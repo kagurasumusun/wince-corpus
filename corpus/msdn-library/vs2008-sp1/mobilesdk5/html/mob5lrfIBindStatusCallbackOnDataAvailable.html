@@ -1,0 +1,114 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>IBindStatusCallback::OnDataAvailable</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="IBindStatusCallback::OnDataAvailable"/>
+<MSHelp:RLTitle Title="IBindStatusCallback::OnDataAvailable"/>
+<MSHelp:Keyword Index="K" Term="IBindStatusCallback::OnDataAvailable"/>
+<MSHelp:Keyword Index="A" Term="mob5lrfIBindStatusCallbackOnDataAvailable"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Application"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbsmartphone"/>
+<MSHelp:Attr Name="Product" Value="kbPocketPC"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="Technology" Value="kbPocketPC"/>
+<MSHelp:Attr Name="Technology" Value="kbSmartphone"/>
+<MSHelp:Attr Name="TopicType" Value="apiref"/>
+<MSHelp:Attr Name="Filename" Value="htmlCtrl_API_iFace1_magneto.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="False"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_1077005">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Windows Mobile Version 5.0 SDK<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="mob5lrfibindstatuscallbackondataavailable"></A>IBindStatusCallback::OnDataAvailable</H1>
+<!--Feedback Link Top Start-->
+<P CLASS="feedback"><font size="1"><a href="mailto:medfdbk&#64;microsoft.com?subject=Product: Windows Mobile | Version: 5.0 | Release: SDK | Title: IBindStatusCallback::OnDataAvailable | Filename: mob5lrfibindstatuscallbackondataavailable.htm | Built on: Wednesday, September 14, 2005">Send Feedback</a> on this topic to the authors</font></p>
+<!--Feedback Link Top End-->
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>Provides data to the client as it becomes available during asynchronous bind operations.</P>
+
+<H4 class="dtH4">Syntax</H4>
+
+<PRE class="syntax"><B>HRESULT nDataAvailable(</B>
+<B>  DWORD </B><I>grfBSCF</I><B>,</B>
+<B>  DWORD </B><I>dwSize</I><B>,</B>
+<B>  FORMATETC * </B><I>pformatetc</I><B>,</B>
+<B>  STGMEDIUM * </B><I>pstgmed</I>
+<B>);</B></PRE>
+
+<H4 class="dtH4">Parameters</H4>
+
+<DL>
+<DT><I>grfBSCF </I></DT>
+
+<DD>[in]&nbsp;Unsigned long integer value taken from the BSCF enumeration indicating the kind of data available.</dd>
+
+<DT><I>dwSize </I></DT>
+
+<DD>[in]&nbsp;Unsigned long integer value that contains the size, in bytes, of total data available from the current bind operation.</dd>
+
+<DT><I>pformatetc </I></DT>
+
+<DD>[in]&nbsp;Address of the <B>FORMATETC</B> structure that indicates the format of the available data. This parameter is used when the bind operation is a result of the <B>IMoniker::BindToStorage</B> method. If there is no format associated with the available data, <I>pformatetc</I> might contain CF_NULL. Each different call to <B>IBindStatusCallback::OnDataAvailable</B> can pass in a new value for this parameter, although they all should always point to the same data.</dd>
+
+<DT><I>pstgmed </I></DT>
+
+<DD>[in]&nbsp;Address of the <B>STGMEDIUM</B> structure that contains the pointers to the interfaces (such as IStream and IStorage) that can be used to access the data. In the asynchronous case, client applications might have received a second pointer to the <B>IStream</B> or <B>IStorage</B> interface from the<B>IMoniker::BindToStorage</B> method, upon which the client application must call <B>IUnknown::Release</B> to avoid memory leaks. </dd>
+</DL>
+
+<H4 class="dtH4">Return Values</H4>
+
+<P>Returns S_OK if successful, or E_INVALIDARG if one or more parameters are invalid.</P>
+
+<H4 class="dtH4">Remarks</H4>
+
+<P>During asynchronous <B>IMoniker::BindToStorage</B> bind operations, an asynchronous moniker calls this method to provide data to the client as it becomes available.</P>
+
+<P>Note that the behavior of the storage returned in <I>pstgmed</I> depends on the BINDF flags returned in the IBindStatusCallback::GetBindInfo method. This storage can be asynchronous or blocking, and the bind operation can follow a data pull model or a data push model. Furthermore, it is important to note that for <B>BINDF</B> bind operations, it is not possible to seek backward into data streams provided in <B>IBindStatusCallback::OnDataAvailable</B>. On the other hand, for data push model bind operations, it is usually possible to seek back into a data stream and read any data that has been downloaded for an ongoing <B>IMoniker::BindToStorage</B> operation.</P>
+
+<H4 class="dtH4">Requirements</H4>
+
+<P><B>Pocket&nbsp;PC:</B> Pocket&nbsp;PC&nbsp;2000 and later<BR>
+<B>Smartphone:</B> Smartphone&nbsp;2002 and later<BR>
+<B>OS&nbsp;Versions:</B> Windows&nbsp;CE&nbsp;3.0 and later<BR>
+<B>Header:</B> urlmon.h<BR>
+<B>Library:</B> urlmon.lib</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="mob5lrfibindstatuscallback.htm">IBindStatusCallback</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Feedback Link Bottom Start-->
+<p><font size="1"><a href="mailto:medfdbk&#64;microsoft.com?subject=Product: Windows Mobile | Version: 5.0 | Release: SDK | Title: IBindStatusCallback::OnDataAvailable | Filename: mob5lrfibindstatuscallbackondataavailable.htm | Built on: Wednesday, September 14, 2005">Send Feedback</a> on this topic to the authors</font></p>
+<!--Feedback Link Bottom End-->
+<!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="mob5conCopyrightInformationForMagneto" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link></font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

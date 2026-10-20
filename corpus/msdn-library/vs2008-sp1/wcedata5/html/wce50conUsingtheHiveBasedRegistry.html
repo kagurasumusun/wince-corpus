@@ -1,0 +1,107 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Using the Hive-Based Registry</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Using the Hive-Based Registry"/>
+<MSHelp:RLTitle Title="Using the Hive-Based Registry"/>
+<MSHelp:Keyword Index="A" Term="wce50conUsingtheHiveBasedRegistry"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Feature"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="registry_overview.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="True"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="True"/>
+<MSHelp:Attr Name="PBFeature" Value="REGISTRY"/>
+<MSHelp:Attr Name="PBOnly" Value="True"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_1055676">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50conusingthehivebasedregistry"></A>Using the Hive-Based Registry</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>Once you have chosen to use the hive-based registry as the registry for your device, you can then implement the hive-based registry. After you have implemented the hive-based registry you can then persist registry data during a cold boot of the OS.</P>
+
+<P class="labelproc"><B>To use the hive-based registry</B>
+
+<OL type="1">
+	<LI>Add the Hive-based Registry Catalog item to your OS design.</li>
+
+	<LI>Verify the following registry settings in the Common.reg file for your OS design.
+<PRE class="code">[HKEY_LOCAL_MACHINE\init\BootVars]
+    "SystemHive"="&lt;<I>your system hive location</I>&gt;"
+    "Flags"=dword:&lt;<I>your value</I>&gt;</PRE>
+
+<P>For more information about configuring the registry to support the hive-based registry, see <A HREF="wce50tskhive-basedregistrysetup.htm">Hive-based Registry Setup</A>.
+</li>
+
+	<LI>Set the following registry value in the Common.reg file for your OS design to determine the default hive to load.
+<PRE class="code">[HKEY_LOCAL_MACHINE\init\BootVars]
+    "DefaultUser"="&lt;<I>username</I>&gt;"</PRE>
+</li>
+
+	<LI>Verify that all registry entries necessary for starting drivers in the first boot phase are wrapped in the comments.
+<P>The following code example shows typical comments.
+
+<PRE class="code">; HIVE BOOT SECTION
+&lt;your registry settings&gt;
+; END HIVE BOOT SECTION</PRE>
+
+<P>These tags are commands that tell the ROM registry builder to add the entries to the boot hive.
+</li>
+
+	<LI>Set the following flag bit on each driver that is loaded during the first boot phase.
+<PRE class="code">[HKEY_LOCAL_MACHINE\Drivers\...]
+    "Flags"=dword:1000</PRE>
+
+<P>The flags are a bitmask to <B>OR</B> with any existing settings. This flag tells the Device Manager to load your driver in the first boot phase with the boot registry, and not to load it a second time in the second boot phase with the system registry. It prevents the driver from being started twice.
+</li>
+
+	<LI>Set the <B>MountFlags</B> registry value equal to <B>DWORD:2</B>. 
+<P>Set this value on the Storage Manager profile of the file system driver for the medium that contains the registry. This indicates that the file system contains the following registry key.
+
+<PRE class="code">[HKEY_LOCAL_MACHINE\System\StorageManager\Profiles\<I>&lt;ProfileName&gt;</I>\&lt;<I>FileSystemName&gt;</I>]
+    "MountFlags"=dword:2</PRE>
+</li>
+
+	<LI>Decide whether a registry flushing mechanism is necessary.
+<P>Outstanding registry data will be flushed on a suspend or resume cycle and any time the system goes through a software shutdown. However, data may be lost if power is suddenly removed. If a software shutdown is not an option, you may need to create a thread that periodically flushes data. To ensure that data is not lost, call <A HREF="wce50lrfregflushkey.htm">RegFlushKey</A>. This will flush any unsaved changes in the hive to the persistent file. It will not damage anything to call <B>RegFlushKey</B> when no data has changed; in that case, the file will not be touched. <B>RegFlushKey</B> should be called on both the system hive <B>HKEY_LOCAL_MACHINE</B> and the user hive <B>HKEY_CURRENT_USER</B>.
+</li>
+</OL>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50conhivebasedregistrystartupsequence.htm">Hive-Based Registry Startup Sequence</A> | <A HREF="wce50conhivebasedregistry.htm">Hive-Based Registry</A> | <A HREF="wce50controubleshootingthehivebasedregistry.htm">Troubleshooting the Hive-Based Registry</A> | <A HREF="wce50conpersistingdatawiththehivebasedregistry.htm">Persisting Data with the Hive-Based Registry</A> | <A HREF="wce50conupgradingthehivebasedregistry.htm">Hive-Based Registry Data</A> | <A HREF="wce50confatfilesystemregistrysettings.htm">FAT File System Registry Settings</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

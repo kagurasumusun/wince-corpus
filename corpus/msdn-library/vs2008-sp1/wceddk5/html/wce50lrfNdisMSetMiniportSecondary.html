@@ -1,0 +1,126 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>NdisMSetMiniportSecondary</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="NdisMSetMiniportSecondary"/>
+<MSHelp:RLTitle Title="NdisMSetMiniportSecondary"/>
+<MSHelp:Keyword Index="K" Term="NdisMSetMiniportSecondary"/>
+<MSHelp:Keyword Index="A" Term="wce50lrfNdisMSetMiniportSecondary"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Driver"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="False"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="apiref"/>
+<MSHelp:Attr Name="Filename" Value="ndis_library_functions2.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="False"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+<MSHelp:Attr Name="APIName" Value="NdisMSetMiniportSecondary"/>
+<MSHelp:Attr Name="APIType" Value="DLLExport"/>
+<MSHelp:Attr Name="APILocation" Value="Ndis.dll"/>
+<MSHelp:Attr Name="PBFeature" Value="NetworkDriver"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_3018549">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50lrfndismsetminiportsecondary"></A>NdisMSetMiniportSecondary</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>This function sets the specified miniport adapter to the secondary role in relation to the primary miniport adapter. The primary miniport adapter handles all packet transfers and requests for information that are made by protocol drivers. However, NDIS can send specific requests to the secondary miniport adapter.</P>
+
+<PRE class="syntax"><B>NDIS_STATUS NdisMSetMiniportSecondary(</B>
+  <B>NDIS_HANDLE</B> <I>MiniportAdapterHandle</I><B>,</B>
+<B>  NDIS_HANDLE</B> <I>PrimaryMiniportAdapterHandle</I>
+<B>);</B></PRE>
+
+<H4 class="dtH4">Parameters</H4>
+
+<DL>
+<DT><I>MiniportAdapterHandle</I></DT>
+
+<DD>[in] Specifies the handle to the miniport adapter previously input to <A HREF="wce50lrfminiportinitialize.htm">MiniportInitialize</A>.</dd>
+
+<DT><I>PrimaryMiniportAdapterHandle</I></DT>
+
+<DD>[in] Specifies the handle to the primary miniport adapter that has already been initialized with <B>MiniportInitialize</B>.</dd>
+</DL>
+
+<H4 class="dtH4">Return Values</H4>
+
+<P>The following table shows the return values for this function.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=30%>Value</TH>
+<TH width=70%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=30%>NDIS_STATUS_SUCCESS</TD>
+<TD width=70%>The miniport adapter has been set to the secondary role in relation to the primary miniport adapter. The miniport driver can subsequently promote the secondary miniport adapter to the primary role.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=30%>NDIS_STATUS_FAILURE</TD>
+<TD width=70%>An attempt to set the miniport adapter that is currently being initialized to the secondary role failed.</TD>
+</TR>
+</table></div>
+
+<H4 class="dtH4">Remarks</H4>
+
+<P>Protocol drivers can only bind to a miniport driver's primary adapter. All bindings to the miniport driver's secondary adapters are torn down.</P>
+
+<P>A miniport driver can call <B>NdisMSetMiniportSecondary</B> during initialization of the secondary miniport adapter, that is, from within the miniport's <B>MiniportInitialize</B> function. In this call, the miniport driver passes the handle to the miniport adapter being initialized in the <I>MiniportAdapterHandle</I> parameter and the handle to the primary miniport adapter that has already been initialized in the <I>PrimaryMiniportAdapterHandle</I> parameter. The primary miniport adapter handles all packet transfers and requests for information that are made by protocol drivers. However, NDIS can send specific requests to the secondary miniport adapter. For example, NDIS might query all miniport adapters for their media connectivity. The secondary miniport adapter must process and respond to this query.</P>
+
+<P>After initialization of the secondary miniport adapter, the miniport driver can subsequently call the <A HREF="wce50lrfndismpromoteminiport.htm">NdisMPromoteMiniport</A> function to promote the secondary miniport adapter to the primary role.</P>
+
+<P>Before the miniport driver calls <B>NdisMSetMiniportSecondary</B>, it must first determine if the miniport adapter being initialized is part of the miniport's bundle of miniport adapters. A miniport driver uses this bundle to balance the workload that each miniport adapter carries and to enable a secondary miniport adapter to take over packet transfers and information requests if the primary miniport adapter fails. For example, if the miniport driver's primary adapter fails, the miniport driver can call the <A HREF="wce50lrfndismremoveminiport.htm">NdisMRemoveMiniport</A> function to remove the primary adapter from the system and from the miniport driver's bundle. The miniport driver can then call <B>NdisMPromoteMiniport</B> to promote a secondary adapter to the primary role.</P>
+
+<P>To determine if the miniport adapter being initialized is part of the miniport driver's bundle, the miniport driver first calls the <A HREF="wce50lrfndisopenconfiguration.htm">NdisOpenConfiguration</A> function to obtain the handle for a registry key in which the miniport driver's configuration parameters are stored. Next, the miniport driver calls the <A HREF="wce50lrfndisreadconfiguration.htm">NdisReadConfiguration</A> function to retrieve the string value (REG_SZ) from the <I>BundleIndentifier</I> keyword under the miniport's registry key. The miniport driver should copy the string value to the miniport's internal structure in which the miniport stores information specific to the miniport adapter that is currently being initialized. This internal structure is also known as <I>MiniportAdapterContext</I>. The miniport driver's information (INF) file sets <I>BundleIndentifier</I> when the miniport driver is installed.</P>
+
+<P>During initialization, the miniport driver should search through all miniport-adapter instances that the driver has already initialized to locate an instance that has an identical bundle-identifier value. To perform this search, the miniport driver inspects each instance's <I>MiniportAdapterContext</I>. If the driver locates a match, it should call <B>NdisMSetMiniportSecondary</B> and pass handles for both primary and secondary miniport adapters.</P>
+
+<P>A miniport driver can call <B>NdisMSetMiniportSecondary</B> during the subsequent initialization of several miniport adapters to set them all to secondary roles. That is, multiple secondary miniport adapters can exist in a bundle. NDIS will only expose the miniport driver's primary adapter to transports. If transports request to send packets to the miniport or request to set or query information, NDIS will pass these requests to the miniport driver using the primary adapter. The miniport driver must provide LBFO for these requests as appropriate. The miniport driver only indicates up packets that were received from the network using the handle for the primary adapter.</P>
+
+<P>Only miniport-adapter instances that are initialized by the same miniport driver and that belong to the miniport's bundle can call <B>NdisMSetMiniportSecondary</B>.</P>
+
+<H4 class="dtH4">Requirements</H4>
+
+<P><B>OS Versions:</B> Windows CE .NET 4.0 and later.<BR>
+<B>Header:</B> Ndis.h.<BR>
+<B>Link Library:</B> Ndis.dll.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50lrfminiportinitialize.htm">MiniportInitialize</A> | <A HREF="wce50lrfndismpromoteminiport.htm">NdisMPromoteMiniport</A> | <A HREF="wce50lrfndismremoveminiport.htm">NdisMRemoveMiniport</A> | <A HREF="wce50lrfndisopenconfiguration.htm">NdisOpenConfiguration</A> | <A HREF="wce50lrfndisreadconfiguration.htm">NdisReadConfiguration</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

@@ -1,0 +1,80 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Back Buffers and Image Surfaces</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Back Buffers and Image Surfaces"/>
+<MSHelp:RLTitle Title="Back Buffers and Image Surfaces"/>
+<MSHelp:Keyword Index="A" Term="wce50conBackBuffersImageSurfaces"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Driver"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="False"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="d3dm_ddk_concepts.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="False"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+<MSHelp:Attr Name="PBFeature" Value="Direct3DMobileDriver"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_1052721">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50conbackbuffersimagesurfaces"></A>Back Buffers and Image Surfaces</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>Back buffers and image surfaces are color buffers that are not shown on-screen directly. They are often referred to as off-screen surfaces. Back buffers are off-screen surfaces in the swap chain and image surfaces are temporary surfaces for loading texture maps. In both cases, as with other resources, the driver must allocate memory for the surface.</P>
+
+<H1 class="dtH1">Back Buffer Creation</H1>
+
+<P>The Microsoft&reg; Direct3D&reg; Mobile middleware creates a back buffer by calling <A HREF="wce50lrfd3dmcreatesurface.htm">D3DM_CreateSurface</A> with <I>D3DM_CREATESURFACE_DATA-&gt;SurfaceType</I> set to D3DMRTYPE_SURFACE. The description will include data for the surface's format, width, height, multisampling type, and usage. The middleware will set the D3DMUSAGE_RENDERTARGET bit in the <I>SurfaceDesc.Usage</I>. It may also set the D3DMUSAGE_LOCKABLE bit for lockable back buffers. </P>
+
+<P>The driver can enforce a policy in which the width and height of the back buffer must be some multiple of the front buffer size, according to the kind of multisampling to be done. This type of checking is only done in the debug builds of the middleware. Similar checking on the validity of the format and the multisampling type is only be done in the debug middleware as well.</P>
+
+<P>The driver must set the values of the <I>SurfaceDesc.Pool</I> and <I>SurfaceDesc.Size</I> parameters once the surface is created. The driver exposes its support for creating back buffers within memory pools through the D3DMSURFCAPS_SYSBACKBUFFER and D3DMSURFCAPS_VIDBACKBUFFER capability bits, see <MSHelp:link keywords="wce50lrfD3DMSURFCAPSValues" TABINDEX="0">D3DMSURFCAPS Values</MSHelp:link>.</P>
+
+<P>The driver is not required to honor the D3DMUSAGE_LOCKABLE bit for back buffers. It must expose the D3DMSURFCAPS_LOCKBACKBUFFER capability bit if it allows the back buffer to be locked. The driver is, however, required to allow the creation of back buffers with at least the D3DMMULTISAMPLE_NONE type and the same pixel format as the front buffer.</P>
+
+<H3 class="dtH3">Image Surface Creation</H3>
+
+<P>Image surfaces are also created with the D3DMRTYPE_SURFACE type. However, when Direct3D Mobile needs an image surface, the <I>SurfaceDesc.Usage</I> parameter might contain the D3DMUSAGE_LOCKABLE bit. The surface description will contain information for the height, width, and format, and the <I>SurfaceDesc.MultiSampleType</I> parameter will be set to D3DMMULTISAMPLE_NONE. After the surface is created, only the size and pool parameters must be registered by the driver.</P>
+
+<P>In Direct3D Mobile debug builds, the format of the image surface will be checked against the driver's list of supported formats. The application will be informed of the driver's pool constraints (for example, no video memory), by means of the D3DMSURFCAPS_SYSIMAGESURFACE and D3DMSURFCAPS_VIDIMAGESURFACE capability bits.</P>
+
+<P>The driver should honor the D3DMUSAGE_LOCKABLE bit for image surfaces. Direct3D Mobile requires that the driver be able to create lockable image surfaces for loading texture map data.</P>
+
+<P>The members of <B>D3DM_CLEAR.Rects</B> (see <MSHelp:link keywords="wce50lrfD3DM_CLEAR" TABINDEX="0">D3DM_CLEAR</MSHelp:link>) represent back buffer offsets. The <B>D3DM_CLEAR.Rects</B> members are not clipped to the viewport extents by the Direct3D Mobile middleware. The driver is responsible for clipping these parameters to the viewport. </P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50conresourcesindirect3dmobiledrivers.htm">Resources in Direct3D Mobile Drivers</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

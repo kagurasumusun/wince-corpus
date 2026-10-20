@@ -1,0 +1,230 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>LASS Registry Settings</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="LASS Registry Settings"/>
+<MSHelp:RLTitle Title="LASS Registry Settings"/>
+<MSHelp:Keyword Index="A" Term="wce50grfLASSRegistrySettings"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Feature"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="Technology" Value="Security"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="lass_registry_settings.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="True"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="True"/>
+<MSHelp:Attr Name="PBFeature" Value="SYSGEN_LASS"/>
+<MSHelp:Attr Name="PBOnly" Value="False"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_1034031">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50grflassregistrysettings"></A>LASS Registry Settings</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>The registry stores information necessary to configure the operating system for applications and hardware devices. The registry also contains information that the operating system continually references during operation.</P>
+
+<BLOCKQUOTE class="dtBlock">
+<b class="le">Note</b>&nbsp;&nbsp;&nbsp;The default registry values vary depending on which Catalog items are included in your OS design. For more information, see <MSHelp:link keywords="wce50lrfDefaultRegistrySettings" TABINDEX="0">Default Registry Settings</MSHelp:link>.</BLOCKQUOTE>
+
+<H4 class="dtH4">Exponential Backoff Registry Settings</H4>
+
+<P>The <B>HKEY_LOCAL_MACHINE\Comm\Security\LASSD\Lockout</B> registry key is used to enable the LASS exponential backoff mechanism. This mechanism is designed to deter brute force attacks that rapidly try several authentications on a LAP by introducing an exponentially increasing time delay between unsuccessful consecutive attempts of the <A HREF="wce50lrfverifyuser.htm">VerifyUser</A> call to a LAP. For more information about exponential backoff, see <A HREF="wce50conlassexponentialbackoff.htm">LASS Exponential Backoff</A>.</P>
+
+<P>The time delay or lockout time is calculated by using the following expression:</P>
+
+<PRE class="code">(InitialPenalty + (2^(Number of failures above Threshold)) * IncrementalPenalty)</PRE>
+
+<P>The following table shows the named values.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=40%>Value : type</TH>
+<TH width=60%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=40%><B>InitialPenalty</B> : REG_DWORD</TD>
+<TD width=60%>Time, in seconds, for the initial penalty.
+<P>Default value is 0.</P>
+</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=40%><B>Threshold</B> : REG_DWORD</TD>
+<TD width=60%>The number of failures before the exponential backoff mechanism is activated.
+<P>Default value is 0. This indicates that exponential backoff is disabled.</P>
+</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=40%><B>IncrementalPenalty</B> : REG_DWORD</TD>
+<TD width=60%>Time, in seconds, of the multiplier for the exponent.
+<P>Default value is 0, indicating that there is no delay beyond the value set for <B>InitialPenalty</B>.</P>
+</TD>
+</TR>
+</table></div>
+
+<H4 class="dtH4">LAP Codeword and Device Wipe Registry Settings</H4>
+
+<P>The <B>HKEY_LOCAL_MACHINE\Comm\Security\LASSD\Lockout</B> registry key is used to configure the LASS settings for codeword functionality and the threshold for device wipes.</P>
+
+<BLOCKQUOTE class="dtBlock">
+<b class="le">Note</b>&nbsp;&nbsp;&nbsp;Do not implement a code word that includes Double Byte Character Set (DBCS) characters. While the CodeWord registry node will accept DBCS characters, users cannot enter DBCS characters on a device. </BLOCKQUOTE>
+
+<P>The following table shows the named values.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=40%>Value : type</TH>
+<TH width=60%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=40%><B>CodeWordFrequency</B> : REG_DWORD</TD>
+<TD width=60%>Determines the frequency for displaying code word confirmation during the LAP authentication process. Setting this value to 0 disables codeword functionality.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=40%><B>CodeWord</B> : REG_SZ</TD>
+<TD width=60%>Codeword that the user will be requested to type.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=40%><B>DeviceWipeThreshold</B> : REG_DWORD</TD>
+<TD width=60%>The number of authentication failures before the device will be wiped. A value of 0 disables device wipe functionality.</TD>
+</TR>
+</table></div>
+
+<H4 class="dtH4">LAP Installation Registry Settings</H4>
+
+<P>To install a new LAP, add a new subkey to the <B>HKEY_LOCAL_MACHINE\Comm\Security\LASSD\LAP </B>registry key that specifies the user-defined name for the new LAP. Use the <B>Dll</B> value for the subkey to specify the location for the LAP.</P>
+
+<P>In the following example, <B>lap_scard</B> is the user-defined name for the new LAP, and the <B>Dll</B> value indicates the name of the LAP DLL.</P>
+
+<PRE class="code">[HKEY_LOCAL_MACHINE\Comm\Security\LASSD\LAP\lap_scard]
+   "Dll"="lap_smartcard.dll"</PRE>
+
+<P>The following table shows the named values.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=19%>Value : type</TH>
+<TH width=81%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=19%><B>Dll</B> : REG_SZ</TD>
+<TD width=81%>The name of the DLL for a LAP that you want to install.</TD>
+</TR>
+</table></div>
+
+<H4 class="dtH4">LAP Activation Registry Settings</H4>
+
+<P>Installing a LAP does not make it active. To make the LAP active, you must activate it after installation. Specify the active LAP by using the <B>ActiveLap</B> value under the <B>HKEY_LOCAL_MACHINE\Comm\Security\LASSD\LAP</B> registry key. </P>
+
+<P>In the following example, <B>ActiveLap</B> is set to <B>lap_scard</B>, which is the subkey that specifies the name of the LAP DLL.</P>
+
+<PRE class="code">[HKEY_LOCAL_MACHINE\Comm\Security\LASSD\LAP]
+   "ActiveLap"="lap_scard"</PRE>
+
+<P>The following table shows the named values.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=26%>Value : type</TH>
+<TH width=74%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=26%><B>ActiveLap</B> : REG_SZ</TD>
+<TD width=74%>A key in the LAP tree. The value of the DLL in the LAP tree specifies the DLL that LASS will load.</TD>
+</TR>
+</table></div>
+
+<H4 class="dtH4">AE Registry Settings</H4>
+
+<P>To install a new authentication event (AE), create a subkey with the GUID of the AE under the <B>HKEY_LOCAL_MACHINE\Comm\Security\LASSD\AE</B> registry key. For examples, see <A HREF="wce50grfinstallingae.htm">Installing an AE</A>.</P>
+
+<P>The following table shows the named values.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=32%>Value : type</TH>
+<TH width=68%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=32%><B>FriendlyName</B> : REG_SZ</TD>
+<TD width=68%>String that indicates to the user what the AE represents.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=32%><B>DisplayText</B> : REG_SZ</TD>
+<TD width=68%>String that indicates the name of the application that is verifying the user in a call to <A HREF="wce50lrfverifyuser.htm">VerifyUser</A>. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=32%><B>AEFrequencyType</B> : REG_DWORD</TD>
+<TD width=68%>Type of frequency policy used to control an AE. It can be any one of the following values, and <B>AEFrequencyValue</B> is interpreted differently based on each value:
+<UL type="disc">
+	<LI>0: User authentication occurs at the frequency specified by <B>AEFrequencyValue</B>. </li>
+
+	<LI>2: <B>AEFrequencyValue</B> represents the number of minutes since any AE returned from <B>VerifyUser</B> successfully.</li>
+
+	<LI>3: <B>AEFrequencyValue</B> represents the number of minutes since the specified AE returned from <B>VerifyUser</B> sucessfully</li>
+</UL>
+</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=32%><B>AEFrequencyValue</B> : REG_DWORD</TD>
+<TD width=68%>Value indicating how often user authentication will occur. The interpretation of <B>AEFrequencyValue</B> depends on the value of <B>AEFrequencyType</B>. For more information about how <B>AEFrequencyType</B> and <B>AEFrequencyValue</B> are related, see <A HREF="wce50grfsettingaepolicy.htm">Setting an AE Policy</A>.
+<P>When <B>AEFrequencyType</B> is set to 0, <B>AEFrequencyValue</B> has the following special cases:
+
+<UL type="disc">
+	<LI>0: Call LAP every time <A HREF="wce50lrfverifyuser.htm">VerifyUser</A> is called.</li>
+
+	<LI>0xFFFFFFFF : Never call into LAP.</li>
+
+	<LI>N: Call into LAP every N-1 time(s) that <B>VerifyUser</B> is called.</li>
+</UL>
+</TD>
+</TR>
+</table></div>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50orilocalauthenticationsubsystemlass.htm">Local Authentication Subsystem (LASS)</A> | <A HREF="wce50grflassapplicationdevelopment.htm">LASS Application Development</A> | <A HREF="wce50conlassosdesigndevelopment.htm">LASS OS Design Development</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

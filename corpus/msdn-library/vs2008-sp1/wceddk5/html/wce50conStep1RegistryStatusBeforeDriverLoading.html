@@ -1,0 +1,90 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Step 1: Loading the PCI Bus Driver</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Step 1: Loading the PCI Bus Driver"/>
+<MSHelp:RLTitle Title="Step 1: Loading the PCI Bus Driver"/>
+<MSHelp:Keyword Index="A" Term="wce50conStep1RegistryStatusBeforeDriverLoading"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Driver"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="False"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="pci_guide.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="False"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="True"/>
+<MSHelp:Attr Name="PBFeature" Value="PCIBusDriver"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_3017986">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50constep1registrystatusbeforedriverloading"></A>Step 1: Loading the PCI Bus Driver</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>In this step of the driver loading process, the PCI bus driver loads.</P>
+
+<P>The following list shows an example of the Device Manager examining the <B>Drivers</B> registry key.
+
+<UL type="disc">
+	<LI><B>Drivers\RootKey</B>
+<P>As the Device Manager loads, it examines the <B>HKEY_LOCAL_MACHINE\Drivers</B> registry key for the <B>RootKey</B> value. It then examines the key pointed to by <B>RootKey</B>, in this case <B>Drivers</B>, for a DLL to load. In this example, it is the bus enumerator, BusEnum.dll. BusEnum.dlls entry point, <B>Init</B>, is called with the <B>HKEY_LOCAL_MACHINE\Drivers</B> key. BusEnum.dll examines the first level of keys just below the key passed to it according to <B>Order</B>. For more information about the <B>Order</B> registry subkey, see <A HREF="wce50condevicemanagerregistrykeys.htm">Device Manager Registry Keys</A>.
+</li>
+
+	<LI><B>Drivers\Debug</B>
+<P>Because, in this example, this registry key has an <B>Order</B> equal to 0, it is examined first. BusEnum.dll is re-entrant. The <B>Flags</B> value is set to 0x0001 or DEVFLAGS_UNLOAD. This means that BusEnum.dll is either unloaded or its reference count is decremented. In this example, its reference count is decremented. <B>Init</B> is called with the <B>Drivers\Debug</B> key. It examines the immediate subkeys for ordering information. In this example, <B>Drivers\Debug\KITL</B> has the lowest and only <B>Order</B> key. The <B>Flags</B> value for <B>Drivers\Debug\KITL</B> is 0x0004, or DEVFLAGS_LOAD, which indicates that the DLL is not loaded because the Ethernet debugging adapter driver has already been loaded by the OAL. Any resources used by this device, and any other devices not loaded by a bus driver, should be excluded from the list of available resources used by the <MSHelp:link keywords="wce50conIOResourceManager" TABINDEX="0">I/O Resource Manager</MSHelp:link>.
+</li>
+
+	<LI><B>Drivers\Virtual</B>
+<P>This registry key has an <B>Order</B> equal to 1 in this example. BusEnum.dll is activated through a call to its <B>Init</B> function with the parameter <B>Drivers\Virtual</B>. <B>Init</B> examines the immediate subkeys for ordering information. In this example, <B>Drivers\Virtual\NDIS</B> has the lowest and only <B>Order</B> key. The <B>Dll</B> value is examined and NDIS.dll is loaded. The entry point, <B>NDS_Init</B>, is called with driver's <B>Active</B> key due the properties of the stream interface, which contains a <B>Key</B> value equal to <B>Drivers\Virtual\NDIS</B>. Because there are no more keys under <B>Drivers\Virtual</B>, the BusEnum.dll's <B>Init</B> function returns.
+</li>
+
+	<LI><B>Drivers\CSP</B>
+<P>This registry key has an <B>Order</B> equal to 2 in this example. BusEnum.dll is activated through a call to <B>Init</B> with parameter <B>Drivers\CSP</B>. <B>Init</B> scans the registry for subkeys of <B>Drivers\CSP</B>. In this case, the first and only key is <B>Drivers\CSP\Serial</B>. Com16550.dll, which is indicated, is loaded and the entry point, <A HREF="wce50lrfcominit.htm">COM_Init</A>, is called with the <B>Active</B> key, which contains a <B>Key</B> value of <B>Drivers\CSP\Serial</B>. The <B>Unimodem</B> subkey is then available to the serial driver.
+</li>
+
+	<LI><B>Drivers\ISA</B>
+<P>This registry key has an <B>Order</B> equal to 3 in this example. The bus enumerator is used in place of an ISA bus driver. You can also use a Plug and Play ISA bus driver. If you do not use a Plug and Play ISA bus driver to configure and allocate ISA resources, the ISA resources must be allocated through the registry. In this case, BusEnum.dll can be used again to enumerate the registry for ISA devices. The use of the <B>ISA</B> subkey, as well as the <B>CSP</B> subkey, is optional. You can choose any registry structure, including hierarchical. For example, <B>ISA</B> can be a subkey of <B>PCI</B>, which can be a subkey of <B>BuiltIn</B>.
+
+<P>In this example, the first key by <B>Order</B> under <B>Drivers\ISA</B> is <B>Drivers\ISA\Serial</B>. The DLL is loaded. In this case, because Com16550.dll is already loaded from a previous key, nothing happens other than a reference count increment, and the default entry point is called. The next key by Order is <B>Drivers\ISA\PCMCIA</B>.
+</li>
+
+	<LI><B>Drivers\PCI</B>
+<P>This registry has an <B>Order</B> equal to 4 in this example. The DLL is PCIbus.dll, a PCI bus driver and enumerator. This driver configures and enumerates the PCI bus, allocates resources to the devices it finds on the bus, and populates the registry with device instances. It does this in conjunction with the I/O Resource Manager. When the PCI bus driver's <B>Init</B> function is called, it examines the values under <B>Drivers\PCI</B> for information about the resources available to the PCI bus. These values include <B>MemBase</B> and <B>MemLen</B>, which specify the ranges of memory-mapped I/O, and <B>IoBase</B> and <B>IoLen</B>, which specify the ranges of port I/O.
+</li>
+</UL>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50constep2enumeratingdevicesonpcibus.htm">Step 2: Enumerating Devices on the PCI Bus</A> | <A HREF="wce50consampledriverloadingonpcibus.htm">Example: Loading Drivers on the PCI Bus</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

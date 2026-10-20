@@ -1,0 +1,130 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Protocol Driver Send and Receive</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Protocol Driver Send and Receive"/>
+<MSHelp:RLTitle Title="Protocol Driver Send and Receive"/>
+<MSHelp:Keyword Index="A" Term="wce50conProtocolDriverSendandReceive"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Driver"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="False"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="ndis_guide2.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="False"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+<MSHelp:Attr Name="PBFeature" Value="NetworkDriver"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_3018323">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50conprotocoldriversendandreceive"></A>Protocol Driver Send and Receive</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>A protocol calls <B>NdisRequest</B> to query or set the characteristics of an underlying miniport. The following table shows the objects used by <B>NdisRequest</B> to set characteristics.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=46%>Object</TH>
+<TH width=54%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=46%><A HREF="wce50lrfoidgenmaximumframesize.htm">OID_GEN_MAXIMUM_FRAME_SIZE</A></TD>
+<TD width=54%>Queries the maximum frame size, in bytes, supported by an underlying NIC driver. The size returned does not include the packet header.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=46%><A HREF="wce50lrfoidgenmaximumtotalsize.htm">OID_GEN_MAXIMUM_TOTAL_SIZE</A></TD>
+<TD width=54%>Determines the largest packet the underlying NIC driver can accommodate on the NIC it manages. The protocol driver must restrict the size of the packets it subsequently sends to this size. It is an error for a protocol driver to submit a larger packet to the underlying NIC driver than the NIC driver has indicated it can support.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=46%><A HREF="wce50lrfoidgenmaximumsendpackets.htm">OID_GEN_MAXIMUM_SEND_PACKETS</A></TD>
+<TD width=54%>Determines the number of send packets that an underlying driver can accept each time the protocol calls <A HREF="wce50lrfndissendpackets.htm">NdisSendPackets</A>. For more information on how this request can affect the protocol driver's subsequent send operations, see <A HREF="wce50consendingprotocoldriveroriginatedpackets.htm">Sending Protocol Driver-Originated Packets</A>.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=46%><A HREF="wce50lrfoidgencurrentlookahead.htm">OID_GEN_CURRENT_LOOKAHEAD</A></TD>
+<TD width=54%>Queries or sets request concerning the size of the lookahead data buffer the underlying driver supplies whenever the protocol's <A HREF="wce50lrfprotocolreceive.htm">ProtocolReceive</A> function is called. If the protocol driver issues this as a query request, NDIS returns the current lookahead buffer size for the given binding to the underlying NIC driver. If the protocol driver makes a set request with this code, it indicates its preferred lookahead buffer size, but the protocol is not assured that an underlying driver will conform to this request. If the underlying driver returned a value greater than one for a preceding <B>OID_GEN_MAXIMUM_SEND_PACKETS</B> query, that driver always indicates receives with a lookahead buffer containing a full network packet. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=46%><A HREF="wce50lrfoidgenmacoptions.htm">OID_GEN_MAC_OPTIONS</A></TD>
+<TD width=54%>Queries to determine the operating characteristics of the underlying NIC driver. This query returns information, such as whether the underlying driver supports full-duplex operations.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=46%><A HREF="wce50lrfoidgenprotocoloptions.htm">OID_GEN_PROTOCOL_OPTIONS</A></TD>
+<TD width=54%>Sets request to inform NDIS of underlying NIC operating characteristics.</TD>
+</TR>
+</table></div>
+
+<P class="label"><B>WAN Dependent Sets</B></P>
+
+<P>The following table shows the set information requests that a protocol driver bound above a WAN-capable NIC must also make.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=46%>Object</TH>
+<TH width=54%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=46%><A HREF="wce50tskoidwanprotocoltype.htm">OID_WAN_PROTOCOL_TYPE</A></TD>
+<TD width=54%>Inform the underlying NDISWAN driver of the type of the protocol driver. The type is supplied as a single-byte, network-level protocol identifier. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=46%><A HREF="wce50lrfoidwanheaderformat.htm">OID_WAN_HEADER_FORMAT</A></TD>
+<TD width=54%>Inform the underlying NDISWAN driver of the header format of the packets it sends. </TD>
+</TR>
+</table></div>
+
+<P class="label"><B>Medium-Dependent Queries</B></P>
+
+<P>A protocol driver queries the medium-dependent current address with a medium-dependent object. The following list shows some example objects that a protocol might query:
+
+<UL type="disc">
+	<LI><A HREF="wce50lrfoidwancurrentaddress.htm">OID_WAN_CURRENT_ADDRESS</A></li>
+
+	<LI><A HREF="wce50lrfoid8023currentaddress.htm">OID_802_3_CURRENT_ADDRESS</A></li>
+
+	<LI><A HREF="wce50lrfoid8025currentaddress.htm">OID_802_5_CURRENT_ADDRESS</A></li>
+</UL>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50conprotocoldrivers.htm">Protocol Drivers</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

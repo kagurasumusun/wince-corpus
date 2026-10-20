@@ -1,0 +1,161 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Bootstrapping To Use An OMA DM Server</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Bootstrapping To Use An OMA DM Server"/>
+<MSHelp:RLTitle Title="Bootstrapping To Use An OMA DM Server"/>
+<MSHelp:Keyword Index="A" Term="wce51conOMADMBootstrapping"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Application"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbsmartphone"/>
+<MSHelp:Attr Name="Product" Value="kbPocketPC"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="Technology" Value="kbPocketPC"/>
+<MSHelp:Attr Name="Technology" Value="kbSmartphone"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="bootstrap_provisioning_mo.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="True"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_1070161">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Windows Mobile Version 5.0 SDK<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce51conomadmbootstrapping"></A>Bootstrapping To Use An OMA DM Server</H1>
+<!--Feedback Link Top Start-->
+<P CLASS="feedback"><font size="1"><a href="mailto:medfdbk&#64;microsoft.com?subject=Product: Windows Mobile | Version: 5.0 | Release: SDK | Title: Bootstrapping To Use An OMA DM Server | Filename: wce51conomadmbootstrapping.htm | Built on: Wednesday, September 14, 2005">Send Feedback</a> on this topic to the authors</font></p>
+<!--Feedback Link Top End-->
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>The primary bootstrap objective is to configure a Windows Mobile-based device to recognize your OMA DM server as having MANAGER privileges on that device. You accomplish this by sending a provisioning document which uses OMA Client Provisioning version 1.1 XML format. Contained in the document is an w7 APPLICATION characteristic which has the values required to fill the DMAcc portion of the device's DM tree. This includes, among other things, the DM server's name and address. The message will also include authentication information for the DM server and the device. After processing this message the device will accept management commands from the DM server. </P>
+
+<BLOCKQUOTE class="dtBlock">
+<b class="le">Note</b>&nbsp;&nbsp;&nbsp;The device requires an SSL connection to the DM server. If the root certificate of the DM server SSL channel is not in the device's default root certificate store then the root certificate needs to be provisioned in bootstrap message as well.</BLOCKQUOTE>
+
+<P>The following example shows a typical DM bootstrap message. It configures the device with the information required for it to connect to, and authenticate a specified DM server:</P>
+
+<PRE class="code">&lt;wap-provisioningdoc version="1.1"&gt;
+  &lt;characteristic type="APPLICATION"&gt;
+    &lt;parm name="APPID" value="w7"/&gt;
+    &lt;parm name="PROVIDER-ID" value="com.mgmtsrv.manage"/&gt;
+    &lt;parm name="NAME" value="Mgmt Server"/&gt;
+    &lt;parm name="ADDR" value="http://www.mgmtserver.com:8080/manage"/&gt;
+    &lt;parm name="TO-NAPID" value="ABCGPRS1"/&gt;
+    &lt;parm name="ROLE" value="8"/&gt;
+    &lt;characteristic type="APPAUTH"&gt;
+      &lt;parm name="AAUTHLEVEL" value="APPSRV"/&gt;
+      &lt;parm name="AAUTHTYPE" value="DIGEST"/&gt;
+      &lt;parm name="AAUTHNAME" value="clientname"/&gt;
+      &lt;parm name="AAUTHSECRET" value="clientsecret"/&gt;
+      &lt;parm name="AAUTHDATA" value="clientnonce"/&gt;
+    &lt;/characteristic&gt;
+    &lt;characteristic type="APPAUTH"&gt;
+      &lt;parm name="AAUTHLEVEL" value="CLIENT"/&gt;
+      &lt;parm name="AAUTHTYPE" value="DIGEST"/&gt;
+      &lt;parm name="AAUTHSECRET" value="serversecret"/&gt;
+      &lt;parm name="AAUTHDATA" value="servernonce"/&gt;
+    &lt;/characteristic&gt;
+    &lt;characteristic type="NAPDEF"&gt;
+      &lt;parm name="NAPID" value="ABCGPRS1"/&gt;
+      &lt;parm name="NAME" value="ABC GPRS Connection"/&gt;
+      &lt;parm name="NAP-ADDRESS" value="ABCGPRSAPN"/&gt;
+      &lt;parm name="NAP-ADDRTYPE" value="APN"/&gt;
+      &lt;parm name="BEARER" value="GSM-GPRS"/&gt;
+    &lt;/characteristic&gt;
+
+&lt;!-- IMPORTANT NOTICE change to policy 4119 ONLY IF the message is sent over RAPI so that the message that is assigned OPERATOR_TPS role will be granted as the device manager by updating the following policy.--&gt; 
+   &lt;characteristic type="SecurityPolicy"&gt;
+      &lt;parm name="4119" value="128"/&gt;
+   &lt;/characteristic&gt;
+
+&lt;!-- Added the change to policy grant manager policy (4119) and WAP Signed Message policy (4107) if the message is sent OTA through WAP Push so that the message that is assigned OPERATOR_TPS role will be granted as the device manager and pure user pin signed or network pin signed WAP push provisioning message from unknown source is disallowed --&gt; 
+   &lt;characteristic type="SecurityPolicy"&gt;
+      &lt;parm name="4119" value="128"/&gt;
+      &lt;parm name="4107" value="3200"/&gt;
+   &lt;/characteristic&gt;
+   &lt;characteristic type="CertificateStore"&gt;
+     &lt;characteristic type="ROOT"&gt;
+       &lt;!-- add DM server's SSL root certificate if it is not in the  device's default root certificate store --&gt;
+      &lt;/characteristic&gt;
+   &lt;/characteristic&gt;
+  &lt;/characteristic&gt;
+&lt;/wap-provisioningdoc&gt;</PRE>
+
+<P>The <B>APPLICATION</B> characteristic specifies information about the server. The <B>INIT</B> parm is specific to the OMA DM protocol. When present, it indicates to the device that it should initiate a management session with the server immediately after successfully processing the message. </P>
+
+<P>The <B>ROLE</B> parm is a Microsoft custom parm. It indicates that, during the DM session, messages from the server will have the specified security role. In the example, the assigned value indicates to the device that the messages will have MANAGER authority (ROLE = 8). </P>
+
+<BLOCKQUOTE class="dtBlock">
+<B>Note</B>&nbsp;&nbsp;The security roles of the DM server account are the same as the bootstrap message unless they are explicitly set by using ROLE parameters. The DM server account cannot have more roles than those of the bootstrap message, and it cannot configure a role that it doesn't have.<B><I> </I></B></BLOCKQUOTE>
+
+<P>The security roles for the DM server are assigned as follows:
+
+<UL type="disc">
+	<LI>If the DM server is bootstrapped at manufacture, the server is assigned all roles implicitly.</li>
+
+	<LI>When bootstrapping a DM server account over the air (OTA) or through Remote API (RAPI), the DM server roles are set to the Role parameter of the server account, as described in <A HREF="wce51grfdmaccconfigurationserviceprovider.htm">DMAcc Configuration Service Provider</A> and the <A HREF="wce51lrfw7applicationconfigurationserviceprovider.htm">w7 APPLICATION Configuration Service Provider</A>.</li>
+</UL>
+
+<P>The two <B>APPAUTH</B> characteristics specify authentication information for the DM server and for the client device.</P>
+
+<P>Windows Mobile Version 5.0 supports the following options for delivering the OMA DM bootstrap provisioning document to the device:
+
+<UL type="disc">
+	<LI>Bootstrap During Production <BR>
+This is the recommended option. The provisioning file can be placed in ROM by the Operator's OEM during production. 
+<BLOCKQUOTE class="dtBlock">
+<b class="le">Note</b>&nbsp;&nbsp;&nbsp;The <B>INIT</B> parm must not be in the provisioning file in ROM.</BLOCKQUOTE>
+</li>
+
+	<LI>Bootstrap OTA via WAP Push for non-branded devices<BR>
+The provisioning file can be sent to the device OTA via WAP Push. However, you will need to enable OTA bootstrapping which is disabled on the device by default. See <A HREF="wce51conenablingotabootstrapping.htm">Enabling OTA Bootstrapping</A> for more information. 
+<BLOCKQUOTE class="dtBlock">
+<b class="le">Note</b>&nbsp;&nbsp;&nbsp;If the device is reset OTA bootstrap settings will be lost as the device will revert to the default factory settings. </BLOCKQUOTE>
+</li>
+
+	<LI>Use Image Update to place a .provxml file in ROM</li>
+
+	<LI>Bootstrap at the point of sale (for non branded devices) using a .cpf file.
+<OL type="a">
+	<LI>Your OEM must place a certificate in the SPC store with Role = Manager. </li>
+
+	<LI>The cert signed .cpf file that contains a w7 APPLICATION characteristic and corresponding data connectivity settings is sent to the device using a MMC card.</li>
+</OL>
+</li>
+</UL>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce51conbootstrap.htm">Bootstrapping Windows Mobile-Based Devices</A> | <A HREF="wce51conomadevicemanagementprovisioning.htm">OMA Device Management Provisioning</A> | <A HREF="wce51conomadevicemanagementtree.htm">OMA Device Management Tree</A> | <A HREF="wce51conprovisioningstructureforsmartphonepocketpc.htm">OMA Client Provisioning Files</A> | <MSHelp:link keywords="wce51conSecurityRoles" TABINDEX="0">Security Roles</MSHelp:link> | <A HREF="wce51lrfw7applicationconfigurationserviceprovider.htm">W7 application Configuration Service Provider</A> </P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Feedback Link Bottom Start-->
+<p><font size="1"><a href="mailto:medfdbk&#64;microsoft.com?subject=Product: Windows Mobile | Version: 5.0 | Release: SDK | Title: Bootstrapping To Use An OMA DM Server | Filename: wce51conomadmbootstrapping.htm | Built on: Wednesday, September 14, 2005">Send Feedback</a> on this topic to the authors</font></p>
+<!--Feedback Link Bottom End-->
+<!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="mob5conCopyrightInformationForMagneto" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link></font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

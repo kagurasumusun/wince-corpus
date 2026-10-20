@@ -1,0 +1,261 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Sample SaxContentHandlerImpl Code</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Sample SaxContentHandlerImpl Code"/>
+<MSHelp:RLTitle Title="Sample SaxContentHandlerImpl Code"/>
+<MSHelp:Keyword Index="A" Term="wce51samSampleSaxContentHandlerImplCode"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Feature"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbSampleProd"/>
+<MSHelp:Attr Name="Filename" Value="SAX2_DevelopersGuide.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="True"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+<MSHelp:Attr Name="PBFeature" Value="SYSGEN_MSXML"/>
+<MSHelp:Attr Name="PBOnly" Value="False"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_1077645">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce51samsamplesaxcontenthandlerimplcode"></A>Sample SaxContentHandlerImpl Code</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>The following code examples illustrate how to write a customized XML parser for CE MSXML. For more information on including these files while creating a SAX2 application, see <A HREF="wce50tsktutorialjumpstartforcreatingasax2applicationwithc.htm">Tutorial: JumpStart for Creating a SAX2 Application with C++</A></P>
+
+<H4 class="dtH4">Sample SaxContentHandlerImpl.h</H4>
+
+<PRE class="code">// SAXContentHandlerImpl.h: interface for the SAXContentHandlerImpl class.
+//
+//////////////////////////////////////////////////////////////////////
+
+#if !defined(AFX_SAXCONTENTHANDLERIMPL_H__517D91C0_0BCF_474D_A77C_10EE27231233__INCLUDED_)
+#define AFX_SAXCONTENTHANDLERIMPL_H__517D91C0_0BCF_474D_A77C_10EE27231233__INCLUDED_
+
+#if _MSC_VER &gt; 1000
+#pragma once
+#endif // _MSC_VER &gt; 1000
+
+class SAXContentHandlerImpl : public ISAXContentHandler  
+{
+public:
+    SAXContentHandlerImpl();
+    virtual ~SAXContentHandlerImpl();
+
+        // This must be correctly implemented, if your handler must be a COM Object (in this example it does not)
+        long __stdcall QueryInterface(const struct _GUID &amp;,void ** );
+        unsigned long __stdcall AddRef(void);
+        unsigned long __stdcall Release(void);
+
+        virtual HRESULT STDMETHODCALLTYPE putDocumentLocator( 
+            /* [in] */ ISAXLocator __RPC_FAR *pLocator);
+        
+        virtual HRESULT STDMETHODCALLTYPE startDocument( void);
+        
+        virtual HRESULT STDMETHODCALLTYPE endDocument( void);
+        
+        virtual HRESULT STDMETHODCALLTYPE startPrefixMapping( 
+            /* [in] */ wchar_t __RPC_FAR *pwchPrefix,
+            /* [in] */ int cchPrefix,
+            /* [in] */ wchar_t __RPC_FAR *pwchUri,
+            /* [in] */ int cchUri);
+        
+        virtual HRESULT STDMETHODCALLTYPE endPrefixMapping( 
+            /* [in] */ wchar_t __RPC_FAR *pwchPrefix,
+            /* [in] */ int cchPrefix);
+        
+        virtual HRESULT STDMETHODCALLTYPE startElement( 
+            /* [in] */ wchar_t __RPC_FAR *pwchNamespaceUri,
+            /* [in] */ int cchNamespaceUri,
+            /* [in] */ wchar_t __RPC_FAR *pwchLocalName,
+            /* [in] */ int cchLocalName,
+            /* [in] */ wchar_t __RPC_FAR *pwchRawName,
+            /* [in] */ int cchRawName,
+            /* [in] */ ISAXAttributes __RPC_FAR *pAttributes);
+        
+        virtual HRESULT STDMETHODCALLTYPE endElement( 
+            /* [in] */ wchar_t __RPC_FAR *pwchNamespaceUri,
+            /* [in] */ int cchNamespaceUri,
+            /* [in] */ wchar_t __RPC_FAR *pwchLocalName,
+            /* [in] */ int cchLocalName,
+            /* [in] */ wchar_t __RPC_FAR *pwchRawName,
+            /* [in] */ int cchRawName);
+        
+        virtual HRESULT STDMETHODCALLTYPE characters( 
+            /* [in] */ wchar_t __RPC_FAR *pwchChars,
+            /* [in] */ int cchChars);
+        
+        virtual HRESULT STDMETHODCALLTYPE ignorableWhitespace( 
+            /* [in] */ wchar_t __RPC_FAR *pwchChars,
+            /* [in] */ int cchChars);
+        
+        virtual HRESULT STDMETHODCALLTYPE processingInstruction( 
+            /* [in] */ wchar_t __RPC_FAR *pwchTarget,
+            /* [in] */ int cchTarget,
+            /* [in] */ wchar_t __RPC_FAR *pwchData,
+            /* [in] */ int cchData);
+        
+        virtual HRESULT STDMETHODCALLTYPE skippedEntity( 
+            /* [in] */ wchar_t __RPC_FAR *pwchName,
+            /* [in] */ int cchName);
+
+};
+
+#endif // !defined(AFX_SAXCONTENTHANDLERIMPL_H__517D91C0_0BCF_474D_A77C_10EE27231233__INCLUDED_)</PRE>
+
+<H4 class="dtH4">Sample SaxContentHandlerImpl.cpp</H4>
+
+<PRE class="code">// SAXContentHandlerImpl.cpp: implementation of the SAXContentHandlerImpl class.
+//
+//////////////////////////////////////////////////////////////////////
+#include "stdafx.h"
+#include "SAXContentHandlerImpl.h"
+//////////////////////////////////////////////////////////////////////
+// Construction/Destruction
+//////////////////////////////////////////////////////////////////////
+
+SAXContentHandlerImpl::SAXContentHandlerImpl()
+{
+}
+SAXContentHandlerImpl::~SAXContentHandlerImpl()
+{
+}
+HRESULT STDMETHODCALLTYPE SAXContentHandlerImpl::putDocumentLocator( 
+            /* [in] */ ISAXLocator __RPC_FAR *pLocator
+            )
+{
+    return S_OK;
+}
+        
+HRESULT STDMETHODCALLTYPE SAXContentHandlerImpl::startDocument()
+{
+    return S_OK;
+}
+        
+HRESULT STDMETHODCALLTYPE SAXContentHandlerImpl::endDocument( void)
+{
+    return S_OK;
+}
+        
+HRESULT STDMETHODCALLTYPE SAXContentHandlerImpl::startPrefixMapping( 
+            /* [in] */ wchar_t __RPC_FAR *pwchPrefix,
+            /* [in] */ int cchPrefix,
+            /* [in] */ wchar_t __RPC_FAR *pwchUri,
+            /* [in] */ int cchUri)
+{
+    return S_OK;
+}
+        
+HRESULT STDMETHODCALLTYPE SAXContentHandlerImpl::endPrefixMapping( 
+            /* [in] */ wchar_t __RPC_FAR *pwchPrefix,
+            /* [in] */ int cchPrefix)
+{
+    return S_OK;
+}
+        
+HRESULT STDMETHODCALLTYPE SAXContentHandlerImpl::startElement( 
+            /* [in] */ wchar_t __RPC_FAR *pwchNamespaceUri,
+            /* [in] */ int cchNamespaceUri,
+            /* [in] */ wchar_t __RPC_FAR *pwchLocalName,
+            /* [in] */ int cchLocalName,
+            /* [in] */ wchar_t __RPC_FAR *pwchRawName,
+            /* [in] */ int cchRawName,
+            /* [in] */ ISAXAttributes __RPC_FAR *pAttributes)
+{
+    return S_OK;
+}
+       
+HRESULT STDMETHODCALLTYPE SAXContentHandlerImpl::endElement( 
+            /* [in] */ wchar_t __RPC_FAR *pwchNamespaceUri,
+            /* [in] */ int cchNamespaceUri,
+            /* [in] */ wchar_t __RPC_FAR *pwchLocalName,
+            /* [in] */ int cchLocalName,
+            /* [in] */ wchar_t __RPC_FAR *pwchRawName,
+            /* [in] */ int cchRawName)
+{
+    return S_OK;
+}
+        
+HRESULT STDMETHODCALLTYPE SAXContentHandlerImpl::characters( 
+            /* [in] */ wchar_t __RPC_FAR *pwchChars,
+            /* [in] */ int cchChars)
+{
+    return S_OK;
+}
+
+HRESULT STDMETHODCALLTYPE SAXContentHandlerImpl::ignorableWhitespace( 
+            /* [in] */ wchar_t __RPC_FAR *pwchChars,
+            /* [in] */ int cchChars)
+{
+    return S_OK;
+}
+
+HRESULT STDMETHODCALLTYPE SAXContentHandlerImpl::processingInstruction( 
+            /* [in] */ wchar_t __RPC_FAR *pwchTarget,
+            /* [in] */ int cchTarget,
+            /* [in] */ wchar_t __RPC_FAR *pwchData,
+            /* [in] */ int cchData)
+{
+    return S_OK;
+}
+        
+HRESULT STDMETHODCALLTYPE SAXContentHandlerImpl::skippedEntity( 
+            /* [in] */ wchar_t __RPC_FAR *pwchVal,
+            /* [in] */ int cchVal)
+{
+    return S_OK;
+}
+
+long __stdcall SAXContentHandlerImpl::QueryInterface(const struct _GUID &amp;riid,void ** ppvObject)
+{
+    // hack-hack-hack!
+    return 0;
+}
+
+unsigned long __stdcall SAXContentHandlerImpl::AddRef()
+{
+    // hack-hack-hack!
+    return 0;
+}
+
+unsigned long __stdcall SAXContentHandlerImpl::Release()
+{
+    // hack-hack-hack!
+    return 0;
+}</PRE>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50congettingstartedwithsax2.htm">Getting Started with SAX2</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

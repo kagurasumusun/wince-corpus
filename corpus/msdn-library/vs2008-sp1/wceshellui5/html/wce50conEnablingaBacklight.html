@@ -1,0 +1,93 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Enabling a Backlight</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Enabling a Backlight"/>
+<MSHelp:RLTitle Title="Enabling a Backlight"/>
+<MSHelp:Keyword Index="A" Term="wce50conEnablingaBacklight"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Feature"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="os_shell.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="True"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="True"/>
+<MSHelp:Attr Name="PBFeature" Value="UI"/>
+<MSHelp:Attr Name="PBOnly" Value="True"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_3011094">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50conenablingabacklight"></A>Enabling a Backlight</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>If your hardware is equipped with a backlight, implement this functionality by setting the Backlight component as a Cplmain component in your Cesysgen.bat file. This component enables the backlight and allows your users to control the backlight settings.</P>
+
+<P>The following example shows a sample entry in a Cesysgen.bat file that defines the Backlight as a Cplmain component.</P>
+
+<PRE class="code">set CPLMAIN_COMPONENTS=%CPLMAIN_COMPONENTS% backlight</PRE>
+
+<P>In addition to including the Backlight component in your OS design, you should also create the following registry key.</P>
+
+<PRE class="code">[HKEY_CURRENT_USER\ControlPanel\Backlight]</PRE>
+
+<P>Once the backlight is enabled, your users can set separate backlight timeouts for battery and AC power. When a user changes these settings, the Control Panel updates the following registry values. Note that the units for these values are in seconds.</P>
+
+<PRE class="code">[HKEY_CURRENT_USER\ControlPanel\Backlight]
+    BatteryTimeout = DWORD
+    ACTimeout = DWORD</PRE>
+
+<P>Your display driver should read these values from the registry and turn off the backlight at the appropriate timeout. You can configure the initial values of these timeouts by setting these registry values to the appropriate defaults in your Project.reg file.</P>
+
+<P>Whenever a change occurs in the timeout values, the Control Panel signals an event named <B>BackLightChangeEvent</B>. This event eliminates the need for your display driver to constantly read the registry to monitor the timeout values for changes.</P>
+
+<P>The following example shows a display driver with a background thread that waits for the BackLightChangeEvent event.</P>
+
+<PRE class="code">//  Create an auto-reset named event, initially not set.
+//  CPL will signal this when something changes.
+HANDLE   hEvent = CreateEvent(NULL, FALSE, FALSE, "BackLightChangeEvent")
+for(;;)
+{
+   //  Wait on this event.
+   WaitForSingleObject(hEvent, INFINITE)
+   //  Awake. CPL must have changed some settings.
+   //  Read new settings from registry and do something useful
+   //  with the new settings.
+   //  Now loop back and wait again.
+}</PRE>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50concontrolpanelcomponents.htm">Control Panel Applications</A> | <A HREF="wce50conaddinganadvancedbacklightdialogbox.htm">Adding an Advanced Backlight Dialog Box</A> </P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

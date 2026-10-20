@@ -1,0 +1,312 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Configuring the Terminal Services Client</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Configuring the Terminal Services Client"/>
+<MSHelp:RLTitle Title="Configuring the Terminal Services Client"/>
+<MSHelp:Keyword Index="A" Term="wce50grfConfiguringTerminalServicesClient"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Target"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="True"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="thinclient_registry.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="True"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="True"/>
+<MSHelp:Attr Name="DesignTemplate" Value="ThinClient"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_1037842">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50grfconfiguringterminalservicesclient"></A>Configuring the Terminal Services Client</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>The Terminal Services Client is controlled by the Terminal Server Client node in the registry. The <B>HKEY_LOCAL_MACHINE\Software\Microsoft\Terminal Server Client</B> registry key controls the configuration of the Terminal Services Client. The following table shows the named values.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=33%>Value</TH>
+<TH width=67%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%><B>CEConfig</B></TD>
+<TD width=67%>Default setting is "WBT". The following list shows the available settings:
+<UL type="disc">
+	<LI>"WBT" indicates that the Terminal Services Client is running in a Windows Thin Client Shell. This is when SYSGEN_WBTSHELL = 1.</li>
+
+	<LI>"Maxall" indicates that the Terminal Services Client is not running the Windows Thin Client Shell. This is used in all other OS designs.</li>
+</UL>
+
+<P>The following list shows the behavior when WBT is set:
+
+<UL type="disc">
+	<LI>File change notifications through protected server library (PSL) calls are disabled.</li>
+
+	<LI>The Windows Thin Client Shell does not bring up the Windows CE Terminal Services Client (CETSC) user interface.</li>
+
+	<LI>Keyboard hooks are disabled for the Windows Thin Client Shell.</li>
+
+	<LI>Additional registry migration occurs for Windows Thin Client OS designs because the connections are started through registry settings and not through .rdp files.</li>
+</UL>
+
+<P>The following list describes issues that a Windows Thin Client might encounter if this value is set to "Maxall":
+
+<UL type="disc">
+	<LI>The Filesys.exe may crash when drive redirection is enabled and an attempt is made to copy a file by using the clipboard.</li>
+
+	<LI>The CETSC user interface appears in the Windows Thin Client when the dialog box about enabling drive redirection is cancelled.</li>
+
+	<LI>Hot key messages might be sent to remote sessions.</li>
+</UL>
+</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%><B>BitmapPersistCacheLocation </B></TD>
+<TD width=67%>Default setting is \Temp. This setting indicates the location of the bitmap cache.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%><B>DisableFileAccess </B></TD>
+<TD width=67%>Default setting is 1. This setting indicates whether the user has access to the local file system. A value of 1 indicates that access to the local file system is disabled and the <B>Save As</B> and <B>Open</B> buttons are not available in the UI. A value of zero (0) indicates that the user has access to the local file system.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%><B>FullScreenAlways</B></TD>
+<TD width=67%>Default setting ifor the Thin Client is 1. You should not change this value.
+<P>When this value is 1, windowed mode is disabled and the session is always run in full-screen mode.</P>
+</TD>
+</TR>
+</table></div>
+
+<P>The following code example shows the registry settings in Rdp.reg that associate .rdp files with CETSC.</P>
+
+<PRE class="code">[HKEY_CLASSES_ROOT\.rdp]
+    @="rdpfile"
+[HKEY_CLASSES_ROOT\rdpfile]
+    @=LOC_RDPCONNECTION
+[HKEY_CLASSES_ROOT\rdpfile\DefaultIcon]
+    @="\\Windows\\cetsc.exe,-101"
+[HKEY_CLASSES_ROOT\rdpfile\Shell\Open\Command]
+    @="\\Windows\\cetsc.exe %1"</PRE>
+
+<P>For more information, see <MSHelp:link keywords="wce50conRDPRegistrySettings" TABINDEX="0">RDP Registry Settings</MSHelp:link>.</P>
+
+<P>Additionally, when a Thin Client that has the Windows Thin Client Shell is deployed and run, user preferences are stored in the <B>HKey_Current_User\Software\Microsoft\Terminal Server Client\Default</B> registry key. This information is comparable to what is included in the .rdp file when a shell other than the Thin Client Shell is used. The following table shows the named values in this key.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=50%>Value</TH>
+<TH width=50%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><B>AudioRedirectionMode</B></TD>
+<TD width=50%>Default setting is 0. This setting indicates where the audio plays. A value of zero (0) indicates that the audio plays on the host computer. A value of 1 indicates that the audio plays on the remote device. A value of 2 indicates that the audio does not play.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><B>AutoReconnectionEnabled</B></TD>
+<TD width=50%>Default setting is 1. This setting indicates whether an attempt is made to automatically reconnect to the host if a connection is lost. A value of 1 indicates that automatic reconnection is enabled, and a value of zero (0) indicates that it is disabled.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><B>BBarEnabled</B></TD>
+<TD width=50%>Default setting is 1. This setting indicates whether to display the connection bar. A value of zero (0) indicates that the connection bar is not displayed, and a value of 1 indicates that it is displayed.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><B>BBarShowMinimizeBtn</B></TD>
+<TD width=50%>Default setting is 1. Indicates whether to display the minimize button on the connection bar. A value of zero (0) indicates that the minimize button is not displayed. A value of 1 indicates that it is displayed.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><B>BbarShowPinButton</B></TD>
+<TD width=50%>Default setting is 0. Indicates whether the pin button on the connection bar is displayed. A value of zero (0) indicates that pin button is not displayed, the connection bar remains on top, and all server output will appear below it. A value of 1 indicates that the pin button is displayed so that a user can unpin the connection bar from the UI.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><B>BBarShowRestoreBtn</B></TD>
+<TD width=50%>Default setting is 1. Indicates whether to display the restore button on the connection bar. A value of zero (0) indicates that the restore button is not displayed. A value of 1 indicates that it is displayed.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><B>BBarPinned</B></TD>
+<TD width=50%>Default setting is 1. Indicates whether to pin the connection bar to the shell. A value of zero (0) indicates that the connection bar is hidden automatically when the cursor is moved away from the connection bar. A value of 1 indicates that the connection bar is always displayed. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><B>BitmapCacheSize</B></TD>
+<TD width=50%>Default setting is 1500. Specifies the size, in KB, of the bitmap cache in memory.  The maximum value is 32000.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><B>BitmapPersistCacheLocation</B></TD>
+<TD width=50%>Default setting is \Temp. Indicates the location of the bitmap cache.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><B>BitmapPersistenceEnabled</B></TD>
+<TD width=50%>Default setting is 0. This setting indicates whether bitmap caching is selected. A value of zero (0) indicates that bitmap caching is not selected, and a value of 1 indicates that it is selected.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><B>ColorDepthID</B></TD>
+<TD width=50%>Default setting is 24. This setting indicates the color depth in bits per pixel (bpp). A value of zero (0) indicates 4 bpp. A value of 1 indicates 8 bpp. A value of 2 indicates 15 bpp. A value of 3 indicates 16 bpp. A value of 4 indicates 24 bpp.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><B>Compress</B></TD>
+<TD width=50%>Default setting is 1. This setting enables file and directory compression. Compression is on by default and it is recommended that it remain so.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><B>ConnectToServerConsole</B></TD>
+<TD width=50%>Default setting is 0. This setting is used only in non-Windows-based Thin Client run-time images. It indicates the console to connect to from the command line. A value of zero (0) indicates that the command connects to a Terminal Services session. Windows XP Professional ignores this setting. A value of 1 indicates that the command connects to the host console. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><B>desktopheight</B></TD>
+<TD width=50%>Default setting is 1024. This setting indicates height of the display, in pixels.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><B>desktopwidth</B></TD>
+<TD width=50%>Default setting is 1280. This setting indicates the width of the display, in pixels.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><B>disable full window drag</B></TD>
+<TD width=50%>Default setting is 1. This setting indicates whether full window drag capability is enabled or disabled. A value of 1 indicates that full window drag is enabled, and a value of zero (0) indicates that it is disabled.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><B>disable menu anims </B></TD>
+<TD width=50%>Default setting is 1. This setting indicates whether menu animation is enabled or disabled. A value of 1 indicates that animation is enabled, and a value of zero (0) indicates that it is disabled.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><B>disable themes</B></TD>
+<TD width=50%>Default setting is 0. This setting indicates whether themes are enabled or disabled. A value of 1 indicates that themes are enabled, and a value of zero (0) indicates that themes are disabled.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><B>disable wallpaper </B></TD>
+<TD width=50%>Default setting is 1. This setting indicates whether wallpaper is disabled or enabled. A value of 1 indicates that wallpaper is enabled, and a value of zero (0) indicates that it is disabled.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><B>DisableFileAccess</B></TD>
+<TD width=50%>Default setting is 1. Indicates whether the user has access to the local file system. A value of 1 indicates that access to the local file system is disabled and the <B>Save As</B> and <B>Open</B> buttons are not available in the UI. A value of zero (0) indicates that the user has access to the local file system.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><B>domain</B></TD>
+<TD width=50%>Indicates the domain of the person who can log on to the remote device. There is no default. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><B>EnableDriveRedirection</B></TD>
+<TD width=50%>Default setting is 1. This setting indicates whether drive redirection is enabled. A value of 1 indicates that drive redirection is on, and a value of zero (0) indicates that it is off.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><B>EnablePortRedirection </B></TD>
+<TD width=50%>Default setting is 1. This setting indicates whether COM port redirection is enabled. A value of 1 indicates that COM port redirection is on, and a value of zero (0) indicates that it is off. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><B>EnablePrinterRedirection </B></TD>
+<TD width=50%>Default setting is 1. This setting indicates whether printer redirection is enabled. A value of 1 indicates that printer redirection is on, and a value of zero (0) indicates that it is off.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><B>EnableSCardRedirection </B></TD>
+<TD width=50%>Default setting is 1. This setting indicates whether redirection of smart cards is allowed. A value of 1 indicates that redirection of smart cards is on, and a value of zero (0) indicates that it is off. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><B>KeyboardHookMode</B></TD>
+<TD width=50%>Default setting is 2. This setting indicates what is displayed when ALT-TAB is pressed on the keyboard. A value of zero (0) indicates items on the local device are displayed. A value of 1 indicates items on the remote device are displayed. A value of 2 indicates that the device is full-screen only.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><B>MaxReconnectAttempts</B></TD>
+<TD width=50%>Default setting is 20. This setting indicates the maximum number of attempts that are made to reconnect to the host after a connection is lost.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><B>MCSPort</B></TD>
+<TD width=50%>Used only in non-Windows-based Thin Client run-time images. It indicates the alternate Winsock port for the RDP.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><B>Password</B></TD>
+<TD width=50%>Indicates the password of the person identified in the <B>UserName</B> value.
+<BLOCKQUOTE class="dtBlock">
+<b class="le">Note&nbsp;&nbsp;&nbsp;</b>Windows CE reads saved passwords, but does not have the ACLs to securely write passwords.</BLOCKQUOTE>
+</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><B>ServerName</B></TD>
+<TD width=50%>Specifies the IP address of the remote device.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><B>StartFullScreen </B></TD>
+<TD width=50%>Default setting is 1. This setting indicates whether the terminal service session starts in full screen. A value of 1 indicates that the session starts in full screen, and a value of zero (0) indicates that it does not.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><B>AlternateShell</B></TD>
+<TD width=50%>Indicates the alternate shell or startup application.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><B>UserName</B></TD>
+<TD width=50%>Indicates the user name of a person who can log on to the remote device.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><B>WorkingDir</B></TD>
+<TD width=50%>Indicates the folder that contains the alternate shell or startup application.</TD>
+</TR>
+</table></div>
+
+<H2 class="dtH2">See Also</H2>
+
+<P><A HREF="wce50conthinclientregistrysettings.htm">Thin Client Registry Settings</A> | <MSHelp:link keywords="wce50conTerminalServicesClientConfigurationThroughRDPFile" TABINDEX="0">Terminal Services Client Configuration through the .rdp File</MSHelp:link></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, July 13, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

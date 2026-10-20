@@ -1,0 +1,144 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Push Router</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Push Router"/>
+<MSHelp:RLTitle Title="Push Router"/>
+<MSHelp:Keyword Index="A" Term="binary"/>
+<MSHelp:Keyword Index="A" Term="CDMA"/>
+<MSHelp:Keyword Index="A" Term="OMA DM over CDMA"/>
+<MSHelp:Keyword Index="A" Term="SMS-Binary"/>
+<MSHelp:Keyword Index="A" Term="conPushRouter"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Application"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbsmartphone"/>
+<MSHelp:Attr Name="Product" Value="kbPocketPC"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="Technology" Value="kbPocketPC"/>
+<MSHelp:Attr Name="Technology" Value="kbSmartphone"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="device_mgmt_mo.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="False"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_1060519">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Windows Mobile Version 5.0 SDK<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="conpushrouter"></A>Push Router</H1>
+<!--Feedback Link Top Start-->
+<P CLASS="feedback"><font size="1"><a href="mailto:medfdbk&#64;microsoft.com?subject=Product: Windows Mobile | Version: 5.0 | Release: SDK | Title: Push Router | Filename: conpushrouter.htm | Built on: Wednesday, September 14, 2005">Send Feedback</a> on this topic to the authors</font></p>
+<!--Feedback Link Top End-->
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>The Push Router component of the device management scheme is the central location for receiving, authenticating, and forwarding all of the incoming WAP push messages, including provisioning messages sent over a WAP push. The Push Router is responsible for determining the type of incoming push message and for passing the message to the matching client application to run the push content. </P>
+
+<P>Push Router tasks include the following:
+
+<UL type="disc">
+	<LI>Accept push messages, and authenticate the origin by using the Security Module that is part of the Push Router component.</li>
+
+	<LI>Assign a security role to the message, through the Security Module, based on the origin of the push message and authentication method. For information about roles, see <MSHelp:link keywords="wce51conSecurityRoles" TABINDEX="0">Security Roles</MSHelp:link>.</li>
+
+	<LI>Forward the relevant message with the assigned security role to the client application push client. </li>
+</UL>
+
+<P>The Push Router can accept data over the air through the Push Proxy Gateway (PPG) over the Global System for Mobile Communications (GSM) and Code Division Multiple Access (CDMA) Short Message Service (SMS) networks.</P>
+
+<P>The following diagram illustrates the Push Router architecture for Windows Mobile software for Pocket PC Phone Edition and Smartphone. </P>
+
+<P class="fig"><IMG SRC="dm2.gif" ALT="" BORDER=0>
+
+<DL>
+<DT>SMS Router</DT>
+
+<DD>The Short Message Service (SMS) Router is the first OS-level software component to receive incoming SMS messages from the network. It accepts SMS messages, determines their final destination, and delivers them to the appropriate software component on the device for processing. SMS messages move from the SMS Router to the appropriate layers of the Wireless Application Protocol (WAP) stack. The SMS Router is designed to route messages to one client per provider. </dd>
+
+<DT>WAP Stack</DT>
+
+<DD>The WAP component decodes the WAP push message and sends it to the Push Router.</dd>
+
+<DT>WSP Push Source</DT>
+
+<DD>The Push Router accepts and processes push messages from a Wireless Session Protocol (WSP) push source. This entry point receives push messages and passes information to the Push Router Core by means of the Source Interface. 
+
+<P>The WSP push source accepts only Wireless Application Protocol (WAP) connectionless nonsecure push messages that conform to the WAP push message format. For more information about the WAP Push Message, see <A HREF="conwappushmessageformat.htm">WAP Push Message Format</A>.
+</dd>
+
+<DT>Push Router Core</DT>
+
+<DD>The push router core initially processes an incoming push message, routes the message, and exposes the communication interfaces for the client and source components. 
+
+<P>When the Push Router Core receives a new message, it is forwarded to the Security Module for authentication and role assignment. After the Security Module processes the message, it sends the message back to the Push Router Core as configuration request that is encoded in an XML document format. The Push Router Core then routes the message to the Configuration Manager. For more information, see <A HREF="conroutingmessagesformo.htm">Routing Messages for Mobile Operators</A>.
+</dd>
+
+<DT>Security Module</DT>
+
+<DD>This is an autonomous component within the Push Router Core. 
+
+<P>It is a generic module that can authenticate messages depending on what they are signed with. Currently, the two authentication methods supported by this module are WAP authentication and OMA-DM trigger notification authentication. All other methods are passed through the default security provider instead of the OMA Client Provisioning security provider or OMA DM security provider.
+
+
+<P>The Security Module authenticates an incoming push message and assigns a security role to it. The Push Router handles submissions to the Security Module. 
+
+
+<P>As a guideline, Windows Mobile-based devices use all authentication methods defined in the WAP Provisioning Bootstrap Specification, WAP-184-PROVBOOT, Version 14-March-2001. This specification is at <A href="http://go.microsoft.com/fwlink/?LinkId=31849" TARGET="_blank">This OMA website</A>.
+
+
+<P>Authentication is transparent to the user. One of the following occurs:
+
+
+<UL type="disc">
+	<LI>If authentication fails, the message is discarded.</li>
+
+	<LI>If authentication succeeds, the Security Module sends the message back to the Push Router Core. For more information, see <MSHelp:link keywords="mob5grfSecurity" TABINDEX="0">Security</MSHelp:link>.</li>
+</UL>
+</dd>
+
+<DT>OMA DM Transport Client</DT>
+
+<DD>OMA DM Transport Client receives and executes OMA DM notification push messages. OMA DM transport client receives the push payloads through the Client Interface of the Push Router Core. </dd>
+
+<DT>ConfigHost Push Client</DT>
+
+<DD>The ConfigHost Push Client accepts OMA Client Provisioning messages from the push router. If the message is wbxml encoded, the ConfigHost push client invokes the wbxml decoder, which decodes it. The push client then sends the provisioning xml to the Configuration Manager.
+
+<P>For more information, about the Configuration Manager, see <MSHelp:link keywords="conDataFromPushRouter" TABINDEX="0">Data from Push Router</MSHelp:link> and <MSHelp:link keywords="conConfigurationManager" TABINDEX="0">Configuration Manager</MSHelp:link> and <A HREF="wce51conconfigurationmanager2.htm">Configuration Manager2</A>.
+</dd>
+</DL>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50oridevicemanagement.htm">Managing Devices</A> | <A HREF="conwappushmessageformat.htm">WAP Push Message Format</A> | <A HREF="consettingpushrouterpolicies.htm">Setting Push Router Policies</A> | <A HREF="wce51conwappushotaprotocolfeatures.htm">WAP Push OTA Protocol Features</A> | <A HREF="wce51conotabootstrappingthroughwappush.htm">Provisioning OTA Through a WAP Push</A> | <MSHelp:link keywords="wce51conSecurityRoles" TABINDEX="0">Security Roles</MSHelp:link> </P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Feedback Link Bottom Start-->
+<p><font size="1"><a href="mailto:medfdbk&#64;microsoft.com?subject=Product: Windows Mobile | Version: 5.0 | Release: SDK | Title: Push Router | Filename: conpushrouter.htm | Built on: Wednesday, September 14, 2005">Send Feedback</a> on this topic to the authors</font></p>
+<!--Feedback Link Bottom End-->
+<!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="mob5conCopyrightInformationForMagneto" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link></font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

@@ -1,0 +1,104 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Raw Sockets</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Raw Sockets"/>
+<MSHelp:RLTitle Title="Raw Sockets"/>
+<MSHelp:Keyword Index="A" Term="wce51conTCPIPRawSockets"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Application"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbsmartphone"/>
+<MSHelp:Attr Name="Product" Value="kbPocketPC"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="Technology" Value="kbPocketPC"/>
+<MSHelp:Attr Name="Technology" Value="kbSmartphone"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="Winsock_Concepts_Bowmore.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="False"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_1062756">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Windows Mobile Version 5.0 SDK<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce51contcpiprawsockets"></A>Raw Sockets</H1>
+<!--Feedback Link Top Start-->
+<P CLASS="feedback"><font size="1"><a href="mailto:medfdbk&#64;microsoft.com?subject=Product: Windows Mobile | Version: 5.0 | Release: SDK | Title: Raw Sockets | Filename: wce51contcpiprawsockets.htm | Built on: Wednesday, September 14, 2005">Send Feedback</a> on this topic to the authors</font></p>
+<!--Feedback Link Top End-->
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>Windows CE-based devices support raw sockets. To enhance security, only trusted applications are allowed to open raw sockets. The TCP/IP service providers may support the SOCK_RAW socket type. </P>
+
+<BLOCKQUOTE class="dtBlock">
+<b class="le">Note</b>&nbsp;&nbsp;&nbsp;Raw sockets are supported only for IPv4. SOCK_RAW is not supported for IPv6 or any other protocol.</BLOCKQUOTE>
+
+<P>There are two types of such sockets:
+
+<UL type="disc">
+	<LI>The first type assumes a known protocol type as written in the IP header. An example of the first type of socket is ICMP. </li>
+
+	<LI>The second type allows any protocol number. An example of the second type would be an experimental protocol that is not supported by the service provider. </li>
+</UL>
+
+<P>If a service provider supports SOCK_RAW sockets for a range of protocols or installs itself over the default raw sockets protocol chain, the provider should set the <B>PFL_HIDDEN</B> flag when calling the <A HREF="wce50lrfwscinstallprovider.htm">WSCInstallProvider</A> function. This flag is prevents the name of the provider from appearing in the query to <B>WSAEnumProtocols</B>. This is useful for the applications that are checking for protocol support.</P>
+
+<P>Providers should set the <B>PFL_Hidden</B> flag while calling the <A HREF="wce50lrfwscinstallprovider.htm">WSCInstallProvider</A> function.</P>
+
+<P>The following rules are applied to the operations over SOCK_RAW sockets:
+
+<UL type="disc">
+	<LI>When an application sends a datagram it may or may not include the IP header at the front of the outgoing datagrams depending on the<B> </B>IP_HDRINCL option set for the socket. The IP_HDRINCL option can be set by calling the <A HREF="wce50lrfsetsockoptwindowssockets.htm">setsockopt (Windows Sockets)</A> function.
+<BLOCKQUOTE class="dtBlock">
+<b class="le">Note</b>&nbsp;&nbsp;&nbsp; If the IP_HDRINCL option set for the socket, Windows CE checks the header to ensure that the protocol field is not set to TCP. If it is, then the WSAEPROTONOSUPPORT error code is returned.</BLOCKQUOTE>
+</li>
+
+	<LI>An application always gets the IP header at the front of each received datagram regardless of the IP_HDRINCL option. </li>
+
+	<LI>Received datagrams are copied into all SOCK_RAW sockets that satisfy the following conditions:
+<UL type="disc">
+	<LI>The protocol number specified for the socket should match the protocol number in the IP header of the received datagram. </li>
+
+	<LI>If a local IP address is defined for the socket, it should correspond to the destination address as specified in the IP header of the received datagram. An application may specify the local IP address by calling bind functions. If no local IP address is specified for the socket, the datagrams are copied into the socket regardless of the destination IP address in the IP header of the received datagram. </li>
+
+	<LI>If a foreign address is defined for the socket, it should correspond to the source address as specified in the IP header of the received datagram. An application may specify the foreign IP address by calling connect functions. If no foreign IP address is specified for the socket, the datagrams are copied into the socket regardless of the source IP address in the IP header of the received datagram. </li>
+</UL>
+</li>
+</UL>
+
+<P>It is important to understand that SOCK_RAW sockets may get many unexpected datagrams. For example, a PING program may use SOCK_RAW sockets to send ICMP echo requests. While the application is expecting ICMP echo responses, all other ICMP messages (such as ICMP HOST_UNREACHABLE) may be delivered to this application also. Moreover, if several SOCK_RAW sockets are open on a machine at the same time, the same datagrams may be delivered to all the open sockets. An application must have a mechanism to recognize its datagram and to ignore all others. Such mechanism may include inspecting the received IP header&#0150;using unique identifiers in the ICMP header (ProcessID, for example), and so forth.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50oriwinsockapplicationdevelopment.htm">Winsock Application Development</A> | <A HREF="wce50conwinsocksecurity.htm">Winsock Security</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Feedback Link Bottom Start-->
+<p><font size="1"><a href="mailto:medfdbk&#64;microsoft.com?subject=Product: Windows Mobile | Version: 5.0 | Release: SDK | Title: Raw Sockets | Filename: wce51contcpiprawsockets.htm | Built on: Wednesday, September 14, 2005">Send Feedback</a> on this topic to the authors</font></p>
+<!--Feedback Link Bottom End-->
+<!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="mob5conCopyrightInformationForMagneto" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link></font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

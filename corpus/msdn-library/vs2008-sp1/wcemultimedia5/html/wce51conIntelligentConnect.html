@@ -1,0 +1,108 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Intelligent Connect</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Intelligent Connect"/>
+<MSHelp:RLTitle Title="Intelligent Connect"/>
+<MSHelp:Keyword Index="A" Term="wce51conIntelligentConnect"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Feature"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="directshow_concepts1.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="False"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+<MSHelp:Attr Name="PBFeature" Value="SYSGEN_DSHOW"/>
+<MSHelp:Attr Name="PBOnly" Value="False"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_1067896">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce51conintelligentconnect"></A>Intelligent Connect</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>Intelligent Connect is the mechanism the Filter Graph Manager uses to build filter graphs. It consists of several related algorithms that select filters and add them to the filter graph. For application programming, you rarely need to know the details of Intelligent Connect. Read this section if you are having trouble building a certain filter graph and want to troubleshoot the problem, or if you are writing your own filter and want to make it available for automatic graph building. </P>
+
+<P>Intelligent Connect involves the following <A HREF="wce50lrfigraphbuilderinterface.htm">IGraphBuilder interface</A> methods: 
+
+<UL type="disc">
+	<LI><A HREF="wce50lrfigraphbuilderrender.htm">IGraphBuilder::Render</A> </li>
+
+	<LI><A HREF="wce50lrfigraphbuilderaddsourcefilter.htm">IGraphBuilder::AddSourceFilter</A> </li>
+
+	<LI><A HREF="wce50lrfigraphbuilderrenderfile.htm">IGraphBuilder::RenderFile</A> </li>
+
+	<LI><A HREF="wce50lrfigraphbuilderconnect.htm">IGraphBuilder::Connect</A></li>
+</UL>
+
+<P>The <B>IGraphBuilder::Render</B> method builds a subsection of a graph. It starts from an unconnected output pin and works downstream, adding new filters as needed. The starting filter must already be in the graph. At each step, the <B>IGraphBuilder::Render</B> method searches for a filter that can connect to the previous filter. The stream can branch if a connecting filter has multiple output pins. The search stops when every stream has a renderer. If the <B>IGraphBuilder::Render </B>method gets stuck, it might back up and try again, using a different set of filters. </P>
+
+<P>To connect each output pin, the <B>IGraphBuilder::Render</B> method does the following: 
+
+<OL type="1">
+	<LI>The Filter Graph Manager tries to use filters that are cached in memory, if any. Throughout the Intelligent Connect process, the Filter Graph Manager may cache filters from earlier steps in the process. </li>
+
+	<LI>If the filter graph contains any filters with unconnected input pins, the Filter Graph Manager tries them next. You can force the <B>IGraphBuilder::Render </B>method to try a particular filter by adding that filter to the graph before calling <B>IGraphBuilder::Render</B>. </li>
+
+	<LI>Finally, the Filter Graph Manager searches the registry, using the <A HREF="wce50lrfifiltermapperenummatchingfilters.htm">IFilterMapper::EnumMatchingFilters</A> method. It tries to match the output pin's preferred media types against media types listed in the registry.</li>
+</OL>
+
+<P>Each filter is registered with a <I>merit</I>, a numerical value that indicates how preferable the filter is, relative to other filters. The <B>IFilterMapper::EnumMatchingFilters </B>method returns filters in order of merit, with a minimum merit of MERIT_DO_NOT_USE + 1. It ignores filters with a merit of MERIT_DO_NOT_USE or less. Filters are also grouped into categories, defined by GUID. Categories themselves have merit, and the <B>IFilterMapper::EnumMatchingFilters</B> method ignores any category with a merit of MERIT_DO_NOT_USE or less, even if the filters in that category have higher merit values. </P>
+
+<P>To summarize, the <B>Render</B> method tries filters in the following order: 
+
+<OL type="1">
+	<LI>Try cached filters. </li>
+
+	<LI>Try filters in the graph. </li>
+
+	<LI>Look up filters in the registry. </li>
+</OL>
+
+<P>The <B>IGraphBuilder::AddSourceFilter</B> method adds a source filter that can render a specified file. First it looks in the registry and matches against the protocol (such as http://), the file extension, or a set of predetermined <I>check bytes</I>, which are bytes at particular offsets in the file that match certain patterns. For details, see <A HREF="wce50conregisteringacustomfiletype.htm">Registering a Custom File Type</A>. Assuming that the method locates an appropriate source filter, it then creates an instance of that filter, adds it to the graph, and calls the filter's <A HREF="wce50lrfifilesourcefilterload.htm">IFileSourceFilter::Load</A> method with the file name. </P>
+
+<P>The <B>IGraphBuilder::RenderFile</B> method builds a default playback graph from a file name. Internally, this method uses <B>IGraphBuilder::AddSourceFilter</B> to locate the correct source filter, and <B>IGraphBuilder::Render</B> to build the rest of the graph.</P>
+
+<P>The <B>IGraphBuilder::Connect</B> method connects and output pin to an input pin. This method adds intermediate filters if needed, using a variation of the algorithm described for the <B>IGraphBuilder::Render</B> method: 
+
+<OL type="1">
+	<LI>Try a direct connection between the filters, with no intermediate filters. </li>
+
+	<LI>Try cached filters. </li>
+
+	<LI>Try filters in the graph. </li>
+
+	<LI>Look up filters in the registry. </li>
+</OL>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

@@ -1,0 +1,121 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>XXX_Init (Device Manager)</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="XXX_Init (Device Manager)"/>
+<MSHelp:RLTitle Title="XXX_Init (Device Manager)"/>
+<MSHelp:Keyword Index="K" Term="XXX_Init (Device Manager)"/>
+<MSHelp:Keyword Index="A" Term="wce50lrfXXXInit15"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Driver"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="False"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="apiref"/>
+<MSHelp:Attr Name="Filename" Value="stream_reference.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="False"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="True"/>
+<MSHelp:Attr Name="APIName" Value="XXX_Init"/>
+<MSHelp:Attr Name="APIType" Value="IDLDef"/>
+<MSHelp:Attr Name="APILocation" Value="Developer implemented"/>
+<MSHelp:Attr Name="PBFeature" Value="StreamDriver"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_3019295">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50lrfxxxinit15"></A><I>XXX</I>_Init (Device Manager)</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>This function initializes a device.</P>
+
+<PRE class="syntax"><B>DWORD</B> <B><I>XXX</I>_Init(</B>
+  <B>LPCTSTR </B><I>pContext</I><B>,</B>
+  <B>LPCVOID </B><I>lpvBusContext</I>
+<B>);</B></PRE>
+
+<H4 class="dtH4">Parameters</H4>
+
+<DL>
+<DT><I>pContext</I></DT>
+
+<DD>[in] Pointer to a string containing the registry path to the active key for the stream interface driver.</dd>
+
+<DT><I>lpvBusContext</I></DT>
+
+<DD>[in] Potentially process-mapped pointer passed as the fourth parameter to <MSHelp:link keywords="wce50lrfActivateDeviceEx" TABINDEX="0">ActivateDeviceEx</MSHelp:link>. If this driver was loaded through legacy mechanisms, then <I>lpvBusContext</I> is zero. This pointer, if used, has only been mapped again as it passes through the protected server library (PSL). The <B><I>XXX</I>_Init</B> function is responsible for performing all protection checking. In addition, any pointers referenced through <I>lpvBusContext</I> must be remapped with the <B>MapCallerPtr</B> function before they can be dereferenced.</dd>
+</DL>
+
+<H4 class="dtH4">Return Values</H4>
+
+<P>Returns a handle to the device context created if successful. Returns zero if not successful. This handle is passed to the <A HREF="wce50lrfxxxopen17.htm">XXX_Open (Device Manager)</A>, <A HREF="wce50lrfxxxpowerdown.htm">XXX_PowerDown (Device Manager)</A>, <A HREF="wce50lrfxxxpowerup.htm">XXX_PowerUp (Device Manager)</A>, and <A HREF="wce50lrfxxxdeinit14.htm">XXX_Deinit (Device Manager)</A> functions.</P>
+
+<H4 class="dtH4">Remarks</H4>
+
+<P>Device Manager calls this function as a result of a call to the <MSHelp:link keywords="wce50lrfActivateDeviceEx" TABINDEX="0">ActivateDeviceEx</MSHelp:link> function. When the user starts using a device, such as inserting a PC Card, Device Manager calls this function to initialize the device. Applications do not call this function. </P>
+
+<P>If your steam interface supports multiple instances of the same type of device file name, you only need to expect one call to the <B><I>XXX</I>_Init</B> function for each instance of the device file name. The <B><I>XXX</I>_Init</B> function returns a separate handle each time it executes. An example is the sample serial port driver, located in %_WINCEROOT%\Public\Common\Oak\Drivers\Serial. It supports multiple COMx: device file names. Stream interfaces that only support one instance of a device file name can return any non-zero value.</P>
+
+<P>Device Manager specifies a pointer to a string containing the registry path to the active key of the specific PC Card device in the <I>pContext </I>parameter. Usually, the string contains the registry path to a numbered subkey of the <B>HKEY_LOCAL_MACHINE\Drivers\Active</B> registry key. Your initialization function uses this information to access data stored in the registry.</P>
+
+<P>The following list shows the tasks this function can perform:
+
+<UL type="disc">
+	<LI>Initialize the installed device to a default state.</li>
+
+	<LI>Allocate resources used globally by the device driver.</li>
+
+	<LI>Register a status callback function with PC Card Services. 
+<P>When the status of the device changes, the operating system calls this status callback function. For example, the status of a PC Card changes when you insert it or remove it.
+</li>
+
+	<LI>Map system memory and I/O space to a PC Card device memory and I/O space.</li>
+
+	<LI>Request notification on specific callback events.</li>
+
+	<LI>Register an interrupt callback function for an interrupt-driven device. 
+<P>When the device generates an interrupt, the operating system calls this interrupt callback function.
+</li>
+</UL>
+
+<P>Device Manager uses the <B><I>XXX</I></B> prefix. When implementing the stream interface, replace <B><I>XXX</I></B> with a prefix appropriate for your specific implementation or use undecorated entry point names in conjunction with DEVFLAGS_NAKEDENTRIES. For more information about other valid <B>Flags</B> values, see <A HREF="wce50lrfactivatedeviceex.htm">ActivateDeviceEx</A>.</P>
+
+<H4 class="dtH4">Requirements</H4>
+
+<P><B>OS Versions:</B> Windows CE 1.0 and later.<BR>
+<B>Header:</B> Developer implemented.<BR>
+<B>Link Library:</B> Developer implemented.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><MSHelp:link keywords="wce50conDeviceFileNames" TABINDEX="0">Device File Names</MSHelp:link> | <MSHelp:link keywords="wce50lrfActivateDeviceEx" TABINDEX="0">ActivateDeviceEx</MSHelp:link> | <A HREF="wce50lrfxxxdeinit14.htm">XXX_Deinit (Device Manager)</A> | <A HREF="wce50lrfxxxiocontrol16.htm">XXX_IOControl (Device Manager)</A> | <A HREF="wce50lrfxxxopen17.htm">XXX_Open (Device Manager)</A> | <A HREF="wce50lrfxxxpowerdown.htm">XXX_PowerDown (Device Manager)</A> | <A HREF="wce50lrfxxxpowerup.htm">XXX_PowerUp (Device Manager)</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

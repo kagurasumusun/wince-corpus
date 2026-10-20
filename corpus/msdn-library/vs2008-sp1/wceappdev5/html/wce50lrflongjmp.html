@@ -1,0 +1,119 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>longjmp</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="longjmp"/>
+<MSHelp:RLTitle Title="longjmp"/>
+<MSHelp:Keyword Index="K" Term="longjmp"/>
+<MSHelp:Keyword Index="A" Term="wce50lrflongjmp"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Application"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="False"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="Technology" Value="CRT"/>
+<MSHelp:Attr Name="TechnologyVers" Value="kbCRT"/>
+<MSHelp:Attr Name="TopicType" Value="apiref"/>
+<MSHelp:Attr Name="Filename" Value="crt2.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="False"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+<MSHelp:Attr Name="APIName" Value="longjmp"/>
+<MSHelp:Attr Name="APIType" Value="DLLExport"/>
+<MSHelp:Attr Name="APILocation" Value="coredll.dll"/>
+<MSHelp:Attr Name="PBFeature" Value="SYSGEN_FULL_CRT"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_3026803">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50lrflongjmp"></A>longjmp</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>Restores stack environment and execution locale.</P>
+
+<PRE class="syntax"><B>void longjmp( </B>
+<B>&nbsp;&nbsp;&nbsp;jmp_buf</B> <I>env</I><B>,</B> 
+   <B>int</B> <I>value</I><B> </B>
+<B>);</B></PRE>
+
+<H4 class="dtH4">Parameters</H4>
+
+<DL>
+<DT><I>env</I></DT>
+
+<DD>Variable in which environment is stored.</dd>
+
+<DT><I>value</I></DT>
+
+<DD>Value to be returned to <A HREF="wce50lrfsetjmp.htm">setjmp</A> call.</dd>
+</DL>
+
+<H4 class="dtH4">Return Values</H4>
+
+<P>None.</P>
+
+<H4 class="dtH4">Remarks</H4>
+
+<P>The <B>longjmp</B> function restores a stack environment and execution locale previously saved in <I>env</I> by <B>setjmp</B>. </P>
+
+<P><B>setjmp</B> and <B>longjmp</B> provide a way to execute a nonlocal <B>goto</B>; they are typically used to pass execution control to error-handling or recovery code in a previously called routine without using the normal call and return conventions.</P>
+
+<P>A call to <B>setjmp</B> causes the current stack environment to be saved in <I>env</I>. A subsequent call to <B>longjmp</B> restores the saved environment and returns control to the point immediately following the corresponding <B>setjmp</B> call. Execution resumes as if <I>value</I> had just been returned by the <B>setjmp</B> call. </P>
+
+<P>The values of all variables (except register variables) that are accessible to the routine receiving control contain the values they had when <B>longjmp</B> was called. </P>
+
+<P>The values of register variables are unpredictable. The value returned by <B>setjmp</B> must be nonzero. If <I>value</I> is passed as 0, the value 1 is substituted in the actual return.</P>
+
+<P>Call <B>longjmp</B> before the function that called <B>setjmp</B> returns; otherwise the results are unpredictable.</P>
+
+<P>Observe the following restrictions when using <B>longjmp</B>:
+
+<UL type="disc">
+	<LI>Do not assume that the values of the register variables will remain the same. The values of register variables in the routine calling <B>setjmp</B> may not be restored to the proper values after <B>longjmp</B> is executed. </li>
+
+	<LI>Do not use <B>longjmp</B> to transfer control out of an interrupt-handling routine unless the interrupt is caused by a floating-point exception. In this case, a program may return from an interrupt handler via <B>longjmp</B> if it first reinitializes the floating-point math package by calling _<B>fpreset</B>.</li>
+
+	<LI>Be careful when using <B>setjmp</B> and <B>longjmp</B> in C++ programs. Because these functions do not support C++ object semantics, it is safer to use the C++ exception-handling mechanism.</li>
+
+	<LI>Using the <B>longjmp</B> or <B>setjmp</B> C runtime routines in a C++ file will generate a link error if C++ exceptions are enabled by using the <MSHelp:link keywords="wce50conGXEnableExceptionHandling" TABINDEX="0">/GX - Enable Exception Handling</MSHelp:link> compiler option. This behavior is by design in Windows CE. </li>
+</UL>
+
+<H4 class="dtH4">Requirements</H4>
+
+<P><B>OS Versions: </B>Windows CE 2.0 and later.<BR>
+<B>Header: </B>stdlib.h.<BR>
+<B>Link Library: </B>coredll.dll.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50lrfsetjmp.htm">setjmp</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

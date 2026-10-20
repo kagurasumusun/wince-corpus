@@ -1,0 +1,130 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>CoReleaseMarshalData</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="CoReleaseMarshalData"/>
+<MSHelp:RLTitle Title="CoReleaseMarshalData"/>
+<MSHelp:Keyword Index="K" Term="CoReleaseMarshalData"/>
+<MSHelp:Keyword Index="A" Term="wce50lrfCoReleaseMarshalData"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Feature"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="apiref"/>
+<MSHelp:Attr Name="Filename" Value="com_functions2.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="False"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+<MSHelp:Attr Name="APIName" Value="CoReleaseMarshalData"/>
+<MSHelp:Attr Name="APIType" Value="LibDef"/>
+<MSHelp:Attr Name="APILocation" Value="Ole32.lib"/>
+<MSHelp:Attr Name="PBFeature" Value="SYSGEN_DCOM"/>
+<MSHelp:Attr Name="PBOnly" Value="False"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_3003543">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50lrfcoreleasemarshaldata"></A>CoReleaseMarshalData</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>This function destroys a previously marshaled data packet. </P>
+
+<PRE class="syntax"><B>STDAPI CoReleaseMarshalData(</B>
+<B> </B> <B>IStream* </B><I>pStm</I><B> </B>
+<B>);</B></PRE>
+
+<H4 class="dtH4">Parameters</H4>
+
+<DL>
+<DT><I>pStm</I></DT>
+
+<DD>[in] Pointer to the stream that contains the data packet to be destroyed.</dd>
+</DL>
+
+<H4 class="dtH4">Return Values</H4>
+
+<P>This function supports the standard return values E_FAIL, E_INVALIDARG,</P>
+
+<P>E_OUTOFMEMORY, and E_UNEXPECTED, as well as the following:
+
+<DL>
+<DT>S_OK</DT>
+
+<DD>The data packet was successfully destroyed.</dd>
+
+<DT>STG_E_INVALIDPOINTER</DT>
+
+<DD>An <B>IStream</B> error dealing with the <I>pStm</I> parameter.</dd>
+
+<DT>CO_E_NOTINITIALIZED</DT>
+
+<DD>The <A HREF="wce50lrfcoinitialize.htm">CoInitialize</A> function was not called on the current thread before this function was called.</dd>
+</DL>
+
+<H4 class="dtH4">Remarks</H4>
+
+<P>The <B>CoReleaseMarshalData</B> function performs the following tasks:
+
+<OL type="1">
+	<LI>The function reads a CLSID from the stream. </li>
+
+	<LI>If COM's default marshaling implementation is being used, the function gets an <A HREF="wce50lrfimarshaliunknown.htm">IMarshal</A> pointer to an instance of the standard unmarshaler. 
+<P>If custom marshaling is being used, the function creates a proxy by calling the <A HREF="wce50lrfcocreateinstance.htm">CoCreateInstance</A> function, passing the CLSID it read from the stream, and requesting an <B>IMarshal</B> interface pointer to the newly created proxy. 
+</li>
+
+	<LI>Using whichever <B>IMarshal</B> interface pointer it has acquired, the function calls <A HREF="wce50lrfimarshalreleasemarshaldata.htm">IMarshal::ReleaseMarshalData</A>. </li>
+</OL>
+
+<P>Typically your application will not call this function. It might need to call this function only if using custom marshaling to write and use a special implementation of <B>IMarshal</B>. The following are examples of situations for which <B>CoReleaseMarshalData</B> should be called:
+
+<UL type="disc">
+	<LI>A failed attempt has been made to unmarshal the data packet.</li>
+
+	<LI>A marshaled data packet has been removed from a global table.</li>
+</UL>
+
+<P>As an analogy, the data packet can be thought of as a reference to the original object, just as if it were another interface pointer being held on the object. Like a real interface pointer, that data packet must be released at some point. The use of <B>IMarshal::ReleaseMarshalData</B> to release data packets is analogous to the use of <A HREF="wce50lrfiunknownrelease.htm">IUnknown::Release</A> to release interface pointers. </P>
+
+<P>Note that your application does not need to call <B>CoReleaseMarshalData</B> after a successful call of the <A HREF="wce50lrfcounmarshalinterface.htm">CoUnmarshalInterface</A> function. That function releases the marshal data as part of its processing. </P>
+
+<P>To determine whether the platform supports this function, see <A HREF="wce50condeterminingsupportedcomapis.htm">Determining Supported COM APIs</A>.</P>
+
+<H4 class="dtH4">Requirements</H4>
+
+<P><B>OS Versions:</B> Windows CE 3.0 and later.<BR>
+<B>Header:</B> Objbase.h.<BR>
+<B>Link Library:</B> Ole32.lib.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50grfcomfunctions.htm">COM Functions</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

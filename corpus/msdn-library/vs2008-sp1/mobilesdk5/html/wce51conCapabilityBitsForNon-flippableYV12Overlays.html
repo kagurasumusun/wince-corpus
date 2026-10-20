@@ -1,0 +1,201 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Capability Bits for Non-flippable YV12 Overlays</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Capability Bits for Non-flippable YV12 Overlays"/>
+<MSHelp:RLTitle Title="Capability Bits for Non-flippable YV12 Overlays"/>
+<MSHelp:Keyword Index="K" Term="code example, Capability bits for non-flippable YV12 overlays"/>
+<MSHelp:Keyword Index="A" Term="wce51conCapabilityBitsForNon-flippableYV12Overlays"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Application"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbsmartphone"/>
+<MSHelp:Attr Name="Product" Value="kbPocketPC"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="Technology" Value="kbPocketPC"/>
+<MSHelp:Attr Name="Technology" Value="kbSmartphone"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="directdraw_concepts_magneto.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="True"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_1073292">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Windows Mobile Version 5.0 SDK<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce51concapabilitybitsfornon-flippableyv12overlays"></A>Capability Bits for Non-flippable YV12 Overlays</H1>
+<!--Feedback Link Top Start-->
+<P CLASS="feedback"><font size="1"><a href="mailto:medfdbk&#64;microsoft.com?subject=Product: Windows Mobile | Version: 5.0 | Release: SDK | Title: Capability Bits for Non-flippable YV12 Overlays | Filename: wce51concapabilitybitsfornon-flippableyv12overlays.htm | Built on: Wednesday, September 14, 2005">Send Feedback</a> on this topic to the authors</font></p>
+<!--Feedback Link Top End-->
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>The following code example shows how to set the DirectDraw capability bits for YV12 overlays that cannot be flipped.</P>
+
+<BLOCKQUOTE class="dtBlock">
+<b class="le">Note</b>&nbsp;&nbsp;&nbsp;To make the following code example easier to read, security checking and error handling are not included. This code example should not be used in a release configuration unless it has been modified to include them.</BLOCKQUOTE>
+
+<PRE class="code">#include "precomp.h"
+
+DWORD g_FourCC[] = {
+    FOURCC_YV12,
+};
+
+#define MAX_FOURCC ( sizeof ( g_FourCC ) / sizeof ( g_FourCC[0] ) )
+
+// callbacks from the DIRECTDRAW object
+
+DDHAL_DDCALLBACKS cbDDCallbacks =
+{
+    sizeof( DDHAL_DDCALLBACKS ),
+        DDHAL_CB32_CREATESURFACE        |
+        DDHAL_CB32_WAITFORVERTICALBLANK |
+        DDHAL_CB32_CANCREATESURFACE     |
+//      DDHAL_CB32_CREATEPALETTE        |
+//      DDHAL_CB32_GETSCANLINE          |
+        0,
+    DDGPECreateSurface,
+    DDGPEWaitForVerticalBlank,
+    DDGPECanCreateSurface,
+    NULL,
+    NULL
+};
+
+// callbacks from the DIRECTDRAWSURFACE object
+
+DDHAL_DDSURFACECALLBACKS cbDDSurfaceCallbacks =
+{
+    sizeof( DDHAL_DDSURFACECALLBACKS ),
+        DDHAL_SURFCB32_DESTROYSURFACE     |
+        DDHAL_SURFCB32_LOCK               |
+        DDHAL_SURFCB32_UNLOCK             |
+        DDHAL_SURFCB32_SETCOLORKEY        |
+        DDHAL_SURFCB32_GETBLTSTATUS       |
+        DDHAL_SURFCB32_UPDATEOVERLAY      |
+        DDHAL_SURFCB32_SETOVERLAYPOSITION |
+//      DDHAL_SURFCB32_SETPALETTE         |
+        0,
+    DDGPEDestroySurface,
+    NULL,
+    DDGPELock,
+    DDGPEUnlock,
+    DDGPESetColorKey,
+    HalGetBltStatus,
+    NULL,
+    HalUpdateOverlay,
+    HalSetOverlayPosition,
+    NULL
+};
+
+// InitDDHALInfo must set up this information
+unsigned long    g_nVideoMemorySize  = 0L;
+unsigned char *  g_pVideoMemory      = NULL; // virtual address of video
+                                             // memory from client's side
+DWORD            g_nTransparentColor = 0L;
+
+EXTERN_C void 
+buildDDHALInfo(
+    LPDDHALINFO lpddhi,
+    DWORD modeidx 
+    )
+{
+    GPEFlat * pGPEFlat = static_cast&lt;GPEFlat *&gt;(GetDDGPE());
+
+    if( !g_pVideoMemory )   // in case this is called more than once...
+    {
+        unsigned long VideoMemoryStart;
+
+        pGPEFlat-&gt;GetVirtualVideoMemory( &amp;VideoMemoryStart,
+                                         &amp;g_nVideoMemorySize );
+        DEBUGMSG( GPE_ZONE_INIT,
+          (TEXT("GetVirtualVideoMemory returned addr=0x%08x size=%d\r\n"),
+          VideoMemoryStart, g_nVideoMemorySize));
+
+        g_pVideoMemory = (BYTE*)VideoMemoryStart;
+        DEBUGMSG( GPE_ZONE_INIT,
+                  (TEXT("gpVidMem=%08x\r\n"), g_pVideoMemory ));
+    }
+
+    memset( lpddhi, 0, sizeof(DDHALINFO) ); // Clear the DDHALINFO
+                                            // structure
+    lpddhi-&gt;dwSize = sizeof(DDHALINFO);
+
+    lpddhi-&gt;lpDDCallbacks = &amp;cbDDCallbacks;
+    lpddhi-&gt;lpDDSurfaceCallbacks = &amp;cbDDSurfaceCallbacks;
+
+    lpddhi-&gt;GetDriverInfo = HalGetDriverInfo;
+
+    lpddhi-&gt;lpdwFourCC = g_FourCC;
+
+    // Capability bits.
+    lpddhi-&gt;ddCaps.dwSize = sizeof(DDCAPS);
+
+    lpddhi-&gt;ddCaps.dwVidMemTotal  = g_nVideoMemorySize;
+    lpddhi-&gt;ddCaps.dwVidMemFree   = g_nVideoMemorySize;
+    lpddhi-&gt;ddCaps.dwVidMemStride = 0;
+
+    lpddhi-&gt;ddCaps.ddsCaps.dwCaps =
+        DDSCAPS_FRONTBUFFER         |
+        DDSCAPS_OVERLAY             |
+        DDSCAPS_PRIMARYSURFACE      |
+        DDSCAPS_SYSTEMMEMORY        |
+        DDSCAPS_VIDEOMEMORY         |
+        0;
+
+    lpddhi-&gt;ddCaps.dwNumFourCCCodes = MAX_FOURCC;
+    lpddhi-&gt;ddCaps.dwPalCaps = 0;
+    lpddhi-&gt;ddCaps.dwMiscCaps = 0;
+
+    // DirectDraw Blttting caps refer to hardware blitting support only.
+    lpddhi-&gt;ddCaps.dwBltCaps = 0;
+    lpddhi-&gt;ddCaps.dwCKeyCaps = 0;
+    lpddhi-&gt;ddCaps.dwAlphaCaps = 0;
+
+    // Overlay caps.
+    lpddhi-&gt;ddCaps.dwOverlayCaps = DDOVERLAYCAPS_FOURCC;
+
+    lpddhi-&gt;ddCaps.dwMaxVisibleOverlays = 1;
+    lpddhi-&gt;ddCaps.dwCurrVisibleOverlays = 0;
+
+    lpddhi-&gt;ddCaps.dwAlignBoundarySrc = 0;
+    lpddhi-&gt;ddCaps.dwAlignSizeSrc = 0;
+    lpddhi-&gt;ddCaps.dwAlignBoundaryDest = 0;
+    lpddhi-&gt;ddCaps.dwAlignSizeDest = 0;
+
+    lpddhi-&gt;ddCaps.dwMinOverlayStretch = 1000;
+    lpddhi-&gt;ddCaps.dwMaxOverlayStretch = 1000;
+}</PRE>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="mob5conoverlaysurfaces.htm">Overlay Surfaces</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Feedback Link Bottom Start-->
+<p><font size="1"><a href="mailto:medfdbk&#64;microsoft.com?subject=Product: Windows Mobile | Version: 5.0 | Release: SDK | Title: Capability Bits for Non-flippable YV12 Overlays | Filename: wce51concapabilitybitsfornon-flippableyv12overlays.htm | Built on: Wednesday, September 14, 2005">Send Feedback</a> on this topic to the authors</font></p>
+<!--Feedback Link Bottom End-->
+<!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="mob5conCopyrightInformationForMagneto" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link></font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

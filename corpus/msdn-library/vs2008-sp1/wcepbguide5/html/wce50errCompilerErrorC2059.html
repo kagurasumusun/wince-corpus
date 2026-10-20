@@ -1,0 +1,89 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Compiler Error C2059</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Compiler Error C2059"/>
+<MSHelp:RLTitle Title="Compiler Error C2059"/>
+<MSHelp:Keyword Index="A" Term="wce50errCompilerErrorC2059"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Guide"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="True"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbRef"/>
+<MSHelp:Attr Name="Filename" Value="err2xxx.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="True"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_3025259">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50errcompilererrorc2059"></A>Compiler Error C2059</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<PRE class="syntax"><B>syntax error : '<I>token</I>'</B></PRE>
+
+<P>The token caused a syntax error.</P>
+
+<P>To determine the cause, examine not only the line listed in the error message, but also the lines above it. The following example generates an error message for the line containing the open curly brace, but the true source of the error appears on the line just above it. </P>
+
+<P class="label"><B>Example</B></P>
+
+<PRE class="code">void main (             // No closing parenthesis.
+{
+
+}</PRE>
+
+<P>If examining the lines yields no clue to what the problem might be, try commenting out the line listed in the error message and possibly several lines above it.</P>
+
+<P>If the error message occurs on a symbol immediately following a <B>typedef</B> variable, check that the variable is defined in the source code.</P>
+
+<P>One specific reason you can get C2059 is when you compile an application that specifies a structure in the default arguments for a function. The default value for an argument must be an expression. An initializer list, such as that used to initialize a structure, is not an expression. For example, the following code generates C2059:</P>
+
+<PRE class="code">// compile with /c
+struct ag_type { 
+int a; 
+float b; 
+}; 
+void func(ag_type arg = {5, 7.0}); </PRE>
+
+<P>The resolution is to define a constructor to perform the required initialization. </P>
+
+<PRE class="code">// compile with /c
+struct ag_type { 
+int a; 
+float b; 
+ag_type(int aa, float bb) : a(aa), b(bb) {} 
+}; 
+void func(ag_type arg = ag_type(5, 7.0)); </PRE>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

@@ -1,0 +1,190 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Building Graphs with the Capture Graph Builder</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Building Graphs with the Capture Graph Builder"/>
+<MSHelp:RLTitle Title="Building Graphs with the Capture Graph Builder"/>
+<MSHelp:Keyword Index="A" Term="wce51conBuildingGraphsWithCaptureGraphBuilder"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Feature"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="directshow_concepts1.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="True"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+<MSHelp:Attr Name="PBFeature" Value="SYSGEN_DSHOW"/>
+<MSHelp:Attr Name="PBOnly" Value="False"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_1067872">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce51conbuildinggraphswithcapturegraphbuilder"></A>Building Graphs with the Capture Graph Builder</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P><B>Applies to:</B> Devices based on Windows Mobile Version 5.0 and later</P>
+
+<P>Despite its name, the Capture Graph Builder is useful for building many kinds of custom filter graphs, not only capture graphs. This topic provides a brief overview of how to use this object. </P>
+
+<P>The Capture Graph Builder exposes the <MSHelp:link keywords="wce51lrfICaptureGraphBuilder2Interface" TABINDEX="0">ICaptureGraphBuilder2 interface</MSHelp:link>. Start by calling <MSHelp:link keywords="wce50lrfCoCreateInstance" TABINDEX="0">CoCreateInstance</MSHelp:link> to create the Capture Graph Builder and the Filter Graph Manager. Then initialize the Capture Graph Builder by calling <MSHelp:link keywords="wce51lrfICaptureGraphBuilder2SetFiltergraph" TABINDEX="0">ICaptureGraphBuilder2::SetFiltergraph</MSHelp:link> with a pointer to the Filter Graph Manager, as shown in the following code:</P>
+
+<PRE class="code">IGraphBuilder *pGraph = NULL;
+ICaptureGraphBuilder2 *pBuilder = NULL;
+
+// Create the Filter Graph Manager.
+HRESULT hr =  CoCreateInstance(CLSID_FilterGraph, NULL,
+    CLSCTX_INPROC_SERVER, IID_IGraphBuilder, (void **)&amp;pGraph);
+
+if (SUCCEEDED(hr))
+{
+    // Create the Capture Graph Builder.
+    hr = CoCreateInstance(CLSID_CaptureGraphBuilder2, NULL,
+        CLSCTX_INPROC_SERVER, IID_ICaptureGraphBuilder2, 
+        (void **)&amp;pBuilder);
+    if (SUCCEEDED(hr))
+    {
+        pBuilder-&gt;SetFiltergraph(pGraph);
+    }
+};</PRE>
+
+<H2 class="dtH2">Connecting Filters</H2>
+
+<P>The <MSHelp:link keywords="wce51lrfICaptureGraphBuilder2RenderStream" TABINDEX="0">ICaptureGraphBuilder2::RenderStream</MSHelp:link> method connects two or three filters together in a chain. Generally, the method works best when each filter has no more than one input pin or output pin of the same type. This discussion begins by ignoring the first two parameters of <B>ICaptureGraphBuilder2::RenderStream</B> and focusing on the last three parameters. The third parameter is an <MSHelp:link keywords="wce50lrfIUnknown" TABINDEX="0">IUnknown</MSHelp:link> pointer, which can specify either a filter (as an <A HREF="wce50lrfibasefilterinterface.htm">IBaseFilter Interface</A> pointer) or an output pin (as an <A HREF="wce50lrfipininterface.htm">IPin Interface</A> pointer). The fourth and fifth parameters specify <B>IBaseFilter</B> pointers. The <B>ICaptureGraphBuilder2::RenderStream</B> method connects all three filters in a chain. For example, suppose that <I>A</I>, <I>B</I>, and <I>C</I> are filters. Assume for now that each filter has exactly one input pin and one output pin. The following call connects A to B, and then B to C:</P>
+
+<PRE class="code">RenderStream(NULL, NULL, A, B, C) </PRE>
+
+<P>All connections are "intelligent," meaning that additional filters are added to the graph as needed. For more information, see <A HREF="wce50congraphbuildingwithintelligentconnect.htm">Graph Building with Intelligent Connect</A>. To connect just two filters, set the middle value to NULL. For example, this call connects A to C:</P>
+
+<PRE class="code">RenderStream(NULL, NULL, A, NULL, C) </PRE>
+
+<P>You can create longer chains by calling the method twice:</P>
+
+<PRE class="code">RenderStream(NULL, NULL, A, B, C)
+RenderStream(NULL, NULL, C, D, E)</PRE>
+
+<P>If the last parameter is NULL, the method automatically locates a default renderer. It uses the <A HREF="wce50lrfvideorendererfilter.htm">DirectShow Video Renderer Filter</A> for video and the <A HREF="wce50lrfaudiorenderer.htm">Waveform Audio Renderer</A> for audio. Thus:</P>
+
+<PRE class="code">RenderStream(NULL, NULL, A, NULL, NULL) </PRE>
+
+<P>is equivalent to</P>
+
+<PRE class="code">RenderStream(NULL, NULL, A, NULL, R) </PRE>
+
+<P>where <I>R</I> is the appropriate renderer. </P>
+
+<P>If you specify a filter in the third parameter, rather than a pin, you may need to indicate which output pin should be used for the connection. That is the purpose of the method's first two parameters. The first parameter applies only to capture filters. It specifies a GUID that indicates a pin category. For a complete list of categories, see <A HREF="wce51conpinpropertyset.htm">Pin Property Set</A>. Two of the categories are valid for all capture filters: 
+
+<UL type="disc">
+	<LI>PIN_CATEGORY_CAPTURE </li>
+
+	<LI>PIN_CATEGORY_PREVIEW </li>
+</UL>
+
+<P>If a capture filter does not supply separate pins for capture and preview, the <B>ICaptureGraphBuilder2::RenderStream</B> method inserts a <A HREF="wce51consmartteefilter.htm">Smart Tee Filter</A>, which splits the stream into a capture stream and a preview stream. From the application's standpoint, you can simply treat all capture filters as having separate pins and ignore the underlying topology of the graph. </P>
+
+<P>For file capture, connect the capture pin to a mux filter. For live preview, connect the preview pin to a renderer. If you switch the two categories, the graph might drop an excessive number of frames during the file capture; but if the graph is connected properly, it drops preview frames as needed in order to maintain throughput on the capture stream. </P>
+
+<P>The following example shows how to connect both streams:</P>
+
+<PRE class="code">// Capture to file:
+pBuilder-&gt;RenderStream(&amp;PIN_CATEGORY_CAPTURE, NULL, pCapFilter, NULL,
+pMux);
+// Preview:
+pBuilder-&gt;RenderStream(&amp;PIN_CATEGORY_PREVIEW, NULL, pCapFilter, NULL, NULL);</PRE>
+
+<P>Some capture filters also support closed captions, indicated by PIN_CATEGORY_VBI. To capture the closed captions to a file, render this category to the mux filter. To view the closed captions in your preview window, connect to the renderer:</P>
+
+<PRE class="code">// Capture to file:
+pBuilder-&gt;RenderStream(&amp;PIN_CATEGORY_VBI, NULL, pCapFilter, NULL, pMux);
+// Preview on screen:
+pBuilder-&gt;RenderStream(&amp;PIN_CATEGORY_VBI, NULL, pCapFilter, NULL, NULL);</PRE>
+
+<P>The second parameter to <B>ICaptureGraphBuilder2::RenderFile</B> identifies the media type, and is typically one of the following: 
+
+<UL type="disc">
+	<LI>MEDIATYPE_Audio </li>
+
+	<LI>MEDIATYPE_Video </li>
+
+	<LI>MEDIATYPE_Interleaved (DV) </li>
+</UL>
+
+<P>You can use this parameter whenever the filter's output pins support the enumeration of preferred media types. For file sources, the Capture Graph Builder automatically adds a parser filter if needed, and then queries the media types on the parser.  Also, if the last filter in the chain has several input pins, the method attempts to enumerate their media types. However, not all filters support this functionality.</P>
+
+<H2 class="dtH2">Finding Interfaces on Filters and Pins </H2>
+
+<P>After you build a graph, you will typically need to locate various interfaces exposed by filters and pins in the graph. For example, a capture filter might expose the <MSHelp:link keywords="wce51lrfIAMDroppedFramesInterface" TABINDEX="0">IAMDroppedFrames Interface</MSHelp:link>, while the filter's output pins might expose the <A HREF="wce50lrfiamstreamconfiginterface.htm">IAMStreamConfig Interface</A>. </P>
+
+<P>The simplest way to find an interface is to use the <MSHelp:link keywords="wce51lrfICaptureGraphBuilder2FindInterface" TABINDEX="0">ICaptureGraphBuilder2::FindInterface</MSHelp:link> method. This method walks the graph (filters and pins) until it locates the desired interface. You can specify the starting point for the search, and you can limit the search to filters upstream or downstream from the starting point.</P>
+
+<P>The following example searches for the <A HREF="wce50lrfiamstreamconfiginterface.htm">IAMStreamConfig Interface</A> on a video preview pin:</P>
+
+<PRE class="code">IAMStreamConfig *pConfig = NULL;
+HRESULT hr = pBuild-&gt;FindInterface(
+    &amp;PIN_CATEGORY_PREVIEW, 
+    &amp;MEDIATYPE_Video,
+    pVCap, 
+    IID_IAMStreamConfig, 
+    (void**)&amp;pConfig
+);
+if (SUCCESSFUL(hr))
+{
+    /* ... */
+    pConfig-&gt;Release();
+}</PRE>
+
+<H2 class="dtH2">Finding Pins</H2>
+
+<P>Less commonly, you may need to locate an individual pin on a filter, although in most cases the <B>ICaptureGraphBuilder2::RenderStream</B> and <B>ICaptureGraphBuilder2::FindInterface</B> methods will save you the trouble. If you do need to find a particular pin on a filter, the <MSHelp:link keywords="wce51lrfICaptureGraphBuilder2FindPin" TABINDEX="0">ICaptureGraphBuilder2::FindPin</MSHelp:link> helper method is useful. Specify the category, the media type (video or audio), the direction, and whether the pin must be unconnected. </P>
+
+<P>For example, the following code searches for an unconnected video preview pin on a capture filter:</P>
+
+<PRE class="code">IPin *pPin = NULL;
+hr = pBuild-&gt;FindPin(
+    pCap,                   // Pointer to the filter to search.
+    PINDIR_OUTPUT,          // Search for an output pin.
+    &amp;PIN_CATEGORY_PREVIEW,  // Search for a preview pin.
+    &amp;MEDIATYPE_Video,       // Search for a video pin.
+    TRUE,                   // The pin must be unconnected. 
+    0,                      // Return the first matching pin (index 0).
+    &amp;pPin);                 // This variable receives the IPin pointer.
+if (SUCCESSFUL(hr))
+{
+    /* ... */
+    pPin-&gt;Release();
+}</PRE>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce51convideocapture.htm">Video Capture</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

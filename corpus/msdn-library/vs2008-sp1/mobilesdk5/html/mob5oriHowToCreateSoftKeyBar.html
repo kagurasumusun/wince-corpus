@@ -1,0 +1,254 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>How to: Create a Soft Key Bar</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="How to: Create a Soft Key Bar"/>
+<MSHelp:RLTitle Title="How to: Create a Soft Key Bar"/>
+<MSHelp:Keyword Index="A" Term="mob5oriHowToCreateSoftKeyBar"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Application"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbsmartphone"/>
+<MSHelp:Attr Name="Product" Value="kbPocketPC"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="Technology" Value="kbPocketPC"/>
+<MSHelp:Attr Name="Technology" Value="kbSmartphone"/>
+<MSHelp:Attr Name="TopicType" Value="kbOrient"/>
+<MSHelp:Attr Name="Filename" Value="Soft_Keys_magneto.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="True"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_1063869">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Windows Mobile Version 5.0 SDK<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="mob5orihowtocreatesoftkeybar"></A>How to: Create a Soft Key Bar</H1>
+<!--Feedback Link Top Start-->
+<P CLASS="feedback"><font size="1"><a href="mailto:medfdbk&#64;microsoft.com?subject=Product: Windows Mobile | Version: 5.0 | Release: SDK | Title: How to: Create a Soft Key Bar | Filename: mob5orihowtocreatesoftkeybar.htm | Built on: Wednesday, September 14, 2005">Send Feedback</a> on this topic to the authors</font></p>
+<!--Feedback Link Top End-->
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>To create a soft key bar and soft keys, you create a resource file and specify the Windows CE <MSHelp:link keywords="wce50lrfSHMENUBARINFO" TABINDEX="0">SHMENUBARINFO</MSHelp:link> structure and the <MSHelp:link keywords="wce50lrfSHCreateMenuBar" TABINDEX="0">SHCreateMenuBar</MSHelp:link> function during the handling of the Windows CE <MSHelp:link keywords="wce50lrfWMINITDIALOG" TABINDEX="0">WM_INITDIALOG</MSHelp:link> message.</P>
+
+<P class="labelproc"><B>To create a soft key bar and soft keys</B>
+
+<OL type="1">
+	<LI>Create a resource file by doing the following:
+<OL type="a">
+	<LI>Identify any menu that is displayed by a soft key. In the following example, the <B>IDR_MAIN_MENU</B> menu is displayed and contains the <B>DONE</B> command.
+<PRE class="code">// MENU 
+<code><b class="cfe">IDR_MAIN_MENU</b></code> MENU 
+BEGIN
+:
+:
+    // SUBMENU 2. This submenu is displayed by the right soft key.
+    POPUP ""
+    BEGIN
+        <code><b class="cfe">MENUITEM "Done"</b></code>     IDM_CARDVIEW_SK2_DONE
+    END  
+END</PRE>
+</li>
+
+	<LI>Indicate the text that appears on the soft key labels, and assign a string resource ID to each text string. In the following example, the text strings are <code class="ce">"Edit"</code> and <code class="ce">"<B>Menu"</B></code> and the string resource IDs are <code class="ce"><B>IDS_CARDVIEW_EDIT</B></code> and <code class="ce"><B>IDS_CARDVIEW_MENU</B></code>.
+<PRE class="code">// STRING TABLE
+
+STRINGTABLE DISCARDABLEBEGIN
+:
+    <code><b class="cfe">IDS_CARDVIEW_EDIT  "Edit"</b></code>
+    <code><b class="cfe">IDS_CARDVIEW_MENU  "Menu"  </b></code>
+:
+END</PRE>
+</li>
+
+	<LI>Indicate the display and functionality of the soft key bar and the soft keys, as shown in the following example.
+<PRE class="code">// Card View Soft key bar
+IDR_CARDVIEW_MENUBAR RCDATA
+BEGIN
+    IDR_MAIN_MENU,
+    2,
+    I_IMAGENONE, IDM_CARDVIEW_SK1_EDIT, TBSTATE_ENABLED, 
+        TBSTYLE_BUTTON | TBSTYLE_AUTOSIZE, IDS_CARDVIEW_EDIT, 0, 
+        NOMENU,
+    I_IMAGENONE, IDM_CARDVIEW_SK2_MENU, TBSTATE_ENABLED, 
+        TBSTYLE_DROPDOWN | TBSTYLE_AUTOSIZE, IDS_CARDVIEW_MENU, 0, 
+        2,END</PRE>
+
+<P>The following table describes the above example.
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=50%>Value</TH>
+<TH width=50%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><B>IDR_CARDVIEW_MENUBAR</B></TD>
+<TD width=50%>Resource ID for the soft key bar.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><B>IDR_MAIN_MENU</B></TD>
+<TD width=50%>A menu displayed by a soft key.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><B>2</B></TD>
+<TD width=50%>The soft key bar contains two soft keys.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><B>I_IMAGENONE</B></TD>
+<TD width=50%>Indicates that the soft key label displays text instead of a bitmap. Windows Mobile-based devices do not support bitmaps on the soft key bar.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><B>IDM_CARDVIEW_SK1_EDIT</B>
+<P>and</P>
+
+<P><B>IDM_CARDVIEW_SK2_MENU</B></P>
+</TD>
+<TD width=50%>Resource IDs for the soft keys.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><B>TBSTATE_ENABLED</B></TD>
+<TD width=50%>Initial state of the button. For information about toolbar states supported by Windows CE, see <MSHelp:link keywords="wce50conCreatingaToolbar" TABINDEX="0">Creating a Toolbar</MSHelp:link>.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><B>TBSTYLE_BUTTON</B>
+<P><B>TBSTYLE_DROPDOWN</B></P>
+
+<P><B>TBSTYLE_AUTOSIZE</B></P>
+</TD>
+<TD width=50%>Styles assigned to each soft key. For more information about toolbar styles supported by Windows CE, see <MSHelp:link keywords="wce50lrfToolbarStyles" TABINDEX="0">Toolbar Styles</MSHelp:link>.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><B>IDS_CARDVIEW_EDIT</B>
+<P><B>IDS_CARDVIEW_MENU</B></P>
+</TD>
+<TD width=50%>String resource IDs for the text that appears on the soft key labels. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><B>NOMENU</B></TD>
+<TD width=50%>Indicates that the <B>IDS_CARDVIEW_EDIT</B> soft key does not display a menu.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><B>2</B></TD>
+<TD width=50%>Submenu index of the menu displayed by the <B>IDS_CARDVIEW_MENU </B>soft key.</TD>
+</TR>
+</table></div>
+</li>
+</OL>
+</li>
+
+	<LI>Add the <MSHelp:link keywords="wce50lrfSHMENUBARINFO" TABINDEX="0">SHMENUBARINFO</MSHelp:link> structure to the application source code. Specify the resource ID for the soft key bar by using the <B>nToolBarID</B> structure member. In the following example, the <B>nToolBarID</B><I> </I>structure member specifies <B>IDR_CARDVIEW_MENUBAR</B>.
+<PRE class="code"><code><b class="cfe">SHMENUBARINFO mbi;
+
+</b></code>memset(&amp;mbi, 0, sizeof(SHMENUBARINFO));  // Reset mbi to 0.
+mbi.cbSize = sizeof(SHMENUBARINFO);
+mbi.hwndParent = hwnd;  // Soft key bar's owner.
+mbi.<code><b class="cfe">nToolBarId</b></code> = <code><b class="cfe">IDR_CARDVIEW_MENUBAR</b></code>;  // Soft key bar resource.
+mbi.hInstRes = g_hinst;  // HINST in which resource is located.</PRE>
+</li>
+
+	<LI>Add the <MSHelp:link keywords="wce50lrfSHCreateMenuBar" TABINDEX="0">SHCreateMenuBar</MSHelp:link> function to the application source code.</li>
+</OL>
+
+<H4 class="dtH4">Example 1</H4>
+
+<PRE class="code">////////////////////////////////////////////////////////////////////
+// MENU 
+IDR_MAIN_MENU MENU 
+BEGIN
+:
+:
+    // SUBMENU 2. This submenu is displayed by the right soft key
+    POPUP ""
+    BEGIN
+        MENUITEM "Done"     IDM_CARDVIEW_SK2_DONE
+    END  
+END
+
+////////////////////////////////////////////////////////////////////
+// STRING TABLE
+
+STRINGTABLE DISCARDABLEBEGIN
+:
+    IDS_CARDVIEW_EDIT  "Edit"
+    IDS_CARDVIEW_MENU  "Menu"  
+:
+END
+
+// Card View Soft key bar
+IDR_CARDVIEW_MENUBAR RCDATA
+BEGIN
+    IDR_MAIN_MENU,
+    2,
+    I_IMAGENONE, IDM_CARDVIEW_SK1_EDIT, TBSTATE_ENABLED, 
+        TBSTYLE_BUTTON | TBSTYLE_AUTOSIZE, IDS_CARDVIEW_EDIT, 0, NOMENU,
+    I_IMAGENONE, IDM_CARDVIEW_SK2_MENU, TBSTATE_ENABLED, 
+        TBSTYLE_DROPDOWN | TBSTYLE_AUTOSIZE, IDS_CARDVIEW_MENU, 0, 2,
+END</PRE>
+
+<H4 class="dtH4">Example 2</H4>
+
+<PRE class="code">BOOL rb;
+int rc;
+LRESULT lr;
+SHMENUBARINFO mbi;
+
+memset(&amp;mbi, 0, sizeof(SHMENUBARINFO));  // Reset mbi to 0.
+mbi.cbSize = sizeof(SHMENUBARINFO);
+mbi.hwndParent = hwnd;  // Soft key bar's owner.
+mbi.nToolBarId = IDR_CARDVIEW_MENUBAR<B>;</B>  // Soft key bar resource.
+mbi.hInstRes = g_hinst;  // HINST in which resource is located.
+
+// Create the Soft key bar.
+rb = SHCreateMenuBar(&amp;mbi);
+if (rb == FALSE)  // SHCreateMenuBar failed.
+{
+    rc = MessageBox(NULL, _T("Could not create soft key bar."),
+                    _T("Error"), MB_OK);
+    if (rc == 0)  // Not enough memory to create MessageBox.
+        return E_OUTOFMEMORY;
+    return E_FAIL;  // Replace with specific error handling.
+}</PRE>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="mob5orisoftkeys.htm">Soft Keys</A> | <A HREF="mob5consoftkeymenuguidelines.htm">Soft Key and Menu Guidelines</A> | <A HREF="mob5tskhowtoobtainhandletosoftkeymenu.htm">How to: Obtain a Handle to a Soft Key Menu</A> | <A HREF="mob5orisoftkeyoverview.htm">Soft Key Overview</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Feedback Link Bottom Start-->
+<p><font size="1"><a href="mailto:medfdbk&#64;microsoft.com?subject=Product: Windows Mobile | Version: 5.0 | Release: SDK | Title: How to: Create a Soft Key Bar | Filename: mob5orihowtocreatesoftkeybar.htm | Built on: Wednesday, September 14, 2005">Send Feedback</a> on this topic to the authors</font></p>
+<!--Feedback Link Bottom End-->
+<!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="mob5conCopyrightInformationForMagneto" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link></font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

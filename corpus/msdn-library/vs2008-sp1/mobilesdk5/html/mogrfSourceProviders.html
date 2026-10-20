@@ -1,0 +1,106 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Customize the PIM Experience with Source Providers</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Customize the PIM Experience with Source Providers"/>
+<MSHelp:RLTitle Title="Customize the PIM Experience with Source Providers"/>
+<MSHelp:Keyword Index="A" Term="mogrfSourceProviders"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Application"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbsmartphone"/>
+<MSHelp:Attr Name="Product" Value="kbPocketPC"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="Technology" Value="kbPocketPC"/>
+<MSHelp:Attr Name="Technology" Value="kbSmartphone"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="Pocket_Outlook_Object_Model_magneto.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="False"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_1076857">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Windows Mobile Version 5.0 SDK<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="mogrfsourceproviders"></A>Customize the PIM Experience with Source Providers</H1>
+<!--Feedback Link Top Start-->
+<P CLASS="feedback"><font size="1"><a href="mailto:medfdbk&#64;microsoft.com?subject=Product: Windows Mobile | Version: 5.0 | Release: SDK | Title: Customize the PIM Experience with Source Providers | Filename: mogrfsourceproviders.htm | Built on: Wednesday, September 14, 2005">Send Feedback</a> on this topic to the authors</font></p>
+<!--Feedback Link Top End-->
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>A Source Provider is a custom function (DLL) that you can create and implement on a Windows Mobile-based device, that customizes the PIM user experience. Source Providers and their associated Source Identification Tag values (Source IDs) are part of a mechanism that supports "Per-Provider Customization" of the PIM experience on mobile devices.</P>
+
+<P>There are three ways you can customize the PIM experience:
+
+<UL type="disc">
+	<LI>Provide a customized Summary tab for associated Contact items when the user opens them from the Contact list view. For more information, see <A HREF="mob5lrfipimsrccontactsummarycarddisplay.htm">IPimSrcContactSummaryCard::Display</A>.</li>
+
+	<LI>Provide a custom icon for associated Contact items when they appear in the Contact list view. For more information, see <A HREF="mob5lrfipimsrccontactlisticonpaint.htm">IPimSrcContactListIcon::Paint</A>.</li>
+
+	<LI>Display Appointment items with alternate background colors in the Agenda and Day views. For more information, see <A HREF="mogrfcustomizeappointmentitemsbackgroundcolor.htm">Customize an Appointment Item's Background Color</A>.</li>
+</UL>
+
+<P>Typically, a Source Provider has a corresponding associate function that is responsible for synchronizing PIM data with the mobile device. Data synchronized with the mobile device by this associate function is tagged with the related Source ID. When Outlook Mobile displays a PIM item, it checks to see if the item has been tagged with a Source ID. If it finds one, it invokes the Source Provider, which customizes the user interface for the PIM item.</P>
+
+<H4 class="dtH4">Related Information</H4>
+
+<P>The Windows Mobile Version 5.0 Pocket PC and Smartphone SDK contains a working sample called <A HREF="mob5samregistersourceprovider.htm">Register a Source Provider</A> that demonstrates how to implement a Source Provider.</P>
+
+<H4 class="dtH4">Remarks</H4>
+
+<P>The <A HREF="mob5lrfsourcecustomizationtypeflags.htm">Source Provider Customization Type Flags</A> describe the types of customizations that a particular Source Provider supports. They are used to create the value for the  Registry Key value.</P>
+
+<P>The <A HREF="mob5lrfsourcepimtypeownershipflags.htm">Source Provider PIM Type Ownership Flags</A> describe the types of PIM items that are associated with a particular Source Provider. They are used to create the value for the <I>Type</I> Registry Key value.</P>
+
+<P>When users enter new contacts and appointments, they can select a Source Provider to associate them with.</P>
+
+<P>A valid Source ID is a DWORD with only 1 bit set (i.e., there are 32 possible Source IDs).</P>
+
+<P>Although <B>Contact</B> and <B>Appointment</B> items, regardless of Source ID, are synchronized with Microsoft Exchange &#0151; Source IDs are not.</P>
+
+<P>Source IDs are not supported for <B>Task</B> items.</P>
+
+<P>Since <B>Contact</B> and <B>Appointment</B> items can be associated with only one Source Provider, your Source Provider installation implementation must select a Source ID that is unique in the domain of all Source Providers installed on the mobile device (it is considered an error to determine Source IDs prior to install). Your implementation must choose a unique Source ID by first iterating over the installed Source Providers registered in the key <code class="ce">\HKLM\PIMSources\</code>, and then choosing the next available Source ID (eg. 1, 2, 4, 8, 16...).</P>
+
+<P>The default Source ID value is zero (0). <B>Contact</B> and <B>Appointment</B> items with a Source ID value of zero are not associated with a Source Provider, and just use the default user interface.</P>
+
+<P>Your Source Provider uninstall implementation must reset the Source ID field of all associated <B>Contact</B> and <B>Appointment</B> items back to zero.</P>
+
+<P>The <B>Contact</B> item OID is passed as a parameter to <A HREF="mob5lrfipimsrccontactlisticonpaint.htm">IPimSrcContactListIcon::Paint</A> so that the Source Provider can look up any additional properties it might require in order to determine how to draw the Contact item.</P>
+
+<P>Source Providers must draw using a transparent background.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="mob5oripocketoutlookobjectmodel.htm">Pocket Outlook Object Model Application Development for Windows Mobile-based Devices</A> | <A HREF="mob5lrfsourcecustomizationtypeflags.htm">Source Provider Customization Type Flags</A> | <A HREF="mob5lrfsourcepimtypeownershipflags.htm">Source Provider PIM Type Ownership Flags</A> | <A HREF="mogrfcustomizeappointmentitemsbackgroundcolor.htm">Customize an Appointment Item's Background Color</A> | <A HREF="mob5lrfpimsrc_color.htm">PIMSRC_COLOR</A> | <A HREF="mob5lrfipimsrccontactlisticonpaint.htm">IPimSrcContactListIcon::Paint</A> | <A HREF="mob5lrfipimsrccontactsummarycarddisplay.htm">IPimSrcContactSummaryCard::Display</A> | <A HREF="mob5samregistersourceprovider.htm">Register a Source Provider</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Feedback Link Bottom Start-->
+<p><font size="1"><a href="mailto:medfdbk&#64;microsoft.com?subject=Product: Windows Mobile | Version: 5.0 | Release: SDK | Title: Customize the PIM Experience with Source Providers | Filename: mogrfsourceproviders.htm | Built on: Wednesday, September 14, 2005">Send Feedback</a> on this topic to the authors</font></p>
+<!--Feedback Link Bottom End-->
+<!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="mob5conCopyrightInformationForMagneto" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link></font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

@@ -1,0 +1,75 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Retrieving Cache Entry Data</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Retrieving Cache Entry Data"/>
+<MSHelp:RLTitle Title="Retrieving Cache Entry Data"/>
+<MSHelp:Keyword Index="A" Term="wce50conRetrievingCacheEntryData"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Feature"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="wininet_concepts.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="True"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+<MSHelp:Attr Name="PBFeature" Value="SYSGEN_WININET"/>
+<MSHelp:Attr Name="PBOnly" Value="False"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_3007738">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50conretrievingcacheentrydata"></A>Retrieving Cache Entry Data</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>The <A HREF="wce50lrfgeturlcacheentryinfo.htm">GetUrlCacheEntryInfo</A> function lets you retrieve the <A HREF="wce50lrfinternetcacheentryinfo.htm">INTERNET_CACHE_ENTRY_INFO</A> structure for the specified URL. This structure contains the structure size, URL of the cached data, local file name, cache entry type, use count, hit rate, size, last modified, expire, last access, and last synchronized times, header data and header data size, and file extension. </P>
+
+<P><B>GetUrlCacheEntryInfo</B> accepts a URL, a buffer for an <B>INTERNET_CACHE_ENTRY_INFO</B> structure, and the buffer size. If the URL is found, the data is copied into the buffer. Otherwise, the function fails and <MSHelp:link keywords="wce50lrfGetLastError" TABINDEX="0">GetLastError</MSHelp:link> returns ERROR_FILE_NOT_FOUND. If the buffer size is insufficient to store the cache entry data, the function fails and <B>GetLastError</B> returns ERROR_INSUFFICIENT_BUFFER. The size required to retrieve the data is stored in the buffer size variable. </P>
+
+<P><B>GetUrlCacheEntryInfo</B> does not do any URL parsing, so a URL containing an anchor (#) is not found in the cache, even if the resource is cached. For example, if the URL http://example.com/example.htm#sample was passed, the function would return ERROR_FILE_NOT_FOUND even if http://example.com/example.htm is in the cache.</P>
+
+<P>The following example retrieves the cache entry information for the specified URL by calling <B>GetUrlCacheEntryInfo</B>.</P>
+
+<PRE class="code">#define CACHE_ENTRY_BUFFER_SIZE  (1024*5)
+DWORD dwBufferSize=0;
+LPINTERNET_CACHE_ENTRY_INFO lpCacheEntry;
+dwBufferSize = CACHE_ENTRY_BUFFER_SIZE;
+//Allocate memory for the buffer that stores <B>INTERNET_CACHE_ENTRY_INFO</B>.
+lpCacheEntry = (LPINTERNET_CACHE_ENTRY_INFO)LocalAlloc(LPTR,CACHE_ENTRY_BUFFER_SIZE);
+//Call <B>GetUrlCacheEntryInfo</B> to retrieve cache data and specify the URL by passing a pointer to the URL string in the <I>lpszUrl</I> parameter.
+BOOL bValue = GetUrlCacheEntryInfo(lpszUrl,lpCacheEntry,&amp;dwBufferSize);</PRE>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50concaching.htm">Caching</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

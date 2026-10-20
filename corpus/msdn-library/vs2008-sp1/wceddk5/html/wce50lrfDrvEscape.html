@@ -1,0 +1,134 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>DrvEscape</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="DrvEscape"/>
+<MSHelp:RLTitle Title="DrvEscape"/>
+<MSHelp:Keyword Index="K" Term="DrvEscape"/>
+<MSHelp:Keyword Index="A" Term="wce50lrfDrvEscape"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Driver"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="False"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="apiref"/>
+<MSHelp:Attr Name="Filename" Value="display_reference.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="False"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+<MSHelp:Attr Name="APIName" Value="DrvEscape"/>
+<MSHelp:Attr Name="APIType" Value="LibDef"/>
+<MSHelp:Attr Name="APILocation" Value="Ddi_ati_lib.lib, Ddi_flat_lib.lib, Ddi_gx_lib.lib, Ddi_mq200_lib.lib, Ddi_nop_lib.lib, Ddi_rflat_lib.lib, Ddi_rgx_lib.lib, or Ddi_tvia5_lib.lib"/>
+<MSHelp:Attr Name="PBFeature" Value="DisplayDriver"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_3017934">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50lrfdrvescape"></A>DrvEscape</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>This function retrieves information from a device that is not available in a device-independent DDI. This function operates the same as on Windows-based desktop platforms, but Windows CE does not support the <B>DrvDrawEscape</B> function. <B>DrvEscape</B> is used for retrieving information from a device that is not available in a device-independent device driver interface; the particular query depends on the value of the <I>iEsc</I> parameter.</P>
+
+<PRE class="syntax"><B>ULONG DrvEscape(</B>
+<B>  DHPDEV </B><I>dhpdev</I><B>,</B>
+<B>  SURFOBJ* </B><I>pso</I><B>,</B>
+<B>  ULONG </B><I>iEsc</I><B>,</B>
+<B>  ULONG </B><I>cjIn</I><B>,</B>
+<B>  PVOID </B><I>pvIn</I><B>,</B>
+<B>  ULONG </B><I>cjOut</I><B>,</B>
+<B>  PVOID </B><I>pvOut</I>
+<B>);</B></PRE>
+
+<H4 class="dtH4">Parameters</H4>
+
+<DL>
+<DT><I>dhpdev</I></DT>
+
+<DD>[in] Handle to the device that is getting the <B>DrvEscape</B> call.</dd>
+
+<DT><I>pso</I> </DT>
+
+<DD>[in] Pointer to a <B>SURFOBJ</B> structure that describes the surface to which the call is directed. </dd>
+
+<DT><I>iEsc</I> </DT>
+
+<DD>[in] Query. The meaning of the other parameters depends on this value. QUERYESCSUPPORT is the only predefined value; it queries whether the driver supports a particular escape function. In this case, <I>pvIn</I> points to an escape function number; <I>cjOut</I> and <I>pvOut</I> are ignored. If the specified function is supported, the return value is nonzero. </dd>
+
+<DT><I>cjIn</I> </DT>
+
+<DD>[in] Size, in bytes, of the buffer pointed to by <I>pvIn</I>. </dd>
+
+<DT><I>pvIn</I> </DT>
+
+<DD>[in] Pointer to the input data for the call. The format of the input data depends on the query specified by the <I>iEsc</I> parameter. </dd>
+
+<DT><I>cjOut</I> </DT>
+
+<DD>[in] Size, in bytes, of the buffer pointed to by <I>pvOut</I>. </dd>
+
+<DT><I>pvOut</I> </DT>
+
+<DD>[out] Pointer to the output buffer. The format of the output data depends on the query specified by the <I>iEsc</I> parameter. </dd>
+</DL>
+
+<H4 class="dtH4">Return Values</H4>
+
+<P>The return value is dependent on the query specified by the <I>iEsc</I> parameter. If the function specified in the query is not supported, the return value is zero.</P>
+
+<H4 class="dtH4">Remarks</H4>
+
+<P>Drawing on the device is not allowed in this function.</P>
+
+<P>GDI passes data directly from a possibly malicious client application to the driver, which means that the <B>DrvEscape</B> function must validate all input arguments. The following list shows what this function must verify:
+
+<UL type="disc">
+	<LI>The <I>iEsc</I> parameter value represents a valid query. </li>
+
+	<LI>The <I>cjIn</I> parameter value is valid for the specified query. </li>
+
+	<LI>The <I>pvIn</I> parameter contents are valid for the specified query. </li>
+
+	<LI>The <I>cjOut</I> parameter contents are valid for the specified query. </li>
+</UL>
+
+<P>Microsoft reserves the range 0 to 0X10000 for its escape codes. Third-party vendors are free to choose escape codes for their own use above this range. Driver-specific escape codes may conflict with those used in other display drivers, so it is important for a display driver to validate escape parameters before processing the escape. One way to do this is to validate the input block size, output block size, and the input block parameters. For added security, drivers should include a specific value that must be set appropriately in every input block to ensure that the input block is from a trusted source.</P>
+
+<H4 class="dtH4">Requirements</H4>
+
+<P><B>OS Versions:</B> Windows CE 1.0 and later.<BR>
+<B>Header:</B> Winddi.h.<BR>
+<B>Link Library:</B> Ddi_ati_lib.lib, Ddi_flat_lib.lib, Ddi_gx_lib.lib, Ddi_mq200_lib.lib, Ddi_nop_lib.lib, Ddi_rflat_lib.lib, Ddi_rgx_lib.lib, or Ddi_tvia5_lib.lib.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50condisplaydrivers.htm">Display Drivers</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

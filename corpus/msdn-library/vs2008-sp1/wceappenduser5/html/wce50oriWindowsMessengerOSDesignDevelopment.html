@@ -1,0 +1,164 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Windows Messenger OS Design Development</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Windows Messenger OS Design Development"/>
+<MSHelp:RLTitle Title="Windows Messenger OS Design Development"/>
+<MSHelp:Keyword Index="F" Term="303"/>
+<MSHelp:Keyword Index="A" Term="wce50oriWindowsMessengerOSDesignDevelopment"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Feature"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbOrient"/>
+<MSHelp:Attr Name="Filename" Value="messenger_os_development.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="False"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+<MSHelp:Attr Name="PBFeature" Value="SYSGEN_MESSENGER"/>
+<MSHelp:Attr Name="PBOnly" Value="True"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_1031269">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50oriwindowsmessengerosdesigndevelopment"></A>Windows Messenger OS Design Development</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>The Microsoft&reg; Windows&reg; Messenger for Windows CE real-time communications software combines real&#0150;time voice and text communications with file transfer capability. In addition, Windows Messenger is presence&#0150;enabled, so that users can see who is available online before trying to contact them and also control their online status that others see. </P>
+
+<P>For information about the network services that Windows Messenger uses to communicate, see <A HREF="wce50conwindowsmessengerarchitecture.htm">Windows Messenger Architecture</A>.</P>
+
+<H4 class="dtH4">OS Design Information</H4>
+
+<P>The following table shows operating system design information for Windows Messenger.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=35%>Concept</TH>
+<TH width=65%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=35%>Dependencies</TD>
+<TD width=65%>RTC Client API
+<P>Kerberos Authentication</P>
+
+<P>CryptoAPI 2.0 Certifications</P>
+
+<P>GIF Decoder</P>
+
+<P>PNG Decoder</P>
+
+<P>Internet Explorer Browser Control Host</P>
+
+<P>Standard I/O ASCII</P>
+
+<P>String Safe Utility Functions</P>
+
+<P>Windows Internet Services and Passport SSI 1.4 Authentication</P>
+</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=35%>Hardware considerations</TD>
+<TD width=65%>Network connection</TD>
+</TR>
+</table></div>
+
+<H4 class="dtH4">Modules and Components</H4>
+
+<P>The following table shows the components and modules that implement Windows Messenger.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=33%>Item</TH>
+<TH width=33%>Module</TH>
+<TH width=34%>Component</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%>Windows Messenger</TD>
+<TD width=33%>msmsgs</TD>
+<TD width=34%>None</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%>Localizable resources</TD>
+<TD width=33%>msgslang</TD>
+<TD width=34%>None</TD>
+</TR>
+</table></div>
+
+<H4 class="dtH4">Implementation Considerations</H4>
+
+<P>The following table shows the Sysgen variables for Windows Messenger. </P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=33%>Sysgen variable</TH>
+<TH width=67%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%>SYSGEN_MESSENGER</TD>
+<TD width=67%>Adds the Windows Messenger application that detects the presence of contacts, and provides text and voice messaging and file transfers by using .NET Messenger and Real-time Communications (RTC) services.</TD>
+</TR>
+</table></div>
+
+<P>The following non-Sysgen implementation considerations are also relevant to OEMs:
+
+<UL type="disc">
+	<LI>TCP ports must be configured so that sockets on a port remain open for extended periods of time.</li>
+
+	<LI>For voice communications, the .NET Messenger Service establishes an outgoing TCP connection from port 6901 for all voice communications.
+<P>In the case of computer-to-computer communications, the call recipient also uses TCP port 6901.
+
+<P>All voice traffic also uses User Datagram Protocol (UDP) packets. The user's computer sends and receives UDP packets using a dynamic port.
+</li>
+
+	<LI>For file transfers, both incoming and outgoing TCP connections use this range of ports: 6891 to 6900. These ports allow up to 10 simultaneous file transfers per sender. If you open only port 6891, users are able to do only one file transfer at a time.</li>
+
+	<LI>To allow users to have a direct connection to instant messaging services through a firewall, instruct them how to:
+<UL type="disc">
+	<LI>Open outgoing TCP connections to port 1863 on proxy servers.</li>
+
+	<LI>Determine which kind of proxy server their networks use (HTTP, SOCKS4, or SOCKS5) and enter the corresponding details in the Windows Messenger application (such as server name and port number) by choosing the <B>Tools </B>menu, choosing <B>Options</B>, changing to the <B>Connection</B> tab, and entering the information. </li>
+
+	<LI>Verify that the internal local area network (LAN) has access to the Domain Name System (DNS) servers to resolve the names of external resources.</li>
+</UL>
+</li>
+</UL>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50oriwindowsmessenger.htm">Windows Messenger</A> </P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

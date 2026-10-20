@@ -1,0 +1,115 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>IDVDRenderer::Abort</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="IDVDRenderer::Abort"/>
+<MSHelp:RLTitle Title="IDVDRenderer::Abort"/>
+<MSHelp:Keyword Index="K" Term="IDVDRenderer, Abort"/>
+<MSHelp:Keyword Index="A" Term="wce50lrfIDVDRendererAbort"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Driver"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="False"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="apiref"/>
+<MSHelp:Attr Name="Filename" Value="dvd_reference.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="False"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+<MSHelp:Attr Name="APIName" Value="IDVDRenderer.Abort"/>
+<MSHelp:Attr Name="PBFeature" Value="DVDRendererDriver"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_3018053">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50lrfidvdrendererabort"></A>IDVDRenderer::Abort</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>This method immediately aborts any decoding and rendering processes and flushes the internal data buffers.</P>
+
+<PRE class="syntax"><B>HRESULT Abort();</B></PRE>
+
+<H4 class="dtH4">Parameters</H4>
+
+<P>None.</P>
+
+<H4 class="dtH4">Return Values</H4>
+
+<P>If the method completes successfully, the return value is S_OK.</P>
+
+<H4 class="dtH4">Remarks</H4>
+
+<P>The navigator can call the <B>IDVDRenderer::Abort</B> method directly to reset the decoder in response to playback timing events. This method can be used to mark a block of data in the stream for a decoder to be aborted between two data transfers after playback of the first data stream is over. This can also be used to resume playback. The navigator chooses the most convenient method for itself to indicate discontinuity. As a result, the decoder/renderer gets reset, and the system time clock (STC) and the rest change to the idle state to wait to play again.</P>
+
+<P>Temporal discontinuity can be detected, in general, anywhere on the cell boundary. In particular, it can be detected during usual playback control and navigation operations, which include, moving to the menu from the title and back to the title again, or skipping a program.</P>
+
+<P>The following table shows some of the uses for the <B>IDVDRenderer::Abort</B> method.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=40%>Use</TH>
+<TH width=60%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=40%>Disk Authentication</TD>
+<TD width=60%>Call the <B>IDVDRenderer::Abort</B> method before going into the protocol.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=40%>Title Renegotiation</TD>
+<TD width=60%>Wait for playback timing notification (PBT), call <B>Abort</B>, and then proceed with the protocol.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=40%>Before sending palette and selecting streams</TD>
+<TD width=60%>Every PGC starts with the <B>Abort</B> method before sending palette and selecting streams.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=40%>Before sending new VOBU</TD>
+<TD width=60%>If a new video object unit (VOBU) is indicated as discontinuous, wait for PBT then use <B>Abort</B> before writing a new VOBU to the renderer.</TD>
+</TR>
+</table></div>
+
+<BLOCKQUOTE class="dtBlock">
+<b class="le">Note</b>&nbsp;&nbsp;&nbsp;In the preceding scenarios, there is a high probability that the content following a call to <B>IDVDRenderer::Abort</B> will have a temporal discontinuity. There could be several <B>Abort</B> calls in a row before the <B>Play</B>/<B>Scan</B> command is issued.</BLOCKQUOTE>
+
+<H4 class="dtH4">Requirements</H4>
+
+<P><B>OS Versions:</B> Windows CE .NET 4.0 and later.<BR>
+<B>Header:</B> Dvddrvr.idl.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50lrfidvdrendereriunknown.htm">IDVDRenderer:IUnknown</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

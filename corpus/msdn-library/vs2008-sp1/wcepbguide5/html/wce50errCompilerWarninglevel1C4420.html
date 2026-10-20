@@ -1,0 +1,90 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Compiler Warning (level 1) C4420</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Compiler Warning (level 1) C4420"/>
+<MSHelp:RLTitle Title="Compiler Warning (level 1) C4420"/>
+<MSHelp:Keyword Index="A" Term="wce50errCompilerWarninglevel1C4420"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Guide"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="True"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbRef"/>
+<MSHelp:Attr Name="Filename" Value="err42xx.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="True"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_3025578">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50errcompilerwarninglevel1c4420"></A>Compiler Warning (level 1) C4420</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<PRE class="syntax"><B>'<I>operator</I>' : operator not available, using '<I>operator</I>' instead; </B>
+<B>run-time checking may be compromised</B></PRE>
+
+<P>This warning is generated when you use the /RTCv (vector new/delete checking) and when no vector form is found. In this case, the non-vector form is used.</P>
+
+<P>In order for /RTCv to work correctly, the compiler should always call the vector form of new/delete if the vector syntax was used. </P>
+
+<P>The following sample program shows how C4420 warnings are generated and avoided,</P>
+
+<PRE class="code">// Test for direct use of global new/delete
+void func1() {
+int * pi = new int[10];  // warning
+
+delete [] pi;    // warning
+}
+
+// Test for use on class; class has vec dtor helper
+struct s1 {
+virtual ~s1() {};
+};
+
+void func2() {
+s1 *ps1 = new s1[10];  // warning
+
+delete [] ps1;
+}       // warning  with message extensions
+
+// Add a placement vector new; should still get warning
+void *operator new[]( size_t s, int op1, int op2 );
+void *operator new( size_t s, int op1 );
+
+void func3() {
+int * pi = new (1) int[10]; // warning
+
+delete [] pi;    // warning
+}</PRE>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

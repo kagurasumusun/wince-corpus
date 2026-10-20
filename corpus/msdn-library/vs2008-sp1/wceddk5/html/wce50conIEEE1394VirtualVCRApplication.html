@@ -1,0 +1,138 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>IEEE 1394 Virtual VCR Application</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="IEEE 1394 Virtual VCR Application"/>
+<MSHelp:RLTitle Title="IEEE 1394 Virtual VCR Application"/>
+<MSHelp:Keyword Index="A" Term="wce50conIEEE1394VirtualVCRApplication"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Driver"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="False"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="1394_vvcr.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="False"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+<MSHelp:Attr Name="PBFeature" Value="1394Driver"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_3017003">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50conieee1394virtualvcrapplication"></A>IEEE 1394 Virtual VCR Application</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>Be sure that the medium that the application uses as permanent storage while streaming can handle the necessary throughput for the appropriate stream. File systems, many types of storage, and hard drives with varying DMA characteristics might be incapable of managing the necessary amount of sustained throughput. This may result in overflow while recording or underflow while playing. During an overflow condition, incoming data might be dropped because the hard drive may not be able to write it fast enough. During an underflow condition, data might not be transmitted on time because the hard drive may not be able to provide data fast enough.</P>
+
+<H2 class="dtH2">Initialization Issues for a Virtual VCR Application</H2>
+
+<P>The following table shows how an application using the IEEE 1394 virtual VCR driver should respond to issues that arise during initialization.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=48%>Initialization issue</TH>
+<TH width=52%>How the application should respond</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=48%>Determining which predefined plugs exist and what their handles are.</TD>
+<TD width=52%>Use <A HREF="wce50lrfioctlvvcrquerystate.htm">IOCTL_VVCR_QUERY_STATE</A>.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=48%>Determining what the appropriate streaming frame size is for the type by utilizing <A HREF="wce50lrfioctlstreamgetmediasize.htm">IOCTL_STREAM_GET_MEDIA_SIZE</A>.</TD>
+<TD width=52%>Use the media type definition from IOCTL_VVCR_QUERY_STATE.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=48%>Initiating streaming sessions against the plugs for each plug returned by IOCTL_VVCR_QUERY_STATE. </TD>
+<TD width=52%>Use the direction and handle values. The plugs from IOCTL_VVCR_QUERY_STATE are considered remote plugs in the context of <A HREF="wce50lrfioctlstreamstartrecvsession.htm">IOCTL_STREAM_START_RECV_SESSION</A> or <A HREF="wce50lrfioctlstreamstartxmitsession.htm">IOCTL_STREAM_START_XMIT_SESSION</A>.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=48%>Initiating an appropriate streaming buffering system for the application. </TD>
+<TD width=52%>Handle buffer streaming through the streaming filter driver using <A HREF="wce50lrfioctlstreamattachbuffer.htm">IOCTL_STREAM_ATTACH_BUFFER</A>, <A HREF="wce50lrfioctlstreamdetachbuffer.htm">IOCTL_STREAM_DETACH_BUFFER</A>, and <A HREF="wce50lrfioctlstreamquerybufferstate.htm">IOCTL_STREAM_QUERY_BUFFER_STATE</A>.</TD>
+</TR>
+</table></div>
+
+<H2 class="dtH2">Run-Time Issues for a Virtual VCR Application</H2>
+
+<P>The following table shows how an application using the IEEE 1394 virtual VCR driver should respond to issues during run-time.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=45%>Run-time issue</TH>
+<TH width=55%>How the application should respond</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=45%>Incoming events come from the virtual VCR driver.</TD>
+<TD width=55%>Issue at least one <A HREF="wce50lrfioctlvvcrevent.htm">IOCTL_VVCR_EVENT</A> command asynchronously.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=45%>IOCTL_VVCR_EVENT notifies the application of a request to play, wind, or record.</TD>
+<TD width=55%>Change the state and begin streaming to the output plug.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=45%>A request is located in the results from IOCTL_VVCR_QUERY_STATE.</TD>
+<TD width=55%>Stream from the input plug. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=45%>A request is located in the results from IOCTL_VVCR_EVENT.</TD>
+<TD width=55%>Cease all streaming or move the emulated tape, by rewinding it, fast forwarding it, and so on.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=45%>IOCTL_VVCR_EVENT returns a plug state change event that introduces an unknown plug, rather than one previously obtained from IOCTL_VVCR_QUERY_STATE.</TD>
+<TD width=55%>Issue IOCTL_VVCR_QUERY_STATE to determine any remaining details about the plug and process it as needed.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=45%>IOCTL_VVCR_EVENT notifies the application of a request to scan to a different tape location.</TD>
+<TD width=55%>Move the emulated tape appropriately.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=45%>The position of the emulated tape changes. </TD>
+<TD width=55%>Use <A HREF="wce50lrfioctlvvcrsetmechanismposition.htm">IOCTL_VVCR_SET_MECHANISM_POSITION</A>.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=45%>The emulated tape state changes, for example, from stop to play or from play to rewind.</TD>
+<TD width=55%>Use <A HREF="wce50lrfioctlvvcrsetmechanismstate.htm">IOCTL_VVCR_SET_MECHANISM_STATE</A>. </TD>
+</TR>
+</table></div>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

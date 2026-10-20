@@ -1,0 +1,151 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>fclose, _fcloseall</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="fclose, _fcloseall"/>
+<MSHelp:RLTitle Title="fclose, _fcloseall"/>
+<MSHelp:Keyword Index="K" Term="_fcloseall"/>
+<MSHelp:Keyword Index="K" Term="fclose"/>
+<MSHelp:Keyword Index="A" Term="wce50lrffclosecmausfcloseall"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Application"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="False"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="Technology" Value="CRT"/>
+<MSHelp:Attr Name="TechnologyVers" Value="kbCRT"/>
+<MSHelp:Attr Name="TopicType" Value="apiref"/>
+<MSHelp:Attr Name="Filename" Value="crt2.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="True"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+<MSHelp:Attr Name="APIName" Value="fclose,"/>
+<MSHelp:Attr Name="APIType" Value="DLLExport"/>
+<MSHelp:Attr Name="APILocation" Value="coredll.dll"/>
+<MSHelp:Attr Name="PBFeature" Value="SYSGEN_FULL_CRT"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_3026854">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50lrffclosecmausfcloseall"></A>fclose, _fcloseall</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>Closes a stream (<B>fclose</B>) or closes all open streams (<B>_fcloseall</B>).</P>
+
+<PRE class="syntax"><B>int _fcloseall( </B>
+<B>&nbsp;&nbsp;&nbsp;void </B>
+<B>);</B>
+
+<B>int fclose( </B>
+<B>&nbsp;&nbsp;&nbsp;FILE* </B><I>stream</I><B> </B>
+<B>);</B></PRE>
+
+<H4 class="dtH4">Parameters</H4>
+
+<DL>
+<DT><I>stream</I></DT>
+
+<DD>Pointer to <B>FILE</B> structure.</dd>
+</DL>
+
+<H4 class="dtH4">Return Values</H4>
+
+<P><B>fclose</B> returns 0 if the stream is successfully closed. </P>
+
+<P>_<B>fcloseall</B> returns the total number of streams closed. </P>
+
+<P>Both functions return EOF to indicate an error.</P>
+
+<H4 class="dtH4">Remarks</H4>
+
+<P>The <B>fclose</B> function closes <I>stream</I>. </P>
+
+<P>_<B>fcloseall</B> closes all open streams except <B>stdin</B>, <B>stdout</B>, <B>stderr</B> (and, in MS-DOS&reg;, _<B>stdaux</B> and _<B>stdprn</B>). It also closes and deletes any temporary files created by <B>tmpfile</B>. </P>
+
+<P>In both functions, all buffers associated with the stream are flushed prior to closing. </P>
+
+<P>System-allocated buffers are released when the stream is closed. </P>
+
+<P>Buffers assigned by the user with <A HREF="wce50lrfsetvbuf.htm">setvbuf</A> are not automatically released.</P>
+
+<P class="label"><B>Example</B></P>
+
+<PRE class="code">/* FOPEN.C: This program opens files named "data"
+ * and "data2".It  uses fclose to close "data" and
+ * _fcloseall to close all remaining files.
+ */
+
+#include &lt;stdio.h&gt;
+
+FILE *stream, *stream2;
+
+void main( void )
+{
+   int numclosed;
+
+   /* Open for read (will fail if file "data" does not exist) */
+   if( (stream  = fopen( "data", "r" )) == NULL )
+      printf( "The file 'data' was not opened\n" );
+   else
+      printf( "The file 'data' was opened\n" );
+
+   /* Open for write */
+   if( (stream2 = fopen( "data2", "w+" )) == NULL )
+      printf( "The file 'data2' was not opened\n" );
+   else
+      printf( "The file 'data2' was opened\n" );
+
+   /* Close stream */
+   if( fclose( stream ) )
+      printf( "The file 'data' was not closed\n" );
+
+   /* All other files are closed: */
+   numclosed = _fcloseall( );
+   printf( "Number of files closed by _fcloseall: %u\n", numclosed );
+}</PRE>
+
+<P class="label"><B>Output</B></P>
+
+<PRE class="code">The file 'data' was opened
+The file 'data2' was opened
+Number of files closed by _fcloseall: 1</PRE>
+
+<H4 class="dtH4">Requirements</H4>
+
+<P><B>OS Versions: </B>Windows CE 2.0 and later.<BR>
+<B>Header: </B>stdlib.h.<BR>
+<B>Link Library: </B>coredll.dll.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50lrffflush.htm">fflush</A> | <A HREF="wce50lrffopencmauswfopen.htm">fopen</A> | <A HREF="wce50lrfsetvbuf.htm">setvbuf</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

@@ -1,0 +1,106 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Capture Graph Builder</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Capture Graph Builder"/>
+<MSHelp:RLTitle Title="Capture Graph Builder"/>
+<MSHelp:Keyword Index="A" Term="wce51conCaptureGraphBuilder"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Feature"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="directshow_concepts1.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="True"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+<MSHelp:Attr Name="PBFeature" Value="SYSGEN_DSHOW"/>
+<MSHelp:Attr Name="PBOnly" Value="False"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_1066266">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce51concapturegraphbuilder"></A>Capture Graph Builder</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P><B>Applies to:</B> Devices based on Windows Mobile Version 5.0 and later</P>
+
+<P>A filter graph that performs video or audio capture is called a capture graph. Capture graphs are often more complicated than file playback graphs. To make it easier for applications to build capture graphs, DirectShow provides a helper object called the Capture Graph Builder. The Capture Graph Builder exposes the <MSHelp:link keywords="wce51lrfICaptureGraphBuilder2Interface" TABINDEX="0">ICaptureGraphBuilder2 interface</MSHelp:link>, which contains methods for building and controlling a capture graph. </P>
+
+<P class="fig"><IMG SRC="dshow_capturegraphbuilder1.gif" ALT="" BORDER=0></P>
+
+<P>Start by calling <MSHelp:link keywords="wce50lrfCoCreateInstance" TABINDEX="0">CoCreateInstance</MSHelp:link><B> </B>to create new instances of the Capture Graph Builder and the Filter Graph Manager. Then initialize the Capture Graph Builder by calling <MSHelp:link keywords="wce51lrfICaptureGraphBuilder2SetFiltergraph" TABINDEX="0">ICaptureGraphBuilder2::SetFiltergraph</MSHelp:link> with a pointer to the Filter Graph Manager's <A HREF="wce50lrfigraphbuilderinterface.htm">IGraphBuilder Interface</A>. </P>
+
+<P class="fig"><IMG SRC="dshow_capturegraphbuilder2.gif" ALT="" BORDER=0></P>
+
+<P>The following code shows a helper function to perform these steps.</P>
+
+<PRE class="code">HRESULT InitCaptureGraphBuilder(
+  IGraphBuilder **ppGraph,         // Receives the pointer.
+  ICaptureGraphBuilder2 **ppBuild  // Receives the pointer.
+)
+{
+    if (!ppGraph || !ppBuild) {
+        return E_POINTER;
+    }
+    IGraphBuilder *pGraph = NULL;
+    ICaptureGraphBuilder2 *pBuild = NULL;
+
+    // Create the Capture Graph Builder.
+    HRESULT hr = CoCreateInstance(CLSID_CaptureGraphBuilder, NULL, 
+        CLSCTX_INPROC_SERVER, IID_IcaptureGraphBuilder2, (void**)&amp;pBuild);
+    if (SUCCEEDED(hr)) {
+        // Create the Filter Graph Manager.
+        hr = CoCreateInstance(CLSID_FilterGraph, 0, CLSCTX_INPROC_SERVER,
+            IID_IGraphBuilder, (void**)&amp;pGraph);
+        if (SUCCEEDED(hr)) {
+            // Initialize the Capture Graph Builder.
+            pBuild-&gt;SetFiltergraph(pGraph);
+
+            // Return both interface pointers to the caller.
+            *ppBuild = pBuild;
+            *ppGraph = pGraph; // The caller must release both interfaces.
+            return S_OK;
+        }
+        else {
+            pBuild-&gt;Release();
+        }
+    }
+    return hr; // Failed
+}</PRE>
+
+<P>Throughout this section on video capture, it is assumed that you are using the Capture Graph Builder to create the capture graph. However, it is possible to build capture graphs entirely by using <B>IGraphBuilder</B> methods. This is considered an advanced topic, however, and the Capture Graph Builder methods are preferred. For more information, see <A HREF="wce51conadvancedcapturetopics.htm">Advanced Capture Topics</A>.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce51convideocapture.htm">Video Capture</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

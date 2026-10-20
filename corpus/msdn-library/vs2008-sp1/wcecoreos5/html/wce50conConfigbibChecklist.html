@@ -1,0 +1,91 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Config.bib Checklist</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Config.bib Checklist"/>
+<MSHelp:RLTitle Title="Config.bib Checklist"/>
+<MSHelp:Keyword Index="A" Term="wce50conConfigbibChecklist"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Feature"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="kernel_overview.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="True"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+<MSHelp:Attr Name="PBFeature" Value="CORE"/>
+<MSHelp:Attr Name="PBOnly" Value="True"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_3009762">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50conconfigbibchecklist"></A>Config.bib Checklist</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>The following is a checklist of items that must appear in Config.bib to produce a multiple XIP image:
+
+<UL type="disc">
+	<LI>Define the XIP. 
+<P>All XIP regions must be in the order in which they appear in Config.bib.
+</li>
+
+	<LI>Establish the XIP chain by adding the following lines to the MEMORY section from the sample Config.bib. 
+<P>The reserve section for the chain file must be the first region in the image.
+
+<PRE class="code">#define XIPLOC_PHYSICAL A02C0000  ;  Location of the chain
+RESERVE  $(XIPLOC_PHYSICAL)   00002000   ;   CHAIN
+pdwXIPLoc 00000000 $(XIPLOC_PHYSICAL) FIXUPVAR</PRE>
+</li>
+
+	<LI>Set the following lines in Config.bib in the CONFIG section.
+<PRE class="code">XIPSCHAIN= $(XIPLOC_PHYSICAL)</PRE>
+</li>
+
+	<LI>Define the required fixup variables in the MEMORY section: <I>pdwXIPLoc</I>. 
+<P>This is defined in the sample Config.bib.
+</li>
+
+	<LI>Reserve a region of RAM for that code and set the fixup variable to point to it, if you are using a RAM region for the flash code like the sample OAL does.
+<PRE class="code">FLASHFN    8c082000  00001000  RESERVED
+dwFshFnRsvd 00000000 8c082000 FIXUPVAR</PRE>
+
+<P>Fix the <I>dwFshFnRsvd</I> variable so that it is at the same address as the region reserved for the chain file. In the code, add the value of ROM_CHAIN_OFFSET to the variable to dereference the chain location. This should look like <CODE>dwFshFnRsvd += ROM_CHAIN_OFFSET</CODE> in the code.
+</li>
+</UL>
+
+<P>If you begin with the sample Config.bib, most of the programming is done for you.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50conbuildinganimagewithmultiplexipregions.htm">Building an Image with Multiple XIP Regions</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

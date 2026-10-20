@@ -1,0 +1,151 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>PREfast Warning Message Reference</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="PREfast Warning Message Reference"/>
+<MSHelp:RLTitle Title="PREfast Warning Message Reference"/>
+<MSHelp:Keyword Index="A" Term="wce50grfPREfastWarningMessageReference"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Guide"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="True"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="prefast_warnings.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="True"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_1053544">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50grfprefastwarningmessagereference"></A>PREfast Warning Message Reference</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>This section describes the warning messages produced by PREfast. You can view these messages by category or number: 
+
+<UL type="disc">
+	<LI><A HREF="wce50grfwarningsbycategory.htm">Warnings by Category</A> </li>
+
+	<LI><A HREF="wce50grfprefastwarningsbynumber.htm">Warnings by Number</A></li>
+</UL>
+
+<P>Each warning topic in this guide contains a detailed description of the warning, including examples and additional resources whenever possible.</P>
+
+<H2 class="dtH2">Suppressing Individual Warning Messages</H2>
+
+<P>PREfast includes support for <B>pragma prefast</B>, which enables source-level suppression of specific PREfast warnings.</P>
+
+<P>You can use <B>pragma prefast</B> to suppress individual warnings when PREfast reports an incorrect or irrelevant message. </P>
+
+<P>Because <B>pragma prefast</B> is an extension to the PREfast AST compiler, it is not recognized by other compilers, including the C++ compiler included with Visual C++ 6.0 and later. </P>
+
+<P>This results in a 4068 warning. This warning can cause builds to fail under -W4 -Wx flags.</P>
+
+<H2 class="dtH2">Using pragma prefast</H2>
+
+<P>To use <B>pragma prefast</B> build problems, add the following to a header that is used in all your source files:</P>
+
+<PRE class="code">#ifndef _PREFAST_
+#pragma warning(disable:4068)
+#endif</PRE>
+
+<P>The syntax of pragma prefast is</P>
+
+<PRE class="syntax">#pragma prefast(
+    specifier {: warning number list separated by whitespace}
+    (, " comment field description")</PRE>
+
+<P>The following example suppresses a warning 308 on the next statement. The comment field allows arbitrary strings, useful for describing why the message is suppressed.</P>
+
+<PRE class="code">#pragma prefast(suppress:308, "the pointer was saved above (PREfast bug 508)")</PRE>
+
+<P>There are several specifier options available in addition to <code class="ce">suppress.</code></P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=33%>Specifier</TH>
+<TH width=33%>Example</TH>
+<TH width=34%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%>disable</TD>
+<TD width=33%>
+<PRE class="code"><code class="ce">#pragma prefast(disable:1 11 221, "explanation for the disable") </code></PRE>
+</TD>
+<TD width=34%>Disables the PREfast warnings specified in a warning list. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%>enable</TD>
+<TD width=33%>
+<PRE class="code">#pragma prefast(enable:1 11 221, "explanation for the enable") </PRE>
+</TD>
+<TD width=34%>Enables the PREfast warnings specified in a warning.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD class="normal" width=33%>push</TD>
+<TD width=33%>
+<PRE class="code">#pragma prefast(push) </PRE>
+</TD>
+<TD width=34%>Pushes the current disabled/enabled state of all the PREfast warnings into a stack. 
+<P>Similar to <code class="ce">#pragma warning(push)</code>. </P>
+</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%>pop</TD>
+<TD width=33%>
+<PRE class="code">#pragma prefast(pop) </PRE>
+</TD>
+<TD width=34%>Resets the disabled/enabled state of all the PREfast warnings to the state of the matching <code class="ce">prefast(push)</code> statement. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD class="normal" width=33%>suppress</TD>
+<TD width=33%>
+<PRE class="code">5 MyFunction(i, 
+#pragma prefast(suppress: 1, "PREfast noise: pftbug-401") 
+6 j);</PRE>
+</TD>
+<TD width=34%>Suppresses the warnings in the next line after the suppress statement. 
+<P>In this example, PREfast warning 1 on line 6 is suppressed.</P>
+</TD>
+</TR>
+</table></div>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50conprefastoverview.htm">PREfast Overview</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

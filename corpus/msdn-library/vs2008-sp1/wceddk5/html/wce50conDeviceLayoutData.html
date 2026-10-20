@@ -1,0 +1,141 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Device Layout Data</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Device Layout Data"/>
+<MSHelp:RLTitle Title="Device Layout Data"/>
+<MSHelp:Keyword Index="A" Term="wce50conDeviceLayoutData"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Driver"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="False"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="keyboard_guide.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="True"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="True"/>
+<MSHelp:Attr Name="PBFeature" Value="KeyboardDriver"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_3018179">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50condevicelayoutdata"></A>Device Layout Data</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>You can include keyboard device layouts in an OS design or dynamically load them at run time.</P>
+
+<H4 class="dtH4">Including Keyboard Device Layouts in an OS Design</H4>
+
+<P>You can include multiple device layouts in an OS design. By default, all device layouts are compiled into the keyboard driver DLL. Compiling all device layouts into the keyboard driver DLL minimizes the number of DLLs in the run-time image. Layout Manager identifies device layouts by their entry points. Device layout entry points are generated from the registry. Use the appropriate input locale identifier for your keyboard layout. For more information about input locals and their associated keyboard layouts, see <A HREF="wce50conkeyboardlayouts.htm">Translating Scan Codes to Virtual-Key Codes</A>.</P>
+
+<P>The value name and the locale identifier comprise the device layout entry points. If one decorated entry does not exist, Layout Manager attempts to use the undecorated names. For example, if Kbdmouse.dll exposes <B>Matrix_00000409</B>, which is a decorated entry point, Layout Manager attempts to use <B>Matrix</B>, which is the undecorated name. This is useful when the device layout does not need to be localized so the same scan code to virtual-key code mappings and remapping functions can be used for every language. </P>
+
+<P>The following registry keys show the <B>PS2_AT_00000409</B>, <B>Matrix_00000409</B> and <B>PS2_AT_00010409</B> device layout entries into Kbdmouse.dll. The input locale registry subkey allows Layout Manager to determine the locales that are available.</P>
+
+<PRE class="code">[HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Layouts\00000409]
+    "Layout File"="kbdmouse.dll"
+    "Layout Text"="US"
+    "PS2_AT"="kbdmouse.dll"
+    "Matrix"="kbdmouse.dll"
+    "Layout Display Name"=mui_sz:"Mykeyboard.dll, # 22
+
+[HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Layouts\00010409]
+    "Layout File"="kbdmouse.dll"
+    "Layout Text"="United States-Dvorak"
+    "PS2_AT"="kbdmouse.dll"</PRE>
+
+<P>Layout Manager uses the value of <B>Layout File</B> to determine which DLL contains the input language. The DLL listed for <B>Layout File</B> does not need to match the DLLs listed for the device layout entry points. For more information, see <A HREF="wce50coninputlanguages.htm">Input Languages</A>. </P>
+
+<P>The following table shows the two types of <B>Preload</B> registry keys.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=49%>Registry key example</TH>
+<TH width=51%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=49%>
+<PRE class="code">[HKEY_CURRENT_USER\Keyboard Layout\Preload]
+<PRE class="code">  @="&lt;HKL value&gt;"</PRE>
+</PRE>
+</TD>
+<TD width=51%>The <B>Preload</B> registry subkey without a <B>Preload</B> subkey value is the default input locale.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=49%>
+<PRE class="code">[HKEY_CURRENT_USER\Keyboard Layout\Preload\<I>&lt;Preload value&gt;</I>]
+<PRE class="code">  @="&lt;HKL value&gt;"</PRE>
+</PRE>
+</TD>
+<TD width=51%>The <B>Preload</B> registry subkey values between 1 and 15 represent the available input locales. You can use up to 15 different keyboard layouts, and the <B>Preload</B> registry subkey values do not have to be in order.</TD>
+</TR>
+</table></div>
+
+<BLOCKQUOTE class="dtBlock">
+<b class="le">Note</b>&nbsp;&nbsp;&nbsp;LOC_HKL_DEFAULT in the Common.str file specifies the default <B>Preload</B> value. If you change the default keyboard layout after the first boot, you must soft reset the platform for the changes to take affect. For more information, see <MSHelp:link keywords="wce50conUserInputLanguageImplementation" TABINDEX="0">Multiple Input Language Support</MSHelp:link>.</BLOCKQUOTE>
+
+<P>If there is no input locale available at boot time, some components of the OS will not function correctly until an input locale is loaded. This affects Remote Desktop Protocol (RDP) keyboards, human interface device (HID) keyboards, and software-based input panels (SIPs).</P>
+
+<P>The following example registry keys show the <B>HKEY_CURRENT_USER\Keyboard Layout\Preload</B> registry subkeys. These registry keys show two input locales, 00000409 and 00010409. 00000409 is the default input locale.</P>
+
+<PRE class="code">[HKEY_CURRENT_USER\Keyboard Layout\Preload]
+    @="00000409"
+
+[HKEY_CURRENT_USER\Keyboard Layout\Preload\1]
+    @="00000409"
+
+[HKEY_CURRENT_USER\Keyboard Layout\Preload\2]
+    @="00010409"</PRE>
+
+<BLOCKQUOTE class="dtBlock">
+<b class="le">Note</b>&nbsp;&nbsp;&nbsp;An error occurs if you ask Layout Manager to switch to an input locale that does not exist in the <B>Preload</B> registry subkey.</BLOCKQUOTE>
+
+<H4 class="dtH4">Adding Keyboard Device Layouts at Run Time</H4>
+
+<P>You can install a device layout at run time. When you install the DLL on the device, add the DLL's entries to the registry in the same manner as the layouts included in the build described previously.</P>
+
+<P>You can replace any device layout at run time by changing the name of the DLL in the registry. Each time Layout Manager changes device layouts, it checks the registry for the DLL that contains the entry function.</P>
+
+<P>The following registry key shows the <B>HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Layouts\00000407</B> registry key.</P>
+
+<PRE class="code">[HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Layouts\00000407]
+    "Layout File"="KbdGer.dll"
+    "Layout Text"="German"
+    "PS2_AT"="KbdGer.dll"</PRE>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50condevicelayouts.htm">Device Layouts</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

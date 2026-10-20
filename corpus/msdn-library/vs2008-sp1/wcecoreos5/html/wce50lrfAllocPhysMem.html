@@ -1,0 +1,169 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>AllocPhysMem</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="AllocPhysMem"/>
+<MSHelp:RLTitle Title="AllocPhysMem"/>
+<MSHelp:Keyword Index="K" Term="AllocPhysMem"/>
+<MSHelp:Keyword Index="A" Term="wce50lrfAllocPhysMem"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Feature"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="apiref"/>
+<MSHelp:Attr Name="Filename" Value="kernel_reference.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="False"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+<MSHelp:Attr Name="APIName" Value="AllocPhysMem"/>
+<MSHelp:Attr Name="APIType" Value="LibDef"/>
+<MSHelp:Attr Name="APILocation" Value="Coredll.lib"/>
+<MSHelp:Attr Name="PBFeature" Value="CORE"/>
+<MSHelp:Attr Name="PBOnly" Value="True"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_3009471">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50lrfallocphysmem"></A>AllocPhysMem</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>This function allocates physically contiguous memory.</P>
+
+<PRE class="syntax"><B>LPVOID AllocPhysMem(</B>
+  <B>DWORD </B><I>cbSize</I><B>,</B>
+  <B>DWORD </B><I>fdwProtect</I><B>,</B>
+  <B>DWORD </B><I>dwAlignmentMask</I><B>,</B>
+  <B>DWORD </B><I>dwFlags</I><B>,</B>
+  <B>PULONG </B><I>pPhysicalAddress</I>
+<B>);</B></PRE>
+
+<H4 class="dtH4">Parameters</H4>
+
+<DL>
+<DT><I>cbSize</I></DT>
+
+<DD>[in] Number of bytes to allocate. The physical memory allocated is rounded up to the nearest page and is aligned on a 64-KB address.</dd>
+
+<DT><I>fdwProtect</I></DT>
+
+<DD>[in] Specifies the protection desired. The following table shows the values you can specify.
+
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=39%>Value</TH>
+<TH width=61%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=39%>PAGE_READONLY</TD>
+<TD width=61%>Enables read access to the committed region of pages. An attempt to write to the committed region results in an access violation. If the system differentiates between read-only access and execute access, an attempt to execute code in the committed region results in an access violation.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=39%>PAGE_READWRITE</TD>
+<TD width=61%>Enables both read and write access to the committed region of pages.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=39%>PAGE_EXECUTE</TD>
+<TD width=61%>Enables execute access to the committed region of pages. An attempt to read or write to the committed region results in an access violation.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=39%>PAGE_EXECUTE_READ</TD>
+<TD width=61%>Enables execute and read access to the committed region of pages. An attempt to write to the committed region results in an access violation.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=39%>PAGE_EXECUTE_READWRITE</TD>
+<TD width=61%>Enables execute, read, and write access to the committed region of pages.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=39%>PAGE_GUARD</TD>
+<TD width=61%>Pages in the region become guard pages. Any attempt to read from or write to a guard page causes the system to raise a STATUS_GUARD_PAGE exception and turn off the guard page status. Guard pages thus act as a one-shot access alarm.
+<P>The PAGE_GUARD flag is a page protection modifier. An application uses it with one of the other page protection flags, with one exception: It cannot be used with PAGE_NOACCESS. When an access attempt leads the system to turn off guard page status, the underlying page protection takes over.</P>
+
+<P>If a guard page exception occurs during a system service, the service typically returns a failure status indicator.</P>
+</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=39%>PAGE_NOACCESS</TD>
+<TD width=61%>Disables all access to the committed region of pages. An attempt to read from, write to, or execute in the committed region results in an access violation exception, called a general protection (GP) fault.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=39%>PAGE_NOCACHE</TD>
+<TD width=61%>Memory returned by <B>AllocPhysMem</B> is always uncached. This flag is a no operation.</TD>
+</TR>
+</table></div>
+
+</dd>
+
+<DT><I>dwAlignmentMask</I></DT>
+
+<DD>[in] Bit mask that describes the byte alignment needed. If it is set to 0 (zero), the default system alignment is used. If it is set to any other value, the kernel will try to fulfill the memory request based on the alignment request. The <I>dwAlignmentMask</I> parameter is AND with a physical address to determine if the memory is aligned correctly for the request.</dd>
+
+<DT><I>dwFlags</I></DT>
+
+<DD>Reserved for future use. Must be set to 0 (zero).</dd>
+
+<DT><I>pPhysicalAddress</I></DT>
+
+<DD>[out] Pointer to a <B>DWORD</B> that stores the physical address of the memory allocation.</dd>
+</DL>
+
+<H4 class="dtH4">Return Values</H4>
+
+<P>If the allocation failed, NULL is returned; otherwise, a valid virtual pointer is returned.</P>
+
+<P>Call <A HREF="wce50lrfgetlasterror.htm">GetLastError</A> for extended error information.</P>
+
+<H4 class="dtH4">Remarks</H4>
+
+<P>If there is no physically contiguous memory to fulfill the request then no attempt will be made to move memory around to fulfill the request.</P>
+
+<BLOCKQUOTE class="dtBlock">
+<b class="le">Note</b>&nbsp;&nbsp;&nbsp;To call <B>AllocPhysMem</B>, you must first set WINCEOEM=1.</BLOCKQUOTE>
+
+<H4 class="dtH4">Requirements</H4>
+
+<P><B>OS Versions:</B> Windows CE .NET 4.0 and later.<BR>
+<B>Header:</B> Pkfuncs.h.<BR>
+<B>Link Library:</B> Coredll.lib.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50lrffreephysmem.htm">FreePhysMem</A> | <MSHelp:link keywords="wce50conTrustedAPIs" TABINDEX="0">Trusted APIs</MSHelp:link></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

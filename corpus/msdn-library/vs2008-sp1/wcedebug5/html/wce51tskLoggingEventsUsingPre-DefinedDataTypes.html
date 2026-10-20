@@ -1,0 +1,99 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Logging Events Using Pre-Defined Data Types</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Logging Events Using Pre-Defined Data Types"/>
+<MSHelp:RLTitle Title="Logging Events Using Pre-Defined Data Types"/>
+<MSHelp:Keyword Index="A" Term="wce51tskLoggingEventsUsingPre-DefinedDataTypes"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Debugging"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="True"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbTask"/>
+<MSHelp:Attr Name="Filename" Value="celog_event_tracking_customization.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="True"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_1073146">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce51tskloggingeventsusingpre-defineddatatypes"></A>Logging Events Using Pre-Defined Data Types</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>The CeLog event-tracking subsystem includes a set of pre-defined data types that you can use when logging your own events. You can instrument your code using these data types in calls to <MSHelp:link keywords="wce50lrfCeLogData" TABINDEX="0">CeLogData</MSHelp:link>. Or, if you only need to log a string value, you can use <MSHelp:link keywords="wce50lrfCeLogMsg" TABINDEX="0">CeLogMsg</MSHelp:link>.</P>
+
+<P>After you have instrumented your code with calls to <B>CeLogData</B> or <B>CeLogMsg</B>, and run your code to capture data, you can view your data in Remote Kernel Tracker and Readlog. For more information, see <A HREF="wce51tskviewingeventsfrompre-defineddatatypes.htm">Viewing Events from Pre-Defined Data Types</A>.</P>
+
+<H3 class="dtH3">CeLogData</H3>
+
+<P>When you call <B>CeLogData</B>, you provide a data type, size, and zone. The pre-defined data types compose arrays of one or more basic data types. For example, CELID_RAW_ULONG defines one or more ULONG values, and CELID_RAW_WCHAR defines a single character or a string. For a complete list of pre-defined data types, see <MSHelp:link keywords="wce51grfCeLogPre-DefinedDataTypes" TABINDEX="0">CeLog Pre-Defined Data Types</MSHelp:link>. The size of the data type array is indicated in the <I>wLen</I> parameter you provide to <B>CeLogData</B>. </P>
+
+<P>The zone you provide determines whether <MSHelp:link keywords="wce50lrfCeLogData" TABINDEX="0">CeLogData</MSHelp:link> logs your data. You can prevent logging for certain kinds of data by disabling a zone, or authorize logging data by enabling a relevant zone. For a complete list of zones, see <MSHelp:link keywords="wce50grfCeLogZones" TABINDEX="0">CeLog Zones</MSHelp:link>. </P>
+
+<P>The following example makes two <B>CeLogData</B> calls to log the values defined in the data types CELID_RAW_ULONG and CELID_RAW_WCHAR. The example logs every occurrence of these values by using the CELZONE_ALWAYSON, which cannot be disabled.</P>
+
+<PRE class="code">    DWORD DataArray[3] = { 1234, 5678, 9101 };
+    TCHAR MyString[] = TEXT("This is my string.");
+
+    CeLogData(TRUE, CELID_RAW_ULONG, DataArray, 3*sizeof(DWORD),
+              0, CELZONE_ALWAYSON, 0, FALSE);
+
+    CeLogData(TRUE, CELID_RAW_WCHAR, MyString,
+              (_tcslen(MyString) + 1)*sizeof(TCHAR),
+              0, CELZONE_ALWAYSON, 0, FALSE);</PRE>
+
+<H3 class="dtH3">CeLogMsg</H3>
+
+<P>You can also use <MSHelp:link keywords="wce50lrfCeLogMsg" TABINDEX="0">CeLogMsg</MSHelp:link> to log string data. The following line shows an example of a <B>CeLogMsg</B> call.</P>
+
+<PRE class="code">    CeLogMsg(TEXT("This is my value: %u\r\n"), dwValue);</PRE>
+
+<P><B>CeLogMsg</B> performs string processing and then calls <B>CeLogData</B> with the CELID_RAW_WCHAR type. <B>CeLogMsg</B> always logs to the zone CELZONE_ALWAYSON, which cannot be turned off. If you need to use zones to filter your data, you must use <B>CeLogData</B> instead of <B>CeLogMsg</B>.</P>
+
+<P>While <B>CeLogMsg</B> provides a convenient way to quickly record information from code, be aware that string representations of your data require much more log space than binary representations. This can lead to problems like CeLog data loss or decreased performance. </P>
+
+<P>If you print many values into one string, or print them often, consider logging a binary version of your data as a custom data structure instead. For more information, see <A HREF="wce51tskcapturingeventswithcustomdatastructures.htm">Capturing Events with Custom Data Structures</A>.</P>
+
+<H3 class="dtH3">Flagging multiple calls </H3>
+
+<P>If you log the same data in multiple places, consider using flags to identify different locations from which the data is logged. For more information, see <A HREF="wce51tskusingflagswithyourevents.htm">Using Flags with Your Events</A>.</P>
+
+<H3 class="dtH3">Improving performance for ship builds</H3>
+
+<P>To minimize the size of your executable and improve performance in ship builds, remove <B>CeLogData</B> and <B>CeLogMsg </B>calls from the build with CeLog macros. For more information, see <A HREF="wce51conusingmacrostoimproveperformanceinshipbuilds.htm">Using Macros to Improve Performance in Ship Builds</A>.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce51tskviewingeventsfrompre-defineddatatypes.htm">Viewing Events from Pre-Defined Data Types</A> | <A HREF="wce51tskcapturingeventswithcustomdatastructures.htm">Capturing Events with Custom Data Structures</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

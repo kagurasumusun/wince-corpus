@@ -1,0 +1,225 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Synchronization</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Synchronization"/>
+<MSHelp:RLTitle Title="Synchronization"/>
+<MSHelp:Keyword Index="A" Term="wce51grfSynchronization"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Debugging"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="True"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="DATK_Sync.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="True"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_1076617">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce51grfsynchronization"></A>Synchronization</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>Synchronization in automation guarantees that a UI action taken by automation code will be synchronous with the device. For example, if you click on a button in automation, the next UI action in your automation will not begin until the device has finished refreshing itself as a result of the button click.</P>
+
+<P class="label"><B>Synchronization in DATK automation</B></P>
+
+<P>Synchronization is implicit in DATK automation &#0150; whenever you use DATK to initiate a UI action, it will ensure that action is synchronous without any extra work on your part. By default DATK will wait for the system and the current foreground to become idle before returning from an UI action.</P>
+
+<P class="label"><B>Special synchronization needs</B></P>
+
+<P>Most of the time this implicit synchronization is sufficient, but if you have special synchronization needs for your automation you should deal with these at the Area Library level instead of in test cases. You can control the type of synchronization used by DATK by changing the global synchronization object. This object defines what heuristics DATK will use to determine that synchronization is complete. Available synchronization objects include:
+
+<UL>
+	<LI>SyncWaitForAllForegroundIdle &#0150; waits for all currently visible windows to become idle</li>
+
+	<LI>SyncWaitForCurrentAppIdle &#0150; waits for all windows and threads belonging to the application in the foreground to become idle</li>
+
+	<LI>SyncWaitForForegroundIdle &#0150; waits for the current foreground window to become idle</li>
+
+	<LI>SyncWaitForNewForeground &#0150; waits until the foreground window changes and becomes idle</li>
+
+	<LI>SyncWaitForForeground &#0150; waits until the specified foreground window (determined by process name or window finder) appears and becomes idle</li>
+
+	<LI>SyncWaitForSystemAndForegroundIdle &#0150; waits for the all system threads to become idle and then waits for all foreground windows and threads to become idle</li>
+
+	<LI>SyncWaitForSystemIdle &#0150; waits for all threads (not windows) in the system to become idle</li>
+
+	<LI>SyncWaitForWindowIdle &#0150; waits for a specified window to become idle</li>
+
+	<LI>SyncWaitForWindowIdleXTime &#0150; waits for a specified window to become idle and stay idle a specified amount of time</li>
+</UL>
+
+<P>If you need to use a different synchronization object you need to swap out the current object before performing your UI action. The following method shows how you change synchronization objects:</P>
+
+<PRE class="code">/// &lt;summary&gt;
+/// Example: change the implicit synchronization object
+/// &lt;/summary&gt;
+public void ChangeSyncObjectExample()
+{
+    // Do work with default sync object
+
+    // Change the sync object
+    using(new SyncMode(new SyncWaitForSystemIdle(20000)))
+    {
+        // Do work with WaitForSystemIdle sync object
+        // Inside this using block all implicitcit
+        // synchronization is performed with the
+        // SyncWaitForSystemIdle sync object
+    }
+
+    // Do work with default sync object
+}</PRE>
+
+<P>If you need to use a different synchronization object for an entire test suite you can swap out the sync mode in Begin and End as shown below:</P>
+
+<PRE class="code">    /// &lt;summary&gt;
+    /// Example: Change sync mode for entire test suite
+    /// &lt;/summary&gt;
+    public class SuiteSynchronizationExample : TestSuite
+    {
+        /// &lt;summary&gt;
+        /// Example: Set the sync mode in Begin method
+        /// &lt;/summary&gt;
+        public void Begin()
+        {
+            // Store the original sync object
+            oldSync = Synchronization.GlobalActionSyncMode;
+
+            // Replace the original sync object with new object
+            Synchronization.GlobalActionSyncMode =
+                new SyncWaitForAllForegroundIdle(
+                Synchronization.defaultTimeout);
+
+            // Other code that uses new sync mode
+        }
+
+        // Any number of test cases that use the new sync mode
+
+        /// &lt;summary&gt;
+        /// Example: Restore the sync mode in End method
+        /// &lt;/summary&gt;
+        public void End()
+        {
+            // Restore the original sync object
+            Synchronization.GlobalActionSyncMode = oldSync;
+        }
+
+        // private field to keep track of original sync object
+        private SyncBasic oldSync = null;
+    }</PRE>
+
+<P>If implicit synchronization is not meeting your needs you can temporarily suspend it and make explicit calls to the synchronization. This should very rarely be necessary and is not encouraged. The following method shows how to work with explicit synchronization:</P>
+
+<PRE class="code">/// &lt;summary&gt;
+/// Example: disable implicit synchronization
+/// &lt;/summary&gt;
+public void DisableImplicitSyncExample()
+{
+    // Do work with default sync object
+
+    // Change the sync object
+    using(new SyncMode(null))
+    {
+        SyncWaitForSystemIdle systemIdle =
+            new SyncWaitForSystemIdle(20000);
+
+        // Inside this using block synchronization
+        // will only be performed if you call it
+        // explicitly
+
+        // Perform UI action without synchronization
+        systemIdle.Wait();
+    }
+
+    // Do work with default sync object
+}</PRE>
+
+<P class="label"><B>Changing the timeout for the global sync object</B></P>
+
+<P>If you need to change the timeout for synchronization over a block of code you can use the SyncMode method explained in the previous question, specifying the desired timeout when you construct the new sync object. If you need to change the timeout for an entire suite you will need to set the global sync mode in the Begin method and reset it in the End method as show below.</P>
+
+<PRE class="code">/// &lt;summary&gt;
+/// Example: changing sync timeout for suite
+/// &lt;/summary&gt;
+public void Begin()
+{
+    // Change the timeout
+    this.Timeout = Datk.Synchronize.Synchronization.GlobalActionSyncMode.Timeout;
+    Datk.Synchronize.Synchronization.GlobalActionSyncMode.Timeout = timeout;
+
+    // Do other work to prepare the suite
+}
+
+/// &lt;summary&gt;
+/// Example: changing sync timeout for suite
+/// &lt;/summary&gt;
+public void End()
+{
+    // Do work to cleanup after the suite
+
+    // Restore the timeout
+    Datk.Synchronize.Synchronization.GlobalActionSyncMode.Timeout = this.Timeout;
+}</PRE>
+
+<P class="label"><B>Custom synchronization objects</B></P>
+
+<P>DATK allows you to enhance synchronization by creating your own custom synchronization object. This should rarely be necessary, and if you find you have need for a new synchronization object you should discuss this with the Tools Team to ensure that the work is not already planned.</P>
+
+<P class="label"><B>Providing implicit synchronization for new DATK or MTK methods</B></P>
+
+<P>If you are developing a new method for DATK or MTK that causes an action to take place on the device you are required to provide implicit synchronization. If your new method simply gets information without initiating any UI actions you do not need to worry about synchronization.</P>
+
+<P>To provide implicit synchronization in your new method you need to use the AtomicAction object to wrap the lines of code that initiate the UI action. This serves to keep synchronization from occurring while the AtomicAction object is in scope, and to initiate synchronization when the AtomicAction object goes out of scope. The following method shows how to use AtomicAction to implement implicit synchronization:</P>
+
+<PRE class="code">/// &lt;summary&gt;
+/// Example: implementing implicit synchronization
+/// &lt;/summary&gt;
+public void ImplementingImplicitSyncExample()
+{
+    // Do work which does not initiate UI actions
+
+    using(new AtomicAction())
+    {
+        // Do work to initiate the UI action.
+        // Inside this using block synchronization
+        // will not take place with the default
+        // sync object. When the block is exited
+        // the default sync object will be used
+        // to synchronize the device.
+    }
+
+    // Do work which does not initiate UI actions
+}</PRE>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

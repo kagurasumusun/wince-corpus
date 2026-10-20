@@ -1,0 +1,130 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>ProtocolUnbindAdapter</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="ProtocolUnbindAdapter"/>
+<MSHelp:RLTitle Title="ProtocolUnbindAdapter"/>
+<MSHelp:Keyword Index="K" Term="ProtocolUnbindAdapter"/>
+<MSHelp:Keyword Index="A" Term="wce50lrfProtocolUnbindAdapter"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Driver"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="False"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="apiref"/>
+<MSHelp:Attr Name="Filename" Value="ndis_lower_edge_functions.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="False"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+<MSHelp:Attr Name="APIName" Value="ProtocolUnbindAdapter"/>
+<MSHelp:Attr Name="APIType" Value="LibDef"/>
+<MSHelp:Attr Name="APILocation" Value="Ndislib.lib"/>
+<MSHelp:Attr Name="PBFeature" Value="NetworkDriver"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_3018650">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50lrfprotocolunbindadapter"></A>ProtocolUnbindAdapter</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>This function is a required function to support Plug and Play.</P>
+
+<PRE class="syntax"><B>VOID ProtocolUnbindAdapter(</B>
+  <B>PNDIS_STATUS</B> <I>Status</I><B>,</B>
+  <B>NDIS_HANDLE</B> <I>ProtocolBindingContext</I><B>,</B>
+  <B>NDIS_HANDLE</B> <I>UnbindContext</I>
+<B>);</B></PRE>
+
+<H4 class="dtH4">Parameters</H4>
+
+<DL>
+<DT><I>Status</I></DT>
+
+<DD>[out] Specifies the status of the unbinding operation as the value returned by <A HREF="wce50lrfndiscloseadapter.htm">NdisCloseAdapter</A>, which can be either of the following.
+
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=33%>Value</TH>
+<TH width=67%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%>NDIS_STATUS_SUCCESS</TD>
+<TD width=67%>The binding was closed and all resources pertaining to that binding have been released.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%>NDIS_STATUS_PENDING</TD>
+<TD width=67%>The request is being handled asynchronously, and the <A HREF="wce50lrfprotocolcloseadaptercomplete.htm">ProtocolCloseAdapterComplete</A> function will complete the operation.</TD>
+</TR>
+</table></div>
+
+</dd>
+
+<DT><I>ProtocolBindingContext</I></DT>
+
+<DD>[in] Specifies the handle to a protocol-allocated context area in which the protocol driver maintains per-binding runtime state. The driver supplied this handle when it called <A HREF="wce50lrfndisopenadapter.htm">NdisOpenAdapter</A>.</dd>
+
+<DT><I>UnbindContext</I></DT>
+
+<DD>[in] Specifies a handle, supplied by NDIS, that the protocol passes subsequently to <B>NdisCompleteUnbindAdapter</B>.</dd>
+</DL>
+
+<H4 class="dtH4">Return Values</H4>
+
+<P>None.</P>
+
+<H4 class="dtH4">Remarks</H4>
+
+<P>As the reciprocal of <A HREF="wce50lrfprotocolbindadapter.htm">ProtocolBindAdapter</A>, <B>ProtocolUnbindAdapter</B> releases all resources the driver allocated for per-binding network I/O operations with one possible exception: the driver-allocated context area designated by the <I>ProtocolBindingContext</I> handle.</P>
+
+<P><B>ProtocolUnbindAdapter</B> must call <B>NdisCloseAdapter</B>, which can, in turn, call the driver's <B>ProtocolCloseAdapterComplete</B> function with the <I>ProtocolBindingContext</I> handle, so <B>ProtocolUnbindAdapter</B> cannot free the memory at <I>ProtocolBindingContext</I> unless <B>NdisCloseAdapter</B> returns NDIS_STATUS_SUCCESS.</P>
+
+<P>Consequently, <B>ProtocolUnbindAdapter</B> should store the input <I>UnbindContext</I> handle in the area at <I>ProtocolBindingContext</I> before it calls <B>NdisCloseAdapter</B>. If this call is completed asynchronously, the <B>ProtocolCloseAdapterComplete</B> function will free all driver-allocated per-binding resources and call <B>NdisCompleteUnbindAdapter</B> with the <I>UnbindContext</I> handle.</P>
+
+<P>If <B>NdisCloseAdapter</B> returns NDIS_STATUS_SUCCESS, <B>ProtocolUnbindAdapter</B> frees all per-binding resources, including the driver-allocated memory at <I>ProtocolBindingContext</I>, and calls <B>NdisCompleteUnbindAdapter</B> itself.</P>
+
+<P>The <B>ProtocolUnbindAdapter</B> function of an NDIS intermediate driver makes a reciprocal call to <A HREF="wce50lrfndisimdeinitializedeviceinstance.htm">NdisIMDeInitializeDeviceInstance</A>. Such a driver's <A HREF="wce50lrfminiporthalt.htm">MiniportHalt</A> function must release all driver-allocated resources associated with the intermediate driver's network adapter before its virtual network adapter is removed from the system.</P>
+
+<P>As soon as <B>ProtocolUnbindAdapter</B> calls <B>NdisCloseAdapter</B>, the <I>NdisBindingHandle</I> originally returned by <B>NdisOpenAdapter</B> should be considered invalid. <B>ProtocolUnbindAdapter</B> cannot make any subsequent calls to <B>Ndis<I>XXX</I></B> functions with this handle, and the protocol cannot receive any indications from the underlying driver. However, if the underlying network adapter is being removed to be reconfigured, NDIS will call the driver's <B>ProtocolBindAdapter</B> function to re-establish the binding when the network adapter is available again.</P>
+
+<H4 class="dtH4">Requirements</H4>
+
+<P><B>OS Versions:</B> Windows CE .NET 4.0 and later.<BR>
+<B>Header:</B> Ndis.h.<BR>
+<B>Link Library:</B> Ndislib.lib.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50lrfndiscloseadapter.htm">NdisCloseAdapter</A> | <A HREF="wce50lrfndisimdeinitializedeviceinstance.htm">NdisIMDeInitializeDeviceInstance</A> | <A HREF="wce50lrfminiporthalt.htm">MiniportHalt</A> | <A HREF="wce50lrfndisopenadapter.htm">NdisOpenAdapter</A> | <A HREF="wce50lrfndiscloseadapter.htm">NdisCloseAdapter</A> | <A HREF="wce50lrfprotocolbindadapter.htm">ProtocolBindAdapter</A> | <A HREF="wce50lrfprotocolcloseadaptercomplete.htm">ProtocolCloseAdapterComplete</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

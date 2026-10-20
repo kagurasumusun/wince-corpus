@@ -1,0 +1,126 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Controlling GPS Intermediate Driver Execution</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Controlling GPS Intermediate Driver Execution"/>
+<MSHelp:RLTitle Title="Controlling GPS Intermediate Driver Execution"/>
+<MSHelp:Keyword Index="A" Term="wce51conControllingGPSIntermediateDriverExecution"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Application"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbsmartphone"/>
+<MSHelp:Attr Name="Product" Value="kbPocketPC"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="Technology" Value="kbPocketPC"/>
+<MSHelp:Attr Name="Technology" Value="kbSmartphone"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="gpsid_appdev_bowmore.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="True"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_1061822">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Windows Mobile Version 5.0 SDK<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce51concontrollinggpsintermediatedriverexecution"></A>Controlling GPS Intermediate Driver Execution</H1>
+<!--Feedback Link Top Start-->
+<P CLASS="feedback"><font size="1"><a href="mailto:medfdbk&#64;microsoft.com?subject=Product: Windows Mobile | Version: 5.0 | Release: SDK | Title: Controlling GPS Intermediate Driver Execution | Filename: wce51concontrollinggpsintermediatedriverexecution.htm | Built on: Wednesday, September 14, 2005">Send Feedback</a> on this topic to the authors</font></p>
+<!--Feedback Link Top End-->
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>While the GPS Intermediate Driver isn't technically a Windows CE service (because it runs in device.exe, not services.exe), it still supports some of the standard service IOCTLs, all of which are explained in more detail in the remainder of this topic:
+
+<UL type="disc">
+	<LI><MSHelp:link keywords="wce50lrfIOCTLSERVICESTART" TABINDEX="0">IOCTL_SERVICE_START</MSHelp:link></li>
+
+	<LI><MSHelp:link keywords="wce50lrfIOCTLSERVICESTOP" TABINDEX="0">IOCTL_SERVICE_STOP</MSHelp:link></li>
+
+	<LI><MSHelp:link keywords="wce50lrfIOCTLSERVICESTATUS" TABINDEX="0">IOCTL_SERVICE_STATUS</MSHelp:link></li>
+
+	<LI><MSHelp:link keywords="wce50lrfIOCTLSERVICEREFRESH" TABINDEX="0">IOCTL_SERVICE_REFRESH</MSHelp:link></li>
+</UL>
+
+<P>Often, the most common IOCTL used with the GPS Intermediate Driver is <B>IOCTL_SERVICE_REFRESH</B>. You use this IOCTL to refresh the GPS Intermediate Driver after changing configuration information in the registry. The GPS Intermediate Driver does not reflect any registry changes until it processes the <B>IOCTL_SERVICE_REFRESH</B> IOCTL.</P>
+
+<P>The other IOCTLs can be used to query, disable, or re-enable GPS Intermediate Driver operation. For example, you might use <B>IOCTL_SERVICE_STOP</B> to turn off the GPS Intermediate Driver to save power (although this may be unnecessary in many cases, because the GPS Intermediate Driver intelligently turns the GPS hardware on and off depending on whether it is being used by applications, as explained in <A HREF="wce51congpsintermediatedriverpowermanagement.htm">GPS Intermediate Driver Power Management</A>). </P>
+
+<H4 class="dtH4">Sending IOCTLs to the GPS Intermediate Driver</H4>
+
+<P>To send these IOCTLs to the GPS Intermediate Driver:
+
+<OL type="1">
+	<LI>Open a connection to the GPS Intermediate Driver, by calling <MSHelp:link keywords="wce50lrfCreateFile" TABINDEX="0">CreateFile</MSHelp:link> and passing "GPD0:" as the first parameter.
+<P>In contrast to the GPS Intermediate Driver multiplexer, which is exposed through <B>CreateFile</B> using an identifier that can vary - it can be "COM1:", "GPD1:", or one of many other options - and is defined in the registry (using the <B>DriverInterface</B> registry entry), you always control the overall execution of the GPS Intermediate Driver using GPD0. For more information about retrieving location information using the GPS Intermediate Driver multiplexer, see <A HREF="wce51conaccessingrawgpsdata.htm">Accessing Raw GPS Data</A>.
+</li>
+
+	<LI>Send the desired message to the GPS Intermediate Driver, by calling <MSHelp:link keywords="wce50lrfDeviceIoControl" TABINDEX="0">DeviceIoControl</MSHelp:link> with the appropriate IOCTL.</li>
+
+	<LI>Close the connection to the GPS Intermediate Driver, by calling <MSHelp:link keywords="wce50lrfCloseHandle" TABINDEX="0">CloseHandle</MSHelp:link>.</li>
+</OL>
+
+<P>For example, the following code sends an IOCTL_SERVICE_REFRESH to the GPS Intermediate Driver:</P>
+
+<PRE class="code">HANDLE hGPS = CreateFile(L"GPD0:", GENERIC_READ, FILE_SHARE_READ | FILE_SHARE_WRITE, 0, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
+if (hGPS != INVALID_HANDLE_VALUE) {
+   DeviceIoControl(hGPS,IOCTL_SERVICE_REFRESH,0,0,0,0,0,0);
+   CloseHandle(hGPS);
+}</PRE>
+
+<H4 class="dtH4">IOCTL_SERVICE_START</H4>
+
+<P>This IOCTL causes the GPS Intermediate Driver to enter a state where it accepts calls for data using the parsed API or the raw interface. You might use this IOCTL to restart the GPS Intermediate Driver after turning it off using <B>IOCTL_SERVICE_STOP</B>.</P>
+
+<P>This IOCTL does not turn on the GPS hardware, to conserve power. Instead, the first parsed API or raw interface call turns on the GPS hardware. For more information about power management when using the GPS Intermediate Driver, see <A HREF="wce51congpsintermediatedriverpowermanagement.htm">GPS Intermediate Driver Power Management</A>.</P>
+
+<H4 class="dtH4">IOCTL_SERVICE_STOP</H4>
+
+<P>This IOCTL causes the GPS Intermediate Driver to close its connection to the underlying GPS hardware, even if applications are currently using the GPS Intermediate Driver to retrieve GPS data. </P>
+
+<P>Any calls to <A HREF="wce51lrfgpsopendevice.htm">GPSOpenDevice</A> or <B>CreateFile</B> using the multiplexer identifier will fail after code has used this IOCTL. In addition, the GPS Intermediate Driver closes existing raw interface handles with an error when the GPS Intermediate Driver is stopped. It also signals any event passed in the hDeviceStateChange parameter of <B>GPSOpenDevice</B> when the GPS Intermediate Driver is stopped. </P>
+
+<P>To re-enable the GPS Intermediate Driver after using this IOCTL, use <B>IOCTL_SERVICE_START</B>. </P>
+
+<P>In many cases, using this IOCTL may not be necessary, because the GPS Intermediate Driver automatically turns the GPS hardware on and off only when necessary. That is, even if the GPS Intermediate Driver is loaded and active, the GPS hardware is only turned on when applications actually use the GPS Intermediate parsed or raw interface to request location information. With that said, there may be cases where a target device needs to turn off all GPS hardware. For example, you might do this if the device is extremely low on battery power. Again, for more information about GPS Intermediate Driver power management, see <A HREF="wce51congpsintermediatedriverpowermanagement.htm">GPS Intermediate Driver Power Management</A>.</P>
+
+<H4 class="dtH4">IOCTL_SERVICE_STATUS</H4>
+
+<P>This IOCTL returns the current state of the GPS Intermediate Driver. For more information, see <MSHelp:link keywords="wce50lrfIOCTLSERVICESTATUS" TABINDEX="0">IOCTL_SERVICE_STATUS</MSHelp:link>.</P>
+
+<H4 class="dtH4">IOCTL_SERVICE_REFRESH</H4>
+
+<P>This IOCTL causes the GPS Intermediate Driver to refresh its configuration parameters from the registry. For more information about how the GPS Intermediate Driver implementation uses <B>IOCTL_SERVICE_REFRESH</B>, see <A HREF="wce51conrefreshinggpsintermediatedriverconfigurationusingioctl_service_refresh.htm">Refreshing GPS Intermediate Driver Configuration using IOCTL_SERVICE_REFRESH</A>.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce51origpsintermediatedriverapplicationdevelopment.htm">GPS Intermediate Driver Application Development</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Feedback Link Bottom Start-->
+<p><font size="1"><a href="mailto:medfdbk&#64;microsoft.com?subject=Product: Windows Mobile | Version: 5.0 | Release: SDK | Title: Controlling GPS Intermediate Driver Execution | Filename: wce51concontrollinggpsintermediatedriverexecution.htm | Built on: Wednesday, September 14, 2005">Send Feedback</a> on this topic to the authors</font></p>
+<!--Feedback Link Bottom End-->
+<!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="mob5conCopyrightInformationForMagneto" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link></font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

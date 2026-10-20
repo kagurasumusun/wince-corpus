@@ -1,0 +1,90 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Information Not Reported by the Kernel Profiler</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Information Not Reported by the Kernel Profiler"/>
+<MSHelp:RLTitle Title="Information Not Reported by the Kernel Profiler"/>
+<MSHelp:Keyword Index="A" Term="wce50conInformationNotReportedByKernelProfiler"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Debugging"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="True"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="kernel_profiler.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="False"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_1036672">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50coninformationnotreportedbykernelprofiler"></A>Information Not Reported by the Kernel Profiler</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>The following table shows information that the kernel profiler does not report.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=33%>Information not reported</TH>
+<TH width=67%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%>Time in assembly code</TD>
+<TD width=67%>The kernel profiler cannot report assembly functions because assembly functions do not have symbols. The kernel profiler attributes a hit in an assembly function to the previous C function in the module.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%>Cache inefficiency</TD>
+<TD width=67%>The kernel profiler does not specifically report cache misses on code or on data. With a cache miss, the CPU stalls on the same instruction until the data is fetched from memory. If cache misses are concentrated in one function, the kernel profiler shows more time being spent in that area. However, particularly with instruction cache misses, cache misses are not evident in the data collected by the kernel profiler because misses are distributed evenly throughout the OS.
+<P>Some CPUs provide additional CPU-specific information about cache use. Windows CE does not currently provide a way to interface with such CPUs to measure cache efficiency or to log the sources of misses. Some CPU vendors provide tools for measuring cache use.</P>
+</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%>Time spent handling TLB misses</TD>
+<TD width=67%>TLB misses can occur anywhere on code and on data. The TLB miss handler runs while interrupts are turned off. The kernel profiler does not report TLB misses as hits in <MSHelp:link keywords="wce50lrfINTERRUPTSENABLE" TABINDEX="0">INTERRUPTS_ENABLE</MSHelp:link> because interrupts are enabled by the CPU rather than enabled in code.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%>Incorrect DMA settings</TD>
+<TD width=67%>If a bandwidth test copies data into memory but the memory is not correctly configured, the kernel profiler does not notify you of the problem. When memory is not correctly configured and the CPU performs the data transfer, the kernel profiler reports the time as time spent in the associated code. When memory is not correctly configured and a bus-mastering device using DMA performs the data transfer, the transfer simply takes longer to complete. This time may appear in the kernel profiler as an unexpectedly lengthy idle time while the CPU waits for the DMA transfer to complete. Examples of improperly configured memory are not cached rather than cached, and write-through rather than write-back or write-combining.
+<P>For the top hits reported by the kernel profiler, verify that memory settings for data buffers are as good as possible. You may want to use a bus analyzer to verify that data is written efficiently over the bus. With Windows CE 4.2 and later, verify that a display driver turns on write-combining for its frame buffer.</P>
+</TD>
+</TR>
+</table></div>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50coninterpretationofoutputofkernelprofiler.htm">Interpretation of the Output of the Kernel Profiler</A> | <A HREF="wce50conplatformprofiling.htm">Kernel Profiler</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

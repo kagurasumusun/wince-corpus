@@ -1,0 +1,129 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Control Channel Characteristics</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Control Channel Characteristics"/>
+<MSHelp:RLTitle Title="Control Channel Characteristics"/>
+<MSHelp:Keyword Index="A" Term="wce50conControlChannelCharacteristics"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Driver"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="False"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="ndis_guide3.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="False"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+<MSHelp:Attr Name="PBFeature" Value="NetworkDriver"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_3018360">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50concontrolchannelcharacteristics"></A>Control Channel Characteristics</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>The Control channel for the device is its USB Control endpoint. A control message from the host to the device is sent as a SEND_ENCAPSULATED_COMMAND transfer. This transfer is defined in the following table.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=16%>BmRequestType</TH>
+<TH width=15%>bRequest</TH>
+<TH width=12%>wValue</TH>
+<TH width=23%>wIndex</TH>
+<TH width=17%>wLength</TH>
+<TH width=17%>Data</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=16%>0x21</TD>
+<TD width=15%>0x00</TD>
+<TD width=12%>0x0000</TD>
+<TD width=23%>bInterfaceNumber field of Communication Class interface descriptor</TD>
+<TD width=17%>Byte length of control message block</TD>
+<TD width=17%>Control message block</TD>
+</TR>
+</table></div>
+
+<P>The host does not continuously poll the USB Control endpoint for input control messages. Upon placing a control message on its Control endpoint, the device must return a notification on the Communication Class interface's Interrupt IN endpoint, which is polled by the host whenever the device can return control messages. The transfer from the device's interrupt IN endpoint to the host is a standard USB Interrupt IN transfer. The only defined device notification is the RESPONSE_AVAILABLE notification, defined in the following table.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=25%>Offset (bytes)</TH>
+<TH width=25%>Length (bytes) </TH>
+<TH width=19%>Field</TH>
+<TH width=31%>Data</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=25%>0</TD>
+<TD width=25%>4</TD>
+<TD width=19%>Notification</TD>
+<TD width=31%>RESPONSE_AVAILABLE (0x00000001)</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=25%>4</TD>
+<TD width=25%>4</TD>
+<TD width=19%>Reserved</TD>
+<TD width=31%>0</TD>
+</TR>
+</table></div>
+
+<P>Upon receiving the RESPONSE_AVAILABLE notification, the host reads the control message from the Control endpoint using a GET_ENCAPSULATED_RESPONSE transfer, defined in the following table.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=22%>bmRequestType</TH>
+<TH width=14%>bRequest</TH>
+<TH width=13%>wValue</TH>
+<TH width=23%>wIndex</TH>
+<TH width=14%>wLength</TH>
+<TH width=14%>Data</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=22%>0xA1</TD>
+<TD width=14%>0x01</TD>
+<TD width=13%>0x0000</TD>
+<TD width=23%>bInterfaceNumber field of Communication Class interface descriptor</TD>
+<TD width=14%>0x0400 (this is the minimum byte length of the buffer posted by host)</TD>
+<TD width=14%>Control message block</TD>
+</TR>
+</table></div>
+
+<P>If for some reason the device receives a GET_ENCAPSULATED_RESPONSE and is unable to respond with a valid data on the Control endpoint, then it should return a one-byte packet set to 0x00, rather than stalling the Control endpoint.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50conusbdrivers.htm">USB Host Controller Driver Development Concepts</A> | <A HREF="wce50conrndistousbmapping.htm">RNDIS To USB Mapping</A> | <A HREF="wce50conusbrndispowermanagement.htm">USB-RNDIS Power Management</A> | <A HREF="wce50conusbrndisethernetdevicesample.htm">USB-RNDIS Ethernet Device Sample</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

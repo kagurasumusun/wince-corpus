@@ -1,0 +1,182 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Implementing the OEMPreDownload Function</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Implementing the OEMPreDownload Function"/>
+<MSHelp:RLTitle Title="Implementing the OEMPreDownload Function"/>
+<MSHelp:Keyword Index="A" Term="wce50tskImplementingtheOEMPreDownloadFunction"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Hardware"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="True"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbTask"/>
+<MSHelp:Attr Name="Filename" Value="howto_developing_a_bootloader.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="True"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_3010322">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50tskimplementingtheoempredownloadfunction"></A>Implementing the OEMPreDownload Function</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>You need to implement the <A HREF="wce50lrfoempredownload.htm">OEMPreDownload</A> function to initialize the TFTP transport or Platform Builder download protocol on your development workstation. You can also implement <B>OEMPreDownload</B> to optionally obtain an IP address through DHCP; otherwise, you need a static address. </P>
+
+<P>The following list shows the tasks that the <B>OEMPreDownload</B> function needs to perform:
+
+<UL type="disc">
+	<LI>Generate a unique hardware platform name to be used by Platform Builder for downloads. The hardware platform name is typically a static text name combined with a derived NIC MAC address value.</li>
+
+	<LI>Obtain an IP address from a DHCP server or assign a static IP address.</li>
+
+	<LI>Initialize the TFTP transport or Platform Builder download protocol. You can do this by calling the <B>EbootInitEtherTransport</B> function defined in Eboot.lib; therefore, ensure that you include Eboot.lib in your boot loader sources file.
+<UL type="disc">
+	<LI>If the address is obtained from a DHCP server, <B>EbootInitEtherTransport</B> returns the address and lease time information, which should be stored in the boot arguments, boot args.</li>
+
+	<LI><B>EbootInitEtherTransport</B> also returns information from Platform Builder user settings such as whether to start a download process or jump to an existing boot loader image on the target. Depending on the value of the <I>bGotJump</I> parameter, either BL_JUMP or BL_DOWNLOAD is returned from the <B>OEMPreDownload</B> function.</li>
+</UL>
+</li>
+</UL>
+
+<P>For more information about the Eboot.lib support library, see <A HREF="wce50conebootcodelibrary.htm">Eboot Code Library</A>.</P>
+
+<P class="labelproc"><B>To implement the OEMPreDownload function</B>
+
+<UL type="disc">
+	<LI>Edit the file Main.c by adding the code necessary to fully implement the <B>OEMPreDownload</B> function.
+<P>The following code example shows the implementation of the <B>OEMPreDownload</B> function for the hardware platform used in this boot loader example.
+
+<PRE class="code">DWORD OEMPreDownload(void)
+{
+    CHAR szDeviceName[EDBG_MAX_DEV_NAMELEN];
+    BOOL  bGotJump = FALSE;
+    DWORD dwDHCPLeaseTime = 0;
+    PDWORD pdwDHCPLeaseTime = &amp;dwDHCPLeaseTime;
+    DWORD dwBootFlags = 0;
+
+
+    // If user wants to jump to existing image - skip download.
+    //
+    if (!g_bDownloadImage)
+    {
+        g_bWaitForConnect = FALSE;  // Do not wait for desktop to connect.
+        return(BL_JUMP);
+    }
+
+    // If the user wants to use a static IP address, do not request an address from a DHCP server. This is done by passing in a NULL for the DHCP lease time variable.
+    //
+    if (pDriverGlobals-&gt;eth.TargetAddr.dwIP &amp;&amp; pDriverGlobals-&gt;eth.SubnetMask)
+    {
+        pdwDHCPLeaseTime = NULL;
+        RETAILMSG(1, (TEXT("INFO: Using static IP address %s.\r\n"), inet_ntoa(pDriverGlobals-&gt;eth.TargetAddr.dwIP))); 
+        RETAILMSG(1, (TEXT("INFO: Using subnet mask %s.\r\n"), inet_ntoa(pDriverGlobals-&gt;eth.SubnetMask))); 
+    }
+
+    // Create device name based on Ethernet address (this is how Platform Builder identifies this device).
+    //
+    memset(szDeviceName, 0, EDBG_MAX_DEV_NAMELEN);
+    CreateDeviceName(&amp;pDriverGlobals-&gt;eth.TargetAddr, szDeviceName, PLATFORM_STRING);
+
+    EdbgOutputDebugString("INFO: Using device name: '%s'\n", szDeviceName);
+
+    // Initialize the TFTP transport.
+    //
+    if (!EbootInitEtherTransport(&amp;pDriverGlobals-&gt;eth.TargetAddr,
+                                 &amp;pDriverGlobals-&gt;eth.SubnetMask,
+                                 &amp;bGotJump,
+                                 pdwDHCPLeaseTime,
+                                 EBOOT_VERSION_MAJOR,
+                                 EBOOT_VERSION_MINOR,
+                                 PLATFORM_STRING,
+                                 szDeviceName,
+                                 EDBG_CPU_ARM720,
+                                 dwBootFlags))
+    {
+        return(BL_ERROR);
+    }
+
+
+    // Save the DHCP lease time (you could use a static IP in which case, the lease time does not matter).
+    //
+    pDriverGlobals-&gt;eth.DHCPLeaseTime = dwDHCPLeaseTime;
+
+    return(bGotJump ? BL_JUMP : BL_DOWNLOAD);
+}
+
+static void
+itoa10(
+    int n,
+    char s[]
+    )
+{
+    int i = 0; 
+
+    // Get absolute value of number.
+    unsigned int val = (unsigned int)((n &lt; 0) ? -n : n);
+
+    // Extract digits in reverse order.
+    do {
+        s[i++] = (val % 10) + '0';
+    } while (val /= 10);
+
+    // Add the minus sign if the number is negative.
+    if (n &lt; 0) s[i++] = '-';
+
+    s[i--] = '\0';
+
+    // Reverse string.
+    for (n = 0; n &lt; i; n++, i--) {
+        char swap = s[n];
+        s[n] = s[i];
+        s[i] = swap;
+    }
+}
+
+void CreateDeviceName(EDBG_ADDR *pMyAddr, char *szBuf, LPSTR szPlatformString)
+{
+    // NOTE: ensure that the caller's buffer (szBuf) is big enough to
+    // hold the static platform string and numerical suffix.
+
+    strcpy(szBuf, szPlatformString);
+    szBuf += strlen(szBuf);
+    itoa10(((pMyAddr-&gt;wMAC[2]&gt;&gt;8) | ((pMyAddr-&gt;wMAC[2] &amp; 0x00ff) &lt;&lt; 8)), 
+             szBuf);
+}</PRE>
+</li>
+</UL>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50howhowtodevelopabootloader.htm">How to Develop a Boot Loader</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

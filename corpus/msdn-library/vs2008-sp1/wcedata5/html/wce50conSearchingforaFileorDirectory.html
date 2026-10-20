@@ -1,0 +1,154 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Searching for a File or Directory</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Searching for a File or Directory"/>
+<MSHelp:RLTitle Title="Searching for a File or Directory"/>
+<MSHelp:Keyword Index="A" Term="wce50conSearchingforaFileorDirectory"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Feature"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="filesys_overview.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="True"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+<MSHelp:Attr Name="PBFeature" Value="FILESYSTEM"/>
+<MSHelp:Attr Name="PBOnly" Value="True"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_1055719">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50consearchingforafileordirectory"></A>Searching for a File or Directory</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>Use the <A HREF="wce50lrffindfirstfile.htm">FindFirstFile</A>, <A HREF="wce50lrffindnextfile.htm">FindNextFile</A>, and <A HREF="wce50lrffindclose.htm">FindClose</A> functions to search for file names or directory names that match a specified pattern. The pattern must be a valid file name and can include the asterisk (*) and question mark (?) wildcards.</P>
+
+<P class="labelproc"><B>To find a single file or a series of files</B>
+
+<OL type="1">
+	<LI>Call the <B>FindFirstFile</B> function with the file name that is passed in through the <I>lpFileName</I> parameter.
+<P>The <B>FindFirstFile</B> function returns a handle that you can use in the <B>FindNextFile</B> function. <B>FindFirstFile</B> also returns the file name, alternate file name, file size, Windows CE object identifier, attributes, creation time, last access time, and last write time of the found file.
+</li>
+
+	<LI>If necessary, call the <B>FindNextFile</B> function with the handle that was returned by the <B>FindFirstFile</B> function.
+<P>The <B>FindNextFile</B> function returns the same data as the <B>FindFirstFile</B> function. You can call <B>FindNextFile</B> multiple times to find variations of the same file.
+</li>
+
+	<LI>Modify the file, as necessary.</li>
+
+	<LI>Destroy the handle that was created by the <B>FindFirstFile</B> function by using the <B>FindClose</B> function.</li>
+</OL>
+
+<P>The following code example shows how to copy all .txt files to a new directory, Textro, which contains read-only files. The example also shows how to change all of the files in the new directory to read-only, if necessary. In the example, the <B>FindFirstFile</B> and <B>FindNextFile</B> functions search the root directory for all .txt files. Each .txt file is then copied into Textro. If a file is not read-only, the example changes to the Textro directory and the <A HREF="wce50lrfsetfileattributes.htm">SetFileAttributes</A> function converts the copied file to read-only. After all of the .txt files are copied, the <B>FindClose</B> function closes the search handle.</P>
+
+<PRE class="code">void FindFileExample (void)
+{
+  WIN32_FIND_DATA FileData;   // Data structure describes the file found
+  HANDLE hSearch;             // Search handle returned by FindFirstFile
+  const size_t cchDest = MAX_PATH  // Set the buffer size for the file name
+  TCHAR szMsg[cchDest];           // String to store the error message
+
+  TCHAR szNewPath[cchDest];  // Name and path of the file copied
+  TCHAR szDirPath[] = TEXT("\\TEXTRO");
+
+  BOOL bFinished = FALSE;
+
+  // Create a new directory.
+
+  if (!CreateDirectory (szDirPath, NULL))
+  {
+     StringCchPrintf (szMsg, cchDest, TEXT("Unable to create new directory."));
+
+    return;
+  }
+
+  // Start searching for .txt files in the root directory.
+
+  hSearch = FindFirstFile (TEXT("\\*.txt"), &amp;FileData);
+  if (hSearch == INVALID_HANDLE_VALUE)
+  {
+        StringCchPrintf (szMsg, cchDest, TEXT("No .TXT files found."));
+    return;
+  }
+
+  // Copy each .txt file to the new directory and change it to
+  // read-only, if it is not already read-only.
+
+  while (!bFinished)
+  {
+    PathCombine(szNewPath, szDirPath, FileData.cFileName);
+
+    if (NULL != szNewPath &amp;&amp; CopyFile (FileData.cFileName, szNewPath, FALSE))
+    {
+      if (!(FileData.dwFileAttributes &amp; FILE_ATTRIBUTE_READONLY))
+      {
+        SetFileAttributes (szNewPath,
+                FileData.dwFileAttributes | FILE_ATTRIBUTE_READONLY);
+      }
+    }
+    else
+    {
+      StringCchPrintf (szMsg, cchDest, TEXT("Unable to copy file."));
+
+      // Your error-handling code goes here.
+    }
+
+    if (!FindNextFile (hSearch, &amp;FileData))
+    {
+      bFinished = TRUE;
+
+      if (GetLastError () == ERROR_NO_MORE_FILES)
+      {
+        StringCchPrintf (szMsg, cchDest, TEXT("Found all of the files."));
+      }
+      else
+      {
+        StringCchPrintf (szMsg, cchDest, TEXT("Unable to find next file."));
+      }
+    }
+  }
+
+  // Close the search handle.
+
+  if (!FindClose (hSearch))
+  {
+    StringCchPrintf (szMsg, cchDest, TEXT("Unable to close search handle."));
+
+  }
+} // End of FindFileExample code</PRE>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50confilesystemoperations.htm">File System Operations</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

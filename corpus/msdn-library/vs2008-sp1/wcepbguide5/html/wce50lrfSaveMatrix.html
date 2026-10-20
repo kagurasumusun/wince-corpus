@@ -1,0 +1,143 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>_SaveMatrix</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="_SaveMatrix"/>
+<MSHelp:RLTitle Title="_SaveMatrix"/>
+<MSHelp:Keyword Index="K" Term="_SaveMatrix [Devices]"/>
+<MSHelp:Keyword Index="A" Term="wce50lrfSaveMatrix"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Guide"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="True"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="apiref"/>
+<MSHelp:Attr Name="Filename" Value="comp_sh4_overview.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="True"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+<MSHelp:Attr Name="APIName" Value="_SaveMatrix"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_3023526">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50lrfsavematrix"></A>_SaveMatrix</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>Stores the extended floating-point register bank into a 4x4 matrix. </P>
+
+<PRE class="syntax"><B>float* _SaveMatrix( </B>
+<B>  float* </B><I>matrix</I><B> </B>
+<B>);</B></PRE>
+
+<H4 class="dtH4">Parameters</H4>
+
+<DL>
+<DT><I>matrix</I></DT>
+
+<DD>[out] Pointer to an array of float values arranged such that the indices of the array are the [row][column] values of the 4x4 matrix.</dd>
+</DL>
+
+<H4 class="dtH4">Return Values</H4>
+
+<P>Pointer to the 4x4 matrix that has been stored.</P>
+
+<H4 class="dtH4">Remarks</H4>
+
+<P>The following code example shows how to use <B>_SaveMatrix</B>.</P>
+
+<PRE class="code">void main() 
+{
+   int i,j;
+   float result[4][4];
+   float m1[4][4] =    {1.0,1.0,1.0,1.0,  
+                  2.0,2.0,2.0,2.0,
+                  3.0,3.0,3.0,3.0, 
+                  4.0,4.0,4.0,4.0};
+
+   float m2[4][4] =    {2.0,2.0,2.0,2.0, 
+                  2.0,2.0,2.0,2.0,
+                  2.0,2.0,2.0,2.0,
+                  2.0,2.0,2.0,2.0};
+       
+   _LoadMatrix(m1);      //Load m1 matrix into XD bank regs
+   _XDMultMatrix(m2);   //[m1]x[m2] &#0151;&gt; result saved into XD bank regs
+   _SaveMatrix(result);      //Load XD bank regs into result buffer
+      
+   //
+   // Print out the result
+   //
+   printf("Result of [m1]x[m2] = \n");
+   for (i = 0; i &lt; 4; i++) 
+   {
+         printf("| ");
+         for (j = 0; j &lt; 4; j++)
+            printf("%8.4f ",result[i][j]);
+         printf(" |\n");
+   }
+
+   _XDMultMatrix(m2);   //[m1]x[m2]x[m2]-&gt;saved results into XD bank
+   _SaveMatrix(result);   //Load XD bank regs into result buffer
+      
+   //
+   // Print out the result
+   //
+   printf("\nResult of [m1]x[m2]x[m2] = \n");
+   for (i = 0; i &lt; 4; i++) 
+      {
+         printf("| ");
+         for (j = 0; j &lt; 4; j++)
+            printf("%8.4f ",result[i][j]);
+         printf(" |\n");
+   }
+}
+<B>Output</B>
+Result of [m1]x[m2] =
+|   8.0000   8.0000   8.0000   8.0000  |
+|  16.0000  16.0000  16.0000  16.0000  |
+|  24.0000  24.0000  24.0000  24.0000  |
+|  32.0000  32.0000  32.0000  32.0000  |
+
+Result of [m1]x[m2]x[m2] =
+|  64.0000  64.0000  64.0000  64.0000  |
+| 128.0000 128.0000 128.0000 128.0000  |
+| 192.0000 192.0000 192.0000 192.0000  |
+| 256.0000 256.0000 256.0000 256.0000  |</PRE>
+
+<H4 class="dtH4">Requirements</H4>
+
+<P><B>Header:</B> shintr.h.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50conintrinsicfunctionsforhitachimicroprocessors.htm">Intrinsic Functions for Renesas Microprocessors</A> | <A HREF="wce50lrfloadmatrix.htm">_LoadMatrix</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

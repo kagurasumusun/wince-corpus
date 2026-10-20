@@ -1,0 +1,74 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Printer Driver Development Concepts</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Printer Driver Development Concepts"/>
+<MSHelp:RLTitle Title="Printer Driver Development Concepts"/>
+<MSHelp:Keyword Index="A" Term="wce50conPrinterDrivers"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Driver"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="False"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="printer_guide.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="False"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+<MSHelp:Attr Name="PBFeature" Value="PrinterDriver"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_3019146">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50conprinterdrivers"></A>Printer Driver Development Concepts</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>The Windows CE graphics device interface (GDI) and display driver perform most of the work involved in printing. At the beginning of the printing process, GDI creates a device context with attributes that are retrieved from the printer driver during a call to <A HREF="wce50lrfdrvenablepdev.htm">DrvEnablePDEV</A>. The display driver, not the printer driver, is used to render subsequent drawing commands that are issued from the application into the device context. Therefore, some drawing functions that are present in a printer driver, such as <B>DrvStrokePath</B>, are never called because the printer driver does not render the document.</P>
+
+<P>After the document has been rendered, GDI sends the resulting 24-bit, blue-green-red bitmap to the printer driver, which formats the bitmap and sends it to the printer. Previous versions of the printer driver requested different color ordering, for more information, see <A HREF="wce50conprinterdrivermigration.htm">Printer Driver Migration</A>. To conserve memory, GDI renders the document in several bands, which are the horizontal sections of the page. It also makes several calls to the printer driver to send the rendered bands to the printer. Thus, the document is rendered several times. GDI optimizes the rendering as much as it can to skip items that are outside of the current band. The band ranges in size from one-quarter of a page to one and one-hundredth of the page, depending on the resources available to GDI. GDI always renders the largest bands possible. The bitmaps passed to the printer driver are in the pixel format requested by the printer driver. </P>
+
+<P>The following illustration shows the relationship between the various system components involved in printing.</P>
+
+<P class="fig"><IMG SRC="prntarch.gif" ALT="" BORDER=0></P>
+
+<P>As the illustration indicates, the interaction between the application and GDI happens only once, but the interactions between GDI, the display driver, and the printer driver happen once for each band. The port monitor is responsible for routing data from the printer driver to the hardware port that connects to the printer. The display driver shown in the diagram is the system's currently loaded graphics driver.</P>
+
+<P>The printer driver converts the bitmap data from a GDI bitmap format into the format that is required by the printer. This can include such operations as color reduction to the color space of the printer, data compression, and data conversion into the format that is used by the printer, a format sometimes known as a page-description language (PDL). Then, the printer driver calls the port monitor to send the rendered bands to the printer.</P>
+
+<P>Only a small number of the graphics driver functions defined for printer drivers are required in printer drivers for Windows CE. Printer drivers are required to implement only those graphics driver functions that are necessary for gathering printer metrics, setting up the printer, starting and ending print jobs, and preparing rendered bands for printing.</P>
+
+<P>Printing is supported over parallel ports, universal serial bus (USB) ports, serial ports, infrared (IR) ports, network printer ports, and Bluetooth wireless technology The printing architecture provides application programming interfaces (APIs) that are exposed by the Graphics, Windowing, and Events Subsystem (GWES) to communicate with the printer driver. The printer driver communicates with the port driver that sends the print data over the selected bus. Therefore, for any printing application, you will need a printer driver that is independent of the bus and the corresponding bus driver. The bus driver could be for use with parallel, USB, or serial ports, with Bluetooth technology, depending on the interface the device supports.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><MSHelp:link keywords="wce50oriShellUserInterface" TABINDEX="0">Shell and User Interface</MSHelp:link></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

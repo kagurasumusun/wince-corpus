@@ -1,0 +1,89 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Nondeterministic Registry Flushing</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Nondeterministic Registry Flushing"/>
+<MSHelp:RLTitle Title="Nondeterministic Registry Flushing"/>
+<MSHelp:Keyword Index="A" Term="wce50conNondeterministicRegistryFlushing"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Feature"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="registry_overview.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="False"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+<MSHelp:Attr Name="PBFeature" Value="REGISTRY"/>
+<MSHelp:Attr Name="PBOnly" Value="True"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_1055663">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50connondeterministicregistryflushing"></A>Nondeterministic Registry Flushing</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>The <A HREF="wce50lrfregflushkey.htm">RegFlushKey</A> function has two different behaviors, varying with the type of registry in use on the device. You determine which of the following registry types to use: 
+
+<UL type="disc">
+	<LI>Object store-based registry
+<P>If an application calls <B>RegFlushKey</B>, the operating system attempts to flush the entire registry to the Windows CE-based device supported storage. The implementation of this function is OEM-dependent, which results in the following scenarios:
+
+<UL type="disc">
+	<LI>If you do not support persistent registry storage, then a call to this function fails. </li>
+
+	<LI>If you support persistent registry storage, then a call to this function flushes the entire registry to you for storage.</li>
+
+	<LI>If your flush request fails, then <B>RegFlushKey</B> fails.</li>
+</UL>
+
+<P>For more information about supporting a persistent registry, see <MSHelp:link keywords="wce50conPersistingDatawiththeRAMBasedRegistry" TABINDEX="0">Persisting Data with the RAM-Based Registry</MSHelp:link>.
+</li>
+
+	<LI>Hive-based registry
+<P>If an application calls <B>RegFlushKey</B>, the operating system attempts to flush any changed data in the hive to the file underneath it. The particular hive to flush is determined from the key provided.
+
+<P>Applications can call <B>RegFlushKey</B> on the system hive or the user hive. The implementation of this function is not OEM-dependent.
+
+<P>For more information about the way data is saved, see <MSHelp:link keywords="wce50conPersistingDatawiththeHiveBasedRegistry" TABINDEX="0">Persisting Data with the Hive-Based Registry</MSHelp:link>.
+</li>
+</UL>
+
+<P>By default, Windows CE does not support a lazy flush of the registry. The PRJ_ENABLE_REGFLUSH_THREAD environment variable can be set to force the operating system to automatically lazy flush the registry. Windows CE-based devices that need to implement a lazy-flush or power-down flush can also do so by calling <B>RegFlushKey</B> at any time from a shell, from a low priority thread, or in the power-off switch handler in the keyboard driver.</P>
+
+<BLOCKQUOTE class="dtBlock">
+<b class="le">Note&nbsp;&nbsp;&nbsp;</b>Calling this function excessively can negatively impact the performance of an application.</BLOCKQUOTE>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50conadvancedregistryconcepts.htm">Advanced Registry Concepts</A> | <A HREF="wce50conflushoncloseregistryflushing.htm">Flush-On-Close Registry Flushing</A> | <A HREF="wce50conregistry.htm">Registry</A> | <A HREF="wce50conhivebasedregistrystoredinram.htm">Hive-Based Registry Stored in RAM</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

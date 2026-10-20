@@ -1,0 +1,143 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>wcstombs</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="wcstombs"/>
+<MSHelp:RLTitle Title="wcstombs"/>
+<MSHelp:Keyword Index="K" Term="wcstombs"/>
+<MSHelp:Keyword Index="A" Term="wce50lrfwcstombs"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Application"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="False"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="Technology" Value="CRT"/>
+<MSHelp:Attr Name="TechnologyVers" Value="kbCRT"/>
+<MSHelp:Attr Name="TopicType" Value="apiref"/>
+<MSHelp:Attr Name="Filename" Value="crt3.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="True"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+<MSHelp:Attr Name="APIName" Value="wcstombs"/>
+<MSHelp:Attr Name="APIType" Value="DLLExport"/>
+<MSHelp:Attr Name="APILocation" Value="coredll.dll"/>
+<MSHelp:Attr Name="PBFeature" Value="SYSGEN_FULL_CRT"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_3026927">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50lrfwcstombs"></A>wcstombs</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>Converts a sequence of wide characters to a corresponding sequence of multibyte characters.</P>
+
+<PRE class="syntax"><B>size_t wcstombs( char</B> *<I>mbstr</I>, <B>const</B> <B>wchar_t</B> *<I>wcstr</I>, <B>size_t</B> <I>count</I> <B>);</B></PRE>
+
+<H4 class="dtH4">Parameters</H4>
+
+<DL>
+<DT><I>mbstr</I></DT>
+
+<DD>The address of a sequence of multibyte characters.</dd>
+
+<DT><I>wcstr</I></DT>
+
+<DD>The address of a sequence of wide characters.</dd>
+
+<DT><I>count</I></DT>
+
+<DD>The maximum number of bytes that can be stored in the multibyte output string.</dd>
+</DL>
+
+<H4 class="dtH4">Libraries</H4>
+
+<P>All versions of the C run-time libraries.</P>
+
+<H4 class="dtH4">Return Values</H4>
+
+<P>If <B>wcstombs</B> successfully converts the multibyte string, it returns the number of bytes written into the multibyte output string, excluding the terminating <B>NULL</B> (if any). </P>
+
+<P>If the <I>mbstr</I> argument is NULL, <B>wcstombs</B> returns the required size of the destination string. </P>
+
+<P>In versions of Windows CE prior to 3.0, setting <I>mbstr</I> to NULL returns -1. </P>
+
+<P>If <B>wcstombs</B> encounters a wide character it cannot be convert to a multibyte character, it returns &#0150;1 cast to type <B>size_t</B>.</P>
+
+<H4 class="dtH4">Remarks</H4>
+
+<P>The <B>wcstombs</B> function converts the wide-character string pointed to by wcstr to the corresponding multibyte characters and stores the results in the <I>mbstr</I> array. The count parameter indicates the maximum number of bytes that can be stored in the multibyte output string (that is, the size of <I>mbstr</I>). </P>
+
+<P>In general, it is not known how many bytes will be required when converting a wide-character string. Some wide characters will require only one byte in the output string; others require two. </P>
+
+<P>If there are two bytes in the multibyte output string for every wide character in the input string (including the wide character <B>NULL</B>), the result is guaranteed to fit.</P>
+
+<P>If <B>wcstombs</B> encounters the wide-character null character (L'\0') either before or when <I>count</I> occurs, it converts it to an 8-bit 0 and stops. Thus, the multibyte character string at <I>mbstr</I> is null-terminated only if <B>wcstombs</B> encounters a wide-character null character during conversion. </P>
+
+<P>If the sequences pointed to by <I>wcstr</I> and <I>mbstr</I> overlap, the behavior of <B>wcstombs</B> is undefined.</P>
+
+<P>If the <I>mbstr</I> argument is <B>NULL</B>, <B>wcstombs</B> returns the required size of the destination string. </P>
+
+<P class="label"><B>Example </B></P>
+
+<PRE class="code">/* WCSTOMBS.C illustrates the behavior of the wcstombs function. */
+
+#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
+
+void main( void )
+{
+   int      i;
+   char    *pmbbuf   = (char *)malloc( MB_CUR_MAX );
+   wchar_t *pwchello = L"Hello, world.";
+
+   printf( "Convert wide-character string:\n" );
+   i = wcstombs( pmbbuf, pwchello, MB_CUR_MAX );
+   printf( "\tCharacters converted: %u\n", i );
+   printf( "\tMultibyte character: %s\n\n", pmbbuf );
+}</PRE>
+
+<P class="label"><B>Output</B></P>
+
+<PRE class="code">Convert wide-character string:
+  Characters converted: 1
+  Multibyte character: H</PRE>
+
+<H4 class="dtH4">Requirements</H4>
+
+<P><B>OS Versions:</B> Windows CE 2.0 and later.<BR>
+<B>Header:</B> stdio.h, stdlib.h.<BR>
+<B>Link Library: </B>coredll.dll.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50lrffgetccmafgetwc.htm">fgetc</A> | <A HREF="wce50lrffgetscmafgetws.htm">fgets</A> | <A HREF="wce50lrffputccmafputwc.htm">fputc</A> | <A HREF="wce50lrffputscmafputws.htm">fputs</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

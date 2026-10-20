@@ -1,0 +1,206 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>ServerCallback</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="ServerCallback"/>
+<MSHelp:RLTitle Title="ServerCallback"/>
+<MSHelp:Keyword Index="K" Term="ServerCallback"/>
+<MSHelp:Keyword Index="A" Term="wce51lrfServerCallback"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Feature"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="apiref"/>
+<MSHelp:Attr Name="Filename" Value="obex_functions.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="False"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+<MSHelp:Attr Name="APIName" Value="ServerCallback"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_1072991">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce51lrfservercallback"></A>ServerCallback</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>This function provides the necessary callback to the server from the specified server extension.</P>
+
+<PRE class="syntax"><B>typedef int (*ServerCallback)(</B>
+  <B>unsigned int </B><I>uiOp</I><B>,</B>
+<B>  unsigned int </B><I>uiId</I><B>,</B>
+<B>  struct _obex_command * </B><I>pCommand</I><B> </B>
+<B>);</B></PRE>
+
+<H4 class="dtH4">Parameters</H4>
+
+<DL>
+<DT><I>uiOp</I></DT>
+
+<DD>The operation selector (the response that the server extension sends to the service extension). The following response values do not require the server extension to generate a command; all of these values would cause the OBEX server to format and send the given response back to the client.
+
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=36%>Value</TH>
+<TH width=64%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=36%>OBEX_RESP_ABORT</TD>
+<TD width=64%>The extension process was aborted.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=36%>OBEX_RESP_ACCEPT</TD>
+<TD width=64%>The extension process was accepted.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=36%>OBEX_RESP_CONTINUE</TD>
+<TD width=64%>The extension process can continue.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=36%>OBEX_RESP_DENY</TD>
+<TD width=64%>The extension process was denied.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=36%>OBEX_RESP_OK</TD>
+<TD width=64%>The extension process was successfully complete.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=36%>OBEX_RESP_REJECT</TD>
+<TD width=64%>The extension process was rejected.</TD>
+</TR>
+</table></div>
+
+
+
+<P>The following response values require the server extension to generate a command to be sent to the service extension.
+
+
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=36%>Value</TH>
+<TH width=64%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=36%>OBEX_RESP_DISCONNECT</TD>
+<TD width=64%>Closes the current connection.
+<P>When the service extension receives a disconnection request, the server extension must return this value.</P>
+</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=36%>OBEX_RESP_HANGUP</TD>
+<TD width=64%>Closes the current connection and the physical connection to the client. 
+<P>This value should only be used if client authentication fails or if the service extension detects a security attack. Closing the physical connection affects all logical connections on the same physical connection.</P>
+</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=36%>OBEX_RESP_RESPOND</TD>
+<TD width=64%>Generates a custom response; usually used when data is sent.
+<P>This value requires an explicit command to be present in the function call parameters.</P>
+</TD>
+</TR>
+</table></div>
+
+</dd>
+
+<DT><I>uiId</I></DT>
+
+<DD>The transaction ID to which the OBEX server is responding.</dd>
+
+<DT><I>pCommand</I></DT>
+
+<DD>If <I>uiOp</I> is set to OBEX_RESP_ABORT, OBEX_RESP_ACCEPT, OBEX_RESP_CONTINUE, OBEX_RESP_DENY, OBEX_RESP_OK, or OBEX_RESP_REJECT, the value of <I>pCommand</I> is set to NULL.
+
+<P>If <I>uiOp</I> is set to OBEX_RESP_DISCONNECT, OBEX_RESP_HANGUP, or OBEX_RESP_RESPOND, <I>pCommand</I> will contain an <A HREF="wce51lrfobex_command.htm">OBEXCOMMAND</A> structure with the following specific values (all other values are the same as in a standard <B>OBEXCOMMAND</B> structure).
+
+
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=18%>Member</TH>
+<TH width=82%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=18%><B>uiOp</B></TD>
+<TD width=82%>The value of this member must match the value of the original command.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=18%><B>sPktData</B></TD>
+<TD width=82%>The value of this member depends on the semantics of the command.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=18%><B>fFinal</B></TD>
+<TD width=82%>The value of this member must be TRUE.</TD>
+</TR>
+</table></div>
+
+</dd>
+</DL>
+
+<H4 class="dtH4">Return Values</H4>
+
+<P>This method returns the standard values <B>E_INVALIDARG</B>, <B>E_OUTOFMEMORY</B>, <B>E_UNEXPECTED</B>, and <B>E_FAIL</B>, as well as the following:
+
+<DL>
+<DT><B>S_OK </B></DT>
+
+<DD>The method completed successfully.</dd>
+</DL>
+
+<H4 class="dtH4">Remarks</H4>
+
+<P>After the server extension executes a command, the extension must indicate the result of that command to the OBEX server. Otherwise, the OBEX server will be unable to respond to the client command. Because the OBEX protocol is based on the client-server model, the OBEX server must respond to every client command; the server can only send data in response to a client command.</P>
+
+<P>When the physical connection to a device closes, the server extension notifies the service extension by sending an OBEX_REQ_CLOSE transaction with an empty (NULL) OBEX command body.</P>
+
+<H4 class="dtH4">Requirements</H4>
+
+<P><B>OS Versions:</B> Windows CE .NET 4.0 and later<BR>
+<B>Header:</B> Obexserver.h<BR>
+<B>Library:</B> Developer Defined</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce51lrfobexfunctions.htm">OBEX Functions</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

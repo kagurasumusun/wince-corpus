@@ -1,0 +1,117 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Sources File</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Sources File"/>
+<MSHelp:RLTitle Title="Sources File"/>
+<MSHelp:Keyword Index="A" Term="wce50conSourcesFile"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="OS"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="True"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="configuration_file_types.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="True"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_3012275">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50consourcesfile"></A>Sources File</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>A <I>sources file</I> is a text file that sets the macro definitions for the source code in a subdirectory. Build.exe uses these macro definitions to determine how to compile and link the source code. </P>
+
+<P>After Build.exe parses a sources file, Nmake.exe incorporates the sources file into the common makefile file, Makefile.def. Build.exe follows only the macro assignments and ignores other lines, such as conditional Nmake.exe statements. Conditional statements in sources files are not supported. </P>
+
+<P>If you run Build.exe on a development workstation that has multiple processors and your dirs and sources files have dependencies, use the SYNCHRONIZE_DRAIN and SYNCHRONIZE_BLOCK macros. Otherwise you might encounter issues. </P>
+
+<P>When an user project is added to the OS tree as a sources project, the dependency tree for the new project must include a common sources file that is called Sources.cmn. Any macro variables in a common sources file apply to all sources files in that directory and its associated subdirectories. </P>
+
+<P>During compilation, user projects get full, unfiltered headers, and are built in separate %_WINCEROOT%\Public dependency trees. Therefore, sources files for user projects must also include macros that define root directories for the projects. </P>
+
+<BLOCKQUOTE class="dtBlock">
+<b class="le">Note</b>&nbsp;&nbsp;&nbsp;You must include these additional macro definitions in the Sources.cmn file.</BLOCKQUOTE>
+
+<P>The following code example shows how to include macros that define root directories for projects.</P>
+
+<PRE class="code">_COMMONPUBROOT=$(_PUBLICROOT)\common
+__PROJROOT = $(_PUBLICROOT)\$(WINCEPROJ)</PRE>
+
+<P>The Platform Builder sample code includes a common sources file in each of the following directories:
+
+<UL type="disc">
+	<LI>%_WINCEROOT%\Public\Common</li>
+
+	<LI>%_WINCEROOT%\Platform\Cepc</li>
+</UL>
+
+<P>The following code example shows the contents of %_WINCEROOT%\Public\Common\Sources.cmn.</P>
+
+<BLOCKQUOTE class="dtBlock">
+<b class="le">Note</b>&nbsp;&nbsp;&nbsp;The directory and file names used in the code examples in this section are samples that demonstrate the way to set up a sources file. You would choose different names for sources files and directories that you create.</BLOCKQUOTE>
+
+<P>The following macro definitions in this code example apply to every sources file in the Public\Common directory.</P>
+
+<PRE class="code">WINCEOEM=1
+WINCEPROJ=COMMON
+WINCETREE=winceos
+RELEASETYPE=OAK
+
+_COMMONPUBROOT=$(_PUBLICROOT)\common
+__PROJROOT = $(_PUBLICROOT)\$(WINCEPROJ)
+
+WARNISERROR=1
+
+_ISVINCPATH=$(_WINCEROOT)\public\common\sdk\inc;
+_OEMINCPATH=$(_WINCEROOT)\public\common\oak\inc;$(_WINCEROOT)\public\common\sdk\inc;$(_WINCEROOT)\public\common\ddk\inc;</PRE>
+
+<P>The following code example shows the placement of the common sources file, Sources.cmn, and other sources files in a sample directory.</P>
+
+<PRE class="code">\Public
+  \MyProj
+    Sources.cmn
+    Dirs
+    \Proj2
+      Dirs
+      Makefile
+      Sources
+      Proj2.cpp
+      Proj2.h
+    . . .</PRE>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50consourcecodeconfigurationfiles.htm">Source Code Configuration Files</A> | <A HREF="wce50condirsfile.htm">Dirs File</A> | <MSHelp:link keywords="wce50conBuildTool" TABINDEX="0">Build Tool</MSHelp:link> | <MSHelp:link keywords="wce50conWindowsCEBuildEnvironmentTool" TABINDEX="0">Windows CE Build Environment Tool</MSHelp:link> | <MSHelp:link keywords="wce50conNmakeTool" TABINDEX="0">Nmake Tool</MSHelp:link> </P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

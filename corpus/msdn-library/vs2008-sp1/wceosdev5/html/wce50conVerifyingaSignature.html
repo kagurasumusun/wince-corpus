@@ -1,0 +1,119 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Verifying a Signature</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Verifying a Signature"/>
+<MSHelp:RLTitle Title="Verifying a Signature"/>
+<MSHelp:Keyword Index="A" Term="wce50conVerifyingaSignature"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="OS"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="True"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="os_secur.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="False"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+<MSHelp:Attr Name="Technology" Value="Security"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_3011067">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50converifyingasignature"></A>Verifying a Signature</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>An original equipment manufacturer can verify that a file contains the proper signature by using the <MSHelp:link keywords="wce50lrfOEMCertifyModule" TABINDEX="0">OEMCertifyModule</MSHelp:link> function before the kernel loads the file. </P>
+
+<P>Using this method, the kernel uses the same hash formula to calculate a signature during the verification process that it used during the signature generation process. <B>OEMCertifyModule</B> compares the signature it calculated from the hash to the signature in the file. If the signatures do not match, <B>OEMCertifyModule</B> prevents the file from loading.</P>
+
+<P>Because the size of a PE file header can vary, <B>OEMCertifyModule</B> may not be able to process the entire header in a single call. Because the signature is at the end of the file, it is not possible to specify a hash function in the signature; you must use Secure Hash Algorithm (SHA) or another fixed hash function. When computing the hash, SHA excludes the following data from the file:
+
+<UL type="disc">
+	<LI>Checksum field in the Windows COFF header (4 bytes)</li>
+
+	<LI>Certificate data directory structure (8 bytes)</li>
+
+	<LI><MSHelp:link keywords="wce50lrfWINCERTIFICATE" TABINDEX="0">WIN_CERTIFICATE</MSHelp:link> structure (size varies)</li>
+</UL>
+
+<P>You can either write the code that is necessary to implement the signature verification and signing tool yourself or use the sample verification library Loadauth.lib. This is included in Platform Builder in the processor-specific directory under %_WINCEROOT%\Public\Common\Oak\Lib, and the signing tool Signfile.exe. </P>
+
+<P>The following table shows the functions contained in Loadauth.lib library.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=24%>Function</TH>
+<TH width=76%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=24%><MSHelp:link keywords="wce50lrfInitPubKey" TABINDEX="0">InitPubKey</MSHelp:link></TD>
+<TD width=76%>Initializes a public key to be used for signature verification.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=24%><MSHelp:link keywords="wce50lrfCertifyModuleInit" TABINDEX="0">CertifyModuleInit</MSHelp:link></TD>
+<TD width=76%>Initiates the process of verifying a signature on a module for the purpose of certifying the module.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=24%><MSHelp:link keywords="wce50lrfCertifyModule" TABINDEX="0">CertifyModule</MSHelp:link></TD>
+<TD width=76%>Streams the bytes of a module for certification.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=24%><MSHelp:link keywords="wce50lrfCertifyModuleFinal" TABINDEX="0">CertifyModuleFinal</MSHelp:link></TD>
+<TD width=76%>Returns the final certification status of a file and any data embedded in the signature.</TD>
+</TR>
+</table></div>
+
+<P class="labelproc"><B>To use the sample verification library (Loadauth.lib)</B>
+
+<OL type="1">
+	<LI>Add <MSHelp:link keywords="wce50lrfOEMCertifyModuleInit" TABINDEX="0">OEMCertifyModuleInit</MSHelp:link> and <B>OEMCertifyModule</B> to the OEM adaptation layer (OAL) and initialize the function pointers.</li>
+
+	<LI>Create and export a hard-coded public key.
+<P>The key must have a PUBLICKEYBLOB format. You can use the <A HREF="wce50consignfileexe.htm">Signfile.exe</A> tool to complete this step.
+</li>
+
+	<LI>Incorporate the public key into the operating system (OS) image.
+<P>You can do this by modifying the OAL according to the sample code in %_WINCEROOT%\&lt;OS design&gt;\%BSP%\Kernel\Hal. 
+
+<P><B><b class="le">Note</b>&nbsp;&nbsp;&nbsp;</B>You can use any name for the functions <B>OEMCertifyModuleInit</B> and <B>OEMCertifyModule</B>. However, it is important to initialize the two kernel pointers, <MSHelp:link keywords="wce50lrfpOEMLoadInit" TABINDEX="0">pOEMLoadInit</MSHelp:link> and <MSHelp:link keywords="wce50lrfpOEMLoadModule" TABINDEX="0">pOEMLoadModule</MSHelp:link>, in the <B>OEMInit</B> function to these named functions.
+</li>
+</OL>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50concreatingasignature.htm">Signature Creation</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

@@ -1,0 +1,106 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Device Power States</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Device Power States"/>
+<MSHelp:RLTitle Title="Device Power States"/>
+<MSHelp:Keyword Index="A" Term="wce50conDevicePower"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Driver"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="False"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="powermgrdrv_guide.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="False"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+<MSHelp:Attr Name="PBFeature" Value="SYSGEN_PM"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_3019100">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50condevicepower"></A>Device Power States</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>Device Power state definitions are statically predefined. The Power Manager passes a device state to a driver and the driver is responsible for mapping the state to its device capabilities and then performing the applicable state transition on its physical device.</P>
+
+<P>The following table specifies the device power states, and their descriptions.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=33%>Device power state</TH>
+<TH width=33%>Registry key</TH>
+<TH width=34%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%>Full on</TD>
+<TD width=33%><B>D0</B></TD>
+<TD width=34%>State in which the device is on and running. It is receiving full power from the system and is delivering full functionality to the user. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%>Low on</TD>
+<TD width=33%><B>D1</B></TD>
+<TD width=34%>State in which the device is fully functional at a lower power or performance state than D0. D1 is applicable when the device is being used, but where peak performance is unnecessary and power is at a premium.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%>Standby</TD>
+<TD width=33%><B>D2</B></TD>
+<TD width=34%>State in which the device is partially powered with automatic wakeup on request. A device in state D2 is effectively standing by.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%>Sleep</TD>
+<TD width=33%><B>D3</B></TD>
+<TD width=34%>State in which the device is partially powered with device-initiated wakeup if available. A device in state D3 is sleeping but capable of raising the System Power State on its own. It consumes only enough power to be able to do so; which must be less than or equal to the amount of power used in state D2.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%>Off</TD>
+<TD width=33%><B>D4</B></TD>
+<TD width=34%>State in which the device has no power. A device in state D4 should not be consuming any significant power. Some peripheral busses require static terminations that intrinsically use non-zero power when a device is physically connected to the bus; a device on such a bus can still support D4.</TD>
+</TR>
+</table></div>
+
+<P>A physical device does not have to support all of the device power states. The only device power state that all devices must support is the full on state, D0. A driver that is issued a request to enter a power state not supported by its device enters the next available power state supported. For example, if the Power Manager requests that it enter D2 and does not support D2, the device can enter D3 or D4 instead. This can be done if the Power Manager supports one of these states. If a device is requested to enter D3 and cannot wake up the system then it should enter D4 and power off rather than staying in standby. These rules are intended to simplify driver implementation.</P>
+
+<P>The Power Manager appropriately maps system power states to the corresponding device power states. For example, if a device only supports device power states D0 and D4, the Power Manager will not immediately request that the device enter the D4 power state. The Power Manager waits until the system enters a system power state in which D3 or D4 is configured as the maximum device power state for that device. If D0, D1, or D2 is configured as the maximum power state, the Power Manager will keep the device at D0.</P>
+
+<P>When a device driver is loaded it should put the device into full on, D0. Before a driver is unloaded, if possible, it should put the device into off, D4. If a device enters another device power state at startup, it can issue a <A HREF="wce50lrfdevicepowernotify.htm">DevicePowerNotify</A> request while processing IOCTL_POWER_CAPABILITIES.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50conpowerstates.htm">Power States</A> | <A HREF="wce50condevicestated3andsystemwakeup.htm">Device State D3 and System Wakeup</A> | <A HREF="wce50lrfdevicepowernotify.htm">DevicePowerNotify</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

@@ -1,0 +1,127 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Setting Up the BIOS Boot Loader</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Setting Up the BIOS Boot Loader"/>
+<MSHelp:RLTitle Title="Setting Up the BIOS Boot Loader"/>
+<MSHelp:Keyword Index="A" Term="wce50conSettingUptheBIOSBootLoader"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Hardware"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="True"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="x86romboot.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="False"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_3011523">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50consettingupthebiosbootloader"></A>Setting Up the BIOS Boot Loader</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>Two floppy disk images are provided in Platform Builder, Setupdisk.144 and Bootdisk.144: 
+
+<UL type="disc">
+	<LI>Setupdisk.144 is an MS-DOS FAT-formatted floppy disk that contains disk setup utilities and the boot sector and boot loader images. </li>
+
+	<LI>Bootdisk.144 is a sample boot disk for downloading a run-time image from Platform Builder that demonstrates the BIOS boot loader and uses Eboot.bin.</li>
+</UL>
+
+<P class="labelproc"><B>To use the floppy disk images</B>
+
+<OL type="1">
+	<LI>If Websetup is not installed on your system, install it by running Websetup.exe from &lt;<I>Platform Builder installation path</I>&gt;\Cepb\Utilities on your development workstation. 
+<P>Websetup only needs to be installed once.
+</li>
+
+	<LI>Place a floppy disk in your floppy drive.</li>
+
+	<LI>Run Setupdisk.144 or Bootdisk.144, from %_WINCEROOT%\Public\Common\Oak\Csp\x86\Biosloader\DiskImages. 
+<P>The .144 file extension is associated with Websetup.
+</li>
+
+	<LI>Select the <B>A Drive</B> button and the floppy disk will be prepared.
+<P>Use the setup floppy disk, Setupdisk.144, to prepare a storage device with the BIOS boot loader.
+
+<BLOCKQUOTE class="dtBlock">
+<b class="le">Note</b>&nbsp;&nbsp;&nbsp;This step assumes that the storage device to be prepared is in an x86 system with a floppy drive and the storage device is visible to MS-DOS as a drive.</BLOCKQUOTE>
+</li>
+</OL>
+
+<P class="labelproc"><B>To prepare the storage device</B>
+
+<OL type="1">
+	<LI>Insert the setup floppy disk and boot it.</li>
+
+	<LI>From the command prompt, use the fdisk utility to create a primary MS-DOS active partition on the storage device. 
+<P>Because the BIOS boot loader does not support FAT32, create a partition whose size is FAT12 or FAT16 compatible. 
+
+<P>For more information about how to use fdisk, consult the fdisk documentation.
+
+<BLOCKQUOTE class="dtBlock">
+<b class="le">Note</b>&nbsp;&nbsp;&nbsp;Prepare the disk in the target device. If you cannot, be sure the BIOS settings for the drive, such as the LBA mode and others, match the settings used on the hardware platform. On-disk settings are stored as part of the fdisk operation and must be compatible with the working BIOS mode.</BLOCKQUOTE>
+</li>
+
+	<LI>From the command prompt, format the new partition using the format utility.
+<P>The MS-DOS system files should not be transferred as part of the formatting process. 
+
+<P>Specifically, do not use <CODE>format /s &lt;drive&gt;</CODE>. 
+
+<P>When prompted by the format utility, leave the volume name blank.
+</li>
+
+	<LI>Write the boot sector image and transfer the boot loader by typing <B>mkdisk <I>&lt;drive letter&gt;</I>:</B>.
+<P>For example, if you are using the C: drive, you would type <B>mkdisk c:</B>.
+</li>
+</OL>
+
+<P>At this point, the storage device contains an active partition that is bootable and contains the boot sector and boot loader images. </P>
+
+<P>The mkdisk utility sets the attributes of the BIOS loader image (BLDR) to hide or protect the file. </P>
+
+<P>Listing all files in the root directory of the storage device will not show files.</P>
+
+<P>After the storage device is prepared with the BIOS loader, the BIN image to be booted must be transferred to the root directory. </P>
+
+<P>By default, the BIOS boot loader looks for the file Nk.bin in the root directory. Nk.bin is the run-time image. </P>
+
+<P>Because the storage device contains a standard FAT file system, if the storage device is removable, it can be placed in any desktop system and the boot image can be copied to the root directory on the storage device.</P>
+
+<P>When the BIOS loader boots, it sends information over physical COM1 on the target device. If you run into problems booting an image with the BIOS loader, connect a Hyperterm connection, 38400 N81, to COM1 for more information.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50conx86biosbootloader.htm">x86 BIOS Boot Loader</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

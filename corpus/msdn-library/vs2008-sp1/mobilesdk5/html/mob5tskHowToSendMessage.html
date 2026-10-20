@@ -1,0 +1,205 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>How to: Send a Message</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="How to: Send a Message"/>
+<MSHelp:RLTitle Title="How to: Send a Message"/>
+<MSHelp:Keyword Index="A" Term="mob5tskHowToSendMessage"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Application"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbsmartphone"/>
+<MSHelp:Attr Name="Product" Value="kbPocketPC"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="Technology" Value="kbPocketPC"/>
+<MSHelp:Attr Name="Technology" Value="kbSmartphone"/>
+<MSHelp:Attr Name="TopicType" Value="kbTask"/>
+<MSHelp:Attr Name="Filename" Value="Messaging_magneto.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="True"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_1063803">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Windows Mobile Version 5.0 SDK<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="mob5tskhowtosendmessage"></A>How to: Send a Message</H1>
+<!--Feedback Link Top Start-->
+<P CLASS="feedback"><font size="1"><a href="mailto:medfdbk&#64;microsoft.com?subject=Product: Windows Mobile | Version: 5.0 | Release: SDK | Title: How to: Send a Message | Filename: mob5tskhowtosendmessage.htm | Built on: Wednesday, September 14, 2005">Send Feedback</a> on this topic to the authors</font></p>
+<!--Feedback Link Top End-->
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>New messages are always created and sent from a message store's Drafts folder. After you create a message, you set its property values (subject, body, list of recipients, and so on) and then post the message.</P>
+
+<P class="labelproc"><B>To send a message</B>
+
+<OL type="1">
+	<LI>Initialize the MAPI subsystem, and log onto a MAPI session. For more information, see <A HREF="mob5tskhowtobeginmapisession.htm">How to: Begin a MAPI Session</A>.</li>
+
+	<LI>Establish a connection to a message store. For more information, see <A HREF="mob5tskhowtoconnecttomessagestore.htm">How to: Connect to a Message Store</A>.</li>
+
+	<LI>Create a message object. For more information, see <A HREF="mob5tskhowtocreatemessage.htm">How to: Create a Message</A>.</li>
+
+	<LI>Prepare and set the list of recipients for the message. Typically, there are three properties to set for each recipient: <B>PR_RECIPIENT_TYPE</B>, <B>PR_ADDRTYPE</B>, and <B>PR_EMAIL_ADDRESS</B>.
+<OL type="a">
+	<LI>Allocate memory for the list of recipients by calling <A HREF="mob5lrfmapiallocatebuffer.htm">MAPIAllocateBuffer</A> with the total size of the recipient list:
+<PRE class="code">ULONG cRecipients = 1;  // Sending this to only 1 person.
+LPWSTR pszTo = L"you@mycompany.com";  // Address of recipient.
+ULONG cRecProps = 3;  // Setting 3 properties for each recipient.
+LPADRLIST pRecList = NULL;
+ULONG cbRecList = 0;
+cbRecList = sizeof(ADRLIST) + 
+            cRecipients * (sizeof(ADRENTRY) + 
+                cRecProps * (sizeof(SPropValue) + 
+                    (wcslen(pszTo)+3) * sizeof(WCHAR) ) );
+hr = MAPIAllocateBuffer(cbRecList, (void **)<code><b class="cfe">&amp;pRecList</b></code>);</PRE>
+</li>
+
+	<LI>Initialize the recipient list by using <MSHelp:link keywords="wce50lrfmemset" TABINDEX="0">memset</MSHelp:link> to set the entire buffer to 0, and then begin filling in values for the recipient list:
+<PRE class="code">LPSPropValue pRecVal = NULL;
+memset((void *)pRecList, 0, cbRecList);
+pRecList-&gt;cEntries = cRecipients;
+pRecList-&gt;aEntries[0].cValues = cRecProps;
+pRecVal = pRecList-&gt;aEntries[0].rgPropVals;</PRE>
+</li>
+
+	<LI>Set the recipient type property value to indicate whether the recipient is listed on the To:, Cc:, or Bcc: fields by using the <A HREF="mob5lrfpr_recipient_type.htm">PR_RECIPIENT_TYPE</A> property. This is the first of three properties that are being set in the recipient list:
+<PRE class="code">pRecVal[0]-&gt;ulPropTag = <code><b class="cfe">PR_RECIPIENT_TYPE</b></code>;
+pRecVal[0]-&gt;Value<code><b class="cfe">.ul</b></code> = <code><b class="cfe">MAPI_TO</b></code>;</PRE>
+</li>
+
+	<LI>Set the address type property value to SMTP by using the <A HREF="mob5lrfpr_addrtype.htm">PR_ADDRTYPE</A> property. This is the second of three properties that are being set in the recipient list:
+<PRE class="code">pRecVal[1]-&gt;ulPropTag = <code><b class="cfe">PR_ADDRTYPE</b></code>;
+pRecVal[1]-&gt;Value<code><b class="cfe">.lpszW</b></code> = <code><b class="cfe">L"SMTP"</b></code>;</PRE>
+</li>
+
+	<LI>Set the e-mail address for each message recipient by using the <A HREF="mob5lrfpr_email_address.htm">PR_EMAIL_ADDRESS</A> property. This is the third and final property that is being set in the recipient list:
+<PRE class="code">pRecVal[2]-&gt;ulPropTag = <code><b class="cfe">PR_EMAIL_ADDRESS</b></code>;
+pRecVal[2]-&gt;Value<code><b class="cfe">.lpszW</b></code> = <code><b class="cfe">pszTo</b></code>;</PRE>
+</li>
+
+	<LI>Add the list of recipients to your message by calling the <A HREF="mob5lrfimessagemodifyrecipients.htm">IMessage::ModifyRecipients</A> method with the <B>MODRECIP_ADD</B> flag:
+<PRE class="code">hr = pMsg-&gt;ModifyRecipients(MODRECIP_ADD, <code><b class="cfe">pRecList</b></code>);</PRE>
+</li>
+
+	<LI>Free the memory buffer for the list of recipients by calling <A HREF="mob5lrfmapifreebuffer.htm">MAPIFreeBuffer</A>.
+<PRE class="code">hr = MAPIFreeBuffer((void *)<code><b class="cfe">pRecList</b></code>);
+pRecVal = NULL;</PRE>
+</li>
+</OL>
+</li>
+
+	<LI>Prepare and set the following properties of the message: <B>PR_MSG_STATUS</B>, <B>PR_MESSAGE_FLAGS</B>, and <B>PR_SUBJECT</B>.
+<OL type="a">
+	<LI>Allocate memory for the message property array by calling <A HREF="mob5lrfmapiallocatebuffer.htm">MAPIAllocateBuffer</A> with the total size of the message properties:
+<PRE class="code">ULONG cMsgProps = 3;  // Setting 3 properties for the message.
+LPWSTR pszSubject = L"MySubject";  // Subject line of message.
+LPSPropValue pMsgVal = NULL;
+ULONG cbMsgVal = 0;
+cbMsgVal = cMsgProps * (sizeof(SPropValue) + 
+               (wcslen(pszSubject)+3) * sizeof(WCHAR) );
+hr = MAPIAllocateBuffer(cbMsgVal, (void **)<code><b class="cfe">&amp;pMsgVal</b></code>);</PRE>
+</li>
+
+	<LI>Initialize the message property array by using <MSHelp:link keywords="wce50lrfmemset" TABINDEX="0">memset</MSHelp:link> to set the entire buffer to 0:
+<PRE class="code">memset((void *)pMsgVal, 0, cbMsgVal);</PRE>
+</li>
+
+	<LI>Identify the message as SMTP by using the <A HREF="mob5lrfpr_msg_status.htm">PR_MSG_STATUS</A> property to set the message status to <B>MSGSTATUS_RECTYPE_SMTP</B>. This is the first of three properties that are being set for the message:
+<PRE class="code">pMsgVal[0]-&gt;ulPropTag = <code><b class="cfe">PR_MSG_STATUS</b></code>;
+pMsgVal[0]-&gt;Value<code><b class="cfe">.ul</b></code> = <code><b class="cfe">MSGSTATUS_RECTYPE_SMTP</b></code>;</PRE>
+</li>
+
+	<LI>Identify the current state of the message as unsent by using the <A HREF="mob5lrfpr_message_flags.htm">PR_MESSAGE_FLAGS</A> property to set the <B>MSGFLAG_UNSENT</B> flag. This is the second of three properties that are being set for the message:
+<PRE class="code">pMsgVal[1]-&gt;ulPropTag = <code><b class="cfe">PR_MESSAGE_FLAGS</b></code>;
+pMsgVal[1]-&gt;Value<code><b class="cfe">.ul</b></code> = <code><b class="cfe">MSGFLAG_UNSENT</b></code>;</PRE>
+</li>
+
+	<LI>Set the subject by using the <A HREF="mob5lrfpr_subject.htm">PR_SUBJECT</A> property. This is the third and final property that is being set for the message:
+<PRE class="code">pMsgVal[2]-&gt;ulPropTag = <code><b class="cfe">PR_SUBJECT</b></code>;
+pMsgVal[2]-&gt;Value<code><b class="cfe">.lpszW</b></code> = <code><b class="cfe">pszSubject</b></code>;</PRE>
+</li>
+
+	<LI>Apply the property values to the message by calling the <A HREF="mob5lrfimapipropsetprops.htm">IMAPIProp::SetProps</A> method on the message object:
+<PRE class="code">hr = pMsg-&gt;SetProps(cMsgProps, <code><b class="cfe">pMsgVal</b></code>, NULL);</PRE>
+</li>
+
+	<LI>Free the memory buffer for the message property array by calling <A HREF="mob5lrfmapifreebuffer.htm">MAPIFreeBuffer</A>.
+<PRE class="code">hr = MAPIFreeBuffer((void *)<code><b class="cfe">pMsgVal</b></code>);</PRE>
+</li>
+</OL>
+</li>
+
+	<LI>Prepare and write the textual body of the message.
+<OL type="a">
+	<LI>Declare a <B>NULL</B> <MSHelp:link keywords="wce50lrfIStreamIUnknown" TABINDEX="0">IStream</MSHelp:link> interface object, and then call the <A HREF="mob5lrfimapipropopenproperty.htm">IMAPIProp::OpenProperty</A> method of the message object to obtain a reference to the message body text stream interface object:
+<PRE class="code">IStream * pStm = NULL;
+hr = pMsg-&gt;OpenProperty(<code><b class="cfe">PR_BODY</b></code>, 
+                        NULL, 
+                        0, 
+                        <code><b class="cfe">MAPI_MODIFY</b></code>, 
+                        (LPUNKNOWN *)<code><b class="cfe">&amp;pStm</b></code>);</PRE>
+</li>
+
+	<LI>Write the text of the body of the message by calling the <MSHelp:link keywords="wce50lrfIStreamWrite" TABINDEX="0">IStream::Write</MSHelp:link> method of the stream object:
+<PRE class="code">LPWSTR pszBody = L"Text in Body of Message.";
+ULONG cbBody = 0;
+ULONG cbWritten = 0;
+cbBody = (wcslen(pszBody)+1) * sizeof(WCHAR);
+hr = pStm-&gt;Write(pszBody, cbBody, &amp;cbWritten);</PRE>
+</li>
+
+	<LI>If it is no longer needed, release the stream object by calling <A HREF="mob5lrfiunknownrelease.htm">IUnknown::Release</A> on it:
+<PRE class="code">pStm-&gt;Release();
+pStm = NULL;</PRE>
+</li>
+</OL>
+</li>
+
+	<LI>Submit the message by calling the <A HREF="mob5lrfimessagesubmitmessage.htm">IMessage::SubmitMessage</A> method of the message object:
+<PRE class="code">hr = pMsg-&gt;SubmitMessage(0);</PRE>
+</li>
+
+	<LI>If it is no longer needed, release the message object by calling <A HREF="mob5lrfiunknownrelease.htm">IUnknown::Release</A> on it:
+<PRE class="code">pMsg-&gt;Release();
+pMsg = NULL;</PRE>
+</li>
+</OL>
+
+<H4 class="dtH4">Code Sample</H4>
+
+<P>The Windows Mobile Version 5.0 Pocket PC and Smartphone SDKs ship with a code sample called <A HREF="mob5samsendinge-mail.htm">Sending e-mail</A>. The default location for the the sample is <code class="ce">C:\Program Files\Windows CE Tools\wce500\Windows Mobile 5.0 Pocket PC SDK\Samples\CPP\Win32\Sendmail\</code>. To load the code sample, double-click the <code class="ce">SendMail.sln</code> solution file.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="mohowhowtocreatemessagingapplication.htm">How to Create a Messaging Application</A> | <A HREF="mob5orimessagingoverview.htm">Messaging Application Development for Windows Mobile-based Devices</A> | <A HREF="mob5orimessaging.htm">Messaging</A> | <A HREF="mob5tskhowtobeginmapisession.htm">How to: Begin a MAPI Session</A> | <A HREF="mob5tskhowtoconnecttomessagestore.htm">How to: Connect to a Message Store</A> | <A HREF="mob5tskhowtocreatemessage.htm">How to: Create a Message</A> | <A HREF="mob5tskhowtoendmapisession.htm">How to: End a MAPI Session</A> | <A HREF="mob5conmessagingsamplecode.htm">Messaging Sample Code</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Feedback Link Bottom Start-->
+<p><font size="1"><a href="mailto:medfdbk&#64;microsoft.com?subject=Product: Windows Mobile | Version: 5.0 | Release: SDK | Title: How to: Send a Message | Filename: mob5tskhowtosendmessage.htm | Built on: Wednesday, September 14, 2005">Send Feedback</a> on this topic to the authors</font></p>
+<!--Feedback Link Bottom End-->
+<!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="mob5conCopyrightInformationForMagneto" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link></font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

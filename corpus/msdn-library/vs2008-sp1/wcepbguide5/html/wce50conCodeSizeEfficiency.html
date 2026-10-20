@@ -1,0 +1,78 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Code Size Considerations</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Code Size Considerations"/>
+<MSHelp:RLTitle Title="Code Size Considerations"/>
+<MSHelp:Keyword Index="A" Term="wce50conCodeSizeEfficiency"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Guide"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="True"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="comp_arm_callspec.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="False"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_3023300">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50concodesizeefficiency"></A>Code Size Considerations</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>Both declspec modifiers and linker-generated thunking routines add additional 32-bit words of text-space instruction. </P>
+
+<P>In general, if a program contains only a few interworking functions, but the interworking functions are called from many places; a linker-generated thunking routine probably results in smaller overall code size. </P>
+
+<P>If a program contains many different interworking functions, but the interworking functions are called from only a few places, using the <A HREF="wce50coniwcall.htm">iwcall</A> or <A HREF="wce50coniw16.htm">iw16</A> declspec results in code size similar to that required by a linker-generated thunking routine.</P>
+
+<P>If code size efficiency is important, keep in mind the following additional word requirements:
+
+<UL type="disc">
+	<LI>The <B>iwcall</B> and <B>iw16</B> declspecs require an additional 32-bit word of text-space instruction per interworking call. 
+<P>Because the function address must be placed into and loaded from the literal pool, the function address can add up to two 32-bit words of text space instruction to the space required by the linker-generated thunking routine. 
+
+<P>Because different load instructions can share a given literal pool entry, some function calls do not add words for a declspec. The literal pool entry can be loaded into a register that different <B>BX</B> instructions use without reloading the register.
+</li>
+
+	<LI>Allowing the linker to generate a thunking routine for the ARM compiler requires three additional 32-bit words per called function but no additional words at the call sites. A linker-generated thunking routine for the THUMB compiler requires four words instead of three.
+<BLOCKQUOTE class="dtBlock">
+<b class="le">Note</b>&nbsp;&nbsp;&nbsp;Regardless of how many different callers call a function, the linker generates only one interworking thunking routine per function call.</BLOCKQUOTE>
+</li>
+</UL>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50conlinkergeneratedthunkingroutines.htm">Linker-generated Thunking Routines</A> | <A HREF="wce50coniwcall.htm">iwcall</A> | <A HREF="wce50coniw16.htm">iw16</A> | <A HREF="wce50coniw32.htm">iw32</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

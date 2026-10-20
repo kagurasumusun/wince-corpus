@@ -1,0 +1,123 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Controlling the Kernel Profiler by Using the Profiler API</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Controlling the Kernel Profiler by Using the Profiler API"/>
+<MSHelp:RLTitle Title="Controlling the Kernel Profiler by Using the Profiler API"/>
+<MSHelp:Keyword Index="A" Term="wce50tskControllingProfilingwhenRunningtheProfileEnabledOSImagefromanApplication"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Debugging"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="True"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbTask"/>
+<MSHelp:Attr Name="Filename" Value="kernel_profiler.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="True"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_3013074">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50tskcontrollingprofilingwhenrunningtheprofileenabledosimagefromanapplication"></A>Controlling the Kernel Profiler by Using the Profiler API</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>To control the kernel profiler, you can call the <MSHelp:link keywords="wce50lrfProfileStart" TABINDEX="0">ProfileStart</MSHelp:link> and <MSHelp:link keywords="wce50lrfProfileStop" TABINDEX="0">ProfileStop</MSHelp:link> functions from an existing application. Alternatively, you can create a standalone application that calls these functions.</P>
+
+<P class="labelproc"><B>To start the kernel profiler by using the profiler API</B>
+
+<UL type="disc">
+	<LI>Within an application, call the <B>ProfileStart</B> function at the beginning of each section of code that you want to profile. </li>
+</UL>
+
+<P class="labelproc"><B>To stop the kernel profiler</B>
+
+<UL type="disc">
+	<LI>Call the <B>ProfileStop</B> function. 
+<P>With the <B>ProfileStart</B> you can set the time slice for each sample and specify a mode for the kernel profiler. For more information about the parameters for the <B>ProfileStart</B> function, see <MSHelp:link keywords="wce50lrfProfileStart" TABINDEX="0">ProfileStart</MSHelp:link>.
+
+<P>When you run the kernel profiler in buffered mode, you may want to use a sampling interval of approximately 200 microseconds (s). When you run the kernel profiler in unbuffered mode you may want to use a larger sampling interval, for example 1000 s.
+
+<P>In unbuffered mode, the kernel profiler looks up symbols while profiling. Unbuffered mode requires a larger sampling interval than buffered mode because it takes more time to capture each sample. You must provide the OS with enough time to execute between samples. For information about buffered and unbuffered mode, see <A HREF="wce50conbufferedunbufferedprofiling.htm">Buffered and Unbuffered Profiling</A>.
+</li>
+</UL>
+
+<P>The following code sample shows a standalone application that controls the kernel profiler.</P>
+
+<PRE class="code">#include &lt;windows.h&gt;
+#include &lt;profiler.h&gt;
+
+int WINAPI WinMain (HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCmdLine, int nShowCmd)
+{
+    DWORD dwUSecInterval = 200;  // Default sampling interval
+    DWORD dwProfOptions = 0;      // Default flags for ProfileStart
+    PTCHAR p;
+    
+    // USAGE: profctl [-i &lt;interval&gt;] [-buffer/-kcall/-obj/-stop/-pause/-continue/-startpaused]
+    // EXAMPLE: profctl -i 300 -buffer   Start profiler in Monte Carlo mode, buffering data, sampling at 300us interval
+    //                  profctl -stop    Stop profiler
+
+    if (_tcsstr(lpCmdLine, TEXT("-stop"))) {
+        ProfileStop();
+        return 0;
+    }
+
+    if (_tcsstr (lpCmdLine, _T("-pause"))) {
+        dwProfOptions = PROFILE_PAUSE;
+        goto startprofiler;  // ignore other command-line options
+    }
+    if (_tcsstr (lpCmdLine, _T("-continue"))) {
+        dwProfOptions = PROFILE_CONTINUE;
+        goto startprofiler;  // ignore other command-line options
+    }
+
+    if (p = _tcsstr (lpCmdLine, _T("-i")))
+        dwUSecInterval = _ttol (p + 3);
+
+    if (_tcsstr(lpCmdLine, TEXT("-obj")))
+        dwProfOptions |= PROFILE_OBJCALL;
+    if (_tcsstr(lpCmdLine, TEXT("-kcall")))
+        dwProfOptions |= PROFILE_KCALL;
+    if (_tcsstr(lpCmdLine, TEXT("-buffer")))
+        dwProfOptions |= PROFILE_BUFFER;
+    if (_tcsstr(lpCmdLine, TEXT("-startpaused")))
+        dwProfOptions |= PROFILE_STARTPAUSED;
+
+startprofiler:
+    ProfileStart(dwUSecInterval, dwProfOptions);
+    return 0;
+}</PRE>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50oricontrollingkernelprofiler.htm">Controlling the Kernel Profiler</A> | <A HREF="wce50coninstrumentedkernelprofilingandmontecarloprofiling.htm">Kernel Profiler Modes</A> | <MSHelp:link keywords="wce50lrfProfileStart" TABINDEX="0">ProfileStart</MSHelp:link> | <MSHelp:link keywords="wce50lrfProfileStartEx" TABINDEX="0">ProfileStartEx</MSHelp:link> | <MSHelp:link keywords="wce50lrfProfileStop" TABINDEX="0">ProfileStop</MSHelp:link></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

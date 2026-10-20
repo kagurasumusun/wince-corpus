@@ -1,0 +1,110 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>FSRAMPERCENT</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="FSRAMPERCENT"/>
+<MSHelp:RLTitle Title="FSRAMPERCENT"/>
+<MSHelp:Keyword Index="K" Term="FSRAMPERCENT"/>
+<MSHelp:Keyword Index="A" Term="wce50lrfFSRAMPERCENT"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="OS"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="True"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="configuration_file_types.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="True"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_3012328">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50lrffsrampercent"></A>FSRAMPERCENT</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>This configuration option specifies the percentage of RAM allocated for the file system. </P>
+
+<P>This option uses the following syntax.</P>
+
+<PRE class="syntax"><B>FSRAMPERCENT </B>= <I>number</I> </PRE>
+
+<H4 class="dtH4">Parameters</H4>
+
+<DL>
+<DT><I>number </I></DT>
+
+<DD>A 4-byte hexadecimal number. 
+
+<P>Each byte represents the number of 4-KB blocks per MB allocated for the file system, as follows:
+
+
+<P>byte 0 = # of 4-KB blocks per MB in the first two MB
+
+
+<P>byte 1 = # of 4-KB blocks per MB in the second two MB
+
+
+<P>byte 2 = # of 4-KB blocks per MB in the third two MB
+
+
+<P>byte 3 = # of 4-KB blocks per MB in the remaining memory
+</dd>
+</DL>
+
+<H4 class="dtH4">Remarks</H4>
+
+<P>You can use <B>FSRAMPERCENT</B> to specify 16 to 255 4-KB blocks of memory. Although the memory is calculated in 4-KB blocks, the actual allocation is a contiguous section of RAM. </P>
+
+<P>The minimum size for <B>FSRAMPERCENT</B> is 128kb, or 0x00000020.</P>
+
+<P>The default is <B>FSRAMPERCENT</B>=0x80808080, which specifies 50 percent of RAM allocated for the file system. </P>
+
+<P>You can calculate the percentage of RAM is reserved by <B>FSRAMPERCENT</B> by dividing the amount of memory reserved in each byte by 1MB. For example, if <B>FSRAMPERCENT</B> is 0x20202020, each byte reserves 0x20 x 4KB = 128KB. 128KB divided by 1MB is .125, or 12.5% of the ram.</P>
+
+<P>You can also calculate the value of <B>FSRAMPERCENT</B> from the desired percentage of RAM to be used in the file system. For example, if you want to reserve 12.5% of RAM for the file system, you would set each byte of <B>FSRAMPERCENT</B> to ((12.5% / 100) * (1MB / 4KB)), or 12.5% * 2.56. This example works out to 32, or 0x20. You would then set the 4-byte value of <B>FSRAMPERCENT</B> to 0x20202020.</P>
+
+<P>The following code example shows how to use FSRAMPERCENT to allocate available RAM to the file system.</P>
+
+<PRE class="code">FSRAMPERCENT=0x10203040</PRE>
+
+<P>In this example, 64 4KB chunks are allocated to byte 0. 48 4KB chunks are allocated to byte 1, 32 4KB chunks are allocated to byte 2, and 16 4KB chunks are allocated to byte 3. The total percentage of memory reserved for the file system would be ((64 + 48 + 32 + 16) * 4KB) / 4MB, or 15.6%.</P>
+
+<P>The OAL now provides the function pointer <MSHelp:link keywords="wce50lrfpOEMCalcFSPages" TABINDEX="0">pOEMCalcFSPages</MSHelp:link> to change the default number of pages assigned to the object store during a cold boot. </P>
+
+<BLOCKQUOTE class="dtBlock">
+<b class="le">Note</b>&nbsp;&nbsp;&nbsp;The minimum size for the object store is 32 KB and the maximum size is 256 MB. </BLOCKQUOTE>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50conconfigsection.htm">CONFIG Section</A> | <MSHelp:link keywords="wce50lrfSetSystemMemoryDivision" TABINDEX="0">SetSystemMemoryDivision</MSHelp:link> | <A HREF="wce50conbinaryimagebuilderfile.htm">Binary Image Builder File</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

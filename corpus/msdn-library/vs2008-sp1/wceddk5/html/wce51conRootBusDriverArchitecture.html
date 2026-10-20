@@ -1,0 +1,153 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Root Bus Driver Development Concepts</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Root Bus Driver Development Concepts"/>
+<MSHelp:RLTitle Title="Root Bus Driver Development Concepts"/>
+<MSHelp:Keyword Index="A" Term="wce51conRootBusDriverArchitecture"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Driver"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="False"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="rootbus_driver.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="False"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_1068174">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce51conrootbusdriverarchitecture"></A>Root Bus Driver Development Concepts</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>The root bus driver is implemented in %_WINCEROOT%\Public\Common\OAK\CSP\ARM\TI\OMAP730\RootBus. The root bus driver consists of the <B>RootBus</B> class, the <B>Omap730DeviceFolder</B> class, and the <B>Omap730Clock</B> class.</P>
+
+<P>Hardware configuration and power management depends on the specific hardware platform. The root bus driver uses a reference count to power-down each clock.</P>
+
+<H2 class="dtH2">RootBus Class</H2>
+
+<P>The following list describes the implementation of the <B>RootBus</B> class:
+
+<UL type="disc">
+	<LI>It inherits the <B>DefaultBusDriver </B>class and the <B>Omap730Clock </B>class.</li>
+
+	<LI>It creates an instance of the <B>Omap730DeviceFolder</B> class.
+<P>Instead of creating a default device folder, the instance of the <B>Omap730DeviceFolder </B>class creates a device folder for a particular hardware component. A base physical address identifies the hardware component.
+</li>
+
+	<LI>It scans the registry and creates client device folders during initialization.
+<P>The default bus driver also scans the registry and creates client device folders during initialization. For more information about bus drivers, see <A HREF="wce50conbusdrivers.htm">Bus Drivers</A>.
+</li>
+
+	<LI>It allows expansion of the <B>CreateNewDevice </B>function for creating additional instances of device folders.</li>
+</UL>
+
+<P>The following list describes the external interface of the <B>RootBus </B>class:
+
+<UL type="disc">
+	<LI>It implements <B>FastIOControl</B> to increase the speed of IOCTL calls from any clients.
+<P>Rather than using a string to identify any client drivers, the <B>RootBus </B>class uses a handle to identify them.
+</li>
+
+	<LI>It exposes the bus access IOCTLs to its client drivers and to any trusted applications that use the <B>RootBus</B> class.
+<P>For information about the bus access IOCTLs, see <A HREF="wce50grfceddkbusdriverioctls.htm">CEDDK Dynamic-Link Library Bus Access IOCTLs</A>.
+</li>
+</UL>
+
+<H2 class="dtH2">Omap730DeviceFolder Class</H2>
+
+<P>The following list describes the implementation of the <B>Omap730DeviceFolder</B> class:
+
+<UL type="disc">
+	<LI>It creates the <B>UpdatePowerState</B> virtual member and uses its default implementation.
+<P>The <B>UpdatePowerState</B> virtual member handles all power requests from any client drivers.
+</li>
+
+	<LI>It allows some TI OMAP730 P2 hardware platforms to conserve power by powering-down individual timers.
+<P>To unify access, there is a clock identifier for each device folder.
+</li>
+
+	<LI>It contains all information related to any client drivers.</li>
+
+	<LI>It inherits default device folder properties.
+<P>Inheritance allows the <B>Omap730DeviceFolder </B>class to assume all default device folder functionality.
+</li>
+
+	<LI>It implements the power state policy for any client drivers with the <B>UpdatePowerState </B>virtual member.
+<P>The <B>Omap730DeviceFolder </B>class powers-up or powers-down any clocks or timers associated with the TI OMAP730 P2 hardware platform.
+</li>
+</UL>
+
+<P>The following list describes the external interface of the <B>Omap730DeviceFolder</B> class:
+
+<UL type="disc">
+	<LI>It contains public functions that the <B>RootBus </B>class can access.</li>
+
+	<LI>It enables clocks with the identifier function that the <B>Omap730Clock</B> class provides.
+<P>The <B>Omap730Clock </B>class has to be accessible from the <B>Omap730DeviceFolder</B> class.
+</li>
+</UL>
+
+<H2 class="dtH2">Omap730Clock Class</H2>
+
+<P>The following list describes the implementation of the <B>Omap730DeviceFolder</B> class:
+
+<UL type="disc">
+	<LI>It uses the CLOCK_ALLOCATION_ID_REGISTER_ACCESS clock identifier for accessing hardware registers.
+<P>CLOCK_ALLOCATION_ID_OPERATION is the clock identifier for normal operation.
+
+<P>CLOCK_ALLOCATION_OTHER is the clock identifier for other operations. 
+
+<P>The implementation of the <B>Omap730DeviceFolder </B>class determines whether all clock identifiers are used. You do not have to use all clock identifiers.
+</li>
+
+	<LI>It manages any clocks on the TI OMAP730 P2 hardware platform.
+<P>The physical address of the clock and a clock identifier identify any clocks. Device folders may have different clock sources, which the clock identifier distinguishes.
+</li>
+
+	<LI>It memory-maps any clocks according to the physical address of the clock and the logical clock identifier.
+<P>For each clock, a private array contains the physical clock identifier. Each clock has an internal reference count to track whether the clock is used. If it is not in use, the clock is automatically powered-down.
+</li>
+</UL>
+
+<P>The following list describes the external interface of the <B>Omap730Clock</B> class:
+
+<UL type="disc">
+	<LI>It has public functions that the <B>Omap730DeviceFolder </B>class and <B>RootBus </B>class can access.</li>
+</UL>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50conbusdrivers.htm">Bus Drivers</A> | <A HREF="wce50grfceddkbusdriverioctls.htm">CEDDK Dynamic-Link Library Bus Access IOCTLs</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

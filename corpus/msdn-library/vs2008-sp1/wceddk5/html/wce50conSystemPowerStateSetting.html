@@ -1,0 +1,118 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>System Power State Setting</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="System Power State Setting"/>
+<MSHelp:RLTitle Title="System Power State Setting"/>
+<MSHelp:Keyword Index="A" Term="wce50conSystemPowerStateSetting"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Driver"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="False"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="powermgrdrv_guide.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="False"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+<MSHelp:Attr Name="PBFeature" Value="SYSGEN_PM"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_3019076">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50consystempowerstatesetting"></A>System Power State Setting</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>In some situations applications may want to change the system power state. Applications are not assumed to know which power states are available on a given Windows CE-based device, nor are they expected to know the characteristics of the system power states that are available. Rather than calling <A HREF="wce50lrfsetsystempowerstate.htm">SetSystemPowerState</A> with an explicit state name, applications can invoke it with a bitmask describing the characteristics of the power state into which they want to transition. The Power Manager will translate this bitmask into a specific power state. For example, an application might request a system power status change with the POWER_STATE_SUSPEND bit set. The Power Manager would then transition into Suspend or SuspendCradle, depending on whether or not the system is in a cradle at the time of the request. If the device were removed from the cradle while in the SuspendCradle state, the Power Manager would transition the system into a suspend state.</P>
+
+<P>The Power Manager may restrict applications from entering certain system power states. For example, if the Power Manager is actively controlling system power states based on external inputs, it may not allow you to explicitly enter an ACRun power state when the unit is running on battery power. The default Power Manager implementation permits only applications to suspend the system.</P>
+
+<P>The following table shows predefined power state bits and their suggested interpretations.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=34%>Bit</TH>
+<TH width=66%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=34%>POWER_STATE_ON</TD>
+<TD width=66%>Highest functional level and highest power consumption.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=34%>POWER_STATE_OFF</TD>
+<TD width=66%>All devices are off. Resuming from this state results in a cold boot. You can use this state to prepare a device for shipping without depleting the battery.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=34%>POWER_STATE_CRITICAL</TD>
+<TD width=66%>Battery is critically low. Carry out required system maintenance, then dump power to devices and put DRAM into a self-refresh state. Resuming from this state results in a cold boot.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=34%>POWER_STATE_BOOT</TD>
+<TD width=66%>System is in the process of booting.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=34%>POWER_STATE_IDLE</TD>
+<TD width=66%>No devices are in use and there is no user interaction. All devices should enter a low-power state as well as a low-power system mode. You can use this as an alternative to suspending the system if the power saved from the low-power mode is satisfactory.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=34%>POWER_STATE_RESET</TD>
+<TD width=66%>Flush files, shut down devices and call <MSHelp:link keywords="wce50lrfKernelIoControl" TABINDEX="0">KernelIoControl</MSHelp:link>.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=34%>POWER_STATE_SUSPEND</TD>
+<TD width=66%>Suspend the OS and ultimately call <MSHelp:link keywords="wce50lrfOEMPowerOff" TABINDEX="0">OEMPowerOff</MSHelp:link>.</TD>
+</TR>
+</table></div>
+
+<P>The sample Power Manager implementation does not use all of the states listed in the above table. You can define state flags that are specific to your Windows CE-based device.</P>
+
+<P>If an application requests a new power state using <B>SetSystemPowerState</B> the Power Manager will do the following:
+
+<UL type="disc">
+	<LI>Broadcast a PBT_TRANSITION notification.</li>
+
+	<LI>Update the device power state, if necessary, for all drivers. If a device is already at an acceptable power state for the new system power state the Power Manager does not need to issue an <A HREF="wce50lrfioctlpowerset.htm">IOCTL_POWER_SET</A>.</li>
+
+	<LI>If the Windows CE-based device is resuming from a suspend state, broadcast a PBT_RESUME notification.</li>
+</UL>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50conapplicationinterface.htm">Application Interface</A> | <A HREF="wce50lrfsetsystempowerstate.htm">SetSystemPowerState</A> | <MSHelp:link keywords="wce50lrfKernelIoControl" TABINDEX="0">KernelIoControl</MSHelp:link> | <MSHelp:link keywords="wce50lrfOEMPowerOff" TABINDEX="0">OEMPowerOff</MSHelp:link> | <A HREF="wce50lrfioctlpowerset.htm">IOCTL_POWER_SET</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

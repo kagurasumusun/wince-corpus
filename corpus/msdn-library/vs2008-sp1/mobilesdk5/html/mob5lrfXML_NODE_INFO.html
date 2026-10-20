@@ -1,0 +1,137 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>XML_NODE_INFO</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="XML_NODE_INFO"/>
+<MSHelp:RLTitle Title="XML_NODE_INFO"/>
+<MSHelp:Keyword Index="K" Term="XML_NODE_INFO"/>
+<MSHelp:Keyword Index="A" Term="mob5lrfXML_NODE_INFO"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Application"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbsmartphone"/>
+<MSHelp:Attr Name="Product" Value="kbPocketPC"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="Technology" Value="kbPocketPC"/>
+<MSHelp:Attr Name="Technology" Value="kbSmartphone"/>
+<MSHelp:Attr Name="TopicType" Value="apiref"/>
+<MSHelp:Attr Name="Filename" Value="htmlCtrl_API_StrucEnum_magneto.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="False"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_1065228">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Windows Mobile Version 5.0 SDK<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="mob5lrfxml_node_info"></A>XML_NODE_INFO</H1>
+<!--Feedback Link Top Start-->
+<P CLASS="feedback"><font size="1"><a href="mailto:medfdbk&#64;microsoft.com?subject=Product: Windows Mobile | Version: 5.0 | Release: SDK | Title: XML_NODE_INFO | Filename: mob5lrfxml_node_info.htm | Built on: Wednesday, September 14, 2005">Send Feedback</a> on this topic to the authors</font></p>
+<!--Feedback Link Top End-->
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>This structure is used with the <B>IXMLNodeFactory </B>interface.</P>
+
+<H4 class="dtH4">Syntax</H4>
+
+<PRE class="syntax"><B>typedef struct _XML_NODE_INFO {</B>
+  <B>DWORD </B><I>dwSize</I><B>;</B>
+  <B>DWORD </B><I>dwType</I><B>;</B>
+  <B>DWORD </B><I>dwSubType</I><B>;</B>
+  <B>BOOL </B><I>fTerminal</I><B>;</B>
+  <B>const WCHAR * </B><I>pwcText</I><B>;</B>
+  <B>ULONG </B><I>ulLen</I><B>;</B>
+  <B>ULONG </B><I>ulNsPrefixLen</I><B>;</B>
+  <B>PVOID </B><I>pNode</I><B>;</B>
+  <B>PVOID </B><I>pReserved</I><B>;</B>
+<B>} XML_NODE_INFO;</B></PRE>
+
+<H4 class="dtH4">Members</H4>
+
+<DL>
+<DT><B>dwSize</B></DT>
+
+<DD>The size of this structure in bytes.</dd>
+
+<DT><B>dwType</B></DT>
+
+<DD>The node type.</dd>
+
+<DT><B>dwSubType</B></DT>
+
+<DD>The node subtype.</dd>
+
+<DT><B>fTerminal</B></DT>
+
+<DD>True if this node cannot have any children. <B>IXMLNodeFactory::BeginChildren</B> and <B>IXMLNodeFactory::EndChildren</B> are guaranteed not to be called for this node.</dd>
+
+<DT><B>pwcText</B></DT>
+
+<DD>This is either a tag name or a <B>PCDATA</B> text value. The lifetime of this pointer is the lifetime of the <B>IXMLNodeFactory::CreateNode</B> call. Element, attribute, and processing instruction tag names or attribute values of type <B>ID</B>, <B>NMTOKEN</B>, <B>ENTITY</B>, or <B>NOTATION</B> can have namespace prefixes.</dd>
+
+<DT><B>ulLen</B></DT>
+
+<DD>The length of the element or attribute name.</dd>
+
+<DT><B>ulNsPrefixLen</B></DT>
+
+<DD>The length of the namespace prefix, when present.</dd>
+
+<DT><B>pNode</B></DT>
+
+<DD>This field can be used by the <B>IXMLNodeFactory</B> interface to RETURN an object representing the node. Because this is <B>PVOID</B>, the <B>IXMLNodeFactory</B> interface can build any tree representation, even a raw structure hierarchy.</dd>
+
+<DT><B>pReserved</B></DT>
+
+<DD>For private communication between factories.</dd>
+</DL>
+
+<H4 class="dtH4">Remarks</H4>
+
+<P>This is essentially a callback interface so that custom node factories can build different kinds of object hierarchies that reflect the XML document. The <B>IXMLNodeFactory</B> interface does not have to create anything; it can just be searching for something in the XML document.</P>
+
+<P>If a non-NULL pointer is returned in the <B>pNode</B> field of <B>XML_NODE_INFO</B>, this pointer will be passed back in by the parser as the <I>pNodeParent</I> in subsequent calls to <B>IXMLNodeFactory::CreateNode</B> for the children of that node. In other words, the XML parser maintains the parse context and passes in the appropriate parent pointer based on what it finds in the XML. The <I>pNodeParent</I> for root level nodes is equal to the argument provided in the <B>IXMLParser::SetRoot</B> call on the parser.</P>
+
+<P>If the node objects must be reference counted, call <B>IUnknown::AddRef</B> before returning them, and then release them in <B>IXMLNodeFactory::EndChildren</B>. All nodes provided in the <B>IXMLNodeFactory::Error</B> method must be released in case the parser stops on an XML syntax error. The parser will always call <B>IXMLNodeFactory::Error</B> in all cases, eliminating the potential for leaking nodes.</P>
+
+<H4 class="dtH4">Requirements</H4>
+
+<P><B>Pocket&nbsp;PC:</B> Pocket&nbsp;PC&nbsp;2000 and later<BR>
+<B>Smartphone:</B> Smartphone&nbsp;2002 and later<BR>
+<B>OS&nbsp;Versions:</B> Windows&nbsp;CE&nbsp;3.0 and later<BR>
+<B>Header:</B> xmlparser.h<BR>
+<B>Library:</B> xmlparser.lib</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="mob5lrfhtmlcontrolapistructures.htm">HTML Control API Structures</A> | <A HREF="mob5lrfixmlnodefactory.htm">IXMLNodeFactory </A> | <A HREF="mob5lrfixmlnodefactorycreatenode.htm">IXMLNodeFactory::CreateNode</A> | <A HREF="mob5lrfixmlnodefactoryendchildren.htm">IXMLNodeFactory::EndChildren</A> | <A HREF="mob5lrfixmlnodefactoryerror.htm">IXMLNodeFactory::Error</A> | <A HREF="mob5lrfixmlparsersetroot.htm">IXMLParser::SetRoot</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Feedback Link Bottom Start-->
+<p><font size="1"><a href="mailto:medfdbk&#64;microsoft.com?subject=Product: Windows Mobile | Version: 5.0 | Release: SDK | Title: XML_NODE_INFO | Filename: mob5lrfxml_node_info.htm | Built on: Wednesday, September 14, 2005">Send Feedback</a> on this topic to the authors</font></p>
+<!--Feedback Link Bottom End-->
+<!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="mob5conCopyrightInformationForMagneto" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link></font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

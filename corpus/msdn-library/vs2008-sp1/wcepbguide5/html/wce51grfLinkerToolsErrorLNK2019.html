@@ -1,0 +1,119 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Linker Tools Error LNK2019</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Linker Tools Error LNK2019"/>
+<MSHelp:RLTitle Title="Linker Tools Error LNK2019"/>
+<MSHelp:Keyword Index="A" Term="wce51grfLinkerToolsErrorLNK2019"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Guide"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="True"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="errlink.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="True"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_1070958">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce51grflinkertoolserrorlnk2019"></A>Linker Tools Error LNK2019</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<PRE class="syntax">unresolved external symbol '<I>symbol</I>' referenced in function '<I>function</I>'</PRE>
+
+<P>An undefined external symbol (<I>symbol</I>) was found in <I>function</I>. To resolve this error, provide a definition for symbol or remove the code that references it.</P>
+
+<P>This error can be caused when a variable is not defined in one of the files included in a build. In the following example, if i and g are not defined in one of the files included in the build, the linker will generate LNK2019. </P>
+
+<PRE class="code">extern int i;
+extern void g();
+void f()
+{
+   i++;
+   g();
+}
+int main()
+{
+}</PRE>
+
+<P>These definitions can be added by including the source code file that contains the definitions as part of the compilation. Alternatively, you can pass .obj or .lib files that contain the definitions to the linker.</P>
+
+<P>Common problems that cause LNK2019 include: 
+
+<UL type="disc">
+	<LI>The DLL being built cannot link against coredll, but the DLL contains an integer division operation that is normally exported by coredll. 
+<P>This issue typically occurs when implementing an installable ISR on an ARM microprocessor. To fix the issue, set the following variable in the SOURCES file:
+
+<PRE class="code">NOMIPS16CODE=1</PRE>
+
+<P>This variable enables the <A HREF="wce50conqrimplicitimportdisableimportingofhelpers.htm">/QRimplicit-import</A> compiler option and prevents importing external functions.
+</li>
+
+	<LI>The declaration of the symbol contains a spelling mistake, such that, it is not the same name as the definition of the symbol. </li>
+
+	<LI>A function was used but the type or number of the parameters did not match the function definition. </li>
+
+	<LI>The calling convention ( __cdecl, __stdcall, or __fastcall) differs on the use of the function declaration and the function definition. </li>
+
+	<LI>Symbol definitions are in a file that was compiled as a C program and symbols are declared in a C++ file without an extern "C" modifier. In that case, modify the declaration, for example, instead of: 
+<PRE class="code">extern int i;
+extern void g();</PRE>
+
+<P>use: 
+
+<PRE class="code">extern "C" int i;
+extern "C" void g();</PRE>
+
+<P>Similarly, if you define a symbol in a C++ file that will be used by a C program, use extern "C" in the definition. 
+</li>
+
+	<LI>A symbol is defined as static and then later referenced outside the file. </li>
+
+	<LI>A static member of a class is not defined. For example, member variable si in the class declaration below should be defined separately: 
+<PRE class="code">#include &lt;stdio.h&gt;
+struct X {
+   static int si;
+};
+// int X::si = 0;   // uncomment this line to resolve
+void main()
+{
+   X *px = new X[2];
+   printf("\n%d",px[0].si);   // LNK2019
+}</PRE>
+</li>
+</UL>
+
+<P>The <A HREF="wce50grfverboseprintprogressmessages.htm">/VERBOSE</A> linker option will help you see which files the linker is referencing. The /EXPORT and /SYMBOLS options of the <A HREF="wce50oridumpbintool.htm">DUMPBIN</A> utility can also help you see which symbols are defined in your dll and object/library files.</P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

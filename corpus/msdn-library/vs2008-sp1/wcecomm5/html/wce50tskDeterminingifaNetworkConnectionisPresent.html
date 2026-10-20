@@ -1,0 +1,196 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Determining if a Network Connection is Present</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Determining if a Network Connection is Present"/>
+<MSHelp:RLTitle Title="Determining if a Network Connection is Present"/>
+<MSHelp:Keyword Index="A" Term="wce50tskDeterminingifaNetworkConnectionisPresent"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Feature"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbTask"/>
+<MSHelp:Attr Name="Filename" Value="winsock.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="True"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+<MSHelp:Attr Name="PBFeature" Value="SYSGEN_WINSOCK"/>
+<MSHelp:Attr Name="PBOnly" Value="False"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_3008467">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50tskdeterminingifanetworkconnectionispresent"></A>Determining if a Network Connection is Present</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>Using Winsock, you can determine programmatically whether the local device is connected to a network.</P>
+
+<P class="labelproc"><B>To determine if a network is present</B>
+
+<OL type="1">
+	<LI>Call <A HREF="wce50lrfwsastartup.htm">WSAStartup</A> to initialize Winsock.</li>
+
+	<LI>Call <A HREF="wce50lrfgethostname.htm">gethostname</A> to obtain the name of the local host.</li>
+
+	<LI>Call <A HREF="wce50lrfgetaddrinfo.htm">getaddrinfo</A> to resolve the name of the local host for all protocol families to obtain a list of network addresses.</li>
+
+	<LI>Search the list of network addresses to check if it contains the loopback address. For IPv6 networks, you must also check if the list contains the IPv6 loopback address. If any of the addresses match the loopback address, no network connection is present.</li>
+
+	<LI>Call <A HREF="wce50lrffreeaddrinfo.htm">freeaddrinfo</A> to free the address information allocated by <B>getaddrinfo</B>.</li>
+
+	<LI>Call <A HREF="wce50lrfwsacleanup.htm">WSACleanup</A> to free any resources for the application.</li>
+</OL>
+
+<P>The following code sample shows how to determine if a network connection is present.</P>
+
+<PRE class="code">#include &lt;winsock2.h&gt;
+#include &lt;ws2tcpip.h&gt;
+#include &lt;windows.h&gt;
+#include &lt;tchar.h&gt;
+#include &lt;strsafe.h&gt;
+
+struct in_addr BIN_IPV4_ADDR_LOOPBACK = {127, 0, 0, 1};
+struct in6_addr BIN_IPV6_ADDR_LOOPBACK =   {   0x0, 0x0,
+                                             0x0, 0x0,
+                                             0x0, 0x0,
+                                             0x0, 0x0,
+                                             0x0, 0x0,
+                                             0x0, 0x0,
+                                             0x0, 0x0,
+                                             0x0, 0x1 };
+#define   MAX_LOCAL_NAME_LEN               64
+
+//Function Prototypes
+BOOL IsNetPresent();
+void Print(TCHAR *pFormat, ...);
+
+int _tmain (int argc, TCHAR* argv[])
+{
+   WSADATA WSAData;
+
+   WSAStartup(MAKEWORD(2,2), &amp;WSAData);
+   Print(TEXT("Network Connection %s present"), IsNetPresent() ? (TEXT("IS")) : (TEXT("is NOT")) );
+   WSACleanup();
+
+   return 0;
+}
+
+//
+// Determine if you have a IPv4 or IPv6 network address.
+//
+BOOL IsNetPresent()
+{
+   BOOL bFoundLocalAddr = FALSE;
+   char szAddrASCII[MAX_LOCAL_NAME_LEN];
+   ADDRINFO AddrHints, *pAI, *pAddrInfo;
+
+   //
+   // Get the local host's name in ASCII text.
+   //
+   if(gethostname(szAddrASCII, MAX_LOCAL_NAME_LEN - 1))
+   {
+      Print(TEXT("Error getting local host name, error = %d"), WSAGetLastError());
+      return FALSE;
+   }
+
+   //
+   // To obtain a list of all the local
+   // addresses, resolve the local name with getaddrinfo for all
+   // protocol families.
+   //
+
+   memset(&amp;AddrHints, 0, sizeof(AddrHints));
+   AddrHints.ai_family = PF_UNSPEC;
+   AddrHints.ai_flags = AI_PASSIVE;
+
+   if(getaddrinfo(szAddrASCII, "10", &amp;AddrHints, &amp;pAddrInfo))
+   {
+      Print(TEXT("getaddrinfo(%hs) error %d"), szAddrASCII, WSAGetLastError());
+      return FALSE;
+   }
+
+   //
+   // Search the addresses returned.
+   // If any of them match the loopback address, then
+   // are not connected to an outside network.
+   //
+   // Note: This will not tell you how many networks you
+   // are connected to.  If one or more networks are present,
+   // then the loopback addresses will not be included in the
+   // list returned from getaddrinfo.
+   //
+
+   bFoundLocalAddr = TRUE;
+   for(pAI = pAddrInfo; pAI != NULL &amp;&amp; bFoundLocalAddr; pAI = pAI-&gt;ai_next)
+   {
+      if(pAI-&gt;ai_family == PF_INET)
+      {
+         if(memcmp(&amp;(((SOCKADDR_IN *)(pAI-&gt;ai_addr))-&gt;sin_addr), &amp;BIN_IPV4_ADDR_LOOPBACK, sizeof(BIN_IPV4_ADDR_LOOPBACK)) == 0)
+            bFoundLocalAddr = FALSE;
+      }
+      else if(pAI-&gt;ai_family == PF_INET6)
+      {
+         if(memcmp(&amp;(((SOCKADDR_IN6 *)(pAI-&gt;ai_addr))-&gt;sin6_addr), &amp;BIN_IPV6_ADDR_LOOPBACK, sizeof(BIN_IPV6_ADDR_LOOPBACK)) == 0)
+            bFoundLocalAddr = FALSE;  
+      }
+   }
+
+   freeaddrinfo(pAddrInfo);
+
+   return bFoundLocalAddr;
+}
+
+void
+Print(
+   TCHAR *pFormat, 
+   ...)
+{
+   va_list ArgList;
+   TCHAR   Buffer[256];
+
+   va_start (ArgList, pFormat);
+
+   (void)StringCchPrintf(Buffer, 256, pFormat, ArgList);
+
+#ifndef UNDER_CE
+   _putts(Buffer);
+#else
+   OutputDebugString(Buffer);
+#endif
+
+   va_end(ArgList);
+}</PRE>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50oriwinsockapplicationdevelopment.htm">Winsock Application Development</A> | <A HREF="wce50conusingwsastartuptoinitializewinsock.htm">Using WSAStartup to Initialize Winsock</A> | <A HREF="wce50lrfwsastartup.htm">WSAStartup</A> | <A HREF="wce50lrfgethostname.htm">gethostname</A> | <A HREF="wce50lrfgetaddrinfo.htm">getaddrinfo</A> | <A HREF="wce50lrfwsacleanup.htm">WSACleanup</A> | <A HREF="wce50lrffreeaddrinfo.htm">freeaddrinfo</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

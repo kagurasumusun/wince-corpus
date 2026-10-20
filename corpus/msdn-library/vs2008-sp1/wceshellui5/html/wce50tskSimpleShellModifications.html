@@ -1,0 +1,148 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Simple Shell Modifications</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Simple Shell Modifications"/>
+<MSHelp:RLTitle Title="Simple Shell Modifications"/>
+<MSHelp:Keyword Index="A" Term="wce50tskSimpleShellModifications"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Feature"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbTask"/>
+<MSHelp:Attr Name="Filename" Value="howto_WriteACustomShell.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="True"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+<MSHelp:Attr Name="PBFeature" Value="UI"/>
+<MSHelp:Attr Name="PBOnly" Value="True"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_3011148">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50tsksimpleshellmodifications"></A>Simple Shell Modifications</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>The following steps describe simple modifications you can make to your shell source code to verify that your source code is being built. </P>
+
+<P>These modifications are broken into two groups:
+
+<UL type="disc">
+	<LI>Those that touch the Explorer source code</li>
+
+	<LI>Those that touch the CEShell source code</li>
+</UL>
+
+<P>Making changes in both areas proves that both major shell code branches are being built.</P>
+
+<P>Before modifying any shell source code, see <A HREF="wce50tsksettingupthesourcefilesforacustomshell.htm">Setting Up the Source Files for a Custom Shell</A>.</P>
+
+<P class="labelproc"><B>To change the Explorer taskbar</B>
+
+<OL type="1">
+	<LI>In an editor, open %_WINCEROOT%\Public\Shell\Oak\<I>&lt;YourShellDirectory&gt;</I>\Explorer\Taskbar\Taskbar.cpp.
+<P>The following table shows variables set in the constructor <B>CTaskBar::CTaskBar</B>. Experiment with the appearance and behavior of your shell by setting the values of these variables.
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=35%>Variable</TH>
+<TH width=65%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=35%><B>m_fIsSmallScreen</B></TD>
+<TD width=65%>The shell is set to QVGA mode if set to TRUE and standard display mode if set to FALSE.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=35%><B>m</B>_<B>fExtraAppsButton</B></TD>
+<TD width=65%>A menu is displayed to provide access to more windows than can be displayed on the taskbar if set to TRUE and is suppressed if set to FALSE. Associated with QVGA mode.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=35%><B>m_fShowClock</B></TD>
+<TD width=65%>The clock appears on the taskbar if set to TRUE and is hidden if set to FALSE.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=35%><B>m_fShowDesktopButton</B></TD>
+<TD width=65%>The show-desktop icon appears on the taskbar if set to TRUE and is hidden if set to FALSE.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=35%><B>m_bTaskBarSlide</B></TD>
+<TD width=65%>The taskbar slides to its hidden state if set to TRUE and jumps instantaneously if set to FALSE.</TD>
+</TR>
+</table></div>
+</li>
+
+	<LI>Save the changes you made to Taskbar.cpp.</li>
+</OL>
+
+<P class="labelproc"><B>To change the CEShell background</B>
+
+<OL type="1">
+	<LI>In an editor, open %_WINCEROOT%\Public\Shell\Oak\<I>&lt;YourShellDirectory&gt;</I>\Ceshell\UI\Desktopview.cpp. </li>
+
+	<LI>Change the desktop background color to lavender by making the following code change in <B>CDesktopView::PaintBackground</B>.
+<PRE class="code">// --- Original code commented out ---
+// ::FillRect(hdc, &amp;rc, ::GetSysColorBrush(COLOR_BACKGROUND));
+// Explicitly set the background color.
+::FillRect(hdc, &amp;rc, ::GetSysColorBrush(RGB(230, 150, 230)));</PRE>
+</li>
+
+	<LI>(Optional) Amend the OS version information displayed on the background to display the name of your shell by making the following code change in <B>CDesktopView::PaintBackground</B>.
+<PRE class="code">/* -- Original code commented out --
+::wsprintf(wszVersion, L"Microsoft Windows \
+CE v%d.%02d (Build %d on %s) ", VerInfo.dwMajorVersion,
+             VerInfo.dwMinorVersion, VerInfo.dwBuildNumber,
+             TEXT(__DATE__));
+*/
+// Display shell name along with Windows CE version information.
+::wsprintf(wszVersion, L"&lt;<I>Shell Name</I>&gt; for Microsoft Windows \
+           CE v%d.%02d (Build %d on %s) ",
+           VerInfo.dwMajorVersion, VerInfo.dwMinorVersion,
+           VerInfo.dwBuildNumber, TEXT(__DATE__));</PRE>
+
+<P>This modification can be useful when you need to distinguish between several custom shells. 
+
+<BLOCKQUOTE class="dtBlock">
+<b class="le">Note&nbsp;&nbsp;&nbsp;</b>This code appears inside of a SHIP_BUILD block, so it only appears if the <B>Enable Ship Build</B> check box is cleared (which is the default state). For information, see <MSHelp:link keywords="wce50urfBuildOptionsTab" TABINDEX="0">Platform Settings: Build Options Tab</MSHelp:link>.</BLOCKQUOTE>
+</li>
+
+	<LI>Save the changes you made to Desktopview.cpp.</li>
+</OL>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50howhowtocustomizetheshell.htm">How to Customize the Shell</A> | <MSHelp:link keywords="wce50lrfGetSysColorBrush" TABINDEX="0">GetSysColorBrush</MSHelp:link> | <MSHelp:link keywords="wce50lrfFillRect" TABINDEX="0">FillRect</MSHelp:link> | <MSHelp:link keywords="wce50lrfwsprintf" TABINDEX="0">wsprintf</MSHelp:link> | <MSHelp:link keywords="wce50urfBuildOptionsTab" TABINDEX="0">Platform Settings: Build Options Tab</MSHelp:link>| <A HREF="wce50lrfdesktopregistrysettings.htm">Desktop Registry Settings</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

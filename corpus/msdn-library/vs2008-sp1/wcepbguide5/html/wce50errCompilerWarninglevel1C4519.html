@@ -1,0 +1,103 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Compiler Warning (level 1) C4519</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Compiler Warning (level 1) C4519"/>
+<MSHelp:RLTitle Title="Compiler Warning (level 1) C4519"/>
+<MSHelp:Keyword Index="A" Term="wce50errCompilerWarninglevel1C4519"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Guide"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="True"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbRef"/>
+<MSHelp:Attr Name="Filename" Value="err42xx.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="True"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_3025596">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50errcompilerwarninglevel1c4519"></A>Compiler Warning (level 1) C4519</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<PRE class="syntax"><B>default template arguments are only allowed on a class template; ignored</B></PRE>
+
+<P>Default template arguments are allowed only on a class template declaration or definition. Default template arguments may not be used in a function template, or in the definition of a member of a class template.</P>
+
+<P>The following code shows how to use default template arguments and some common mistakes.</P>
+
+<PRE class="code">/*****
+Default template arguments are allowed only on a class template declaration or definition. Default template arguments may not be used in a function template, or in the definition of a member of a class template.
+*****/
+
+#include &lt;stdio.h&gt;
+
+// OK : default template argument is allowed on a class template
+template&lt;class T=int&gt; class A {
+public:
+   static T f(T a, T b) { return a + b; };
+};
+
+class B {
+public:
+   // C4519 : default template argument is not allowed here
+   template&lt;class T=int&gt; static T f(T a, T b) { return a + b; };
+};
+
+// C4519 : default template argument is not allowed here
+template&lt;class T=int&gt; T f(T a, T b) { return a + b; };
+
+int main() {
+   double a = 3.5, b = 4.25;
+   double d = 0.0;
+
+   d = f(a, b);             // double f(double, double)
+                            //   Double is deduced from the types of the 
+                            //   arguments to f().  f's default 
+                            //   template argument is ignored.
+   printf("%2.2lf\n", d);   // Prints the value 7.75
+
+   d = A&lt;&gt;::f(a, b);        // int A&lt;&gt;::f(int, int)
+                            //   Template argument defaults to int. Arguments
+                            //   are coerced to ints, and an int is returned.
+   printf("%2.2lf\n", d);   // Prints the value 7.00
+
+   d = B::f(a, b);          //   Double is deduced from the types of the 
+                            //   arguments to B::f().  B::f's default 
+                            //   template argument is ignored.
+   printf("%2.2lf\n", d);   // Prints the value 7.75
+
+   return 0;
+}</PRE>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

@@ -1,0 +1,115 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>x86 BIOS Boot Loader</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="x86 BIOS Boot Loader"/>
+<MSHelp:RLTitle Title="x86 BIOS Boot Loader"/>
+<MSHelp:Keyword Index="A" Term="wce50conx86BIOSBootLoader"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Hardware"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="True"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="x86romboot.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="False"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_3011521">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50conx86biosbootloader"></A>x86 BIOS Boot Loader</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>The x86 BIOS boot loader (biosloader) is an alternative to romboot. </P>
+
+<P>Unlike romboot, biosloader does not replace the system BIOS. Rather, it uses the BIOS services like the VESA BIOS for video display control, and INT 13h services for disk I/O to load an image from a local storage device. </P>
+
+<P>It loads a .bin image from any device the BIOS exposes INT 13h support for and views as a storage device. This includes floppy, hard disk, Compact Flash (CF), and Disk-On-Chip. </P>
+
+<P>The boot loader resides on the bootable storage device and is found and loaded by a boot sector image.</P>
+
+<P>The following list summarizes the BIOS boot loader boot process:
+
+<OL type="1">
+	<LI>At power-on or reset, the x86 CPU jumps to the CPU reset vector address and starts to execute BIOS code. 
+<P>The BIOS will typically configure the hardware, which includes configuring the DRAM controller, configuring the host bridge, and enumerating PCI devices, and then locating a boot drive.
+</li>
+
+	<LI>If the boot drive is a fixed disk (for example, hard disk, Compact Flash card, or Disk-On-Chip) the first disk sector will be the master boot sector (MBR). 
+<P>If the boot drive is a floppy disk, it does not contain an MBR. Instead, the first sector on the disk is a boot sector. 
+
+<P>The MBR neatly fits in one disk sector and is made up of code, 16-bit real mode code, and data. 
+
+<P>The MBR is written to the disk by a partitioning tool like the MS-DOS fdisk program. 
+
+<P>The MBR is loaded from the disk into RAM by the BIOS; then the BIOS begins to execute the MBR code. 
+
+<P>If the BIOS cannot locate the MBR on the boot drive, which looks for a two-byte signature at the end of the sector, it displays an error message and halts.
+</li>
+
+	<LI>The MBR code primarily searches through the partition table looking for the active partition on the boot disk. 
+<P>The partition table is data that resides in the MBR. 
+
+<P>If the MBR code cannot locate an active partition, it displays an error message and halts. 
+
+<P>If it finds an active partition, it determines the disk address of that partition. 
+
+<P>The first sector in the partition is called the boot sector. However, on a floppy disk, this is the first sector on the disk because there is no MBR on a floppy disk. 
+
+<P>The MBR code loads the boot sector into RAM and jumps to it.
+</li>
+
+	<LI>The boot sector, like the MBR, contains code and data and fits neatly within a single disk sector. The boot sector is the first piece of OS-specific code. 
+<P>The boot sector's task is to find and load the BIOS boot loader. It does this by using the disk-resident properties of the native file system, along with BIOS services, to find and load the boot loader into RAM and then jump to it.
+</li>
+
+	<LI>After starting, the BIOS loader proceeds.</li>
+</OL>
+
+<P>To prepare a storage device for use with the BIOS boot loader, you must partition and format it.</P>
+
+<P>For more information about the BIOS boot loader and its functionalities, see the following topics:
+
+<UL type="disc">
+	<LI><A HREF="wce50conbootsector.htm">Boot Sector</A></li>
+
+	<LI><A HREF="wce50consettingupthebiosbootloader.htm">Setting Up the BIOS Boot Loader</A></li>
+
+	<LI><A HREF="wce50conbiosbootloaderlimitations.htm">BIOS Boot Loader Limitations</A></li>
+</UL>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50conspecializedbootloaders.htm">Specialized Boot Loaders</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

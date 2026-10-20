@@ -1,0 +1,113 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Handling Complex Types</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Handling Complex Types"/>
+<MSHelp:RLTitle Title="Handling Complex Types"/>
+<MSHelp:Keyword Index="A" Term="wce50conHandlingComplexTypes"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Feature"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="soap_concepts.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="True"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+<MSHelp:Attr Name="PBFeature" Value="SYSGEN_SOAPTK"/>
+<MSHelp:Attr Name="PBOnly" Value="False"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_3007495">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50conhandlingcomplextypes"></A>Handling Complex Types</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>The server supports operations that use simple data types. </P>
+
+<P>As shown in the following code example from the Web Services Description Language (WSDL) file from the Calc sample application, the server supports the <B>Add</B> and <B>Subtract</B> methods. The <B>Add</B> method takes parameters that each map to the XML Schema Definition (XSD) <B>double</B> type.</P>
+
+<PRE class="code">...
+  &lt;message name='Calc.Add'&gt;
+    &lt;part name='A' type='xsd:double'/&gt;
+    &lt;part name='B' type='xsd:double'/&gt;
+  &lt;/message&gt;
+  &lt;message name='Calc.AddResponse'&gt;
+    &lt;part name='Result' type='xsd:double'/&gt;
+  &lt;/message&gt;
+...</PRE>
+
+<P>When building SOAP messages that request these operations, the <B>SoapClient</B> and <B>SoapServer</B> objects in the SOAP Toolkit for Windows CE know how to map these XSD base types to XML. For example, the <B>double</B> type maps to <B>text</B> and the <B>string</B> type maps to <B>text</B>. </P>
+
+<P>Use the <A HREF="wce50lrfisoapclient.htm">ISoapClient</A> and <A HREF="wce50lrfisoapserver.htm">ISoapServer</A> interfaces to access the <B>SoapClient</B> and <B>SoapServer</B> objects.</P>
+
+<P>If you are sending complex types in a SOAP message, the <B>SoapClient</B> and <B>SoapServer</B> objects do not know how to map these types to XML. </P>
+
+<P>An example of a complex type is found in the following sample WSDL fragment. </P>
+
+<P>This example specifies a <B>GetAddr</B> operation whose parameter is a complex type named <B>Addr</B>. What makes <B>Addr</B> a complex type is the fact that this object consists of multiple <B>string</B> types instead of a single data type.</P>
+
+<PRE class="code">...
+&lt;types&gt;
+  &lt;schema targetNamespace='http://tempuri.org/type'
+    xmlns='http://www.w3.org/2001/XMLSchema'
+    xmlns:SOAP-ENC='http://schemas.xmlsoap.org/soap/encoding/'
+    xmlns:wsdl='http://schemas.xmlsoap.org/wsdl/'
+    elementFormDefault='qualified'&gt;
+      &lt;complexType name="Addr"&gt;
+        &lt;sequence&gt;
+          &lt;element name='name' type='string'/&gt;
+          &lt;element name='street' type='string'/&gt;
+          &lt;element name='city' type='string'/&gt;
+          &lt;element name='state' type='string'/&gt;
+          &lt;element name='zip-code' type='string'/&gt;
+        &lt;/sequence&gt;
+      &lt;/complexType&gt;
+  &lt;/schema&gt;
+&lt;/types&gt;
+...
+&lt;message name='AddrBook.GetAddr'&gt;
+  &lt;part name='Name' type='xsd:string'/&gt;
+&lt;/message&gt;
+&lt;message name='AddrBook.GetAddrResponse'&gt;
+  &lt;part name='Result' type='typens:Addr'/&gt;
+&lt;/message&gt;
+...</PRE>
+
+<P>To send complex types in a SOAP message using a high-level API, implement a custom mapper, as described in <A HREF="wce50consendingcomplextypesusingacustomtypemapper.htm">Sending Complex Types Using a Custom Type Mapper</A>.</P>
+
+<P>If you plan on sending complex types using a low-level API, you might want to use the built-in type mappers provided with the toolkit to properly serialize and deserialize simple types and arrays. For more information, see <A HREF="wce50lrfisoaptypemapperfactory.htm">ISoapTypeMapperFactory</A>.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50conadvancedtopics.htm">Advanced Topics</A> | <A HREF="wce50lrfisoaptypemapper.htm">ISoapTypeMapper</A> | <A HREF="wce50lrfisoaptypemapperfactory.htm">ISoapTypeMapperFactory</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

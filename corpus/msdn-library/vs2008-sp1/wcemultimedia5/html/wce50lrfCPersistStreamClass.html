@@ -1,0 +1,194 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>CPersistStream Class</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="CPersistStream Class"/>
+<MSHelp:RLTitle Title="CPersistStream Class"/>
+<MSHelp:Keyword Index="K" Term="CPersistStream Class"/>
+<MSHelp:Keyword Index="A" Term="wce50lrfCPersistStreamClass"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Feature"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="apiref"/>
+<MSHelp:Attr Name="Filename" Value="directshow_classes6.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="False"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+<MSHelp:Attr Name="APIName" Value="CPersistStream"/>
+<MSHelp:Attr Name="PBFeature" Value="SYSGEN_DSHOW"/>
+<MSHelp:Attr Name="PBOnly" Value="False"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_1050040">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50lrfcpersiststreamclass"></A>CPersistStream Class</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P class="fig"><IMG SRC="pstrm011.gif" ALT="" BORDER=0></P>
+
+<P>This class is the base class for persistent properties of filters (that is, filter properties in saved graphs). </P>
+
+<P>The simplest way to use <B>CPersistStream</B> is to: 
+
+<OL type="1">
+	<LI>Arrange for your filter to inherit this class. </li>
+
+	<LI>Implement <A HREF="wce50lrfcpersiststreamwritetostream.htm">CPersistStream::WriteToStream</A> and <A HREF="wce50lrfcpersiststreamreadfromstream.htm">CPersistStream::ReadFromStream</A> in your class. These will override the functions here, which do nothing but act as placeholders. </li>
+
+	<LI>Change your <B>NonDelegatingQueryInterface</B> to handle <MSHelp:link keywords="wce50lrfIPersistStreamIPersist" TABINDEX="0">IPersistStream:IPersist</MSHelp:link>. </li>
+
+	<LI>Implement <A HREF="wce50lrfcpersiststreamsizemax.htm">CPersistStream::SizeMax</A> to return an upper bound on the number of bytes of data you save. </li>
+
+	<LI>If you save Unicode data, remember that a WCHAR is 2 bytes. </li>
+
+	<LI>When your data changes, call <A HREF="wce50lrfcpersiststreamsetdirty.htm">CPersistStream::SetDirty</A>. </li>
+</OL>
+
+<H4 class="dtH4">Version Numbers</H4>
+
+<P>At some point you might decide to alter or extend the format of your data. You will then wish you had a version number in all the old saved streams so you can tell, when you read them, whether they represent the old or new form. To assist you, this class writes and reads a version number. When it writes, it calls <A HREF="wce50lrfcpersiststreamgetsoftwareversion.htm">CPersistStream::GetSoftwareVersion</A> to inquire as to the version of the software being used at the moment. (In effect, this is a version number of the data layout in the file.) It writes this as the first thing in the data. If you want to change the version, implement (override) <B>CPersistStream::GetSoftwareVersion</B>. It reads the version number from the file into <B>CPersistStream::mPS_dwFileVersion</B> before calling <A HREF="wce50lrfcpersiststreamreadfromstream.htm">CPersistStream::ReadFromStream</A>, so in <B>CPersistStream::ReadFromStream</B> you can check <B>CPersistStream::mPS_dwFileVersion</B> to see if you are reading an old version file. Usually you should accept files whose version is no newer than the software version that is reading them. </P>
+
+<H4 class="dtH4">Protected Data Members</H4>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=50%>Data Member</TH>
+<TH width=50%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><B>mPS_dwFileVersion</B></TD>
+<TD width=50%>Version number of the file.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><B>mPS_fDirty</B></TD>
+<TD width=50%>Data for this stream must be saved.  </TD>
+</TR>
+</table></div>
+
+<H4 class="dtH4">Member Functions</H4>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=50%>Member Function</TH>
+<TH width=50%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><A HREF="wce50lrfcpersiststreamcpersiststream.htm">CPersistStream</A></TD>
+<TD width=50%>Constructs a CPersistStream object.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><A HREF="wce50lrfcpersiststreamsetdirty.htm">SetDirty</A></TD>
+<TD width=50%>Indicates that the object must be saved to the stream.</TD>
+</TR>
+</table></div>
+
+<H4 class="dtH4">Overridable Member Functions</H4>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=50%>Member Function</TH>
+<TH width=50%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><A HREF="wce50lrfcpersiststreamgetclassid.htm">GetClassID</A>  </TD>
+<TD width=50%>Retrieves the class identifier of this stream.  </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><A HREF="wce50lrfcpersiststreamgetsoftwareversion.htm">GetSoftwareVersion</A></TD>
+<TD width=50%>Retrieves the version number for this file format.  </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><A HREF="wce50lrfcpersiststreamreadfromstream.htm">ReadFromStream</A></TD>
+<TD width=50%>Reads the filter's data from the stream.  </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><A HREF="wce50lrfcpersiststreamsizemax.htm">SizeMax</A></TD>
+<TD width=50%>Retrieves the number of bytes needed for data (not including version number).  </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><A HREF="wce50lrfcpersiststreamwritetostream.htm">WriteToStream</A></TD>
+<TD width=50%>Writes the filter's data to the stream.  </TD>
+</TR>
+</table></div>
+
+<H4 class="dtH4">Implemented IPersistStream Methods</H4>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=50%>Method</TH>
+<TH width=50%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><A HREF="wce50lrfcpersiststreamgetsizemax.htm">GetSizeMax</A></TD>
+<TD width=50%>Retrieves the number of bytes needed for data (including version number).  </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><A HREF="wce50lrfcpersiststreamisdirty.htm">IsDirty</A></TD>
+<TD width=50%>Checks if the object must be saved.  </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><A HREF="wce50lrfcpersiststreamload.htm">Load</A></TD>
+<TD width=50%>Loads the data from the stream into memory.  </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><A HREF="wce50lrfcpersiststreamsave.htm">Save</A></TD>
+<TD width=50%>Saves the data from memory to the stream.  </TD>
+</TR>
+</table></div>
+
+<H4 class="dtH4">Requirements</H4>
+
+<P>DirectShow applications and DirectShow filters have different include file and link library requirements. </P>
+
+<P>For more information, see <A HREF="wce50consettingupthebuildenvironment.htm">Setting Up the Build Environment</A>. </P>
+
+<P><B>OS Versions:</B> Windows CE 2.12 and later. Version 2.12 requires DXPAK 1.0 or later.<BR>
+<B>Header:</B> </P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50grfdirectshowclasses.htm">DirectShow Classes</A> | <MSHelp:link keywords="wce50lrfIPersistStreamIPersist" TABINDEX="0">IPersistStream:IPersist</MSHelp:link>. </P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

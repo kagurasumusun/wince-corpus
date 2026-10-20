@@ -1,0 +1,102 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Implementing DDHAL Functionality</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Implementing DDHAL Functionality"/>
+<MSHelp:RLTitle Title="Implementing DDHAL Functionality"/>
+<MSHelp:Keyword Index="A" Term="wce50conDDHALFunctionalityImplementation"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Driver"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="False"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbTask"/>
+<MSHelp:Attr Name="Filename" Value="ddraw_guide.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="False"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+<MSHelp:Attr Name="PBFeature" Value="DirectDrawDriver"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_3017624">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50conddhalfunctionalityimplementation"></A>Implementing DDHAL Functionality</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>This topic describes the steps required to implement minimal DirectDraw hardware abstraction layer (DDHAL) functionality in your display driver, and assumes that you do not want to move an existing DDHAL from the Windows desktop to Windows CE. For more information about performing that task, see <A HREF="wce50conddhalportingfromthedesktop.htm">DDHAL Porting from the Desktop</A>.</P>
+
+<P>The source code for Windows CE's sample display drivers is located in driver-specific subdirectories of %_WINCEROOT\Public\Common\OAK\Drivers\Display. The HAL source code is located in the %_WINCEROOT\Public\Common\OAK\Drivers\Display\DDGPE directory. </P>
+
+<P>The following list shows the items you need to implement a simple DDHAL in your display driver:
+
+<UL type="disc">
+	<LI>The build files used to export functions from your compiled code. This usually has the name of your compiled binary, as defined in the <CODE>TARGETNAME=BINARYNAME</CODE> section of your sources file, and ends with the .def extension.</li>
+
+	<LI>The build files used to define include paths, and to attach source code and libraries to your project, usually called sources.</li>
+</UL>
+
+<P class="labelproc"><B>To implement DDHAL functionality</B>
+
+<OL type="1">
+	<LI>Modify the file used to export functions from your compiled binary.
+<P>It should export the <A HREF="wce50lrfhalinit.htm">HALInit</A> function. To see how this is done, you can consult the sample driver source code file DDI.def. The <B>HALInit</B> function is part of the Ddgpe.lib. This should already be linked to your project.
+</li>
+
+	<LI>Modify your include path to include directory for DDHFuncs.h. 
+<P>This is a public header file that can be used by any display driver and should not be modified. 
+</li>
+
+	<LI>Copy the Ddgpeusr.h header file from one of the sample driver's source directories, such as %_WINCEROOT%\Public\Common\OAK\Drivers\Display\VGAFlat, into an appropriate location inside your display driver's build directory.
+<P>This header file is private to your display driver and can be modified. You must customize this file to implement the <B>IN_VBLANK</B> and <B>IS_BUSY</B> macros because they are required by the sample DDHAL implementation.
+</li>
+
+	<LI>Using the sample display driver that most closely matches the architecture of your display driver, copy the following source code files from the basic HAL source code in the sample display drivers into your display driver's build directory, and add them to the appropriate build files:
+<UL type="disc">
+	<LI>HalCaps.cpp</li>
+
+	<LI>HalDD.cpp</li>
+
+	<LI>HalSurf.cpp</li>
+
+	<LI>HalPalette.cpp</li>
+</UL>
+</li>
+
+	<LI>Compile and build your display driver and ensure that it continues to work properly.
+<P>Once you verify that it is still functional, your driver is ready to be tested with DirectDraw programs. Keep in mind that the code is not in an optimized state and will require some customization to improve performance.
+</li>
+</OL>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50condirectdrawdisplaydrivercreation.htm">DirectDraw Display Driver Creation</A> | <A HREF="wce50condriverextensionusingddgpe.htm">Driver Extension Using DDGPE</A> | <A HREF="wce50conddhalcustomization.htm">DDHAL Customization</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

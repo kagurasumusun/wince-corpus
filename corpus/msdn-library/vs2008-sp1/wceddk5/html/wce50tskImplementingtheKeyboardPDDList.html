@@ -1,0 +1,112 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Implementing the Keyboard PDD List</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Implementing the Keyboard PDD List"/>
+<MSHelp:RLTitle Title="Implementing the Keyboard PDD List"/>
+<MSHelp:Keyword Index="A" Term="wce50tskImplementingtheKeyboardPDDList"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Driver"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="False"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbTask"/>
+<MSHelp:Attr Name="Filename" Value="howto_migkbddrvrlayoutmgr.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="True"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+<MSHelp:Attr Name="PBFeature" Value="KeyboardDriver"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_3017590">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50tskimplementingthekeyboardpddlist"></A>Implementing the Keyboard PDD List</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>The Layout Manager retrieves the list of platform-dependent driver (PDD) entry points from the <B>g_rgpfnPddEntries </B>global array in the keyboard driver. This array can contain any number of keyboard PDDs that the system supports. However, the first entry in the list is an exception. </P>
+
+<P>You can use the device layout for the first PDD in the list for converting scan codes to virtual-key codes, when <B>MapVirtualKey</B>(&lt;<I>scan code</I>&gt;, 3) is called. Because the HID keyboard driver requires this call to convert AT scan codes to virtual keys, you must make the first entry for a PDD that has a full set of AT scan codes in its device layout. If the keyboard PDD in question does not do this, you must place the no operation instruction (NOP) PDD entry function, <B>PS2_NOP_Entry</B>, first.</P>
+
+<P>Perform all of the following steps in the latest Platform Builder installation, in %_WINCEROOT%\Platform\%_TGTPLAT%\Drivers\Mykbdmouse.</P>
+
+<P class="labelproc"><B>To implement the keyboard PDD list</B>
+
+<OL type="1">
+	<LI>Create a new directory, name it PDDList, and then add an entry for this new directory to the dirs file in %_WINCEROOT%\Platform\%_TGTPLAT%\Drivers\Mykbdmouse.
+<P>Ensure that the directories that build your keyboard driver DLLs are last in the Dirs file. The directories that build your keyboard driver DLLs are the directories that contain EngUs1, Jpn1, Jpn2, or Kor1 in the directory name. Sometimes, these directories are placed within a DLL directory.
+</li>
+
+	<LI>Create a new file in the PDDList directory and name it PDDList.cpp.</li>
+
+	<LI>Add a new sources file to the PDDList directory. 
+<P>The following sources file code example is a model for the sources file in the PDDList directory.
+
+<PRE class="code">RELEASETYPE=PLATFORM
+
+TARGETNAME=KbdPddList
+TARGETTYPE=LIBRARY
+
+SOURCES= \
+  pddlist.cpp</PRE>
+</li>
+
+	<LI>Add a makefile file to the PDDList directory. 
+<P>The following example shows an example makefile file.
+
+<PRE class="code">!INCLUDE $(_MAKEENVROOT)\makefile.def</PRE>
+</li>
+
+	<LI>In the PDDList.cpp file, implement the PDD list. 
+<P>The following code example shows how to implement the keyboard PDD list. Because this sample uses AT scan codes, the NOP PDD is not necessary.
+
+<PRE class="code">#include &lt;windows.h&gt;
+#include &lt;keybdpdd.h&gt;
+
+BOOL
+WINAPI
+TGTPLAT_Entry(
+  UINT uiPddId,
+  PFN_KEYBD_EVENT pfnKeybdEvent,
+  PKEYBD_PDD *ppKeybdPdd
+);
+
+PFN_KEYBD_PDD_ENTRY g_rgpfnPddEntries[] = {
+  TGTPLAT_Entry,
+  NULL
+};</PRE>
+</li>
+</OL>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50conlayoutmanager.htm">Layout Manager</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

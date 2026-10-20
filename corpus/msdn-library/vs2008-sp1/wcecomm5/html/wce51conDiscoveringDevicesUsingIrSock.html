@@ -1,0 +1,117 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Discovering Devices Using IrSock</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Discovering Devices Using IrSock"/>
+<MSHelp:RLTitle Title="Discovering Devices Using IrSock"/>
+<MSHelp:Keyword Index="A" Term="wce51conDiscoveringDevicesUsingIrSock"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Feature"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="IrDA.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="True"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_1071524">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce51condiscoveringdevicesusingirsock"></A>Discovering Devices Using IrSock</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>Before an IrDA socket connection can be initiated, a device address must be obtained by calling the <A HREF="wce50lrfgetsockoptwindowssockets.htm">getsockopt</A> function and specifying the socket option, IRLMP_ENUMDEVICES in the <I>optname</I> parameter. This option causes a single discovery to be run on each idle adapter. The list of discovered devices and cached devices (on active adapters) is returned immediately. For more information about the socket options supported for IrDA, see <A HREF="wce51consol_irlmp.htm">SOL_IRLMP</A>.</P>
+
+<P>The following example code shows how to call <B>getsockopt</B> to perform device discovery.</P>
+
+<PRE class="code">getsockopt(hIrdaSock, SOL_IRLMP, IRLMP_ENUMDEVICES, &amp;DevList, &amp;DevListLen);</PRE>
+
+<P>This function returns a list of all available IrDA devices. A device address returned from the function call is copied into a <A HREF="wce50lrfsockaddrirda.htm">SOCKADDR_IRDA</A> structure, which is used by a subsequent call to the <A HREF="wce50lrfconnectwindowssockets.htm">connect</A> function to connect to the specified device. </P>
+
+<P>The second approach to performing discovery of IrDA device addresses is to notify the application only when the device list changes from the last discovery run by the stack. This is performed by using the socket option, IRLMP_IAS_QUERY, which is used to retrieve a single attribute of a single class from a peer device's Information Access Service(IAS) database. IrDA provides this database to store IrDA-based information. Limited access to the IAS database is available through the Winsock interface, but such access is not typically used by applications and exists primarily to support connections to non-Windows devices that are not compliant with the Winsock IrDA conventions.</P>
+
+<P>The application specifies the device and class to query and the attribute and attribute type. </P>
+
+<BLOCKQUOTE class="dtBlock">
+<b class="le">Note</b>&nbsp;&nbsp;&nbsp;The device should have performed discovery in a previous call to <B>getsockopt</B> by using IRLMP_ENUMDEVICES, as described earlier. It is expected that the application allocates a buffer, of the necessary size, for the returned parameters.</BLOCKQUOTE>
+
+<P>The following code shows how to perform a device discovery by using <B>getsockopt</B> with the IRLMP_ENUMDEVICES option.</P>
+
+<PRE class="code">SOCKADDR_IRDA     DestSockAddr = { AF_IRDA, 0, 0, 0, 0, "SampleIrDAService" };
+#define DEVICE_LIST_LEN    10
+unsigned char    DevListBuff[sizeof(DEVICELIST) &#0150;
+                 sizeof(IRDA_DEVICE_INFO) +
+                 (sizeof(IRDA_DEVICE_INFO) * DEVICE_LIST_LEN)];
+int              DevListLen    = sizeof(DevListBuff);
+PDEVICELIST      pDevList      = (PDEVICELIST) &amp;DevListBuff;
+pDevList-&gt;numDevice = 0;
+// Sock is not in connected state
+if (getsockopt(Sock, SOL_IRLMP, IRLMP_ENUMDEVICES,
+               (char *) pDevList, &amp;DevListLen) == SOCKET_ERROR)
+{
+        // WSAGetLastError 
+}
+if (pDevList-&gt;numDevice == 0)
+{
+        // no devices discovered or cached
+        // not a bad idea to run a couple of times
+}
+else
+{
+       // one per discovered device
+       for (i = 0; i &lt; (int) pDevList-&gt;numDevice; i++)
+       {
+            // typedef struct _IRDA_DEVICE_INFO
+            // {
+            //     u_char    irdaDeviceID[4];
+            //     char      irdaDeviceName[22];
+            //     u_char    irdaDeviceHints1;
+            //     u_char    irdaDeviceHints2;
+            //     u_char    irdaCharSet;
+            // } _IRDA_DEVICE_INFO;
+            // pDevList-&gt;Device[i]. see _IRDA_DEVICE_INFO for fields
+            // display the device names and let the user select one
+       }
+}
+// assume the user selected the first device [0]
+memcpy(&amp;DestSockAddr.irdaDeviceID[0], &amp;pDevList-&gt;Device[0].irdaDeviceID[0], 4);
+if (connect(Sock, (const struct sockaddr *) &amp;DestSockAddr,
+            sizeof(SOCKADDR_IRDA)) == SOCKET_ERROR)
+{
+       // WSAGetLastError
+}</PRE>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce51conirsockserverapplication.htm">IrSock Server Application</A> | <A HREF="wce51conirsockclientapplication.htm">IrSock Client Application</A> | <A HREF="wce51concreatinginfraredwinsockapplication.htm">Creating an Infrared Winsock Application</A> | <A HREF="wce51coninfraredcommunicationsapplicationdevelopment.htm">IrDA Application Development</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

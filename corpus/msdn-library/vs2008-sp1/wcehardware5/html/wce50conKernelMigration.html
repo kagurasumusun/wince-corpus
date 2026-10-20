@@ -1,0 +1,186 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Kernel Migration</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Kernel Migration"/>
+<MSHelp:RLTitle Title="Kernel Migration"/>
+<MSHelp:Keyword Index="A" Term="wce50conKernelMigration"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Hardware"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="True"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="bsp_migration_concepts.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="False"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_1052244">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50conkernelmigration"></A>Kernel Migration</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>The Windows CE kernel provides core operating system (OS) functionality for any Windows CE&#0150;based device. This functionality includes process, thread, and memory management. For more information, see <MSHelp:link keywords="wce50conKernel" TABINDEX="0">Kernel Overview</MSHelp:link>.</P>
+
+<P>This topic provides information about the changes that have been made to the Windows CE kernel. The changes are grouped by the Windows CE version in which they were made.</P>
+
+<H2 class="dtH2">Windows CE 5.0</H2>
+
+<P>For Windows CE 5.0, the following changes were made to the Windows CE kernel:
+
+<UL type="disc">
+	<LI>As part of the production-quality OAL model, the kernel directories, Kern, Kernkitl, and Kernkitlprof, are no longer under the %_WINCEROOT%\Platform\&lt;<I>Hardware Platform Name</I>&gt;\Kernel\Buildexe\Dirs directory.
+<P>Instead, these directories are now under the %_WINCEROOT%\Platform\&lt;<I>Hardware Platform Name</I>&gt;\Src\Kernel directory. For more information about the new directory structure, see <A HREF="wce50condirectorylayout.htm">BSP and CSP Directory Layout</A>.
+</li>
+
+	<LI>The ARMV4 kernel has been merged into the ARMV4I kernel.</li>
+
+	<LI>The SH3 kernel is no longer supported.</li>
+</UL>
+
+<H2 class="dtH2">Windows CE .NET 4.2</H2>
+
+<P>For Windows CE .NET 4.2, the following changes were made to the Windows CE kernel:
+
+<UL type="disc">
+	<LI>Page size has increased for SH4 kernels from 1 KB to 4 KB.
+<P>Once the page size has been increased, you must rebuild any application or device driver binary builds with a 1-KB page size. When you rebuild the binary builds, you increase the builds to a 4-KB page size. By doing this, you ensure that the kernel loads and runs correctly on Windows CE .NET 4.2 and later.
+
+<BLOCKQUOTE class="dtBlock">
+<b class="le">Note</b>&nbsp;&nbsp;&nbsp;Prior to Windows CE .NET 4.2, the default page size for SHx kernels was 1 KB. If you do not enlarge the page size, any binary builds with a 1-KB page size will not run on more recent versions of Windows CE.</BLOCKQUOTE>
+</li>
+
+	<LI>The ARMV4T (Thumb) kernel has been merged into the ARMV4I kernel.
+<P>With the ARMV4I kernel, 16-bit Thumb applications are still supported.
+</li>
+
+	<LI>The MIPSIIB and MIPS16 kernels and OS builds have been merged into the MIPS II kernel and OS build.
+<P>With the merged MIPS II kernel, the NEC Vr41<I>XXX</I> CPUs and 16-bit applications are still supported.
+</li>
+
+	<LI>The algorithm to correct priority inversion with priority inheritance has been simplified. As a result, in some cases, only one level of inheritance occurs.</li>
+
+	<LI>The default thread quantum for the OS is 100 milliseconds, but you can change it.</li>
+
+	<LI>Nested interrupts can now be used by microprocessors and hardware that support them.</li>
+
+	<LI>Before calling the <B>WaitForSingleObject</B> function, you call the <MSHelp:link keywords="wce50lrfInterruptInitialize" TABINDEX="0">InterruptInitialize</MSHelp:link> function with a valid interrupt service routine (ISR) for the <I>hEvent</I> parameter. If you use this <I>hEvent</I> parameter in <B>WaitForSingleObject</B> before calling <B>InterruptInitialize</B> with a valid ISR, <B>InterruptInitialize</B> fails.</li>
+
+	<LI>In Windows CE .NET 4.2, the <MSHelp:link keywords="wce50lrfGetThreadPriority" TABINDEX="0">GetThreadPriority</MSHelp:link> or <MSHelp:link keywords="wce50lrfCeGetThreadPriority" TABINDEX="0">CeGetThreadPriority</MSHelp:link> functions return the thread's base priority, which might differ from the Windows CE 3.0 priority if the thread is boosted to overcome priority inversion.
+<P>In Windows CE 3.0 and earlier, a call to these functions returns the current priority. 
+</li>
+
+	<LI>In Windows CE .NET 4.2, a handle to an ISR can only be used in a call for <MSHelp:link keywords="wce50lrfWaitForSingleObject" TABINDEX="0">WaitForSingleObject</MSHelp:link>. This enables the kernel to optimize the setting of the ISR event that starts the waiting IST.
+<P>In Windows CE 3.0 and earlier, the handle of the event linked to an ISR can be used in a call to <MSHelp:link keywords="wce50lrfWaitForMultipleObjects" TABINDEX="0">WaitForMultipleObjects</MSHelp:link>. However, in doing this you can lose interrupts. 
+</li>
+
+	<LI>In Windows CE .NET 4.2 and later, the timer tick is a constant 1 millisecond when not in idle. When entering idle mode by calling <MSHelp:link keywords="wce50lrfOEMIdle" TABINDEX="0">OEMIdle</MSHelp:link>, you are given information on how to reset the timer tick to an extended period.
+<P>In Windows CE 3.0 and earlier, you cannot redefine the timer tick. 
+</li>
+</UL>
+
+<H2 class="dtH2">Windows CE .NET 4.0</H2>
+
+<P>For Windows CE .NET 4.0, the following changes were made to the Windows CE kernel:
+
+<UL type="disc">
+	<LI>The <I>dwMaximumSize</I> parameter of <MSHelp:link keywords="wce50lrfHeapCreate" TABINDEX="0">HeapCreate</MSHelp:link> is honored and allocates only as much memory as requested. 
+<P>If you had previously passed in 0, you still get an unlimited heap as specified by Microsoft Win32&reg;.
+</li>
+
+	<LI>When there is an unrecoverable error, the system calls the kernel function <MSHelp:link keywords="wce50lrflpNKHaltSystem" TABINDEX="0">lpNKHaltSystem</MSHelp:link>. 
+<P>You can use <A HREF="wce50lrfoeminit.htm">OEMInit</A> to redirect the function pointer to your own system shutdown or reset function in the OAL. For more information, see <A HREF="wce50consystemhalt.htm">System Halt</A>.
+</li>
+
+	<LI>The kernel libraries and their associated directories are different. 
+<P>The debugger no longer statically links into the kernel. Instead, debugging takes place over the <A HREF="wce50conkernelindependenttransportlayer.htm">Kernel Independent Transport Layer</A> (KITL). Also, the kernel's Withkd.exe and Profkd.exe files are obsolete and can be deleted.
+
+<P>The following list shows the new kernels for Windows CE 4.0:
+
+<UL type="disc">
+	<LI>Kitlnokd.exe is now Kernkitl.exe.</li>
+
+	<LI>Nkprof.exe is now Kernkitlprof.exe.</li>
+
+	<LI>Kern.exe is built without support for the Kernel Independent Transport Layer (KITL).</li>
+</UL>
+
+<P>The following changes are required in your BSP to account for the new kernels:
+
+<UL type="disc">
+	<LI>Rename the old directories Nokd and profiler to Kernkitl and Kernkitlprof, respectively. Modify the sources files in each of these directories to have <code class="ce">TARGETNAME = kernkitl</code> and <code class="ce">TARGETNAME = kernkitlprof</code>, respectively.</li>
+
+	<LI>Add a new Kern directory to build a kernel without KITL support.</li>
+</UL>
+</li>
+
+	<LI>Windows CE 4.0 supports the following techniques to measure OS performance on a target device:
+<UL type="disc">
+	<LI>Instrumented kernel profiling</li>
+
+	<LI>Hardware-assisted profiling</li>
+
+	<LI>Monte Carlo profiling, which uses frequent sampling to determine which routines are using the most CPU cycles</li>
+</UL>
+
+<P>For information about how to implement these profiling techniques, see <MSHelp:link keywords="wce50conPlatformProfiling" TABINDEX="0">Platform Profiling</MSHelp:link>.
+</li>
+</UL>
+
+<H2 class="dtH2">Windows CE 3.0</H2>
+
+<P>For Windows CE 3.0, the following changes were made to the Windows CE kernel:
+
+<UL type="disc">
+	<LI>The priority system has 256 priority levels numbered 0 (zero) through 255, with priority level 0 being the highest priority level. The original 8 priority levels for Windows CE 2.12 and earlier versions are mapped to levels 248 through 255.
+<P>For more information, see <MSHelp:link keywords="wce50conRealTimePrioritySystemLevels" TABINDEX="0">Real-Time Priority System Levels</MSHelp:link>.
+</li>
+</UL>
+
+<H2 class="dtH2">Windows CE 2.12</H2>
+
+<P>For Windows CE 2.12, the following changes were made to the Windows CE kernel:
+
+<UL type="disc">
+	<LI>By default, the OS runs every thread in kernel mode to reduce overhead and increase performance of many functions. This enables all threads to access physical memory.
+<P>Before building your run-time image, you can set the default mode to user mode.
+</li>
+
+	<LI>Complete implementation of the <MSHelp:link keywords="wce50lrfGetThreadTimes" TABINDEX="0">GetThreadTimes</MSHelp:link> function is supported.</li>
+</UL>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50conoalmigration.htm">OAL Migration</A> | <A HREF="wce50orimigratingboardsupportpackage.htm">Migrating a Board Support Package</A> </P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

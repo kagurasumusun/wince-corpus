@@ -1,0 +1,191 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Creating Driver Globals and Boot Args</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Creating Driver Globals and Boot Args"/>
+<MSHelp:RLTitle Title="Creating Driver Globals and Boot Args"/>
+<MSHelp:Keyword Index="A" Term="wce50tskCreatingDriverGlobalsandBootArgs"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Hardware"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="True"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbTask"/>
+<MSHelp:Attr Name="Filename" Value="howto_developing_a_bootloader.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="True"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="AllowSearch" CONTENT="True">
+<META NAME="msdnID" CONTENT="_3010345">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50tskcreatingdriverglobalsandbootargs"></A>Creating Driver Globals and Boot Args</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>Driver globals is a memory buffer shared by device drivers and the operating system (OS). </P>
+
+<P>Boot args is a memory buffer shared between the boot loader and the OS. The boot args are updated throughout the boot process to carry information such as the network device used for download &#0151; including the base address, interrupt, IP address, subnet mask, and MAC address &#0151; and other system or user settings.</P>
+
+<P>The driver globals area typically contains the boot args area. This keeps all the global shared data within one page of RAM. The boot args area can contain whatever you find useful. The format and contents are largely up to you. Be sure to store information about the NIC in the boot args area so that the OS can locate it later.</P>
+
+<P class="labelproc"><B>To create the driver globals and boot args shared data areas</B>
+
+<OL type="1">
+	<LI>In %_WINCEROOT%\Platform\MyPlatform\Src\Inc, create a header file called Platform_boot.h.</li>
+
+	<LI>Add the following code sample to the Platform_boot.h file.
+<PRE class="code">#include &lt;halether.h&gt;
+    
+//
+// Debug ethernet parameters.
+//
+
+typedef struct _ETH_HARDWARE_SETTINGS
+{
+    EDBG_ADAPTER    Adapter;            // The NIC used to communicate with Platform Builder.
+    UCHAR           ucEdbgAdapterType;  // Type of debug Ethernet adapter.
+    UCHAR           ucEdbgIRQ;          // IRQ line to use for debug Ethernet adapter.
+    DWORD           dwEdbgBaseAddr;     // Base I/O address for debug Ethernet adapter.
+    DWORD           dwEdbgDebugZone;    // EDBG debug zones to be enabled.
+
+    // Base for creating a device name.
+    // This will be combined with the EDBG MAC address 
+    // to generate a unique device name to identify
+    // the device to Platform Builder.
+    char szPlatformString[EDBG_MAX_DEV_NAMELEN];    
+                                        
+    UCHAR           ucCpuId;            // Type of CPU.
+} ETH_HARDWARE_SETTINGS, *PETH_HARDWARE_SETTINGS;
+
+
+//
+// Boot args - Parameters passed from the boot loader to the OS.
+//
+
+#define BOOTARG_SIG  0x544F4F42 // "BOOT"
+
+typedef struct BOOT_ARGS
+{
+    DWORD   dwSig;
+    DWORD   dwLen;              // Total length of boot args struct.
+    UCHAR   ucLoaderFlags;      // Flags set by boot loader.
+    UCHAR   ucEshellFlags;      // Flags from Eshell.
+    DWORD   dwEdbgDebugZone;    // Which debug messages are enabled?
+
+    //
+    // The following addresses are only valid if LDRFL_JUMPIMG is set and
+    // the corresponding bit in ucEshellFlags is set (configured by Eshell, bit
+    // definitions in Ethdbg.h).
+    //
+    EDBG_ADDR EshellHostAddr;   // IP/Ethernet addr and UDP port of host
+                                // running Eshell.
+    EDBG_ADDR DbgHostAddr;      // IP/Ethernet address and UDP port of host
+                                // receiving debug messages.
+    EDBG_ADDR CeshHostAddr;     // IP/Ethernet addr and UDP port of host
+                                // running Ethernet text shell.
+    EDBG_ADDR KdbgHostAddr;     // IP/Ethernet addr and UDP port of host
+                                // running kernel debugger.
+
+    ETH_HARDWARE_SETTINGS   Edbg;    // The debug Ethernet controller.
+
+} BOOT_ARGS, *PBOOT_ARGS;
+
+//
+// Definitions for flags set by the boot loader.
+//
+#define    LDRFL_USE_EDBG    0x0001  // Set to attempt to use debug Ethernet.
+
+//
+// The following two flags are only looked at if LDRFL_USE_EDBG is set.
+//
+#define    LDRFL_ADDR_VALID  0x0002  // Set if EdbgAddr member is valid.
+#define    LDRFL_JUMPIMG     0x0004  // If set, do not communicate with Eshell
+                                     // to get configuration information,
+                                     // use ucEshellFlags member instead.</PRE>
+</li>
+
+	<LI>In %_WINCEROOT%\Platform\MyPlatform\Src\Inc, create a header file called Drv_glob.h to define the driver globals region.</li>
+
+	<LI>Add the following code sample to the Drv_glob.h file.
+<PRE class="code">#include "platform_boot.h"
+
+typedef struct _DRIVER_GLOBALS
+{
+    //
+    // TODO: Later, fill in this area with shared information between 
+    // drivers and the OS.
+    //
+    
+    BOOT_ARGS        bootargs;
+} DRIVER_GLOBALS, *PDRIVER_GLOBALS;  </PRE>
+</li>
+
+	<LI>Modify the .bib file to reserve memory for the driver globals region.
+<P>You must reserve the driver globals region in the .bib file after you have defined this region. Typically, the driver globals, including boot args, is placed in RAM below the boot loader. 
+
+<P>The following code example shows how to perform this procedure.
+
+<PRE class="code">MEMORY
+;   Name     Start     Size      Type
+;   -------  --------  --------  ----
+    DRV_GLB  A0008000  00001000  RESERVED   ; Driver globals; 4 KB is sufficient.
+
+    EBOOT    A0030000  00020000  RAMIMAGE   ; Set aside 128 KB for loader; finalize later.
+    RAM      A0050000  00010000  RAM        ; Free RAM; finalize later.
+    
+CONFIG
+    COMPRESSION=OFF
+    PROFILE=OFF
+    KERNELFIXUPS=ON
+    
+    ; These cause the .nb0 file to be created. An .nb0 file may be 
+    ; directly written to flash and then booted.
+    ; Because the loader is linked to execute from RAM,
+    ; these must match the RAMIMAGE section.
+    ROMSTART=A0030000
+    ROMWIDTH=32
+    ROMSIZE=20000
+
+MODULES
+;   Name            Path                                            Memory Type
+;   --------------  ----------------------------------------------  -----------
+    nk.exe          $(_TARGETPLATROOT)\target\$(_TGTCPU)\$(WINCEDEBUG)\EBOOT.exe   EBOOT</PRE>
+
+<P>In the previous code example, the DRV_GLB line was added to reserve the driver globals region in the .bib file.
+</li>
+</OL>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50howhowtodevelopabootloader.htm">How to Develop a Boot Loader</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

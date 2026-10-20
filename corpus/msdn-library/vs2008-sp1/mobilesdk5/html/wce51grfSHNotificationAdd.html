@@ -1,0 +1,175 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>SHNotificationAdd</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="SHNotificationAdd"/>
+<MSHelp:RLTitle Title="SHNotificationAdd"/>
+<MSHelp:Keyword Index="K" Term="SHNotificationAdd"/>
+<MSHelp:Keyword Index="A" Term="wce51grfSHNotificationAdd"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Application"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbsmartphone"/>
+<MSHelp:Attr Name="Product" Value="kbPocketPC"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="Technology" Value="kbPocketPC"/>
+<MSHelp:Attr Name="Technology" Value="kbSmartphone"/>
+<MSHelp:Attr Name="TopicType" Value="apiref"/>
+<MSHelp:Attr Name="Filename" Value="shnotification_reference_magneto.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="True"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_1058416">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Windows Mobile Version 5.0 SDK<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce51grfshnotificationadd"></A>SHNotificationAdd</H1>
+<!--Feedback Link Top Start-->
+<P CLASS="feedback"><font size="1"><a href="mailto:medfdbk&#64;microsoft.com?subject=Product: Windows Mobile | Version: 5.0 | Release: SDK | Title: SHNotificationAdd | Filename: wce51grfshnotificationadd.htm | Built on: Wednesday, September 14, 2005">Send Feedback</a> on this topic to the authors</font></p>
+<!--Feedback Link Top End-->
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>This function adds a notification icon.</P>
+
+<PRE class="syntax"><B>LRESULT SHNotificationAdd(</B>
+<B>  SHNOTIFICATIONDATA* </B><I>pndAdd</I>
+<B>)</B>;</PRE>
+
+<H4 class="dtH4">Parameters</H4>
+
+<DL>
+<DT><I>pndAdd</I></DT>
+
+<DD>[in] Pointer to an <A HREF="wce51grf_shnotificationdata.htm">SHNOTIFICATIONDATA</A> structure that specifies the icon to be added.</dd>
+</DL>
+
+<H4 class="dtH4">Return Values</H4>
+
+<P>This function returns ERROR_SUCCESS when successful.</P>
+
+<P>The following list shows the return values on failure, for a Windows Mobile-based Pocket PC.
+
+<UL type="disc">
+	<LI>ERROR_INVALID_PARAMETER</li>
+
+	<LI>ERROR_OUTOFMEMORY</li>
+
+	<LI>ERROR_DLL_INIT_FAILED</li>
+
+	<LI>ERROR_NOT_FOUND</li>
+
+	<LI>ERROR_NO_MATCH</li>
+</UL>
+
+<P>The following list shows the return values on failure, for a Windows Mobile-based Smartphone.
+
+<UL type="disc">
+	<LI>ERROR_INVALID_PARAMETER</li>
+</UL>
+
+<P>For a description of these error values, see <MSHelp:link keywords="wce50lrfSystemErrorsAlphabeticalOrder" TABINDEX="0">System Errors - Alphabetical Order</MSHelp:link>.</P>
+
+<H4 class="dtH4">Example</H4>
+
+<P>The following code example demonstrates how to use <B>SHNotificationAdd</B>.</P>
+
+<BLOCKQUOTE class="dtBlock">
+<b class="le">Note</b>&nbsp;&nbsp;&nbsp;To make the following code example easier to read, security checking and error handling are not included. This code example should not be used in a release configuration unless it has been modified to include them.</BLOCKQUOTE>
+
+<PRE class="code">static const GUID CLSID_SHNAPI_Test = { 0x33765136, 0x8cb9, 0x449a, { 0xb0, 0x20, 0x43, 0xed, 0x40, 0xa, 0xb8, 0xfc } };
+
+void SHNotificationExample()
+{
+    // This code will add an SHNotificaion notificaion (PocketPC only)
+    SHNOTIFICATIONDATA sn  = {0};
+    SHNOTIFICATIONDATA sn2 = {0};
+
+    sn.cbStruct = sizeof(sn);
+    sn.dwID = 1;
+    sn.npPriority = SHNP_INFORM;
+    sn.csDuration = 15;
+    sn.hicon = LoadIcon(g_hInstance, MAKEINTRESOURCE(IDI_SAMPLEICON));
+    sn.clsid = CLSID_SHNAPI_Test;
+    sn.grfFlags = 0;
+    sn.pszTitle = TEXT("Sample Notification");
+    sn.pszHTML = TEXT("&lt;html&gt;&lt;body&gt;This is &lt;b&gt;sample html&lt;/b&gt; in a notification!&lt;/body&gt;&lt;/html&gt;");
+    sn.rgskn[0].pszTitle = TEXT("Dismiss");
+    sn.rgskn[0].skc.wpCmd = 100;
+
+    //Add the notification to the tray
+<code><b class="cfe">    SHNotificationAdd(&amp;sn);</b></code>
+
+    //Put the data from an existing notification into a second SHNOTIFICATIONDATA struct
+    sn2.cbStruct = sizeof(sn2);
+    SHNotificationGetData(&amp;CLSID_SHNAPI_Test, 1, &amp;sn2);
+
+    //Update the title, HTML, icon, and softkeys of the notification
+    sn2.pszTitle = TEXT("Updated - Sample Notification");
+    sn2.pszHTML = TEXT("&lt;html&gt;&lt;body&gt;This notification has been &lt;b&gt;updated!&lt;/b&gt;&lt;/body&gt;&lt;/html&gt;");
+    sn2.hicon = LoadIcon(g_hInstance, MAKEINTRESOURCE(IDI_SAMPLEICON2));
+    sn2.rgskn[0].pszTitle = TEXT("Disabled");
+    sn2.rgskn[0].skc.wpCmd = 100;
+    sn2.rgskn[0].skc.grfFlags = NOTIF_SOFTKEY_FLAGS_DISABLED;
+    SHNotificationUpdate(SHNUM_TITLE | SHNUM_HTML | SHNUM_ICON | SHNUM_SOFTKEYCMDS | SHNUM_SOFTKEYS, &amp;sn2);
+
+    //Remove the notification from the tray
+    SHNotificationRemove(&amp;CLSID_SHNAPI_Test, 1);
+
+    //Add a new notification that utilizes the MRE functionality
+    sn.cbStruct = sizeof(sn);
+    sn.dwID = 1;
+    sn.npPriority = SHNP_INFORM;
+    sn.csDuration = 15;
+    sn.hicon = LoadIcon(g_hInstance, MAKEINTRESOURCE(IDI_SAMPLEICON));
+    sn.clsid = CLSID_SHNAPI_Test;
+    sn.grfFlags = SHNF_STRAIGHTTOTRAY;
+    sn.pszTodaySK = TEXT("New Task");
+    sn.pszTodayExec = TEXT("\\windows\\tasks.exe");
+
+    //Add the notification to the tray
+    SHNotificationAdd(&amp;sn);
+
+    //Remove the notification from the tray
+    SHNotificationRemove(&amp;CLSID_SHNAPI_Test, 1);
+}</PRE>
+
+<H4 class="dtH4">Requirements</H4>
+
+<P><B>OS Versions:</B> Windows CE 5.01 and later<BR>
+<B>Header:</B> aygshell.h<BR>
+<B>Link Library:</B> aygshell.lib</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce51grfshnotificationremove.htm">SHNotificationRemove</A> | <A HREF="wce51grfshnotificationupdate.htm">SHNotificationUpdate</A> | <MSHelp:link keywords="wce50lrfSHNotificationGetData" TABINDEX="0">SHNotificationGetData</MSHelp:link> | <A HREF="wce51grf_shnotificationdata.htm">SHNOTIFICATIONDATA</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Feedback Link Bottom Start-->
+<p><font size="1"><a href="mailto:medfdbk&#64;microsoft.com?subject=Product: Windows Mobile | Version: 5.0 | Release: SDK | Title: SHNotificationAdd | Filename: wce51grfshnotificationadd.htm | Built on: Wednesday, September 14, 2005">Send Feedback</a> on this topic to the authors</font></p>
+<!--Feedback Link Bottom End-->
+<!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="mob5conCopyrightInformationForMagneto" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link></font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

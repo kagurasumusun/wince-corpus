@@ -1,0 +1,154 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>IAMVideoCompression::GetInfo</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="IAMVideoCompression::GetInfo"/>
+<MSHelp:RLTitle Title="IAMVideoCompression::GetInfo"/>
+<MSHelp:Keyword Index="K" Term="IAMVideoCompression::GetInfo"/>
+<MSHelp:Keyword Index="A" Term="wce51lrfIAMVideoCompressionGetInfo"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Application"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbsmartphone"/>
+<MSHelp:Attr Name="Product" Value="kbPocketPC"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="Technology" Value="kbPocketPC"/>
+<MSHelp:Attr Name="Technology" Value="kbSmartphone"/>
+<MSHelp:Attr Name="TopicType" Value="apiref"/>
+<MSHelp:Attr Name="Filename" Value="directshow_interfaces_magneto.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="True"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_1074474">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Windows Mobile Version 5.0 SDK<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce51lrfiamvideocompressiongetinfo"></A>IAMVideoCompression::GetInfo</H1>
+<!--Feedback Link Top Start-->
+<P CLASS="feedback"><font size="1"><a href="mailto:medfdbk&#64;microsoft.com?subject=Product: Windows Mobile | Version: 5.0 | Release: SDK | Title: IAMVideoCompression::GetInfo | Filename: wce51lrfiamvideocompressiongetinfo.htm | Built on: Wednesday, September 14, 2005">Send Feedback</a> on this topic to the authors</font></p>
+<!--Feedback Link Top End-->
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>This method retrieves information about the filter's compression properties, including capabilities and default values. </P>
+
+<PRE class="syntax"><B>HRESULT GetInfo(</B>
+<B>  WCHAR*  </B><I>pszVersion</I><B>,</B>
+<B>  int*    </B><I>pcbVersion</I><B>,</B>
+<B>  LPWSTR  </B><I>pszDescription</I><B>,</B>
+<B>  int*    </B><I>pcbDescription</I><B>,</B>
+<B>  long*   </B><I>pDefaultKeyFrameRate</I><B>,</B>
+<B>  long*   </B><I>pDefaultPFramesPerKey</I><B>,</B>
+<B>  double* </B><I>pDefaultQuality</I><B>,</B>
+<B>  long*   </B><I>pCapabilities</I>
+<B>) PURE;</B></PRE>
+
+<H4 class="dtH4">Parameters</H4>
+
+<DL>
+<DT><I>pszVersion</I></DT>
+
+<DD>[out] Pointer to a WCHAR buffer that receives a version string, such as "Version 2.1.0." </dd>
+
+<DT><I>pcbVersion</I></DT>
+
+<DD>[in, out] Pointer to an int variable that receives the size of the version string, in bytes. </dd>
+
+<DT><I>pszDescription</I></DT>
+
+<DD>[out] A LPWSTR buffer that receives a description string, such as "My Video Compressor." </dd>
+
+<DT><I>pcbDescription</I></DT>
+
+<DD>[in, out] Pointer to an int variable that receives the size of the description string. </dd>
+
+<DT><I>pDefaultKeyFrameRate</I></DT>
+
+<DD>[out] Pointer to a long variable that receives the default key-frame rate. </dd>
+
+<DT><I>pDefaultPFramesPerKey</I></DT>
+
+<DD>[out] Pointer to a long variable that receives the default rate of predicted (P) frames per key frame. </dd>
+
+<DT><I>pDefaultQuality</I></DT>
+
+<DD>[out] Pointer to a double variable that receives the default quality. </dd>
+
+<DT><I>pCapabilities</I></DT>
+
+<DD>[out] Pointer to a long variable that receives the compression capabilities, as a bitwise combination of zero or more CompressionCaps flags. </dd>
+</DL>
+
+<H4 class="dtH4">Return Values</H4>
+
+<P>Returns an HRESULT value.</P>
+
+<H4 class="dtH4">Remarks</H4>
+
+<P>Any of the listed parameters can be NULL, in which case the method ignores that parameter. </P>
+
+<P>The application must allocate the buffers for the version and description strings. To determine the required size of the buffers, call this method with NULL for the <I>pszVersion</I> and <I>pszDescription</I> parameters. Use the values returned in <I>pcbVersion</I> and <I>pcbDescription</I> to allocate the buffers and then call the method again, as shown in the following code:</P>
+
+<PRE class="code">int cbVersion, cbDesc; // Size in bytes, not characters!
+hr = pCompress-&gt;GetInfo(0, &amp;cbVersion, 0, &amp;cbDesc, 0, 0, 0, 0);
+if (SUCCEEDED(hr))
+{
+  WCHAR *pszVersion = new WCHAR[cbVersion/2];  // Wide character = 2
+bytes
+  WCHAR *pszDesc = new WCHAR[cbDesc/2];
+  if (pszVersion &amp;&amp; pszDesc)
+  {
+    hr = pCompress-&gt;GetInfo(pszVersion, 0, pszDesc, 0, 0, 0, 0, 0);
+  }
+  delete [] pszVersion;
+  delete [] pszDesc;
+}</PRE>
+
+<P>Note that the strings are wide-character strings, and the returned sizes are in bytes, not number of characters. Also, one or both strings might be zero-length.</P>
+
+<P>The <I>pCapabilities</I> parameter receives a set of flags indicating which compression properties are supported, and thus which <A HREF="wce51lrfiamvideocompressioninterface.htm">IAMVideoCompression interface</A> methods are supported. For example, if the CompressionCaps_CanKeyFrame flag is returned, the filter supports the <A HREF="wce51lrfiamvideocompressionget_keyframerate.htm">IAMVideoCompression::get_KeyFrameRate</A> and <A HREF="wce51lrfiamvideocompressionput_keyframerate.htm">IAMVideoCompression::put_KeyFrameRate</A> methods.</P>
+
+<P>The remaining parameters receive default values for the compression properties. For unsupported properties (as determined by the flags returned in <I>pCapabilities</I>), you should ignore the corresponding default value, as it may not be correct or meaningful.</P>
+
+<H4 class="dtH4">Requirements</H4>
+
+<P>DirectShow applications and DirectShow filters have different include file and link library requirements. See <MSHelp:link keywords="wce50conSettingUptheBuildEnvironment" TABINDEX="0">Setting Up the Build Environment</MSHelp:link> for more information. </P>
+
+<P><B>Pocket&nbsp;PC Platforms:</B> Windows Mobile 5.0&nbsp;and later<BR>
+<B>Smartphone Platforms:</B> Windows Mobile&nbsp;5.0 and later<BR>
+<B>OS Versions:</B> Windows CE 5.01 and later.<BR>
+<B>Header:</B> </P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce51lrfiamvideocompressioninterface.htm">IAMVideoCompression Interface</A> | <A HREF="wce51lrfiamvideocompressioninterface.htm">IAMVideoCompression interface</A> | <A HREF="wce51lrfiamvideocompressionget_keyframerate.htm">IAMVideoCompression::get_KeyFrameRate</A> | <A HREF="wce51lrfiamvideocompressionput_keyframerate.htm">IAMVideoCompression::put_KeyFrameRate</A> </P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Feedback Link Bottom Start-->
+<p><font size="1"><a href="mailto:medfdbk&#64;microsoft.com?subject=Product: Windows Mobile | Version: 5.0 | Release: SDK | Title: IAMVideoCompression::GetInfo | Filename: wce51lrfiamvideocompressiongetinfo.htm | Built on: Wednesday, September 14, 2005">Send Feedback</a> on this topic to the authors</font></p>
+<!--Feedback Link Bottom End-->
+<!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="mob5conCopyrightInformationForMagneto" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link></font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

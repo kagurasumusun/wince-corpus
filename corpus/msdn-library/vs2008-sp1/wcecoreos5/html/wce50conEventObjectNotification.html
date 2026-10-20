@@ -1,0 +1,263 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Event Object Notification</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Event Object Notification"/>
+<MSHelp:RLTitle Title="Event Object Notification"/>
+<MSHelp:Keyword Index="A" Term="wce50conEventObjectNotification"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Feature"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="kernel_scheduling.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="True"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+<MSHelp:Attr Name="PBFeature" Value="CORE"/>
+<MSHelp:Attr Name="PBOnly" Value="True"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_3009408">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50coneventobjectnotification"></A>Event Object Notification</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>Windows CE uses event objects to complete the following tasks:
+
+<UL type="disc">
+	<LI>Notify a thread when to perform its task</li>
+
+	<LI>Indicate that an event has occurred</li>
+</UL>
+
+<P>For example, a thread that writes to a buffer resets the event object to signaled when it finishes writing. </P>
+
+<P>By using an event object to notify the thread that its task is finished, the thread can immediately start performing other tasks.</P>
+
+<P>To create an event object, call the <A HREF="wce50lrfcreateevent.htm">CreateEvent</A> function. </P>
+
+<P>The following code example shows the <B>CreateEvent</B> function prototype.</P>
+
+<PRE class="code">HANDLE CreateEvent (NULL, BOOL bManualReset, BOOL bInitialState,
+                    LPTSTR lpName);</PRE>
+
+<P>Use the<I><B> </B>lpName</I> parameter to name the event object or to leave the object unnamed. </P>
+
+<P>Use the <I>bManualReset</I> parameter to specify whether the event object resets itself from a signaled state to a nonsignaled state or whether it requires a manual reset. </P>
+
+<P>Use the <I>bInitialState </I>parameter to specify whether the event object is created in the signaled or nonsignaled state. </P>
+
+<P>Named events can be shared with other processes. Threads in other processes can open a handle to an existing event object by specifying its name in a call to <B>CreateEvent</B>. </P>
+
+<P>All named synchronization objects are stored in the same queue. To determine whether a <B>CreateEvent</B> function created or opened an object, call the <A HREF="wce50lrfgetlasterror.htm">GetLastError</A> function immediately after calling<B> CreateEvent</B>. </P>
+
+<P>If <B>GetLastError</B> returns ERROR_ALREADY_EXISTS, the call opened an event. In other words, if the name specified in a call to <B>CreateEvent</B> matches the name of an event object, the function returns the handle of the object. </P>
+
+<P>When you use this technique for event objects, none of the calling processes should request immediate ownership of the event, because it is uncertain which process actually gets ownership.</P>
+
+<P>To signal an event, use the <A HREF="wce50lrfsetevent.htm">SetEvent</A> or <A HREF="wce50lrfpulseevent.htm">PulseEvent</A> function. 
+
+<UL type="disc">
+	<LI><B>SetEvent</B> does not automatically reset the event object to a nonsignaled state. </li>
+
+	<LI><B>PulseEvent</B> signals the event and then resets the event. 
+<P>For manual events, <B>PulseEvent</B> unblocks all threads waiting on the event. 
+
+<P>For automatic events, <B>PulseEvent</B> unblocks only one thread.
+</li>
+</UL>
+
+<P>If an event object can reset itself, you need only use <B>SetEvent</B> to signal. The event object is then reset to the nonsignaled state when one thread is unblocked after waiting on that event. </P>
+
+<P>To manually reset an event, use the<B> </B><A HREF="wce50lrfresetevent.htm">ResetEvent</A> function.</P>
+
+<P>To close an event object, call the <B>CloseHandle</B> function. If the event object is named, Windows CE maintains a use count on the object, and you must make one call to <B>CloseHandle</B> for each call to <B>CreateEvent</B>.</P>
+
+<P>A single thread can specify different event objects in several simultaneous overlapped operations. If this is the case, use a multiple-object wait function to wait for the state of an event object to be signaled. </P>
+
+<P>You can also use event objects in a number of situations to notify a waiting thread of the occurrence of an event. For example, communications devices use an event object to signal their completion. </P>
+
+<P>The following code example shows an application that uses event objects to prevent several threads from reading from a shared memory buffer while a master thread is writing to that buffer. </P>
+
+<P>The master thread uses the <B>CreateEvent</B> function to create a manual-reset event object. The master thread sets the event object to nonsignaled when it is writing to the buffer and it then resets the object to signaled when it finishes writing. </P>
+
+<P>The master thread then creates several reader threads and an auto-reset event object for each thread. Each reader thread sets its event object to signaled when it is not reading from the buffer. </P>
+
+<PRE class="code">VOID ReadThreadFunction (LPVOID lpParam);  // Forward declaration
+
+#define NUMTHREADS 4
+
+HANDLE  hGlobalWriteEvent;
+HANDLE  hReadEvents[NUMTHREADS];
+
+void CreateEventsAndThreads (void)
+{
+  HANDLE hThread;   // Newlycreated thread handle
+  DWORD dwThreadID; // Newlycreated thread ID value
+  int i;            // For-loop counter
+
+  hGlobalWriteEvent = CreateEvent (NULL,  // No security attributes
+                                   TRUE,  // Manual-reset event
+                                   TRUE,  // Initial state is signaled
+                                   TEXT("WriteEvent"));
+                                          // Object name
+  if (hGlobalWriteEvent == NULL)
+  {
+    // Your code to deal with the error goes here.
+  }
+
+  for (i = 0; i &lt; NUMTHREADS; i++)
+  {
+    hReadEvents[i] = CreateEvent (NULL,   // No security attributes
+                                  FALSE,  // Auto-reset event
+                                  TRUE,   // Initial state is signaled
+                                  NULL);  // Object not named
+    if (hReadEvents[i] == NULL)
+    {
+      // Your code to deal with the error goes here.
+    }
+
+    hThread = CreateThread (
+                  NULL,               // No security attributes 
+                                      // in Windows CE
+                  0,                  // Must be 0 under Windows CE
+                  (LPTHREAD_START_ROUTINE) ReadThreadFunction
+                  &amp;hReadEvents[i],    // Pass new thread's event handle
+                  0,                  // Thread runs immediately
+                  &amp;dwThreadID);       // Returned ID value (ignored)
+
+    if (hThread == NULL) 
+    {
+      // Your code to deal with the error goes here.
+    }
+  }
+} // End of CreateEventsAndThreads example code</PRE>
+
+<P>In the following code example, before the master thread writes to the shared buffer, it uses <B>ResetEvent</B> to set the state of <I>hGlobalWriteEvent</I>, which is an application-defined global variable, to nonsignaled.</P>
+
+<P>This blocks the reader threads from starting a read operation. </P>
+
+<P>The master thread then uses the <A HREF="wce50lrfwaitforsingleobject.htm">WaitForSingleObject</A> function to wait for all reader threads to finish current read operations. When the loop of calls to <B>WaitForSingleObject</B> is complete, the master thread can safely write to the buffer. </P>
+
+<P>After it finishes writing, it sets <I>hGlobalWriteEvent</I> and all reader-thread events to signaled, which enables the reader threads to resume their read operations. </P>
+
+<P>The example does not use the <A HREF="wce50lrfwaitformultipleobjects.htm">WaitForMultipleObjects</A> function because in Windows CE the <I>fWaitAll</I> flag must be set to FALSE. For more information about wait functions, see <A HREF="wce50conwaitfunctions.htm">Wait Functions</A>.</P>
+
+<PRE class="code">int WriteToBuffer (void)
+{
+  DWORD dwWaitResult;
+  int i;
+
+  // Block all read threads from starting any new operations.
+  if (!ResetEvent (hGlobalWriteEvent))
+  {
+    // Your code to deal with the error goes here.
+  }
+
+  // Wait for all the read events to be signaled (threads done).
+  for (i = 0; i &lt; NUMTHREADS; i++)
+  {
+    dwWaitResult = WaitForSingleObject (hReadEvents[i], INFINITE);
+    if (WAIT_OBJECT_0 != dwWaitResult)
+    {
+      // Your code to deal with the error goes here.
+    }
+  }
+
+  // Now it is okay to write to the shared buffer, so that code
+  // goes here.
+
+
+  // Put all the events back to signaled (so read threads can run).
+  for(i = 0; i &lt; NUMTHREADS; i++)
+  {
+    if (!SetEvent (hReadEvents[i]))
+    {
+      // Your code to deal with the error goes here.
+    }
+  }
+
+  if (!SetEvent (hGlobalWriteEvent))
+  {
+    // Your code to deal with the error goes here.
+  }
+
+  return 1;
+} // End of WriteToBuffer example code</PRE>
+
+<P>In the following code example, before starting a read operation, each reader thread uses the <B>WaitForSingleObject</B> function to wait for the application-defined global variable, <I>hGlobalWriteEvent</I>, and then uses it again to wait for its own read event to be signaled. </P>
+
+<P>When the loop of calls to <B>WaitForSingleObject</B> is complete, the reader thread's auto-reset event is reset to nonsignaled. This blocks the master thread from writing to the buffer until the reader thread uses the <B>SetEvent</B> function to reset the event's state to signaled. </P>
+
+<PRE class="code">VOID ReadThreadFunction (LPVOID lpParam)
+{
+  DWORD dwWaitResult;
+  HANDLE hEvent;
+  BOOL bStayInLoop;
+
+  hEvent = * (HANDLE *) lpParam;   // This thread's read event
+
+  bStayInLoop = TRUE;
+
+  while (bStayInLoop)
+  {
+    // First, wait for the master thread's event.
+    WaitForSingleObject (hGlobalWriteEvent, INFINITE);
+    if (WAIT_OBJECT_0 != dwWaitResult)
+    {
+      // Your code to deal with the error goes here.
+    }
+
+    // Now, wait for this thread's event object.
+    WaitForSingleObject (hEvent, INFINITE);
+    if (WAIT_OBJECT_0 != dwWaitResult)
+    {
+      // Your code to deal with the error goes here.
+    }
+
+    // Now it is okay to read the shared buffer -- the code to do
+    // that goes here.  When it is time for the thread to quit, set
+    // the bStayInLoop variable to FALSE.
+
+    // Now, signal that this thread is done with the buffer.
+    if (!SetEvent (hEvent))
+    {
+      // Your code to deal with the error goes here.
+    }
+  }
+} // End of ReadThreadFunction example code</PRE>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50consynchronization280.htm">Synchronization</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

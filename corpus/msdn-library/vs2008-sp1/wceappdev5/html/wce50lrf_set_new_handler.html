@@ -1,0 +1,172 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>_set_new_handler</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="_set_new_handler"/>
+<MSHelp:RLTitle Title="_set_new_handler"/>
+<MSHelp:Keyword Index="K" Term="_set_new_handler"/>
+<MSHelp:Keyword Index="A" Term="wce50lrf_set_new_handler"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Application"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="False"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="Technology" Value="CRT"/>
+<MSHelp:Attr Name="TechnologyVers" Value="kbCRT"/>
+<MSHelp:Attr Name="TopicType" Value="apiref"/>
+<MSHelp:Attr Name="Filename" Value="crt3.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="True"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+<MSHelp:Attr Name="APIName" Value="_set_new_handler"/>
+<MSHelp:Attr Name="APIType" Value="DLLExport"/>
+<MSHelp:Attr Name="APILocation" Value="coredll.dll"/>
+<MSHelp:Attr Name="PBFeature" Value="SYSGEN_FULL_CRT"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_1044764">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50lrf_set_new_handler"></A>_set_new_handler</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>Transfer control to your error-handling mechanism if the new operator fails to allocate memory.</P>
+
+<PRE class="syntax"><B>_PNH _set_new_handler(</B>
+<B>  _PNH </B><I>pNewHandler</I>
+<B>);</B></PRE>
+
+<H4 class="dtH4">Parameters</H4>
+
+<DL>
+<DT><I>pNewHandler</I></DT>
+
+<DD>Pointer to the application-supplied memory handling function</dd>
+</DL>
+
+<H4 class="dtH4">Return Values</H4>
+
+<P><B>_set_new_handler</B> returns a pointer to the previous exception handling function registered by <B>_set_new_handler</B>, so that the previous function can be restored later. If no previous function has been set, the return value may be used to restore the default behavior; this value may be NULL.</P>
+
+<H4 class="dtH4">Remarks</H4>
+
+<P>Call the <B>_set_new_handler </B>function to specify an exception-handling function that is to gain control if the new operator fails to allocate memory. </P>
+
+<P>If new fails, the run-time system calls the exception-handling function that was passed as an argument to <B>_set_new_handler</B>. <B>_PNH</B>, defined in NEW.H, is a pointer to a function that returns type int and takes an argument of type <B>size_t</B>. Use <B>size_t</B> to specify the amount of space to be allocated.</P>
+
+<P><B>_set_new_handler</B> is essentially a garbage-collection scheme. The run-time system retries allocation each time your function returns a nonzero value and fails if your function returns 0.</P>
+
+<P>The following code example show how the <B>_set_new_handler</B> function registers the specified exception-handling function with the run-time system:</P>
+
+<PRE class="code">#include &lt;new.h&gt;
+int handle_program_memory_depletion( size_t )
+{
+   // Your code
+}
+void main( void )
+{
+   _set_new_handler( handle_program_memory_depletion );
+   int *pi = new int[BIG_NUMBER];
+}</PRE>
+
+<P>You can save the function address that was last passed to the <B>_set_new_handler </B>function and reinstate it later:</P>
+
+<PRE class="code">_PNH old_handler = _set_new_handler( my_handler );
+   // Code that requires my_handler
+   _set_new_handler( old_handler )
+   // Code that requires old_handler</PRE>
+
+<P>The <B>_set_new_mode</B> function sets the new handler mode for <A HREF="wce50lrfmalloc.htm">malloc</A>. The new handler mode indicates whether, on failure, <B>malloc</B> is to call the new handler routine as set by <B>_set_new_handler</B>. </P>
+
+<P>By default, <B>malloc</B> does not call the new handler routine on failure to allocate memory. You can override this default behavior so that, when malloc fails to allocate memory, <B>malloc</B> calls the new handler routine in the same way that the new operator does when it fails for the same reason. </P>
+
+<P>To override the default, call </P>
+
+<PRE class="code">_set_new_mode(1)</PRE>
+
+<P>early in your program, or link with NEWMODE.OBJ.</P>
+
+<H4 class="dtH4">Example</H4>
+
+<PRE class="code">/* HANDLER.CPP: This program uses _set_new_handler to 
+ * print an error message if the new operator fails.
+ */
+
+#include &lt;stdlib.h&gt;
+#include &lt;new.h&gt;
+
+/* Allocate memory in chunks of size MemBlock. */
+const size_t MemBlock = 1024;
+
+/* Allocate a memory block for the printf function to use in case
+ * of memory allocation failure; the printf function uses malloc.
+ * The failsafe memory block must be visible globally because the
+ * handle_program_memory_depletion function can take one 
+ * argument only.
+ */
+char * failsafe = new char[128];
+
+/* Declare a customized function to handle memory-allocation failure.
+ * Pass this function as an argument to _set_new_handler.
+ */
+int handle_program_memory_depletion( size_t );
+
+void main( void )
+{
+   // Register existence of a new memory handler.
+   _set_new_handler( handle_program_memory_depletion );
+   size_t *pmemdump = new size_t[MemBlock];
+   for( ; pmemdump != 0; pmemdump = new size_t[MemBlock] );
+}
+
+int handle_program_memory_depletion( size_t size )
+{
+   // Release character buffer memory.
+   delete failsafe;
+   printf( "Allocation failed, " );
+   printf( "%u bytes not available.\n", size );
+   // Tell new to stop allocation attempts.
+   return 0;
+}
+
+Output
+Allocation failed %0 bytes not available.</PRE>
+
+<H4 class="dtH4">Requirements</H4>
+
+<P><B>OS Versions:</B> Windows CE 2.0 and later.<BR>
+<B>Header:</B> new.h.<BR>
+<B>Link Library: </B>coredll.dll.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50lrfcalloc.htm">calloc</A> | <A HREF="wce50lrffree.htm">free</A> | <A HREF="wce50lrfmalloc.htm">malloc</A> | <A HREF="wce50lrfrealloc.htm">realloc</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

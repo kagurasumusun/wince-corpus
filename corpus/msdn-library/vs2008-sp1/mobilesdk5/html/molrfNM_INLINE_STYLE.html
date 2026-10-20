@@ -1,0 +1,163 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>NM_INLINE_STYLE</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="NM_INLINE_STYLE"/>
+<MSHelp:RLTitle Title="NM_INLINE_STYLE"/>
+<MSHelp:Keyword Index="K" Term="NM_INLINE_STYLE"/>
+<MSHelp:Keyword Index="A" Term="molrfNM_INLINE_STYLE"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Application"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbsmartphone"/>
+<MSHelp:Attr Name="Product" Value="kbPocketPC"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="Technology" Value="kbPocketPC"/>
+<MSHelp:Attr Name="Technology" Value="kbSmartphone"/>
+<MSHelp:Attr Name="TopicType" Value="apiref"/>
+<MSHelp:Attr Name="Filename" Value="htmlCtrl_API_StrucEnum_magneto.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="True"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_1075642">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Windows Mobile Version 5.0 SDK<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="molrfnm_inline_style"></A>NM_INLINE_STYLE</H1>
+<!--Feedback Link Top Start-->
+<P CLASS="feedback"><font size="1"><a href="mailto:medfdbk&#64;microsoft.com?subject=Product: Windows Mobile | Version: 5.0 | Release: SDK | Title: NM_INLINE_STYLE | Filename: molrfnm_inline_style.htm | Built on: Wednesday, September 14, 2005">Send Feedback</a> on this topic to the authors</font></p>
+<!--Feedback Link Top End-->
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>This notification message is sent by the HTML viewer control to notify the application that a stylesheet is about to be loaded via the &lt;link&gt; tag and gives the application a chance to bypass the operation. An alternate stylesheet can be added at this time using the <A HREF="mob5lrfdtm_addstyle.htm">DTM_ADDSTYLE</A> message.</P>
+
+<H4 class="dtH4">Syntax</H4>
+
+<PRE class="syntax"><B>NM_HTMLVIEW * </B><I>pnmHTMLView</I><B> = (NM_HTMLVIEW *)lParam;</B>
+<I>szHrefText</I><B> = </B><I>pnmHTMLView</I><B>-&gt;szTarget;</B></PRE>
+
+<H4 class="dtH4">Parameters</H4>
+
+<DL>
+<DT><I>pnmHTMLView</I></DT>
+
+<DD>Points to an <B>NM_HTMLVIEW</B> structure that contains information about the <B>NM_INLINE_STYLE</B> notification message.</dd>
+
+<DT><I>szHrefText</I></DT>
+
+<DD>A null-terminated string that contains the contents of the HREF attribute of the LINK tag in the HTML text.</dd>
+</DL>
+
+<H4 class="dtH4">Return Values</H4>
+
+<P>If the application handles this message it should return a non-zero result. The HTML control will not load the specified stylesheet in that case. Returning a zero result to the HTML control will result in the default control handling to occur and the specified stylesheet to be loaded.</P>
+
+<H4 class="dtH4">Code Example</H4>
+
+<P>The following code example demonstrates how to use <B>NM_INLINE_STYLE</B>.</P>
+
+<BLOCKQUOTE class="dtBlock">
+<b class="le">Note</b>&nbsp;&nbsp;&nbsp;To make the following code example easier to read, security checking and error handling are not included. This code example should not be used in a release configuration unless it has been modified to include them.</BLOCKQUOTE>
+
+<PRE class="code">/******************************* example.html *********************************
+&lt;html&gt;
+    &lt;head&gt;
+        &lt;title&gt;NM_INLINE_STYLE Test&lt;/title&gt;
+        &lt;link rel="stylesheet" type="text/css" href="inline0.css" /&gt;
+        &lt;link rel="stylesheet" type="text/css" href="inline1.css" /&gt;
+    &lt;/head&gt;
+    &lt;body&gt;
+        &lt;p id="p0"&gt;Ordinarily, this text would appear green. However ExampleWndProc can make it blue.&lt;/p&gt;
+        &lt;p id="p1"&gt;This text should appear red, even when using ExampleWndProc.&lt;/p&gt;
+    &lt;/body&gt;
+&lt;/html&gt;
+*/
+
+/******************************** inline0.css *********************************
+p#p0 {color: green}
+*/
+
+/******************************** inline1.css *********************************
+p#p1 {color: red}
+*/
+
+LRESULT CALLBACK ExampleWndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
+{
+    switch (uMsg)
+    {
+    // For clarity, handling of other Windows messages has been omitted.
+    // ...
+    case WM_NOTIFY:
+        {
+            LPNMHDR pnmHdr = (LPNMHDR)lParam;
+            switch (pnmHdr-&gt;code)
+            {
+            // For clarity, handling of other notification codes has been omitted.
+            // ...
+            case NM_INLINE_STYLE:
+                {
+                    NM_HTMLVIEW * pnmHTMLView = (NM_HTMLVIEW *)pnmHdr;
+
+                    // Note the treatment of (pnmHTMLView-&gt;szTarget) as an ANSI string.
+                    if (strstr((const char *)(pnmHTMLView-&gt;szTarget), "inline0.css"))
+                    {
+                        SendMessage(GetDlgItem(hwnd, IDC_HTML),
+                                    DTM_ADDSTYLE, 
+                                    0, 
+                                    (LPARAM)TEXT("p#p0 {color:blue}"));
+                        return 1;
+                    }
+                    else
+                    {
+                        return 0;
+                    }
+                }
+            }
+        }
+    }
+
+    return DefWindowProc(hwnd, uMsg, wParam, lParam);
+}</PRE>
+
+<H4 class="dtH4">Requirements</H4>
+
+<P><B>Pocket&nbsp;PC:</B> Pocket&nbsp;PC&nbsp;2002 and later<BR>
+<B>Smartphone:</B> Smartphone&nbsp;2002 and later<BR>
+<B>OS&nbsp;Versions:</B> Windows&nbsp;CE&nbsp;3.0 and later<BR>
+<B>Header:</B> htmlctrl.h<BR>
+<B>Library:</B> htmlctrl.lib</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="mob5lrfhtmlcontrolapinotifications.htm">HTML Control API Notifications</A> | <A HREF="mob5lrfnm_htmlviewa.htm">NM_HTMLVIEWA</A> | <A HREF="mob5lrfnm_htmlvieww.htm">NM_HTMLVIEWW</A> | <A HREF="mob5lrfhtmlcontrolapiwindowstyles.htm">WC_HTML Windows styles</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Feedback Link Bottom Start-->
+<p><font size="1"><a href="mailto:medfdbk&#64;microsoft.com?subject=Product: Windows Mobile | Version: 5.0 | Release: SDK | Title: NM_INLINE_STYLE | Filename: molrfnm_inline_style.htm | Built on: Wednesday, September 14, 2005">Send Feedback</a> on this topic to the authors</font></p>
+<!--Feedback Link Bottom End-->
+<!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="mob5conCopyrightInformationForMagneto" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link></font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

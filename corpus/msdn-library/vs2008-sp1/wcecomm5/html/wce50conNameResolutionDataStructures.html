@@ -1,0 +1,94 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Name Resolution Data Structures</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Name Resolution Data Structures"/>
+<MSHelp:RLTitle Title="Name Resolution Data Structures"/>
+<MSHelp:Keyword Index="A" Term="wce50conNameResolutionDataStructures"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Feature"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="winsock.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="False"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+<MSHelp:Attr Name="PBFeature" Value="SYSGEN_WINSOCK"/>
+<MSHelp:Attr Name="PBOnly" Value="False"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_3008435">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50connameresolutiondatastructures"></A>Name Resolution Data Structures</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>Winsock provides a set of structures that are used extensively throughout the name resolution functions. </P>
+
+<P class="label"><B>Query-Related Data Structures</B></P>
+
+<P>The <A HREF="wce50lrfwsaquerysetwindowssockets.htm">WSAQUERYSET</A> structure is used to form queries for <A HREF="wce50lrfwsalookupservicebeginwindowssockets.htm">WSALookupServiceBegin</A>, and used to deliver query results for <A HREF="wce50lrfwsalookupservicenextwindowssockets.htm">WSALookupServiceNext</A>. It is a complex structure because it contains pointers to several other structures, some of which reference even more structures. </P>
+
+<P>Within the <A HREF="wce50lrfwsaquerysetwindowssockets.htm">WSAQUERYSET</A> structure, most of the parameters are self explanatory, but some deserve additional explanation. The <I>dwSize</I> parameter must always be completed with <B>sizeof(WSAQUERYSET)</B>, because this is used by namespace providers to detect and adapt to different versions of the <B>WSAQUERYSET</B> structure that may appear over time.</P>
+
+<P>The <I>dwOutputFlags</I> parameter is used by a namespace provider to provide additional information about query results. For more information, see <A HREF="wce50lrfwsalookupservicenextwindowssockets.htm">WSALookupServiceNext</A>.</P>
+
+<P>The <A HREF="wce50lrfwsaecomparator.htm">WSAECOMPARATOR</A> structure referenced by <I>lpversion </I>is used for both query constraint and results. For queries, the <I>dwVersion</I> parameter indicates the desired version of the service. The <I>ecHow </I>parameter is an enumerated type that specifies how the comparison can be made. The choices are COMP_EQUALS, which requires that an exact match in version occur, or COMP_NOTLESS, which requires that the service's version number be no less than the value of <I>dwVersion</I>.</P>
+
+<P>The <I>lpszContext</I> parameter applies to hierarchical namespaces, and specifies the starting point of a query or the location within the hierarchy where the service resides. The following general rules apply:
+
+<UL type="disc">
+	<LI>A value of NULL, blank ("") starts the search at the default context.</li>
+
+	<LI>A value of "\" starts the search at the top of the namespace.</li>
+
+	<LI>Any other value starts the search at the designated point. </li>
+</UL>
+
+<P>Providers that do not support containment may return an error if anything other than "" or "\" is specified. Providers that support limited containment, such as groups, should accept "", '\", or a designated point. Contexts are namespace specific. If <I>dwNameSpace</I> is NS_ALL, then only "" or "\" should be passed as the context because these are recognized by all namespaces.</P>
+
+<P>The <I>lpszQueryString</I> parameter is used to supply additional, namespace-specific query information such as a string describing a well-known service and transport protocol name, as in "FTP/TCP".</P>
+
+<P>The <A HREF="wce50lrfafprotocols.htm">AFPROTOCOLS</A> structure referenced by <I>lpafpProtocols </I>is used for query purposes only, and supplies a list of protocols to constrain the query. These protocols are represented as address family, protocol pairs because protocol values only have meaning within the context of an address family.</P>
+
+<P>The array of <A HREF="wce50lrfcsaddrinfo.htm">CSADDR_INFO</A> structure referenced by <I>lpcsaBuffer</I> contains all of the information needed for either a service to use in establishing a listen, or a client to use in establishing a connection to the service. The <I>LocalAddr</I> and <I>RemoteAddr</I> parameters both directly contain a <A HREF="wce50lrfsocketaddress.htm">SOCKET_ADDRESS</A> structure. A service would create a socket using the tuple (<I>LocalAddr.lpSockaddr-&gt;sa_family, iSocketType, iProtocol</I>). It would bind the socket to a local address using <I>LocalAddr.lpSockaddr</I>, and <I>LocalAddr.lpSockaddrLength</I>. The client creates its socket with the tuple (<I>RemoteAddr.lpSockaddr-&gt;sa_family, iSocketType, iProtocol</I>), and uses the combination of <I>RemoteAddr.lpSockaddr</I>, and <I>RemoteAddr.lpSockaddrLength </I>when making a remote connection.</P>
+
+<P class="label"><B>Service Class Data Structures</B></P>
+
+<P>When a new service class is installed, a <A HREF="wce50lrfwsaserviceclassinfo.htm">WSASERVICECLASSINFO</A> structure must be prepared and supplied. This structure also consists of substructures that contain a series of parameters that apply to specific namespaces. </P>
+
+<P>For each service class, there is a single <A HREF="wce50lrfwsaserviceclassinfo.htm">WSASERVICECLASSINFO</A> structure. Within the <B>WSASERVICECLASSINFO</B> structure, the service class unique identifier is contained in <I>lpServiceClassId</I>, and an associated display string is referenced by <I>lpServiceClassName</I>. The <I>lpClassInfos</I> parameter in the <B>WSASERVICECLASSINFO</B> structure references an array of <B>WSANSCLASSINFO</B> structures, each of which supplies a named and typed parameter that applies to a specified namespace. Examples of values for the <I>lpszName</I> parameter include SapId, TcpPort, UdpPort, and so on. These strings are generally specific to the namespace identified in <I>dwNameSpace</I>. Typical values for <I>dwValueType</I> might be REG_DWORD and REG_SZ. The <I>dwValueSize</I> parameter indicates the length of the data item pointed to by <I>lpValue</I>.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50conwinsocknameresolution.htm">Winsock Name Resolution</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

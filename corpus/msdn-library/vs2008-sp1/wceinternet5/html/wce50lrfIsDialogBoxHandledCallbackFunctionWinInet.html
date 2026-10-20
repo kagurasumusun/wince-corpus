@@ -1,0 +1,331 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>IsDialogBoxHandled Callback Function (WinInet)</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="IsDialogBoxHandled Callback Function (WinInet)"/>
+<MSHelp:RLTitle Title="IsDialogBoxHandled Callback Function (WinInet)"/>
+<MSHelp:Keyword Index="K" Term="IsDialogBoxHandled Callback Function (WinInet)"/>
+<MSHelp:Keyword Index="A" Term="wce50lrfIsDialogBoxHandledCallbackFunctionWinInet"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Feature"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="apiref"/>
+<MSHelp:Attr Name="Filename" Value="wininet_os_development.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="True"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+<MSHelp:Attr Name="APIName" Value="IsDialogBoxHandled"/>
+<MSHelp:Attr Name="APIType" Value="LibDef"/>
+<MSHelp:Attr Name="APILocation" Value="Wininetui.lib"/>
+<MSHelp:Attr Name="PBFeature" Value="SYSGEN_WININET"/>
+<MSHelp:Attr Name="PBOnly" Value="True"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_3006265">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50lrfisdialogboxhandledcallbackfunctionwininet"></A>IsDialogBoxHandled Callback Function (WinInet)</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>This function is called by WinInet whenever an event requiring user input occurs.</P>
+
+<PRE class="syntax"><B>DWORD IsDialogBoxHandled(</B>
+<B>  HWND </B><I>hWnd</I><B>,</B>
+<B>  DWORD </B><I>dwError</I><B>,</B>
+<B>  LPVOID </B><I>lpParam</I>
+<B>)</B></PRE>
+
+<H4 class="dtH4">Parameters</H4>
+
+<DL>
+<DT><I>hWnd </I></DT>
+
+<DD>[in] Handle to the parent window of the dialog box.</dd>
+
+<DT><I>dwError </I></DT>
+
+<DD>[in] Specifies the code for the error that requires a response from the user.</dd>
+
+<DT><I>lpParam </I></DT>
+
+<DD>[in, out] Specific information about the error code. See Remarks for more information.</dd>
+</DL>
+
+<H4 class="dtH4">Return Values</H4>
+
+<P>The <B>IsDialogBoxHandled </B>function should return one of the following values:
+
+<UL type="disc">
+	<LI>ERROR_SUCCESS if the function completed successfully.</li>
+
+	<LI>ERROR_CANCELLED if the function failed or was cancelled.</li>
+
+	<LI>ERROR_CALL_NOT_IMPLEMENTED to instruct WinInet to use the default message box.</li>
+</UL>
+
+<H4 class="dtH4">Remarks</H4>
+
+<P>The following table shows the WinInet error codes set in <I>dwError </I>and corresponding dialog box messages and <I>lpParam</I> values.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=30%>Error/<I>dwError</I> value</TH>
+<TH width=30%>Default Dialog Box</TH>
+<TH width=40%><I>lpParam</I> value</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=30%>0</TD>
+<TD width=30%>Prompts a user to go online. The user has been working offline with a cached page.</TD>
+<TD width=40%>NULL</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=30%>ERROR_INTERNET_INCORRECT_PASSWORD</TD>
+<TD width=30%>Indicates that the operation requires authentication and the correct password was not supplied.</TD>
+<TD width=40%>
+<DL>
+<DT>Pointer to an <B>InvalidPassType</B> structure. This is an internal WinInet structure that has the following signature:</DT>
+
+<DT><CODE><code class="ce">{LPSTR </code><I>lpszRealm</I><code class="ce">;</code></CODE><BR>
+<CODE><code class="ce">LPSTR </code><I>lpszUsername</I><code class="ce">;</code></CODE><BR>
+<CODE><code class="ce">LPSTR </code><I>lpszPassword</I><code class="ce">;</code></CODE><BR>
+<CODE><code class="ce">LPSTR </code><I>lpszHost</I><code class="ce">;</code></CODE><BR>
+<CODE><code class="ce">ULONG </code><I>ulMaxField</I><code class="ce">;</code></CODE><BR>
+<CODE><code class="ce">BOOL </code><I>fIsProxy</I><code class="ce">;</code></CODE><BR>
+<CODE><code class="ce">AuthType </code><I>eAuthType</I><code class="ce">;</code></CODE><BR>
+<code class="ce">}</code></DT>
+</DL>
+</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=30%>ERROR_HTTP_COOKIE_NEEDS_CONFIRMATION<BR>
+ERROR_HTTP_COOKIE_NEEDS_CONFIRMATION_EX</TD>
+<TD width=30%>Prompts a user to accept cookie or cancel the operation.</TD>
+<TD width=40%>
+<DL>
+<DT>Pointer to a <B>COOKIE_DLG_INFO</B> structure. This is an internal WinInet structure that has the following signature:
+<PRE class="code">{LPWSTR <I>pszServer</I>;
+PINTERNET_COOKIE <I>pic</I>;
+DWORD <I>dwStopWarning</I>;
+INT <I>cx</I>;
+INT <I>cy</I>;
+LPWSTR <I>pszHeader</I>;
+DWORD <I>dwOperation</I>;
+} </PRE>
+
+<P>Possible values for the <B>dwOperation</B> member are:<BR>
+COOKIE_OP_SET (0x01)<BR>
+COOKIE_OP_MODIFY (0x02)<BR>
+COOKIE_OP_GET (0x04)<BR>
+COOKIE_OP_SESSION (0x08)<BR>
+COOKIE_OP_PERSISTENT (0x10)<BR>
+COOKIE_OP_3RD_PARTY (0x20)<BR>
+Ignore all other members of this structure. They contain values used internally by WinInet.</P>
+</DT>
+</DL>
+</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=30%>ERROR_INTERNET_SEC_CERT_CN_INVALID</TD>
+<TD width=30%>The host name in the certificate is invalid or does not match. Prompts a user to continue or cancel.</TD>
+<TD width=40%>
+<DL>
+<DT>Pointer to <B>ERRORINFODLGTYPE</B> structure. This is an internal WinInet structure that has the following signature:
+<PRE class="code">{
+DWORD <I>dwDlgFlags</I>,
+DWORD <I>dwDlgId</I>, 
+HINTERNET <I>hInternet</I>, 
+LPVOID <I>lpVoid</I>;
+}</PRE>
+
+<P><I>dwDlgFlags</I>=(DLG_FLAGS_CAN_HAVE_CERT_INFO | DLG_FLAGS_IGNORE_CERT_CN_INVALID)</P>
+
+<P><I>dwDlgId</I>=IDD_BAD_CN</P>
+</DT>
+</DL>
+</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=30%>ERROR_INTERNET_SEC_CERT_DATE_INVALID</TD>
+<TD width=30%>The date in the certificate is invalid or has expired. Prompts a user to continue or cancel.</TD>
+<TD width=40%>
+<DL>
+<DT>Pointer to <B>ERRORINFODLGTYPE</B> structure. This is an internal WinInet structure that has the following signature:
+<PRE class="code">{
+DWORD <I>dwDlgFlags</I>,
+DWORD <I>dwDlgId</I>, 
+HINTERNET <I>hInternet</I>, 
+LPVOID <I>lpVoid</I>;
+}</PRE>
+
+<P><I>dwDlgFlags</I>=DLG_FLAGS_CAN_HAVE_CERT_INFO | DLG_FLAGS_IGNORE_CERT_DATE_INVALID)</P>
+
+<P><I>dwDlgId</I>=IDD_CERT_EXPIRED</P>
+</DT>
+</DL>
+</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=30%>ERROR_INTERNET_MIXED_SECURITY</TD>
+<TD width=30%>There is a mixture of secure and non-secure connections. Prompts a user to continue or cancel.</TD>
+<TD width=40%>NULL</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=30%>ERROR_INTERNET_HTTP_TO_HTTPS_ON_REDIR</TD>
+<TD width=30%>The nonsecure URL is being redirected to a secure URL. Prompts a user to continue or cancel.</TD>
+<TD width=40%>NULL</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=30%>ERROR_INTERNET_HTTPS_TO_HTTP_ON_REDIR</TD>
+<TD width=30%>The secure URL is being redirected to a nonsecure URL. Prompts a user to continue or cancel.</TD>
+<TD width=40%>NULL</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=30%>ERROR_HTTP_REDIRECT_NEEDS_CONFIRMATION</TD>
+<TD width=30%>Prompts the user to confirm the HTTP redirect request.</TD>
+<TD width=40%>NULL</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=30%>ERROR_INTERNET_POST_IS_NON_SECURE</TD>
+<TD width=30%>Data will be posted on a non-secure connection. Prompts a user to continue or cancel.</TD>
+<TD width=40%>NULL</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=30%>ERROR_INTERNET_CHG_POST_IS_NON_SECURE</TD>
+<TD width=30%>Indicates that the system is changing to non-secure post.</TD>
+<TD width=40%>NULL</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=30%>ERROR_INTERNET_INVALID_CA</TD>
+<TD width=30%>The certificate authority is invalid or incorrect. Prompts a user to continue or cancel.</TD>
+<TD width=40%>
+<DL>
+<DT>Pointer to <B>ERRORINFODLGTYPE</B> structure. This is an internal WinInet structure that has the following signature:
+<PRE class="code">{
+DWORD <I>dwDlgFlags</I>,
+DWORD <I>dwDlgId</I>, 
+HINTERNET <I>hInternet</I>, 
+LPVOID <I>lpVoid</I>;
+}</PRE>
+
+<P><I>dwDlgFlags</I>=DLG_FLAGS_CAN_HAVE_CERT_INFO | DLG_FLAGS_IGNORE_INVALID_CA)</P>
+
+<P><I>dwDlgId</I>=IDD_INVALID_CA</P>
+</DT>
+</DL>
+</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=30%>ERROR_INTERNET_CLIENT_AUTH_CERT_NEEDED</TD>
+<TD width=30%>A certificate is required to complete client authentication. Prompts a user to continue or cancel.</TD>
+<TD width=40%>NULL</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=30%>ERROR_INTERNET_UNABLE_TO_DOWNLOAD_SCRIPT</TD>
+<TD width=30%>Not used. Called internally when the download of the proxy auto-configuration script file fails.</TD>
+<TD width=40%>NULL</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=30%>ERROR_INTERNET_HTTPS_HTTP_SUBMIT_REDIR</TD>
+<TD width=30%>Indicates that the operation must be retried because of a security zone check.</TD>
+<TD width=40%>NULL</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=30%>ERROR_INTERNET_SEC_CERT_ERRORS</TD>
+<TD width=30%>The security certificate contained errors. Prompts a user to continue or cancel.</TD>
+<TD width=40%>
+<DL>
+<DT>Pointer to <B>ERRORINFODLGTYPE</B> structure. This is an internal WinInet structure that has the following signature:
+<PRE class="code">{
+DWORD <I>dwDlgFlags</I>,
+DWORD <I>dwDlgId</I>, 
+HINTERNET <I>hInternet</I>, 
+LPVOID <I>lpVoid</I>;
+}</PRE>
+
+<P>If the InternetSetOption sets INTERNET_OPTION_ERROR_MASK and passes the INTERNET_ERROR_MASK_COMBINED_SEC_CERT flag, then:</P>
+
+<P><I>dwDlgFlags</I>=DLG_FLAGS_CAN_HAVE_CERT_INFO.</P>
+
+<P><I>dwDlgId=</I>IDD_SEC_CERT_ERRORS.</P>
+</DT>
+</DL>
+</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=30%>ERROR_INTERNET_SEC_CERT_REV_FAILED</TD>
+<TD width=30%>Revocation information for the security certificate for this site is not available. Prompts a user to continue or cancel.</TD>
+<TD width=40%>
+<DL>
+<DT>Pointer to <B>ERRORINFODLGTYPE</B> structure. This is an internal WinInet structure that has the following signature:
+<PRE class="code">{
+DWORD <I>dwDlgFlags</I>,
+DWORD <I>dwDlgId</I>, 
+HINTERNET <I>hInternet</I>, 
+LPVOID <I>lpVoid</I>;
+}</PRE>
+
+<P><I>dwDlgFlags</I>=DLG_FLAGS_CAN_HAVE_CERT_INFO.</P>
+
+<P><I>dwDlgId=</I>IDD_REVOCATION_PROBLEM.</P>
+</DT>
+</DL>
+</TD>
+</TR>
+</table></div>
+
+<H4 class="dtH4">Requirements</H4>
+
+<P><B>OS Versions:</B> Windows CE .NET 4.2 and later.<BR>
+<B>Header:</B> Wininetui.h.<BR>
+<B>Link Library:</B> Wininetui.lib.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50oriwininetosdesigndevelopment.htm">WinInet OS Design Development</A> | <A HREF="wce50conreplacingthewininetuserinterface.htm">Replacement of the WinInet User Interface</A> | <A HREF="wce50lrfismessageboxhandledcallbackfunction.htm">IsMessageBoxHandled Callback Function</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

@@ -1,0 +1,98 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Retaining the dwCeLogTLBMiss Counter</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Retaining the dwCeLogTLBMiss Counter"/>
+<MSHelp:RLTitle Title="Retaining the dwCeLogTLBMiss Counter"/>
+<MSHelp:Keyword Index="A" Term="wce51grfRetainingDwCeLogTLBMissCounter"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Debugging"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="True"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="celog_event_tracking_customization.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="True"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_1073137">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce51grfretainingdwcelogtlbmisscounter"></A>Retaining the dwCeLogTLBMiss Counter</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>ARM and x86 CPUs handle translation look-aside buffer (TLB) misses with hardware. As a result, CeLog cannot record TLB-miss counts for these CPUs. MIPS and SH CPUs use software TLB-miss handling, and so for these CPUs it is possible for CeLog to record TLB-miss counts by communicating with the kernel TLB-miss handling routines.</P>
+
+<P>The kernel TLB-miss handling routines only record TLB-miss counts on profiling builds, so it is only possible for CeLog to record TLB-miss counts on these builds.</P>
+
+<P>The kernel variable <MSHelp:link keywords="wce50lrfdwCeLogTLBMiss" TABINDEX="0">dwCeLogTLBMiss</MSHelp:link> stores a count of TLB misses. The kernel TLB-miss handler updates this variable on each TLB miss. A pointer to this variable is passed to the event tracking library in the <MSHelp:link keywords="wce50lrfCeLogImportTable" TABINDEX="0">CeLogImportTable</MSHelp:link> structure. The kernel does not log CELID_SYSTEM_TLB events to record TLB misses. The kernel only updates the <B>dwCeLogTLBMiss</B> counter. If you implement an event-tracking library, your library will not receive notification of TLB misses other than the contents of the <B>dwCeLogTLBMiss</B> variable.</P>
+
+<P>To track the count of TLB misses, check whether the variable value has changed occasionally, and log the changes as CELID_SYSTEM_TLB events. The variable does not reset to 0, so you must store a copy of the previous value of the TLB miss counter, for use in measuring how much the value changed.</P>
+
+<P>The following sample code demonstrates how your event-tracking library can record TLB miss counts.</P>
+
+<PRE class="code">CeLogImportTable imports; // Initialization from IOCTL_CELOG_IMPORT not shown here
+
+void CheckTLBMisses()
+{
+    static DWORD dwPrevCount = 0;
+    DWORD dwCurrentCount;
+
+    // Keep a local copy in case it changes asynchronously
+    dwCurrentCount = *imports.pdwCeLogTLBMiss;
+
+    if (dwCurrentCount != dwPrevCount) {
+        // The TLB miss count has increased since last time this code executed.
+
+        // Convenient structure for logging the change in a CELID_SYSTEM_TLB event
+        struct {
+            CEL_HEADER header;
+            DWORD dwTLBMissCount;
+        } MyTLBEvent;
+        MyTLBEvent.header.ID = CELID_SYSTEM_TLB;
+        MyTLBEvent.header.Length = sizeof(MyTLBEvent.dwTLBMissCount);
+        MyTLBEvent.header.fTimeStamp = FALSE;
+        MyTLBEvent.dwTLBMissCount = dwCurrentCount &#0150; dwPrevCount;
+
+        // Now write the MyTLBEvent structure to the memory-mapped file
+        // or to a log file &#0150; not shown here.
+
+        // Remember the counter value for next time
+        dwPrevCount = dwCurrentCount;
+    }
+}</PRE>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce51conimplementingeventtrackinglibrary.htm">Implementing an Event Tracking Library</A> | <A HREF="wce51grfoalelementsforcelogeventtracking.htm">OAL Elements for CeLog Event Tracking</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

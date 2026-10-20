@@ -1,0 +1,87 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Design Considerations for a Network Performance Test</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Design Considerations for a Network Performance Test"/>
+<MSHelp:RLTitle Title="Design Considerations for a Network Performance Test"/>
+<MSHelp:Keyword Index="A" Term="wce50conDesignConsiderationsforaNetworkPerformanceTest"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Driver"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="False"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="ndisminiportdriveroptimization.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="True"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+<MSHelp:Attr Name="PBFeature" Value="NetworkDriver"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_3018221">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50condesignconsiderationsforanetworkperformancetest"></A>Design Considerations for a Network Performance Test</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>Prior to optimizing a network driver, identify the performance improvements you are seeking. For example, your current hardware and driver might perform at a rate that is lower than expected. The first step in addressing a performance issue is to design a network performance test for your driver and hardware.</P>
+
+<P>You must specifically design a network performance test. It is not sufficient to use an application that employs networking functionality and additional technology to test network performance. For example, Microsoft&reg; Internet Explorer uses networking functionality to download content for Web pages, but also uses graphics capabilities to generate and display Web pages. If you use any technologies other than networking functionality, your test results will not necessarily indicate the maximum performance for a specified set of hardware.</P>
+
+<P>A typical design of a network performance test consists of a client desktop computer and a server. Both the client desktop computer and the server repeatedly call the <MSHelp:link keywords="wce50lrfsend" TABINDEX="0">send</MSHelp:link>, <MSHelp:link keywords="wce50lrfrecv" TABINDEX="0">recv</MSHelp:link> and <MSHelp:link keywords="wce50lrfrecvfrom" TABINDEX="0">recvfrom</MSHelp:link> Winsock functions to send or receive data over TCP\IP or User Datagram Protocol (UDP). The following code example shows the main loop of a TCP or UDP networking performance test.</P>
+
+<PRE class="code">//Set up connection SOCKET sd.
+DWORD dwBytesSent = 0;
+DWORD dwTime = GetTickCount();
+while(dwBytesSent &lt; dwTotalBytesReq){
+     int nRet = send(sd, buf, dwBufSize- cwBytesSent, 0)
+     if(nRet == SOCKET_ERROR || nRet == 0){
+          //Handle error or TCP closed connection.
+          break;
+     }
+     dwBytesSent += nRet;
+}
+//Close connection.
+_tprintf(TEXT("Sent %ld bytes in %ld ms; throughput: %f Mbps\n"),
+     dwBytesSent,
+     dwTime,
+     (float)dwBytesSent * 8. / (float)dwTime / 1000.);</PRE>
+
+<P>The connection setup and shutdown times, along with all other operations except the sending of data, are excluded from the block where the send or receive throughput is measured. In addition, there are no calls to the <MSHelp:link keywords="wce50lrfselect" TABINDEX="0">select</MSHelp:link> or <MSHelp:link keywords="wce50lrfsetsockoptWindowsSockets" TABINDEX="0">setsockopt (Windows Sockets)</MSHelp:link> functions from within the main send loop. Avoid excess function calls. These can have a negative impact on performance.</P>
+
+<P>For a Microsoft Windows&reg; CE-based device with x-86, Microsoft recommends that you design your performance test so that it is compatible with both Windows CE and a Windows-based desktop OS. This design helps you compare results when you use the same hardware on different OSs. </P>
+
+<P>Once you have designed your network performance test, you can implement your test. For more information, see <A HREF="wce50tskimplementationofanetworkperformancetest.htm">Implementing a Network Performance Test</A>.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50conoptimizationofndisminiportdriverperformance.htm">Improving Performance of an NDIS Miniport Driver</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

@@ -1,0 +1,145 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>_fpieee_flt</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="_fpieee_flt"/>
+<MSHelp:RLTitle Title="_fpieee_flt"/>
+<MSHelp:Keyword Index="K" Term="_fpieee_flt"/>
+<MSHelp:Keyword Index="A" Term="wce50lrfusfpieeeusflt"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Application"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="False"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="Technology" Value="CRT"/>
+<MSHelp:Attr Name="TechnologyVers" Value="kbCRT"/>
+<MSHelp:Attr Name="TopicType" Value="apiref"/>
+<MSHelp:Attr Name="Filename" Value="crt2.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="False"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+<MSHelp:Attr Name="APIName" Value="_fpieee_flt"/>
+<MSHelp:Attr Name="APIType" Value="DLLExport"/>
+<MSHelp:Attr Name="APILocation" Value="coredll.dll"/>
+<MSHelp:Attr Name="PBFeature" Value="SYSGEN_FULL_CRT"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_3026869">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50lrfusfpieeeusflt"></A>_fpieee_flt</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>Invokes user-defined trap handler for IEEE floating-point exceptions.</P>
+
+<PRE class="syntax"><B>int _fpieee_flt( </B>
+<B>&nbsp;&nbsp;&nbsp;unsigned long</B> <I>exc_code</I><B>,</B> 
+   <B>struct</B> <B>_EXCEPTION_POINTERS*</B> <I>exc_info</I><B>,</B> 
+   <B>int</B> <I>handler</I><B>(_FPIEEE_RECORD *) </B>
+<B>);</B></PRE>
+
+<H4 class="dtH4">Parameters</H4>
+
+<DL>
+<DT><I>exc_code</I></DT>
+
+<DD>Exception code.</dd>
+
+<DT><I>exc_info</I></DT>
+
+<DD>Pointer to the Windows NT exception information structure.</dd>
+
+<DT><I>handler</I></DT>
+
+<DD>Pointer to user's IEEE trap-handler routine.</dd>
+</DL>
+
+<H4 class="dtH4">Return Values</H4>
+
+<P>The return value of <B>_fpieee_flt</B> is the value returned by handler. As such, the IEEE filter routine can be used in the except clause of a structured exception-handling (SEH) mechanism.</P>
+
+<H4 class="dtH4">Remarks</H4>
+
+<P>The <B>_fpieee_flt</B> function invokes a user-defined trap handler for IEEE floating-point exceptions and provides it with all relevant information. </P>
+
+<P>This routine serves as an exception filter in the SEH mechanism, which invokes your own IEEE exception handler when necessary.</P>
+
+<P>The _FPIEEE_RECORD structure, defined in FPIEEE.H, contains information pertaining to an IEEE floating-point exception. This structure is passed to the user-defined trap handler by <B>_fpieee_flt</B>.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=38%>_FPIEEE_RECORD Field</TH>
+<TH width=62%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=38%><B>unsigned int RoundingMode, </B><BR>
+<B>unsigned int Precision</B></TD>
+<TD width=62%>Contain information on the floating-point environment at the time the exception occurred.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=38%><B>unsigned int Operation</B></TD>
+<TD width=62%>Indicates the type of operation that caused the trap. 
+<P>If the type is a comparison (<B>_FpCodeCompare</B>), you can supply one of the special _FPIEEE_COMPARE_RESULT values (as defined in FPIEEE.H) in the Result. Value field. </P>
+
+<P>The conversion type (<B>_FpCodeConvert</B>) indicates that the trap occurred during a floating-point conversion operation. </P>
+
+<P>You can look at the Operand1 and Result types to determine the type of conversion being attempted.</P>
+</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=38%><B>_FPIEEE_VALUE Operand1, _FPIEEE_VALUE Operand2, _FPIEEE_VALUE Result</B></TD>
+<TD width=62%>Indicate the types and values of the proposed result and operands:
+<UL type="disc">
+	<LI><B>OperandValid. </B>Flag indicating whether the responding value is valid.</li>
+
+	<LI><B>Format. </B>Data type of the corresponding value. 
+<P>The format type might be returned even if the corresponding value is not valid.
+</li>
+
+	<LI><B>Value. </B>Result or operand data value.</li>
+</UL>
+</TD>
+</TR>
+</table></div>
+
+<H4 class="dtH4">Requirements</H4>
+
+<P><B>OS Versions: </B>Windows CE 2.0 and later.<BR>
+<B>Header: </B>stdlib.h.<BR>
+<B>Link Library: </B>coredll.dll.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50confloating-pointsupport.htm">Floating-Point Support</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

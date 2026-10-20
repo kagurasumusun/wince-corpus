@@ -1,0 +1,96 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>When Reference Counts will Change</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="When Reference Counts will Change"/>
+<MSHelp:RLTitle Title="When Reference Counts will Change"/>
+<MSHelp:Keyword Index="A" Term="mob5conWhenReferenceCountswillChange"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Application"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbsmartphone"/>
+<MSHelp:Attr Name="Product" Value="kbPocketPC"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="Technology" Value="kbPocketPC"/>
+<MSHelp:Attr Name="Technology" Value="kbSmartphone"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="directdraw_concepts_magneto.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="False"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_1073273">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Windows Mobile Version 5.0 SDK<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="mob5conwhenreferencecountswillchange"></A>When Reference Counts will Change</H1>
+<!--Feedback Link Top Start-->
+<P CLASS="feedback"><font size="1"><a href="mailto:medfdbk&#64;microsoft.com?subject=Product: Windows Mobile | Version: 5.0 | Release: SDK | Title: When Reference Counts will Change | Filename: mob5conwhenreferencecountswillchange.htm | Built on: Wednesday, September 14, 2005">Send Feedback</a> on this topic to the authors</font></p>
+<!--Feedback Link Top End-->
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>There are several DirectDraw methods that affect the reference count of a surface, and a few that affect other objects you can associate with a surface. You can think of these situations as surface-only changes and cross-object changes.
+
+<DL>
+<DT><B>Surface-only changes</B></DT>
+
+<DD>Surface-only changes, as the name states, only affect the reference count of a surface object. 
+
+<P>For example, you might use the <A HREF="mob5lrfidirectdraw4enumsurfaces.htm">IDirectDraw::EnumSurfaces</A> to enumerate the current surfaces that fit a particular description. When the method invokes the callback function that you provide, it passes a pointer to an <A HREF="mob5lrfidirectdrawsurface5.htm">IDirectDrawSurface</A> interface, but it increments the reference count for the object before your application receives the pointer. 
+
+
+<P>It is your responsibility to release the object when you are finished with it. This will typically be at the end of your callback routine, or later if you choose to keep the object.
+
+
+<P>Most other surface-only changes affect the reference counts of complex surfaces, such as a flipping chain. Reference counts are a little more tricky for complex surfaces, because (in most cases) DirectDraw treats a complex surface as if it was a single object, even though it is a set of surfaces. 
+</dd>
+
+<DT><B>Cross-object changes</B></DT>
+
+<DD>Cross-object reference count changes occur when you create an association between a surface and another object that performs a task for the surface, such as a clipper.
+
+<P>The <A HREF="mob5lrfidirectdrawsurface5setclipper.htm">IDirectDrawSurface::SetClipper</A> method increments the reference count of the object being attached. After they are attached, the surface manages them; if the surface is released, it automatically releases any objects it is using. 
+
+
+<P>(For this reason, some applications release the interface for the object after these calls succeed. This is a perfectly valid practice.) 
+
+
+<P>Once a clipper is attached to a surface, you can call the <A HREF="mob5lrfidirectdrawsurface5getclipper.htm">IDirectDrawSurface::GetClipper</A> method to retrieve them again. 
+
+
+<P>Because these methods return a copy of an interface pointer, they implicitly increment the reference count for the object being retrieved. 
+
+
+<P>When you are done with the interfaces, do not forget to release them &#0151; the objects that the interfaces represent will not disappear so long as the surface they are attached to still holds a reference to them.
+</dd>
+</DL>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Feedback Link Bottom Start-->
+<p><font size="1"><a href="mailto:medfdbk&#64;microsoft.com?subject=Product: Windows Mobile | Version: 5.0 | Release: SDK | Title: When Reference Counts will Change | Filename: mob5conwhenreferencecountswillchange.htm | Built on: Wednesday, September 14, 2005">Send Feedback</a> on this topic to the authors</font></p>
+<!--Feedback Link Bottom End-->
+<!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="mob5conCopyrightInformationForMagneto" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link></font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

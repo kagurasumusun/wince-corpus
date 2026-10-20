@@ -1,0 +1,114 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>NdisMWriteLogData</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="NdisMWriteLogData"/>
+<MSHelp:RLTitle Title="NdisMWriteLogData"/>
+<MSHelp:Keyword Index="K" Term="NdisMWriteLogData"/>
+<MSHelp:Keyword Index="A" Term="wce50lrfNdisMWriteLogData"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Driver"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="False"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="apiref"/>
+<MSHelp:Attr Name="Filename" Value="ndis_library_functions2.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="False"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+<MSHelp:Attr Name="APIName" Value="NdisMWriteLogData"/>
+<MSHelp:Attr Name="APIType" Value="DLLExport"/>
+<MSHelp:Attr Name="APILocation" Value="Ndis.dll"/>
+<MSHelp:Attr Name="PBFeature" Value="NetworkDriver"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_3018564">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50lrfndismwritelogdata"></A>NdisMWriteLogData</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>This function transfers driver-supplied information into the log file for consumption and display by a driver-dedicated Microsoft&reg; Win32&reg; application.</P>
+
+<PRE class="syntax"><B>NDIS_STATUS NdisMWriteLogData(</B>
+<B>  NDIS_HANDLE</B> <I>LogHandle</I><B>,</B>
+<B>  PVOID</B> <I>LogBuffer</I><B>,</B>
+<B>  UINT</B> <I>LogBufferSize</I>
+<B>);</B></PRE>
+
+<H4 class="dtH4">Parameters</H4>
+
+<DL>
+<DT><I>LogHandle</I></DT>
+
+<DD>[in] Specifies the handle returned by <A HREF="wce50lrfndismcreatelog.htm">NdisMCreateLog</A>.</dd>
+
+<DT><I>LogBuffer</I></DT>
+
+<DD>[in] Points to a driver-allocated buffer containing the information to be written.</dd>
+
+<DT><I>LogBufferSize</I></DT>
+
+<DD>[in] Specifies how many bytes of data to copy into the log file.</dd>
+</DL>
+
+<H4 class="dtH4">Return Values</H4>
+
+<DL>
+<DT>NDIS_STATUS_SUCCESS</DT>
+
+<DD>The driver-supplied data at <I>LogBuffer</I> has been copied into the log file.</dd>
+
+<DT>NDIS_STATUS_BUFFER_OVERFLOW</DT>
+
+<DD>The given <I>LogBufferSize</I> is too large, that is, larger than the log file itself.</dd>
+</DL>
+
+<H4 class="dtH4">Remarks</H4>
+
+<P>If the driver-dedicated application has an outstanding request for log file data, <B>NdisMWriteLogData</B> satisfies that request as soon as it has copied the driver-supplied information into the log file.</P>
+
+<P>The driver must release any spin lock it is holding before calling <B>NdisMWriteLogData</B>.</P>
+
+<P><B>NdisMWriteLogData</B> does not recognize boundaries between log records, nor does the Win32 function, <B>DeviceIoControl</B>, which applications can call with IOCTL_NDIS_GET_LOG_DATA to retrieve data written to an NDIS log file by an NDIS NIC driver. <B>NdisMWriteLogData</B> writes all miniport-supplied data at <I>LogBuffer</I> into the log file as a byte stream. <B>DeviceIoControl</B> reads the data from such a log as a byte stream, as well.</P>
+
+<P>Consequently, an application reading an NDIS log must collect retrieved data into records. To aid such an application in collecting variable-length records, any miniport writing to such a log can insert a marker at the beginning of each record. Then, the application formatting the retrieved data can search for these markers to determine the start of each record.</P>
+
+<H4 class="dtH4">Requirements</H4>
+
+<P><B>OS Versions:</B> Windows CE .NET 4.0 and later.<BR>
+<B>Header:</B> Ndis.h.<BR>
+<B>Link Library:</B> Ndis.dll.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50lrfndisallocatememory.htm">NdisAllocateMemory</A> | <A HREF="wce50lrfndismcloselog.htm">NdisMCloseLog</A> | <A HREF="wce50lrfndismcreatelog.htm">NdisMCreateLog</A> | <A HREF="wce50lrfndismflushlog.htm">NdisMFlushLog</A> | <A HREF="wce50lrfndisreleasespinlock.htm">NdisReleaseSpinLock</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

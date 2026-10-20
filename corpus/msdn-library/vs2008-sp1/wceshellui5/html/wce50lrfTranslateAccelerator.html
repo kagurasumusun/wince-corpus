@@ -1,0 +1,124 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>TranslateAccelerator</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="TranslateAccelerator"/>
+<MSHelp:RLTitle Title="TranslateAccelerator"/>
+<MSHelp:Keyword Index="K" Term="TranslateAccelerator"/>
+<MSHelp:Keyword Index="A" Term="wce50lrfTranslateAccelerator"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Feature"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="apiref"/>
+<MSHelp:Attr Name="Filename" Value="keybrd_mwmgr.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="False"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+<MSHelp:Attr Name="APIName" Value="TranslateAccelerator"/>
+<MSHelp:Attr Name="APIType" Value="LibDef"/>
+<MSHelp:Attr Name="APILocation" Value="Accel.lib"/>
+<MSHelp:Attr Name="PBFeature" Value="UI"/>
+<MSHelp:Attr Name="PBOnly" Value="False"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_3022170">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50lrftranslateaccelerator"></A>TranslateAccelerator</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>This function processes accelerator keys for menu commands. <B>TranslateAccelerator</B> translates a <A HREF="wce50lrfwmkeydown.htm">WM_KEYDOWN</A> or <A HREF="wce50lrfwmsyskeydown.htm">WM_SYSKEYDOWN</A> message to a <A HREF="wce50lrfwmcommand.htm">WM_COMMAND</A> message and then sends the WM_COMMAND message directly to the appropriate window procedure. <B>TranslateAccelerator</B> does not return until the window procedure has processed the message.</P>
+
+<PRE class="syntax"><B>int</B> <B>TranslateAccelerator(</B>
+  <B>HWND</B> <I>hWnd</I><B>, </B>
+  <B>HACCEL</B> <I>hAccTable</I><B>, </B>
+  <B>LPMSG</B> <I>lpMsg </I>
+<B>);</B> </PRE>
+
+<H4 class="dtH4">Parameters</H4>
+
+<DL>
+<DT><I>hWnd</I></DT>
+
+<DD>Handle to the window whose messages are to be translated. </dd>
+
+<DT><I>hAccTable</I></DT>
+
+<DD>Handle to an accelerator table. The accelerator table must have been loaded by a call to the <A HREF="wce50lrfloadaccelerators.htm">LoadAccelerators</A> function or created by a call to the <A HREF="wce50lrfcreateacceleratortable.htm">CreateAcceleratorTable</A> function. </dd>
+
+<DT><I>lpMsg</I></DT>
+
+<DD>Long pointer to an <A HREF="wce50lrfmsg.htm">MSG</A> structure that contains message information retrieved from the calling thread's message queue by using the <A HREF="wce50lrfgetmessage.htm">GetMessage</A> or <A HREF="wce50lrfpeekmessage.htm">PeekMessage</A> function. </dd>
+</DL>
+
+<H4 class="dtH4">Return Values</H4>
+
+<P>Nonzero indicates success. Zero indicates failure. To get extended error information, call <MSHelp:link keywords="wce50lrfGetLastError" TABINDEX="0">GetLastError</MSHelp:link>.</P>
+
+<H4 class="dtH4">Remarks</H4>
+
+<P>All accelerator key messages are translated into WM_COMMAND messages; Windows CE does not support the WM_SYSCOMMAND message. </P>
+
+<P>To differentiate the message that this function sends from messages sent by menus or controls, the high-order word of the <I>wParam</I> parameter of the WM_COMMAND or WM_SYSCOMMAND message contains the value 1. </P>
+
+<P>Accelerator key combinations used to select items from the <B>window</B> menu are translated into WM_SYSCOMMAND messages; all other accelerator key combinations are translated into WM_COMMAND messages. </P>
+
+<P>When <B>TranslateAccelerator</B> returns a nonzero value and the message is translated, the application should not use the <A HREF="wce50lrftranslatemessage.htm">TranslateMessage</A> function to process the message again. </P>
+
+<P>An accelerator need not correspond to a menu command. </P>
+
+<P>If the accelerator command corresponds to a menu item, the application is sent a <A HREF="wce50lrfwminitmenupopup.htm">WM_INITMENUPOPUP</A> message, as if the user were trying to display the menu. However, these messages are not sent if any of the following conditions exist: 
+
+<UL type="disc">
+	<LI>The window is disabled. </li>
+
+	<LI>The menu item is disabled. </li>
+
+	<LI>The accelerator key combination does not correspond to an item on the <B>window</B> menu and the window is minimized. </li>
+
+	<LI>A mouse capture is in effect. For information about mouse capture, see the <A HREF="wce50lrfsetcapture.htm">SetCapture</A> function. </li>
+</UL>
+
+<P>If the specified window is the active window and no window has the keyboard focus (which is generally the case if the window is minimized), <B>TranslateAccelerator</B> translates <A HREF="wce50lrfwmsyskeyup.htm">WM_SYSKEYUP</A> and WM_SYSKEYDOWN messages instead of WM_KEYUP and WM_KEYDOWN messages. </P>
+
+<P>If an accelerator keystroke occurs that corresponds to a menu item when the window that owns the menu is minimized, <B>TranslateAccelerator</B> does not send a WM_COMMAND message. However, if an accelerator keystroke occurs that does not match any of the items in the window's menu or in the <B>window</B> menu, the function sends a WM_COMMAND message, even if the window is minimized. </P>
+
+<H4 class="dtH4">Requirements</H4>
+
+<P><B>OS Versions:</B> Windows CE 1.0 and later.<BR>
+<B>Header:</B> Winuser.h.<BR>
+<B>Link Library:</B> Accel.lib.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50lrfcreateacceleratortable.htm">CreateAcceleratorTable</A> | <A HREF="wce50lrfgetmessage.htm">GetMessage</A> | <A HREF="wce50lrfloadaccelerators.htm">LoadAccelerators</A> | <A HREF="wce50lrfmsg.htm">MSG</A> | <A HREF="wce50lrfpeekmessage.htm">PeekMessage</A> | <A HREF="wce50lrfsetcapture.htm">SetCapture</A> | <A HREF="wce50lrftranslatemessage.htm">TranslateMessage</A> | <A HREF="wce50lrfwmcommand.htm">WM_COMMAND</A> | <A HREF="wce50lrfwminitmenupopup.htm">WM_INITMENUPOPUP</A> | <A HREF="wce50lrfwmkeydown.htm">WM_KEYDOWN</A> | <A HREF="wce50lrfwmsyskeydown.htm">WM_SYSKEYDOWN</A> | <A HREF="wce50grfkeyboardfunctions.htm">Keyboard Functions</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

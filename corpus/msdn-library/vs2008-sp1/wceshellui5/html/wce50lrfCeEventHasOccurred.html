@@ -1,0 +1,111 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>CeEventHasOccurred</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="CeEventHasOccurred"/>
+<MSHelp:RLTitle Title="CeEventHasOccurred"/>
+<MSHelp:Keyword Index="K" Term="CeEventHasOccurred"/>
+<MSHelp:Keyword Index="A" Term="wce50lrfCeEventHasOccurred"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Feature"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="apiref"/>
+<MSHelp:Attr Name="Filename" Value="notif_f.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="True"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+<MSHelp:Attr Name="APIName" Value="CeEventHasOccurred"/>
+<MSHelp:Attr Name="APIType" Value="LibDef"/>
+<MSHelp:Attr Name="APILocation" Value="Coredll.lib"/>
+<MSHelp:Attr Name="PBFeature" Value="UI"/>
+<MSHelp:Attr Name="PBOnly" Value="True"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="AllowSearch" CONTENT="True">
+<META NAME="msdnID" CONTENT="_3010691">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50lrfceeventhasoccurred"></A>CeEventHasOccurred</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>This function is used by operating system (OS) components and by device drivers to send a notification that one of the supported events on the system has occurred. </P>
+
+<P>This function is only available to platform and driver developers.</P>
+
+<PRE class="syntax"><B>BOOL CeEventHasOccurred(</B>
+<B>  LONG </B><I>lWhichEvent</I><B>,</B>
+<B>  TCHAR* </B><I>pwszEndOfCommandLine</I>
+<B>);</B></PRE>
+
+<H4 class="dtH4">Parameters</H4>
+
+<DL>
+<DT><I>lWhichEvent</I></DT>
+
+<DD>[in] Identifies the event that just occurred. It must be one of the events supported by <MSHelp:link keywords="wce50lrfCeRunAppAtEvent" TABINDEX="0">CeRunAppAtEvent</MSHelp:link>.</dd>
+
+<DT><I>pwszEndOfCommandLine</I></DT>
+
+<DD>[in] Pointer to a string that contains a message associated with the event that just occurred. This string is appended to the command line that launches the application associated with the event.</dd>
+</DL>
+
+<H4 class="dtH4">Remarks</H4>
+
+<P>Calls to <B>CeEventHasOccurred</B> notify the OS that the event identified by the <I>lWhichEvent</I> parameter has just occurred. If an application has previously been associated with that event through a call to <MSHelp:link keywords="wce50lrfCeRunAppAtEvent" TABINDEX="0">CeRunAppAtEvent</MSHelp:link>, then it is launched with the command-line parameters supplied by <B>CeRunAppAtEvent</B> and <I>pwszEndOfCommandLine</I>. For example, an application named Program.exe could be associated with COM port detection using the following code:</P>
+
+<PRE class="code">CeRunAppAtEvent("Program.exe", NOTIFICATION_EVENT_RS232_DETECTED);</PRE>
+
+<P>Then, the serial driver could signal a newly detected COM port with the following code:</P>
+
+<PRE class="code">CeEventHasOccurred (NOTIFICATION_EVENT_RS232_DETECTED, L"A new COM
+ port has been detected!");</PRE>
+
+<P>When the event is triggered, the application would be launched as though you entered the following command on the command line:</P>
+
+<PRE class="code">program.exe AppRunAtRs232Detect A new COM port has been detected!</PRE>
+
+<P>In this example, <B>CeRunAppAtEvent</B> automatically adds the string <CODE>AppRunAtRs232Detect</CODE> to the command line.</P>
+
+<P>To add your own notification event to your system, you must modify <A HREF="wce50lrfcenotifypublicfilterevent.htm">CeNotifyPublic_FilterEvent</A> to recognize your event. Next, call <B>CeEventHasOccurred</B> from your software component or device driver, as appropriate.</P>
+
+<P>The delay for blocking the <B>CeEventHasOccured</B> function while the OS initializes can be set with the <B>ShortApiTimeout</B> registry value. For more information, see <A HREF="wce50lrfgeneralgwesregistrysettings.htm">General GWES Registry Settings</A>.</P>
+
+<H4 class="dtH4">Requirements</H4>
+
+<P><B>OS Versions:</B> Windows CE 2.0 and later.<BR>
+<B>Header:</B> Notify.h.<BR>
+<B>Link Library:</B> Coredll.lib.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50grfnotificationfunctions.htm">Notification Functions</A> | <MSHelp:link keywords="wce50lrfCeRunAppAtEvent" TABINDEX="0">CeRunAppAtEvent</MSHelp:link></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

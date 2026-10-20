@@ -1,0 +1,125 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>GetModuleHandle</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="GetModuleHandle"/>
+<MSHelp:RLTitle Title="GetModuleHandle"/>
+<MSHelp:Keyword Index="K" Term="GetModuleHandle"/>
+<MSHelp:Keyword Index="A" Term="wce50lrfGetModuleHandle"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Feature"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="apiref"/>
+<MSHelp:Attr Name="Filename" Value="dll_reference.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="False"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+<MSHelp:Attr Name="APIName" Value="GetModuleHandle"/>
+<MSHelp:Attr Name="APIType" Value="LibDef"/>
+<MSHelp:Attr Name="APILocation" Value="Coredll.lib, Nk.lib"/>
+<MSHelp:Attr Name="PBFeature" Value="CORE"/>
+<MSHelp:Attr Name="PBOnly" Value="False"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_3002513">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50lrfgetmodulehandle"></A>GetModuleHandle</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>This function returns a module handle for the specified module if the file is mapped into the address space of the calling process. </P>
+
+<PRE class="syntax"><B>HMODULE GetModuleHandle( </B>
+  <B>LPCTSTR</B> <I>lpModuleName</I>
+<B>);</B></PRE>
+
+<H4 class="dtH4">Parameters</H4>
+
+<DL>
+<DT><I>lpModuleName</I></DT>
+
+<DD>[in] Pointer to a null-terminated string that contains the name of the module, which must be a DLL file. 
+
+<P>If the file name extension is omitted, the default library extension .dll is appended. 
+
+
+<P>The file name string can include a trailing point character (.) to indicate that the module name has no extension. 
+
+
+<P>If this parameter is NULL, <B>GetModuleHandle</B> returns a handle to the file used to create the calling process. All paths are ignored; only the file name and extension are used.
+
+
+<P>The file extensions .dll and .cpl are treated as identical when comparing module names.
+</dd>
+</DL>
+
+<H4 class="dtH4">Return Values</H4>
+
+<P>A handle to the specified module indicates success. </P>
+
+<P>NULL indicates failure. </P>
+
+<P>To get extended error information, call <A HREF="wce50lrfgetlasterror.htm">GetLastError</A>. </P>
+
+<H4 class="dtH4">Remarks</H4>
+
+<P>The returned handle is not global, inheritable, or duplicative, and it cannot be used by another process. </P>
+
+<P>The handles returned by <B>GetModuleHandle</B> and <A HREF="wce50lrfloadlibrary.htm">LoadLibrary</A> can be used in the same functions &#0151; for example, <A HREF="wce50lrfgetprocaddress.htm">GetProcAddress</A>, <A HREF="wce50lrffreelibrary.htm">FreeLibrary</A>, or <MSHelp:link keywords="wce50lrfLoadResource" TABINDEX="0">LoadResource</MSHelp:link>. </P>
+
+<P>The difference between the two functions involves the reference count: 
+
+<UL type="disc">
+	<LI><B>LoadLibrary</B> maps the module into the address space of the calling process, if necessary, and increments the module's reference count, if it is already mapped. </li>
+
+	<LI><B>GetModuleHandle</B>, however, returns the handle to a mapped module without incrementing its reference count. </li>
+</UL>
+
+<BLOCKQUOTE class="dtBlock">
+<b class="le">Note</b>&nbsp;&nbsp;&nbsp;The reference count is used in <B>FreeLibrary</B> to determine whether to unmap the function from the address space of the process. For this reason, use care when using a handle returned by <B>GetModuleHandle</B> in a call to <B>FreeLibrary.</B> Doing so can cause a DLL module to be unmapped prematurely. </BLOCKQUOTE>
+
+<P>This function must also be used carefully in a multithreaded application. </P>
+
+<P>There is no guarantee that the module handle remains valid between the time this function returns the handle and the time it is used by another function. </P>
+
+<P>For example, a thread might retrieve a module handle by calling <B>GetModuleHandle</B>, but before the thread uses the handle, a second thread could free the module and the system could load another module, giving it the same handle as the module that was recently freed. The first thread would then be left with a module handle that refers to a module different from the one intended. </P>
+
+<H4 class="dtH4">Requirements</H4>
+
+<P><B>OS Versions:</B> Windows CE 2.10 and later.<BR>
+<B>Header:</B> Winbase.h.<BR>
+<B>Link Library:</B> Coredll.lib, Nk.lib.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50lrffreelibrary.htm">FreeLibrary</A> | <A HREF="wce50lrfgetprocaddress.htm">GetProcAddress</A> | <A HREF="wce50lrfloadlibrary.htm">LoadLibrary</A> | <MSHelp:link keywords="wce50lrfLoadResource" TABINDEX="0">LoadResource</MSHelp:link></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

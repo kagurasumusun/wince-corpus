@@ -1,0 +1,75 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>CeLog IOCTL Interface</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="CeLog IOCTL Interface"/>
+<MSHelp:RLTitle Title="CeLog IOCTL Interface"/>
+<MSHelp:Keyword Index="A" Term="wce51conCeLogIOCTLInterface"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Debugging"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="True"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="celog_event_tracking_customization.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="False"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_1073627">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce51concelogioctlinterface"></A>CeLog IOCTL Interface</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>To communicate with the kernel, an event tracking library uses the interface provided by the <MSHelp:link keywords="wce50lrfKernelLibIoControl" TABINDEX="0">KernelLibIoControl</MSHelp:link> function and the set of CeLog IOCTLs that your library can call. For specific information about the CeLog IOCTLs, see <MSHelp:link keywords="wce50grfToolsIOCTLs" TABINDEX="0">Tools IOCTLs</MSHelp:link> </P>
+
+<P>Your event-tracking library can present one more interface for use by applications. To call into your library, your library can export <MSHelp:link keywords="wce50lrfIOControl" TABINDEX="0">IOControl</MSHelp:link>, and applications can call the <B>KernelLibIoControl</B> function. In this manner, you can define your own IOCTL values for applications to call extend the functionality of your library.</P>
+
+<P>For an application to use <B>KernelLibIoControl </B>to call into your library, the application must first open a handle to your library by calling <MSHelp:link keywords="wce50lrfLoadKernelLibrary" TABINDEX="0">LoadKernelLibrary</MSHelp:link>. Note, that the application must be trusted.</P>
+
+<P>Once an event-tracking library is loaded into the kernel, there is no way to unload it. The library remains loaded until the device is rebooted. However, the library can de-register so that its functions no longer receive event tracking calls from the kernel, by calling <MSHelp:link keywords="wce50lrfIOCTL_CELOG_DEREGISTER" TABINDEX="0">IOCTL_CELOG_DEREGISTER</MSHelp:link>. The library registers and deregisters dynamically as needed.</P>
+
+<P>The kernel allows multiple event tracking libraries to be loaded and registered for event tracking calls simultaneously. The kernel ensures that all libraries receive the calls. If you have more than one event-tracking library loaded at the same time, the following information might be helpful:
+
+<UL type="disc">
+	<LI>Only one timer frequency can be reported in the CELID_LOG_MARKER event. If more than one event-tracking library reports a non-zero timer frequency in their <B>CeLogExportTable</B>, then the kernel uses the frequency from the most recently registered library when it logs this event.</li>
+
+	<LI>The set of zones that are enabled across the system is a bitmask of the zones from all event-tracking libraries. Every time the zones change, the kernel queries all event-tracking libraries to learn their individual zone settings. Every zone that is enabled in at least one library is enabled overall. As a result, libraries can receive logging calls for zones that they individually have not enabled.
+<P>When an event tracking library changes its own zones, the library can call <MSHelp:link keywords="wce50lrfIOCTL_CELOG_REPORTZONECHANGE" TABINDEX="0">IOCTL_CELOG_REPORTZONECHANGE</MSHelp:link> to make the kernel re-calculate the overall zone settings.
+</li>
+</UL>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50conreplacingthedefaultcelogdll.htm">Registering an Event Tracking Library</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

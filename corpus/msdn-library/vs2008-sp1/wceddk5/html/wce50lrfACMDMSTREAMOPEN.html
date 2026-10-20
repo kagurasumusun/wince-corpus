@@ -1,0 +1,121 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>ACMDM_STREAM_OPEN</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="ACMDM_STREAM_OPEN"/>
+<MSHelp:RLTitle Title="ACMDM_STREAM_OPEN"/>
+<MSHelp:Keyword Index="K" Term="ACMDM_STREAM_OPEN"/>
+<MSHelp:Keyword Index="A" Term="wce50lrfACMDMSTREAMOPEN"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Driver"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="False"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="apiref"/>
+<MSHelp:Attr Name="Filename" Value="acm_messages.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="False"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+<MSHelp:Attr Name="APIName" Value="ACMDM_STREAM_OPEN"/>
+<MSHelp:Attr Name="PBFeature" Value="AudioDriver"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_3017165">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50lrfacmdmstreamopen"></A>ACMDM_STREAM_OPEN</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>This message requests an ACM driver either to open a conversion stream or to indicate whether the specified conversion is supported.</P>
+
+<H4 class="dtH4">Parameters</H4>
+
+<DL>
+<DT><I>dwDeviceID</I></DT>
+
+<DD>Value that specifies a driver instance identifier. The driver returns this value in response to the <A HREF="wce50lrfacmopen.htm">ACM_Open (ACM Driver)</A> function.</dd>
+
+<DT><I>hDriver</I></DT>
+
+<DD>Handle to a driver.</dd>
+
+<DT><I>uMsg</I></DT>
+
+<DD>Value that specifies this message.</dd>
+
+<DT><I>lParam1</I></DT>
+
+<DD>Pointer to an <A HREF="wce50lrfacmdrvstreaminstance.htm">ACMDRVSTREAMINSTANCE</A> structure.</dd>
+
+<DT><I>lParam2</I></DT>
+
+<DD>Not used.</dd>
+</DL>
+
+<H4 class="dtH4">Return Values</H4>
+
+<P>A return value of MMSYSERR_NOERROR indicates success. Otherwise, the driver returns one of the MMSYSERR error values declared in the Mmsystem.h header file or one of the ACMERR error values declared in the Msacm.h header file. If a specified conversion is not supported, the driver should return ACMERR_NOTPOSSIBLE.</P>
+
+<H4 class="dtH4">Remarks</H4>
+
+<P>The ACM (Waveapi.dll) sends this message by calling the ACM driver's <A HREF="wce50lrfacmiocontrol.htm">ACM_IOControl</A> entry point through the <B>DeviceIoControl</B> function. The ACM sends this message when an application calls the <B>acmStreamOpen</B> function. All ACM drivers that provide stream conversions must support this message.</P>
+
+<P>If the client has specified the ACM_STREAMOPENF_QUERY flag, which is contained in the <B>fdwOpen</B> member of <B>ACMDRVSTREAMINSTANCE</B>, the driver should not open a stream instance. Otherwise, the driver returns MMSYSERR_NOERROR if the conversion is possible and MMSYSERR_NOTPOSSIBLE.</P>
+
+<P>When a driver receives this message, it first determines if it can perform the specified conversion. If possible, it performs instance initialization operations for the stream, such as determining which conversion routines to use and allocating instance-specific resources. If the driver supports asynchronous operations and the client has specified the ACM_STREAMOPENF_ASYNC flag, which is contained in the <B>fdwOpen</B> member<B> </B>of <B>ACMDRVSTREAMINSTANCE</B>, the driver sends the client an MM_ACM_OPEN callback message by calling the <B>PostThreadMessage</B> function after the operation completes.</P>
+
+<P>Before calling the driver's <B>ACM_IOControl</B> function, the ACM verifies that the following conditions have been met:
+
+<UL type="disc">
+	<LI>The <B>fdwOpen</B> member of <B>ACMDRVSTREAMINSTANCE</B> contains valid flag values.</li>
+
+	<LI>The source and destination <B>WAVEFORMATEX</B> structures are readable.</li>
+
+	<LI>If a <B>WAVEFILTER</B> structure is specified, it is readable, and the source and destination format structures contain identical information.</li>
+
+	<LI>If the client has specified different source and destination format tags, the driver has declared itself to be a codec by setting ACMDRIVERDETAILS_SUPPORTF_CODEC in the <B>fdwSupport</B> member<B> </B>of <B>ACMDRIVERDETAILS</B>. </li>
+
+	<LI>If the client specifies source and destination formats associated with a single format tag, the driver declares itself to be a converter by setting ACMDRIVERDETAILS_SUPPORTF_CONVERTER in the <B>fdwSupport</B> member<B> </B>of <B>ACMDRIVERDETAILS</B>.</li>
+
+	<LI>If the client specifies a filter operation, the driver declares itself to be a filter by setting ACMDRIVERDETAILS_SUPPORTF_FILTER in the <B>fdwSupport</B> member<B> </B>of <B>ACMDRIVERDETAILS</B>.</li>
+</UL>
+
+<P>If the client specifies the ACM_STREAMOPENF_NONREALTIME flag, which is contained in the <B>fdwOpen</B> member of <B>ACMDRVSTREAMINSTANCE</B>, the driver can perform the conversion without time constraints. However, if this flag is not specified and the driver cannot perform the conversion in real time, it returns ACMERR_NOTPOSSIBLE.</P>
+
+<H4 class="dtH4">Requirements</H4>
+
+<P><B>OS Versions:</B> Windows CE 1.0 and later.<BR>
+<B>Header:</B> Msacmdrv.h.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50lrfacmdmdriverdetails.htm">ACMDM_DRIVER_DETAILS</A> | <A HREF="wce50lrfacmopen.htm">ACM_Open (ACM Driver)</A> | <A HREF="wce50lrfacmdrvstreaminstance.htm">ACMDRVSTREAMINSTANCE</A> | <A HREF="wce50lrfacmiocontrol.htm">ACM_IOControl</A> | <A HREF="wce50conacmdrivermessages.htm">ACM Driver Messages</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

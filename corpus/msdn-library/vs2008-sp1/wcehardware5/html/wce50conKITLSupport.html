@@ -1,0 +1,325 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>KITL Library</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="KITL Library"/>
+<MSHelp:RLTitle Title="KITL Library"/>
+<MSHelp:Keyword Index="A" Term="wce50conKITLSupport"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Hardware"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="True"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="PQOAL_concepts.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="True"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_1042611">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50conkitlsupport"></A>KITL Library</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>The OAL KITL library provides a wrapper interface to the Kernel Independent Transport Layer (KITL) and the KITL parameters. A hardware platform component is required to configure the KITL transport driver. For more information, see %_WINCEROOT%\Platform\Common\Src\Inc\Oal_kitl.h.</P>
+
+<P>A KITL configuration file, Kitl_cfg.h, is provided in the %_WINCEROOT%\&lt;<I>Hardware Platform Name</I>&gt;\Src\Inc directory to configure the transport type and transport parameters. This configuration data can be used by the hardware platform component to configure KITL if the boot loader is not present.</P>
+
+<P>KITL initialization and startup occurs in the <A HREF="wce50lrfoeminit.htm">OEMInit</A> function. The boot loader might configure it, or if the boot loader is not present, static parameters might configure it. </P>
+
+<P>The <B>KitlPlatformInit</B> function configures the driver entry points based on the transport type. If operation without a boot loader is required, the <B>KitlConfigInit</B> function initializes the KITL configuration data from the Kitl_cfg.h file.</P>
+
+<P>The OAL portion of KITL provides the following functionality:
+
+<UL type="disc">
+	<LI>Plumbing between the selected transport method and KITL</li>
+
+	<LI>Support for a virtual miniport (VMINI) IOCTL</li>
+
+	<LI>Management of the KITL power on and off events</li>
+
+	<LI>An interface to the registry for KITL devices</li>
+</UL>
+
+<H2 class="dtH2">External Interface</H2>
+
+<H3 class="dtH3">Enumerations</H3>
+
+<DL>
+<DT><code class="ce">typedef enum{<BR>
+   OAL_KITL_TYPE_NONE = 0,<BR>
+   OAL_KITL_TYPE_SERIAL,     // Serial<BR>
+   OAL_KITL_TYPE_ETH,        // UDP/IP4/Ethernet<BR>
+   OAL_KITL_TYPE_FLASH       // Flash memory, for booting only<BR>
+}OAL_KITL_TYPE;</code></DT>
+
+<DD>This enumeration specifies the boot or KITL protocol type.</dd>
+
+<DT><code class="ce">typedef enum{<BR>
+   OAL_KITL_FLAGS_ENABLED = 0x0001,   // Enable KITL<BR>
+   OAL_KITL_FLAGS_PASSIVE = 0x0002,   // Passive KITL mode<BR>
+   OAL_KITL_FLAGS_DHCP    = 0x0004,   // Enable DHCP<BR>
+   OAL_KITL_FLAGS_VMINI   = 0x0003,   // Enable VMINI<BR>
+   OAL_KITL_FLAGS_POLL    = 0x0010,   // Use polling without interrupts<BR>
+   OAL_KITL_FLAGS_EXTNAME = 0x0020,   // Extend the device name<BR>
+}OAL_KITL_FLAGS;</code></DT>
+
+<DD>This enumeration specifies the optional flags passed as part of the <B>OAL_KITL_ARGS</B> structure.</dd>
+</DL>
+
+<H3 class="dtH3">Structures</H3>
+
+<DL>
+<DT><code class="ce">typedef struct{<BR>
+   UINT32 flags;<BR>
+   DEVICE_LOCATION devLoc;      // KITL device location<BR>
+   union {<BR>
+      struct {                  // Serial class parameters<BR>
+         UINT32 baudRate;<BR>
+         UINT32 dataBits;<BR>
+         UINT32 stopBits;<BR>
+         UINT32 parity;<BR>
+      };<BR>
+      struct {                  // Ethernet class parameters<BR>
+         UINT16 mac[3];<BR>
+         UINT32 ipAddress;<BR>
+         UINT32 ipMask;<BR>
+         UINT32 ipRoute;<BR>
+      };<BR>
+   };<BR>
+}OAL_KITL_ARGS;</code></DT>
+
+<DD>This structure is used to pass parameters to the <B>OALKitlInit</B> function. When another KITL transport protocol is added, this structure can change by adding a new structure in union.</dd>
+
+<DT><code class="ce">typedef struct{<BR>
+   UINT8* pAddress;          // Base address<BR>
+   UINT32 baudRate;          // Baud rate<BR>
+   UINT32 dataBits;          // Data bits<BR>
+   UINT32 stopBits;          // Stop bits<BR>
+   UINT32 parity;            // Parity<BR>
+   UINT32 bestSize;          // Best size for sending or receiving<BR>
+} KITL_SERIAL_INFO;</code></DT>
+
+<DD>This structure is passed to the KITL serial driver for initialization. The driver sets the <B>bestSize</B> parameter. The KITL framework uses this parameter when it sends data to the driver. For example, the USB serial driver can set the <B>bestSize</B> parameter to 64 and the KITL framework calls or sends a size request of 64, not including the last packet.</dd>
+
+<DT><code class="ce">typedef struct {<BR>
+    LPCWSTR name;         // Device or driver name<BR>
+    UINT32 ifcType;       // Interface name<BR>
+    UINT32 id;            // Device identification, depends on interface type<BR>
+    UINT32 resource;      // Resource to be used as base address<BR>
+    OAL_KITL_TYPE type;   // KITL driver type: Ethernet, serial, and so on<BR>
+    VOID *pDriver;        // KITL driver, depends on the driver type<BR>
+} OAL_KITL_DEVICE;</code></DT>
+
+<DD>This structure defines the KITL device. The <B>name</B> parameter is a user-readable device name. The <B>ifcType</B> parameter determines the interface type on which the device is located. Together, the <B>ifcType</B> and <B>id</B> parameters are used to identify the device.</dd>
+</DL>
+
+<H3 class="dtH3">Constants</H3>
+
+<DL>
+<DT><code class="ce">#define OAL_KITL_ID_SIZE 16</code></DT>
+
+<DD>This value defines the maximum length of the KITL device name.</dd>
+
+<DT><code class="ce">#define OAL_KITL_WINDOW_SIZE 8</code></DT>
+
+<DD>This value defines the length of the KITL protocol window size. It is used in the KITL initialization structure.</dd>
+
+<DT><code class="ce">#define OAL_KITL_BUFFER_SIZE 0x10000</code></DT>
+
+<DD>This value defines the buffer size used by the KITL protocol implementation. For the Ethernet protocol, this buffer is used as the network card driver DMA buffer.</dd>
+</DL>
+
+<H3 class="dtH3">Variables</H3>
+
+<DL>
+<DT><code class="ce">extern UINT8 g_oalKitlBuffer[OAL_KITL_BUFFER_SIZE];</code></DT>
+
+<DD>This global variable is used by the KITL protocol implementation. For Ethernet or Internet Protocol version 4 (IPv4), this variable is used as a network driver DMA buffer.</dd>
+</DL>
+
+<H3 class="dtH3">Functions</H3>
+
+<DL>
+<DT><code class="ce">BOOL OALKitlStart();</code></DT>
+
+<DD>This function starts the KITL module. On images without KITL support, this function is stubbed.</dd>
+
+<DT><code class="ce">BOOL OALKitlInit(LPCSTR deviceId, OAL_KITL_ARGS *pArgs, OAL_KITL_DEVICE *pDevice);</code></DT>
+
+<DD>This function initializes the KITL subsystem<I>. </I>It is called from the <B>OALKitlStart</B> function.</dd>
+
+<DT><code class="ce">OAL_KITL_DEVICE* OALKitlFindDevice(DEVICE_LOCATION *pDevLoc, </code><BR>
+<code class="ce">OAL_KITL_DEVICE *pDevices);</code></DT>
+
+<DD>This function finds the KITL device in the device table based on the device location. This function also updates the device location structure members based on the device location and other information.</dd>
+
+<DT><code class="ce">LPCWSTR OALKitlDeviceName(DEVICE_LOCATION *pDevLoc, </code></DT>
+
+<DT><code class="ce">OAL_KITL_DEVICE *pDevices);</code></DT>
+
+<DD>This function returns the device or driver name based on the device location and the KITL devices table.</dd>
+
+<DT><code class="ce">OAL_KITL_TYPE OALKitlDeviceType(DEVICE_LOCATION *pDevLoc, </code><BR>
+<code class="ce">OAL_KITL_DEVICE *pDevices);</code></DT>
+
+<DD>This function returns the KITL device type based on the device location and the KITL devices table.</dd>
+
+<DT><code class="ce">VOID OALKitlInitRegistry();</code></DT>
+
+<DD>This function initializes the registry to disable the KITL device using the OS device driver. It is called from the <A HREF="wce50lrfioctlhalinitregistry.htm">IOCTL_HAL_INITREGISTRY</A> handler.</dd>
+
+<DT><code class="ce">VOID OALKitlPowerOff();</code></DT>
+
+<DD>This function sets the KITL device to the power off mode. It is called by the power handler from <A HREF="wce50lrfoempoweroff.htm">OEMPowerOff</A> before the KITL device reaches suspend mode.</dd>
+
+<DT><code class="ce">VOID OALKitlPowerOn();</code></DT>
+
+<DD>This function restores the KITL device to a functional state. It is called by the power handler from <B>OEMPowerOff</B> after the KITL device recovers from being in suspend mode.</dd>
+
+<DT><code class="ce">BOOL OALIoCtlVBridge(UINT32 code, VOID *pInpBuffer, UINT32 inpSize, </code><BR>
+<code class="ce">VOID *pOutBuffer, UINT32 outSize, UINT32 *pOutSize);</code></DT>
+
+<DD>This function is the IOCTL handler for VBridge related IOCTLs. Add this function to <B>g_oalIoCtlTable</B> as the handler for the VBridge IOCTLs. For more information about these IOCTLs, see <A HREF="wce50grfvminiioctls.htm">VMINI IOCTLs</A>.</dd>
+
+<DT><code class="ce">VOID OALKitlCreateName(LPSTR szPrefix, UINT16 mac[3], LPSTR szBuffer);</code></DT>
+
+<DD>This function creates the KITL device name from the prefix and the MAC address. The resulting device name is stored in the <I>szBuffer</I> parameter, which should have a size equal to OAL_KITL_ID_SIZE.</dd>
+
+<DT><code class="ce">BOOL OALKitlGetDevLoc(DEVICE_LOCATION *pDevLoc);</code></DT>
+
+<DD>This function returns the KITL device location. It is used by some optional KITL functions.</dd>
+
+<DT><code class="ce">LPWSTR OALKitlIPtoString(UINT32 ip4);</code></DT>
+
+<DD>This function converts the IP address to a string. Because it uses the internal static buffer, this is not a reentrant function.</dd>
+
+<DT><code class="ce">LPWSTR OALKitlMACtoString(UINT16 mac[]);</code></DT>
+
+<DD>This function converts the MAC address to a string. Because it uses the internal static buffer, this is not a reentrant function.</dd>
+
+<DT><code class="ce">UINT32 OALKitlStringToIP(LPCWSTR szIP);</code></DT>
+
+<DD>This function converts a string to an IP address. If the string is incorrect, this function returns 0.</dd>
+
+<DT><code class="ce">BOOL OALKitlStringToMAC(LPCWSTR szMAC, UINT16 mac[]);</code></DT>
+
+<DD>This function converts a string to a MAC address. It returns TRUE if the conversion is successful. Otherwise, it returns FALSE.</dd>
+</DL>
+
+<H3 class="dtH3">Serial Driver Interface</H3>
+
+<P>The following APIs specify the device driver for the KITL serial device driver.
+
+<DL>
+<DT><code class="ce">typedef BOOL (*OAL_KITLSERIAL_INIT)(KITL_SERIAL_INFO *pInfo);</code></DT>
+
+<DT><code class="ce">typedef VOID (*OAL_KITLSERIAL_DEINIT)();</code></DT>
+
+<DT><code class="ce">typedef UINT16 (*OAL_KITLSERIAL_RECV)(UINT8 *pData, UINT16 size);</code></DT>
+
+<DT><code class="ce">typedef UINT16 (*OAL_KITLSERIAL_SEND)(UINT8 *pData, UINT16 size);</code></DT>
+
+<DT><code class="ce">typedef VOID (*OAL_KITLSERIAL_SENDCOMPLETE)(UINT16 size);</code></DT>
+
+<DT><code class="ce">typedef VOID (*OAL_KITLSERIAL_ENABLE_INTS)();</code></DT>
+
+<DT><code class="ce">typedef VOID (*OAL_KITLSERIAL_DISABLE_INTS)();</code></DT>
+
+<DT><code class="ce">typedef VOID (*OAL_KITLSERIAL_POWER_OFF)();</code></DT>
+
+<DT><code class="ce">typedef VOID (*OAL_KITLSERIAL_POWER_ON)();</code></DT>
+</DL>
+
+<P>The <B>OAL_KITL_SERIAL_DRIVER</B> structure stores information about the KITL serial device driver.</P>
+
+<PRE class="code">typedef struct{
+   OAL_KITLSERIAL_INIT pfnInit;
+   OAL_KITLSERIAL_DEINIT pfnDeinit;
+   OAL_KITLSERIAL_SEND pfnSend;
+   OAL_KITLSERIAL_SENDCOMPLETE pfnSendComplete;
+   OAL_KITLSERIAL_RECV pfnRecv;
+   OAL_KITLSERIAL_ENABLE_INTS pfnEnableInts;
+   OAL_KITLSERIAL_DISABLE_INTS pfnDisableInts;
+   OAL_KITLSERIAL_POWER_OFF pfnPowerOff;
+   OAL_KITLSERIAL_POWER_ON pfnPowerOn;
+} OAL_KITL_SERIAL_DRIVER;</PRE>
+
+<H3 class="dtH3">Driver Interface &#0150; Ethernet</H3>
+
+<P>The following APIs specify the device driver for the KITL Ethernet device driver.
+
+<DL>
+<DT><code class="ce">typedef BOOL (*OAL_KITLETH_INIT)(UINT8 *pAddress, UINT32 offset, UINT16 mac[3]);</code></DT>
+
+<DT><code class="ce">typedef BOOL (*OAL_KITLETH_INIT_DMABUFFER)(UINT32 address, UINT32 size);</code></DT>
+
+<DT><code class="ce">typedef BOOL (*OAL_KITLETH_DEINIT)();</code></DT>
+
+<DT><code class="ce">typedef UINT16 (*OAL_KITLETH_SEND_FRAME)(UINT8 *pData, UINT32 size);</code></DT>
+
+<DT><code class="ce">typedef UINT16 (*OAL_KITLETH_GET_FRAME)(UINT8 *pData, UINT16 *pSize);</code></DT>
+
+<DT><code class="ce">typedef VOID (*OAL_KITLETH_ENABLE_INTS)();</code></DT>
+
+<DT><code class="ce">typedef VOID (*OAL_KITLETH_DISABLE_INTS)();</code></DT>
+
+<DT><code class="ce">typedef VOID (*OAL_KITLETH_POWER_OFF)();</code></DT>
+
+<DT><code class="ce">typedef VOID (*OAL_KITLETH_POWER_ON)();</code></DT>
+
+<DT><code class="ce">typedef VOID (*OAL_KITLETH_CURRENT_PACKET_FILTER)(UINT32 filter);</code></DT>
+
+<DT><code class="ce">typedef BOOL (*OAL_KITLETH_MULTICAST_LIST)(UINT8 *pAddresses, UINT32 count);</code></DT>
+</DL>
+
+<P>The <B>OAL_KITL_ETH_DRIVER</B> structure stores information about the KITL Ethernet device driver.</P>
+
+<PRE class="code">typedef struct {
+   OAL_KITLETH_INIT pfnInit;
+   OAL_KITLETH_INIT_DMABUFFER pfnInitDmaBuffer;
+   OAL_KITLETH_DEINIT pfnDeinit;
+   OAL_KITLETH_SEND_FRAME pfnSendFrame;
+   OAL_KITLETH_GET_FRAME pfnGetFrame;
+   OAL_KITLETH_ENABLE_INTS pfnEnableInts;
+   OAL_KITLETH_DISABLE_INTS pfnDisableInts;
+   OAL_KITLETH_POWER_OFF pfnPowerOff;
+   OAL_KITLETH_POWER_ON pfnPowerOn;
+   OAL_KITLETH_CURRENT_PACKET_FILTER pfnCurrentPacketFilter;
+   OAL_KITLETH_MULTICAST_LIST pfnMulticastList;
+} OAL_KITL_ETH_DRIVER;</PRE>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50conproductionqualityoalcomponents.htm">Production-Quality OAL Components</A> </P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

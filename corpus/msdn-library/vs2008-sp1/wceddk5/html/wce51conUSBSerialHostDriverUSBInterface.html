@@ -1,0 +1,185 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>USB Serial Host Driver USB Interface</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="USB Serial Host Driver USB Interface"/>
+<MSHelp:RLTitle Title="USB Serial Host Driver USB Interface"/>
+<MSHelp:Keyword Index="A" Term="wce51conUSBSerialHostDriverUSBInterface"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Driver"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="False"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="usbserialhost_guide.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="True"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_1062050">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce51conusbserialhostdriverusbinterface"></A>USB Serial Host Driver USB Interface</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>The following list shows details of the USB serial host driver USB interface:
+
+<UL type="disc">
+	<LI>It assumes that <B>bInterfaceClass </B>is equal to 0xFF.</li>
+
+	<LI>It assumes one USB interface with one endpoint for bulk read transfers, one endpoint for bulk write transfers, and one optional endpoint for interrupt transfers. The USB serial host driver does not check for multiple bulk transfer endpoints.</li>
+
+	<LI>It emulates data terminal ready (DTR) and request to send (RTS) status lines by issuing a class specific request that indicates the state of the output control lines on the host. The USB function client driver emulates a NULL modem cable, so the data carrier direct (DCD) and data set ready (DSR) states follow the USB serial host driver DTR state. In addition, the clear to send (CTS) state in the USB function client driver follows the RTS state in the USB serial host driver. In the USB serial host driver, the <B>UsbClassVendorCommand</B> function issues the request. The following code example shows the definition of <B>UsbClassVendorCommand</B>.
+<PRE class="code">NTSTATUS UsbClassVendorCommand(
+  IN PDEVICE_OBJECT PDevObj, 
+  IN UCHAR Request,
+  IN USHORT Value, 
+  IN USHORT Index, 
+  IN PVOID Buffer,
+  IN OUT PULONG BufferLen, 
+  IN BOOLEAN Read, 
+  IN ULONG Class 
+);</PRE>
+
+<P>The following table shows the descriptions for each parameter of <B>UsbClassVendorCommand</B>.
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=16%>Parameter</TH>
+<TH width=42%>Description</TH>
+<TH width=42%>Wceusbsh.sys value</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=16%><I>PDevObj</I></TD>
+<TD width=42%>Pointer to a device object.</TD>
+<TD width=42%><code class="ce">PDevExt-&gt;DeviceObject</code></TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=16%><I>Request</I></TD>
+<TD width=42%>Request field of the class specific or vendor specific command.</TD>
+<TD width=42%><code class="ce">USB_COMM_SET_CONTROL_LINE_STATE</code></TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=16%><I>Value</I></TD>
+<TD width=42%>Value field of the class specific or vendor specific command.</TD>
+<TD width=42%><code class="ce">usState</code>
+<UL type="disc">
+	<LI>Specifies the control signal bitmask. The <I>Value</I> bitmask reserves D15 through D2.</li>
+
+	<LI>Set D1 equal to 1 to set the RTS state as active, and set D1 equal to 0 to set the RTS state as inactive.</li>
+
+	<LI>Set D0 equal to 1 to set the DTR state as active, and set D0 equal to 0 to set the DTR state as inactive.</li>
+</UL>
+</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=16%><I>Index</I></TD>
+<TD width=42%>Index field of the class specific or vendor specific command.</TD>
+<TD width=42%><code class="ce">PDevExt-&gt;UsbInterfaceNumber</code></TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=16%><I>Buffer</I></TD>
+<TD width=42%>Pointer to a data buffer.</TD>
+<TD width=42%><code class="ce">NULL</code></TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=16%><I>BufferLen</I></TD>
+<TD width=42%>Length of the data buffer.</TD>
+<TD width=42%><code class="ce">NULL</code></TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=16%><I>Read</I></TD>
+<TD width=42%>Data direction flag.</TD>
+<TD width=42%><code class="ce">FALSE</code></TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=16%><I>Class</I></TD>
+<TD width=42%>TRUE if a class command, otherwise is a vendor command.</TD>
+<TD width=42%><code class="ce">WCEUSB_CLASS_COMMAND</code></TD>
+</TR>
+</table></div>
+</li>
+
+	<LI>It uses an optional interrupt endpoint to indicate whether IN data is available. This endpoint also reports the state of the serial control lines. The following table describes the bitmask that reports the state of the serial control lines.<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=50%>Bit</TH>
+<TH width=50%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>D15 through D3</TD>
+<TD width=50%>Reserved.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>D2</TD>
+<TD width=50%>Reports whether DSR is active. If equal to 1 then DSR is active, if equal to 0 then DSR is inactive.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>D1</TD>
+<TD width=50%>Reports whether CTS is active. If equal to 1 then CTS is active, if equal to 0, then CTS is inactive.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>D0</TD>
+<TD width=50%>Reports whether the host should read the IN endpoint. If equal to 1 then the host should read the IN endpoint. If equal to 0 then there is no data available.
+<P>When this bit is set, the USB serial host driver assigns a timeout value for reading the IN endpoint, then the USB serial host driver polls the IN endpoint while there is data or until the timeout expires. The default timeout value is 1280 milliseconds.</P>
+
+<P>For information about configuring this timeout value, see <A HREF="wce51conusbserialhostdriverregistrysettings.htm">USB Serial Host Driver Registry Settings</A>.</P>
+</TD>
+</TR>
+</table></div>
+</li>
+</UL>
+
+<H2 class="dtH2">USB Interface Programming Considerations</H2>
+
+<P>The following list shows details to consider while using the USB serial host driver:
+
+<UL type="disc">
+	<LI>ActiveSync calls IOCTL_SERIAL_SET_DTR twice when it tries to connect. Handle this in the USB function client driver.</li>
+
+	<LI>It notifies the USB stack to cancel the read on the IN endpoint when <B>InterruptTimeout </B>expires. Reads on an IN endpoint take different amounts of time depending on the processing status of the USB stack. If you set the <B>InterruptTimeout </B>value too low, then the driver spends more time waiting for the read on the IN endpoint to cancel, instead of reading. If you set the <B>InterruptTimeout</B> value too high, then the driver spends more time polling for data. Using the interrupt endpoint prevents the USB host controller from polling the USB bus more than necessary, which can negatively affect performance on the PCI bus of the Windows-based desktop platform.</li>
+
+	<LI>It polls the upper layer protocols in the USB function client driver every second to maintain connectivity. Adjusting timing related settings such as <B>InterruptTimeout</B> could interfere with this polling.</li>
+</UL>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

@@ -1,0 +1,114 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>RegisterService</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="RegisterService"/>
+<MSHelp:RLTitle Title="RegisterService"/>
+<MSHelp:Keyword Index="K" Term="RegisterService"/>
+<MSHelp:Keyword Index="A" Term="wce50lrfRegisterService"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Feature"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="apiref"/>
+<MSHelp:Attr Name="Filename" Value="servdotexe_functions.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="False"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+<MSHelp:Attr Name="APIName" Value="RegisterService"/>
+<MSHelp:Attr Name="APIType" Value="LibDef"/>
+<MSHelp:Attr Name="APILocation" Value="Coredll.lib"/>
+<MSHelp:Attr Name="PBFeature" Value="SYSGEN_SERVICES"/>
+<MSHelp:Attr Name="PBOnly" Value="False"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_3007647">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50lrfregisterservice"></A>RegisterService</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>This function creates a new instance of a service.</P>
+
+<PRE class="syntax"><B>HANDLE RegisterService(</B>
+  <B>LPCWSTR</B> <I>lpszType</I><B>,</B>
+  <B>DWORD </B><I>dwIndex</I><B>,</B>
+  <B>LPCWSTR</B><I> lpszLib</I><B>,</B>
+  <B>DWORD</B><I> dwInfo</I>
+<B>);</B></PRE>
+
+<H4 class="dtH4">Parameters</H4>
+
+<DL>
+<DT><I>lpszType</I></DT>
+
+<DD>[in] Pointer to the string that contains the three-letter service prefix code.</dd>
+
+<DT><I>dwIndex</I></DT>
+
+<DD>[in] Specifies the service index number between 0 and 9.</dd>
+
+<DT><I>lpszLib</I></DT>
+
+<DD>[in] Pointer to the string that contains the name of the DLL file that contains the service.</dd>
+
+<DT><I>dwInfo</I></DT>
+
+<DD>[in] Specifies the argument passed during the call to the service's exposed <A HREF="wce50lrfxxxinit318.htm">xxx_Init (Services.exe)</A> function.</dd>
+</DL>
+
+<H4 class="dtH4">Return Values</H4>
+
+<P>A handle to the service is returned on success. A NULL value is returned on failure. For extended error information, call <MSHelp:link keywords="wce50lrfGetLastError" TABINDEX="0">GetLastError</MSHelp:link>.</P>
+
+<H4 class="dtH4">Remarks</H4>
+
+<P><B>RegisterService</B> can be used to either load an unloaded service into memory or create a new instance of a service already loaded.</P>
+
+<P><B>RegisterService</B> will first load the DLL file specified in <I>lpszLib</I> and verify that it exports the <B>xxx_Init</B>, <A HREF="wce50lrfxxxdeinit317.htm">xxx_Deinit (Services.exe)</A>, and <A HREF="wce50lrfxxxiocontrol319.htm">xxx_IOControl (Services.exe)</A> functions. <B>RegisterService</B> will fail with ERROR_FILE_NOT_FOUND if the DLL file cannot be loaded and ERROR_INVALID_FUNCTION if the file does not export the required functions.</P>
+
+<P>Varying instances of a service running from the same DLL and with the same <I>lpszType</I> value are differentiated by different <I>dwIndex</I> values. These values must be unique for a given service. <B>RegisterService</B> will verify that no service has the same <I>lpszType</I> prefix and <I>dwIndex</I> value. If this is the case, it will fail and <B>SetLastError</B> to ERROR_DEVICE_IN_USE.</P>
+
+<P><B>Services.exe</B> will then call the <B>xxx_Init</B> function and pass it the value stored in <I>dwInfo</I>. If the service returns a value of zero, Services.exe will fail and <B>SetLastError</B> to ERROR_OPEN_FAILED. Otherwise, it will store the return value of <B>xxx_Init</B> and pass it as a context value at a later time when calling another function of the service such as <B>xxx_Deinit</B> and <B>xxx_IOControl</B>.</P>
+
+<BLOCKQUOTE class="dtBlock">
+<B>Note</B>&nbsp;&nbsp;&nbsp; <B>RegisterService</B> is available for use by trusted applications only. To avoid trust issues, it is recommended that you use the registry to set up your service, then call <A HREF="wce50lrfactivateservice.htm">ActivateService</A> to load the service.</BLOCKQUOTE>
+
+<H4 class="dtH4">Requirements</H4>
+
+<P><B>OS Versions:</B> Windows CE .NET 4.0 and later.<BR>
+<B>Header:</B> Service.h. <BR>
+<B>Link Library:</B> Coredll.lib.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50lrfxxxinit318.htm">xxx_Init (Services.exe)</A> | <A HREF="wce50lrfxxxdeinit317.htm">xxx_Deinit (Services.exe)</A> | <A HREF="wce50lrfxxxiocontrol319.htm">xxx_IOControl (Services.exe)</A> | <A HREF="wce50conservicesexe.htm">Services.exe</A> | <A HREF="wce50conservicesexeregistrysettings.htm">Services.exe Registry Settings</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

@@ -1,0 +1,103 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>ARM Microprocessor</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="ARM Microprocessor"/>
+<MSHelp:RLTitle Title="ARM Microprocessor"/>
+<MSHelp:Keyword Index="A" Term="wce50conARMMicroprocessor"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Hardware"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="True"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="howto_developing_an_OAL.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="False"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_3010395">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50conarmmicroprocessor"></A>ARM Microprocessor</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>The following issues should be noted when using an ARM kernel:
+
+<UL type="disc">
+	<LI>The ARM kernel does not restrict your use of registers. 
+<P>In addition, you can use C code as well as assembler code when you are developing your interrupt service routines (ISRs). However, be aware that the ISR should be as small and fast as possible. 
+</li>
+
+	<LI>You can specify mapping of physical resources to the statically mapped (direct-mapped) virtual addresses of the kernel in 1-MB blocks. 
+<P>In an ARM-specific OAL, create an <A HREF="wce50conoemaddresstable.htm">OEMAddressTable</A> table that defines the mapping from the 4-GB physical address space to the kernel's 512-MB, statically mapped spaces. Each entry in the table consists of the following entries:
+
+<UL type="disc">
+	<LI>Virtual base address to which to map </li>
+
+	<LI>Physical base address from which to map </li>
+
+	<LI>Number of MB to map</li>
+</UL>
+
+<P>Although the order of the values in the table is arbitrary, DRAM should be placed first for optimal performance. 
+
+<P>Because the table is zero-terminated, the last entry must be all zeroes. 
+
+<P>The kernel creates two ranges of virtual addresses from this table: 
+
+<UL type="disc">
+	<LI>One region, from 0x80000000 to 0x9FFFFFFF, will have caching and buffering enabled. </li>
+
+	<LI>The other region, from 0xA0000000 to 0xBFFFFFFF, will have caching and buffering disabled.</li>
+</UL>
+</li>
+
+	<LI>The <A HREF="wce50lrfoeminterrupthandlerfiq.htm">OEMInterruptHandlerFIQ</A> function must be part of the OAL for any ARM build to succeed, even if it is just a stub.</li>
+
+	<LI>Nested interrupts.
+<P>The ARM CPU architecture supports two interrupts: one hardware interrupt request (IRQ) and one fast interrupt request. 
+
+<P>The OEM must choose a nesting scheme and perform the appropriate masking of the interrupt register in <A HREF="wce50lrfoeminterrupthandler.htm">OEMInterruptHandler</A> before re-enabling interrupts. To do so, call <MSHelp:link keywords="wce50lrfINTERRUPTSON" TABINDEX="0">INTERRUPTS_ON</MSHelp:link> once the lower priority interrupts have been masked. 
+
+<P><B>OEMInterruptHandler</B> might call <MSHelp:link keywords="wce50lrfINTERRUPTSOFF" TABINDEX="0">INTERRUPTS_OFF</MSHelp:link> again if it requires non-reentrant code, but this call is not required because the kernel handles it when returning from <B>OEMInterruptHandler</B>.
+</li>
+
+	<LI>By default, when a process calls <MSHelp:link keywords="wce50lrfGetSystemInfo" TABINDEX="0">GetSystemInfo</MSHelp:link>, the <B>dwProcessorType</B> member returned in the <MSHelp:link keywords="wce50lrfSYSTEMINFO" TABINDEX="0">SYSTEM_INFO</MSHelp:link> structure does not return the correct microprocessor type. 
+<P>To work around this issue, OEMs should initialize the kernel global variable <I>CEProcessorType</I> to either PROCESSOR_ARM720, PROCESSOR_ARM920, or PROCESSOR_ARM7TDMI in <A HREF="wce50lrfoeminit.htm">OEMInit</A>. The kernel uses the value of <I>CEProcessorType</I> to initialize <B>dwProcessorType</B>. The choice to use PROCESSOR_ARM720, PROCESSOR_ARM920, or PROCESSOR_ARM7TDMI depends upon your microprocessor. For more information, see <A HREF="wce50lrfceprocessortype.htm">CEProcessorType</A>.
+</li>
+</UL>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50howhowtodevelopanoemadaptationlayer.htm">How to Develop an OEM Adaptation Layer</A> | <A HREF="wce50conmicroprocessorspecificissues.htm">Microprocessor-specific Issues</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

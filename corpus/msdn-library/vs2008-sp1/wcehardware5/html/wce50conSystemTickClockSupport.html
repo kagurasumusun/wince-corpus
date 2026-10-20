@@ -1,0 +1,195 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Timer Library</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Timer Library"/>
+<MSHelp:RLTitle Title="Timer Library"/>
+<MSHelp:Keyword Index="A" Term="wce50conSystemTickClockSupport"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Hardware"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="True"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="PQOAL_concepts.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="True"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_1042609">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50consystemtickclocksupport"></A>Timer Library</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>The timer library implements the system tick or clock. For more information, see %_WINCEROOT%\Platform\Common\Src\Inc\Oal_timer.h.</P>
+
+<P>You can replace the production-quality OAL implementation, as long as your custom implementation exports the kernel and OAL interfaces. You can replace the timer related functions with the common implementation for the rest of the library.</P>
+
+<P>The production-quality OAL code implementation assumes the timer has a granularity equal to or higher than 1 millisecond with the ability to reduce and extend the system tick. The code uses system tick manipulation in two situations. It is used in <B>OEMIdle</B> to extend the actual system tick beyond the normal system tick period, which is usually 1 millisecond, before it puts the CPU in idle with OAL. It is also used to return the system to the normal tick period when the system returns from idle. When you use kernel profiling, use the system tick manipulation in <B>OEMProfileTimerEnable</B> to reduce the system tick period. In this case, use the period that is shorter than 1 millisecond. To avoid collision with possible timer manipulation in <B>OEMIdle</B>, set the maximum idle period to the normal system tick period.</P>
+
+<P>The production-quality OAL implements a busy loop in the <B>OALCPUIdle</B> function. Use this implementation for development only. The correct implementation of <B>OALCPUIdle</B> depends on the global variable <I>b_oalInterruptFlag</I>, which must be set to TRUE in the interrupt handler code. In the product you release to customers, use the <B>OEMIdle</B> stub, if your hardware does not support idle mode.</P>
+
+<H2 class="dtH2">Kernel Interface</H2>
+
+<DL>
+<DT><code class="ce">UINT32 OALTimerIntrHandler();</code></DT>
+
+<DD>This function implements the timer interrupt handler. Depending on the hardware, it is called from the general interrupt handler for ARM-based hardware platforms, or it is used as an interrupt handler for MIPS-based hardware platforms.
+
+<P>This function returns a SYSINTR value from the interrupt handler.
+</dd>
+
+<DT><A HREF="wce50lrfcurmsec.htm">CurMSec</A></DT>
+
+<DD>This global variable indicates the number of milliseconds since boot time. It is defined in the kernel.
+
+<P>This global variable is updated with each system tick and contains the system relative time in milliseconds. The update quantum is the system tick period. If the system tick period is a 1 millisecond variable, the variable will contain the actual system-relative time.
+</dd>
+
+<DT><A HREF="wce50lrfoemidle.htm">OEMIdle</A></DT>
+
+<DD>This function places the CPU in an idle state when a thread is not ready to run. It is called by the kernel.</dd>
+
+<DT><A HREF="wce50lrfscgettickcount.htm">SC_GetTickCount</A></DT>
+
+<DD>This function returns the actual system-relative time in 1-millisecond intervals. On systems with a 1-millisecond system tick, this function can return the actual value of <I>CurMSec</I>. However, if the system runs with a system tick period higher than 1 millisecond, this function should get the actual time in 1-millisecond intervals.</dd>
+
+<DT><A HREF="wce50lrfpqueryperformancefrequency.htm">pQueryPerformanceFrequency</A></DT>
+
+<DD>This function returns the timer frequency with higher granularity than 1 millisecond, if it exists.
+
+<P>If no such timer frequency exists, a timer frequency of 1 kHz, or 1 millisecond, is returned.
+</dd>
+
+<DT><A HREF="wce50lrfpqueryperformancecounter.htm">pQueryPerformanceCounter</A></DT>
+
+<DD>This function returns the number of milliseconds since the device booted. It is used instead of <B>GetTickCount</B> for timers with high granularity.</dd>
+
+<DT><A HREF="wce50lrfpoemupdaterescheduletime.htm">pOEMUpdateRescheduleTime</A></DT>
+
+<DD>This function is a pointer to the function that reprograms the system timer.</dd>
+</DL>
+
+<H2 class="dtH2">OAL Interface</H2>
+
+<P>The following functions are used in timer implementations delivered in the common library.</P>
+
+<PRE class="code"><code class="ce">BOOL OALTimerInit(UINT32 msecPerSysTick, UINT32 countsPerMSec, UINT32 margin);</code></PRE>
+
+<P>This function initializes the system timer. It is usually called from <B>OEMInit</B>. The <I>msecPerSysTick</I> parameter defines the system-tick period. The <I>countsPerMSec</I> parameter states the timer input clock frequency. The value is equal to the frequency divided by 1000. The <I>margin</I> parameter is used in the timer manipulation routines <B>OALTimerRecharge</B> and <B>OALTimerUpdate</B> to define a safe time range where the timer can be modified without errors. </P>
+
+<P>For variable tick periods, set the <I>msecPerSysTick</I> parameter to the maximum period supported by the hardware. Your implementation should check and fix the value if it is bigger than what is supported. This function allows the use of -1 as a parameter.
+
+<DL>
+<DT><code class="ce">VOID OALTimerRecharge();</code></DT>
+
+<DD>This function is usually called from the timer interrupt handler to recharge the timer for the next system ticks.
+
+<P>Depending on your timer hardware implementation, this function can be stubbed.
+</dd>
+
+<DT><code class="ce">UINT32 OALTimerUpdate(UINT32 period, UINT32 margin);</code></DT>
+
+<DD>This function modifies the actual system tick period. The new system tick period is defined in the <I>period</I> parameter. It returns the time that has expired from the actual period in the new system tick period. You can use this value to avoid system tick drift or to count the time the system spent in idle mode. If the actual time is close to the value in the <I>margin</I> parameter, the tick time is not changed. If the new tick time is close to the actual time, shift the value forward by the count specified in the <I>margin</I> parameter.
+
+<P>You should only implement this function when you use the OAL <B>OEMIdle</B> function, IL timing, or profiling implementation.
+</dd>
+
+<DT><code class="ce">INT32 OALTimerCountsSinceSysTick();</code></DT>
+
+<DD>This function returns the time that has expired since the current system tick.</dd>
+
+<DT><code class="ce">extern OAL_TIMER_STATE g_oalTimer;</code></DT>
+
+<DD>This global variable exports the timer control block.</dd>
+
+<DT><code class="ce">UINT32 OALGetTickCount();</code></DT>
+
+<DD>This function returns the number of 1-millisecond ticks that have elapsed since system boot or reset. The counter can overflow, but the overflow period should not be shorter than approximately 30 seconds.
+
+<P>Because this function is used during system boot, it must be called before the interrupt subsystem is active.
+</dd>
+
+<DT><code class="ce">VOID OALStall(UINT32 uSecs);</code></DT>
+
+<DD>This function stalls the CPU for <I>uSecs</I> microseconds. 
+
+<P>Because this function is used during system boot, it must be called before the interrupt subsystem is active.
+</dd>
+</DL>
+
+<H2 class="dtH2">Internal Interface</H2>
+
+<DL>
+<DT><code class="ce">VOID OALTimerRecharge(UINT32 period, UINT32 margin);</code></DT>
+
+<DD>This function is usually called from the timer interrupt handler to recharge the timer for the next system ticks.
+
+<P>Depending on your timer hardware implementation, you can stub this function.
+</dd>
+
+<DT><code class="ce">VOID OALCPUIdle();</code></DT>
+
+<DD>This function puts the CPU or SOC in idle state. The CPU or SOC should exist the idle state when an interrupt occurs. This function is called with interrupts are disabled. When this function returns, interrupts must be disabled also.
+
+<P>Implement this function only when you use the OAL <B>OEMIdle</B> function. The common library contains a busy loop implementation, which you can use for development.
+</dd>
+</DL>
+
+<H2 class="dtH2">Internal Interface for systems with count/compare counters</H2>
+
+<DL>
+<DT><code class="ce">VOID OALTimerInitCount(UINT32 period);</code></DT>
+
+<DD>This function initializes the system timer with a specified base period.</dd>
+
+<DT><code class="ce">UINT32 OALTimerGetCount();</code></DT>
+
+<DD>This function returns the actual timer value. Use this function only for <B>OALGetTickCount</B> or <B>OALStall</B> implementation in stuations where the global timer variable is not initialized. You can also use this function to implement the <B>OALTimerRecharge</B>, <B>OALTimerCountsSinceSysTick</B>, <B>OALTimerReduceSysTick</B>, and <B>OALTimerExtendSysTick</B> functions for systems with a count and compare timer.
+
+<P>This function call should also clear the timer interrupt.
+</dd>
+
+<DT><code class="ce">UINT32 OALTimerGetCompare();</code></DT>
+
+<DD>This function returns the timer compare value. Implement this function only for systems with a count and compare timer. You can also use this function to implement the <B>OALTimerRecharge</B>, <B>OALTimerCountsSinceSysTick</B>, <B>OALTimerReduceSysTick</B>, and <B>OALTimerExtendSysTick</B> functions for systems with a count and compare timer.</dd>
+
+<DT><code class="ce">VOID OALTimerSetCompare(UINT32 compare);</code></DT>
+
+<DD>This function sets the timer compare value. Implement this function only for systems with a count and compare timer. You can also use this function to implement the <B>OALTimerRecharge</B>, <B>OALTimerCountsSinceSysTick</B>, <B>OALTimerReduceSysTick</B>, and <B>OALTimerExtendSysTick</B> functions for systems with a count and compare timer.</dd>
+</DL>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50conproductionqualityoalcomponents.htm">Production-Quality OAL Components</A> </P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

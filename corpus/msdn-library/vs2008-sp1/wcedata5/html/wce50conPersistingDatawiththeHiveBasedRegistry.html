@@ -1,0 +1,71 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Persisting Data with the Hive-Based Registry</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Persisting Data with the Hive-Based Registry"/>
+<MSHelp:RLTitle Title="Persisting Data with the Hive-Based Registry"/>
+<MSHelp:Keyword Index="A" Term="wce50conPersistingDatawiththeHiveBasedRegistry"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Feature"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="registry_overview.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="True"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="True"/>
+<MSHelp:Attr Name="PBFeature" Value="REGISTRY"/>
+<MSHelp:Attr Name="PBOnly" Value="True"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_1055679">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50conpersistingdatawiththehivebasedregistry"></A>Persisting Data with the Hive-Based Registry</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>The hive-based registry is designed to relieve the OEM of persisting the registry. No work is necessary on boot or shutdown to preserve registry data, with the possible exception that the OEM may need to flush the registry using <A HREF="wce50lrfregflushkey.htm">RegFlushKey</A> if a typical software shutdown is not done.</P>
+
+<P>Some additional options are available if the OEM wants to perform a final backup. This may be necessary if the data stored in the registry renders the system somehow not viable. In this case, the OEM can use <A HREF="wce50lrfregsavekey.htm">RegSaveKey</A> to save a known viable registry, and use <A HREF="wce50lrfregreplacekey.htm">RegReplaceKey</A> to restore it. This solution requires a system reboot after calling <B>RegReplaceKey</B>, but should only be necessary in rare cases.</P>
+
+<P><A HREF="wce50lrfregsavekey.htm">RegSaveKey</A> operates on one hive at a time; calling this API on <B>HKEY_LOCAL_MACHINE</B> will save the system hive to a file, and calling it on <B>HKEY_CURRENT_USER</B> will save the current user's hive. Conversely, <B>RegReplaceKey</B> can only be used with <B>HKEY_LOCAL_MACHINE</B>. It replaces the system hive only. To replace a user hive, the OEM may call <MSHelp:link keywords="wce50lrfSetCurrentUser" TABINDEX="0">SetCurrentUser</MSHelp:link> with a NULL user name to log off the current user, and then call <A HREF="wce50lrfcopyfile.htm">CopyFile</A> to replace the user's invalid hive with a saved known viable hive.</P>
+
+<P>Another case in which last known good support is useful is the case in which the registry hive files become corrupted, perhaps by a file system error. When the system detects a corrupt hive file during boot, the file is deleted and a clean one created in its place. This enables the system to boot successfully. You can detect this event by looking for a particular value under <B>HKEY_LOCAL_MACHINE</B> or <B>HKEY_CURRENT_USER</B>, as shown in the following registry key example.</P>
+
+<PRE class="code">[HKEY_LOCAL_MACHINE]
+    "RegPersisted"=dword:1</PRE>
+
+<P>If this value is present under <B>HKEY_LOCAL_MACHINE</B>, it indicates that the system hive has been restored successfully. If it is present under <B>HKEY_CURRENT_USER</B>, it indicates that the user hive was successfully restored. Its absence indicates a clean boot, in which case the hive was created new. If the value is absent, you can set up verification for this value and restore a stored last known hive.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50conhivebasedregistry.htm">Hive-Based Registry</A> | <A HREF="wce50conusingthehivebasedregistry.htm">Using the Hive-Based Registry</A> | <A HREF="wce50controubleshootingthehivebasedregistry.htm">Troubleshooting the Hive-Based Registry</A> | <A HREF="wce50conupgradingthehivebasedregistry.htm">Hive-Based Registry Data</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

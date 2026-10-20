@@ -1,0 +1,161 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Creating a Browser Class</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Creating a Browser Class"/>
+<MSHelp:RLTitle Title="Creating a Browser Class"/>
+<MSHelp:Keyword Index="A" Term="wce50conCreatingBrowserClass"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Feature"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="creating_an_internet_browser.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="True"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_1057172">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50concreatingbrowserclass"></A>Creating a Browser Class</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>To create an Internet browser, you must define a class for the browser that inherits OLE interfaces to facilitate OLE activation. The following table shows the interfaces that the class must inherit.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=32%>Interface</TH>
+<TH width=68%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=32%><B>IOleContainer</B></TD>
+<TD width=68%>This interface is used to enumerate objects in a compound document or to lock a container in the running state. Container and object applications both implement this interface.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=32%><MSHelp:link keywords="wce50lrfIOleClientSiteIUnknown" TABINDEX="0">IOleClientSite</MSHelp:link></TD>
+<TD width=68%>This interface is the primary means by which an embedded object obtains information about the location and the extent of its display site, moniker, user interface, and other resources provided by its container.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=32%><B>IOleInPlaceSite</B></TD>
+<TD width=68%>This interface manages interaction between the container and the object's in-place client site. The client site is the display site for embedded objects, and provides position and conceptual information about the object. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=32%><B>IOleControlSite</B></TD>
+<TD width=68%>This interface provides the methods that enable a site object to manage each embedded control within a container. A site object provides this interface as well as other site interfaces such as <B>IOleClientSite</B> and <B>IOleInPlaceSite</B>. When a control requires the services expressed through this interface, it will query one of the other client site interfaces for <B>IOleControlSite</B>.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=32%><B>DWebBrowserEvents2</B></TD>
+<TD width=68%>This interface designates an event sink interface that an application must implement in order to receive event notifications from a <B>WebBrowser</B> control or from the Internet Explorer application.</TD>
+</TR>
+</table></div>
+
+<P>The following code example shows a browser class, CBrowser, that implements the browser object.</P>
+
+<PRE class="code">class CBrowser : 
+    public IOleContainer,
+    public IOleClientSite,
+    public IOleInPlaceSite,
+    public IOleControlSite,
+    public DWebBrowserEvents2
+{
+public:
+// Declare new and delete clear allocators.
+    inline void * __cdecl operator new(size_t cb) { return LocalAlloc(LPTR, cb); } 
+    inline void __cdecl operator delete(void * pv) { LocalFree(pv); }
+// Constructor and Destructor
+  CBrowser();
+  ~CBrowser();
+  //IUnknown methods
+  STDMETHOD(QueryInterface) (REFIID riid, LPVOID * ppv)
+  {
+    //QueryInterface for IoleContainer.
+    if ((riid == IID_IOleContainer) || (riid == IID_IUnknown))
+    {
+        RETAILMSG(1, (L"Browser QueryInterface for IOleContainer"));
+        *ppv = (IOleContainer *) this;
+    }     
+    else if (...//Inerface)
+    {
+      ...//Query Interface for other interfaces.
+    }
+    AddRef();
+    return S_OK;
+  }
+  STDMETHOD_(ULONG, AddRef) (void)
+  {
+    ...
+  }
+  
+  STDMETHOD_(ULONG, Release) (void)
+  {
+    ...
+  }
+  ...// IOleContainer methods
+  ...// IOleClientSite methods
+  ...// IOleWindow methods
+  ...// IOleInPlaceSite methods
+  ...// IOleControlSite methods
+  ...// DWebBrowserEvents
+  ...// IDispatch methods
+// public methods
+  HRESULT StartBrowser(LPWSTR szURL);     // Start a browser.
+  HRESULT NavigateToURL(LPWSTR szURL);    // Browse to a URL.
+  void CloseBrowser(); // Close the browser.
+//static WndProc wrapper and actual WndProc
+  static LRESULT  CALLBACK s_BrowseWndProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam);
+  LRESULT BrowseWndProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam);
+private:
+  HRESULT CreateBrowserWindow();    // Create the main window.
+  HRESULT CreateBrowserObject();    // Create a web browser object.
+  HRESULT RegisterBrowserEventSink(); // Connect up the event sink
+// private members
+  HWND _hWnd;   //The main window
+  IoleObject *_pObject; // The browser object
+  IConnectionPoint *_pCP;  // Pointer to the browser event connection-point (for DWebBrowserEvents2)
+  IWebBrowser2 *_pWB2; // Pointer to the Web browser object
+  BOOL _bInPlaceActive;  // Determines if the document is active
+  DWORD _dwEventCookie; // Stores cookies that will be received when the 
+                        // browser registers to receive DWebBrowserEvents2
+  ULONG _ulRefs; //reference count for the interfaces supported by the 
+                 //container.
+};</PRE>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50conregisteringbrowserwindow.htm">Registering the Browser Window</A> | <A HREF="wce50concreatinganinternetbrowser.htm">Creating an Internet Browser</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

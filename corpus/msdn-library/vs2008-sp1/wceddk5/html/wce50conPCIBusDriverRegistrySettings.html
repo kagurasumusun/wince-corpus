@@ -1,0 +1,118 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>PCI Bus Driver Registry Settings</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="PCI Bus Driver Registry Settings"/>
+<MSHelp:RLTitle Title="PCI Bus Driver Registry Settings"/>
+<MSHelp:Keyword Index="A" Term="wce50conPCIBusDriverRegistrySettings"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Driver"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="False"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="pci_guide.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="True"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="True"/>
+<MSHelp:Attr Name="PBFeature" Value="PCIBusDriver"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_3017961">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50conpcibusdriverregistrysettings"></A>PCI Bus Driver Registry Settings</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>The following registry key example shows the PCI bus driver registry keys, which are in %_WINCEROOT%\Public\Common\OAK\Drivers\PCIBus\PCIBus.reg.</P>
+
+<PRE class="code">[HKEY_LOCAL_MACHINE\Drivers\BuiltIn\PCI]
+    "Dll"="PCIbus.dll"
+    "Order"=dword:20
+    "Flags"=dword:8
+    "BusIoctl"=dword:2a0048
+    "IClass"=multi_sz:"{CD149194-286F-4095-9694-D70E6AB867C3}=%b","{6F40791D-300E-44E4-BC38-E0E63CA8375C}=%b"
+
+; Registry enumerator used for loading each PCI device driver instance   
+[HKEY_LOCAL_MACHINE\Drivers\BuiltIn\PCI\Instance]
+    "InterfaceType"=dword:5
+    "BusName"="PCI"</PRE>
+
+<P>The following registry key example shows the template and resulting instance keys for the ES1371 driver located in %_WINCEROOT%\Public\Common\OAK\Drivers\WaveDev\PDD\ES1371. It is the template provided in your Platform.reg file.</P>
+
+<PRE class="code">[HKEY_LOCAL_MACHINE\Drivers\BuiltIn\PCI\Template\WaveDev]
+    "Prefix"="WAV"
+    "Dll"="es1371.dll"
+    "Index"=dword:1
+    "Order"=dword:0
+    "Dma"=dword:5
+    "Class"=dword:04
+    "SubClass"=dword:01
+    "ProgIF"=dword:00
+    "VendorID"=multi_sz:"1274","1274"
+    "DeviceID"=multi_sz:"1371","5880"
+    "IsrDll"="giisr.dll"
+    "IsrHandler"="ISRHandler"</PRE>
+
+<P>The following registry key example shows the <B>Instance</B> registry key for instance 1 of the ES1371 driver.</P>
+
+<PRE class="code">[HKEY_LOCAL_MACHINE\Drivers\BuiltIn\PCI\Instance\WaveDev1]
+    DWORD: SysIntr = 0x20
+    DWORD: Irq = 0x9
+    DWORD: IoLen = 0x40
+    DWORD: IoBase = 0xe000
+    DWORD: BusNumber = 0x0
+    DWORD: InterfaceType = 0x5
+    DWORD: SubSystemID = 0x1371
+    DWORD: SubVendorID = 0x1274
+    DWORD: RevisionID = 0x8
+    DWORD: DeviceID = 0x1371
+    DWORD: VendorID = 0x1274
+    DWORD: ProgIF = 0x0
+    DWORD: SubClass = 0x1
+    DWORD: Class = 0x4
+    SZ: IsrHandler = ISRHandler
+    SZ: IsrDll = giisr.dll
+    DWORD: Dma = 0x5
+    DWORD: Order = 0x0
+    DWORD: Index = 0x1
+    SZ: Dll = es1371.dll
+    SZ: Prefix = WAV
+    DWORD: InstanceIndex = 0x1</PRE>
+
+<P>Everything the driver needs is provided by <B>IoBase</B>, <B>IoLen</B>, <B>Irq</B> and <B>SysIntr</B>. Device identification information is also provided, which includes <B>Class</B>, <B>SubClass</B>, <B>ProgIF</B>, <B>VendorID</B>, <B>DeviceID</B>, <B>RevisionID</B>, <B>SubVendorID</B> and <B>SubSystemID</B>. 0x5 is specified for the PCI <B>InterfaceType</B>, and 0 (zero) is specified for the PCI bus <B>BusNumber</B>. These specifications are useful when calling <MSHelp:link keywords="wce50lrfHalTranslateBusAddress" TABINDEX="0">HalTranslateBusAddress</MSHelp:link> or <MSHelp:link keywords="wce50lrfTransBusAddrToVirtual" TABINDEX="0">TransBusAddrToVirtual</MSHelp:link>.</P>
+
+<P>A driver reads the <B>IoBase</B>, <B>IoLen</B>, <B>Irq</B>, <B>SysIntr</B>, <B>InterfaceType</B> and <B>BusNumber</B> values out of the registry, and then calls <MSHelp:link keywords="wce50lrfTransBusAddrToVirtual" TABINDEX="0">TransBusAddrToVirtual</MSHelp:link> to create a virtual base address to the device. The bus does not matter to the driver because all of the relevant information is provided for it. Thus, you can also use this driver for an ISA device, if the expected registry values are pre-set in the registry.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50coninstallableisrswithdrivers.htm">Installable ISRs with Drivers</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

@@ -1,0 +1,171 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Interrupt Library</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Interrupt Library"/>
+<MSHelp:RLTitle Title="Interrupt Library"/>
+<MSHelp:Keyword Index="A" Term="wce50conInterruptSupport"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Hardware"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="True"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="PQOAL_concepts.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="False"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_1042610">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50coninterruptsupport"></A>Interrupt Library</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>The interrupt library implements interrupt processing. Support for interrupts is provided by a combination of OAL common routines and processor specific routines. </P>
+
+<P>Depending on the CPU or SOC model, you can implement the interrupt library with hardware platform callbacks. This method is useful on hardware where you have used an external secondary interrupt controller.</P>
+
+<P>For more information, see %_WINCEROOT%\Platform\Common\Src\Inc\Oal_intr.h.</P>
+
+<H2 class="dtH2">Kernel Interface</H2>
+
+<DL>
+<DT><A HREF="wce50lrfoeminterruptenable.htm">OEMInterruptEnable</A></DT>
+
+<DD>This function performs hardware operations necessary to enable the specified hardware interrupt.</dd>
+
+<DT><A HREF="wce50lrfoeminterruptdisable.htm">OEMInterruptDisable</A></DT>
+
+<DD>This function disables the specified hardware interrupt.</dd>
+
+<DT><A HREF="wce50lrfoeminterruptdone.htm">OEMInterruptDone</A></DT>
+
+<DD>This function signals completion of interrupt processing.</dd>
+
+<DT><A HREF="wce50lrfioctlhalrequestsysintr.htm">IOCTL_HAL_REQUEST_SYSINTR</A></DT>
+
+<DD>The kernel calls <A HREF="wce50lrfoemiocontrol.htm">OEMIoControl</A> with this control code to request an IRQ-to-SYSINTR mapping.</dd>
+
+<DT><A HREF="wce50lrfioctlhalreleasesysintr.htm">IOCTL_HAL_RELEASE_SYSINTR</A></DT>
+
+<DD>The kernel calls <B>OEMIoControl</B> with this control code to release a previously requested SYSINTR.</dd>
+
+<DT><A HREF="wce50lrfioctlhalrequestirq.htm">IOCTL_HAL_REQUEST_IRQ</A></DT>
+
+<DD>The kernel calls <B>OEMIoControl</B> with this control code to request a hardware-to-IRQ mapping based on device location.</dd>
+</DL>
+
+<H2 class="dtH2">OAL Interface</H2>
+
+<DL>
+<DT><code class="ce">#define OAL_INTR_IRQ_MAXIMUM 64</code></DT>
+
+<DD>This value defines the maximum number of IRQs. If there is no limitation for this value in the OAL library, the Windows CE resource manager only supports 64 IRQs.</dd>
+
+<DT><code class="ce">BOOL OALIntrInit();</code></DT>
+
+<DD>This function initializes the interrupt hardware. It is usually called during the system initialization process. If your implementation uses hardware platform callbacks, <B>OALIntrInit</B> calls the <B>BSPIntrInit</B> function.</dd>
+
+<DT><code class="ce">VOID OALIntrStaticTranslate(UINT32 sysIntr, UINT32 irq);</code></DT>
+
+<DD>This function sets the static IRQ &lt;-&gt; SYSINTR mapping for a specified value. It is typically used during system initialization for legacy drivers.</dd>
+
+<DT><code class="ce">UINT32 OALIntrRequestSysIntr(UINT32 count, const UINT32 *pIrqs,</code><BR>
+<code class="ce">UINT32 flags);</code></DT>
+
+<DD>This function allocates a new SYSINTR value for a specified IRQ list. Based on the <I>flags</I> parameter, it can also set backward static mapping (IRQ -&gt; SYSINTR).</dd>
+</DL>
+
+<H2 class="dtH2">Internal Interface</H2>
+
+<DL>
+<DT><code class="ce">VOID OALIntrMapInit();</code></DT>
+
+<DD>This function initializes the IRQ/SYSINTR mapping structure. It must be called from the <B>OALIntrInit</B> function.</dd>
+
+<DT><code class="ce">BOOL OALIntrReleaseSysIntr(UINT32 sysIntr);</code></DT>
+
+<DD>This function releases a SYSINTR. It also clears backward static mapping (IRQ -&gt; SYSINTR), if it exists.</dd>
+
+<DT><code class="ce">UINT32 OALIntrTranslateIrq(UINT32 irq);</code></DT>
+
+<DD>This function returns the SYSINTR for a specified IRQ based on the static mapping.</dd>
+
+<DT><code class="ce">BOOL OALIntrTranslateSysIntr(UINT32 sysIntr, UINT32 *pCount, const </code><BR>
+<code class="ce">UINT32 *ppIrqs);</code></DT>
+
+<DD>This function returns the list of IRQs for a specified SYSINTR.</dd>
+</DL>
+
+<H2 class="dtH2">Hardware Platform Callback Functions</H2>
+
+<DL>
+<DT><code class="ce">BOOL BSPIntrInit();</code></DT>
+
+<DD>This function is called by <B>OALIntrInit</B> if your implementation uses hardware platform callbacks. <B>OALIntrInit </B>initializes the interrupt hardware and is usually called during the system initialization process.</dd>
+
+<DT><code class="ce">BOOL BSPIntrRequestIrqs(DEVICE_LOCATION *pDevLoc, UINT32 *pCount, </code><BR>
+<code class="ce">UINT32 *pIrqs);</code></DT>
+
+<DT><code class="ce">BOOL OALIntrRequestIrqs(DEVICE_LOCATION *pDevLoc, UINT32 *pCount, </code><BR>
+<code class="ce">UINT32 *pIrqs);</code></DT>
+
+<DD>This function returns the list of IRQs for the device identified by the <I>pDevLoc</I> parameter. If your implementation uses hardware platform callbacks, <B>OALIntrRequestIrqs</B> must call <B>BSPIntrRequestIrqs</B> if the device is not recognized. On input, <I>pCount</I> contains the maximum number of IRQs allowed in the list. When the function returns, it returns the number of IRQs in the list.</dd>
+
+<DT><code class="ce">UINT32 BSPIntrEnableIrq(UINT32 irq);</code></DT>
+
+<DT><code class="ce">BOOL OALIntrEnableIrqs(UINT32 count, const UINT32 *pIrqs);</code></DT>
+
+<DD>This function enables the list of interrupts identified by an IRQ. If your implementation uses hardware platform callbacks, <B>OALIntrEnableIrqs</B> must call <B>BSPIntrEnableIrq</B> for each IRQ in the list before it enables the IRQ. <B>BSPIntrEnableIrq</B> can also perform board-specific actions and modify an IRQ.</dd>
+
+<DT><code class="ce">UINT32 BSPIntrDisableIrq(UINT32 irq);</code></DT>
+
+<DT><code class="ce">VOID OALIntrDisableIrqs(UINT32 count, const UINT32 *pIrqs);</code></DT>
+
+<DD>This finction disables the list of interrupts identified by an IRQ. If your implementation uses hardware platform callbacks, <B>OALIntrDisableIrqs</B> must call <B>BSPIntrDisableIrq</B> for each IRQ in the list before it disables the IRQ. <B>BSPIntrDisableIrq</B> can also perform board-specific actions and modify an IRQ.</dd>
+
+<DT><code class="ce">UINT32 BSPIntrDoneIrq(UINT32 irq);</code></DT>
+
+<DT><code class="ce">VOID OALIntrDoneIrqs(UINT32 count, const UINT32 *pIrqs);</code></DT>
+
+<DD>This function scans the list of interrupts identified by an IRQ. If your implementation uses hardware platform callbacks, <B>OALIntrDoneIrqs</B> must call the <B>BSPIntrDoneIrq</B> function for each IRQ in the list before it re-enables each IRQ. <B>BSPIntrDoneIrq</B> can also perform board-specific actions and modify an IRQ.</dd>
+
+<DT><code class="ce">UINT32 BSPIntrActiveIrq(UINT32 irq);</code></DT>
+
+<DD>This function translates IRQs for chaining the controller interrupt. It is called from the interrupt handler if your implementation uses hardware platform callbacks.</dd>
+</DL>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50conproductionqualityoalcomponents.htm">Production-Quality OAL Components</A> </P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

@@ -1,0 +1,113 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>IOCTL_STREAM_LOCATE_REMOTE_PLUG</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="IOCTL_STREAM_LOCATE_REMOTE_PLUG"/>
+<MSHelp:RLTitle Title="IOCTL_STREAM_LOCATE_REMOTE_PLUG"/>
+<MSHelp:Keyword Index="K" Term="IOCTL_STREAM_LOCATE_REMOTE_PLUG"/>
+<MSHelp:Keyword Index="A" Term="wce50lrfIOCTLSTREAMLOCATEREMOTEPLUG"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Driver"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="False"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="apiref"/>
+<MSHelp:Attr Name="Filename" Value="avcstream_reference.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="False"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+<MSHelp:Attr Name="APIName" Value="IOCTL_STREAM_LOCATE_REMOTE_PLUG"/>
+<MSHelp:Attr Name="PBFeature" Value="1394Driver"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_3017219">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50lrfioctlstreamlocateremoteplug"></A>IOCTL_STREAM_LOCATE_REMOTE_PLUG</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>This IOCTL permits the caller to attempt to locate or cause the remote node to create a plug on a remote node that is capable of handling the type of media stream required by the application. </P>
+
+<H4 class="dtH4">Parameters</H4>
+
+<DL>
+<DT><I>hDevice</I></DT>
+
+<DD>[in] Handle to the target object. To get a device handle, call the <MSHelp:link keywords="wce50lrfCreateFile" TABINDEX="0">CreateFile</MSHelp:link> function with a name dynamically obtained from the <B>SetupDiEnumDeviceInterfaces</B> function. </dd>
+
+<DT><I>dwIoControlCode</I></DT>
+
+<DD>[in] IOCTL for the operation. This value identifies the target operation and the type of device on which to perform the operation. For this operation, use IOCTL_STREAM_LOCATE_REMOTE_PLUG. </dd>
+
+<DT><I>lpInBuffer</I></DT>
+
+<DD>[in] Must be filled in with a properly initialized <A HREF="wce50lrfstreamlocateremoteplugrequest.htm">STREAM_LocateRemotePlug_Request</A> structure. The <B>slrp_MediaType</B>, <B>slrp_Direction</B>, and <B>slrp_SubunitPlugID</B> members must be pre-initialized.</dd>
+
+<DT><I>nInBufferSize</I></DT>
+
+<DD>[in] Set to <B>sizeof(STREAM_LocateRemotePlug_Request)</B>. </dd>
+
+<DT><I>lpOutBuffer</I></DT>
+
+<DD>[out] Must point to a <A HREF="wce50lrfstreamlocateremoteplugresponse.htm">STREAM_LocateRemotePlug_Response</A> structure. </dd>
+
+<DT><I>nOutBufferSize</I></DT>
+
+<DD>[in] Set to <B>sizeof(STREAM_LocateRemotePlug_Response)</B>. </dd>
+
+<DT><I>lpBytesReturned</I></DT>
+
+<DD>[out] Pointer to a <B>DWORD</B> variable that receives the actual count of bytes returned by the function in the output buffer. </dd>
+
+<DT><I>lpOverlapped</I></DT>
+
+<DD>[out] If not used, set to NULL. Otherwise, this should point to a completely filled out <B>OVERLAPPED</B> structure that contains a valid event. The event will be signaled when the I/O operation is complete. </dd>
+</DL>
+
+<H4 class="dtH4">Return Values</H4>
+
+<P>If the operation succeeds, the <MSHelp:link keywords="wce50lrfDeviceIoControl" TABINDEX="0">DeviceIoControl</MSHelp:link> function returns a non-zero value. If the operation fails, <B>DeviceIoControl</B> returns zero. To obtain extended error information, call <MSHelp:link keywords="wce50lrfGetLastError" TABINDEX="0">GetLastError</MSHelp:link>.</P>
+
+<H4 class="dtH4">Remarks</H4>
+
+<P>Connecting to individually numbered serial bus plugs on remote nodes is fairly straightforward. However, knowing which serial bus plug on a remote node to connect can be more complex. This IOCTL encapsulates most of that process. Given the type of media that an application expects to transfer and the actual subunit, implicitly defined by the device object being dealt with, requests will be made to locate or establish a plug of the correct type connected to the specified subunit.</P>
+
+<P>Several AV/C plug control systems exist, and some differ in structure. To provide for future compatibility, complete any successful location of a plug with this IOCTL with a call to the <A HREF="wce50lrfioctlstreamdereferenceremoteplug.htm">IOCTL_STREAM_DEREFERENCE_REMOTE_PLUG</A> IOCTL when the plug is no longer needed. Depending on the mechanism used, this dereference IOCTL may or may not take action. </P>
+
+<H4 class="dtH4">Requirements</H4>
+
+<P><B>OS Versions:</B> Windows CE .NET 4.0 and later.<BR>
+<B>Header:</B> Avc_stream.h.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50lrfioctlstreamcreatelocalplug.htm">IOCTL_STREAM_CREATE_LOCAL_PLUG</A> | <A HREF="wce50lrfioctlstreamdeletelocalplug.htm">IOCTL_STREAM_DELETE_LOCAL_PLUG</A> | <A HREF="wce50lrfioctlstreamstartrecvsession.htm">IOCTL_STREAM_START_RECV_SESSION</A> | <A HREF="wce50lrfioctlstreamstartxmitsession.htm">IOCTL_STREAM_START_XMIT_SESSION</A> | <A HREF="wce50lrfioctlstreamdereferenceremoteplug.htm">IOCTL_STREAM_DEREFERENCE_REMOTE_PLUG</A> | <MSHelp:link keywords="wce50lrfCreateFile" TABINDEX="0">CreateFile</MSHelp:link> | <A HREF="wce50lrfstreamlocateremoteplugrequest.htm">STREAM_LocateRemotePlug_Request</A> | <A HREF="wce50lrfstreamlocateremoteplugresponse.htm">STREAM_LocateRemotePlug_Response</A> | <MSHelp:link keywords="wce50lrfDeviceIoControl" TABINDEX="0">DeviceIoControl</MSHelp:link></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

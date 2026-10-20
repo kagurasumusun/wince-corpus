@@ -1,0 +1,147 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>How to: Implement Runtime Platform and Version Checking</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="How to: Implement Runtime Platform and Version Checking"/>
+<MSHelp:RLTitle Title="How to: Implement Runtime Platform and Version Checking"/>
+<MSHelp:Keyword Index="A" Term="mob5tskHowToImplementRuntimePlatformVersionChecking"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Application"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbsmartphone"/>
+<MSHelp:Attr Name="Product" Value="kbPocketPC"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="Technology" Value="kbPocketPC"/>
+<MSHelp:Attr Name="Technology" Value="kbSmartphone"/>
+<MSHelp:Attr Name="TopicType" Value="kbTask"/>
+<MSHelp:Attr Name="Filename" Value="Writing_Code_for_Multiple_Devices_and_Versions_magneto.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="True"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_1063890">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Windows Mobile Version 5.0 SDK<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="mob5tskhowtoimplementruntimeplatformversionchecking"></A>How to: Implement Runtime Platform and Version Checking</H1>
+<!--Feedback Link Top Start-->
+<P CLASS="feedback"><font size="1"><a href="mailto:medfdbk&#64;microsoft.com?subject=Product: Windows Mobile | Version: 5.0 | Release: SDK | Title: How to: Implement Runtime Platform and Version Checking | Filename: mob5tskhowtoimplementruntimeplatformversionchecking.htm | Built on: Wednesday, September 14, 2005">Send Feedback</a> on this topic to the authors</font></p>
+<!--Feedback Link Top End-->
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>You can use the Windows CE <MSHelp:link keywords="wce50lrfGetVersionEx" TABINDEX="0">GetVersionEx</MSHelp:link> function and the Windows CE <MSHelp:link keywords="wce50lrfOSVERSIONINFO" TABINDEX="0">OSVERSIONINFO</MSHelp:link> structure to implement runtime platform version checking. The <B>dwPlatformId</B> structure member identifies the platform and version of the operating system. This enables you to provide different paths of execution for each version.</P>
+
+<H4 class="dtH4">Example</H4>
+
+<PRE class="code">// Define the (arbitrary) device type identifiers.
+#define DESKTOPID  500
+#define SMARTPHONE2003ID  403
+#define SMARTPHONE2002ID  402
+#define POCKETPC2003ID  303
+#define POCKETPC2002ID  302
+#define POCKETPC2000ID  300
+#define OTHERWINCEID  100
+#define UNKNOWNID  0
+
+BOOL rb;
+int rc;
+int iDevice = 0;  // Describe the device type.
+OSVERSIONINFO osvi;
+TCHAR szPlatform[MAX_PATH];
+
+osvi.dwOSVersionInfoSize = sizeof(osvi);
+rb = GetVersionEx(&amp;osvi);
+if (rb == FALSE)  // GetVersionEx failed.
+{
+    rc = MessageBox(NULL, _T("Could not create main window."),
+                    _T("Error"), MB_OK);
+    if (rc == 0)  // Not enough memory to create MessageBox.
+        return E_OUTOFMEMORY;
+    return E_FAIL;  // Replace with specific error handling.
+}
+
+switch (osvi.dwPlatformId)
+{
+    // A Windows CE platform. 
+    case VER_PLATFORM_WIN32_CE:
+        // Get platform string.
+        rb = SystemParametersInfo(SPI_GETPLATFORMTYPE, 
+                                  MAX_PATH, szPlatform, 0);
+        if (rb == FALSE)  // SystemParametersInfo failed.
+        {
+            rc = MessageBox(NULL, _T("Could not create main window."),
+                            _T("Error"), MB_OK);
+            if (rc == 0)  // Not enough memory to create MessageBox.
+                return E_OUTOFMEMORY;
+            return E_FAIL;  // Replace with specific error handling.
+        }
+        else  // SystemParametersInfo succeeded.
+        {
+            if (0 == lstrcmpi(szPlatform, TEXT("Smartphone")))  
+            {  // Smartphone devices.
+                if (osvi.dwMajorVersion == 3)
+                    iDevice = SMARTPHONE2002ID;
+                else if (osvi.dwMajorVersion == 4)
+                    iDevice = SMARTPHONE2003ID;
+                else  // Unknown device.
+                    iDevice = UNKNOWNID;
+            } 
+            else if (0 == lstrcmp(szPlatform, TEXT("PocketPC"))) 
+            {  // Pocket PC devices.
+                if (osvi.dwMajorVersion == 3)
+                    if (osvi.dwMinorVersion == 0)
+                        iDevice = POCKETPC2000ID;
+                    else if (osvi.dwMinorVersion == 1)
+                        iDevice = POCKETPC2002ID;
+                    else  // Unknown device.
+                        iDevice = UNKNOWNID;
+                else if (osvi.dwMajorVersion == 4)
+                    iDevice = POCKETPC2003ID;
+                else  // Unknown device.
+                    iDevice = UNKNOWNID;
+            }
+            else
+            {  // Some other Windows CE&#0150;based device.
+                iDevice = OTHERWINCEID;
+            } 
+        }  // SystemParametersInfo succeeded.
+        break;
+    // A desktop Windows platform.
+    default:
+        iDevice = DESKTOPID;
+    break;
+}</PRE>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="mob5conwritingcodeformultipledevicesversions.htm">Writing Code for Multiple Devices and Versions</A> | <A HREF="mob5grfconditionalcompilation.htm">Conditional Compilation</A> | <A HREF="mob5grfruntimeplatformversionchecking.htm">Runtime Platform and Version Checking</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Feedback Link Bottom Start-->
+<p><font size="1"><a href="mailto:medfdbk&#64;microsoft.com?subject=Product: Windows Mobile | Version: 5.0 | Release: SDK | Title: How to: Implement Runtime Platform and Version Checking | Filename: mob5tskhowtoimplementruntimeplatformversionchecking.htm | Built on: Wednesday, September 14, 2005">Send Feedback</a> on this topic to the authors</font></p>
+<!--Feedback Link Bottom End-->
+<!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="mob5conCopyrightInformationForMagneto" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link></font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

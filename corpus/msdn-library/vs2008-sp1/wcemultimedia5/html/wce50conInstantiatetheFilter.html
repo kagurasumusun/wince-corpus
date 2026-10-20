@@ -1,0 +1,100 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Instantiate the Filter</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Instantiate the Filter"/>
+<MSHelp:RLTitle Title="Instantiate the Filter"/>
+<MSHelp:Keyword Index="A" Term="wce50conInstantiatetheFilter"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Feature"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="directshow_concepts4.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="True"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+<MSHelp:Attr Name="PBFeature" Value="SYSGEN_DSHOW"/>
+<MSHelp:Attr Name="PBOnly" Value="False"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_3020500">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50coninstantiatethefilter"></A>Instantiate the Filter</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>All filters must add code to let the base classes instantiate the filter. </P>
+
+<P>To instantiate a filter, you must include two pieces of code in your filter: 
+
+<UL type="disc">
+	<LI>A static <B>CreateInstance</B> member function in the derived filter class</li>
+
+	<LI>A means of informing the class factory in the base classes how to access this function </li>
+</UL>
+
+<P>Typically, the <B>CreateInstance</B> member function calls the constructor for the derived filter class. </P>
+
+<P>The following examples show how to implement the <B>CreateInstance</B> member function. </P>
+
+<PRE class="code">CUnknown *CGargle::CreateInstance(LPUNKNOWN punk, HRESULT *phr) {
+
+    CGargle *pNewObject = new CGargle(NAME("Gargle Filter"), punk, phr);
+    if (pNewObject == NULL) {
+        *phr = E_OUTOFMEMORY;
+    }
+
+    return pNewObject;
+} // CreateInstance
+</PRE>
+
+<P>To communicate with the class factory, declare a global array of <A HREF="wce50lrfcfactorytemplateclass.htm">CFactoryTemplate</A> objects as <I>g_Templates</I> and provide the name of your filter, the class identifier (CLSID) of your filter, and a pointer to the static <B>CreateInstance</B> member function that creates your filter object. </P>
+
+<PRE class="code">// Needed for the CreateInstance mechanism
+CFactoryTemplate g_Templates[2]=
+    { { L"Gargle filter"              , &amp;CLSID_Gargle , 
+Gargle::CreateInstance          }
+    , { L"Gargle filter Property Page", &amp;CLSID_GargProp, 
+GargleProperties::CreateInstance}
+    };
+
+int g_cTemplates = sizeof(g_Templates)/sizeof(g_Templates[0]);
+</PRE>
+
+<P>You can add additional parameters to the <B>CFactoryTemplate</B> templates if you want your filter to be self-registering. For more information on this, see <A HREF="wce50conregisteringdirectshowfilters.htm">Registering DirectShow Filters</A>. </P>
+
+<P>Finally, link your filter to Strmbase.lib and export <MSHelp:link keywords="wce50lrfDllGetClassObject" TABINDEX="0">DllGetClassObject</MSHelp:link> and <MSHelp:link keywords="wce50lrfDllCanUnloadNow" TABINDEX="0">DllCanUnloadNow</MSHelp:link> using a .def file. </P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50conwriteatransformfilter.htm">Write a Transform Filter</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

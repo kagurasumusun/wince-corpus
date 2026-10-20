@@ -1,0 +1,92 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Keyboard Driver Development Concepts</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Keyboard Driver Development Concepts"/>
+<MSHelp:RLTitle Title="Keyboard Driver Development Concepts"/>
+<MSHelp:Keyword Index="A" Term="wce50conKeyboardDriverDevelopmentConcepts"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Driver"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="False"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="keyboard_guide.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="False"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="True"/>
+<MSHelp:Attr Name="PBFeature" Value="KeyboardDriver"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_1027265">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50conkeyboarddriverdevelopmentconcepts"></A>Keyboard Driver Development Concepts</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>Keyboard drivers are divided into components. This facilitates developing keyboard drivers for any keyboard layout. A <I>keyboard layout</I> is the key arrangement used for a particular keyboard, including such factors as the number of keys and the configuration of the keys. Some proprietary keyboards use custom layouts, and many keyboards allow a user to map keys to characters according to personal preference.</P>
+
+<P>Some keyboard drivers must handle keys that generate multiple virtual keys. This is useful on smaller hardware platforms that do not have all of the physical keys normally present on keyboards used with desktop workstations. Some of the keys have multiple functions, modified functions, or both. The driver generates virtual keys based on the state of particular physical keys and modifier keys, such as SHIFT and ALT.</P>
+
+<P>Generally, you should implement the keyboard driver as a layered driver. The upper layer, or model device driver (MDD), maps scan codes to virtual-key codes, generates character data associated with virtual-key codes, and then packages keyboard messages and puts them in a system-wide message queue. The lower layer, or platform-dependent driver (PDD), retrieves scan codes from hardware.</P>
+
+<P>The following illustration shows a keyboard driver stack that is hardware-platform independent.</P>
+
+<P class="fig"><IMG SRC="ddk_keyboard_stack.gif" ALT="" BORDER=0></P>
+
+<P>The keyboard driver is different from other device drivers because it is language dependent. The scan code to virtual-key code and virtual-key code to Unicode character translations are both dependent only on the keyboard layout for the language. The <A HREF="wce50lrfkeybddrivervkeytounicode.htm">PFN_KEYBD_DRIVER_VKEY_TO_UNICODE</A> function is responsible for generating the correct Unicode character based on the state of the virtual keys. This function is dependent only on the keyboard layout for the language. Both of these conversions are based on translation tables; also known as, <I>keyboard mappings</I>, which you can customize for different languages. You can create your own keyboard mappings or customize the existing keyboard mappings, if necessary. </P>
+
+<P>The Graphics, Windowing, and Events Subsystem (GWES) loads the keyboard driver at boot time. When GWES starts, it retrieves the name of the keyboard driver dynamic-link library (DLL) from the <B>HKEY_LOCAL_MACHINE\Hardware\DeviceMap\KEYBD\Drivername</B> registry key. If no entry is found, GWES uses the default name, Keybddr.dll. It then loads the DLL and verifies that all required entry points exist. Then, GWES calls the <A HREF="wce50lrfkeybddriverinitialize.htm">PFN_KEYBD_DRIVER_INITIALIZE</A> function to perform a one-time initialization. In this function, the driver saves a local copy of the GWES callback function and initializes the hardware and interrupt service thread (IST) to handle keyboard interrupts. When an interrupt is signaled, the keyboard driver is responsible for converting the hardware scan code into a virtual-key code and passing both to GWES through either the callback passed to <A HREF="wce50lrfkeybddriverinitializeex.htm">PFN_KEYBD_DRIVER_INITIALIZE_EX</A> or the <MSHelp:link keywords="wce50lrfkeybdevent" TABINDEX="0">keybd_event</MSHelp:link> API. Later, GWES pulls the keyboard event from the queue and calls back to the driver's <B>PFN_KEYBD_DRIVER_VKEY_TO_UNICODE</B> routine. The driver analyzes the specified key event and the virtual-key state and generates the corresponding characters. GWES then sends the virtual-key code and the characters to the appropriate application. The keyboard driver must add the flags KEYBD_DEVICE_SILENT or KEYBD_DEVICE_SILENT_REPEAT to the virtual-key codes or pass KEYEVENTF_SILENT to <B>keybd_event</B> in order to suppress audible key clicks.</P>
+
+<P>The <A HREF="wce50lrfkeybddrivergetinfo.htm">PFN_KEYBD_DRIVER_GET_INFO</A> and <A HREF="wce50lrfkeybddriversetmode.htm">PFN_KEYBD_DRIVER_SET_MODE</A> functions get and set information about the keyboard. When the main input thread processes a keyboard-connection event through the callback function passed to <B>PFN_KEYBD_DRIVER_INITIALIZE_EX</B>, the thread calls the <B>PFN_KEYBD_DRIVER_GET_INFO</B> function to get the virtual-key code to Unicode data supplied by the driver. The thread also allocates the required memory for the virtual-key state data and any extra data required by the driver. </P>
+
+<P>The <B>PFN_KEYBD_DRIVER_INITIALIZE_EX</B> and <B>PFN_KEYBD_EVENT_CALLBACK_EX</B> functions replace the non-Ex versions of these functions. The Ex functions provide support for Terminal Server Client by handling extra scan code information that the Terminal Server Protocol requires. The sample keyboard drivers on all hardware platforms use the Ex versions.</P>
+
+<H2 class="dtH2">Required and Optional Keyboard Driver Functionality</H2>
+
+<P>Keyboard drivers must call <MSHelp:link keywords="wce50lrfkeybdevent" TABINDEX="0">keybd_event</MSHelp:link> to notify GWES of any keyboard activity.</P>
+
+<P>The following list shows the optional keyboard driver functionality:
+
+<UL type="disc">
+	<LI>Updating keyboard drivers to work with Layout Manager. For more information, see <A HREF="wce50conlayoutmanager.htm">Layout Manager</A>, <A HREF="wce50howhowtomigrateakeyboarddriverwithoutconformingtothelayoutmanagerinterface.htm">How to Migrate a Keyboard Driver Without Conforming to the Layout Manager Interface</A>, and <A HREF="wce50howhowtomigrateakeyboarddrivertoconformtothelayoutmanagerinterface.htm">How to Migrate a Keyboard Driver to Conform to the Layout Manager Interface</A>.</li>
+
+	<LI>Implementing <MSHelp:link keywords="wce50lrfMapVirtualKey" TABINDEX="0">MapVirtualKey</MSHelp:link><B>(<I>uCode</I>, 0)</B> to enable Remote Desktop Protocol (RDP). <B>MapVirtualKey(<I>uCode</I>, 0)</B> must perform virtual key code to XT scan code conversions. For more information, see <A HREF="wce50conremotedesktopprotocolsupport.htm">Remote Desktop Protocol Support</A>.</li>
+
+	<LI>Implementing <B>MapVirtualKey(<I>uCode</I>, 3)</B> to enable USB keyboards. <B>MapVirtualKey(<I>x</I>, 3)</B> must perform AT scan code to virtual key code conversions.</li>
+
+	<LI>Enabling USB keyboard LEDs. For more information, see <A HREF="wce50tskaddingkeyboardledsupporttothehiddriver.htm">Adding Keyboard LED Support to the HID Keyboard Driver</A>.</li>
+</UL>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50conlayoutmanager.htm">Layout Manager</A> | <A HREF="wce50conkeyboarddriversamples.htm">Keyboard Driver Samples</A> | <A HREF="wce50conkeyboarddriverregistrysettings.htm">Keyboard Driver Registry Settings</A> | <A HREF="wce50condevicelayouts.htm">Device Layouts</A> | <A HREF="wce50coninputlanguages.htm">Input Languages</A> | <A HREF="wce50conkeyboardlayouts.htm">Translating Scan Codes to Virtual-Key Codes</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

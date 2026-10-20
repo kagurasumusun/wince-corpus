@@ -1,0 +1,101 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Writing to a Serial Port</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Writing to a Serial Port"/>
+<MSHelp:RLTitle Title="Writing to a Serial Port"/>
+<MSHelp:Keyword Index="A" Term="wce50conWritingtoaSerialPort"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Feature"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="serial_concepts.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="True"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+<MSHelp:Attr Name="PBFeature" Value="CORE"/>
+<MSHelp:Attr Name="PBOnly" Value="False"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_3005340">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50conwritingtoaserialport"></A>Writing to a Serial Port</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>The <MSHelp:link keywords="wce50lrfWriteFile" TABINDEX="0">WriteFile</MSHelp:link> function transfers data through the serial connection to another device. </P>
+
+<P>Before calling this function, an application must open and configure a serial port.</P>
+
+<P>Because Windows CE does not support overlapped I/O, the primary <I>thread</I> or any thread that creates a window should not try to write a large amount of data to a serial port. Such threads are blocked and cannot manage message queues. </P>
+
+<P>An application can simulate overlapped I/O by creating multiple threads to handle read/write operations. To coordinate threads, an application calls the <A HREF="wce50lrfwaitcommevent.htm">WaitCommEvent</A> function to block threads until specific communication events occur. </P>
+
+<P>For more information about communication events, see <A HREF="wce50conusingcommunicationevents.htm">Using Communication Events</A>.</P>
+
+<P class="labelproc"><B>To write to a serial port</B>
+
+<OL type="1">
+	<LI>Pass the port handle to the <B>WriteFile</B> function in the <I>hFile</I> parameter. 
+<P>The <MSHelp:link keywords="wce50lrfCreateFile" TABINDEX="0">CreateFile</MSHelp:link> function returns this handle when an application opens a port.
+</li>
+
+	<LI>Specify a pointer to the data to be written in <I>lpBuffer</I>. 
+<P>Often this data is binary data or a character array.
+</li>
+
+	<LI>Specify the number of bytes to write in <I>nNumberOfBytesToWrite</I>. 
+<P>The entire buffer can be passed to the driver.
+</li>
+
+	<LI>Specify in <I>lpNumberOfBytesWritten</I> a pointer to a location where <B>WriteFile</B> will store the number of bytes actually written; then look at this location to determine if the data transferred.</li>
+
+	<LI>Be sure that <I>lpOverlapped</I> is NULL.</li>
+</OL>
+
+<P>The following code example shows how to transfer data using the <B>WriteFile</B> function.</P>
+
+<PRE class="code">DWORD dwError,
+      dwNumBytesWritten;
+
+WriteFile (hPort,              // Port handle
+           &amp;Byte,              // Pointer to the data to write 
+           1,                  // Number of bytes to write
+           &amp;dwNumBytesWritten, // Pointer to the number of bytes 
+                               // written
+           NULL                // Must be NULL for Windows CE
+);</PRE>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50conprogrammingserialconnections.htm">Programming Serial Connections</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

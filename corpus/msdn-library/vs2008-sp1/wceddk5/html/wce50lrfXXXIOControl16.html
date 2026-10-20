@@ -1,0 +1,126 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>XXX_IOControl (Device Manager)</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="XXX_IOControl (Device Manager)"/>
+<MSHelp:RLTitle Title="XXX_IOControl (Device Manager)"/>
+<MSHelp:Keyword Index="K" Term="XXX_IOControl (Device Manager)"/>
+<MSHelp:Keyword Index="A" Term="wce50lrfXXXIOControl16"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Driver"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="False"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="apiref"/>
+<MSHelp:Attr Name="Filename" Value="stream_reference.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="False"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="True"/>
+<MSHelp:Attr Name="APIName" Value="XXX_IOControl"/>
+<MSHelp:Attr Name="APIType" Value="IDLDef"/>
+<MSHelp:Attr Name="APILocation" Value="Developer implemented"/>
+<MSHelp:Attr Name="PBFeature" Value="StreamDriver"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_3019296">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50lrfxxxiocontrol16"></A><I>XXX</I>_IOControl (Device Manager)</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>This function sends a command to a device.</P>
+
+<PRE class="syntax"><B>BOOL</B> <B><I>XXX</I>_IOControl(</B>
+  <B>DWORD</B><I> hOpenContext</I><B>,</B>
+  <B>DWORD </B><I>dwCode</I><B>,</B>
+  <B>PBYTE</B> <I>pBufIn</I><B>,</B>
+  <B>DWORD </B><I>dwLenIn</I><B>,</B>
+  <B>PBYTE</B> <I>pBufOut</I><B>,</B>
+  <B>DWORD </B><I>dwLenOut</I><B>,</B>
+  <B>PDWORD</B> <I>pdwActualOut</I> 
+<B>);</B></PRE>
+
+<H4 class="dtH4">Parameters</H4>
+
+<DL>
+<DT><I>hOpenContext</I></DT>
+
+<DD>[in] Handle to the open context of the device. The <A HREF="wce50lrfxxxopen17.htm">XXX_Open (Device Manager)</A> function creates and returns this identifier.</dd>
+
+<DT><I>dwCode</I></DT>
+
+<DD>[in] I/O control operation to perform. These codes are device-specific and are usually exposed to developers through a header file.</dd>
+
+<DT><I>pBufIn</I></DT>
+
+<DD>[in] Pointer to the buffer containing data to transfer to the device.</dd>
+
+<DT><I>dwLenIn</I></DT>
+
+<DD>[in] Number of bytes of data in the buffer specified for <I>pBufIn</I>.</dd>
+
+<DT><I>pBufOut</I></DT>
+
+<DD>[out] Pointer to the buffer used to transfer the output data from the device.</dd>
+
+<DT><I>dwLenOut</I></DT>
+
+<DD>[in] Maximum number of bytes in the buffer specified by <I>pBufOut</I>.</dd>
+
+<DT><I>pdwActualOut</I></DT>
+
+<DD>[out] Pointer to the <B>DWORD</B> buffer that this function uses to return the actual number of bytes received from the device.</dd>
+</DL>
+
+<H4 class="dtH4">Return Values</H4>
+
+<P>TRUE indicates success. FALSE indicates failure.</P>
+
+<H4 class="dtH4">Remarks</H4>
+
+<P>An application uses the <MSHelp:link keywords="wce50lrfDeviceIoControl" TABINDEX="0">DeviceIoControl</MSHelp:link> function to specify an operation to perform. The operating system, in turn, invokes the <B><I>XXX</I>_IOControl</B> function. The <I>dwCode </I>parameter contains the input or output operation to perform; these codes are usually specific to each device driver and are exposed to application programmers through a header file that the device driver developer makes available.</P>
+
+<P>If you define the <B>HKEY_LOCAL_MACHINE\Drivers\BuiltIn\<I>MyDevice</I>\Ioctl</B> registry key for your device driver, Device Manager invokes the <B><I>XXX</I>_IOControl</B> function when it loads and initializes your device driver. It uses the <B>Ioctl</B> registry value for the <I>dwCode</I> parameter and NULL for the <I>pBufIn </I>and <I>pBufOut </I>parameters. Your device might use this option to load other modules that require the installation of the basic device driver, or as a trigger to perform any other actions that are not suited to being part of the <A HREF="wce50lrfxxxinit15.htm">XXX_Init (Device Manager)</A> function. The actual sequence of calls made to a device driver in this scenario is <B><I>XXX</I>_Init</B>, <B><I>XXX</I>_Open</B>, <B><I>XXX</I>_IOControl</B>, and <A HREF="wce50lrfxxxclose13.htm">XXX_Close (Device Manager)</A>. The <B><I>XXX</I>_Open</B> function call is necessary for Device Manager to retrieve a valid context handle, and the <B><I>XXX</I>_Close</B> function is necessary to leave the device driver available to serve applications. </P>
+
+<P>Device Manager uses the <B><I>XXX</I></B> prefix. When implementing the stream interface, replace <B><I>XXX</I></B> with a prefix appropriate for your specific implementation or use undecorated entry point names in conjunction with DEVFLAGS_NAKEDENTRIES. For more information about other valid <B>Flags</B> values, see <A HREF="wce50lrfactivatedeviceex.htm">ActivateDeviceEx</A>.</P>
+
+<P>If possible, implement all power management IOCTLs in your driver.</P>
+
+<H4 class="dtH4">Requirements</H4>
+
+<P><B>OS Versions:</B> Windows CE 1.0 and later.<BR>
+<B>Header:</B> Developer implemented.<BR>
+<B>Link Library:</B> Developer implemented.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50condevicemanager.htm">Device Manager</A> | <A HREF="wce50grfpowermanagementioctls.htm">Power Management IOCTLs</A> | <A HREF="wce50lrfactivatedeviceex.htm">ActivateDeviceEx</A> | <MSHelp:link keywords="wce50lrfDeviceIoControl" TABINDEX="0">DeviceIoControl</MSHelp:link> | <MSHelp:link keywords="wce50lrfIOCTLPSLNOTIFY" TABINDEX="0">IOCTL_PSL_NOTIFY</MSHelp:link> | <A HREF="wce50lrfxxxclose13.htm">XXX_Close (Device Manager)</A> | <A HREF="wce50lrfxxxinit15.htm">XXX_Init (Device Manager)</A> | <A HREF="wce50lrfxxxopen17.htm">XXX_Open (Device Manager)</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

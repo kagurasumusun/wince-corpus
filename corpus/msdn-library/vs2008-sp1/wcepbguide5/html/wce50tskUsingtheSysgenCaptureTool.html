@@ -1,0 +1,171 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Using the Sysgen Capture Tool</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Using the Sysgen Capture Tool"/>
+<MSHelp:RLTitle Title="Using the Sysgen Capture Tool"/>
+<MSHelp:Keyword Index="A" Term="wce50tskUsingtheSysgenCaptureTool"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Guide"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="True"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbTask"/>
+<MSHelp:Attr Name="Filename" Value="tools.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="True"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="AllowSearch" CONTENT="True">
+<META NAME="msdnID" CONTENT="_3014221">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50tskusingthesysgencapturetool"></A>Using the Sysgen Capture Tool</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>You can use the Sysgen Capture tool to create a new sources file for a modified public driver that you want to rebuild in your OS design directory. For more information on the Sysgen Capture tool, see <A HREF="wce50lrfsysgencapturetool.htm">Sysgen Capture Tool</A>.</P>
+
+<P>The following procedure uses the serial port driver for 16550 UARTs, Com16550.dll, as an example of a target for the Sysgen Capture tool. Use the general process to assist in copying public code to your OS design so that you can make custom modifications.</P>
+
+<P class="labelproc"><B>Using the Sysgen Capture Tool</B>
+
+<OL type="1">
+	<LI>From a command prompt, in your OS design directory, create two subdirectories for the driver. One is for a library corresponding to your driver and the other is for your driver's binary file, which can be a DLL or EXE. 
+<P>For example, to customize Com16550.dll, create a subdirectory named %_TARGETPLATROOT%\Drivers\Com16550\Src for the library and %_TARGETPLATROOT%\Drivers\Com16550\DLL for the binary file. 
+
+<BLOCKQUOTE class="dtBlock">
+<b class="le">Note</b>&nbsp;&nbsp;&nbsp;If you were customizing an executable such as Etcha.exe, then you might create %_TARGETPLATROOT%\Apps\Etcha\Src and %_TARGETPLATROOT%\Apps\Etcha\EXE.</BLOCKQUOTE>
+</li>
+
+	<LI>Verify that the library name for your driver module is different from the name for your driver's binary file. 
+<P>In this example, Com16550.dll is built by linking Com16550_lib.lib. Most DLL Sysgen targets use the *_lib.lib naming convention because if you do not differentiate the library file and binary file names, the driver's import library has the same name as the static library containing its code. This may result in build problems that are difficult to diagnose accurately. 
+</li>
+
+	<LI>Copy the Public directory that contains code for the module that you want to build into the Src directory that you created. In this example, you would copy the files from Public\Common\OAK\Drivers\Serial\Com16550\*.*. </li>
+
+	<LI>Navigate to the %_TARGETPLATROOT%\Drivers\Com16550\Src directory. Use a text editor to open the Sources file, and then add the following line.
+<PRE class="code">RELEASETYPE=PLATFORM</PRE>
+
+<P>If a RELEASETYPE line already exists in the Sources file, then change its value to PLATFORM. This tells the build system that output files should be placed in your OS design's Lib or target directories. 
+</li>
+
+	<LI>Verify that the following line appears in the Sources file, and then save the file and close the text editor.
+<PRE class="code">WINCEOEM=1</PRE>
+
+<P>This tells the build system to include portions of header files that are only available to OEMs who are building run-time images. 
+</li>
+
+	<LI>Build the library in %_TARGETPLATROOT%\Drivers\Com16550\Src. If there are any errors, resolve them before proceeding. A successful build creates and places the file Com16550_lib.lib in the appropriate subdirectory of %_TARGETPLATROOT%\lib. </li>
+
+	<LI>Navigate to the directory for your driver's binary file. For example, navigate to %_TARGETPLATROOT%\Drivers\Com16550\DLL. </li>
+
+	<LI>Run Sysgen_capture with the usual Sysgen parameters. For example, type the following line to execute Sysgen_capture with Com16550 as a target.
+<PRE class="code">Sysgen_capture com16550</PRE>
+
+<P>This creates one or more files, one of which is a Sources file with the name of the driver as the file extension. For example, a file created using Com16550 as a target would be named Sources.com16550. The Sysgen_capture.bat utility creates one such file for each .dll or .exe target created while running your Sysgen command. 
+</li>
+
+	<LI>Rename the sources file for your driver as Sources. For example, remove the extension .com16550 from the file name Sources.com16550. </li>
+
+	<LI>Copy one of the selected module's sample Makefiles into your Src directory. At a minimum, you need a Sources file and a Makefile to run Build.exe. 
+<P>For example, copy the Makefile located in %_TARGETPLATROOT%\Drivers\Com16550\Src into %_TARGETPLATROOT%\Drivers\Com16550\DLL. 
+</li>
+
+	<LI>Run Build.exe. This creates the same binary as the standard Sysgen command, and places it in your OS design's target directory, which is a subdirectory of %_TARGETPLATROOT%\target. Examine Build.log to determine where the binary was created. 
+<BLOCKQUOTE class="dtBlock">
+<b class="le">Note</b>&nbsp;&nbsp;&nbsp;This version of the driver uses the standard version of Com16550_lib.lib, not the version that you created in %_TARGETPLATROOT%\Drivers\Com16550\src.</BLOCKQUOTE>
+</li>
+
+	<LI>In %_TARGETPLATROOT%\Drivers\Com16550\Src, open the sources file in a text editor. Remove the TARGETLIBS, or SOURCELIBS, entry for Com16550_lib.lib, and move it to SOURCELIBS, changing the path as appropriate. You may need to replace occurrences of %_PUBLICROOT%\common\oak with %_TARGETPLATROOT%. </li>
+
+	<LI>Navigate to the directory for your driver's binary file, for example, %_TARGETPLATROOT%\Drivers\Com16550\DLL, and then run Build.exe. Build.exe builds the target binary using your version of Com16550_lib.lib, which you can confirm by examining Build.log. 
+<BLOCKQUOTE class="dtBlock">
+<b class="le">Note</b>&nbsp;&nbsp;&nbsp;In order to delete all the object files, you may need to run Build.exe with the <B>&#0150;c</B> parameter. </BLOCKQUOTE>
+</li>
+
+	<LI>In the %_TARGETPLATROOT%\Drivers\Com16550 directory, create a Dirs file that lists, in order, the Src and DLL, or EXE, directories. This enables you to build your modified version of %_TARGETPLATROOT%\Drivers\Com16550\Src and link an executable with one build command. </li>
+
+	<LI>Run Build.exe with the <B>&#0150;c</B> option in the %_PROJECTROOT%\CustomDriver directory and confirm that the contents of both the Src and DLL, or EXE, subdirectories are built, and that the driver links successfully. </li>
+</OL>
+
+<P>Sysgen_capture.bat also works on OS functionality that is not a driver. The following table shows commands for other OS functionality.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=40%>Command</TH>
+<TH width=60%>Result</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=40%>
+<PRE class="code">Sysgen_capture pm</PRE>
+</TD>
+<TD width=60%>Creates a Sources file for the Power Manager</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=40%>
+<PRE class="code">Sysgen_capture etcha</PRE>
+</TD>
+<TD width=60%>Creates a Sources file for Etcha.exe, a touch driver test program.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=40%>
+<PRE class="code">Sysgen_capture -p wceshellfe cplmain</PRE>
+</TD>
+<TD width=60%>Creates a Sources file for the control panel.</TD>
+</TR>
+</table></div>
+
+<P>Both Sysgen_capture.bat and Nmake_capture.bat are located in %_WINCEROOT%\Public\Common\OAK\Bin\I386. If you want to build Nmake_capture.exe, the source code is located in %_WINCEROOT%\Public\Common\OAK\Tools. </P>
+
+<P>In the following procedure, Microsoft assumes that your Platform Builder installation includes support for x86 run-time images.</P>
+
+<P class="labelproc"><B>To build Nmake_capture.exe</B>
+
+<OL type="1">
+	<LI>Open a command-line build window with an environment that has %_TGTCPU% set to NTANSI and %_TGTPLAT% set to NOPLAT. </li>
+
+	<LI>From the command prompt, navigate to the %_WINCEROOT%\Public\Common\OAK\Tools\Nmake_capture directory. </li>
+
+	<LI>Run Build.exe with the <B>-c</B> option, as shown in the following code example. 
+<PRE class="code">Build -c</PRE>
+</li>
+
+	<LI>Copy the new version of Nmake_capture.exe into the execution path ahead of the default version included with Platform Builder.</li>
+</OL>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50lrfsysgencapturetool.htm">Sysgen Capture Tool</A> | <A HREF="wce50consysgentool.htm">Sysgen Tool</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

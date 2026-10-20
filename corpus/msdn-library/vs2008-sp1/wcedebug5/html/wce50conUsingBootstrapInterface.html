@@ -1,0 +1,99 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Using the ICcBootstrap Interface</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Using the ICcBootstrap Interface"/>
+<MSHelp:RLTitle Title="Using the ICcBootstrap Interface"/>
+<MSHelp:Keyword Index="A" Term="wce50conUsingBootstrapInterface"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Debugging"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="True"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="corecon_application_services.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="False"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_1052468">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50conusingbootstrapinterface"></A>Using the ICcBootstrap Interface</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P><A HREF="wce50grficcbootstrap.htm">ICcBootstrap</A> enables downloading a run-time image, an application, or a collection of files to a target device. </P>
+
+<P>The bootstrap interface supports the following functionality:
+
+<UL type="disc">
+	<LI>Flashing a target device with a run-time image</li>
+
+	<LI>Gathering information such as OS version and CPU information </li>
+</UL>
+
+<P>In addition, for application downloading, ICcBootstrap supports downloading application files and launching an application on a target device.</P>
+
+<P>You can load a download service directly using the COM activation call <MSHelp:link keywords="wce50lrfCoCreateInstance" TABINDEX="0">CoCreateInstance</MSHelp:link>, or instantiate a kernel download service with <A HREF="wce50lrficcsvchostgetservice.htm">ICcSvcHost::GetService</A>.</P>
+
+<P>If you instantiate a download service using <A HREF="wce50grficcsvchost.htm">ICcSvcHost</A>, the download service remains loaded in the service host process until the lock count for the service, controlled through <A HREF="wce50lrficcservicelockservice.htm">ICcService::LockService</A> and <A HREF="wce50lrficcserviceunlockservice.htm">ICcService::UnlockService</A>, is greater than 0. </P>
+
+<P>If you activate a download service directly using a COM call, the service remains in the client process space until the reference count for the object equals 0.</P>
+
+<P>The following steps show a typical process for using a download service. This process assumes that the client has implemented the <B>ICcService</B> interface through the service host, or that the client created an instance of the service directly with COM.
+
+<OL type="1">
+	<LI>Call <A HREF="wce50lrficcserviceinitialize.htm">ICcService::Initialize</A>.
+<P>This initializes the target device ID associated with the service. The download service uses the target device ID to query for properties from the datastore. 
+</li>
+
+	<LI>Call <A HREF="wce50lrficcserviceconnect.htm">ICcService::Connect</A>.
+<P>This establishes a connection between the desktop download service and a target device. For example, if you use the Ethernet Kernel Download service, calling <B>ICcService::Connect</B> ensures that the service has the target device IP address.
+</li>
+
+	<LI>Call <MSHelp:link keywords="wce50lrfIUnknownQueryInterface" TABINDEX="0">IUnknown::QueryInterface</MSHelp:link> for an <A HREF="wce50grficcbootstrap.htm">ICcBootstrap</A> object.</li>
+
+	<LI>Call <A HREF="wce50lrficcbootstrapdownload.htm">ICcBootstrap::Download</A>.
+<P>This downloads the requested files to a target device. 
+
+<P>You can repeat step 4 an unlimited number of times.
+</li>
+
+	<LI>Call <A HREF="wce50lrficcserviceunlockservice.htm">ICcService::UnlockService</A><B>.</B>
+<P>This releases the service interface. If there are no other references to this service, the service object is deleted and subsequent calls to <A HREF="wce50lrficcsvchostgetservice.htm">ICcSvcHost::GetService</A> create new instances of this service.
+</li>
+</OL>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50condownloadbootstrapinterfaces.htm">Download Interfaces</A> | <A HREF="wce50conkerneldownloadservices.htm">Kernel Download Services</A> | <A HREF="wce50conapplicationdownloadservices.htm">Application Download Services</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

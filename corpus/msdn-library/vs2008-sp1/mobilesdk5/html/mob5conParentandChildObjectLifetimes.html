@@ -1,0 +1,135 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Parent and Child Object Lifetimes</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Parent and Child Object Lifetimes"/>
+<MSHelp:RLTitle Title="Parent and Child Object Lifetimes"/>
+<MSHelp:Keyword Index="K" Term="code example, Parent and child object lifetimes"/>
+<MSHelp:Keyword Index="A" Term="mob5conParentandChildObjectLifetimes"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Application"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbsmartphone"/>
+<MSHelp:Attr Name="Product" Value="kbPocketPC"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="Technology" Value="kbPocketPC"/>
+<MSHelp:Attr Name="Technology" Value="kbSmartphone"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="directdraw_concepts_magneto.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="True"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_1073246">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Windows Mobile Version 5.0 SDK<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="mob5conparentandchildobjectlifetimes"></A>Parent and Child Object Lifetimes</H1>
+<!--Feedback Link Top Start-->
+<P CLASS="feedback"><font size="1"><a href="mailto:medfdbk&#64;microsoft.com?subject=Product: Windows Mobile | Version: 5.0 | Release: SDK | Title: Parent and Child Object Lifetimes | Filename: mob5conparentandchildobjectlifetimes.htm | Built on: Wednesday, September 14, 2005">Send Feedback</a> on this topic to the authors</font></p>
+<!--Feedback Link Top End-->
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>All objects you will use in DirectDraw programming &#0151; the DirectDraw object, surfaces, palettes, clippers, and such &#0151; only exist in memory for as long as another object, such as an application, needs them. </P>
+
+<P>The time that passes from the moment when an object is created and placed in memory to when it is released and subsequently removed from memory is known as the object's lifetime. </P>
+
+<P>The Component Object Model (COM) followed by all DirectX technologies dictate that an object must keep track of how many other objects require its services. </P>
+
+<P>This number, known as a reference count, determines the object's lifetime. COM also dictates that an object expose the <MSHelp:link keywords="mob5lrfIUnknownAddRef" TABINDEX="0">IUnknown::AddRef</MSHelp:link> and <MSHelp:link keywords="mob5lrfIUnknownRelease" TABINDEX="0">IUnknown::Release</MSHelp:link> methods to enable applications to explicitly manage its reference count; make sure you use these methods in accordance to COM rules.</P>
+
+<P>You are not the only one who is using the <B>IUnknown</B> methods to manage reference counts for objects &#0151; DirectDraw objects use them internally, too. </P>
+
+<P>When you use the <A HREF="mob5lrfidirectdraw4.htm">IDirectDraw</A> interface to create a child object like a surface, the child uses the <B>IUnknown::AddRef</B> method of the parent DirectDraw object to increment the parent's reference count. </P>
+
+<P>When your application no longer needs an object, call the <B>Release</B> method to decrement its reference count. When the count reaches zero, the object is removed from memory. </P>
+
+<P>When a child object's reference count reaches zero, it calls the parent's <B>IUnknown::Release</B> method to indicate that there is one less object who will be needing the parent's services. </P>
+
+<P>Implicitly allocated objects, such as the back-buffer surfaces in a flipping chain that you create with a single <A HREF="mob5lrfidirectdraw4createsurface.htm">IDirectDraw::CreateSurface</A> call, are automatically deallocated when their parent DirectDrawSurface object is released. </P>
+
+<P>Also, you can only release a DirectDraw object from the thread that created the application window. For single-threaded applications, this restriction obviously does not apply, as there is only one thread. </P>
+
+<H4 class="dtH4">Code Example</H4>
+
+<P>Consider an application that creates a primary flipping chain of two surfaces (created by a single <B>CreateSurface</B> call) using an attached <MSHelp:link keywords="wce50conDirectDrawClipperStructures" TABINDEX="0">DirectDrawClipper</MSHelp:link> object. The following code example demonstrates a safer way to release these objects.</P>
+
+<BLOCKQUOTE class="dtBlock">
+<b class="le">Note</b>&nbsp;&nbsp;&nbsp;To make the following code example easier to read, security checking and error handling are not included. This code example should not be used in a release configuration unless it has been modified to include them.</BLOCKQUOTE>
+
+<PRE class="code">// For this example, the g_lpDDraw, g_lpDDSurface, and
+// g_lpDDClip are valid pointers to objects.
+void ReleaseDDrawObjects(void)
+{
+    // If the DirectDraw object pointer is valid, 
+    // release it and the objects it owns.
+    if(g_lpDDraw)
+    {
+        // Release the DirectDraw object. (This call would not
+        // be safe if the children were created through IDirectDraw2 
+        // or IDirectDraw. See the following note for
+        // more information)
+        g_lpDDraw-&gt;Release(), g_lpDDraw = NULL;
+ 
+        // Now, release the clipper that is attached to the surfaces.
+        if(g_lpDDClip)
+            g_lpDDClip-&gt;Release(), g_lpDDClip = NULL;
+ 
+        // Now, release the primary flipping chain. Note
+        // that this is only valid because the flipping 
+        // chain surfaces were created with a single 
+        // CreateSurface call. If they were explicitly
+        // created and attached, then they must also be
+        // explicitly released.
+        if(g_lpDDSurface)
+            g_lpDDSurface-&gt;Release(), g_lpDDSurface = NULL;
+    }
+}</PRE>
+
+<BLOCKQUOTE class="dtBlock">
+<b class="le">Note&nbsp;&nbsp;&nbsp;</b>Earlier versions of the DirectDraw interface behave differently than the most recent interface. </BLOCKQUOTE>
+
+<BLOCKQUOTE class="dtBlock">
+When using these early interfaces, DirectDraw automatically releases all child objects when the parent itself is released. As a result, if you use these older interfaces, the order in which you release objects is critical. </BLOCKQUOTE>
+
+<BLOCKQUOTE class="dtBlock">
+In this case, you should release the children of a DirectDraw object before releasing the DirectDraw object itself (or not release them at all, counting on the parent to do cleanup for you). </BLOCKQUOTE>
+
+<BLOCKQUOTE class="dtBlock">
+Because the DirectDraw object releases the child objects, if you release the parent before the children, you are very likely to incur a memory fault for attempting to dereference a pointer that was invalidated when the parent object released its children. </BLOCKQUOTE>
+
+<BLOCKQUOTE class="dtBlock">
+Some older applications relied on the automatic release of child objects and neglected to properly release some objects when no longer needed. </BLOCKQUOTE>
+
+<BLOCKQUOTE class="dtBlock">
+At the time, this practice did not cause any negative side effects, however doing so when using the <A HREF="mob5lrfidirectdraw4.htm">IDirectDraw</A> interface might result in memory leaks. </BLOCKQUOTE>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Feedback Link Bottom Start-->
+<p><font size="1"><a href="mailto:medfdbk&#64;microsoft.com?subject=Product: Windows Mobile | Version: 5.0 | Release: SDK | Title: Parent and Child Object Lifetimes | Filename: mob5conparentandchildobjectlifetimes.htm | Built on: Wednesday, September 14, 2005">Send Feedback</a> on this topic to the authors</font></p>
+<!--Feedback Link Bottom End-->
+<!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="mob5conCopyrightInformationForMagneto" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link></font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

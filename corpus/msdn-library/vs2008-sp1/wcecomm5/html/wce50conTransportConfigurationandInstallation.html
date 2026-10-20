@@ -1,0 +1,96 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Transport Installation</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Transport Installation"/>
+<MSHelp:RLTitle Title="Transport Installation"/>
+<MSHelp:Keyword Index="A" Term="wce50conTransportConfigurationandInstallation"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Feature"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="winsock2spi_concepts.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="False"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+<MSHelp:Attr Name="PBFeature" Value="SYSGEN_WINSOCK"/>
+<MSHelp:Attr Name="PBOnly" Value="False"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_3008198">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50contransportconfigurationandinstallation"></A>Transport Installation</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>For a transport protocol to be accessible through Winsock, it must be properly installed on the system and registered with Winsock. When a transport service provider is installed by invoking a vendor's installation program, configuration information must be added to the link list of providers in Winsock to provide Ws2.dll with the required information. Ws2.dll exports an installation function, <A HREF="wce50lrfwscinstallprovider.htm">WSCInstallProvider</A> for the vendor's installation program to supply the relevant information about the to-be-installed service provider, for example, the name and path to the service provider DLL and a list of <B>WSAPROTOCOL_INFOW</B> structures that this provider can support. Symmetrically, Ws2.dll also provides a function, <A HREF="wce50lrfwscdeinstallprovider.htm">WSCDeinstallProvider</A>, for a vendor's uninstallation program to remove all the relevant information from the link list of providers maintained by Ws2.dll. The exact location and format of this configuration information is private to Ws2.dll, and can only be manipulated by the previously-mentioned functions.</P>
+
+<P>The order in which transport service providers are initially installed governs the order in which they are enumerated through <A HREF="wce50lrfwscenumprotocols.htm">WSCEnumProtocols</A> at the service provider interface, or through <B>WSAEnumProtocols</B> at the application interface. More importantly, this order also governs the order in which protocols and service providers are considered when a client requests creation of a socket based on its address family, type, and protocol identifier.</P>
+
+<P class="label"><B>Installing Layered Protocols and Provider Chains</B></P>
+
+<P>The <B>WSAPROTOCOL_INFO</B> structure supplied with each protocol to be installed indicates whether the protocol is a base protocol, layered protocol, or in a provider chain. The value of the <I>ProtocolChain.ChainLen </I>parameter is interpreted as shown in the following table.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=15%>Value</TH>
+<TH width=85%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=15%>0</TD>
+<TD width=85%>Layered protocol.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=15%>1</TD>
+<TD width=85%>Base protocol (or provider chain with only one provider).</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=15%>&gt;1</TD>
+<TD width=85%>Provider chain.</TD>
+</TR>
+</table></div>
+
+<P>Installation of provider chains can only occur after successful installation of all parts of the chain, including base protocols and layered protocols. The <B>WSAPROTOCOL_INFOW</B> structure for a provider chain uses the <I>ProtocolChain </I>parameter to describe the length of the chain and the identity of each protocol. The individual protocols that make up a chain are listed in order in the <I>ProtocolChain.ChainEntries</I> array, with the number zero element of the array corresponding to the first layered provider. Protocols are identified by their <I>CatalogEntryID</I> values, which are assigned by Ws2.dll at protocol installation time, and can be found in the <B>WSAPROTOCOL_INFOW</B> structure for each protocol. </P>
+
+<P>The values for the remaining parameters in the provider chain's <B>WSAPROTOCOL_INFOW</B> structure should be chosen to reflect the attributes and identifiers that best characterize the provider chain as a whole. When selecting these values, developers should bear in mind that communications over provider chains can only occur when both endpoints have compatible provider chains installed, and that applications must be able to recognize the corresponding <B>WSAPROTOCOL_INFO</B> structure. </P>
+
+<P>When a base protocol is installed, it is not necessary to make any entries in the <I>ProtocolChain.ChainEntries </I>array. It is implicitly understood that the sole protocol of this provider chain is already identified in the <I>CatalogEntryID </I>parameter of the same <B>WSAPROTOCOL_INFO</B> structure. Also note that provider chains may not include multiple instances of the same layered protocol.</P>
+
+<P>For more information about installing LSPs, see <A HREF="wce50conlayeredserviceprovider.htm">Installing an LSP</A>.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50condatatransportproviders.htm">Data Transport Providers</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

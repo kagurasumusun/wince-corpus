@@ -1,0 +1,99 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Function Inlining Problems</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Function Inlining Problems"/>
+<MSHelp:RLTitle Title="Function Inlining Problems"/>
+<MSHelp:Keyword Index="A" Term="wce50errFunctionInliningProblems"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Guide"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="True"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbRef"/>
+<MSHelp:Attr Name="Filename" Value="errlink.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="True"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_3026195">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50errfunctioninliningproblems"></A>Function Inlining Problems</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>If you are using function inlining, you must do the following:
+
+<UL type="disc">
+	<LI>Have the inline functions implemented in the header file you include.</li>
+
+	<LI>Have inlining turned ON in the header file.</li>
+</UL>
+
+<P>If you are using the <B>#pragma inline_depth</B> compiler directive, make sure you have a value of 2 or greater set. </P>
+
+<P>A value of zero will turn off inlining. </P>
+
+<P>Also make sure you are using the /Ob1 or /Ob2 compiler options. These are available in the <B>Project Settings</B> dialog box. (See the <B>Optimizations</B> category on the <B>C/C++</B> tab.)</P>
+
+<P>Mixing inline and noninline compile options on different modules can sometimes cause problems. </P>
+
+<P>If a C++ library is created with function inlining turned on (/Ob1 or /Ob2) but the corresponding header file describing the functions has inlining turned off (no option), you will get error LNK2001. The functions do not get inlined into the code from the header file, but because they are not in the library file there is no address to resolve the reference. </P>
+
+<P>Similarly, a program that uses function inlining but defines the functions in a .cpp file rather than in the header file will also get error LNK2001. The header file is included everywhere deemed appropriate, but the functions are only inlined when the .cpp file passes through the compiler; therefore, the linker sees the functions as unresolved externals when used in other modules. </P>
+
+<P>TESTCLS.H</P>
+
+<PRE class="code">class testcls {
+ public:
+  void PublicStatMemFunc1(void); 
+};</PRE>
+
+<P>CLASFUNC.CPP</P>
+
+<PRE class="code">#include "testcls.h"
+
+inline void testcls::PublicStatMemFunc1(void)
+{
+}</PRE>
+
+<P>TEST2.CPP</P>
+
+<PRE class="code">#include "testcls.h"
+
+void main(void)
+{
+ testcls testclsObject;
+ testclsObject.PublicStatMemFunc1( ); //This needed for compiler to add entry to table of unresolved symbols
+                        //Will cause an LNK2001 because this module cannot
+ }                    //  see the implementation of PublicStatMemFunc1( );</PRE>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

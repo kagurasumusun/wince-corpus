@@ -1,0 +1,78 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Accessing Memory from a Driver</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Accessing Memory from a Driver"/>
+<MSHelp:RLTitle Title="Accessing Memory from a Driver"/>
+<MSHelp:Keyword Index="A" Term="wce50conMemoryManagement281"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Driver"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="False"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="driverarchitecture.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="False"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+<MSHelp:Attr Name="PBFeature" Value="CoreDriver"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_3017980">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50conmemorymanagement281"></A>Accessing Memory from a Driver</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>When you execute code in kernel mode, in contrast to user mode, you must have access to the entire physical memory. Because an interrupt service thread (IST) runs in user mode and could need access to a block of physical memory to communicate with a device, you must map this block of memory to the address space in which the IST runs.</P>
+
+<P class="labelproc"><B>To map a block of memory to the address space of the IST</B>
+
+<OL type="1">
+	<LI>Call <MSHelp:link keywords="wce50lrfVirtualAlloc" TABINDEX="0">VirtualAlloc</MSHelp:link> to reserve a block of virtual memory. 
+<P>You must pass the MEM_RESERVE value as an argument to this function. Microsoft&reg; Windows&reg; CE allocates the memory and gives you a pointer to the block.
+</li>
+
+	<LI>Call <MSHelp:link keywords="wce50lrfVirtualCopy" TABINDEX="0">VirtualCopy</MSHelp:link> to map this block of memory to the corresponding block of physical memory. 
+<P>Specify the PAGE_NOCACHE argument so that the values inside that block are not cached. This flag will force the system to not optimize out a read.
+</li>
+</OL>
+
+<P><B>VirtualCopy</B> also supports the PAGE_PHYSICAL flag. You must set this flag when you are mapping physical memory that resides beyond 512 MB, that is, physical memory with an address above 0x1FFFFFFF.</P>
+
+<P>You can free virtual memory by using the <MSHelp:link keywords="wce50lrfVirtualFree" TABINDEX="0">VirtualFree</MSHelp:link> function.</P>
+
+<P>If a device driver creates a thread, and in that thread you call <MSHelp:link keywords="wce50lrfMapPtrToProcess" TABINDEX="0">MapPtrToProcess</MSHelp:link>, you must use <MSHelp:link keywords="wce50lrfGetCurrentPermissions" TABINDEX="0">GetCurrentPermissions</MSHelp:link> and <MSHelp:link keywords="wce50lrfSetProcPermissions" TABINDEX="0">SetProcPermissions</MSHelp:link> to retrieve and reset process permissions.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50conmemoryaccess.htm">Memory Access Permissions</A> | <MSHelp:link keywords="wce50conMemoryArchitecture" TABINDEX="0">Memory Architecture</MSHelp:link></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

@@ -1,0 +1,205 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>How to Profile and Optimize a Display Driver</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="How to Profile and Optimize a Display Driver"/>
+<MSHelp:RLTitle Title="How to Profile and Optimize a Display Driver"/>
+<MSHelp:Keyword Index="A" Term="wce50howHowtoProfileandOptimizeaDisplayDriver"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Driver"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="False"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbHowTo"/>
+<MSHelp:Attr Name="Filename" Value="howto_optimizingdisplaydriver.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="False"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+<MSHelp:Attr Name="PBFeature" Value="DisplayDriver"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_3017602">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50howhowtoprofileandoptimizeadisplaydriver"></A>How to Profile and Optimize a Display Driver</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>Windows CE and Platform Builder ship with a number of tools that can help you improve the performance of your display driver. 
+
+<UL type="disc">
+	<LI>Profiling tools, such as Monte Carlo profiling, help you understand which functions in your run-time image are most heavily used. </li>
+
+	<LI>Performance tools, such as DispPerf.exe, provide you with time-oriented measurements of your run-time image's operations. </li>
+</UL>
+
+<P>For more information, see <MSHelp:link keywords="wce50conMonteCarloProfiling" TABINDEX="0">Monte Carlo Profiling</MSHelp:link> and <A HREF="wce50condisplaydriverperformanceprofiling.htm">Display Driver Performance Profiling</A>. </P>
+
+<P>You can use these tools to determine which functions in your system are most frequently called during a usage scenario, and to provide metrics for the specific raster operations in your display driver.</P>
+
+<P>The following table shows the steps to profile a graphics application and optimize a specific color conversion in the FLAT display driver. </P>
+
+<P>These steps work on any display-based device and they assume that you are already familiar with the process of building a run-time image and downloading it to a target device. </P>
+
+<P>Select the check box next to each step to track your progress.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=6%>&nbsp;</TH>
+<TH width=56%>Step</TH>
+<TH width=38%>Topic</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=6%><INPUT TYPE="Checkbox" Value="ON"></TD>
+<TD width=56%>1. Create an empty display-based operating OS.</TD>
+<TD width=38%><MSHelp:link keywords="wce50tskCreatinganEmptyDisplayBasedOS" TABINDEX="0">Creating an Empty Display-Based OS</MSHelp:link></TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=6%><INPUT TYPE="Checkbox" Value="ON"></TD>
+<TD width=56%>2. Clone the FLAT display driver. 
+<P>The FLAT display driver is included in your OS design by default. By cloning it, you can make private modifications to the driver without affecting the performance or stability of other OS designs that might be using the public driver code for the FLAT driver.</P>
+
+<P>To clone the FLAT display driver
+
+<UL type="disc">
+	<LI>In OSDesignView, clone the Catalog item <B>&lt;</B><I>OS design</I><B>&gt; </B>Catalog Items\Device Drivers\Display\VGA Linear (Flat) Framebuffer.</li>
+
+	<LI>In the <B>Clone Catalog Item - ddi_flat</B> dialog box, select <B>ddi_flat_lib</B> and choose <B>OK</B>.</li>
+
+	<LI>In the <B>Clone Catalog Item - gpe</B> dialog box, select <B>gpe_lib</B>,<B> emulrotate</B>, and <B>genblt</B>. Clear the checkboxes for the other cloneable libraries, then choose <B>OK</B>.</li>
+</UL>
+</TD>
+<TD width=38%><MSHelp:link keywords="wce50tskCloningCatalogItem" TABINDEX="0">Cloning a Catalog Item</MSHelp:link></TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=6%><INPUT TYPE="Checkbox" Value="ON"></TD>
+<TD width=56%>3. Enable Monte Carlo profiling for your configuration.</TD>
+<TD width=38%><A HREF="wce50tskenablingmontecarloprofilingonyourplatform.htm">Enabling Monte Carlo Profiling of a Configuration</A></TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=6%><INPUT TYPE="Checkbox" Value="ON"></TD>
+<TD width=56%>4. Activate the instrumentation code for profiling your display driver with DispPerf.exe by setting the environment variable DO_DISPPERF = 1.
+<P>As with all sample display drivers shipped with Windows CE, the FLAT driver is already instrumented to support DispPerf, the display driver performance profiling tool. </P>
+
+<P>Typically, the code to support DispPerf within the FLAT driver is turned off, but setting DO_DISPPERF = 1 turns it on. </P>
+
+<P>For more information, see <A HREF="wce50condisplaydriverperformanceprofiling.htm">Display Driver Performance Profiling</A>.</P>
+</TD>
+<TD width=38%><MSHelp:link keywords="wce50tskSettingorClearinganEnvironmentVariable" TABINDEX="0">Setting or Clearing an Environment Variable</MSHelp:link></TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=6%><INPUT TYPE="Checkbox" Value="ON"></TD>
+<TD width=56%>5. Create an application that uses your OS design's graphics routines, providing a target for profiling your display driver.</TD>
+<TD width=38%><A HREF="wce50tskcreatingatargetapplicationforprofilingtheflatdisplaydriver.htm">Creating a Target Application for Profiling the FLAT Display Driver</A></TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=6%><INPUT TYPE="Checkbox" Value="ON"></TD>
+<TD width=56%>6. Within your OS design, create a project for the application that gathers the profiling data for the display driver, DispPerf.exe.</TD>
+<TD width=38%><A HREF="wce50tskbuildingdispperfexe.htm">Building DispPerf.exe</A></TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=6%><INPUT TYPE="Checkbox" Value="ON"></TD>
+<TD width=56%>7. Build a release configuration for your run-time image. From the <B>Build OS</B> menu, choose <B>Sysgen</B>.</TD>
+<TD width=38%><MSHelp:link keywords="wce50tskBuildingaPlatform" TABINDEX="0">Building a Run-Time Image</MSHelp:link></TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=6%><INPUT TYPE="Checkbox" Value="ON"></TD>
+<TD width=56%>8. When the build is complete, configure your download and debugging connections. </TD>
+<TD width=38%><MSHelp:link keywords="wce50tskConfiguringaConnectionforDownloadingandDebugging" TABINDEX="0">Configuring a Connection for Downloading and Debugging</MSHelp:link></TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=6%><INPUT TYPE="Checkbox" Value="ON"></TD>
+<TD width=56%>9. Download the run-time image to your device.</TD>
+<TD width=38%><MSHelp:link keywords="wce50conOSImageDownload" TABINDEX="0">Downloading a Run-Time Image</MSHelp:link></TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=6%><INPUT TYPE="Checkbox" Value="ON"></TD>
+<TD width=56%>10. After your run-time image is loaded, begin profiling ProfApp.exe to obtain a set of performance data.</TD>
+<TD width=38%><A HREF="wce50tskobtainingaperformanceprofileforadisplaydriver.htm">Obtaining a Performance Profile for a Display Driver</A></TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=6%><INPUT TYPE="Checkbox" Value="ON"></TD>
+<TD width=56%>11. Analyze the profiling and performance data to find heavily used functions that can be optimized.</TD>
+<TD width=38%><A HREF="wce50tskdisplaydeviceperformanceprofileanalysis.htm">Display Device Performance Profile Analysis</A></TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=6%><INPUT TYPE="Checkbox" Value="ON"></TD>
+<TD width=56%>12. From the <B>Target</B> menu in Platform Builder, choose <B>Detach Device</B> to return to the Platform Builder IDE.</TD>
+<TD width=38%>Not applicable.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=6%><INPUT TYPE="Checkbox" Value="ON"></TD>
+<TD width=56%>13. Add a function to the BitBlt emulation library to improve the performance of the FLAT display driver when running ProfApp.exe on your run-time image. 
+<P>For more information see <A HREF="wce50lrfbitbltemulationlibraryfunctions.htm">BitBlT Emulation Library Functions</A>.</P>
+</TD>
+<TD width=38%><A HREF="wce50conoptimizingagpeemulationfunction.htm">Optimizing a GPE Emulation Function</A></TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=6%><INPUT TYPE="Checkbox" Value="ON"></TD>
+<TD width=56%>14. From the <B>Build OS</B> menu, choose <B>Sysgen</B>.</TD>
+<TD width=38%>Not applicable.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=6%><INPUT TYPE="Checkbox" Value="ON"></TD>
+<TD width=56%>15. After your run-time image is rebuilt, download it onto your device and rerun the profiling steps to obtain a set of post-optimization profiling and performance data.</TD>
+<TD width=38%><MSHelp:link keywords="wce50conOSImageDownload" TABINDEX="0">Downloading a Run-Time Image</MSHelp:link>
+<P><A HREF="wce50tskobtainingaperformanceprofileforadisplaydriver.htm">Obtaining a Performance Profile for a Display Driver</A></P>
+</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=6%><INPUT TYPE="Checkbox" Value="ON"></TD>
+<TD width=56%>16. Evaluate the results of the optimization.</TD>
+<TD width=38%><A HREF="wce50conoptimizedgpeemulationfunctionanalysis.htm">Optimized GPE Emulation Function Analysis</A></TD>
+</TR>
+</table></div>
+
+<BLOCKQUOTE class="dtBlock">
+<b class="le">Note&nbsp;&nbsp;&nbsp;</b>If your project and run-time images build but exhibit unexpected behavior, verify that the settings you made for your projects and platform run-time images were all made for the release configuration of your run-time image.</BLOCKQUOTE>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50condisplaydriverperformance.htm">Display Driver Performance</A> | <MSHelp:link keywords="wce50oriHowtoTopics" TABINDEX="0">How-to Topics</MSHelp:link> | <A HREF="wce50condisplaydriversamples.htm">Display Driver Samples</A> | <A HREF="wce50oridevelopingdevicedriver.htm">Developing a Device Driver</A> </P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

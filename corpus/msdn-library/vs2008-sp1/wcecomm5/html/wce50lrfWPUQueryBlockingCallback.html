@@ -1,0 +1,133 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>WPUQueryBlockingCallback</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="WPUQueryBlockingCallback"/>
+<MSHelp:RLTitle Title="WPUQueryBlockingCallback"/>
+<MSHelp:Keyword Index="K" Term="WPUQueryBlockingCallback"/>
+<MSHelp:Keyword Index="A" Term="wce50lrfWPUQueryBlockingCallback"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Feature"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="apiref"/>
+<MSHelp:Attr Name="Filename" Value="winsock2spi_functions.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="False"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+<MSHelp:Attr Name="APIName" Value="WPUQueryBlockingCallback"/>
+<MSHelp:Attr Name="APIType" Value="LibDef"/>
+<MSHelp:Attr Name="APILocation" Value="Ws2.lib"/>
+<MSHelp:Attr Name="PBFeature" Value="SYSGEN_WINSOCK"/>
+<MSHelp:Attr Name="PBOnly" Value="False"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_3008271">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50lrfwpuqueryblockingcallback"></A>WPUQueryBlockingCallback</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>This function returns a pointer to a callback function the service provider should invoke periodically while servicing blocking operations.</P>
+
+<BLOCKQUOTE class="dtBlock">
+<b class="le">Note</b>&nbsp;&nbsp;&nbsp;<B>WPUQueryBlockingCallback</B> is not supported for the default TCP/UDP provider in Windows CE. However, third parties can implement their own provider and have support for this function if they choose.</BLOCKQUOTE>
+
+<PRE class="syntax"><B>int WPUQueryBlockingCallback(</B>
+  <B>DWORD</B><I> dwCatalogEntryId</I><B>,</B>
+  <B>LPBLOCKINGCALLBACK FAR* </B><I>lplpfnCallback</I><B>,</B>
+  <B>PDWORD_PTR</B><I> lpdwContext</I><B>,</B>
+  <B>LPINT</B><I> lpErrno</I> 
+<B>);</B></PRE>
+
+<H4 class="dtH4">Parameters</H4>
+
+<DL>
+<DT><I>dwCatalogEntryId</I></DT>
+
+<DD>[in] Descriptor identifying the calling service provider.</dd>
+
+<DT><I>lplpfnCallback</I></DT>
+
+<DD>[out] Pointer that receives the blocking callback function.</dd>
+
+<DT><I>lpdwContext</I></DT>
+
+<DD>[out] Pointer that receives a context value that the service provider must pass into the blocking callback.</dd>
+
+<DT><I>lpErrno</I></DT>
+
+<DD>[out] Pointer to the error code.</dd>
+</DL>
+
+<H4 class="dtH4">Return Values</H4>
+
+<P>If no error occurs, this function returns zero and stores a pointer to a blocking callback function in <I>lpfnCallback</I> and an associated context value in <I>lpdwContext</I>. Otherwise, it returns SOCKET_ERROR, and a specific error code is available in <I>lpErrno</I>.</P>
+
+<P>This function always returns NULL in <I>lpfnCallback</I> in Windows CE.</P>
+
+<P>The following table shows possible error codes.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=20%>Error value</TH>
+<TH width=80%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=20%>WSAEFAULT</TD>
+<TD width=80%>The <I>lpfnCallback</I> or the <I>lpdwContext</I> parameter is not a valid part of the process address space.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=20%>WSAEINVAL</TD>
+<TD width=80%>The <I>dwCatalogEntryId</I> is invalid.</TD>
+</TR>
+</table></div>
+
+<H4 class="dtH4">Remarks</H4>
+
+<P>This function returns a pointer to a callback function in <I>lpfnCallback</I> to be invoked periodically during blocking operations. This function also returns a context value in <I>lpdwContext</I> to be passed into the blocking callback.</P>
+
+<P>Using Win32, this function can return NULL in <I>lpfnCallback</I>, indicating that no user defined&#0150;blocking hook is installed. In this case, the service provider should use the native Win32 synchronization objects to implement blocking.</P>
+
+<P>LPBLOCKINGCALLBACK is defined as <code class="ce">typedef BOOL ( CALLBACK FAR * LPBLOCKINGCALLBACK )( DWORD dwContext );</code>.</P>
+
+<P>The blocking callback will return TRUE if the service provider is to continue waiting for the blocking operation to complete. </P>
+
+<P>Any missing parts of the address will default to a reasonable value, if possible. For example, a missing port number will default to zero.</P>
+
+<H4 class="dtH4">Requirements</H4>
+
+<P><B>OS Versions:</B> Windows CE .NET 4.0 and later.<BR>
+<B>Header:</B> Ws2spi.h.<BR>
+<B>Link Library:</B> Ws2.lib.</P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

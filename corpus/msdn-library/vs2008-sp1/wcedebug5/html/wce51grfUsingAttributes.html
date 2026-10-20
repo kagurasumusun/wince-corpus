@@ -1,0 +1,134 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Using Attributes</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Using Attributes"/>
+<MSHelp:RLTitle Title="Using Attributes"/>
+<MSHelp:Keyword Index="A" Term="wce51grfUsingAttributes"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Debugging"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="True"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="TuxNet.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="True"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_1076542">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce51grfusingattributes"></A>Using Attributes</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>Attributes can be used in various ways on test cases or test suites:
+
+<UL type="disc">
+	<LI>To describe an aspect of the test, in terms of what it tests or what it does. The TestCaseAttribute description and test type help with this</li>
+
+	<LI>To specify any restrictions the test, for instance, language or platform restructions. Custom attributes that know how to detect qualifications for a test are generally used for this purpose.</li>
+
+	<LI>To group tests for execution in a convenient manner. The test-type and group parameter to TestCaseAttribute are examples of this. These can be used from the command-line to identify specific tests to run. This is discussed in more detail below.</li>
+</UL>
+
+<P class="label"><B>Grouping</B></P>
+
+<P>In general, it is better to arrange test cases logically in TestSuite classes based on what feature or features they are testing rather than how or when the tester expects to run them. For instance, if you have two feature sets and three different sub-features in each, it might be better code arrangement to create one TestSuite class for each feature set, rather than a TestSuite class for each sub-feature. Code-reuse is easier when similar tests are near each other. However, this presents a problem if you want to run tests just from a specific sub-feature, and not all tests in a TestSuite. The Groups parameter to TestCaseAttribute can help with this.</P>
+
+<P>The TestCaseAttribute takes a Groups parameter that lets you specify a list of strings representing Test Groups. When you run your tests with Tux.Net, you can specify a Test Group (or multiple groups) to run and Tux.Net will run all tests that contain an attribute for one of the specified groups.</P>
+
+<P>The following code sample will run with either the command line parameter "-group Circles" or "-group Squares":</P>
+
+<PRE class="code">/// &lt;summary&gt;
+/// Sample Test Case assigned to two groups, 'Circles' and 'Squares'
+/// &lt;/summary&gt;
+/// &lt;returns&gt;Test Result&lt;/returns&gt;
+[TestCaseAttribute( "Test plotting of all known shapes",
+     Type = TestType.BVT,
+     Groups = new string [] {TestGroupNames.Circles,
+                             TestGroupNames.Squares})]
+public Logging.LogResult TestPlotAllShapes()
+{
+    GlobalLogger.AddComment("executing TestPlotAllShapes");
+    return Logging.LogResult.Pass;
+}
+
+/// &lt;summary&gt;
+/// List of predefined group names
+/// &lt;/summary&gt;
+public class TestGroupNames
+{
+    /// &lt;summary&gt;Circle Group Name&lt;/summary&gt;
+    public const string Circles = "Circles";
+
+    /// &lt;summary&gt;Square Group Name&lt;/summary&gt;
+    public const string Squares = "Squares";
+}</PRE>
+
+<P>This example shows a test case that belongs to two different logical groups. It also demonstrates using string objects, for example <B>TestGroupNames.Circles</B>, to ensure consistent use of group names and to avoid typos when assigning group names.</P>
+
+<P class="label"><B>Multiple SKUs</B></P>
+
+<P>Some test cases are only applicable to one product or one SKU of a product. In these cases, use a TestCaseAttribute to specify which configurations your test can be run on. The harness will only run your test on devices that meet the criteria specified in this attribute.</P>
+
+<P>The following example uses the MobileDevicesDescriptor (defined in the Windows Mobile plug-in, MDUtils) and shows how to specify that your test suite only runs on PocketPC. In addition, the first test case will only run on GSM and CDMA, for English and German languages. The second test case will only run on English devices.</P>
+
+<PRE class="code">/// &lt;summary&gt;
+/// Summary description for DeviceDescriptorExample.
+/// All tests in this test suite will only be run
+/// on PocketPC.
+/// &lt;/summary&gt;
+[MobileDevicesDescriptor(Product = Products.PocketPC)]
+public class DeviceDescriptorExample : TestSuite
+{
+     [TestCaseAttribute( "Sample for a Sku specific test")
+     [MobileDevicesDescriptor(Sku = Skus.Gsm | Skus.Cdma,
+                  Languages = new int[] {0x0409, 0x0407})]
+      public Logging.LogResult SkuSpecificTest()
+      {
+            // This test will only be run on PocketPC
+            // This test will only be run on GSM or CDMA
+            // This test will only be run on WWE and GER
+      }
+
+      [TestCaseAttribute( "Sample for a Language specific test")
+      [MobileDevicesDescriptor(Languages = new int[] {0x0409})]
+      public Logging.LogResult LanguageSpecificTest()
+      {
+            // This test will only be run on PocketPC
+            // This test will only be run on WWE
+      }
+}</PRE>
+
+<P>It is straight-forward to implement a plug-in like MDUtils to provide other attributes for constraints. Look at the a MDUtils project for more details.</P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

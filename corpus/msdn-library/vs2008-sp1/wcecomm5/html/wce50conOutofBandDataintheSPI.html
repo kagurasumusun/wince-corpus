@@ -1,0 +1,90 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Out-of-Band Data in the SPI</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Out-of-Band Data in the SPI"/>
+<MSHelp:RLTitle Title="Out-of-Band Data in the SPI"/>
+<MSHelp:Keyword Index="A" Term="wce50conOutofBandDataintheSPI"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Feature"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="winsock2spi_concepts.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="False"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+<MSHelp:Attr Name="PBFeature" Value="SYSGEN_WINSOCK"/>
+<MSHelp:Attr Name="PBOnly" Value="False"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_3008227">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50conoutofbanddatainthespi"></A>Out-of-Band Data in the SPI</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>The service providers that support the out-of-band data (OOB) abstraction for the stream-style sockets must adhere to the semantics in this section. OOB data handling in a protocol-independent manner is described later. Please refer to the <I>Windows Sockets 2 Protocol-Specific Annex </I>(a separate document)<I> </I>for a discussion of OOB data implemented using urgent data in TCP/IP service providers. In the following, the use of <A HREF="wce50lrfwsprecv.htm">WSPRecv</A> also implies <A HREF="wce50lrfwsprecvfrom.htm">WSPRecvFrom</A>. </P>
+
+<P class="label"><B>Protocol Independent&#0150;Out-of-Band Data in the SPI</B></P>
+
+<P>OOB data is a logically independent transmission channel associated with each pair of connected stream sockets. OOB data may be delivered to the user independently of typical data. The abstraction defines that the OOB data facilities must support the reliable delivery of at least one OOB data block at a time. This data block may contain at least one byte of data, and at least one OOB data block may be pending delivery to the user at any one time. For communications protocols which support in-band signaling (that is, TCP, where the urgent data is delivered in sequence with the typical data), the system usually extracts the OOB data from the typical data stream and stores it separately (leaving a gap in the typical data stream). This allows users to choose between receiving the OOB data in order and receiving it out of sequence without having to buffer all the intervening data. It is possible to peek at OOB data. </P>
+
+<P>A user can determine if there is any OOB data waiting to be read using the <A HREF="wce50lrfwspioctl.htm">WSPIoctl</A>(<B>SIOCATMARK</B>) function. For protocols where the concept of the position of the OOB data block within the typical data stream is meaningful (that is, TCP), a Windows Sockets service provider will maintain a conceptual marker indicating the position of the last byte of OOB data within the typical data stream. This is not necessary for the implementation of the <B>WSPIoctl </B>(<B>SIOCATMARK</B>) functionality &#0151; the presence or absence of OOB data is all that is required. </P>
+
+<P>For protocols where the concept of the position of the OOB data block within the typical data stream is meaningful an application may prefer to process out-of-band data inline, as part of the typical data stream. This is achieved by setting the socket option <B>SO_OOBINLINE</B> (see section <B>WSPIoctl</B>). For other protocols where the OOB data blocks are truly independent of the typical data stream, attempting to set <B>SO_OOBINLINE</B> will result in an error. An application can use the <B>SIOCATMARK</B> <B>WSPIoctl</B> command to determine whether there is any unread OOB data preceding the mark. For example, it might use this to resynchronize with its peer by ensuring that all data up to the mark in the data stream is discarded when appropriate. </P>
+
+<P>With <B>SO_OOBINLINE</B> disabled (by default), the following actions result:
+
+<UL type="disc">
+	<LI>The Windows Sockets service provider returns from <A HREF="wce50lrfwspselect.htm">WSPSelect</A> with the appropriate <I>exceptfds</I> socket set if OOB data is queued on the socket.</li>
+
+	<LI>The client can call <A HREF="wce50lrfwsprecv.htm">WSPRecv</A> with MSG_OOB to read the urgent data block at any time. The block of OOB data jumps the queue.</li>
+
+	<LI>The client can call <B>WSPRecv</B> without MSG_OOB to read the typical data stream. The OOB data block will not appear in the data stream with typical data. If OOB data remains after any call to <B>WSPRecv</B>, the service provider notifies the client with FD_OOB or through <I>exceptfds</I><B> </B>when using<B> WSPSelect</B>.</li>
+
+	<LI>For protocols where the OOB data has a position within the typical data stream, a single <B>WSPRecv</B> operation will not span that position. One <B>WSPRecv</B> will return the typical data before the mark, and a second <B>WSPRecv</B> is required to begin reading data after the mark. </li>
+</UL>
+
+<P>With <B>SO_OOBINLINE</B> enabled, the following actions result:
+
+<UL type="disc">
+	<LI>FD_OOB messages are <I>not</I> posted for OOB data &#0151; for the purpose of the <A HREF="wce50lrfwspselect.htm">WSPSelect</A> function, OOB data is treated as typical data, and indicated by setting the socket in <I>readfds</I> or by sending an FD_READ message respectively.</li>
+
+	<LI>The client may not call <A HREF="wce50lrfwsprecv.htm">WSPRecv</A> with the MSG_OOB flag set to read the OOB data block - the error code WSAEINVAL will be returned.</li>
+
+	<LI>The client can call <B>WSPRecv</B> without the MSG_OOB flag set. Any OOB data will be delivered in its correct order within the typical data stream. OOB data will never be mixed with typical data &#0151; there must be three read requests to get past the OOB data. The first returns the typical data prior to the OOB data block, the second returns the OOB data, and the third returns the typical data following the OOB data. In other words, the OOB data block boundaries are preserved.</li>
+</UL>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50consocketio.htm">Socket I/O</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

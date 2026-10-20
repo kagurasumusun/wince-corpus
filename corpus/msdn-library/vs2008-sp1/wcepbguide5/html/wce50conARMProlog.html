@@ -1,0 +1,97 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>ARM Prolog</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="ARM Prolog"/>
+<MSHelp:RLTitle Title="ARM Prolog"/>
+<MSHelp:Keyword Index="A" Term="wce50conARMProlog"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Guide"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="True"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="comp_arm_callspec.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="True"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_3023284">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50conarmprolog"></A>ARM Prolog</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>The ARM prolog has three constituent parts. All parts are immediately contiguous, with no intervening instructions. When the prolog follows this guideline, the <B>Virtual Unwinder</B> can reverse-execute the prolog.</P>
+
+<P>The following list shows the three required parts of an ARM prolog.
+
+<OL type="1">
+	<LI>A sequence of zero or one instructions that push the incoming argument values from <B>R0</B>, <B>R1</B>, <B>R2</B>, and <B>R3</B> to the argument home locations, and updates <B>R13</B> to the new stack top.
+<P>This sequence saves all permanent registers in descending order at the top of the stack frame, following any saved argument registers.
+</li>
+
+	<LI>A sequence of one or more instructions that set up the frame pointer, if one is to be established. 
+<P>The prolog copies stack pointer <B>R13</B> to<B> R12</B> before the initial register saves and uses <B>R12</B> to compute the value of the frame pointer, <B>R11</B>. 
+</li>
+
+	<LI>A sequence of zero or more instructions that allocate the remaining stack frame space for local variables, compiler-generated temporaries, and the argument build area by subtracting a 4-byte aligned offset from <B>R13</B>. 
+<P>If an offset is too wide to represent in the immediate field, the prolog uses the scratch register <B>R12</B> to hold the offset. In this case, it sets the value in <B>R12</B> with a different instruction. 
+</li>
+</OL>
+
+<H4 class="dtH4">Examples</H4>
+
+<P>The following examples show how to construct a variety of ARM prologs.
+
+<UL type="disc">
+	<LI>ARM Prolog with frame in R11.
+<PRE class="code">MOV    r12, r13        ; Save stack on entry if needed.
+STMDB  r13!, {r0-r3}    ; As needed
+STMDB  r13!, {r4-r12, r14}  ; As needed
+SUB    r11, r12, #16    ; Sets frame past args
+&lt;stack link if needed&gt;</PRE>
+</li>
+
+	<LI>ARM Prolog with no frame.
+<PRE class="code">MOV    r12, r13
+STMDB  r13!, {r0-r3}        ; As needed
+STMDB  r13! {[r4-r12,]|[r13,]r14}  ; As needed
+&lt;stack link if needed&gt;
+&lt;note: r12 is not used if the stack (r13) is the first register saved&gt;</PRE>
+</li>
+</UL>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50consehinriscenvironments.htm">SEH in RISC Environments</A> | <A HREF="wce50conarmepilog.htm">ARM Epilog</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

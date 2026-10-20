@@ -1,0 +1,157 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>SHGetUIMetrics</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="SHGetUIMetrics"/>
+<MSHelp:RLTitle Title="SHGetUIMetrics"/>
+<MSHelp:Keyword Index="K" Term="SHGetUIMetrics"/>
+<MSHelp:Keyword Index="A" Term="mob5lrfSHGetUIMetrics"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Application"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbsmartphone"/>
+<MSHelp:Attr Name="Product" Value="kbPocketPC"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="Technology" Value="kbPocketPC"/>
+<MSHelp:Attr Name="Technology" Value="kbSmartphone"/>
+<MSHelp:Attr Name="TopicType" Value="apiref"/>
+<MSHelp:Attr Name="Filename" Value="shell_reference_magneto.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="True"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_1072775">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Windows Mobile Version 5.0 SDK<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="mob5lrfshgetuimetrics"></A>SHGetUIMetrics</H1>
+<!--Feedback Link Top Start-->
+<P CLASS="feedback"><font size="1"><a href="mailto:medfdbk&#64;microsoft.com?subject=Product: Windows Mobile | Version: 5.0 | Release: SDK | Title: SHGetUIMetrics | Filename: mob5lrfshgetuimetrics.htm | Built on: Wednesday, September 14, 2005">Send Feedback</a> on this topic to the authors</font></p>
+<!--Feedback Link Top End-->
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>The <B>SHGetUIMetrics</B> function retrieves the system font size.</P>
+
+<H4 class="dtH4">Syntax</H4>
+
+<PRE class="syntax"><B>HRESULT SHGetUIMetrics (</B>
+<B>  SHUIMETRIC </B><I>shuim</I><B>,</B>
+<B>  PVOID </B><I>pvBuffer</I><B>,</B>
+<B>  DWORD </B><I>cbBufferSize</I><B>,</B>
+<B>  DWORD * </B><I>pcbRequired</I>
+<B>);</B></PRE>
+
+<H4 class="dtH4">Parameters</H4>
+
+<DL>
+<DT><I>shuim</I></DT>
+
+<DD>[in] Indicates how you want the system font size expressed. <I>shuim</I> must be one of the <A HREF="mob5lrfshuimetric.htm">SHUIMETRIC</A> values.</dd>
+
+<DT><I>pvBuffer</I></DT>
+
+<DD>[out] Reference to the retrieved system font size value. Can be <B>NULL</B>. (See Remarks for details.)</dd>
+
+<DT><I>cbBufferSize</I></DT>
+
+<DD>[in] The estimated size of <I>pvBuffer</I>.</dd>
+
+<DT><I>pcbRequired</I></DT>
+
+<DD>[out] Reference to the actual size required for <I>pvBuffer</I>. Can be <B>NULL</B>. (See Remarks for details.)</dd>
+</DL>
+
+<H4 class="dtH4">Return Values</H4>
+
+<P><B>SHGetUIMetrics</B> returns an <B>HRESULT</B> value of either <B>S_OK</B> or an appropriate error code.</P>
+
+<H4 class="dtH4">Remarks</H4>
+
+<P>To ensure that your application displays properly, you should call <B>SHGetUIMetrics</B> to determine current system font size when your application starts. Also, after the window receives the <A HREF="mob5lrfsh_uimetric_change.htm">SH_UIMETRIC_CHANGE</A> notification that is broadcast whenever the user changes the system font size, you can call <B>SHGetUIMetrics</B> to determine the new font metrics and then determine whether the new font size requires a new layout of your window.</P>
+
+<P>If you call <B>SHGetUIMetrics</B> to retrieve the system font size, <I>shuim</I> must be one of the three <B>SHUIMETRIC</B> values: <B>SHUIM_FONTSIZE_POINT</B>, or <B>SHUIM_FONTSIZE_PIXEL</B>, or <B>SHUIM_FONTSIZE_PERCENTAGE</B>. In this case, <I>pvBuffer</I> is a pointer to DWORD, and <I>cbBufferSize</I> is the size of a DWORD.</P>
+
+<BLOCKQUOTE class="dtBlock">
+<b class="le">Note</b>&nbsp;&nbsp;&nbsp;In Windows Mobile 2003 software and earlier, users cannot change the system font size on Windows Mobile-based Smartphones.</BLOCKQUOTE>
+
+<H4 class="dtH4">Code Example</H4>
+
+<P>The following code example demonstrates how to use <B>SHGetUIMetrics</B>.</P>
+
+<BLOCKQUOTE class="dtBlock">
+<b class="le">Note</b>&nbsp;&nbsp;&nbsp;To make the following code example easier to read, security checking and error handling are not included. This code example should not be used in a release configuration unless it has been modified to include them.</BLOCKQUOTE>
+
+<PRE class="code">#include &lt;Aygshell.h&gt;
+
+LRESULT CALLBACK SHUIMetricWndProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
+{
+    // This message will only fire on Pocket PC
+    static UINT uMetricChangeMsg = RegisterWindowMessage(SH_UIMETRIC_CHANGE);
+
+    if (message == uMetricChangeMsg)
+    {
+        HRESULT hr;
+        LOGFONT lf;
+        HDC hDC = GetDC(hwnd);
+        int iFontSizePoint;
+        int iFontSizePixel;
+        int iFontSizePercentage;
+
+        // Get the height of the current system font size in points. This can be used with the LOGFONT
+        // structure to get the correct font height.
+        hr = SHGetUIMetrics(SHUIM_FONTSIZE_POINT, &amp;iFontSizePoint, sizeof(iFontSizePoint), NULL);
+        lf.lfHeight = -MulDiv(iFontSizePoint, GetDeviceCaps(hDC, LOGPIXELSY), 72);
+
+        // Get the height of the current system font size in pixels. This can be used with the LOGFONT
+        // structure to get the correct font height.
+        hr = SHGetUIMetrics(SHUIM_FONTSIZE_PIXEL, &amp;iFontSizePixel, sizeof(iFontSizePixel), NULL);
+        lf.lfHeight = -iFontSizePixel;
+
+        // Get the height of the current system font size in percentage of the default system font size. This is
+        // useful when using richedit controls, since richedit supports the EM_SETZOOM message.
+        hr = SHGetUIMetrics(SHUIM_FONTSIZE_PERCENTAGE, &amp;iFontSizePercentage, sizeof(iFontSizePercentage), NULL);
+
+        ReleaseDC(hwnd, hDC);
+    }
+
+    return DefWindowProc(hwnd, message, wParam, lParam);
+}
+</PRE>
+
+<H4 class="dtH4">Requirements</H4>
+
+<P><B>Pocket&nbsp;PC:</B> Windows Mobile&nbsp;2003 Second Edition and later.<BR>
+<B>Smartphone:</B> Windows Mobile&nbsp;2003 Second Edition and later.<BR>
+<B>OS&nbsp;Versions:</B> Windows CE .NET 4.2 and later.<BR>
+<B>Header:</B> Aygshell.h.<BR>
+<B>Library:</B> Aygshell.dll</P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Feedback Link Bottom Start-->
+<p><font size="1"><a href="mailto:medfdbk&#64;microsoft.com?subject=Product: Windows Mobile | Version: 5.0 | Release: SDK | Title: SHGetUIMetrics | Filename: mob5lrfshgetuimetrics.htm | Built on: Wednesday, September 14, 2005">Send Feedback</a> on this topic to the authors</font></p>
+<!--Feedback Link Bottom End-->
+<!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="mob5conCopyrightInformationForMagneto" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link></font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

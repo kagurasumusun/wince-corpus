@@ -1,0 +1,193 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Module-Definition File</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Module-Definition File"/>
+<MSHelp:RLTitle Title="Module-Definition File"/>
+<MSHelp:Keyword Index="A" Term="wce50conModuleDefinitionFiles"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="OS"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="True"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="configuration_file_types.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="False"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_3012341">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50conmoduledefinitionfiles"></A>Module-Definition File</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>A module-definition (.def) file is a text file that contains statements defining an executable (.exe) file or dynamic-link library (DLL). </P>
+
+<P>Although all executable files can use .def files, they are mainly used by the linker tool to create .exe files and DLL files as one of the final steps in the build process. For more information on the build process, see <A HREF="wce50conbuildphases.htm">Build Phases</A>.</P>
+
+<P>The statements in a .def file provide the linker with information about exports, attributes, and other information about the application to be linked. </P>
+
+<P>Most statements appear once in the .def file, and accept one specification of arguments, which follows the statement keyword on the same or subsequent lines. </P>
+
+<P>If you repeat the statement with different arguments later in the file, the later statement overrides the earlier one. Many of these statements have an equivalent LINK command-line option.</P>
+
+<P>The SECTIONS, EXPORTS, and IMPORTS statements can appear more than once in the .def file. Each statement can take multiple specifications, which must be separated by one or more spaces, tabs, or newline characters. </P>
+
+<P>The statement keyword must appear once before the first specification, and it can be repeated before each additional specification.</P>
+
+<P>A semicolon at the beginning of each comment line designates comments in the .def file. A comment cannot share a line with a statement, but it can appear between specifications in a multiline statement, such as SECTIONS and EXPORTS.</P>
+
+<P>If a string argument matches a reserved word, it must be enclosed in double quotation marks.</P>
+
+<P>Numeric arguments are specified in decimal or C-language notation.</P>
+
+<P>For examples of .def files, see the files Kbdjpn1.def, Kbdjpn2.def, Kbdkor.def, and Kbdus.def for Windows CE 4.2 or later, which are in %_WINCEROOT%\Public\Common\Oak\Inc.</P>
+
+<H2 class="dtH2">NAME</H2>
+
+<P>This statement specifies a name for the main output file, and it must precede all other statements. </P>
+
+<P>The statement syntax is as follows:</P>
+
+<PRE class="syntax">NAME[application][BASE=address]</PRE>
+
+<P>In LINK, You can specify an output filename with the Output File Name (/OUT) option and set the base address with the Base Address (/BASE) option. </P>
+
+<P>If both NAME and /OUT are specified, /OUT overrides NAME.</P>
+
+<H2 class="dtH2">LIBRARY</H2>
+
+<P>This statement tells LINK to create a DLL and must precede all statements when used. At the same time, LINK creates an import library, unless an export (.exp) file is used in the build.</P>
+
+<P>The statement syntax is as follows:</P>
+
+<PRE class="syntax">LIBRARY [library][BASE=address]</PRE>
+
+<P>The LIBRARY argument specifies the internal name of the DLL. In LINK, you use the Output File Name (/OUT) option to specify the DLL's output name.</P>
+
+<P>The BASE=address argument sets the base address that the operating system uses to load the DLL. This argument overrides the default DLL location of 0x10000000. For more information about base addresses, see the Base Address (/BASE) option.</P>
+
+<P>In LINK, you can specify a DLL build with the /DLL option, and set the base address with the /BASE option.</P>
+
+<H2 class="dtH2">DESCRIPTION</H2>
+
+<P>This statement writes a string into an .rdata section, and uses the following syntax: </P>
+
+<PRE class="syntax">DESCRIPTION "text"</PRE>
+
+<P>You enclose the specified text in single or double quotation marks. To use a literal quotation mark in the string, enclose the string with the other type of quotation mark.</P>
+
+<P>This functionality differs from the comment that you specify in LINK with the /COMMENT option.</P>
+
+<H2 class="dtH2">STACKSIZE</H2>
+
+<P>This statement sets the size of the stack in bytes. You can set the stack in LINK with the Stack Allocations (/STACK) option. </P>
+
+<P>The statement uses the following syntax:</P>
+
+<PRE class="syntax">STACKSIZE reserve[,commit]</PRE>
+
+<P>The reserve argument specifies the total stack allocation in virtual memory. The default stack size is 1 MB. The linker rounds up the specified value to the nearest 4 bytes. </P>
+
+<P>The commit argument is subject to interpretation by the operating system. For example, in Windows NT, it specifies the amount of physical memory to allocate at a time. </P>
+
+<P>Committed virtual memory causes space to be reserved in the paging file. The higher the value, the more time the application saves when it needs more stack space. However, this increases the memory requirements and possibly the startup time.</P>
+
+<H2 class="dtH2">SECTIONS</H2>
+
+<P>This statement sets attributes for one or more sections in the run-time image. You can use it to override the default attributes for each section type. </P>
+
+<P>The statement uses the following syntax:</P>
+
+<PRE class="syntax">SECTIONS definitions</PRE>
+
+<P>The SEGMENTS keyword is supported as a synonym for SECTIONS.</P>
+
+<P>SECTIONS marks the beginning of a list of section definitions. The SECTIONS keyword can be on the same line as the first definition or on a preceding line, but each definition must be on a separate line. </P>
+
+<P>A .def file can contain one or more SECTIONS statements. </P>
+
+<P>The syntax for a section definition is:</P>
+
+<PRE class="syntax">section [CLASS 'classname'] attributes</PRE>
+
+<P>The section name is case sensitive. The CLASS keyword is supported for compatibility, but is ignored. The attributes are one or more of the following: EXECUTE, READ, SHARED, and WRITE.</P>
+
+<P>In LINK, you can specify section attributes with the /SECTION option.</P>
+
+<H2 class="dtH2">EXPORT</H2>
+
+<P>This statement makes one or more definitions available as exports to other applications. </P>
+
+<P>The statement uses the following syntax:</P>
+
+<PRE class="syntax">EXPORTS definitions</PRE>
+
+<P>This statement makes one or more definitions available as exports to other applications. When LINK builds an application that contains exports, it also creates an import library, unless an .exp file is used in the build.</P>
+
+<P>EXPORTS marks the beginning of a list of export definitions. The EXPORTS keyword can be on the same line as the first definition or on a preceding line, but each definition must be on a separate line. A .def file can contain one or more EXPORTS statements.</P>
+
+<P>An export definition uses the following syntax:</P>
+
+<PRE class="syntax">entryname[=internalname] [@ordinal[NONAME]] [DATA] [PRIVATE]</PRE>
+
+<P>The optional keyword PRIVATE prevents entryname from being placed in the import library that LINK generates. However, it has no effect on the export in the run-time image that LINK also generates.</P>
+
+<P>There are three methods for exporting a definition, listed in recommended order of use:
+
+<OL type="1">
+	<LI>The __declspec(dllexport) keyword in the source code</li>
+
+	<LI>An EXPORTS statement in a .def file</li>
+
+	<LI>An /EXPORT specification in a LINK command </li>
+</OL>
+
+<P>All three methods can be used in the same application. </P>
+
+<H2 class="dtH2">VERSION</H2>
+
+<P>This statement tells LINK to put a number in the header of the .exe file or DLL. </P>
+
+<P>The statement uses the following syntax:</P>
+
+<PRE class="syntax"><B>VERSION </B><I>major</I>[.<I>minor</I>]</PRE>
+
+<P>The <I>major</I> and <I>minor</I> arguments are decimal numbers in the range 0 through 65,535. The default setting is 0.0.</P>
+
+<P>In LINK, you can specify a version number with the Version Information (/VERSION) option. </P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50conbuildphases.htm">Build Phases</A> | <MSHelp:link keywords="wce50oriHowtoTopics" TABINDEX="0">How-to Topics</MSHelp:link></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

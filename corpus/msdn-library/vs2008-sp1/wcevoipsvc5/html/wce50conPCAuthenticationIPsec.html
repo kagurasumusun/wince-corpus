@@ -1,0 +1,75 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>PC Authentication and IPsec</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="PC Authentication and IPsec"/>
+<MSHelp:RLTitle Title="PC Authentication and IPsec"/>
+<MSHelp:Keyword Index="A" Term="wce50conPCAuthenticationIPsec"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Feature"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="pcauth_appdev.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="False"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+<MSHelp:Attr Name="PBFeature" Value="SYSGEN_VOIPPHONE_LAP"/>
+<MSHelp:Attr Name="PBOnly" Value="False"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_1051524">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50conpcauthenticationipsec"></A>PC Authentication and IPsec</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>Desktop computers running Windows can be configured to require that IP traffic be protected using IP security protocol (IPsec). Desktop computers that are configured like this can cause the PC Authentication LAP and desktop computer application to communicate differently.</P>
+
+<BLOCKQUOTE class="dtBlock">
+<b class="le">Note&nbsp;&nbsp;&nbsp;</b>Explaining how to configure IPsec on desktop computers running Windows is outside the scope of this topic. For more information about IPsec, refer to the documentation for your version of Windows.</BLOCKQUOTE>
+
+<P>In one scenario, a desktop computer can be configured to attempt to protect any IP communication using IPsec. When the PC Authentication LAP on a Windows CE-based IP phone attempts to connect to a desktop computer that requires IPsec, the desktop computer waits for a non-negligible amount of time &#0151; between two and five seconds&#0151; for IPsec communication. </P>
+
+<P>When no IPsec communication is forthcoming, the desktop computer makes an exception for that device and allows communication to proceed without IPsec. Future requests do not require the timeout period to expire and so complete immediately. </P>
+
+<P>The initial desktop computer timeout causes the call to the LASS <MSHelp:link keywords="wce50lrfVerifyUser" TABINDEX="0">VerifyUser</MSHelp:link> function to also timeout, which results in the LAP not authenticating the user. Because of the resulting exception, subsequent authentication attempts are processed normally and, if the desktop computer is authenticated and unlocked, the user is authenticated.</P>
+
+<P>From the perspective of an application that uses the PC Authentication LAP, like the Telephony User Interface (TUI), this can cause initial authentication attempts to fail while subsequent attempts succeed. Applications that use the PC Authentication Catalog item should take this possibility into account, perhaps by providing a user interface that notifies the user when a timeout occurs or by retrying the authentication attempt automatically.</P>
+
+<P>The exception that allows non-IPsec communication is limited in time and the desktop computer may discard the exception data after a certain number of minutes. This means that another request from the same Windows CE-based device may result in the same pattern of initial timeout followed by success.</P>
+
+<P>Although the LASS always calls the LAP's <B>VerifyUser </B>implementation, applications using the PC Authentication LAP directly can call <A HREF="wce50lrfattemptconnection.htm">AttemptConnection</A> to avoid this problem. <B>AttemptConnection</B> makes the some connection to the desktop computer, but waits for a longer period before timing out. As long as this longer period of time is sufficient for the desktop computer to make a non-IPsec exception and allow IP communication, <B>AttemptConnection</B> can succeed on an initial call.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50oripcauthenticationapplicationdevelopment.htm">PC Authentication Application Development</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, July 13, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

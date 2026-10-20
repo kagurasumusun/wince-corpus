@@ -1,0 +1,187 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>HID Button Capability Arrays</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="HID Button Capability Arrays"/>
+<MSHelp:RLTitle Title="HID Button Capability Arrays"/>
+<MSHelp:Keyword Index="A" Term="wce50conHIDButtonCapabilityArrays"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Driver"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="False"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="hid_guide.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="False"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+<MSHelp:Attr Name="PBFeature" Value="HIDDriver"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_3018098">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50conhidbuttoncapabilityarrays"></A>HID Button Capability Arrays</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>A button capability array contains information about the button usages supported by a top-level collection for a specific type of HID report. A <A HREF="wce50lrfhidpcaps.htm">HIDP_CAPS</A> structure contains information about a collection's capability.</P>
+
+<P>The following table shows the functions that HID client drivers can use to obtain button capability information.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=50%>Function</TH>
+<TH width=50%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><A HREF="wce50lrfhidpgetbuttoncaps.htm">HidP_GetButtonCaps</A> </TD>
+<TD width=50%>Returns a button capability array describing all the button usages contained in a specified report type.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><A HREF="wce50lrfhidpgetspecificbuttoncaps.htm">HidP_GetSpecificButtonCaps</A> </TD>
+<TD width=50%>Filters the button capability information it returns by a caller-specified usage page, usage identifier, and link collection. </TD>
+</TR>
+</table></div>
+
+<P>A button capability array contains <A HREF="wce50lrfhidpbuttoncaps.htm">HIDP_BUTTON_CAPS</A> structures. The following list shows the information contained in the <B>HIDP_BUTTON_CAPS</B> structure about a HID usage or usage range:
+
+<UL type="disc">
+	<LI>Usage page for the usage or usage range</li>
+
+	<LI>Report identifier of the report that contains the button data</li>
+
+	<LI>Usage identifier or usage range</li>
+
+	<LI>Flag that indicates whether a usage is an aliased usage</li>
+
+	<LI>Link collection that contains the usage or usage range</li>
+
+	<LI>String descriptors and designators associated with the usage or usage range</li>
+
+	<LI>Data indexes that the HID parser assigned to the usage or usage range</li>
+</UL>
+
+<P>The following list shows the general conditions for all usages described by a button capability array:
+
+<UL type="disc">
+	<LI>Each capability structure represents a single usage or usage range that is associated with a variable main item or an array main item. </li>
+
+	<LI>Variable main items can use aliased usages. A usage that is associated with an array item cannot be aliased. A usage range cannot be aliased. </li>
+
+	<LI>The HID parser uses only the minimum required number of usages to assign a usage to each button. The parser assigns usages in the order in which the report descriptor specifies. The parser discards usages in a report descriptor that are not required. The button capability array does not contain any information about discarded usages. </li>
+
+	<LI>If the number of usages specified for a variable item is less than the number of buttons in the item, the capability array contains only one capability structure that describes one button usage, which is the last usage specified in the report descriptor for the variable main item. </li>
+
+	<LI>The HID parser assigns a unique data index to each usage described in the capability array. </li>
+</UL>
+
+<H2 class="dtH2">Variable Main Item Button Usages</H2>
+
+<P>Capability structures in a button capability array describe each usage or usage range specified in a report descriptor.</P>
+
+<P>The <B>IsAlias</B> member of capability structures is TRUE in every structure except the last structure added to the capability array. <B>IsAlias</B> is FALSE in the last capability structure. The preferred usage is the last aliased usage in the sequence. </P>
+
+<P>A HID driver can determine which button usages are aliased by scanning for these sequences.</P>
+
+<P>The following table shows an example of aliased usages.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=33%>Report descriptor aliased usage order</TH>
+<TH width=33%>Capability array usage order</TH>
+<TH width=34%>IsAlias value</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%>Usage 1</TD>
+<TD width=33%>Usage 3</TD>
+<TD width=34%>TRUE</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%>Usage 2 </TD>
+<TD width=33%>Usage 2</TD>
+<TD width=34%>TRUE</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%>Usage 3</TD>
+<TD width=33%>Usage 1</TD>
+<TD width=34%>FALSE</TD>
+</TR>
+</table></div>
+
+<H2 class="dtH2">Array Main Item Button Usages</H2>
+
+<P>A capability structure in a button capability array describes each usage or usage range for a button array main item specified in a report descriptor. The order in which the capability structures are added to a capability array is the reverse of the order in which the usages are specified for a main item.</P>
+
+<P>The HID parser assigns a data index to each usage associated with the array item in the order in which a report descriptor specifies the usages. </P>
+
+<P>The following table shows the correspondence between a set of usages, as specified in a report descriptor, and the usages and data indexes, as specified in the capability array. In this table, <I>n</I> is the first data index that the parser assigns to the first usage associated with the array item.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=33%>Report descriptor usage order</TH>
+<TH width=33%>Capability array usage order</TH>
+<TH width=34%>DataIndex, or DataIndexMax - DataIndexMin</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%>Usage 1</TD>
+<TD width=33%>Usage range 2</TD>
+<TD width=34%>From <I>n</I>+7 to <I>n</I>+8</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%>Usage range 1, with 4 usages</TD>
+<TD width=33%>Usage 2 </TD>
+<TD width=34%><I>n</I>+5</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%>Usage 2 </TD>
+<TD width=33%>Usage range 1 </TD>
+<TD width=34%>From <I>n</I>+1 to <I>n</I>+4</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%>Usage range 2, with 2 usages</TD>
+<TD width=33%>Usage 1</TD>
+<TD width=34%><I>n</I></TD>
+</TR>
+</table></div>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50conhiddataindexes.htm">HID Data Indexes</A> | <A HREF="wce50conhidvaluecapabilityarrays.htm">HID Value Capability Arrays</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

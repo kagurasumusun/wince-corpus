@@ -1,0 +1,192 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Implementing the Boot Loader StartUp Function</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Implementing the Boot Loader StartUp Function"/>
+<MSHelp:RLTitle Title="Implementing the Boot Loader StartUp Function"/>
+<MSHelp:Keyword Index="A" Term="wce50tskImplementingtheBootLoaderStartUpFunction"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Hardware"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="True"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbTask"/>
+<MSHelp:Attr Name="Filename" Value="howto_developing_a_bootloader.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="True"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_3010330">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50tskimplementingthebootloaderstartupfunction"></A>Implementing the Boot Loader StartUp Function</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>The <B>StartUp</B> function is the entry point to the boot loader and is the first function that is run following a CPU reset. The <B>StartUp</B> function is responsible for configuring the CPU and other core logic. It is a highly hardware-dependent routine and the best source of examples when implementing your own is to use existing BSP code for standard development boards (SDBs) that use the same CPU or processor.</P>
+
+<P>The tasks that the <B>StartUp</B> function needs to perform may vary depending on the hardware, but in general, the <B>StartUp</B> function needs to perform the following tasks:
+
+<UL type="disc">
+	<LI>Put the CPU into the correct run mode if it does not automatically enter that mode after reset. The correct run mode enables unrestricted access to all hardware memory. This is typically called supervisor mode in the case of x86: ring 0 protected mode with a flat memory map.</li>
+
+	<LI>Disable or mask interrupts at the CPU level.</li>
+
+	<LI>Ensure that the memory management unit (MMU) and translation look-aside buffers (TLBs) are off.</li>
+
+	<LI>Invalidate caches and write buffers, if caches are to be used later in the development process.</li>
+
+	<LI>Initialize the memory controller.</li>
+
+	<LI>Initialize other necessary on-chip devices like clocks.
+<BLOCKQUOTE class="dtBlock">
+<b class="le">Note</b>&nbsp;&nbsp;&nbsp;Board-level initialization will typically come later. For more information about board-level initialization in the boot loader, see <A HREF="wce50tskimplementingtheoemplatforminitfunction.htm">Implementing the OEMPlatformInit Function</A>. For more information about board-level initialization in the OAL, see <A HREF="wce50tskimplementingtheoeminitfunction.htm">Implementing the OEMInit Function</A>.</BLOCKQUOTE>
+</li>
+
+	<LI>Set up a stack pointer.</li>
+
+	<LI>Optionally set up MMU for static logical-physical address mappings and optionally enable the caches.</li>
+
+	<LI>Copy the running boot loader image from flash memory to RAM. The boot loader typically starts executing in flash memory at boot time and then will typically copy itself to RAM, and then continue running in RAM. The latter process happens because the boot loader will usually write to flash memory, but most linear flash memory cannot handle both read and write operations at the same time, or due to performance reasons.</li>
+
+	<LI>Jump to C code.</li>
+</UL>
+
+<P>The <B>StartUp</B> function is typically shared between the boot loader and the OS in the OAL. Differences between the boot loader and the OS environment are typically handled with the preprocessor directives <CODE>#ifdef</CODE>. Some of the differences between the boot loader and OS environment include handling CPU resume and power management code.</P>
+
+<P class="labelproc"><B>To implement the boot loader StartUp function</B>
+
+<OL type="1">
+	<LI>Edit the file Startup.s.</li>
+
+	<LI>Add the full implementation of the <B>StartUp</B> function to the file Startup.s. For more information about the file containing the <B>StartUp</B> function, see <A HREF="wce50tskcreatingafileforthebootloaderstartupfunction.htm">Creating a File for the Boot Loader StartUp Function</A>.
+<P>The <B>StartUp</B> function is typically implemented in assembly code. 
+
+<P>The following code example shows the <B>StartUp</B> function for the ARM hardware platform used in this particular boot loader development process. For more information about the example hardware platform used for this example, see <A HREF="wce50conbootloaderdesign.htm">Boot Loader Design</A>.
+
+<PRE class="code">    STARTUPTEXT
+    LEAF_ENTRY StartUp
+ 
+        ;
+        ; Disable all interrupts, set SVC mode.
+        ;
+        mov     r0, #(SVC32Mode :OR: NoINTS)
+        msr     cpsr_c, r0
+        
+        ;
+        ; Disable MMU and caches.
+        ;
+        ldr                     r0, =CP15ControlInit
+        WRMMU_STATE             r0
+        ldr                     r0, =CP15AuxControlInit
+        WRMMU_AUX_STATE         r0
+ 
+        ;
+        ; Flush TLBs and caches.
+        ;
+        mov                     r0, #0x0
+        WRMMU_FlushTB           r0
+        WRCACHE_FlushIDC        r0
+ 
+        ;
+        ; Drain write buffer.
+        ;
+        mov     r0, #0
+        mcr     p15, 0, r0, c7, c10, 4
+        CPWAIT
+ 
+ 
+        ;--------------------------------------------------------------------
+        ; Set up a temporary stack. Use the first 32 KB of on-chip SRAM. 
+        ;--------------------------------------------------------------------
+        ldr     sp, =(CPU_SRAM0 + SZ_32K - 4)
+ 
+ 
+        bl      disableInts
+        bl      initUART                ; Or initLEDs &#0150; for debugging.
+        bl      initClocks
+        bl      initStaticMem
+        bl      initSDRAM               
+        bl      sizeSDRAM               ; SDRAM size in MB returned in r0. 
+               
+ 
+    IF EBOOT
+        ;
+        ; Relocate code from flash to RAM if necessary. This step is required
+        ; because Eboot code runs from physical, not virtual, addresses.
+        ;
+        ; Returns with r0 = linked (absolute) address for Startup, -1 if 
+        ; currently executing in the correct place.
+        ;
+        
+        ; Note: Because the Eboot image is built to execute from RAM but is currently
+        ; executing out of flash, verify that this call is a relative branch. Once the
+        ; code is relocated to RAM, absolute address references are fine.
+        ;
+        ; The branch with link instruction will do a relative branch and because 
+        ; Thumb/ARM mode switching is not necessary, it works fine here.
+        ;
+    
+        bl       EverythingRelocate
+ 
+        ;
+        ; If relocation was successful, jump to the new address of RealStartup. 
+        ; Otherwise just fall through.
+        ;        
+        cmp     r0, #-1
+        movne   pc, r0
+ 
+    ENDIF       ; IF EBOOT
+ 
+ 
+RealStartup
+    IF EBOOT
+        bl      EbootMain
+    ELSE
+        adr     r0, OEMAddressTable     ; r0 = physical address of OEMMemoryMap
+ 
+        bl      KernelStart
+    ENDIF
+ 
+    ;
+    ; Control should never return to this routine; if it does, spin.
+    ;
+ 
+spin    b       spin
+ 
+    ENTRY_END</PRE>
+</li>
+</OL>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><MSHelp:link keywords="wce50conARMGuide" TABINDEX="0">ARM Technology Guide</MSHelp:link> | <MSHelp:link keywords="wce50conARMAssembler" TABINDEX="0">ARM Assembler</MSHelp:link> | <A HREF="wce50concpuinitialization.htm">CPU Initialization</A> | <A HREF="wce50howhowtodevelopabootloader.htm">How to Develop a Boot Loader</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

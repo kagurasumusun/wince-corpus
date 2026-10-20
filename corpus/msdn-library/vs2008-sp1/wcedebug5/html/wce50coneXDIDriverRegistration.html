@@ -1,0 +1,101 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>eXDI Driver Registration</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="eXDI Driver Registration"/>
+<MSHelp:RLTitle Title="eXDI Driver Registration"/>
+<MSHelp:Keyword Index="A" Term="wce50coneXDIDriverRegistration"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Debugging"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="True"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="exdi_overview.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="True"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_1056488">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50conexdidriverregistration"></A>eXDI Driver Registration</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>You must register your driver with the <A HREF="wce50concoreconinfrastructure.htm">Core Connectivity Infrastructure</A> by dropping an XSL file containing information about the new service. See microsoft.platformbuilder500.kdstublite.xsl in the sample eXDI service for an example of this XSL file and register.bat for how to register it.</P>
+
+<P>The following list shows the steps needed to register your eXDI driver as a service.
+
+<OL type="1">
+	<LI>Registering the COM server corresponding to the new eXDI service. This is usually done by running <B>regsvr32</B> with the COM dll as the argument: 
+<PRE class="code">regsvr32 /s %DROPROOT%\KdSeXdi2Lite.dll</PRE>
+</li>
+
+	<LI>Copying the XSL file containing the service declaration in the Core Connectivity datastore add-on directory:
+<PRE class="code">copy Microsoft.PlatformBuilder500.KdStubLite.xsl "%ALLUSERSPROFILE%\Application Data\Microsoft\corecon\1.0\addons"</PRE>
+</li>
+</OL>
+
+<P>The following guidelines provide additional information about the XSL file data:
+
+<UL type="disc">
+	<LI>The service must be registered as a Kernel Debugger Probe Driver. This service category is reserved for eXDI services and it has a GUID of 0F20E4AD-A44D-45d3-BA05-A077C1441E90</li>
+
+	<LI>The Service GUID, SERVICEINFO ID, must be unique, and must be followed by the descriptive name of the probe.</li>
+</UL>
+
+<P>For more information about Core Connectivity service categories, see <A HREF="wce50concoreconoverview.htm">Core Connectivity Overview</A>.</P>
+
+<P>The following example shows how to make the service usable and visible for in Platform Builder 5.0 or later:</P>
+
+<PRE class="code">&lt;SERVICECATEGORY ID="0F20E4AD-A44D-45d3-BA05-A077C1441E90" Name="Kernel Debugger Probe driver"&gt;
+    &lt;SERVICEINFOCONTAINER&gt;
+        &lt;SERVICEINFO ID="XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX" Name="Probe Name"&gt;
+            &lt;PROPERTYCONTAINER/&gt;
+        &lt;/SERVICEINFO&gt;
+    &lt;/SERVICEINFOCONTAINER&gt;
+    &lt;PROPERTYCONTAINER/&gt;
+&lt;/SERVICECATEGORY&gt;
+</PRE>
+
+<P>By adding a version number, the <B>Target Connectivity Options </B>UI will filter out the other versions that do not match. The following example shows how to add version information:</P>
+
+<PRE class="code">&lt;PROPERTYCONTAINER&gt;
+    &lt;PROPERTY ID="Version" Name="Version"&gt;<B>6.00</B>&lt;/PROPERTY&gt;
+    &lt;PROPERTY ID="EarliestSupportedVersion" Name="EarliestSupportedVersion"&gt;<B>5.0</B>&lt;/PROPERTY&gt;
+    &lt;PROPERTY ID="ReplacementList" Name="ReplacementList"&gt;<B> XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX</B> &lt;/PROPERTY&gt;
+&lt;/PROPERTYCONTAINER&gt;</PRE>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50conexdisampledriverplug-ins.htm">eXDI Sample Driver</A> | <A HREF="wce50concoreconinfrastructure.htm">Core Connectivity Infrastructure</A> | <A HREF="wce50oricorecondatastore.htm">Core Connectivity Datastore</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

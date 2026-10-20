@@ -1,0 +1,90 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Implementing the Optimization Function</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Implementing the Optimization Function"/>
+<MSHelp:RLTitle Title="Implementing the Optimization Function"/>
+<MSHelp:Keyword Index="A" Term="wce50tskImplementingGenBltCPUOptimize"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Driver"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="False"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbTask"/>
+<MSHelp:Attr Name="Filename" Value="display_guide.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="True"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+<MSHelp:Attr Name="PBFeature" Value="DisplayDriver"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_1057369">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50tskimplementinggenbltcpuoptimize"></A>Implementing the Optimization Function</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>For every generated function, the optimization function executes fewer times than specified by GENBLT_OPTIMIZE_LEVELS. The default value for GENBLT_OPTIMIZE_LEVELS is four. Each time the optimization function executes, the optimization function is passed an integer that indicates which pass the optimization function is executing. The following code example shows the definition for the optimization function.</P>
+
+<PRE class="code">typedef BOOL (*PFN_CpuOptimize)(int FnIndex, void * pMCode, DWORD Level);</PRE>
+
+<P>In general, the optimization functions can perform any optimization task. An optimization pass is guaranteed to be completed before the next optimization pass begins.</P>
+
+<P>Choosing the correct point to perform an optimization requires profiling. If optimization passes are executed too close together, the optimization might result in overall performance degradation. This is likely to occur if the function being optimized is flushed from the blit cache before the optimization cost has been amortized. The number of blits separating optimization passes is proportional to the cost of a particular optimization pass.</P>
+
+<P>The following table shows some general guidelines for the optimization passes.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=34%>Pass</TH>
+<TH width=66%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=34%>First pass</TD>
+<TD width=66%>Removes unnecessary code, such as code that reads the same variable immediately after writing that variable. Instruction sequences might be replaced by a single instruction that performs the same operations.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=34%>Second pass</TD>
+<TD width=66%>Assigns unused registers to frequently used variables, which reduces the amount of reading and writing to and from memory.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=34%>Subsequent passes</TD>
+<TD width=66%>Depends on the microprocessor.</TD>
+</TR>
+</table></div>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50tskimplementinggenbltcpuinitialize.htm">Implementing the GenBltCpuInitialize Function</A> | <A HREF="wce50tskimplementinggenbltcputranslate.htm">Implementing the Translation Function</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

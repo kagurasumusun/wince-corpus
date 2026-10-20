@@ -1,0 +1,134 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Making an AlwaysOn Data Connection</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Making an AlwaysOn Data Connection"/>
+<MSHelp:RLTitle Title="Making an AlwaysOn Data Connection"/>
+<MSHelp:Keyword Index="A" Term="wce51howAlwaysOnPacketDataConnection"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Application"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbsmartphone"/>
+<MSHelp:Attr Name="Product" Value="kbPocketPC"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="Technology" Value="kbPocketPC"/>
+<MSHelp:Attr Name="Technology" Value="kbSmartphone"/>
+<MSHelp:Attr Name="TopicType" Value="kbTask"/>
+<MSHelp:Attr Name="Filename" Value="connmgr_app_dev.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="False"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_1069964">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Windows Mobile Version 5.0 SDK<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce51howalwaysonpacketdataconnection"></A>Making an AlwaysOn Data Connection</H1>
+<!--Feedback Link Top Start-->
+<P CLASS="feedback"><font size="1"><a href="mailto:medfdbk&#64;microsoft.com?subject=Product: Windows Mobile | Version: 5.0 | Release: SDK | Title: Making an AlwaysOn Data Connection | Filename: wce51howalwaysonpacketdataconnection.htm | Built on: Wednesday, September 14, 2005">Send Feedback</a> on this topic to the authors</font></p>
+<!--Feedback Link Top End-->
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>The AlwaysOn feature ensures that the device always keeps the packet data connection once the user establishes a connection, such as GPRS on GSM networks or 1xRTT on CDMA networks. An AlwaysOn connection is established at the point when it is first configured as AlwaysOn . Following initial configuration, Connection Manager will attempt to keep the AlwaysOn connection always connected. The behavior for AlwaysOn packet connections is configured using one of the following configuration service providers:
+
+<UL type="disc">
+	<LI><MSHelp:link keywords="wce51grfCM_GPRSEntriesCSP" TABINDEX="0">CM_GPRSEntries Configuration Service Provider</MSHelp:link></li>
+
+	<LI><MSHelp:link keywords="wce51grfCM_NetEntriesCSP" TABINDEX="0">CM_NetEntries Configuration Service Provider</MSHelp:link></li>
+
+	<LI><MSHelp:link keywords="wce51grfCM_PPPEntriesCSP" TABINDEX="0">CM_PPPEntries Configuration Service Provider</MSHelp:link></li>
+</UL>
+
+<P>The AlwaysOn setting is applicable for all connections, including GPRS, 1xRTT, and others. You should take care, though, in selecting connections to designate as AlwaysOn. Suspend-resume-capable connections are often good candidates for the AlwaysOn feature. However, you will not want to designate as AlwaysOn an active data connection that can prevent incoming calls from being received. This situation often happens with 1xRTT connections.</P>
+
+<P>Connection Manager will attempt to activate an AlwaysOn GPRS/1xRTT connection in the following cases:
+
+<UL type="disc">
+	<LI>Connection Manager determines that the AlwaysOn connection is the preferred path for a connection request, but the connection is not already activated. </li>
+
+	<LI>A new AlwaysOn connection is provisioned or configured. </li>
+
+	<LI>For GPRS calls, when the registration status has changed through a RIL_NOTIFY_GPRSREGSTATUSCHANGED constant and the <I>lpData</I> notification parameter points to either RIL_REGSTAT_HOME or RIL_REGSTAT_ROAMING. </li>
+
+	<LI>For other types of calls &#0151; for example, 1xRTT &#0151; when the registration status has changed through a RIL_NOTIFY_GPRSREGSTATUSCHANGED constant and the <I>lpData</I> notification parameter points to either RIL_REGSTAT_HOME or RIL_REGSTAT_ROAMING. </li>
+
+	<LI>When a needed resource becomes available &#0151; for example, when a RAS call that was using the phone resource is released. </li>
+</UL>
+
+<P>When activation fails in a recoverable way &#0151; that is, not through an incorrect username, password, APN, or upon remote disconnect &#0151; Connection Manager will use the following retry logic as long as the device remains in the proper registration state (home or roam). 
+
+<UL type="disc">
+	<LI>Retry one time immediately. </li>
+
+	<LI>Retry periodically (every 30 minutes with registry override) until success. </li>
+</UL>
+
+<BLOCKQUOTE class="dtBlock">
+<B>Note</B>&nbsp;&nbsp;&nbsp;A connection will be kept always-on only it if its configured as such. If the connection receives a disconnect event, it will be disconnected and the change of state will be communicated to the Connection Manager AlwaysOn manager. Connection Manager will then try to reestablish the connection as described above.</BLOCKQUOTE>
+
+<P>The following connection types are set to AlwaysOn by default:
+
+<UL type="disc">
+	<LI>Wi-Fi</li>
+
+	<LI>Ethernet</li>
+
+	<LI>Desktop Passthrough (DTPT)</li>
+</UL>
+
+<BLOCKQUOTE class="dtBlock">
+<B>Note</B>&nbsp;&nbsp;&nbsp;Users can modify the AlwaysOn setting for all connections except for the ones in the preceding list, which are forced AlwaysOn.</BLOCKQUOTE>
+
+<P>The following connection types can never set to be AlwaysOn:
+
+<UL type="disc">
+	<LI>VPN</li>
+
+	<LI>CSD</li>
+</UL>
+
+<P>If the device goes into an idle or sleep state, the AlwaysOn feature helps ensure that any active packet data session is not terminated. The following list shows the events that can trigger a Windows Mobile-based device to go into an idle state:
+
+<UL type="disc">
+	<LI>User presses the power button</li>
+
+	<LI>Idle timeout fires</li>
+
+	<LI>OEM or ISV explicitly makes a system call to put the device into an idle state</li>
+</UL>
+
+<P>In all the preceding cases, any active packet data connection would be maintained active. Even when the device is in an idle state, it is reachable and immediately available without reconnection when the device comes out of the idle state.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><MSHelp:link keywords="mob5oriConnectionManager" TABINDEX="0">Connection Manager Concepts</MSHelp:link></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Feedback Link Bottom Start-->
+<p><font size="1"><a href="mailto:medfdbk&#64;microsoft.com?subject=Product: Windows Mobile | Version: 5.0 | Release: SDK | Title: Making an AlwaysOn Data Connection | Filename: wce51howalwaysonpacketdataconnection.htm | Built on: Wednesday, September 14, 2005">Send Feedback</a> on this topic to the authors</font></p>
+<!--Feedback Link Bottom End-->
+<!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="mob5conCopyrightInformationForMagneto" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link></font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

@@ -1,0 +1,110 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Supported USB Features</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Supported USB Features"/>
+<MSHelp:RLTitle Title="Supported USB Features"/>
+<MSHelp:Keyword Index="A" Term="wce50conSupportedandUnsupportedUSBFeatures"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Driver"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="False"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="usbhost_guide.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="False"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+<MSHelp:Attr Name="PBFeature" Value="USBHostDriver"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_3019337">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50consupportedandunsupportedusbfeatures"></A>Supported USB Features</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>The Windows CE USB implementation supports bus enumeration, transfer types, client drivers, integrated and external hubs, desktop connectivity, unknown universal serial bus (USB) peripherals, and power management.</P>
+
+<H2 class="dtH2">Bus Enumeration</H2>
+
+<P>The bus enumeration process proceeds in the following sequence: 
+
+<UL type="disc">
+	<LI>The HCD module acquires information from a connected device, and then assigns it a unique USB address.</li>
+
+	<LI>The HCD module sets a configuration value to enumerate the device. 
+<P>At this point, the device is configured and ready to conduct, transmit, and receive transactions. 
+</li>
+
+	<LI>The USB driver module attempts to load one or more USB device drivers to control the device, based on the information contained in the device and interface descriptors. </li>
+
+	<LI>If no suitable driver has been registered for the device, a user is prompted to enter the name of a driver to control the device.</li>
+</UL>
+
+<H2 class="dtH2">Transfer Types</H2>
+
+<P>All four types of data transfer defined in the <I>Universal Serial Bus Specification </I>are supported. USB device drivers can use any of the transfer types that are appropriate for the endpoints of their peripherals. For more information, see <A HREF="wce50conusbtransfertypes.htm">USB Transfer Types</A>.</P>
+
+<H2 class="dtH2">Client Drivers</H2>
+
+<P>The USB architecture implemented for Windows CE supports loading client drivers. Examples of USB device classes include the human input device (HID) class and the mass storage class. You can write your own client drivers and load them appropriately. For more information, see <A HREF="wce50conusbdriversamples.htm">USB Host Client Drivers</A>.</P>
+
+<H2 class="dtH2">Integrated and External Hubs</H2>
+
+<P>Windows CE supports integrated and external hubs up to five levels deep. This is the maximum allowed by the <I>Universal Serial Bus Specification</I>.</P>
+
+<H2 class="dtH2">Unknown Peripherals</H2>
+
+<P>Unknown USB peripherals generally cause no problems in Windows CE.</P>
+
+<H2 class="dtH2">Desktop Connectivity</H2>
+
+<P>Windows CE provides a USB function controller driver for Windows CE-based devices and desktop computers that includes the appropriate USB function controller hardware. When you use this driver, the USB function controller hardware sees the USB port on the device or the desktop computer as a virtual serial port. To use this driver on a desktop computer, you must have a host-side USB serial driver. With the device and the desktop computer configured this way, standard serial ports can be used over a USB connection. </P>
+
+<P>Windows CE provides no support for a device to appear as a USB peripheral to other host computers. This is because only the host side of the USB client and host architecture is implemented. That is, the host controller driver (HCD) and USB driver modules that Microsoft supplies do not allow you to connect a device to a desktop computer that is running as a USB host. You could implement this functionality, but the hardware platform would still require USB function controller hardware. For more information, see <A HREF="wce50conusbserialhostdriver.htm">USB Serial Host Driver</A> and <A HREF="wce50conusbfunctioncontrollerdriver.htm">USB Function Controller Drivers</A>.</P>
+
+<H2 class="dtH2">Power Management</H2>
+
+<P>Windows CE provides support for bus-powered and self-powered devices. For both types of device, the USB driver module reads the power requirements of the device from the descriptor information and rejects the device if it exceeds the maximum power threshold. Because you can set the current-draw limit, you should not rely on any particular amount of available current, except as detailed in the <I>Universal Serial Bus Specification</I>. </P>
+
+<P>USB hubs enforce current-draw limits, not the host computer. The hub shuts down devices that draw too much current. Hubs that cannot control the power level on individual ports might shut down all their ports or might be forcibly shut down by an upstream hub when a current over-draw situation occurs. Shutting down can cause multiple USB devices to disconnect from the bus if a single device draws too much current. </P>
+
+<P>Complex power saving modes or partial-power modes are not supported for USB devices when the host hardware platform is suspended. Instead, the entire bus shuts down. During the suspend and resume power states, you can choose whether USB controllers should stay powered up or not. If an you choose to have remote wakeup on a USB device and the controller has this functionality, the controller will work in the suspend and resume states. Otherwise, the entire bus shuts down.</P>
+
+<P>USB device drivers might need to take special action to make a power cycle transparent to upper-level applications. For example, if a USB device provides a file system, the device driver should preserve open file handles across a power cycle. One solution is for the USB device driver to register itself with the <MSHelp:link keywords="wce50conDeviceManager" TABINDEX="0">Device Manager</MSHelp:link> by exposing the stream interface and calling the <A HREF="wce50lrfactivatedeviceex.htm">ActivateDeviceEx</A> function. This increments the reference count on the USB device driver's dynamic-link library (DLL) so that when the USB driver module unloads the driver, the driver's code remains in memory. The USB device driver can keep any application file handles open and wait for the call to the <A HREF="wce50lrfusbdeviceattach.htm">USBDeviceAttach</A> function, which occurs after the system resumes and the USB device is ready to be used. The disadvantage of this approach is that the driver remains in memory even after the USB device is detached from the system. The second solution is to separate the USB interface from the upper-level file system interface and keep the file system driver code which manages file handles separate from the USB device driver code that actually manages the storage hardware.</P>
+
+<P>The platform dependent driver (PDD) for the USB host controller can either shut down or go into suspend mode during system shut down. When in suspend mode, the host controller is capable of waking the system up using USB devices that support remote wake-up.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50conpowermanagement.htm">Power Management</A> | <A HREF="wce50conusbsystemsoftware.htm">USB System Software</A> | <A HREF="wce50conusbdriverarchitecture.htm">USB Host Controller Driver Architecture</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

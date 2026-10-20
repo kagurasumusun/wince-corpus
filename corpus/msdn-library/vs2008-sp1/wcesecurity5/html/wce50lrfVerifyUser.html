@@ -1,0 +1,160 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>VerifyUser</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="VerifyUser"/>
+<MSHelp:RLTitle Title="VerifyUser"/>
+<MSHelp:Keyword Index="K" Term="VerifyUser"/>
+<MSHelp:Keyword Index="A" Term="wce50lrfVerifyUser"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Feature"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="Technology" Value="Security"/>
+<MSHelp:Attr Name="TopicType" Value="apiref"/>
+<MSHelp:Attr Name="Filename" Value="lass_reference.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="True"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+<MSHelp:Attr Name="APIName" Value="VerifyUser"/>
+<MSHelp:Attr Name="APIType" Value="LibDef"/>
+<MSHelp:Attr Name="APILocation" Value="Coredll.lib"/>
+<MSHelp:Attr Name="PBFeature" Value="SYSGEN_LASS"/>
+<MSHelp:Attr Name="PBOnly" Value="False"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_1034037">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50lrfverifyuser"></A>VerifyUser</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>This function authenticates the user. An application calls this function.</P>
+
+<PRE class="syntax"><B>BOOL VerifyUser(</B>
+<B>  const GUID* </B><I>AEKey</I><B>,</B>
+<B>  LPCWSTR </B><I>wszAEDisplayText</I><B>,</B>
+<B>  HWND </B><I>hWndParent</I><B>,</B>
+<B>  DWORD </B><I>dwOptions</I><B>,</B>
+<B>  PVOID </B><I>pExtended</I>
+<B>);</B></PRE>
+
+<H4 class="dtH4">Parameters</H4>
+
+<DL>
+<DT><I>AEKey</I></DT>
+
+<DD>[in] Pointer to the authentication event identifier. The identifier corresponds to the type of authentication required.</dd>
+
+<DT><I>wszAEDisplayText</I></DT>
+
+<DD>[in] Pointer to the text for the LAP to display. If this value is NULL, the function uses the value set in the registry.</dd>
+
+<DT><I>hWndParent</I></DT>
+
+<DD>[in] Handle to the parent window. </dd>
+
+<DT><I>dwOptions</I></DT>
+
+<DD>[in] A bitmask of options. The following table shows the possible values.
+
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=28%>Value</TH>
+<TH width=72%>Description </TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=28%>VU_NO_UI</TD>
+<TD width=72%>Returns from <B>VerifyUser</B> without displaying the UI. When using this value, the function will return TRUE only if the user can be verified without displaying the UI. Otherwise, it will return FALSE.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=28%>VU_HANDLE_MASTER_KEY</TD>
+<TD width=72%>Handle master key encryption and decryption if master key encryption and decryption are supported. 
+<BLOCKQUOTE class="dtBlock">
+<b class="le">Note&nbsp;&nbsp;&nbsp;</b>The VU_HANDLE_MASTER_KEY option is valid only when it is set by a trusted application.</BLOCKQUOTE>
+</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=28%>VU_UNTIL_SUCCESS</TD>
+<TD width=72%>Keep calling into the LAP until the user cancels, or until the user successfully verifies. 
+<BLOCKQUOTE class="dtBlock">
+<b class="le">Note</b>&nbsp;&nbsp;&nbsp;If the VU_NO_UI flag is passed to the function, VU_UNTIL_SUCCESS is ignored.</BLOCKQUOTE>
+</TD>
+</TR>
+</table></div>
+
+</dd>
+
+<DT><I>pExtended</I></DT>
+
+<DD>Reserved. Must be set to NULL.</dd>
+</DL>
+
+<H4 class="dtH4">Return Values</H4>
+
+<P>Returns TRUE if the user is verified, and FALSE otherwise. To get extended error information, the application should call <MSHelp:link keywords="wce50lrfGetLastError" TABINDEX="0">GetLastError</MSHelp:link>. If the user cancelled the verification request,<B> GetLastError</B> returns ERROR_CANCELLED. If the user failed authentication, <B>GetLastError</B> returns ERROR_WRONG_PASSWORD, or a more applicable code set by the LAP.</P>
+
+<H4 class="dtH4">Remarks</H4>
+
+<P><B>VerifyUser</B> can be called by any application, whether it is trusted or untrusted.</P>
+
+<H4 class="dtH4">Example</H4>
+
+<P>The following example shows how the application can use <B>VerifyUser</B> to authenticate the user before calling any secure function. <B>CallSecureFunction</B> and <B>TellUserVerificationFailed</B> in this example are user-defined functions.</P>
+
+<PRE class="code">APP A;
+HWND hMyWindow;
+VerifyAndCallSecureFunction() 
+{
+    DWORD LastError;
+    GUID AEKeyForFoo = ...;
+    if (VerifyUser(&amp;AEKeyForFoo,"App A",hMyWindow,VU_UNTIL_SUCCESS,0))  //  Call into LASS; This will  
+       CallSecureFunction()  // call into active LAP and show LAP-specific UI
+    else 
+       TellUserVerificationFailed(GetLastError()));  // display your own UI
+}</PRE>
+
+<H4 class="dtH4">Requirements</H4>
+
+<P><B>Pocket PC:</B> Windows Mobile 5.0 and later.<BR>
+<B>Smartphone:</B> Windows Mobile 5.0 and later.<BR>
+<B>OS Versions:</B> Windows CE 5.0 and later.<BR>
+<B>Header:</B> Lap.h.<BR>
+<B>Link Library:</B> Coredll.lib.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50grflassfunctions.htm">LASS Functions</A> | <A HREF="wce50concomparinglasspasswordauthentication.htm">Comparing LASS and Password Authentication</A> | <A HREF="wce50grfsettingaepolicy.htm">Setting an AE Policy</A> | <A HREF="wce50grfinstallingae.htm">Installing an AE</A> | <A HREF="wce51lrfverifyuserlap.htm">VerifyUser (LAP)</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

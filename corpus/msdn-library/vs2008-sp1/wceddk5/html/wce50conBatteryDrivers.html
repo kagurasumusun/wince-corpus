@@ -1,0 +1,128 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Battery Driver Development Concepts</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Battery Driver Development Concepts"/>
+<MSHelp:RLTitle Title="Battery Driver Development Concepts"/>
+<MSHelp:Keyword Index="A" Term="wce50conBatteryDrivers"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Driver"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="False"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="battery_guide.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="True"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+<MSHelp:Attr Name="PBFeature" Value="BatteryDriver"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_3017272">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50conbatterydrivers"></A>Battery Driver Development Concepts</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>The battery driver, which is loaded by the Device Manager, exposes a stream interface. The exposed stream interface provides OS designs that do not include GWES access to the battery functions. The interface also provides battery information earlier in the boot process and enables you to support batteries that report more, or different, information than the standard functions permit.</P>
+
+<BLOCKQUOTE class="dtBlock">
+<b class="le">Note</b>&nbsp;&nbsp;&nbsp;Ensure that the device never wakes up for the sole purpose of displaying a low-battery warning.</BLOCKQUOTE>
+
+<P>The following list shows the functions that the battery driver enables:
+
+<UL type="disc">
+	<LI><MSHelp:link keywords="wce50lrfGetSystemPowerStatusEx" TABINDEX="0">GetSystemPowerStatusEx</MSHelp:link></li>
+
+	<LI><MSHelp:link keywords="wce50lrfGetSystemPowerStatusEx2" TABINDEX="0">GetSystemPowerStatusEx2</MSHelp:link></li>
+
+	<LI><A HREF="wce50lrfpowerpolicynotify.htm">PowerPolicyNotify</A></li>
+
+	<LI><A HREF="wce50lrfbatterydrvrgetlevels.htm">BatteryDrvrGetLevels</A></li>
+
+	<LI><A HREF="wce50lrfbatterydrvrsupportschangenotification.htm">BatteryDrvrSupportsChangeNotification</A></li>
+
+	<LI><A HREF="wce50lrfbatterygetlifetimeinfo.htm">BatteryGetLifeTimeInfo</A></li>
+
+	<LI><A HREF="wce50lrfbatterynotifyoftimechange.htm">BatteryNotifyOfTimeChange</A></li>
+</UL>
+
+<H2 class="dtH2">Battery PDD Interface</H2>
+
+<P>Battery functions are translated into <A HREF="wce50conbatterydriverioctls.htm">Battery Driver IOCTLs</A> and passed to the battery driver. The battery driver model device driver (MDD) then invokes internal functions that may result in platform-dependent driver (PDD) calls.</P>
+
+<P>The following list shows the battery driver PDD functions:
+
+<UL type="disc">
+	<LI><A HREF="wce50lrfbatterypddinitialize.htm">BatteryPDDInitialize</A></li>
+
+	<LI><A HREF="wce50lrfbatterypdddeinitialize.htm">BatteryPDDDeinitialize</A></li>
+
+	<LI><A HREF="wce50lrfbatterypddresume.htm">BatteryPDDResume</A></li>
+
+	<LI><A HREF="wce50lrfbatterypddpowerhandler.htm">BatteryPDDPowerHandler</A></li>
+
+	<LI><A HREF="wce50lrfbatterypddgetstatus.htm">BatteryPDDGetStatus</A></li>
+
+	<LI><A HREF="wce50lrfbatterypddgetlevels.htm">BatteryPDDGetLevels</A></li>
+
+	<LI><A HREF="wce50lrfbatterypddsupportschangenotification.htm">BatteryPDDSupportsChangeNotification</A></li>
+</UL>
+
+<P>In addition to these functions, you can have the battery PDD receive custom IOCTLs. To enable this, you must have the PDD declare a function to process the IOCTL codes and pass its pointer to the MDD. You must set the function pointer to have a signature compatible with <A HREF="wce50lrfpfnbatterypddiocontrol.htm">PFN_BATTERY_PDD_IOCONTROL</A>.</P>
+
+<P>The following code example shows how you should register the custom IOCTL handler in the PDD's <B>BatteryPddInitialize</B> function. The <B>BatteryPDDIoControl</B> function name in the code example below is a placeholder and is invoked through a function pointer.</P>
+
+<PRE class="code">DWORD BatteryPddIOControl(
+  DWORD dwContext,
+  DWORD dwIoctl,
+  PUCHAR pInBuf,
+  DWORD InBufLen,
+  PUCHAR pOutBuf,
+  DWORD OutBufLen,
+  PDWORD pdwBytesTransferred)
+{
+  DWORD dwStatus = ERROR_SUCCESS;
+  // additional code
+  return dwStatus;
+}
+
+BOOL BatteryPddInitialize(LPCTSTR pszRegistryContext) 
+{
+  // additional code
+  gpfnBatteryPddIOControl = BatteryPddIOControl;
+  // additional code
+}</PRE>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50constreaminterfacedrivers.htm">Stream Interface Driver Development Concepts</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

@@ -1,0 +1,175 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>xsl:fallback Element</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="xsl:fallback Element"/>
+<MSHelp:RLTitle Title="xsl:fallback Element"/>
+<MSHelp:Keyword Index="K" Term="xsl, fallback Element"/>
+<MSHelp:Keyword Index="A" Term="wce50lrfxslfallbackElement"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Feature"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="apiref"/>
+<MSHelp:Attr Name="Filename" Value="XSLref01.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="True"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+<MSHelp:Attr Name="APIName" Value="xsl:fallback"/>
+<MSHelp:Attr Name="PBFeature" Value="SYSGEN_MSXML"/>
+<MSHelp:Attr Name="PBOnly" Value="False"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_3024137">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50lrfxslfallbackelement"></A>xsl:fallback Element</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>The <B>&lt;xsl:fallback&gt;</B> element is designed to handle situations where the parser cannot handle an XSL element that may be part of a new version, or is otherwise an unrecognized extension. It works by calling template content that can provide a reasonable substitute to the behavior of the new element when encountered.</P>
+
+<PRE class="syntax"><B>&lt;xsl:fallback&gt;
+&lt;/xsl:fallback&gt;</B></PRE>
+
+<H4 class="dtH4">Attributes</H4>
+
+<P>None.</P>
+
+<H4 class="dtH4">Element Information</H4>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TD width=33%><B>Number of occurrences</B></TD>
+<TD width=67%>Unlimited</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%><B>Parent elements</B></TD>
+<TD width=67%>Any element where the content is a template.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%><B>Child elements</B></TD>
+<TD width=67%>Any element that can occur in a template.</TD>
+</TR>
+</table></div>
+
+<H4 class="dtH4">Remarks</H4>
+
+<P>When an XSL document is first loaded, the XSLT preparser performs validation on all XSL elements. If the version passed in the <B>&lt;xsl:stylesheet&gt;</B> element is greater than that supported by the parser, then whenever an unfamiliar element is encountered, the parser will execute the <B>&lt;xsl:fallback&gt;</B> children of that element (or simply not perform any action if the fallback has no content). If the element is supported, then the fallback templates are never instantiated. Likewise, if the version given in the style sheet is the same as that supported by the browser, then an error will be called.</P>
+
+<P>Fallbacks are part of the forward-processing mechanism that XSLT uses for handling upgrades. By creating alternative ways of handling a command if an element is not supported, forward-processing guarantees that the code used is relatively robust and insensitive to differences in parser conformity.</P>
+
+<P>In addition to handling versioning differences, the fallback function can also be used to handle elements defined by name space extensions. Because adding functionality to the base specification is typically very difficult, name space extensions let developers define functionality beyond that specified by the XSLT specification. If the name space is not supported (no definition for the name space is provided), or if a name space function or element is not defined, then the fallback mechanism can be used to provide alternate functionality.</P>
+
+<P>To guarantee that the extension is interpreted within the XSLT operation, you need to set the <B>extension-element-prefixes</B> attribute in the <B>&lt;xsl:stylesheet&gt;</B> element so that it contains the name of the prefix to interpret. In addition, declare the name space for that prefix.</P>
+
+<H4 class="dtH4">Example</H4>
+
+<P>The following XML document has the "fallback.xsl" style sheet attached. The fallback.xsl style sheet provides alternate processing for the document.</P>
+
+<PRE class="code">&lt;?xml version="1.0"?&gt;
+&lt;?xml-stylesheet href="fallback.xsl" type="text/xsl"?&gt;
+&lt;records&gt;
+   &lt;record&gt;
+      &lt;name&gt;Rachel Valdez&lt;/name&gt;
+      &lt;address&gt;222 Cherry&lt;/address&gt;
+      &lt;phone&gt;425-555-0100&lt;/phone&gt;
+   &lt;/record&gt;
+   &lt;record&gt;
+      &lt;name&gt;James Van Eaton&lt;/name&gt;
+      &lt;address&gt;777 Elm&lt;/address&gt;
+      &lt;phone&gt;425-555-0101&lt;/phone&gt;
+   &lt;/record&gt;
+&lt;/records&gt;</PRE>
+
+<P>fallback.xsl</P>
+
+<P>The fallback.xsl style sheet attempts to process the XML document with a hypothetical &lt;xsl:import-table&gt; element. Because this element is not supported in the current version of the parser, the document is alternately processed with the script inside the fallback element.</P>
+
+<PRE class="code">&lt;xsl:stylesheet version="1.1" xmlns:xsl="http://www.w3.org/1999/XSL/Transform"&gt;
+  &lt;xsl:template match="/"&gt;
+     &lt;HTML&gt;
+     &lt;HEAD&gt;&lt;TITLE&gt;Output Table&lt;/TITLE&gt;&lt;/HEAD&gt;
+     &lt;BODY&gt;
+    &lt;xsl:import-table href="blah.html" name="sample"&gt;
+      &lt;xsl:fallback&gt;
+      &lt;p&gt;This version of the parser does not support the creation of a table with the 'xsl:import-table' element, so the following table has been generated using the 'fallback' element.&lt;/p&gt;
+        &lt;table border='2'&gt;
+         &lt;xsl:for-each select='records/record'&gt;
+           &lt;tr&gt;
+            &lt;td&gt;&lt;xsl:value-of select='name'/&gt;&lt;/td&gt;
+            &lt;td&gt;&lt;xsl:value-of select='address'/&gt;&lt;/td&gt;
+            &lt;td&gt;&lt;xsl:value-of select='phone'/&gt;&lt;/td&gt;
+           &lt;/tr&gt;
+         &lt;/xsl:for-each&gt;
+        &lt;/table&gt;
+      &lt;/xsl:fallback&gt;
+     &lt;/xsl:import-table&gt;
+      &lt;/BODY&gt;
+   &lt;/HTML&gt; 
+  &lt;/xsl:template&gt;
+&lt;/xsl:stylesheet&gt; </PRE>
+
+<P>Output</P>
+
+<P>This version of the parser does not support the creation of a table with the 'xsl:import-table' element, so the following table has been generated using the 'fallback' element.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TD width=33%>
+<PRE class="code">Rachel Valdez</PRE>
+</TD>
+<TD width=33%>
+<PRE class="code">222 Cherry</PRE>
+</TD>
+<TD width=34%>
+<PRE class="code">425-555-0100<B> </B></PRE>
+</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%>
+<PRE class="code">James Van Eaton</PRE>
+</TD>
+<TD width=33%>
+<PRE class="code">777 Elm</PRE>
+</TD>
+<TD width=34%>
+<PRE class="code">425-555-0101 </PRE>
+</TD>
+</TR>
+</table></div>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50grfxsltelements.htm">XSLT Elements</A> | <A HREF="wce50lrfelementavailablefunction.htm">element-available Function</A> | <A HREF="wce50lrffunctionavailablefunction.htm">function-available Function</A> | <A HREF="wce50lrfsystempropertyfunction.htm">system-property Function</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

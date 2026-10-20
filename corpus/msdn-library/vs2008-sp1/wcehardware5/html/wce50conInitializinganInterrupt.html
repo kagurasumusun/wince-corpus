@@ -1,0 +1,85 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Initializing an Interrupt</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Initializing an Interrupt"/>
+<MSHelp:RLTitle Title="Initializing an Interrupt"/>
+<MSHelp:Keyword Index="A" Term="wce50conInitializinganInterrupt"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Hardware"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="True"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="howto_developing_an_OAL.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="True"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_3010405">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50coninitializinganinterrupt"></A>Initializing an Interrupt</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>Windows CE initializes an interrupt either in <A HREF="wce50lrfoeminit.htm">OEMInit</A> or as part of device driver initialization. Part of the interrupt initialization can also include the creation of an interrupt service thread (IST).</P>
+
+<P>The kernel begins the interrupt initialization process by calling <B>OEMInit</B>. Use <B>OEMInit</B> to register an interrupt service routine (ISR) by calling the <MSHelp:link keywords="wce50lrfHookInterrupt" TABINDEX="0">HookInterrupt</MSHelp:link> function. <B>HookInterrupt</B> associates an ISR with a hardware interrupt request (IRQ). Further, you must use <B>OEMInit</B> to register the interrupts for the system timer because subsequent code, such as the scheduler, relies on a system timer.</P>
+
+<P>Some device drivers may require handling that cannot be completed in an ISR. When Windows CE calls the initialization function for these types of device drivers, you can use <MSHelp:link keywords="wce50lrfInterruptInitialize" TABINDEX="0">InterruptInitialize</MSHelp:link> to register an event handle with the interrupt identifier returned by the ISR of the target device. </P>
+
+<P>The initialization function of the device driver can then set up an IST for the interrupt by calling the <MSHelp:link keywords="wce50lrfCreateThread" TABINDEX="0">CreateThread</MSHelp:link> function. The main loop of the thread should wait on the event by using the <MSHelp:link keywords="wce50lrfWaitForSingleObject" TABINDEX="0">WaitForSingleObject</MSHelp:link> function. Do not use <B>WaitForMultipleObjects</B>. The main loop should also process the interrupt. </P>
+
+<P>If you create a thread in the driver initialization routine, you should set the appropriate priority level of the thread with the <MSHelp:link keywords="wce50lrfCeSetThreadPriority" TABINDEX="0">CeSetThreadPriority</MSHelp:link> function. This provides the appropriate scheduling times. </P>
+
+<P>When the IST has a higher priority than the interrupted thread, Windows CE interrupts the thread and runs the IST immediately. The thread priorities can range from 0 through 255, with 0 as the highest priority. </P>
+
+<P>The choice of the IST priority level is dependent upon the environment in which the IST needs to run. These environmental factors include the number of threads, relative priority of threads, and the amount of interrupt handling.</P>
+
+<P>The following code example shows the functions that a device driver initialization routine typically calls to create an event and a thread associated with an ISR.</P>
+
+<PRE class="code">// Create an event and a thread, and then associate them. 
+hEvent = CreateEvent(...)
+
+// Get the event handle, register the interrupt, and then
+// associate it with the event.
+InterruptInitialize(SYSINTR_SERIAL, hEvent, ...) 
+
+// Create the thread for the IST, passing it the event handle.
+// The IST code calls WaitOnSingleObject, so give it the event handle.
+hThd = CreateThread(..., MyISTRoutine, hEvent, ...) 
+CeSetThreadPriority(hThd, 152);</PRE>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50howhowtodevelopanoemadaptationlayer.htm">How to Develop an OEM Adaptation Layer</A> | <A HREF="wce50conimplementinganisr.htm">Implementing an ISR</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

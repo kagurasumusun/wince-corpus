@@ -1,0 +1,131 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>IObexDevice::Put</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="IObexDevice::Put"/>
+<MSHelp:RLTitle Title="IObexDevice::Put"/>
+<MSHelp:Keyword Index="K" Term="IObexDevice,Put"/>
+<MSHelp:Keyword Index="A" Term="wce50lrfIObexDevicePut"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Feature"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="apiref"/>
+<MSHelp:Attr Name="Filename" Value="obex_interfaces.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="True"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+<MSHelp:Attr Name="APIName" Value="IObexDevice.Put"/>
+<MSHelp:Attr Name="APIType" Value="LibDef"/>
+<MSHelp:Attr Name="APILocation" Value="Uuid.lib"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_1072977">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50lrfiobexdeviceput"></A>IObexDevice::Put</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>This method issues a <B>Put</B> command for an object that is passed to the server.This sends information to the remote device using a specific service.</P>
+
+<PRE class="syntax"><B>HRESULT Put(</B>
+  <B>IHeaderCollection* </B><I>pHeaders</I><B>,</B> 
+  <B>IStream** </B><I>ppStream</I>
+<B>);</B></PRE>
+
+<H4 class="dtH4">Parameters</H4>
+
+<DL>
+<DT><I>pHeaders</I></DT>
+
+<DD>[in] Pointer to the headers collection that describes the object.</dd>
+
+<DT><I>ppStream</I></DT>
+
+<DD>[in, out] Unique. Destination pointer to the <MSHelp:link keywords="wce50lrfIStreamIUnknown" TABINDEX="0">IStream</MSHelp:link> interface, which is used to write the data. For example, to send a file to a remote device, wrap the file around a steam and then put that stream on the remote device. This parameter initially returns an empty stream to be filled with the data to be transmitted.</dd>
+</DL>
+
+<H4 class="dtH4">Return Values</H4>
+
+<P>The appropriate HResult is returned.</P>
+
+<H4 class="dtH4">Remarks</H4>
+
+<P>To verify the <B>Put</B> operation has completed, run <MSHelp:link keywords="wce50lrfIStreamCommit" TABINDEX="0">IStream::Commit</MSHelp:link> before you close the operation. This practice is particularly useful when deleting a file. A return of S_OK indicates the operation has completed successfully. Limit the stream size to manageable chunks of information (512 bytes, for example). Transferring very large streams of information prevent the ability to cancel the transfer of that information until the entire transfer process is complete.</P>
+
+<P>The following code example shows how to delete a file after the put operation has completed. This example assumes the existence of an <B>IObexDevice</B> object that is named pObexDevice and is correctly initialized. It also assumes that an IHeaderCollection object, named pHeaderCollection, is initialized. </P>
+
+<PRE class="code">//
+// A PUT operation that has BODY is assumed by the 
+// server to be a delete  (per IrOBEX 1.2 spec section 3.3.3.6).
+// This example demonstrates how to use the WinCE OBEX client 
+// implementation to delete a file.
+
+//
+//  ---The construction/connection code of IObex/IObexDevice has been
+//  omitted for brevity.
+//
+
+IStream *pStream = NULL;
+if(FAILED(pHeaderCollection-&gt;AddName(L"MyFile.txt"))) 
+   goto Error;
+if(FAILED(pObexDevice-&gt;Put(pHeaderCollection, &amp;pStream))) 
+   goto Error;
+
+// NOTE: If Commit fails, the delete operation was either 
+// rejected by the server or the connection was lost. 
+// In either case, the file deletion failed.
+
+if(FAILED(pStream-&gt;Commit(0))) 
+   goto Error;
+
+//Success return.
+hRet = S_OK;
+goto Done;
+
+Error:
+    //Display Error and go to cleanup code.
+    hRet = E_FAIL;
+Done:
+    //Clean up.</PRE>
+
+<H4 class="dtH4">Requirements</H4>
+
+<P><B>OS Versions:</B> Windows CE .NET 4.0 and later.</P>
+
+<P><B>Header:</B> Obex.h, Obex.idl.</P>
+
+<P><B>Link Library:</B> Uuid.lib.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50conclientsupport.htm">Client Support</A> | <A HREF="wce50lrfiobexdeviceiunknown.htm">IObexDevice</A> | <MSHelp:link keywords="wce50lrfIStreamIUnknown" TABINDEX="0">IStream</MSHelp:link> | <A HREF="wce50grfobexinterfaces.htm">OBEX Interfaces</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

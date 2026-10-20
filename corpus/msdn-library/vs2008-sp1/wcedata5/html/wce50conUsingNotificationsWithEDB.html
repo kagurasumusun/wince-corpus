@@ -1,0 +1,236 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Using Notifications with EDB</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Using Notifications with EDB"/>
+<MSHelp:RLTitle Title="Using Notifications with EDB"/>
+<MSHelp:Keyword Index="A" Term="wce50conUsingNotificationsWithEDB"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Feature"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="edb_concepts.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="False"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_1044859">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50conusingnotificationswithedb"></A>Using Notifications with EDB</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>When a change occurs to a volume or database, EDB sends notifications to client applications that have requested notification. A client registers for notifications by passing a <A HREF="wce50lrfcenotifyrequest.htm">CENOTIFYREQUEST</A> structure in the call to the <A HREF="wce50lrfceopendatabaseinsessionedb.htm">CeOpenDatabaseInSession</A> function. A client unregisters by closing the database handle. This process is the same as in CEDB, although EDB supports new notification types and does not support some of the CEDB notification types.</P>
+
+<H2 class="dtH2">EDB Notification Types</H2>
+
+<P>The following table shows the notification types supported by EDB:</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=43%>Notification type</TH>
+<TH width=57%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=43%>DB_NOTIFY_RECORD_CREATED</TD>
+<TD width=57%>Indicates that a new record has been created.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=43%>DB_NOTIFY_RECORD_CHANGED</TD>
+<TD width=57%>Indicates that a record has been changed.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=43%>DB_NOTIFY_RECORD_DELETED</TD>
+<TD width=57%>Indicates that a record has been deleted.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=43%>DB_NOTIFY_VOLUME_CHANGED</TD>
+<TD width=57%>Occurs only within a transaction, and indicates a change in the volume.</TD>
+</TR>
+</table></div>
+
+<H2 class="dtH2">CENOTIFICATION Structure</H2>
+
+<P>Whenever a change occurs to a database or volume, EDB posts an allocated <A HREF="wce50lrfcenotification.htm">CENOTIFICATION</A> structure to the client's window handle (obtained from the <B>CENOTIFYREQUEST</B> structure). The information in the <B>CENOTIFICATION</B> structure depends on the notification type. The following table shows the value for each member of the <B>CENOTIFICATION</B> structure for each notification type:</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=25%>Notification type</TH>
+<TH width=25%>GUID value</TH>
+<TH width=25%>oidParent value</TH>
+<TH width=25%>OID value</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=25%>RECORD_CREATED</TD>
+<TD width=25%>The GUID of the volume that contains the record</TD>
+<TD width=25%>OID of the database that contains the record</TD>
+<TD width=25%>OID of the record that has been created</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=25%>RECORD_CHANGED</TD>
+<TD width=25%>The GUID of the volume that contains the record</TD>
+<TD width=25%>OID of the database that contains the record</TD>
+<TD width=25%>OID of the record that has been changed</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=25%>RECORD_DELETED</TD>
+<TD width=25%>The GUID of the volume that contains the record</TD>
+<TD width=25%>OID of the database that contains the record</TD>
+<TD width=25%>OID of the record that has been deleted</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=25%>VOLUME_CHANGED</TD>
+<TD width=25%>The GUID of the volume that has been changed</TD>
+<TD width=25%>NULL</TD>
+<TD width=25%>NULL</TD>
+</TR>
+</table></div>
+
+<P>The notification message posted is WM_DBNOTIFICATION, and the pointer to the <B>CENOTIFICATION</B> structure is supplied in the <I>lParam</I> parameter. Your application must call the <A HREF="wce50lrfcefreenotificationedb.htm">CeFreeNotification</A> function to free the memory associated with the <B>CENOTIFICATION</B> structure.</P>
+
+<H2 class="dtH2">DB_NOTIFY_VOLUME_CHANGED Notification Type</H2>
+
+<P>There are two scenarios where EDB sends the DB_NOTIFY_VOLUME_CHANGED notification:
+
+<UL type="disc">
+	<LI>The queue changes threshold is exceeded.
+<P>When a transaction commits, EDB dispatches the relevant changes to the appropriate clients. If there are clients registered to receive notifications, EDB queues the change information during long-running transactions. If the number of queued changes exceeds a threshold, EDB stops logging individual changes; once the transaction commits, EDB send a single DB_NOTIFY_VOLUME_CHANGED notification to each client. This prevents flooding of the clients' message queues.
+
+<BLOCKQUOTE class="dtBlock">
+<b class="le">Note</b>&nbsp;&nbsp;&nbsp;Notifications are sent only if the transaction successfully commits. If the transaction is reverted, no notification is sent.</BLOCKQUOTE>
+</li>
+
+	<LI>A client registers for notifications after a transaction has begun.
+<P>If a client registers for notifications after an explicit transaction has already started, the client receives a DB_NOTIFY_VOLUME_CHANGED notification after any transaction on the volume commits. For example, if User1 has started a transaction and is making changes to a database, and then User2 opens the same database and registers for notifications, User2 will receive a DB_NOTIFY_VOLUME_CHANGED notification once User1 commits. 
+
+<P>Because all operations occur within a transaction (whether explicit or implicit), a DB_NOTIFY_VOLUME_CHANGED notification might be sent even if no explicit transaction occurred. For example, if User2 registers for notifications while User1 is performing an Insert operation, User2 will receive a DB_NOTIFY_VOLUME_CHANGED notification once the Insert operation completes.
+
+<BLOCKQUOTE class="dtBlock">
+<b class="le">Note</b>&nbsp;&nbsp;&nbsp;EDB sends a DB_NOTIFY_VOLUME_CHANGED notification to all clients registered to receive notifications, even if the database that changed is not the database on which the client is registered.</BLOCKQUOTE>
+</li>
+</UL>
+
+<H2 class="dtH2">Setting the Change Queue Threshold</H2>
+
+<P>You can set the maximum number of changes to be queued during a transaction in two ways:
+
+<UL type="disc">
+	<LI>Setting the default value
+<P>You can set a default value to be used for all sessions and opened databases by passing a value in the <A HREF="wce50grfcevolumeoptionsedb.htm">CEVOLUMEOPTIONS</A> structure when you mount a volume. For more information, see <A HREF="wce50conconfigurableedbvolumeoptions.htm">Configurable EDB Volume Options</A>.
+</li>
+
+	<LI>Setting a per-session value
+<P>You can set the value on a per-session basis by calling the <A HREF="wce50lrfcesetsessionoptionedb.htm">CeSetSessionOption</A> function.
+</li>
+</UL>
+
+<H2 class="dtH2">Notification Compatibility Differences</H2>
+
+<P>EDB supports two notification styles: the CEDB method of using messages, and a new notification style in which notifications are received as a structure. The following table lists the various notification types and the database engine that supports each:</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=41%>Notification type</TH>
+<TH width=28%>Supported by EDB</TH>
+<TH width=31%>Supported by CDEB</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=41%>DB_NOTIFY_VOLUME_CHANGED</TD>
+<TD width=28%>Yes</TD>
+<TD width=31%>No</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=41%>DB_NOTIFY_RECORD_CREATED</TD>
+<TD width=28%>Yes</TD>
+<TD width=31%>Yes</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=41%>DB_NOTIFY_RECORD_CHANGED</TD>
+<TD width=28%>Yes</TD>
+<TD width=31%>Yes</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=41%>DB_NOTIFY_RECORD_DELETED</TD>
+<TD width=28%>Yes</TD>
+<TD width=31%>Yes</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=41%>DB_CEOID_DIRECTORY_DELETED</TD>
+<TD width=28%>No</TD>
+<TD width=31%>Yes</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=41%>DB_CEOID_FILE_DELTETED</TD>
+<TD width=28%>No</TD>
+<TD width=31%>Yes</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=41%>DB_CEOID_DATABASE_DELETED</TD>
+<TD width=28%>No</TD>
+<TD width=31%>Yes</TD>
+</TR>
+</table></div>
+
+<H2 class="dtH2">Handling Notifications at the Client</H2>
+
+<P>When handling notifications at the client, you should be aware of these two potential issues:
+
+<UL type="disc">
+	<LI>Changes and notification order
+<P>Clients should not rely on the order in which changes are made within a transaction and the order in which notifications are received. There is no certainty that notifications will be received in the same order in which the changes were made.
+</li>
+
+	<LI>OID value re-use
+<P>Once a client is registered, the client receives OID values in the notifications. The value of the OID depends on the notification type. However, you must be careful when using the OIDs that a client receives in a notification. For example, suppose Client1 deletes a record. Client2 will receive a notification about the delete; this notification will include the OID for the deleted record. However, EDB may reuse that OID for a new record. Therefore, Client2 can safely use the OID to clean up its own cached data or user interface, but should not use it for subsequent calls to EDB.
+</li>
+</UL>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50lrfceopendatabaseinsessionedb.htm">CeOpenDatabaseInSession</A> | <A HREF="wce50lrfcefreenotificationedb.htm">CeFreeNotification</A> | <A HREF="wce50lrfcenotification.htm">CENOTIFICATION</A> | <A HREF="wce50grfcevolumeoptionsedb.htm">CEVOLUMEOPTIONS</A> | <A HREF="wce50lrfcenotifyrequest.htm">CENOTIFYREQUEST</A> | <A HREF="wce50conconfigurableedbvolumeoptions.htm">Configurable EDB Volume Options</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

@@ -1,0 +1,186 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Registry File</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Registry File"/>
+<MSHelp:RLTitle Title="Registry File"/>
+<MSHelp:Keyword Index="A" Term="wce50conRegistryFile"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="OS"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="True"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="configuration_file_types.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="True"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="True"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_3012321">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50conregistryfile"></A>Registry File</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>Makeimg.exe uses registry (.reg) files to establish the registry entries for a run-time image. </P>
+
+<P>When you cold boot your target device, Filesys.exe uses .reg files to create a default registry. Platform.reg defines the hardware registry settings for the target device, and Project.reg defines the registry settings for the Windows CE-based executable files. </P>
+
+<P>The registry files have the following format. </P>
+
+<PRE class="code">[KEY1]
+"ValueName1"={Value Type}:{data}
+"ValueName2"={Value Type}:{data}
+[KEY2]
+"ValueName1"={Value Type}:{data}
+...</PRE>
+
+<P>You can specify the default value names by using the following format.</P>
+
+<PRE class="code">[KEY1]
+@ = "<I>default value name</I>" </PRE>
+
+<P>The following table shows the possible value types.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=20%>Value type</TH>
+<TH width=80%>Format</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=20%>REG_SZ</TD>
+<TD width=80%>"my string"</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=20%>REG_DWORD</TD>
+<TD width=80%>dword: NNNNN (hex number)
+<P>Type is always interpreted as a hex value.</P>
+</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=20%>REG_MULTI_SZ</TD>
+<TD width=80%>multi_sz: "my string", "my string"</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=20%>REG_BINARY</TD>
+<TD width=80%>hex: xx,xx,xx,xx ...</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=20%>HEX</TD>
+<TD width=80%>hex(xxxxxxxx): xx,xx,xx,xx
+<P>The hex(xx) types should correspond to the remaining Microsoft&reg; Win32&reg; registry types.</P>
+</TD>
+</TR>
+</table></div>
+
+<P>You can also use <B>IF/ENDIF</B> keywords, which execute a block of registry settings when an environment variable is set or equal to a particular value. </P>
+
+<P>To execute a block of registry settings when an environment variable is not set or is not equal to a specific value, use a space and an exclamation point (!) at the end of the line. </P>
+
+<P><B>IF/ENDIF</B> blocks can be nested. </P>
+
+<P><B>IF/ENDIF</B> keywords have the following format.</P>
+
+<PRE class="code">IF <I>environment variable </I>[= <I>value</I>] [!]
+[KEY1]
+"ValueName1"={Value Type}:{data}
+"ValueName2"={Value Type}:{data}
+[KEY2]
+"ValueName1"={Value Type}:{data}
+...
+ENDIF</PRE>
+
+<P>Use the semicolon (;) to start a line of comments.</P>
+
+<P>The following table shows the tasks you can perform in the registry.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=31%>Task</TH>
+<TH width=69%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=31%>Creating a registry entry</TD>
+<TD width=69%>To create a registry entry, update the registry file using the following syntax.
+<PRE class="code">[Key1]
+"ValueName"="Value Type"</PRE>
+</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=31%>Deleting a registry key</TD>
+<TD width=69%>To delete a registry key, place a dash (-) before the key name, using the following format.
+<PRE class="code">[-KEY1]</PRE>
+</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=31%>Deleting a registry value</TD>
+<TD width=69%>To delete a value, place a dash (-) after the value's equal sign, using the following format.
+<PRE class="code">"ValueName1"=-</PRE>
+</TD>
+</TR>
+</table></div>
+
+<H4 class="dtH4">Example</H4>
+
+<P>The following code example shows how you can add entries to the registry to create a key with a value set to a string value. In the example, if the IMGNOCONDEXAMPLE environment variable is not set, an additional subkey and value are entered into the registry.</P>
+
+<PRE class="code">[HKEY_LOCAL_MACHINE\RegExample]
+"MyValue"="MyString"
+IF IMGNOCONDEXAMPLE !
+[HKEY_LOCAL_MACHINE\RegExample\ConditionalSubKey]
+"MyString"="This is a string"
+ENDIF</PRE>
+
+<H4 class="dtH4">Remarks</H4>
+
+<P>When Makeimg.exe processes all .reg files to create a single file, duplicate entries result in a warning that indicates a duplicate entry in the final .reg file, Default.fdf, System.hiv, or User.hiv files. </P>
+
+<P>The duplication can be valid in some cases. The OEM should verify the duplication. When the OS cold boots, as in the case of the Default.fdf file, the last version of the duplicated data is the version created and stored in the real registry. In the case of .HIV files, the data contained in it is the last version found during Makeimg.exe.</P>
+
+<P>The hive-based registry requires that .reg files have additional tags included. These tags identify what parts of the registry are contained in the boot hive file. Each registry entry that must be set in the boot hive to boot the device must be wrapped with the following tag.</P>
+
+<PRE class="code">; HIVE BOOT SECTION
+ ... reg data...
+; END HIVE BOOT SECTION</PRE>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50conimageconfigurationfiles.htm">Run-Time Image Configuration Files</A> | <MSHelp:link keywords="wce50howHowtoCreateaDeviceDriver" TABINDEX="0">How to Create a Device Driver</MSHelp:link></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

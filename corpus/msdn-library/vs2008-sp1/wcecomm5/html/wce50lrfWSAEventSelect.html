@@ -1,0 +1,315 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>WSAEventSelect</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="WSAEventSelect"/>
+<MSHelp:RLTitle Title="WSAEventSelect"/>
+<MSHelp:Keyword Index="K" Term="WSAEventSelect"/>
+<MSHelp:Keyword Index="A" Term="wce50lrfWSAEventSelect"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Feature"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="apiref"/>
+<MSHelp:Attr Name="Filename" Value="winsock2_functions.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="True"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+<MSHelp:Attr Name="APIName" Value="WSAEventSelect"/>
+<MSHelp:Attr Name="APIType" Value="LibDef"/>
+<MSHelp:Attr Name="APILocation" Value="Ws2.lib"/>
+<MSHelp:Attr Name="PBFeature" Value="SYSGEN_WINSOCK"/>
+<MSHelp:Attr Name="PBOnly" Value="False"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_3008352">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50lrfwsaeventselect"></A>WSAEventSelect</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>This function specifies an event object to be associated with the supplied set of FD_<I>XXX</I> network events.</P>
+
+<PRE class="syntax"><B>int WSAEventSelect(</B>
+  <B>SOCKET </B><I>s</I><B>,</B>
+  <B>WSAEVENT </B><I>hEventObject</I><B>,</B>
+  <B>long </B><I>lNetworkEvents</I>
+<B>);</B></PRE>
+
+<H4 class="dtH4">Parameters</H4>
+
+<DL>
+<DT><I>s</I></DT>
+
+<DD>[in] Descriptor identifying the socket.</dd>
+
+<DT><I>hEventObject</I></DT>
+
+<DD>[in] Handle identifying the event object to be associated with the supplied set of FD_<I>XXX</I> network events.</dd>
+
+<DT><I>lNetworkEvents</I></DT>
+
+<DD>[in] Bitmask that specifies the combination of FD_<I>XXX</I> network events in which the application has interest.</dd>
+</DL>
+
+<H4 class="dtH4">Return Values</H4>
+
+<P>The return value is zero if the application's specification of the network events and the associated event object was successful. If an error occurs, the value SOCKET_ERROR is returned, and a specific error number can be retrieved by calling the <A HREF="wce50lrfwsagetlasterror.htm">WSAGetLastError</A> function.</P>
+
+<P>As in the case of the <A HREF="wce50lrfselect.htm">select</A> function, <B>WSAEventSelect</B> will frequently be used to determine when a data transfer operation (send or receive) can be issued with the expectation of immediate success. Nevertheless, a robust application must be prepared for the possibility that the event object is set and it issues a Windows Sockets call that returns WSAEWOULDBLOCK immediately. For example, the following sequence of operations is possible:
+
+<OL type="1">
+	<LI>Data arrives on socket <I>s</I>; Windows Sockets sets the <B>WSAEventSelect</B> event object. </li>
+
+	<LI>The application does some other processing. </li>
+
+	<LI>While processing, the application issues an <A HREF="wce50lrfioctlsocket.htm">ioctlsocket</A> and notices that there is data ready to be read. </li>
+
+	<LI>The application issues a <A HREF="wce50lrfrecv.htm">recv</A> to read the data. </li>
+
+	<LI>The application waits on the event object specified in <B>WSAEventSelect</B>, which returns immediately indicating that data is ready to read. </li>
+
+	<LI>The application issues <B>recv</B> which fails with the error WSAEWOULDBLOCK. </li>
+</OL>
+
+<P>The occurrence of the network event is recorded, the corresponding bit is set in the internal network event record, and the associated event object is signalled. No further action is taken for the network event until the application makes the function call that implicitly re-enables the setting of the event and signals the associated event object.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=33%>Network event </TH>
+<TH width=67%>Re-enabling function </TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%>FD_READ </TD>
+<TD width=67%><A HREF="wce50lrfrecv.htm">recv</A>, <A HREF="wce50lrfrecvfrom.htm">recvfrom</A>, <A HREF="wce50lrfwsarecv.htm">WSARecv</A>, or <A HREF="wce50lrfwsarecvfrom.htm">WSARecvFrom</A>. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%>FD_WRITE </TD>
+<TD width=67%><A HREF="wce50lrfsend.htm">send</A>, <A HREF="wce50lrfsendto.htm">sendto</A>, <A HREF="wce50lrfwsasend.htm">WSASend</A>, or <A HREF="wce50lrfwsasendto.htm">WSASendTo</A>. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%>FD_OOB </TD>
+<TD width=67%><A HREF="wce50lrfrecv.htm">recv</A>, <A HREF="wce50lrfrecvfrom.htm">recvfrom</A>, <A HREF="wce50lrfwsarecv.htm">WSARecv</A>, or <A HREF="wce50lrfwsarecvfrom.htm">WSARecvFrom</A>. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%>FD_ACCEPT </TD>
+<TD width=67%><A HREF="wce50lrfacceptwindowssockets.htm">accept (Windows Sockets)</A> or <A HREF="wce50lrfwsaaccept.htm">WSAAccept</A> unless the error code returned is WSATRY_AGAIN indicating that the condition function returned CF_DEFER. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%>FD_CONNECT </TD>
+<TD width=67%>None.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%>FD_CLOSE </TD>
+<TD width=67%>None. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%>FD_ROUTING_<BR>
+INTERFACE_CHANGE </TD>
+<TD width=67%><A HREF="wce50lrfwsaioctl.htm">WSAIoctl</A> with command SIO_ROUTING_INTERFACE_CHANGE. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%>FD_ADDRESS_<BR>
+LIST_CHANGE </TD>
+<TD width=67%><A HREF="wce50lrfwsaioctl.htm">WSAIoctl</A> with command SIO_ADDRESS_LIST_CHANGE. </TD>
+</TR>
+</table></div>
+
+<P>Any call to the re-enabling routine, even one that fails, results in re-enabling of recording and signaling for the relevant network event and event object.</P>
+
+<P>For FD_READ, FD_OOB, and FD_ACCEPT network events, network event recording and event object signaling are level-triggered. This means that if the re-enabling routine is called and the relevant network condition is still valid after the call, the network event is recorded and the associated event object is set. This allows an application to be event-driven and not be concerned with the amount of data that arrives at any one time. Consider the following sequence:
+
+<OL type="1">
+	<LI>A transport provider receives 100 bytes of data on socket<I> s </I>and causes ws2.dll to record the FD_READ network event and set the associated event object.</li>
+
+	<LI>The application issues <B>recv</B>(s, buffptr, 50, 0) to read 50 bytes. </li>
+
+	<LI>The transport provider causes ws2.dll to record the FD_READ network event and sets the associated event object again because there is still data to be read.</li>
+</OL>
+
+<P>With these semantics, an application need not read all available data in response to an FD_READ network event &#0151; a single <B>recv</B> in response to each FD_READ network event is appropriate.</P>
+
+<P>The FD_ROUTING_INTERFACE_CHANGE and FD_ADDRESS_LIST_CHANGE events are considered edge-triggered as well. A message will be posted exactly once when a change occurs after the application has requested the notification by issuing <B>WSAIoctl</B> with SIO_ROUTING_INTERFACE_CHANGE or SIO_ADDRESS_LIST_CHANGE correspondingly. Other messages will not be forthcoming until the application re-issues the IOCTL and another change is detected since the IOCTL has been issued.</P>
+
+<P>If a network event has already happened when the application calls <B>WSAEventSelect</B> or when the re-enabling function is called, a network event is recorded and the associated event object is set as appropriate. For example, consider the following sequence:
+
+<OL type="1">
+	<LI>An application calls <A HREF="wce50lrflisten.htm">listen</A>.</li>
+
+	<LI>A connect<B> </B>request is received but not yet accepted.</li>
+
+	<LI>The application calls <B>WSAEventSelect</B> specifying that it is interested in the FD_ACCEPT network event for the socket. Due to the persistence of network events, Windows Sockets records the FD_ACCEPT network event and sets the associated event object immediately.</li>
+</OL>
+
+<P>The FD_WRITE network event is handled slightly differently. An FD_WRITE network event is recorded when a socket is first connected with <B>connect</B>/<B>WSAConnect</B> or accepted with <B>accept</B>/<B>WSAAccept</B>, and then after a send fails with WSAEWOULDBLOCK and buffer space becomes available. Therefore, an application can assume that sends are possible starting from the first FD_WRITE network event setting and lasting until a send returns WSAEWOULDBLOCK. After such a failure, the application will find out that sends are again possible when an FD_WRITE network event is recorded and the associated event object is set.</P>
+
+<P>The FD_OOB network event is used only when a socket is configured to receive out of band (OOB) data separately. If the socket is configured to receive OOB data inline, the OOB (expedited) data is treated as usual data and the application should register an interest in, and will get an FD_READ network event, not an FD_OOB network event. An application can set or inspect the way in which OOB data is to be handled by using <A HREF="wce50lrfsetsockoptwindowssockets.htm">setsockopt (Windows Sockets)</A> or <A HREF="wce50lrfgetsockoptwindowssockets.htm">getsockopt (Windows Sockets)</A> for the SO_OOBINLINE option.</P>
+
+<P>The error code in an FD_CLOSE network event indicates whether the socket close was graceful or abortive. If the error code is zero, then the close was graceful; if the error code is WSAECONNRESET, then the socket's virtual circuit was reset. This only applies to connection-oriented sockets such as SOCK_STREAM.</P>
+
+<P>The FD_CLOSE network event is recorded when a close indication is received for the virtual circuit corresponding to the socket. In TCP terms, this means that the FD_CLOSE is recorded when the connection goes into the TIME WAIT or CLOSE WAIT states. This results from the remote end performing a <A HREF="wce50lrfshutdown.htm">shutdown</A> on the send side or a <A HREF="wce50lrfclosesocket.htm">closesocket</A>. The FD_CLOSE network event is posted after all data is read from a socket. An application should check for remaining data on receipt of FD_CLOSE to avoid any possibility of losing data.</P>
+
+<P>Windows Sockets will record only an FD_CLOSE network event to indicate closure of a virtual circuit. It will not record an FD_READ network event to indicate this condition.</P>
+
+<P>The FD_ROUTING_INTERFACE_CHANGE network event is recorded when the local interface that should be used to reach the destination specified in <B>WSAIoctl</B> with SIO_ROUTING_INTERFACE_CHANGE changes after such IOCTL has been issued.</P>
+
+<P>The FD_ADDRESS_LIST_CHANGE network event is recorded when the list of addresses of the protocol family for the socket to which the application can bind changes after <B>WSAIoctl</B> with SIO_ADDRESS_LIST_CHANGE has been issued. </P>
+
+<P>The following table shows a list of possible error codes.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=36%>Error code </TH>
+<TH width=64%>Description </TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=36%>WSANOTINITIALISED </TD>
+<TD width=64%>A successful <A HREF="wce50lrfwsastartup.htm">WSAStartup</A> call must occur before using this function. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=36%>WSAENETDOWN </TD>
+<TD width=64%>The network subsystem has failed. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=36%>WSAEINVAL </TD>
+<TD width=64%>One of the specified parameters was invalid, or the specified socket is in an invalid state. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=36%>WSAEINPROGRESS </TD>
+<TD width=64%>A blocking Winsock call is in progress, or the service provider is still processing a callback function. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=36%>WSAENOTSOCK </TD>
+<TD width=64%>The descriptor is not a socket. </TD>
+</TR>
+</table></div>
+
+<H4 class="dtH4">Remarks</H4>
+
+<P>This function is used to specify an event object, <I>hEvent</I>Object, to be associated with the selected FD_<I>XXX</I> network events, <I>lNetworkEvents</I>. The socket for which an event object is specified is identified by the parameter<I> s</I>. The event object is set when any of the nominated network events occur.</P>
+
+<P>This function sets the associated event object and records the occurrence of this event in an internal network event record. An application can use <B>WSAEnumNetworkEvents</B> to retrieve the contents of the internal network event record and thus determine which of the nominated network events have occurred.</P>
+
+<P><B>WSAEventSelect</B> is the only function that causes network activity and errors to be recorded and retrievable through <A HREF="wce50lrfwsaenumnetworkevents.htm">WSAEnumNetworkEvents</A>. See the description of <A HREF="wce50lrfselect.htm">select</A> to find out how that function reports network activity and errors.</P>
+
+<P>The <B>WSAEventSelect</B> function automatically sets socket<I> s </I>to nonblocking mode, regardless of the value of <I>lNetworkEvents</I>. See <A HREF="wce50lrfioctlsocket.htm">ioctlsocket</A> and <A HREF="wce50lrfwsaioctl.htm">WSAIoctl</A> for how to set the socket back to blocking mode.</P>
+
+<P>The <I>lNetworkEvents</I> parameter is constructed by using the bitwise OR operator with any of the values specified in the following table.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=35%>Value </TH>
+<TH width=65%>Description </TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=35%>FD_READ </TD>
+<TD width=65%>Wants to receive notification of readiness for reading. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=35%>FD_WRITE </TD>
+<TD width=65%>Wants to receive notification of readiness for writing. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=35%>FD_OOB </TD>
+<TD width=65%>Wants to receive notification of the arrival of out of band (OOB) data. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=35%>FD_ACCEPT </TD>
+<TD width=65%>Wants to receive notification of incoming connections. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=35%>FD_CONNECT </TD>
+<TD width=65%>Wants to receive notification of a completed connection or multipoint join operation. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=35%>FD_CLOSE </TD>
+<TD width=65%>Wants to receive notification of a socket closure. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=35%>FD_ROUTING_<BR>
+INTERFACE_CHANGE </TD>
+<TD width=65%>Wants to receive notification of routing interface changes for the specified destination. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=35%>FD_ADDRESS_<BR>
+LIST_CHANGE </TD>
+<TD width=65%>Wants to receive notification of local address list changes for the address family of the socket. </TD>
+</TR>
+</table></div>
+
+<P>Issuing a <B>WSAEventSelect</B> call for a socket cancels any previous <B>WSAEventSelect</B> calls for the same socket and clears the internal network event record. For example, to associate an event object with both reading and writing network events, the application must call <B>WSAEventSelect</B> with both FD_READ and FD_WRITE as the following code sample shows.</P>
+
+<PRE class="code">rc = WSAEventSelect(s, hEventObject, FD_READ|FD_WRITE);</PRE>
+
+<P>It is not possible to specify different event objects for different network events. The following code will not work because the second call will cancel the effects of the first, and only the FD_WRITE network event will be associated with <I>hEventObject2</I>.</P>
+
+<PRE class="code">rc = WSAEventSelect(s, hEventObject1, FD_READ);
+rc = WSAEventSelect(s, hEventObject2, FD_WRITE); //bad</PRE>
+
+<P>To cancel the association and selection of network events on a socket, <I>lNetworkEvents</I> should be set to zero, in which case the <I>hEventObject</I> parameter will be ignored.</P>
+
+<PRE class="code">rc = WSAEventSelect(s, hEventObject, 0);</PRE>
+
+<P>Closing a socket with the <B>closesocket</B> function also cancels the association and selection of network events specified in <B>WSAEventSelect</B> for the socket. The application, however, still must call <B>WSACloseEvent</B> to explicitly close the event object and free any resources.</P>
+
+<P>The socket created when the <B>accept</B> function is called has the same properties as the listening socket used to accept it. Any <B>WSAEventSelect</B> association and network events selection set for the listening socket apply to the accepted socket. For example, if a listening socket has a <B>WSAEventSelect</B> association of <I>hEventOject</I> with FD_ACCEPT, FD_READ, and FD_WRITE, then any socket accepted on that listening socket will also have FD_ACCEPT, FD_READ, and FD_WRITE network events associated with the same <I>hEventObject</I>. If a different <I>hEventObject</I> or network event is desired, the application should call <B>WSAEventSelect</B>, passing the accepted socket and the desired new information.</P>
+
+<H4 class="dtH4">Requirements</H4>
+
+<P><B>OS Versions:</B> Windows CE .NET 4.0 and later.<BR>
+<B>Header:</B> Winsock2.h.<BR>
+<B>Link Library:</B> Ws2.lib.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50lrfacceptwindowssockets.htm">accept (Windows Sockets)</A> | <A HREF="wce50lrfclosesocket.htm">closesocket</A> | <A HREF="wce50lrfgetsockoptwindowssockets.htm">getsockopt (Windows Sockets)</A> | <A HREF="wce50lrfioctlsocket.htm">ioctlsocket</A> | <A HREF="wce50lrflisten.htm">listen</A> | <A HREF="wce50lrfrecv.htm">recv</A> | <A HREF="wce50lrfrecvfrom.htm">recvfrom</A> | <A HREF="wce50lrfselect.htm">select</A> | <A HREF="wce50lrfsend.htm">send</A> | <A HREF="wce50lrfsendto.htm">sendto</A> | <A HREF="wce50lrfsetsockoptwindowssockets.htm">setsockopt (Windows Sockets)</A> | <A HREF="wce50lrfshutdown.htm">shutdown</A> | <A HREF="wce50lrfwsaaccept.htm">WSAAccept</A> | <A HREF="wce50lrfwsacloseevent.htm">WSACloseEvent</A> | <A HREF="wce50lrfwsacreateevent.htm">WSACreateEvent</A> | <A HREF="wce50lrfwsaenumnetworkevents.htm">WSAEnumNetworkEvents</A> | <A HREF="wce50lrfwsagetlasterror.htm">WSAGetLastError</A> | <A HREF="wce50lrfwsaioctl.htm">WSAIoctl</A> | <A HREF="wce50lrfwsarecv.htm">WSARecv</A> | <A HREF="wce50lrfwsarecvfrom.htm">WSARecvFrom</A> | <A HREF="wce50lrfwsasend.htm">WSASend</A> | <A HREF="wce50lrfwsasendto.htm">WSASendTo</A> | <A HREF="wce50lrfwsastartup.htm">WSAStartup</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

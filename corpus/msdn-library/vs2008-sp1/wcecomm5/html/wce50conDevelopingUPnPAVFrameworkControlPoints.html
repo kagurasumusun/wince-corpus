@@ -1,0 +1,92 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Developing UPnP AV Framework Control Points</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Developing UPnP AV Framework Control Points"/>
+<MSHelp:RLTitle Title="Developing UPnP AV Framework Control Points"/>
+<MSHelp:Keyword Index="A" Term="wce50conDevelopingUPnPAVFrameworkControlPoints"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Feature"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="upnpav_appdev.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="True"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+<MSHelp:Attr Name="PBFeature" Value="UPNP"/>
+<MSHelp:Attr Name="PBOnly" Value="False"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_1052949">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50condevelopingupnpavframeworkcontrolpoints"></A>Developing UPnP AV Framework Control Points</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>Using the UPnP AV Framework to develop a UPnP AV control point involves finding MediaRenderer and MediaServer devices and then invoking actions and receiving state variable change notifications.</P>
+
+<P>The AV Control Point sample contains code for all of these steps. For more information about this sample, see <A HREF="wce50lrfupnpavcontrolpointsample.htm">UPnP AV Control Point Sample</A>.</P>
+
+<P>UPnP AV control point applications that use the UPnP AV Framework typically perform the operations in the following list.
+
+<OL type="1">
+	<LI>Locate UPnP AV MediaRenderer and/or MediaServer devices. 
+<P>The UPnP AV Framework provides no special-purpose functionality for locating devices. Instead, you use the standard UPnP Control Point API. 
+
+<P>To find MediaRenderer devices, use this search target string:
+
+<PRE class="code">urn:schemas-upnp-org:device:MediaRenderer:1</PRE>
+
+<P>To find MediaServer devices, use this search target string:
+
+<PRE class="code">urn:schemas-upnp-org:device:MediaServer:1</PRE>
+
+<P>For more information about locating UPnP devices using the UPnP Control Point API, see <A HREF="wce50condevicelocation.htm">Device Location</A>.
+</li>
+
+	<LI>Use the <A HREF="wce50lrfiupnpdeviceidispatch.htm">IUPnPDevice</A> pointers you obtained in Step 1 to create instances of the <A HREF="wce50lrfmediarendererdevice.htm">MediaRendererDevice</A> and/or <A HREF="wce50lrfmediaserverdevice.htm">MediaServerDevice</A> classes. The constructors for these classes take <B>IUPnPDevice</B> pointers.</li>
+
+	<LI>Use <A HREF="wce50lrfmediarendererdevicegetconnectionmanager.htm">MediaRendererDevice::GetConnectionManager</A>, <A HREF="wce50lrfmediaserverdevicegetconnectionmanager.htm">MediaServerDevice::GetConnectionManager</A>, and <A HREF="wce50lrfmediaserverdevicegetcontentdirectory.htm">MediaServerDevice::GetContentDirectory</A> to obtain pointers to <A HREF="wce50lrficonnectionmanager.htm">IConnectionManager</A> (on both devices) and <A HREF="wce50lrficontentdirectory.htm">IContentDirectory</A> (on the MediaServer device) implementations.</li>
+
+	<LI>Use the appropriate methods of the <B>IConnectionManager </B>and <B>IContentDirectory </B>implementations to perform all control point tasks.
+<P>For example, to browse the content made available by a ContentDirectory service, use <A HREF="wce50lrficontentdirectorybrowsemetadata.htm">IContentDirectory::BrowseMetadata</A> or <A HREF="wce50lrficontentdirectorybrowsechildren.htm">IContentDirectory::BrowseChildren</A>. Then use the DIDL-Lite XML returned by these methods with the <A HREF="wce50lrfparserupnpav.htm">parser</A> class to enumerate and examine all object properties.
+
+<P>Or, to start a media stream from a MediaServer to a MediaRenderer, use <A HREF="wce50lrficonnectionmanagerprepareforconnection.htm">IConnectionManager::PrepareForConnection</A>. <B>PrepareForConnection</B> returns <A HREF="wce50lrfiavtransport.htm">IAVTransport</A> and <A HREF="wce50lrfirenderingcontrol.htm">IRenderingControl</A> implementations you use to initiate and control the display properties of the transferred media.
+</li>
+</OL>
+
+<P>For information about the control flow and action invocations required when working with ConnectionManager, AVTransport, RenderingControl, and ContentDirectory services, see <A HREF="wce50conupnpavdcpdocumentation.htm">UPnP AV DCP Documentation</A>.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50condevelopingupnpavframeworkapplication.htm">Developing UPnP AV Framework Devices and Control Points</A> | <A HREF="wce50oricontrolpointapi.htm">Using the UPnP Control Point API</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

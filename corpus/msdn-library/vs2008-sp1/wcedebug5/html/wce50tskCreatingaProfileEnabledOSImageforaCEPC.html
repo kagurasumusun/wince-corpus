@@ -1,0 +1,129 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Building a Run-Time Image That Supports the Kernel Profiler</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Building a Run-Time Image That Supports the Kernel Profiler"/>
+<MSHelp:RLTitle Title="Building a Run-Time Image That Supports the Kernel Profiler"/>
+<MSHelp:Keyword Index="A" Term="wce50tskCreatingaProfileEnabledOSImageforaCEPC"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Debugging"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="True"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbTask"/>
+<MSHelp:Attr Name="Filename" Value="kernel_profiler.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="False"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_3013072">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50tskcreatingaprofileenabledosimageforacepc"></A>Building a Run-Time Image That Supports the Kernel Profiler</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>To use the kernel profiler, you must first build a run-time image that supports the kernel profiler. By default, a run-time image that supports the kernel profiler includes KITL, regardless of the build options that you choose.</P>
+
+<P>For each BSP, versions of the kernel are specified in sources files in the Kern<I>XXX</I> directories at %_WINCEROOT%\Platform\&lt;<I>Hardware platform name</I>&gt;\Src\Kernel. In a typical BSP, the version of the kernel that supports the kernel profiler by default also includes KITL. </P>
+
+<P>The following table shows the versions of the kernel that you can build by default with a typical BSP.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=21%>Kernel version</TH>
+<TH width=79%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=21%>Kern.exe</TD>
+<TD width=79%>Does not support the kernel profiler and does not include KITL</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=21%>Kernkitl.exe</TD>
+<TD width=79%>Does not support the kernel profiler and includes KITL</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=21%>Kernkitlprof.exe</TD>
+<TD width=79%>Supports the kernel profiler and includes KITL</TD>
+</TR>
+</table></div>
+
+<P><b class="le">Note</b>&nbsp;&nbsp;&nbsp;If you use a custom BSP, there may not be a Kernkitlprof version of the kernel in the BSP, particularly if you migrated the BSP from a previous version of Windows CE. For information about building a Kernkitlprof version of the kernel, see <A HREF="wce50tskcreatingkernkitlprofversionofkernel.htm">Creating a Kernkitlprof Version of the Kernel</A>. For information about building without KITL a run-time image that supports the kernel profiler, see <A HREF="wce50tskbuildingwithoutkitlrun-timeimagethatsupportskernelprofiler.htm">Creating a Kernprof Version of the Kernel</A>.</P>
+
+<P>Microsoft recommends that you build a run-time image to support the kernel profiler from the Release configuration of your OS design. While a run-time image built from a Release configuration is not required, other builds run slower and should not be used to analyze performance.</P>
+
+<P class="labelproc"><B>To build a run-time image that supports the kernel profiler</B>
+
+<OL type="1">
+	<LI>In the Platform.bib or Project.bib file, in the MODULES section of ROM, add modules for which you want the kernel profiler to look up symbols. 
+<P>For more information about .bib files, see <MSHelp:link keywords="wce50conBinaryImageBuilderFile" TABINDEX="0">Binary Image Builder File</MSHelp:link>.
+</li>
+
+	<LI>From the <B>Platform</B> menu, choose <B>Settings</B>, and then choose the <B>Build Options</B> tab. </li>
+
+	<LI>Select the <B>Enable Profiling</B> check box, and then choose <B>OK</B>.
+<P>When you select the <B>Enable Profiling</B> check box and then choose <B>OK</B>, the following environment variables are set:
+
+<UL type="disc">
+	<LI>IMGPROFILER
+<P>The run-time image supports the kernel profiler when the IMGPROFILER variable is set because the Config.bib and Common.bib files specify an appropriate response to the value of this variable. For more information about the conditional logic in the Config.bib and Common.bib files, see <A HREF="wce50tskconfiguringconfigbibcommonbibforimgprofiler.htm">Configuring the Config.bib and Common.bib Files for IMGPROFILER</A>.
+</li>
+
+	<LI>WINCEMAP
+<P>This environment variable is set by default.  
+
+<P>All applications and modules you want to profile should be in the MODULES section of ROM too, so you need .map files for those.
+
+<P>You can, alternatively, set these environment variables from the command line. To set an environment variable from the command line, in a command prompt build window, type <code class="ce">set &lt;environment variable&gt;=1</code>.
+</li>
+</UL>
+</li>
+
+	<LI>Verify for each module in the MODULES section of ROM that the appropriate .map file for the module exists in the release directory.
+<P>With the appropriate .map file in the release directory, the symbols for the module are available to the kernel.
+</li>
+
+	<LI>Build a run-time image.
+<P>For information about building the run-time image in the IDE, see <MSHelp:link keywords="wce50tskBuildingaPlatform" TABINDEX="0">Building a Run-Time Image</MSHelp:link>.
+
+<P>To build the run-time image from the command line, run Blddemo.bat. For more information about Blddemo.bat, see <MSHelp:link keywords="wce50conBuildDemoTool" TABINDEX="0">Build Demo Tool</MSHelp:link>.
+</li>
+</OL>
+
+<P>After completing these steps, if you use one of the sample BSPs provided with Platform Builder or if you use a BSP created from a copy of a sample BSP, you should be able to run the kernel profiler. If you use a custom BSP, you may need to add code to the OAL to implement the profiler interrupt. For more information, see <A HREF="wce50tskimplementingprofiling.htm">Setting Up Monte Carlo Profiling</A>.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50orisettingupkernelprofiler.htm">Setting Up the Kernel Profiler</A> | <MSHelp:link keywords="wce50conBuildDemoTool" TABINDEX="0">Build Demo Tool</MSHelp:link> | <MSHelp:link keywords="wce50conBuildTool" TABINDEX="0">Build Tool</MSHelp:link> | <MSHelp:link keywords="wce50conEnvironmentVariables" TABINDEX="0">Environment Variables</MSHelp:link> | <MSHelp:link keywords="wce50conMakeBinaryImageTool" TABINDEX="0">Make Binary Image Tool</MSHelp:link></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

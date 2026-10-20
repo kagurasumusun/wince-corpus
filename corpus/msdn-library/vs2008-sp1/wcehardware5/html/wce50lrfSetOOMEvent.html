@@ -1,0 +1,151 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>SetOOMEvent</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="SetOOMEvent"/>
+<MSHelp:RLTitle Title="SetOOMEvent"/>
+<MSHelp:Keyword Index="K" Term="SetOOMEvent"/>
+<MSHelp:Keyword Index="A" Term="wce50lrfSetOOMEvent"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Hardware"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="True"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="apiref"/>
+<MSHelp:Attr Name="Filename" Value="oal_functions1.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="False"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+<MSHelp:Attr Name="APIName" Value="SetOOMEvent"/>
+<MSHelp:Attr Name="APIType" Value="LibDef"/>
+<MSHelp:Attr Name="APILocation" Value="Coredll.lib"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_3010820">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50lrfsetoomevent"></A>SetOOMEvent</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>This function enables enhanced memory management features of Windows CE. </P>
+
+<PRE class="syntax"><B>void SetOOMEvent(</B>
+  <B>HANDLE</B> <I>hEvent</I><B>,</B>
+  <B>DWORD</B> <I>cpLow</I><B>,</B>
+  <B>DWORD</B> <I>cpCritical</I><B>,</B>
+  <B>DWORD</B> <I>cpLowBlockSize</I><B>,</B>
+  <B>DWORD</B> <I>cpCriticalBlockSize </I>
+<B>);</B></PRE>
+
+<H4 class="dtH4">Parameters</H4>
+
+<DL>
+<DT><I>hEvent</I></DT>
+
+<DD>[in] Handle to the event that the kernel sets when memory becomes low or critically low.</dd>
+
+<DT><I>cpLow</I></DT>
+
+<DD>[in] Number of free memory pages that triggers a low memory condition. When memory goes below this level, <I>hEvent</I> is set.</dd>
+
+<DT><I>cpCritical</I></DT>
+
+<DD>[in] Number of free memory pages that triggers a critically low memory condition. When memory goes below this level, <I>hEvent</I> is set.</dd>
+
+<DT><I>cpLowBlockSize</I></DT>
+
+<DD>[in] Size of the largest block that the kernel allocates with the <MSHelp:link keywords="wce50lrfVirtualAlloc" TABINDEX="0">VirtualAlloc</MSHelp:link> function, when the allocation would leave the system with fewer than <I>cpLow</I> pages.</dd>
+
+<DT><I>cpCriticalBlockSize</I></DT>
+
+<DD>[in] Size of the largest block that the kernel allocates with <B>VirtualAlloc</B>, when the allocation would leave the system with fewer than <I>cpCritical</I> pages.</dd>
+</DL>
+
+<H4 class="dtH4">Return Values</H4>
+
+<P>None.</P>
+
+<H4 class="dtH4">Remarks</H4>
+
+<P>This function replaces <B>SetGwesOOMEvent</B>, which is now obsolete. </P>
+
+<P>There is no need to call this function in an OS configuration that includes the OOM component. The OOM component calls this function and relies on registry settings to define the OEM's preferred memory settings. </P>
+
+<P>If there are no registry settings, the OOM component uses the following parameter defaults:
+
+<UL type="disc">
+	<LI><I>cpLow</I> = 32</li>
+
+	<LI><I>cpCritical</I> = 20</li>
+
+	<LI><I>cpLowBlockSize</I> = 4</li>
+
+	<LI><I>cpCriticalBlockSize</I> = 2</li>
+</UL>
+
+<P>If an OEM does not include the OOM component, the OEM must call this function to enable control of the following resources:
+
+<UL type="disc">
+	<LI>Page-out code. When memory is low, the kernel pages out or discards code that is marked discardable. This enables memory to be freed for use by other processes.</li>
+
+	<LI>Reclaim unused stack space. When memory is low, the kernel attempts to reclaim memory used by a thread's stack that is no longer needed by the thread.</li>
+</UL>
+
+<P>If this function is not called, the following defaults for the system are used:
+
+<UL type="disc">
+	<LI><I>cpLow</I> = 0</li>
+
+	<LI><I>cpCritical</I> = 0</li>
+
+	<LI><I>cpLowBlockSize</I> = 0</li>
+
+	<LI><I>cpCriticalBlockSize</I> = 0</li>
+</UL>
+
+<P>The kernel does not attempt to page out code until memory reaches zero, and it does not reclaim unused stack memory. However, memory is reclaimed when threads, processes, memory, and kernel objects are deleted. </P>
+
+<P>In some circumstances, a system that does not discard memory or reclaim stack memory is usable by OEMs. An OEM must completely investigate the issues before deciding not to call this function.</P>
+
+<P>An application that needs to monitor a memory state would pass in the parameters and then wait for the event to be triggered by the kernel by calling the function <MSHelp:link keywords="wce50lrfWaitForSingleObject" TABINDEX="0">WaitForSingleObject</MSHelp:link>. </P>
+
+<P>When the kernel sets the event, the monitoring application would query the memory state to determine if memory is low or critical, and then take appropriate action. To query the current memory state, use the <MSHelp:link keywords="wce50lrfGlobalMemoryStatus" TABINDEX="0">GlobalMemoryStatus</MSHelp:link> function.</P>
+
+<H4 class="dtH4">Requirements</H4>
+
+<P><B>OS Versions:</B> Windows CE 3.0 and later.<BR>
+<B>Header:</B> Pkfuncs.h.<BR>
+<B>Link Library:</B> Coredll.lib.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50lrfdwnkmaxprionoscav.htm">dwNKMaxPrioNoScav</A> | <MSHelp:link keywords="wce50lrfGlobalMemoryStatus" TABINDEX="0">GlobalMemoryStatus</MSHelp:link> | <MSHelp:link keywords="wce50lrfVirtualAlloc" TABINDEX="0">VirtualAlloc</MSHelp:link> | <MSHelp:link keywords="wce50lrfWaitForSingleObject" TABINDEX="0">WaitForSingleObject</MSHelp:link> | <MSHelp:link keywords="wce50lrfOut-of-MemoryRegistrySettings" TABINDEX="0">Out-of-Memory Registry Settings</MSHelp:link> </P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

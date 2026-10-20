@@ -1,0 +1,90 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Using the IVideoWindow Interface</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Using the IVideoWindow Interface"/>
+<MSHelp:RLTitle Title="Using the IVideoWindow Interface"/>
+<MSHelp:Keyword Index="A" Term="wce50conUsingtheIVideoWindowInterface"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Feature"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="directshow_concepts1.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="True"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+<MSHelp:Attr Name="PBFeature" Value="SYSGEN_DSHOW"/>
+<MSHelp:Attr Name="PBOnly" Value="False"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_3020458">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50conusingtheivideowindowinterface"></A>Using the IVideoWindow Interface</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>This section describes how to use the <B>IVideoWindow</B> interface to set properties on the video window, including the owner and style of the window.</P>
+
+<BLOCKQUOTE class="dtBlock">
+<b class="le">Note</b>&nbsp;&nbsp;&nbsp;Most of the code in the sample program performs standard windowing operations, and is not discussed in this topic. In particular, the functions <B>WindowProc</B> and <B>WinMain</B> contain a typical framework for Microsoft&reg; Windows&reg; applications. The application-defined functions <B>PlayFile</B> and <B>CleanUp</B> are the ones of interest.</BLOCKQUOTE>
+
+<P>First, create an instance of the filter graph manager and construct the filter graph (through a call to the <A HREF="wce50lrfigraphbuilderrenderfile.htm">IGraphBuilder::RenderFile</A> method). For more information on how to do this, see <A HREF="wce50conplayingamediafile.htm">Playing a Media File</A>.</P>
+
+<P>Then, before starting playback, set the properties on the video window, as follows:</P>
+
+<P>Attach the video playback window to the desired parent window. To do this, call the <A HREF="wce50lrfivideowindowputowner.htm">IVideoWindow::put_Owner</A> method and pass it a handle to the owner window. This method takes a variable of type OAHWND, so cast the handle to this type, if necessary.</P>
+
+<BLOCKQUOTE class="dtBlock">
+<b class="le">Note</b>&nbsp;&nbsp;&nbsp;To make the following code example easier to read, error checking is not included. Do not use this code example in a release configuration unless it you have modified it to include secure error handling.</BLOCKQUOTE>
+
+<PRE class="code">// pGraph is a previously obtained pointer to the filter graph manager.
+IVideoWindow    *pVidWin = NULL;
+pGraph-&gt;QueryInterface(IID_IVideoWindow, (void **)&amp;pVidWin);
+pVidWin-&gt;put_Owner((OAHWND)g_hwnd);</PRE>
+
+<P>Change the style of the video window to a child window. To do this, call the <A HREF="wce50lrfivideowindowputwindowstyle.htm">IVideoWindow::put_WindowStyle</A> method and pass it a combination of style flags. The WS_CHILD flag indicates that the window is a child window; the WS_CLIPSIBLINGS flag prevents the window from drawing inside the client area of another child window. </P>
+
+<PRE class="code">pVidWin-&gt;put_WindowStyle(WS_CHILD | WS_CLIPSIBLINGS);</PRE>
+
+<P>Set the position of the video window by calling the <A HREF="wce50lrfivideowindowsetwindowposition.htm">IVideoWindow::SetWindowPosition</A> method. This method takes device coordinates specifying the left edge (x-axis), top edge (y-axis), width, and height of the window. The sample program stretches the video window to fill the entire parent window. </P>
+
+<PRE class="code">RECT grc;
+GetClientRect(g_hwnd, &amp;grc);
+pVidWin-&gt;SetWindowPosition(0, 0, grc.right, grc.bottom);</PRE>
+
+<P>The <MSHelp:link keywords="wce50lrfGetClientRect" TABINDEX="0">GetClientRect</MSHelp:link> function fills a <MSHelp:link keywords="wce50lrfRECT" TABINDEX="0">RECT</MSHelp:link> structure with the coordinates of the window's client area. The coordinates are relative to the upper-left corner of the client area, so the <B>left</B> and <B>top</B> members are both zero and the <B>right</B> and <B>bottom</B> members define the width and height, respectively. </P>
+
+<P>Before the application exits, it is important that you set the visibility of the video window to false. Otherwise, a video image remains on the screen and the user cannot get rid of it. Then, reset the owner to NULL; otherwise, messages are sent to the wrong window, likely causing errors.</P>
+
+<PRE class="code">HRESULT hr = pVidWin-&gt;put_Visible(OAFALSE);
+hr = pVidWin-&gt;put_Owner(NULL);   </PRE>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

@@ -1,0 +1,87 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>TFAT File Naming Limitations</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="TFAT File Naming Limitations"/>
+<MSHelp:RLTitle Title="TFAT File Naming Limitations"/>
+<MSHelp:Keyword Index="A" Term="wce51conTFATFileNamingLimitations"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Feature"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="fatfs_guide.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="True"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="True"/>
+<MSHelp:Attr Name="PBFeature" Value="SYSGEN_STOREMGR"/>
+<MSHelp:Attr Name="PBOnly" Value="False"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_1075673">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce51contfatfilenaminglimitations"></A>TFAT File Naming Limitations</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>Under the TFAT file system, file names are restricted to no more than 247 characters. Attempts to use a file name or path that exceeds this restriction will fail.</P>
+
+<P>The root file system on all of Windows CE-based devices is managed by the TFAT file system. In most cases, a Windows CE-based device uses 12- or 16-bit TFAT. </P>
+
+<P>In the FATFS file system, the root directory resides at a fixed location and cannot be moved. Because of this characteristic, the file system can be corrupted if an operation performed at the root directory is interrupted.</P>
+
+<P>To make operations transaction-safe, the default TFAT file system redirects all root-directory entries to a hidden directory. In addition, the system redirects all root-directory operations to this hidden directory. To calling applications, the hidden director appears as the root, but is actually a sub-director of the root directory. Operations performed within the hidden directory are transaction safe. In this way, TFAT operations in the root directory are transaction-safe.</P>
+
+<P>To perform the redirection, the TFAT system prepends the name of the hidden directory to the designated path, and increases the path length by the number of characters in the redirection string, <code class="ce">__TFAT_HIDDEN_ROOT_DIR__</code>. For example</P>
+
+<PRE class="code">CreateFile("\temp\myfile.dat")</PRE>
+
+<P>resolves to </P>
+
+<PRE class="code">CreateFile("__TFAT_HIDDEN_ROOT_DIR__\temp\myfile.dat")</PRE>
+
+<P>If the total path size including the string that enacts the redirection, <code class="ce">__TFAT_HIDDEN_ROOT_DIR__</code>, portion is larger than MAX_PATH, the operation will fail with ERROR_FILENAME_EXCED_RANGE. </P>
+
+<P>As a result, a file name and path must not be longer than the following:</P>
+
+<PRE class="code">(MAX_PATH - strlen("__TFAT_HIDDEN_ROOT_DIR__\"))</PRE>
+
+<P>If desired, you can disable the hidden root redirection feature by adding the appropriate bit to the FATFS <B>Flags</B> registry value at the following registry key.</P>
+
+<PRE class="code">[HKEY_LOCAL_MACHINE\System\StorageManager\FATFS]
+    "Flags"=dword:XXXX</PRE>
+
+<P>To disable root directory redirection, set the <B>Flags </B>value to 0x00100000.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50contransactionsafefatfilesystem.htm">Transaction-Safe FAT File System</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

@@ -1,0 +1,134 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Dump File Format</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Dump File Format"/>
+<MSHelp:RLTitle Title="Dump File Format"/>
+<MSHelp:Keyword Index="A" Term="wce50conErrorReportGeneratorDumpFileFormat"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Feature"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="True"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="PBFeature" Value="SYSGEN_WATSON"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="error_reporting_generator.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="False"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_1050428">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50conerrorreportgeneratordumpfileformat"></A>Dump File Format</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>The Error Reporting dump format uses <I>Relative Virtual Addresses (RVA)</I> to describe the location of a data member within a file. An RVA is an offset from the beginning of a file. </P>
+
+<P>Because a minidump for a target device must be readable on another device, all structures in the dump file are the same size, regardless of the architecture of the faulting device. </P>
+
+<P>The dump file format specifies a set of directories that point to the data. </P>
+
+<P>Each directory specifies the following:
+
+<UL type="disc">
+	<LI>Data type</li>
+
+	<LI>Data size</li>
+
+	<LI>RVA to the location of the data in the dump file</li>
+</UL>
+
+<P>Each file permits only one directory of a specific type.</P>
+
+<P>The basic dump file format is a single <A HREF="wce50lrf_minidump_header.htm">MINIDUMP_HEADER</A> followed by <I>n</I> MINIDUMP_DIRECTORY entries followed by <I>n</I> data entries. </P>
+
+<P>The MINIDUMP_HEADER specifies how many MINIDUMP_DIRECTORY entries follow. Each MINIDUMP_DIRECTORY entry points to data in the dump data section.</P>
+
+<P>The following diagram shows the relationship of the data structures used in dump files.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TD width=100%><A HREF="wce50lrf_minidump_header.htm">MINIDUMP_HEADER</A><BR>
+ Signature<BR>
+ Version<BR>
+NumberOfStreams<BR>
+ StreamDirectoryRva </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=100%>Directory [ 0 ]<BR>
+ StreamType = ceStreamSystemInfo<BR>
+ DataSize<BR>
+ DataRva<BR>
+&nbsp;<BR>
+Directory [ 1 ]<BR>
+ StreamType = ceStreamException<BR>
+ DataSize<BR>
+ DataRva<BR>
+<BR>
+Directory [NumberOfStreams &#0150; 1]<BR>
+ StreamType = ceStreamThreadContextList<BR>
+ DataSize<BR>
+ DataRva</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=100%>&nbsp;<BR>
+Data [ 0 ] (<A HREF="wce50lrf_cedump_system_info.htm">_CEDUMP_SYSTEM_INFO</A>)<BR>
+ SizeOfHeader<BR>
+ ProcessorArchitecture<BR>
+ NumberOfProcessors<BR>
+&nbsp;<BR>
+Data [ 1 ] (<A HREF="wce50lrf_cedump_exception_stream.htm">_CEDUMP_EXCEPTION_STREAM</A>)<BR>
+ SizeOfHeader<BR>
+ SizeOfException<BR>
+ SizeOfThreadContext<BR>
+<BR>
+Data [NumberOfStreams &#0150; 1](<A HREF="wce50lrf_cedump_element_list.htm">_CEDUMP_ELEMENT_LIST</A>)<BR>
+ SizeOfHeader<BR>
+ SizeOfFieldInfo<BR>
+ NumberOfFieldInfo<BR>
+ NumberOfElements<BR>
+ Elements<BR>
+ FieldInfo [ 0 ] (<A HREF="wce50lrf_cedump_field_info.htm">_CEDUMP_FIELD_INFO</A>)<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;FieldId<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;FieldSize<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;FieldLabel<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;FieldFormat</TD>
+</TR>
+</table></div>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce51contypesofcrashdumpfiles.htm">Types of Crash Dump Files</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

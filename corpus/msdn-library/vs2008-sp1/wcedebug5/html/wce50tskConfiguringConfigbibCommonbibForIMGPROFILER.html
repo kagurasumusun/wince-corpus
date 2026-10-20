@@ -1,0 +1,108 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Configuring the Config.bib and Common.bib Files for IMGPROFILER</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Configuring the Config.bib and Common.bib Files for IMGPROFILER"/>
+<MSHelp:RLTitle Title="Configuring the Config.bib and Common.bib Files for IMGPROFILER"/>
+<MSHelp:Keyword Index="A" Term="wce50tskConfiguringConfigbibCommonbibForIMGPROFILER"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Debugging"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="True"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbTask"/>
+<MSHelp:Attr Name="Filename" Value="kernel_profiler.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="True"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_1037920">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50tskconfiguringconfigbibcommonbibforimgprofiler"></A>Configuring the Config.bib and Common.bib Files for IMGPROFILER</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>To support the kernel profiler when the IMGPROFILER environment variable is set, verify that the Config.bib and Common.bib files must contain appropriate conditional logic to respond to the value of this environment variable.</P>
+
+<P class="labelproc"><B>To configure the Config.bib and Common.bib files for IMGPROFILER</B>
+
+<OL type="1">
+	<LI>In the Config.bib file, if IMGPROFILER is set, set PROFILE=ON. 
+<P>Verify that the Config.bib file contains the following code.
+
+<PRE class="code">IF IMGPROFILER
+   PROFILE=ON
+ELSE
+   PROFILE=OFF
+ENDIF</PRE>
+
+<P>For more information about the PROFILE flag, see <MSHelp:link keywords="wce50lrfPROFILE" TABINDEX="0">PROFILE</MSHelp:link>.
+</li>
+
+	<LI>To choose a version of the kernel that supports the kernel profiler and also includes KITL, in the Common.bib file, if IMGPROFILER is set, use the Kernkitlprof.exe version of the kernel. 
+<P>Verify that the Common.bib file contains the following code.
+
+<PRE class="code">IF IMGPROFILER
+   nk.exe     $(_FLATRELEASEDIR)\kernkitlprof.exe     NK  SHXL
+ENDIF</PRE>
+</li>
+
+	<LI>If you use a custom BSP, there may not be a Kernkitlprof version of the kernel available, particularly if you migrated the BSP from a previous version of Windows CE. For information about building a Kernkitlprof version of the kernel, see <A HREF="wce50tskcreatingkernkitlprofversionofkernel.htm">Creating a Kernkitlprof Version of the Kernel</A>.
+<P>- or -
+
+<P>To choose a version of the kernel that supports the kernel profiler and does not include KITL, in the Common.bib file, if IMGPROFILER is set, use the Kernprof.exe version of the kernel. 
+
+<P>The following code example shows the section of the Common.bib file that you should modify.
+
+<PRE class="code">IF IMGPROFILER
+   nk.exe     $(_FLATRELEASEDIR)\kernkitlprof.exe     NK  SHXL
+ENDIF</PRE>
+
+<P>The following code example shows the same section of the Common.bib file after you modify the section.
+
+<PRE class="code">IF IMGPROFILER
+IF IMGNOKITL
+   nk.exe     $(_FLATRELEASEDIR)\kernprof.exe         NK  SHXL
+ENDIF
+IF IMGNOKITL !
+   nk.exe     $(_FLATRELEASEDIR)\kernkitlprof.exe     NK  SHXL
+ENDIF
+ENDIF</PRE>
+
+<P>For information about creating a Kernprof version of the kernel, see <A HREF="wce50tskbuildingwithoutkitlrun-timeimagethatsupportskernelprofiler.htm">Creating a Kernprof Version of the Kernel</A>.
+</li>
+</OL>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50orisettingupkernelprofiler.htm">Setting Up the Kernel Profiler</A> | <A HREF="wce50tskcreatingaprofileenabledosimageforacepc.htm">Building a Run-Time Image That Supports the Kernel Profiler</A> | <A HREF="wce50coninstrumentedkernelprofilingandmontecarloprofiling.htm">Kernel Profiler Modes</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

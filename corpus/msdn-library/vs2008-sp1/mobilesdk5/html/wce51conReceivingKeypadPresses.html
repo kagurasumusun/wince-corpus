@@ -1,0 +1,91 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Receiving Keypad Presses (PPC Only)</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Receiving Keypad Presses (PPC Only)"/>
+<MSHelp:RLTitle Title="Receiving Keypad Presses (PPC Only)"/>
+<MSHelp:Keyword Index="A" Term="wce51conReceivingKeypadPresses"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Application"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbsmartphone"/>
+<MSHelp:Attr Name="Product" Value="kbPocketPC"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="Technology" Value="kbPocketPC"/>
+<MSHelp:Attr Name="Technology" Value="kbSmartphone"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="todayscreen_concepts_magneto.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="True"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_4000878">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Windows Mobile Version 5.0 SDK<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce51conreceivingkeypadpresses"></A>Receiving Keypad Presses (PPC Only)</H1>
+<!--Feedback Link Top Start-->
+<P CLASS="feedback"><font size="1"><a href="mailto:medfdbk&#64;microsoft.com?subject=Product: Windows Mobile | Version: 5.0 | Release: SDK | Title: Receiving Keypad Presses (PPC Only) | Filename: wce51conreceivingkeypadpresses.htm | Built on: Wednesday, September 14, 2005">Send Feedback</a> on this topic to the authors</font></p>
+<!--Feedback Link Top End-->
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>Once the <B>Today</B> screen plug-in has the selection focus, each keypad button press causes it to receive a WM_TODAYCUSTOM_USERNAVIGATION message. If the plug-in handles the button press internally, it should return TRUE in response to this message. Otherwise, the <B>Today</B> screen passes the selection on to the next item if either the up or down key was pressed. This can be used to navigate through a series of sub-items.</P>
+
+<P>WM_TODAYCUSTOM_USERNAVIGATION is defined as (WM_USER + 246). The parameter <I>wParam</I> is set to the virtual key code of the keypress (e.g., VK_UP, VK_LEFT, etc); lParam is not used.</P>
+
+<P>The action button is handled differently. If the action button is pressed, the plug-in receives a WM_TODAYCUSTOM_ACTION message, unless the value of <B>Selectability</B> is equal to one, in which case it receives a WM_LBUTTONDOWN and a WM_LBUTTONUP message at coordinates (1, 1), simulating a user tap.</P>
+
+<P>WM_TODAYCUSTOM_ACTION is defined as (WM_USER + 247). The parameter <I>wParam</I> is equal to the virtual key code for the action key (i.e., VK_RETURN); <I>lParam</I> is not used. The return value for this message is ignored. The following code example shows this.</P>
+
+<PRE class="code">case WM_TODAYCUSTOM_USERNAVIGATION:
+   InvalidateRect(hwnd, NULL, FALSE);
+
+   if (wParam == VK_UP)   g_nSelectedItem--;
+   if (wParam == VK_DOWN) g_nSelectedItem++;
+
+   if (g_nSelectedItem &lt; 0 || g_nSelectedItem &gt;= MAX_ITEMS)
+   {
+      return FALSE; // go to the next plug-in
+   }
+   else
+   {
+      return TRUE;  // stay in this plug-in
+   }
+
+case WM_TODAYCUSTOM_ACTION:
+   OnAction();
+   break;</PRE>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce51oritodayscreenplug-inselectionppconly.htm">Today Screen Plug-in Selection (PPC Only)</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Feedback Link Bottom Start-->
+<p><font size="1"><a href="mailto:medfdbk&#64;microsoft.com?subject=Product: Windows Mobile | Version: 5.0 | Release: SDK | Title: Receiving Keypad Presses (PPC Only) | Filename: wce51conreceivingkeypadpresses.htm | Built on: Wednesday, September 14, 2005">Send Feedback</a> on this topic to the authors</font></p>
+<!--Feedback Link Bottom End-->
+<!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="mob5conCopyrightInformationForMagneto" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link></font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

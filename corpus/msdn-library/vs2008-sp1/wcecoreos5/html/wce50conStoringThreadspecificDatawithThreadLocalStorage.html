@@ -1,0 +1,103 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Storing Thread-specific Data with Thread Local Storage</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Storing Thread-specific Data with Thread Local Storage"/>
+<MSHelp:RLTitle Title="Storing Thread-specific Data with Thread Local Storage"/>
+<MSHelp:Keyword Index="A" Term="wce50conStoringThreadspecificDatawithThreadLocalStorage"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Feature"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="kernel_scheduling.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="False"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+<MSHelp:Attr Name="PBFeature" Value="CORE"/>
+<MSHelp:Attr Name="PBOnly" Value="True"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_3009404">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50constoringthreadspecificdatawiththreadlocalstorage"></A>Storing Thread-specific Data with Thread Local Storage</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>Thread local storage (TLS) is the method by which each thread in a multithreaded process allocates a location to store thread-specific data in. </P>
+
+<P>There are several situations when you might want a thread to access unique data. For example, you might want to include a spreadsheet application that creates an instance of the same thread each time the user opens a new spreadsheet. The DLL that provides the functions for various spreadsheet operations can use TLS to save data about the current state of each spreadsheet. </P>
+
+<P>TLS uses a TLS array to save thread-specific data. When a process is created, Windows CE allocates a 64-slot array for each running process. </P>
+
+<P>When a DLL attaches to a process, the DLL calls the <A HREF="wce50lrftlsalloc.htm">TlsAlloc</A> function, which looks through the array to find a free slot. The function then marks the slot "in use" and returns an index value to the newly assigned slot. </P>
+
+<P>If no slots are available, the function returns &#0150;1. </P>
+
+<P>Individual threads cannot call <B>TlsAlloc</B>. Only a process or DLL can call the function and it must do so before creating the threads that will use the TLS slot. </P>
+
+<P>After a slot is assigned, each thread can access its unique data by calling the <A HREF="wce50lrftlssetvalue.htm">TlsSetValue</A> function to store data in the TLS slot, or the <A HREF="wce50lrftlsgetvalue.htm">TlsGetValue</A> function to retrieve data from the slot.</P>
+
+<P>The following table describes the TLS functions that are supported by Windows CE.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=16%>Function</TH>
+<TH width=84%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=16%><B>TlsAlloc</B></TD>
+<TD width=84%>Allocates a TLS index. The index is available to any thread in the process for storing and retrieving thread-specific values. 
+<P>You must store this index in global memory, where all threads can retrieve its value. </P>
+</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=16%><A HREF="wce50lrftlsfree.htm">TlsFree</A></TD>
+<TD width=84%>Releases the TLS index, making it available for reuse.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=16%><A HREF="wce50lrftlsgetvalue.htm">TlsGetValue</A></TD>
+<TD width=84%>Retrieves the value that is pointed to by the TLS index.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=16%><B>TlsSetValue</B></TD>
+<TD width=84%>Stores a value in the slot that is pointed to by the TLS index.</TD>
+</TR>
+</table></div>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50conthreads.htm">Threads</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

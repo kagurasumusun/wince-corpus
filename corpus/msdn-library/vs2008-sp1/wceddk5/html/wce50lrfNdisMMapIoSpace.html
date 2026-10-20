@@ -1,0 +1,138 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>NdisMMapIoSpace</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="NdisMMapIoSpace"/>
+<MSHelp:RLTitle Title="NdisMMapIoSpace"/>
+<MSHelp:Keyword Index="K" Term="NdisMMapIoSpace"/>
+<MSHelp:Keyword Index="A" Term="wce50lrfNdisMMapIoSpace"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Driver"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="False"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="apiref"/>
+<MSHelp:Attr Name="Filename" Value="ndis_library_functions2.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="False"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+<MSHelp:Attr Name="APIName" Value="NdisMMapIoSpace"/>
+<MSHelp:Attr Name="APIType" Value="DLLExport"/>
+<MSHelp:Attr Name="APILocation" Value="Ndis.dll"/>
+<MSHelp:Attr Name="PBFeature" Value="NetworkDriver"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_3018522">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50lrfndismmapiospace"></A>NdisMMapIoSpace</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>This function maps a specified bus-relative range of physical addresses or registers onto a system-space virtual range of addresses.</P>
+
+<PRE class="syntax"><B>NDIS_STATUS NdisMMapIoSpace(</B>
+  <B>PVOID* </B><I>VirtualAddress</I><B>,</B>
+  <B>NDIS_HANDLE </B><I>MiniportAdapterHandle</I><B>,</B>
+  <B>NDIS_PHYSICAL_ADDRESS </B><I>PhysicalAddress</I><B>,</B>
+  <B>UINT </B><I>Length</I>
+<B>);</B></PRE>
+
+<H4 class="dtH4">Parameters</H4>
+
+<DL>
+<DT><I>VirtualAddress</I></DT>
+
+<DD>[out] Pointer to a caller-supplied variable that is set to the converted virtual address if the call is successful.</dd>
+
+<DT><I>MiniportAdapterHandle</I></DT>
+
+<DD>[in] Handle input to the <A HREF="wce50lrfminiportinitialize.htm">MiniportInitialize</A> function.</dd>
+
+<DT><I>PhysicalAddress</I></DT>
+
+<DD>[in] Specifies the bus-relative base physical address of the device memory range to be mapped.</dd>
+
+<DT><I>Length</I></DT>
+
+<DD>[in] Specifies the number of bytes to be mapped.</dd>
+</DL>
+
+<H4 class="dtH4">Return Values</H4>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=45%>Value</TH>
+<TH width=55%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=45%>NDIS_STATUS_SUCCESS </TD>
+<TD width=55%>The mapping was successful. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=45%>NDIS_STATUS_RESOURCE_CONFLICT</TD>
+<TD width=55%>An attempt to claim the device memory range in the registry has failed, possibly because another driver has already claimed the range for its device. This function logs an error if this occurs.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=45%>NDIS_STATUS_RESOURCES</TD>
+<TD width=55%>The memory could not be mapped or sufficient virtual memory could not be allocated.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=45%>NDIS_STATUS_FAILURE</TD>
+<TD width=55%>Either the bus type or bus number is out of range, or the specified <I>PhysicalAddress</I> and <I>Length</I> are invalid, possibly not within the I/O space of the current platform.</TD>
+</TR>
+</table></div>
+
+<H4 class="dtH4">Remarks</H4>
+
+<P>Drivers of NICs that have on-board memory call this function or a bank of device registers appearing in the I/O space of the host. For example, the driver of an NIC that uses PI/O calls this function.</P>
+
+<P>A successful call to this function claims hardware resources in the registry for the driver's NIC. Consequently, only <B>MiniportInitialize</B> functions call this function.</P>
+
+<P>This function sets the variable at <I>VirtualAddress</I> to NULL if it does not return NDIS_STATUS_SUCCESS.</P>
+
+<P><B>MiniportInitialize</B> gets the <I>PhysicalAddress</I> value either from the driver's <B>Parameters</B> registry key or by calling a bus-type-specific <B>Ndis<I>XXX</I></B> configuration function. The specified physical address range must fall within the I/O space of the current platform. It is a programming error to call this function with a host physical memory address.</P>
+
+<P>A miniport must call the reciprocal <A HREF="wce50lrfndismunmapiospace.htm">NdisMUnmapIoSpace</A> function to release its claim on system resources if <B>MiniportInitialize</B> subsequently fails to initialize the NIC, if its NIC is removed from the machine, and/or when the driver is unloading.</P>
+
+<H4 class="dtH4">Requirements</H4>
+
+<P><B>OS Versions:</B> Windows CE .NET 4.0 and later.<BR>
+<B>Header:</B> Ndis.h.<BR>
+<B>Link Library:</B> Ndis.dll.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50lrfminiportinitialize.htm">MiniportInitialize</A> | <A HREF="wce50lrfndismunmapiospace.htm">NdisMUnmapIoSpace</A> | <A HREF="wce50lrfndisopenconfiguration.htm">NdisOpenConfiguration</A> | <A HREF="wce50lrfndisreadpcislotinformation.htm">NdisReadPciSlotInformation</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

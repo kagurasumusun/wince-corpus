@@ -1,0 +1,127 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>IPersistStream URL Moniker Implementation</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="IPersistStream URL Moniker Implementation"/>
+<MSHelp:RLTitle Title="IPersistStream URL Moniker Implementation"/>
+<MSHelp:Keyword Index="K" Term="IPersistStream URL Moniker Implementation"/>
+<MSHelp:Keyword Index="A" Term="wce50lrfIPersistStreamURLMonikerImplementation"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Feature"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="apiref"/>
+<MSHelp:Attr Name="Filename" Value="com_interfaces2.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="False"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+<MSHelp:Attr Name="APIName" Value="IPersistStream"/>
+<MSHelp:Attr Name="PBFeature" Value="SYSGEN_DCOM"/>
+<MSHelp:Attr Name="PBOnly" Value="False"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_3003674">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50lrfipersiststreamurlmonikerimplementation"></A>IPersistStream URL Moniker Implementation</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>The URL moniker implementation of <B>IPersistStream</B> is found on an URL moniker object, which supports the <A HREF="wce50lrfiunknown.htm">IUnknown</A> interface, the <MSHelp:link keywords="wce50lrfIAsyncMoniker" TABINDEX="0">IAsyncMoniker</MSHelp:link> interface, and the <A HREF="wce50lrfimonikeriunknown.htm">IMoniker</A> interface. </P>
+
+<P>The <B>IMoniker</B> interface inherits its definition from <B>IPersistStream</B> and thus, the URL moniker also provides an implementation of <B>IPersistStream</B> as part of its implementation of <B>IMoniker</B>.</P>
+
+<P>The <B>IAsyncMoniker</B> interface on an URL moniker is simply <B>IUnknown</B> (there are no additional methods); it is used to allow clients to determine if a moniker supports asynchronous binding. </P>
+
+<P>To get a pointer to the <B>IMoniker</B> interface on this object, call the <MSHelp:link keywords="wce50lrfCreateURLMoniker" TABINDEX="0">CreateURLMoniker</MSHelp:link> function. Then, to get a pointer to <B>IPersistStream</B>, call the <A HREF="wce50lrfiunknownqueryinterface.htm">QueryInterface</A> method.</P>
+
+<P><B>IPersistStream</B>, in addition to inheriting its definition from <B>IUnknown</B>, also inherits the single method of <B>IPersist</B>, <B>GetClassID</B>.</P>
+
+<BLOCKQUOTE class="dtBlock">
+<B><b class="le">Note</b>&nbsp;&nbsp;&nbsp;</B>The current URL Moniker implementation of <B>IMoniker</B> does not support asynchronous storage. Future implementations will do so.</BLOCKQUOTE>
+
+<H4 class="dtH4">When to Use</H4>
+
+<P>Call <B>IPersistStream</B> to have the moniker manage its persistent storage.</P>
+
+<H4 class="dtH4">Methods</H4>
+
+<P>The following table shows the methods for this interface in alphabetical order.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=31%>IPersistStream Method</TH>
+<TH width=69%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=31%><A HREF="wce50lrfipersistgetclassid.htm">GetClassID</A></TD>
+<TD width=69%>Returns CLSID_StdURLMoniker.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=31%><A HREF="wce50lrfipersiststreamgetsizemax.htm">GetSizeMax</A></TD>
+<TD width=69%>Returns the maximum number of bytes in the stream that will be required by a subsequent call to <B>IPersistStream::Save</B>. 
+<P>This value is SIZEOF(ULONG)==4 plus SIZEOF(WCHAR)*n where n is the length of the full or partial URL string including the NULL terminator.</P>
+</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=31%><A HREF="wce50lrfipersiststreamisdirty.htm">IsDirty</A></TD>
+<TD width=69%>Returns S_OK if the Moniker has changed since it was last saved (<B>IPersistStream::Save</B> with <I>fClearDirty</I>==TRUE), S_FALSE otherwise.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=31%><A HREF="wce50lrfipersiststreamload.htm">Load</A></TD>
+<TD width=69%>Initializes an URL moniker from data within a stream, usually stored there previously using its <B>IPersistStream::Save</B> (through <A HREF="wce50lrfolesavetostream.htm">OleSaveToStream</A> or <B>OleSaveToStreamEx</B>).
+<P>The binary format of the URL Moniker is its URL string in Unicode (may be a full or partial URL string, see <B>CreateURLMoniker</B> for details). </P>
+
+<P>This is represented as a ULONG (32-bit) count of characters followed by that many Unicode characters. </P>
+</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=31%><A HREF="wce50lrfipersiststreamsave.htm">Save</A></TD>
+<TD width=69%>Saves an URL moniker to a stream. 
+<P>The binary format of URL Moniker is its URL string in Unicode (may be a full or partial URL string, see <B>CreateURLMoniker</B> for details). </P>
+
+<P>This is represented as a ULONG (32-bit) count of characters followed by that many Unicode characters.</P>
+</TD>
+</TR>
+</table></div>
+
+<H4 class="dtH4">Remarks</H4>
+
+<P>To determine whether the platform supports this interface, see <A HREF="wce50condeterminingsupportedcomapis.htm">Determining Supported COM APIs</A>.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50lrfolesavetostream.htm">OleSaveToStream</A> | <A HREF="wce50lrfiunknown.htm">IUnknown</A> </P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

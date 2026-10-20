@@ -1,0 +1,232 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>IOCTL Library</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="IOCTL Library"/>
+<MSHelp:RLTitle Title="IOCTL Library"/>
+<MSHelp:Keyword Index="A" Term="wce50conIOCTLSupport"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Hardware"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="True"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="PQOAL_concepts.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="True"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_1042607">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50conioctlsupport"></A>IOCTL Library</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>The IOCTL library provides common OAL implementations for IOCTL codes that are hardware platform-independent . It also provides a central method for configuring IOCTL processing, which removes a source of duplicated code across all hardware platforms and substantially reduces maintenance and test efforts. This also relieves OEMs from having to implement the common functionality.</P>
+
+<P>The IOCTL library allows OEMs to easily replace OAL functions with custom hardware platform functions through a function callout table defined in the configuration directory. A standard hardware platform file, Ioctl.c, includes this configuration table. The function callout table provides a single point of control for all IOCTL processing.</P>
+
+<P>The IOCTL table contains the IOCTL code and a function pointer to handle the IOCTL. The function pointer might be a public OAL function or a hardware platform function. A placeholder function is provided if the IOCTL is unsupported. The placeholder function generates an error message for unimplemented IOCTLs. The IOCTL code and an associated function pointer with the same argument prototype as <A HREF="wce50lrfoemiocontrol.htm">OEMIoControl</A> defines the IOCTL handler.</P>
+
+<P>There are OAL and hardware platform specific data items relevant to IOCTL processing. The hardware platform code must be able to set OAL IOCTL variables. This is accomplished through global variables in the hardware platform file Ioctl.c. In the Ioctl.c file, the global variables are defined and initialized from configuration parameters defined in the configuration file Ioctl_cfg.h. This approach is required to maintain the separation between the OAL and hardware platform code.</P>
+
+<P>The OAL IOCTL library implements the <B>OEMIoControl</B> function. The implementation searches the IOCTL table for the corresponding code that when found executes the function. Because this is a simple table lookup, IOCTL codes closer to the top of the table require less search time. For better performance, position IOCTL codes with a higher execution rate at the top of the table.</P>
+
+<P>For more information, see %_WINCEROOT%\Platform\Common\Src\Inc\Oal_ioctl.h.</P>
+
+<H2 class="dtH2">External Interface</H2>
+
+<P>The IOCTL library provides an external interface made up of functions and global variables that communicate between the other modular libraries and the OAL and the kernel.</P>
+
+<H3 class="dtH3">IOCTL table entry</H3>
+
+<DL>
+<DT><code class="ce">typedef struct{<BR>
+    UINT32  IoctlCode;<BR>
+    BOOL    (*pfnHandler)(UINT32,VOID*,UINT32,VOID*,UINT32,UINT32*);<BR>
+}OAL_IOCTL_HANDLER, *POAL_IOCTL_HANDLER;</code></DT>
+
+<DD>This global IOCTL table defines the procedure to be called for an IOCTL code. This structure should be defined in the hardware platform code. The global variable <I>g_oalIoctlTable</I> is an array of these types.</dd>
+</DL>
+
+<H3 class="dtH3">Variables</H3>
+
+<DL>
+<DT><code class="ce">extern const OAL_IOCTL_HANDLER g_oalIoctlTable[];</code></DT>
+
+<DD>This global variable references the global IOCTL table defined in the hardware platform code.</dd>
+
+<DT><code class="ce">extern LPCWSTR g_oalIoCtlPlatformType;</code></DT>
+
+<DD>This global variable contains information about the hardware platform type.</dd>
+
+<DT><code class="ce">extern LPCWSTR g_oalIoCtlPlatformOEM;</code></DT>
+
+<DD>This global variable contains information about the hardware platform OEM.</dd>
+
+<DT><code class="ce">extern LPCWSTR g_oalIoCtlProcessorVendor;</code></DT>
+
+<DD>This global variable contains information about the processor vendor.</dd>
+
+<DT><code class="ce">extern LPCWSTR g_oalIoCtlProcessorName;</code></DT>
+
+<DD>This global variable contains information about the processor name.</dd>
+
+<DT><code class="ce">extern LPCWSTR g_oalIoCtlProcessorCore;</code></DT>
+
+<DD>This global variable contains information about the processor core.</dd>
+
+<DT><code class="ce">extern UINT32 g_oalIoCtlInstructionSet;</code></DT>
+
+<DD>This global variable contains the processor instruction set identifier.</dd>
+
+<DT><code class="ce">extern UINT32 g_oalIoCtlClockSpeed;</code></DT>
+
+<DD>This global variable contains information about the processor clock speed.</dd>
+</DL>
+
+<H3 class="dtH3">Functions</H3>
+
+<P>The following functions implement basic IOCTL code handlers.
+
+<DL>
+<DT><code class="ce">BOOL OALIoCtlHalGetDeviceId(UINT32,VOID*,UINT32,VOID*,UINT32,UINT32*);</code></DT>
+
+<DT><code class="ce">BOOL OALIoCtlHalGetDeviceInfo(UINT32,VOID*,UINT32,VOID*,UINT32,UINT32*);</code></DT>
+
+<DT><code class="ce">BOOL OALIoCtlProcessorInfo(UINT32,VOID*,UINT32,VOID*,UINT32,UINT32*);</code></DT>
+
+<DT><code class="ce">BOOL OALIoCtlHalInitRegistry(UINT32,VOID*,UINT32,VOID*,UINT32,UINT32*);</code></DT>
+
+<DT><code class="ce">BOOL OALIoCtlHalReboot(UINT32,VOID*,UINT32,VOID*,UINT32,UINT32*);</code></DT>
+
+<DT><code class="ce">BOOL OALIoCtlHalGetUUID(UINT32,VOID*,UINT32,VOID*,UINT32,UINT32*);</code></DT>
+</DL>
+
+<P>The following functions implement IOCTL code handlers used by the OAL flat display driver.
+
+<DL>
+<DT><code class="ce">BOOL OALIoCtlHalDDIGetNumModes(UINT32,VOID*,UINT32,VOID*,UINT32,UINT32*);</code></DT>
+
+<DT><code class="ce">BOOL OALIoCtlHalDDIGetModeInfo(UINT32,VOID*,UINT32,VOID*,UINT32,UINT32*);</code></DT>
+
+<DT><code class="ce">BOOL OALIoCtlHalDDISetMode(UINT32,VOID*,UINT32,VOID*,UINT32,UINT32*);</code></DT>
+
+<DT><code class="ce">BOOL OALIoCtlHalDDISetPalette(UINT32,VOID*,UINT32,VOID*,UINT32,UINT32*);</code></DT>
+
+<DT><code class="ce">BOOL OALIoCtlHalDDIPower(UINT32,VOID*,UINT32,VOID*,UINT32,UINT32*);</code></DT>
+</DL>
+
+<H3 class="dtH3">IOCTL Configuration Table included in g_oalIoctlTable[]</H3>
+
+<PRE class="code">{ IOCTL_EDBG_DEREGISTER_CLIENT ,      OALIoCtlNotSupported    },
+{ IOCTL_EDBG_GET_OUTPUT_DEBUG_FN,     OALIoCtlNotSupported    },
+{ IOCTL_EDBG_IS_STARTED,              OALIoCtlNotSupported    },
+{ IOCTL_EDBG_RECV,                    OALIoCtlNotSupported    },
+{ IOCTL_EDBG_REGISTER_CLIENT  ,       OALIoCtlNotSupported    },
+{ IOCTL_EDBG_REGISTER_DFLT_CLIENT,    OALIoCtlNotSupported    },
+{ IOCTL_EDBG_SEND,                    OALIoCtlNotSupported    },
+{ IOCTL_EDBG_SET_DEBUG,               OALIoCtlNotSupported    },
+{ IOCTL_HAL_DISABLE_WAKE,             OALIoCtlHalDisableWake  },
+{ IOCTL_HAL_ENABLE_WAKE,              OALIoCtlHalEnableWake   },
+{ IOCTL_HAL_PRESUSPEND,               OALIoCtlHalPresuspend   },
+{ IOCTL_HAL_GET_WAKE_SOURCE,          OALIoCtlHalGetWakeSource},
+{ IOCTL_HAL_AUTHENTICATE_DEVICE,      OALIoCtlNotSupported    },
+{ IOCTL_HAL_DDK_CALL,                 OALIoCtlNotSupported    },
+{ IOCTL_HAL_GETREGSECUREKEYS,         OALIoCtlNotSupported    },
+{ IOCTL_HAL_GET_BIN_CHAIN,            OALIoCtlNotSupported    },
+{ IOCTL_HAL_GET_BOOTLOADER_PARAMS,    OALIoCtlNotSupported    },
+{ IOCTL_HAL_GET_CACHE_INFO,           OALIoCtlNotSupported    },
+{ IOCTL_HAL_GET_DEVICEID,             OALIoCtlNotSupported    },
+{ IOCTL_HAL_GET_DEVICE_INFO,          OALIoCtlNotSupported    },
+{ IOCTL_HAL_GET_HIVE_CLEAN_FLAG,      OALIoCtlNotSupported    },
+{ IOCTL_HAL_GET_HIVE_RAM_REGION,      OALIoCtlNotSupported    },
+{ IOCTL_HAL_GET_HWENTROPY,            OALIoCtlNotSupported    },
+{ IOCTL_HAL_GET_IMAGE_SIGNED_STATE,   OALIoCtlNotSupported    },
+{ IOCTL_HAL_GET_IP_ADDR,              OALIoCtlNotSupported    },
+{ IOCTL_HAL_GET_POWERONREASON,        OALIoCtlNotSupported    },
+{ IOCTL_HAL_GET_RANDOM_SEED,          OALIoCtlNotSupported    },
+{ IOCTL_HAL_GET_RIO_INFO,             OALIoCtlNotSupported    },
+{ IOCTL_HAL_GET_UUID,                 OALIoCtlNotSupported    },
+{ IOCTL_HAL_ILTIMING,                 OALIoCtlNotSupported    },
+{ IOCTL_HAL_INITREGISTRY,             OALIoCtlNotSupported    },
+{ IOCTL_HAL_INIT_RTC,                 OALIoCtlNotSupported    },
+{ IOCTL_HAL_OEM_PROFILER,             OALIoCtlNotSupported    },
+{ IOCTL_HAL_POSTINIT,                 OALIoCtlNotSupported    },
+{ IOCTL_HAL_PROFILE,                  OALIoCtlNotSupported    },
+{ IOCTL_HAL_QUERY_DEVICE_SETTINGS,    OALIoCtlNotSupported    },
+{ IOCTL_HAL_QUERY_DISPLAYSETTINGS,    OALIoCtlNotSupported    },
+{ IOCTL_HAL_RADIO_CNTRL,              OALIoCtlNotSupported    },
+{ IOCTL_HAL_REBOOT,                   OALIoCtlNotSupported    },
+{ IOCTL_HAL_RELEASE_SYSINTR,          OALIoCtlNotSupported    },
+{ IOCTL_HAL_REQUEST_IRQ,              OALIoCtlNotSupported    },
+{ IOCTL_HAL_REQUEST_SYSINTR,          OALIoCtlNotSupported    },
+{ IOCTL_HAL_SAVE_HIVE_RAM_REGION,     OALIoCtlNotSupported    },
+{ IOCTL_HAL_SET_DEVICE_INFO,          OALIoCtlNotSupported    },
+{ IOCTL_HAL_TRANSLATE_IRQ,            OALIoCtlNotSupported    },
+{ IOCTL_HAL_WHQL_TEST_MODE,           OALIoCtlNotSupported    },
+{ IOCTL_HAL_WRITE_XIP,                OALIoCtlNotSupported    },
+{ IOCTL_HAL_XIPCHAIN,                 OALIoCtlNotSupported    },
+{ IOCTL_KITL_GET_INFO,                OALIoCtlNotSupported    },
+{ IOCTL_PROCESSOR_INFORMATION,        OALIoCtlNotSupported    },
+{ IOCTL_PSL_NOTIFY,                   OALIoCtlNotSupported    },
+{ IOCTL_QUERY_PHYSICALMEM,            OALIoCtlNotSupported    },
+{ IOCTL_SET_KERNEL_COMM_DEV,          OALIoCtlNotSupported    },
+{ IOCTL_SET_KERNEL_DEV_PORT,          OALIoCtlNotSupported    },
+
+#ifdef IMGSHAREETH
+
+// Standard VBRIDGE/ KITL Support
+
+{ IOCTL_VBRIDGE_802_3_MULTICAST_LIST,       OALIoCtlVBridge   },
+{ IOCTL_VBRIDGE_ADD_MAC,                    OALIoCtlVBridge   },
+{ IOCTL_VBRIDGE_CURRENT_PACKET_FILTER,      OALIoCtlVBridge   },
+{ IOCTL_VBRIDGE_GET_ETHERNET_MAC,           OALIoCtlVBridge   },
+{ IOCTL_VBRIDGE_GET_RX_PACKET,              OALIoCtlVBridge   },
+{ IOCTL_VBRIDGE_GET_RX_PACKET_COMPLETE,     OALIoCtlVBridge   },
+{ IOCTL_VBRIDGE_GET_TX_PACKET,              OALIoCtlVBridge   },
+{ IOCTL_VBRIDGE_GET_TX_PACKET_COMPLETE,     OALIoCtlVBridge   },
+{ IOCTL_VBRIDGE_SHARED_ETHERNET,            OALIoCtlVBridge   },
+{ IOCTL_VBRIDGE_WILD_CARD,                  OALIoCtlVBridge   },
+{ IOCTL_VBRIDGE_WILD_CARD_RESET_BUFFER,     OALIoCtlVBridge   },
+{ IOCTL_VBRIDGE_WILD_CARD_VB_INITIALIZED,   OALIoCtlVBridge   },
+
+#endif
+
+// Required Termination
+
+{ 0,                                        NULL              }</PRE>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50conproductionqualityoalcomponents.htm">Production-Quality OAL Components</A> </P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

@@ -1,0 +1,149 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>IDispatch::GetTypeInfo</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="IDispatch::GetTypeInfo"/>
+<MSHelp:RLTitle Title="IDispatch::GetTypeInfo"/>
+<MSHelp:Keyword Index="K" Term="IDispatch, GetTypeInfo"/>
+<MSHelp:Keyword Index="A" Term="wce50lrfIDispatchGetTypeInfo"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Feature"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="apiref"/>
+<MSHelp:Attr Name="Filename" Value="automation_interfaces1.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="True"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+<MSHelp:Attr Name="APIName" Value="IDispatch.GetTypeInfo"/>
+<MSHelp:Attr Name="APIType" Value="LibDef"/>
+<MSHelp:Attr Name="APILocation" Value="Oleaut32.lib, Uuid.lib"/>
+<MSHelp:Attr Name="PBFeature" Value="SYSGEN_DCOM"/>
+<MSHelp:Attr Name="PBOnly" Value="False"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_3003272">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50lrfidispatchgettypeinfo"></A>IDispatch::GetTypeInfo</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>This<B> </B>method retrieves the type information for an object. </P>
+
+<PRE class="syntax"><B>HRESULT GetTypeInfo( </B>
+  <B>unsigned int </B><I>iTInfo</I><B>, </B>
+  <B>LCID </B><I>lcid</I><B>, </B>
+  <B>ITypeInfo FAR* FAR* </B><I>ppTInfo </I>
+<B>);</B></PRE>
+
+<H4 class="dtH4">Parameters</H4>
+
+<DL>
+<DT><I>iTInfo</I></DT>
+
+<DD>[in] Type information to return. Pass zero to retrieve type information for the <A HREF="wce50lrfidispatch.htm">IDispatch</A> implementation.</dd>
+
+<DT><I>lcid</I></DT>
+
+<DD>[in] Locale identifier for the type information. An object may be able to return different type information for different languages. This is important for classes that support localized member names. For classes that do not support localized member names, this parameter can be ignored.</dd>
+
+<DT><I>ppTInfo</I></DT>
+
+<DD>[out] Receives a pointer to the requested type information object.</dd>
+</DL>
+
+<H4 class="dtH4">Return Values</H4>
+
+<P>The following table shows the return values for this function.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=40%>Value</TH>
+<TH width=60%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=40%>S_OK</TD>
+<TD width=60%>Success; the type information element exists.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=40%>DISP_E_BADINDEX</TD>
+<TD width=60%>Failure; <I>iTInfo</I> parameter was not 0.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=40%>TYPE_E_ELEMENTNOTFOUND</TD>
+<TD width=60%>Failure; <I>iTInfo</I> parameter was not 0.</TD>
+</TR>
+</table></div>
+
+<H4 class="dtH4">Example</H4>
+
+<P>The following code from the sample file Lines.cpp loads information from the type library and implements the member function <B>GetTypeInfo</B>. </P>
+
+<PRE class="code">// These lines are from CLines::Create load type information for the
+// Lines collection from the type library. 
+hr = LoadTypeInfo(&amp;pLines-&gt;m_ptinfo, IID_ILines);
+if (FAILED(hr))
+goto error;
+
+// Additional code omitted for brevity.
+
+// This function implements GetTypeInfo for the CLines collection.
+STDMETHODIMP
+CLines::GetTypeInfo(
+UINT iTInfo,
+LCID lcid,
+ITypeInfo FAR* FAR* ppTInfo)
+{
+*ppTInfo = NULL;
+
+if(iTInfo != 0)
+return ResultFromScode(DISP_E_BADINDEX);
+
+m_ptinfo-&gt;AddRef();
+*ppTInfo = m_ptinfo;
+
+  return NOERROR;
+}
+ </PRE>
+
+<H4 class="dtH4">Requirements</H4>
+
+<P><B>OS Versions:</B> Windows CE 2.0 and later.<BR>
+<B>Header:</B> Oaidl.h, Oaidl.idl.<BR>
+<B>Link Library:</B> Oleaut32.lib, Uuid.lib.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50lrfidispatch.htm">IDispatch</A> </P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

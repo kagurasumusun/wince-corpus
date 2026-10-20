@@ -1,0 +1,116 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Adding Debug Zones to the NDIS Miniport Driver Initialization Functions</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Adding Debug Zones to the NDIS Miniport Driver Initialization Functions"/>
+<MSHelp:RLTitle Title="Adding Debug Zones to the NDIS Miniport Driver Initialization Functions"/>
+<MSHelp:Keyword Index="A" Term="wce50howAddingDebugZonesToNDISMiniportDriverInitializationFunctions"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Driver"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="False"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbTask"/>
+<MSHelp:Attr Name="Filename" Value="howto_portndisdriver.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="True"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+<MSHelp:Attr Name="PBFeature" Value="NetworkDriver"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_1038190">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50howaddingdebugzonestondisminiportdriverinitializationfunctions"></A>Adding Debug Zones to the NDIS Miniport Driver Initialization Functions</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>After adding the NDIS miniport driver for a Windows-based desktop platform to your Workspace, use Platform Builder to modify the NDIS miniport driver initialization functions.</P>
+
+<P class="labelproc"><B>To add debug zones to the NDIS miniport driver initialization functions</B>
+
+<OL type="1">
+	<LI>In %_WINCEROOT%\Platform\%_TGTPLAT%\Drivers\<I>CENDISMiniport</I>, open Mp.h , and then define Windows CE debug zones at the end of the file, immediately before the last <code class="ce">#endif</code> directive.
+<P>The following code example shows how to add Windows CE debug zones.
+
+<PRE class="code">#ifdef UNDER_CE
+
+//
+// Windows CE debug zones
+//
+
+#define ZONE_INIT      DEBUGZONE(0)
+#define ZONE_ERROR     DEBUGZONE(15)
+
+#endif  //  UNDER_CE</PRE>
+</li>
+
+	<LI>In %_WINCEROOT%\Platform\%_TGTPLAT%\Drivers\<I>CENDISMiniport</I>, open Mp_main.c, and define <B>dpCurSettings</B> immediately above the NDIS miniport driver <MSHelp:link keywords="wce50lrfDllMain" TABINDEX="0">DllMain</MSHelp:link> entry point definition.
+<P>The following code example shows how to define <B>dpCurSettings</B>.
+
+<PRE class="code">DBGPARAM dpCurSettings = {
+    TEXT("e100bex"), 
+    {
+        TEXT("Init"),
+        TEXT("Undefined"),
+        TEXT("Undefined"),
+        TEXT("Undefined"),
+        TEXT("Undefined"),
+        TEXT("Undefined"),
+        TEXT("Undefined"),
+        TEXT("Undefined"),
+        TEXT("Undefined"),
+        TEXT("Undefined"),
+        TEXT("Undefined"),
+        TEXT("Undefined"),
+        TEXT("Undefined"),
+        TEXT("Undefined"),
+        TEXT("Warning"),
+        TEXT("Error") 
+    },
+    0x000b
+};</PRE>
+</li>
+
+	<LI>From the IDE <B>Build</B> menu, choose <B>Open Build Release Directory</B>. </li>
+
+	<LI>Navigate to the directory containing your Windows CE NDIS miniport driver. 
+<P>Be sure your NDIS miniport driver is in %_WINCEROOT%\Platform\%_TGTPLAT%\Drivers\<I>CENDISMiniport</I>.
+</li>
+
+	<LI>Build the Windows CE NDIS miniport driver with the Build tool. 
+<P>For more information about the Build tool, see <MSHelp:link keywords="wce50conBuildTool" TABINDEX="0">Build Tool</MSHelp:link>. Microsoft recommends using the <B>-c</B> parameter with the Build tool to delete all object files.
+</li>
+</OL>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50howhowtomigratewindows-baseddesktopndisminiportdrivertowindowsce.htm">How to Migrate a Windows-based Desktop NDIS Miniport Driver to Windows CE</A> | <MSHelp:link keywords="wce50conPlatformDebuggingandTesting" TABINDEX="0">Tools for Debugging and Testing</MSHelp:link></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

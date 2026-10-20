@@ -1,0 +1,124 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>RAPI Restricted Mode Security</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="RAPI Restricted Mode Security"/>
+<MSHelp:RLTitle Title="RAPI Restricted Mode Security"/>
+<MSHelp:Keyword Index="A" Term="wce51conRAPIRestrictedModeSecurity"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Application"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbsmartphone"/>
+<MSHelp:Attr Name="Product" Value="kbPocketPC"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="Technology" Value="kbPocketPC"/>
+<MSHelp:Attr Name="Technology" Value="kbSmartphone"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="rapi_conceptual_magneto.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="True"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_1063079">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Windows Mobile Version 5.0 SDK<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce51conrapirestrictedmodesecurity"></A>RAPI Restricted Mode Security</H1>
+<!--Feedback Link Top Start-->
+<P CLASS="feedback"><font size="1"><a href="mailto:medfdbk&#64;microsoft.com?subject=Product: Windows Mobile | Version: 5.0 | Release: SDK | Title: RAPI Restricted Mode Security | Filename: wce51conrapirestrictedmodesecurity.htm | Built on: Wednesday, September 14, 2005">Send Feedback</a> on this topic to the authors</font></p>
+<!--Feedback Link Top End-->
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>With the release of Windows Mobile 5.0, RAPI restricted mode was introduced for Windows Mobile-based devices. Previously, Windows Mobile-based Pocket PCs had no such security policy. Restricted mode behaves the same on both Windows Mobile-based Pocket PCs and Smartphones and has implications for both Remote API and Remote API 2 functions.</P>
+
+<P>You can provide increased security for Windows Mobile-based Pocket PCs or Smartphones by using security policies and specifically by using the SECPOLICY_RAPI policy. The SECPOLICY_RAPI policy provides the following options:
+
+<UL type="disc">
+	<LI>Disable all RAPI calls and disable access to ActiveSync. </li>
+
+	<LI>Run RAPI calls run in restricted mode and enable access to ActiveSync. </li>
+
+	<LI>Enable full access to all RAPI calls and access to ActiveSync. This is the least secure mode. An attacker could potentially put a .dll on the device using RAPI, use <B>CeRapiInvoke</B> to run it Trusted, and thereby compromise security.</li>
+</UL>
+
+<P>To provide a higher level of protection for your device and use an application that requires RAPI, do the following:
+
+<OL type="1">
+	<LI>Set SECPOLICY_RAPI to RESTRICTED.</li>
+
+	<LI>Add an entry in the metabase to the <B>RAPI</B> metabase name with the path of the application .dll on the device, and the security role set to User Authenticated. You can add an entry either in the ROM image or through the <MSHelp:link keywords="wce51grfMetabaseCSP" TABINDEX="0">Metabase Configuration Service Provider</MSHelp:link>.</li>
+</OL>
+
+<P>For more information about security policies see the Smartphone SDK Adaptation Kit for Mobile Operators.</P>
+
+<H4 class="dtH4">Remarks</H4>
+
+<P><B>CeRapiInvoke</B> loads the device-side DLL named in <I>pDllPath</I>, then calls the RAPI extension named in <I>pFunctionName</I>.</P>
+
+<P>It is the responsibility of the RAPI extension to release the IRAPIStream object (that is, to call pIRAPIStream-&gt;Release();).</P>
+
+<P>As of Windows Mobile Version 5.0, the Remote Access Security Policy on Smartphone and Pocket PC is set to <B>Restricted</B> by default. These devices are considered "Locked," which prevents you from using <B>CeRapiInvoke</B> to invoke device-side DLLs &#0151; <I>unless you take extra steps to satisfy the requirements of the Remote Access Security Policy</I>. For more information on RAPI security, see <MSHelp:link keywords="mob5grfSecurity" TABINDEX="0">Security for Windows Mobile-based Devices</MSHelp:link>. </P>
+
+<BLOCKQUOTE class="dtBlock">
+<b class="le">Note</b>&nbsp;&nbsp;&nbsp;Although still locked, <B>CeRapiInvoke</B> is permitted on the non-phone version of Pocket PC.</BLOCKQUOTE>
+
+<P><B>CeRapiInvoke</B> gives elevated privileges to any DLL that can be invoked on the mobile device.</P>
+
+<P>RAPI security policies are set in the <B>project.reg</B> configuration file.</P>
+
+<P class="labelproc"><B>To satisfy the requirements of the Remote Access Security Policy</B></P>
+
+<P>Follow this procedure if you successfully used <B>CeRapiInvoke</B> in the past, and it now fails under the Windows Mobile 5.0 Remote Access Security Policy.
+
+<OL type="1">
+	<LI>Modify your CAB install to call <MSHelp:link keywords="mob5lrfDMProcessConfigXML" TABINDEX="0">DMProcessConfigXML</MSHelp:link>. Pass in a setup.xml file to the <MSHelp:link keywords="wce51grfMetabaseCSP" TABINDEX="0">Metabase Configuration Service Provider</MSHelp:link> that adds the new node "RAPI" to the metabase. This node must include the absolute path to the *.DLL file. For more information, see .<MSHelp:link keywords="wce51conMetabaseSettings" TABINDEX="0">Metabase Settings</MSHelp:link>. The following code example shows the contents of a typical setup.xml file.
+<PRE class="code">&lt;wap-provisioningdoc&gt;
+   &lt;characteristic type="<code><b class="cfe">Metabase</b></code>"&gt;
+      &lt;characteristic type="<code><b class="cfe">RAPI\Program Files\The Phone Company\example.dll\*</b></code>"&gt;
+      &lt;parm name="rw-access" value="3"/&gt;
+      &lt;parm name="access-role" value="152"/&gt; &lt;!-- 152 maps to "CARRIER_TPS | USER_AUTH | MANAGER" --&gt;
+      &lt;/characteristic&gt;
+   &lt;/characteristic&gt;
+&lt;/wap-provisioningdoc&gt;</PRE>
+</li>
+
+	<LI>Set the System attribute on the *.DLL file.</li>
+</OL>
+
+<PRE class="code"></PRE>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><MSHelp:link keywords="mob5conRemoteAPIRAPIReference" TABINDEX="0">Remote API (RAPI) Reference</MSHelp:link> | <A HREF="wce51conbestpractices.htm">Security Best Practices</A> | <MSHelp:link keywords="mob5lrfCeRapiInvoke" TABINDEX="0">CeRapiInvoke</MSHelp:link> </P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+</table></div>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Feedback Link Bottom Start-->
+<p><font size="1"><a href="mailto:medfdbk&#64;microsoft.com?subject=Product: Windows Mobile | Version: 5.0 | Release: SDK | Title: RAPI Restricted Mode Security | Filename: wce51conrapirestrictedmodesecurity.htm | Built on: Wednesday, September 14, 2005">Send Feedback</a> on this topic to the authors</font></p>
+<!--Feedback Link Bottom End-->
+<!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="mob5conCopyrightInformationForMagneto" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link></font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

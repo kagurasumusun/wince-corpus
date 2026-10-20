@@ -1,0 +1,70 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Ready-Event Process</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Ready-Event Process"/>
+<MSHelp:RLTitle Title="Ready-Event Process"/>
+<MSHelp:Keyword Index="A" Term="wce50conEventProcess"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Feature"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="kernel_overview.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="False"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+<MSHelp:Attr Name="PBFeature" Value="CORE"/>
+<MSHelp:Attr Name="PBOnly" Value="True"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_3009767">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50coneventprocess"></A>Ready-Event Process</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>The ready-event process consists of modules that expose a ready-event and threads that wait for a ready-event.</P>
+
+<H4 class="dtH4">Modules that expose a ready-event</H4>
+
+<P>When Filesys.exe starts, events are created as soon as the registry is initialized. If the RAM-based registry is in use, the events are created before any applications or drivers are started. If the hive-based registry is in use, the events from the boot hive are created before any applications or drivers are started. Then, when the system hive is loaded, the events from the system hive are created. For more information, see <MSHelp:link keywords="wce50tskInitializingtheObjectStorebasedRegistry" TABINDEX="0">RAM-Based Registry Initialization</MSHelp:link> and <MSHelp:link keywords="wce50tskInitializingtheFilebasedRegistry" TABINDEX="0">Hive-Based Registry Initialization</MSHelp:link>.</P>
+
+<P>When the module that added the event data is run, it calls <A HREF="wce50lrfopenevent.htm">OpenEvent</A> to open and set the event. Any waiting thread is released. The event remains active for the life of the OS.</P>
+
+<H4 class="dtH4">Threads that wait for a ready-event</H4>
+
+<P>When modules start, they will first try to call <B>OpenEvent</B> for the API sets to which they are related. If <B>OpenEvent</B> fails, the API set was never, and will never be, registered. If <B>OpenEvent</B> succeeds, the module can call the <A HREF="wce50lrfwaitforsingleobject.htm">WaitForSingleObject</A> function to wait for the API set to be registered. This eliminates polling and lets a module know whether an API set will be registered.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50condeterminingifanapiisready.htm">Determining if an API is Ready</A> | <A HREF="wce50coneventregistration.htm">Ready-Event Registration</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

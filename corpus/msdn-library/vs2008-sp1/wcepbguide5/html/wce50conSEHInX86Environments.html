@@ -1,0 +1,73 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>SEH in x86 Environments</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="SEH in x86 Environments"/>
+<MSHelp:RLTitle Title="SEH in x86 Environments"/>
+<MSHelp:Keyword Index="A" Term="wce50conSEHInX86Environments"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Guide"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="True"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="comp_eh.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="False"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_1045224">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50consehinx86environments"></A>SEH in x86 Environments</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>In an x86 environment, the <B>FS</B> register points to the current value of the Thread Information Block (TIB) structure. One element in the TIB structure is a pointer to an EXCEPTION_RECORD structure, which in turn contains a pointer to an exception handling callback function. Thus, each thread has its own exception callback function.</P>
+
+<P>The x86 compiler builds exception-handling structures on the stack as it processes functions. The <B>FS</B> register always points to the TIB, which in turn contains a pointer to an <B>EXCEPTION_RECORD </B>structure. The <B>EXCEPTION_RECORD</B> structure points to the exception handler function. </P>
+
+<P><B>EXCEPTION_RECORD</B> structures form a linked list: the new <B>EXCEPTION_RECORD</B> structure contains a pointer to the previous <B>EXCEPTION_RECORD</B> structure, and so on. On Intel-based machines, the head of the list is always pointed to by the first DWORD in the thread information block, <B>FS:[0]</B> .</P>
+
+<P>When an exception occurs, the system walks the list of <B>EXCEPTION_RECORD </B>structures until it finds a handler for the exception. When a handler is found, the system walks the list again, up to the node that handles the exception. During this second traversal, the system calls each handler function a second time with the exception flag set to EH_UNWINDING. </P>
+
+<P>The API builds a dummy exception record structure containing the context and the exception callback function. After each callback, the corresponding exception frame is removed and the API moves on to the next frame. The API stops unwinding when it gets to the frame whose address was passed in as the first parameter.</P>
+
+<P>After an exception is handled and all previous exception frames have been called to unwind, execution continues where the handling callback function indicates. </P>
+
+<P>The code where execution resumes expects that the stack and frame pointers, the <B>ESP</B> and <B>EBP</B> registers on Intel CPUs, are set to their values within the stack frame that handled the exception. </P>
+
+<P>Therefore, the handler that accepts an exception is responsible for setting the stack and frame pointers to values they had in the stack frame that contains the SEH code that handled the exception.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50consehinriscenvironments.htm">SEH in RISC Environments</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

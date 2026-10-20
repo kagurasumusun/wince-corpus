@@ -1,0 +1,131 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>HalGetBusData</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="HalGetBusData"/>
+<MSHelp:RLTitle Title="HalGetBusData"/>
+<MSHelp:Keyword Index="K" Term="HalGetBusData"/>
+<MSHelp:Keyword Index="A" Term="wce50lrfHalGetBusData"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Driver"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="False"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="apiref"/>
+<MSHelp:Attr Name="Filename" Value="ceddk_reference.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="False"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+<MSHelp:Attr Name="APIName" Value="HalGetBusData"/>
+<MSHelp:Attr Name="APIType" Value="LibDef"/>
+<MSHelp:Attr Name="APILocation" Value="CEDDK.lib"/>
+<MSHelp:Attr Name="PBFeature" Value="CoreDriver"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_3010128">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50lrfhalgetbusdata"></A>HalGetBusData</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>This function retrieves configuration information about a specified slot or address on a I/O bus.</P>
+
+<PRE class="syntax"><B>ULONG HalGetBusData(</B> 
+  <B>BUS_DATA_TYPE</B> <I>BusDataType</I><B>,</B> 
+  <B>ULONG </B><I>BusNumber</I><B>,</B> 
+  <B>ULONG </B><I>SlotNumber</I><B>,</B> 
+  <B>PVOID</B> <I>Buffer</I><B>,</B> 
+  <B>ULONG </B><I>Length </I>
+<B>);</B></PRE>
+
+<H4 class="dtH4">Parameters</H4>
+
+<DL>
+<DT><I>BusDataType</I></DT>
+
+<DD>[in] Type of bus data to be retrieved. The upper bound on the types supported is always MaximumBusDataType from the <A HREF="wce50lrfbusdatatype.htm">BUS_DATA_TYPE</A> enumeration. Implementation of bus routines is OEM-specific. The default CEDDK.dll returns 0 for this function. The CEDDK.dll for a CEPC supports PNPISAConfiguration and PCIConfiguration bus configurations.</dd>
+
+<DT><I>BusNumber</I></DT>
+
+<DD>[in] Zero-based and system-assigned number of the bus in systems with several buses of the same <I>BusDataType</I>.</dd>
+
+<DT><I>SlotNumber</I></DT>
+
+<DD>[in] Logical slot number or location of the device. If PCIConfiguration is specified as the <I>BusDataType</I>, this value a PCI_SLOT_NUMBER value, which is the slot and function numbers combined.</dd>
+
+<DT><I>Buffer</I></DT>
+
+<DD>[in] Pointer to a caller-supplied buffer for configuration information specific to <I>BusDataType</I>. If you specify PCIConfiguration, the buffer contains the <A HREF="wce50lrfpcicommonconfig.htm">PCI_COMMON_CONFIG</A> information for the specified <I>SlotNumber</I> and function number.</dd>
+
+<DT><I>Length</I></DT>
+
+<DD>[in] Maximum number of bytes to return in <I>Buffer</I>.</dd>
+</DL>
+
+<H4 class="dtH4">Return Values</H4>
+
+<P>Returns the number of bytes of data it wrote in the specified buffer. If the specifed <I>BusDataType</I> is not valid for the current platform, this function returns 0.</P>
+
+<P>The following table shows the return values for this function that indicate errors when the input <I>BusType</I> is PCIConfiguration.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=13%>Value</TH>
+<TH width=87%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=13%>0</TD>
+<TD width=87%>The specified PCI bus does not exist.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=13%>2</TD>
+<TD width=87%>The specified PCI bus exists, but there is no device at the specified PCI <I>SlotNumber</I>. The <I>Buffer</I> also contains the PCI_INVALID_VENDOR_ID value for the <B>VendorId</B> member of <B>PCI_COMMON_CONFIG</B>.</TD>
+</TR>
+</table></div>
+
+<H4 class="dtH4">Remarks</H4>
+
+<P>Device drivers call this function during initialization to locate their devices on a particular I/O bus. You can use the returned configuration data, which is specific to the bus type, in later calls to other configuration and initialization functions, such as <A HREF="wce50lrfhaltranslatebusaddress.htm">HalTranslateBusAddress</A>.</P>
+
+<P>For supported buses, <B>HalGetBusData</B> calls <A HREF="wce50lrfhalgetbusdatabyoffset.htm">HalGetBusDataByOffset</A> with an <I>Offset</I> of 0, which retrieves configuration information for the device starting at <I>Offset</I> 0.</P>
+
+<H4 class="dtH4">Requirements</H4>
+
+<P><B>OS Versions:</B> Windows CE 2.10 and later.<BR>
+<B>Header:</B> CEDDK.h.<BR>
+<B>Link Library:</B> CEDDK.lib.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50lrfbusdatatype.htm">BUS_DATA_TYPE</A> | <A HREF="wce50lrfhalgetbusdatabyoffset.htm">HalGetBusDataByOffset</A> | <A HREF="wce50lrfhalsetbusdata.htm">HalSetBusData</A> | <A HREF="wce50lrfhalsetbusdatabyoffset.htm">HalSetBusDataByOffset</A> | <A HREF="wce50lrfhaltranslatebusaddress.htm">HalTranslateBusAddress</A> | <A HREF="wce50lrfpcicommonconfig.htm">PCI_COMMON_CONFIG</A> </P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

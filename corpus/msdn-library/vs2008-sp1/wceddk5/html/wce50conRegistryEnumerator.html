@@ -1,0 +1,106 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Bus Enumerator</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Bus Enumerator"/>
+<MSHelp:RLTitle Title="Bus Enumerator"/>
+<MSHelp:Keyword Index="A" Term="wce50conRegistryEnumerator"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Driver"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="False"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="driverloadingmodel.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="True"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="True"/>
+<MSHelp:Attr Name="PBFeature" Value="CoreDriver"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_3017991">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50conregistryenumerator"></A>Bus Enumerator</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>The bus enumerator, BusEnum.dll, exports the <B>Init</B> and <B>Deinit</B> functions. It finds new devices by reading entries from the registry. The Device Manager can call the bus enumerator again while a previous invocation is still active. Because the bus enumerator supports hierarchical usage, it can load itself over a different registry key. When the bus enumerator is unloaded, it unloads anything it directly loaded.</P>
+
+<P>The bus enumerator loads built-in drivers at boot time and eventually loads PCI drivers. It exposes a bus interface to support driver unloading and reloading. The bus enumerator provides bus names for the drivers that it loads. Because the bus enumerator does not support bus power management, built-in devices require power management support from the OAL.</P>
+
+<P>The base bus name is a bus enumerator parameter, which, if absent, suppresses bus naming. This is because the bus enumerator also loads services.</P>
+
+<P>The Device Manager loads the bus enumerator by checking <B>HKEY_LOCAL_MACHINE\Drivers\<I>RootKey</I></B> to determine where to start the driver loading process. The default value of <B><I>RootKey</I></B> is <B>Drivers</B>. The Device Manager loads the driver indicated by that key, which is typically BusEnum.dll.</P>
+
+<P>The bus enumerator examines its root key, which is the registry key passed to it, by looking for subkeys that describe drivers to load. The following list shows the subkeys these keys contain:
+
+<UL type="disc">
+	<LI>Built-in or native devices</li>
+
+	<LI>ISA devices</li>
+
+	<LI>The PCI bus</li>
+
+	<LI>Virtual devices, such as the Network Driver Interface Specification (NDIS)</li>
+
+	<LI>Optional protocol elements, such as Simple Network Management Protocol (SNMP) or Point-to-Point Protocol (PPP)</li>
+
+	<LI>Other non-enumerable operating system (OS) components.</li>
+</UL>
+
+<P>BusEnum.dll examines the first level of keys just below the key passed to it, according to the <B>Order</B> registry subkey. It invokes <MSHelp:link keywords="wce50lrfActivateDeviceEx" TABINDEX="0">ActivateDeviceEx</MSHelp:link> on each subkey it finds. The bus enumerator generally runs with the DEVFLAGS_UNLOAD flag.</P>
+
+<P>Each subkey can have any values typically interpreted by <B>ActivateDeviceEx</B> or by the driver ultimately loaded. Additionally, each subkey can have an <B>Order</B> value between 0 and 255. The smallest <B>Order</B> value gets loaded first. If there is no <B>Order</B> value, the driver gets loaded after drivers with defined <B>Order</B> values.</P>
+
+<P>Entry points of drivers that expose the stream interface are constructed from the <B>Prefix</B> value. If the registry entry for the driver does not contain a <B>Prefix</B> value, the entry points do not have a prefix. For example, a serial driver with <B>Prefix</B> equal to COM has an entry point of <A HREF="wce50lrfcominit.htm">COM_Init</A>. If there is no <B>Prefix</B> value, then the entry point is <B>Init</B>. The bus enumerator driver does all of its work in its <B>Init</B> entry point and the Device Manager can unload it when <B>Init</B> returns.</P>
+
+<P>As the bus enumerator initializes the system, it traverses the subkeys of <B>HKEY_LOCAL_MACHINE\Drivers\BuiltIn</B> or wherever the <B>HKEY_LOCAL_MACHINE\Drivers\RootKey</B> value points. The bus enumerator traverses the subkeys one by one, initializing a driver for each subkey. It loads the DLL indicated by the <B>DLL</B> value, and then creates a subkey for the driver under <B>HKEY_LOCAL_MACHINE\Drivers\Active</B>. Then, it calls the <B>Init</B> function or the driver's entry point and passes in a string containing that subkey.</P>
+
+<P>Using the string it gets in return, the <B><I>XXX</I>_Init</B> routine should call <MSHelp:link keywords="wce50lrfRegOpenKeyEx" TABINDEX="0">RegOpenKeyEx</MSHelp:link> to get a handle for this key, and then call <MSHelp:link keywords="wce50lrfRegQueryValueEx" TABINDEX="0">RegQueryValueEx</MSHelp:link> to look up the key value, which contains the string corresponding to the registry key that Device Manager originally encountered under <B>HKEY_LOCAL_MACHINE\Drivers\BuiltIn</B>.</P>
+
+<P>It is common for device driver writers to include other values in their registry keys. These values can indicate the I/O port address, the IRQ setting, the DMA settings, or any additional information needed.</P>
+
+<P>The following registry key example shows the generic registry key format for a device called Sample. You can find other examples in Platform.reg files or registry files in directories that contain device drivers.</P>
+
+<PRE class="code">[HKEY_LOCAL_MACHINE\Drivers\BuiltIn\Sample]
+    "Dll" = "sampledev.dll"
+    "Prefix" = "SMP"
+    "Index" = dword:1
+    "Order" = dword:0
+    "FriendlyName" = "Sample Controller"
+    "Ioctl" = dword:0</PRE>
+
+<P>Using the above registry settings, the Device Manager creates a new key. Then, it calls <B>SMP_Init</B> and passes in a pointer to the new key. <B>SMP_Init</B> then calls <B>RegOpenKeyEx</B> to get a handle for the key. Then, it calls <B>RegQueryValueEx</B> to get the string "\Drivers\BuiltIn\Sample". <B><I>XXX</I>_Init</B> can then use this string to open that key and access other information placed there. For non-stream drivers, if there is no <B>Prefix</B> value, <B>Init</B> is the assumed entry point. </P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50lrfactivatedeviceex.htm">ActivateDeviceEx</A> | <A HREF="wce50conpcibusdriver.htm">PCI Bus Driver</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

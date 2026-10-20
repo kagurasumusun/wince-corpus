@@ -1,0 +1,194 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>How to Customize Memory on a CEPC</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="How to Customize Memory on a CEPC"/>
+<MSHelp:RLTitle Title="How to Customize Memory on a CEPC"/>
+<MSHelp:Keyword Index="A" Term="wce50howHowtoCustomizeMemoryonaCEPC"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Hardware"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="True"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbHowTo"/>
+<MSHelp:Attr Name="Filename" Value="howto_increasing_available_memory.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="True"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_3010189">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50howhowtocustomizememoryonacepc"></A>How to Customize Memory on a CEPC</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>For CEPCs, x86-based standard development boards (SDBs), and ARM-based SDBs, the OEM adaptation layer (OAL) statically maps physical memory addresses to virtual memory addresses. By default, the <A HREF="wce50conoemaddresstable.htm">OEMAddressTable</A> definition, which resides in the OAL, maps 64 MB of RAM. </P>
+
+<P>If you want your run-time image to use the exact amount of RAM on your CEPC, update <B>OEMAddressTable</B> and the Config.bib file. For example, if your CEPC contains 96 MB of RAM, update <B>OEMAddressTable</B> and Config.bib accordingly. Additionally, you can use this procedure for simulating different amounts of RAM on your CEPC. For other microprocessors, the CPU and kernel define this mapping.</P>
+
+<P>When the OAL starts, operating system (OS) memory allocation code is not initialized. <B>OEMAddressTable</B> provides an initial memory map so that initialization code in the OAL and interrupt service routines (ISRs) can access memory-mapped devices. You should edit <B>OEMAddressTable</B> as appropriate for your CEPC.</P>
+
+<P>If you have unmapped RAM after boot time, applications can map the RAM by calling the <MSHelp:link keywords="wce50lrfCreateStaticMapping" TABINDEX="0">CreateStaticMapping</MSHelp:link> function. </P>
+
+<P>You can extend this static mapping in the OAL after boot time by calling the <A HREF="wce50lrfnkcreatestaticmapping.htm">NKCreateStaticMapping</A> function. </P>
+
+<H4 class="dtH4">Hardware and Software Assumptions</H4>
+
+<UL type="disc">
+	<LI>You have set up a CEPC. For more information, see <A HREF="wce50howhowtosetupacepc.htm">How to Set Up a CEPC</A>.</li>
+
+	<LI>Your run-time image resides and executes from a continuous region of RAM.</li>
+</UL>
+
+<P>To track your progress in the following table, select the check box next to each step.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=6%>&nbsp;</TH>
+<TH width=56%>Step</TH>
+<TH width=38%>Topic</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=6%><INPUT TYPE="Checkbox" Value="ON"></TD>
+<TD width=56%>1. Configure your run-time image.
+<BLOCKQUOTE class="dtBlock">
+<b class="le">Note</b>&nbsp;&nbsp;&nbsp;It is not necessary to perform a run-time image build now. You will perform a run-time image build in step 8.</BLOCKQUOTE>
+</TD>
+<TD width=38%><A HREF="wce50howhowtoconfigureandbuildanosimageforacepc.htm">How to Configure and Build a Run-Time Image for a CEPC</A></TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=6%><INPUT TYPE="Checkbox" Value="ON"></TD>
+<TD width=56%>2. To edit <B>OEMAddressTable</B>, open the Oeminit.asm file.
+<UL type="disc">
+	<LI>Navigate to %_WINCEROOT%\Public\Common\OAK\CSP\x86\OAL.</li>
+
+	<LI>Open the Oeminit.asm file.</li>
+</UL>
+</TD>
+<TD width=38%>Not applicable</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=6%><INPUT TYPE="Checkbox" Value="ON"></TD>
+<TD width=56%>3. Find the definition for <B>OEMAddressTable</B>, which begins near line 250.
+<P>The following code example shows the default <B>OEMAddressTable</B> definition for an x86 microprocessor.</P>
+
+<PRE class="code">_OEMAddressTable:
+  dd  80000000h,  0,  04000000h
+; FLASH and other memory, if any
+; dd  FlashVA,  FlashPA,  FlashSize
+  dd  0,  0,  0</PRE>
+
+<P>The default RAM size in the example is 04000000h, which is 64 MB.</P>
+</TD>
+<TD width=38%><A HREF="wce50conoemaddresstable.htm">OEMAddressTable</A></TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=6%><INPUT TYPE="Checkbox" Value="ON"></TD>
+<TD width=56%>4. Adjust the size entry of <B>OEMAddressTable</B> to match the amount of RAM you intend to use on your target device.
+<P>The size entry must be 4 MB aligned and you cannot have overlapping addresses.
+
+<UL type="disc">
+	<LI>In case you need to revert to the original line of code that contains the RAM size, copy the line of code you will edit, paste the line of code directly above or below the original line of code, and place the ';' delimiter at the beginning of the original line of code.</li>
+</UL>
+
+<P>For example, if your CEPC has 128 MB of RAM, change the size entry from 04000000h to 08000000h.</P>
+</TD>
+<TD width=38%>Not applicable</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=6%><INPUT TYPE="Checkbox" Value="ON"></TD>
+<TD width=56%>5. Verify that the last line in <B>OEMAddressTable</B> is all zeros.
+<P>This marks the end of <B>OEMAddressTable</B>. </P>
+
+<P>The following code example shows the default last line in the <B>OEMAddressTable</B> definition.</P>
+
+<PRE class="code">  dd  0,  0,  0</PRE>
+</TD>
+<TD width=38%>Not applicable</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=6%><INPUT TYPE="Checkbox" Value="ON"></TD>
+<TD width=56%>6. Save Oeminit.asm and build the CEPC OAL. 
+<P>Because the CEPC OAL is in _PUBLICROOT, you must manually perform the build and Sysgen phases of the build process.
+
+<UL type="disc">
+	<LI>From the <B>Build OS</B> menu, choose <B>Open Release Directory</B>.</li>
+
+	<LI>Navigate to %_WINCEROOT%\Public\Common\OAK\CSP\x86\OAL.</li>
+
+	<LI>In the Build window, type <B>build</B> and press ENTER.</li>
+
+	<LI>Type <B>sysgen i486oal</B> and press ENTER.</li>
+</UL>
+</TD>
+<TD width=38%>Not applicable</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=6%><INPUT TYPE="Checkbox" Value="ON"></TD>
+<TD width=56%>7. To take advantage of the new RAM mapping, update the Config.bib file for your run-time image.</TD>
+<TD width=38%><A HREF="wce50tskupdatingconfigbibwithanewrammapping.htm">Updating Config.bib with a New RAM Mapping</A></TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=6%><INPUT TYPE="Checkbox" Value="ON"></TD>
+<TD width=56%>8. Build the run-time image.
+<UL type="disc">
+	<LI>From the <B>Build OS</B> menu, choose <B>Build and Sysgen</B>. Verify that <B>Copy Files to Release Directory After Build </B>and <B>Make Run-Time Image After Build </B>are selected.</li>
+</UL>
+</TD>
+<TD width=38%><MSHelp:link keywords="wce50tskBuildingaPlatform" TABINDEX="0">Building a Run-Time Image</MSHelp:link></TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=6%><INPUT TYPE="Checkbox" Value="ON"></TD>
+<TD width=56%>9. Download the run-time image to the CEPC.</TD>
+<TD width=38%><MSHelp:link keywords="wce50conOSImageDownload" TABINDEX="0">Downloading a Run-Time Image</MSHelp:link></TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=6%><INPUT TYPE="Checkbox" Value="ON"></TD>
+<TD width=56%>10. View the available memory on the CEPC with the Remote System Information tool.</TD>
+<TD width=38%><MSHelp:link keywords="wce50conRemoteSystemInformation" TABINDEX="0">Remote System Information</MSHelp:link></TD>
+</TR>
+</table></div>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><MSHelp:link keywords="wce50oriHowtoTopics" TABINDEX="0">How-to Topics</MSHelp:link> </P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

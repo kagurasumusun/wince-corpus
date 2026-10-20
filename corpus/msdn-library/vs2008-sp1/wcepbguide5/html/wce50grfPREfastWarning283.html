@@ -1,0 +1,94 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>PREfast Warning 283</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="PREfast Warning 283"/>
+<MSHelp:RLTitle Title="PREfast Warning 283"/>
+<MSHelp:Keyword Index="A" Term="wce50grfPREfastWarning283"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Guide"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="True"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="prefast_warnings2.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="True"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_1053668">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50grfprefastwarning283"></A>PREfast Warning 283</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<PRE class="syntax">283 - Allocation/free mismatch.
+Additional Information: &lt;variable&gt; is allocated with array new [], deleted with scalar delete (see allocation at &lt;location&gt;).</PRE>
+
+<P>This warning appears only in C++ code and indicates that the calling function has inconsistently allocated memory with the <B>array new</B> operator but freed it with the scalar <B>delete</B> operator. </P>
+
+<P>This is undefined behavior according to the C++ standard; however, when using default global operators, it behaves correctly with the Microsoft Visual C++ 6.0 and Visual C++&nbsp;.NET 2002 implementations. </P>
+
+<P>In addition to the inherent risk involved in relying on undefined behavior, if global (or class-specific) operator new and operator delete are not compatible with operator <B>new</B> and operator <B>delete</B>, unexpected results can occur.</P>
+
+<P>The results of this defect are difficult to predict. It can result in 
+
+<UL type="disc">
+	<LI>Leaks</li>
+
+	<LI>Memory corruptions</li>
+
+	<LI>Crashes (if operators are overridden)</li>
+</UL>
+
+<P>In most cases, the mismatch can be unimportant, depending on the implementation of the compiler and its libraries. PREfast cannot distinguish between these situations.</P>
+
+<P>If memory is allocated with <B>array new</B>, it should typically be freed with <B>array delete</B>.</P>
+
+<P>If the underlying object in the array is a class type, there is an additional complication: the destructors for the individual objects are not called. In this case, warning 278 is reported instead. </P>
+
+<P>This message is often reported on character or wide-character arrays.</P>
+
+<H4 class="dtH4">Example</H4>
+
+<P class="label"><B>Defective Source</B></P>
+
+<PRE class="code">char *str = new char[arraySize];
+
+delete str;</PRE>
+
+<P class="label"><B>Corrected Source</B></P>
+
+<PRE class="code">char *str = new char[arraySize];
+
+delete[] str;</PRE>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

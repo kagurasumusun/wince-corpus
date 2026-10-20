@@ -1,0 +1,105 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Installable ISR Registry Settings</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Installable ISR Registry Settings"/>
+<MSHelp:RLTitle Title="Installable ISR Registry Settings"/>
+<MSHelp:Keyword Index="A" Term="wce50conInstallableISRRegistrySettings"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Driver"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="False"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="ndis_guide4.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="True"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="True"/>
+<MSHelp:Attr Name="PBFeature" Value="NetworkDriver"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_3018397">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50coninstallableisrregistrysettings"></A>Installable ISR Registry Settings</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>An installable ISR is a function that runs in the kernel context and determines if a device is generating an interrupt. A generic installable ISR function called ISRHandler is provided as part of the OS in the GIISR.DLL file. This function supports a number of configurable parameters that allow it to meet the needs of most devices. For example, in order to have the MYNIC driver use the installable ISR, you must add the following settings to the registry.</P>
+
+<PRE class="code">{HKEY_LOCAL_MACHINE\Drivers\BuiltIn\PCI\Template\MYNIC]
+    "IsrDll"="giisr.dll"
+    "IsrHandler"="ISRHandler"
+    "PortIsIO"=dword:1
+    "PortOffset"=dword:2c
+    "PortSize"=dword:2
+    "PortMask"=dword"F000</PRE>
+
+<P>The <CODE>"IsrDll"</CODE> and <CODE>"IsrHandler"</CODE> settings notify the OS that it must use the generic ISR handler function. The remaining four parameters are used to configure the generic ISR for a device allowing the OS to determine if the device has generated an interrupt by reading the interrupt status registry, and optionally the interrupt mask register. The following table lists and describes these parameters.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=50%>Parameter</TH>
+<TH width=50%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>
+<PRE class="code">"PortIsIO"=dword:1</PRE>
+</TD>
+<TD width=50%>Configures the generic ISR handler to read the interrupt status of the device from IO space. Setting this parameter to <CODE>dword:0</CODE> would cause the handler to read from memory space.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>
+<PRE class="code">"PortOffset"=dword:3c</PRE>
+</TD>
+<TD width=50%>Specifies the offset to the interrupt status register from the beginning of the IOBase of the device.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>
+<PRE class="code">"PortSize"=dword:2</PRE>
+</TD>
+<TD width=50%>Specifies that the ISR should be read as a 16 bit value. Setting this value to <CODE>dword:1</CODE> would signal an 8 bit read while setting it to <CODE>dword:4</CODE> would signal a 32 bit read.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>
+<PRE class="code">"PortMask"=dwordF000</PRE>
+</TD>
+<TD width=50%>Specifies the value and the ISR to determine whether or not the device is generating an interrupt. </TD>
+</TR>
+</table></div>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50conpcibusenumeratorregistrysettings.htm">PCI Bus Enumerator Registry Settings</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

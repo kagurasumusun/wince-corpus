@@ -1,0 +1,117 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>DrvRealizeBrush</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="DrvRealizeBrush"/>
+<MSHelp:RLTitle Title="DrvRealizeBrush"/>
+<MSHelp:Keyword Index="K" Term="DrvRealizeBrush"/>
+<MSHelp:Keyword Index="A" Term="wce50lrfDrvRealizeBrush"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Driver"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="False"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="apiref"/>
+<MSHelp:Attr Name="Filename" Value="display_reference.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="False"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+<MSHelp:Attr Name="APIName" Value="DrvRealizeBrush"/>
+<MSHelp:Attr Name="APIType" Value="LibDef"/>
+<MSHelp:Attr Name="APILocation" Value="Ddi_ati_lib.lib, Ddi_flat_lib.lib, Ddi_gx_lib.lib, Ddi_mq200_lib.lib, Ddi_nop_lib.lib, Ddi_rflat_lib.lib, Ddi_rgx_lib.lib, or Ddi_tvia5_lib.lib"/>
+<MSHelp:Attr Name="PBFeature" Value="DisplayDriver"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_3017940">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50lrfdrvrealizebrush"></A>DrvRealizeBrush</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>This function requests that the driver realize a specified brush for a specified surface.</P>
+
+<PRE class="syntax"><B>BOOL DrvRealizeBrush(</B>
+<B>  BRUSHOBJ* </B><I>pbo</I><B>,</B>
+<B>  SURFOBJ* </B><I>psoTarget</I><B>,</B>
+<B>  SURFOBJ* </B><I>psoPattern</I><B>,</B>
+<B>  SURFOBJ* </B><I>psoMask</I><B>,</B>
+<B>  XLATEOBJ* </B><I>pxlo</I><B>,</B>
+<B>  ULONG </B><I>iHatch</I>
+<B>);</B></PRE>
+
+<H4 class="dtH4">Parameters</H4>
+
+<DL>
+<DT><I>pbo</I> </DT>
+
+<DD>[in] Pointer to the <B>BRUSHOBJ</B> to realize. All other parameters, except for <I>psoTarget</I>, can be queried from this object. Parameter specifications are provided as an optimization. This parameter is best used as a parameter for <B>BRUSHOBJ_pvAllocRBrush</B>, which allocates the memory for the realized brush. </dd>
+
+<DT><I>psoTarget</I> </DT>
+
+<DD>[in] Pointer to the surface for which the brush is to be realized. This surface can be the physical surface for the device, a device format bitmap, or a standard format bitmap. </dd>
+
+<DT><I>psoPattern</I> </DT>
+
+<DD>[in] Pointer to the surface that describes the pattern for the brush. For a raster device, this is a bitmap. For a vector device, this is one of the pattern surfaces provided by <A HREF="wce50lrfdrvenablepdev.htm">DrvEnablePDEV</A>. </dd>
+
+<DT><I>psoMask</I> </DT>
+
+<DD>[in] Pointer to a transparency mask for the brush. This is a 1 bit per pixel bitmap that has the same extent as the pattern. A mask of zero means the pixel is considered a background pixel for the brush. In transparent background mode, the background pixels are unaffected in a fill. Plotters can ignore this parameter because they never draw background information. </dd>
+
+<DT><I>pxlo</I> </DT>
+
+<DD>[in] Pointer to a <A HREF="wce50lrfxlateobj.htm">XLATEOBJ</A> that defines the interpretation of colors in the pattern. If <I>pxlo</I> is NULL, no translation is needed. A <B>XLATEOBJ_XXX</B> function can be called to translate the colors to device color indices. Vector devices should translate color zero through the <B>XLATEOBJ</B> to get the foreground color for the brush. </dd>
+
+<DT><I>iHatch</I> </DT>
+
+<DD>[in] Indicator for whether the <I>psoPattern</I> parameter is one of the hatch brushes returned by <B>DrvEnablePDEV</B>. This is true if the value of this parameter is less than HS_DDI_MAX, which is defined in Winddi.h. </dd>
+</DL>
+
+<H4 class="dtH4">Return Values</H4>
+
+<P>The return value is TRUE if the brush was successfully realized. Otherwise, it is FALSE, and an error code is logged.</P>
+
+<H4 class="dtH4">Remarks</H4>
+
+<P>To realize a brush, the driver converts a GDI brush into a form that can be used internally. A realized brush contains device-specific information needed by the device to accelerate drawing using the brush.</P>
+
+<P>The driver's realization of a brush is written into the buffer allocated by a call to <B>BRUSHOBJ_pvAllocRBrush</B>.</P>
+
+<H4 class="dtH4">Requirements</H4>
+
+<P><B>OS Versions:</B> Windows CE 1.0 and later.<BR>
+<B>Header:</B> Winddi.h.<BR>
+<B>Link Library:</B> Ddi_ati_lib.lib, Ddi_flat_lib.lib, Ddi_gx_lib.lib, Ddi_mq200_lib.lib, Ddi_nop_lib.lib, Ddi_rflat_lib.lib, Ddi_rgx_lib.lib, or Ddi_tvia5_lib.lib.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50condisplaydrivers.htm">Display Drivers</A> | <A HREF="wce50lrfdrvenablepdev.htm">DrvEnablePDEV</A> | <A HREF="wce50lrfxlateobj.htm">XLATEOBJ</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

@@ -1,0 +1,253 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>CeHeapCreate</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="CeHeapCreate"/>
+<MSHelp:RLTitle Title="CeHeapCreate"/>
+<MSHelp:Keyword Index="K" Term="CeHeapCreate"/>
+<MSHelp:Keyword Index="A" Term="wce50lrfCeHeapCreate"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Feature"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="apiref"/>
+<MSHelp:Attr Name="Filename" Value="memory_management_reference.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="True"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+<MSHelp:Attr Name="APIName" Value="CeHeapCreate"/>
+<MSHelp:Attr Name="APIType" Value="LibDef"/>
+<MSHelp:Attr Name="APILocation" Value="Coredll.lib"/>
+<MSHelp:Attr Name="PBFeature" Value="CORE"/>
+<MSHelp:Attr Name="PBOnly" Value="False"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_1031923">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50lrfceheapcreate"></A>CeHeapCreate</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>This function allows users to create a heap with a custom allocator or deallocator function.</P>
+
+<PRE class="syntax"><B>HANDLE CeHeapCreate(</B>
+  <B>DWORD</B> <I>flOptions</I><B>,</B><I> </I>
+  <B>DWORD</B> <I>dwInitialSize</I><B>,</B><I> </I>
+  <B>DWORD</B> <I>dwMaximumSize</I><B>,</B><I> </I>
+  <B>PFN_AllocHeapMem</B> <I>pfnAlloc</I><B>,</B><I> </I>
+  <B>PFN_FreeHeapMem</B> <I>pfnFee </I>
+<B>); </B></PRE>
+
+<H4 class="dtH4">Parameters</H4>
+
+<DL>
+<DT><I>flOptions</I></DT>
+
+<DD>[in] Reserved. This parameter must be set to zero.</dd>
+
+<DT><I>dwInitialSize</I></DT>
+
+<DD>[in] Initial size, in bytes, of the heap. 
+
+<P>This value determines the initial amount of physical storage that is allocated for the heap. 
+
+
+<P>The value is rounded up to the next page boundary. 
+
+
+<P>To determine the size of a page on the host computer, use the <A HREF="wce50lrfgetsysteminfo.htm">GetSystemInfo</A> function.
+</dd>
+
+<DT><I>dwMaximumSize</I></DT>
+
+<DD>[in] If <I>dwMaximumSize</I> is a nonzero value, it specifies the maximum size, in bytes, of the heap. 
+
+<P><B>CeHeapCreate</B> rounds <I>dwMaximumSize</I> up to the next page boundary and then reserves a block of that size in the virtual address space of the process for the heap. 
+
+
+<P>If allocation requests made by <A HREF="wce50lrfheapalloc.htm">HeapAlloc</A> or <A HREF="wce50lrfheaprealloc.htm">HeapReAlloc</A> exceed the initial amount of physical storage space specified by <I>dwInitialSize</I>, the system allocates additional pages of physical storage for the heap, up to the heap's maximum size.
+
+
+<P>If <I>dwMaximumSize</I> is nonzero, the heap cannot grow and an absolute limitation arises where all allocations are fulfilled within the specified heap unless there is not enough free space.
+
+
+<P>If <I>dwMaximumSize</I> is zero, it specifies that the heap can grow and the heap's size is limited only by available memory. 
+
+
+<P>Requests to allocate blocks larger than 0x0018000 bytes do not automatically fail. The system calls <A HREF="wce50lrfvirtualalloc.htm">VirtualAlloc</A> to obtain the memory needed for such large blocks. 
+
+
+<P>Applications that need to allocate large memory blocks should set <I>dwMaximumSize</I> to zero.
+</dd>
+
+<DT><I>pfnAlloc</I></DT>
+
+<DD>[in] The allocator function.</dd>
+
+<DT><I>pfnFree</I></DT>
+
+<DD>[in] The deallocator function.</dd>
+</DL>
+
+<H4 class="dtH4">Return Values</H4>
+
+<P>A handle to the heap indicates success. </P>
+
+<P>NULL indicates failure.</P>
+
+<H4 class="dtH4">Remarks</H4>
+
+<P>For more information about the function prototypes for the custom allocator and deallocator functions, see <MSHelp:link keywords="wce50lrfPFN_AllocHeapMem" TABINDEX="0">PFN_AllocHeapMem</MSHelp:link> and <MSHelp:link keywords="wce50lrfPFN_FreeHeapMem" TABINDEX="0">PFN_FreeHeapMem</MSHelp:link>, respectively.</P>
+
+<P>The following code sample shows an implementation that uses a single reservation on the physical memory. </P>
+
+<P>It is possible to use the physical memory on a page-by-page basis if you maintain a free list of the physical memory. In such a case, you use the <A HREF="wce50lrfvirtualcopy.htm">VirtualCopy</A> or <A HREF="wce50lrfvirtualfree.htm">VirtualFree</A> function on the pages during MEM_COMMIT and MEM_DECOMMIT.</P>
+
+<PRE class="code">// Assuming there are some fast memory available on a platform at physical 
+// address 0x40000000, of size 0x80000.
+// The following code creates a heap on using this memory when possible.
+//
+#define  PHYS_MEM_ADDR 0x40000000
+#define  PHYS_MEM_SIZE 0x00080000
+//
+BOOL g_fPhysMemUsed;
+//
+// The allocator
+LPVOID MyAllocMem (LPVOID pAddr, DWORD cbSize, DWORD fdwAction, LPDWORD pdwData)
+{
+   LPVOID lpRet = NULL;
+   switch (fdwAction) {
+      case MEM_RESERVE:
+      // Reserve VM using VirtualAlloc
+      if (!(lpRet = VirtualAlloc (pAddr, cbSize, MEM_RESERVE, PAGE_NOACCESS))) {
+         SetLastError (ERROR_OUTOFMEMORY);
+         break;
+      }
+      // Use the physical memory if possible
+      if (!g_fPhysMemUsed &amp;&amp; (cbSize &lt;= PHYS_MEM_SIZE)) {
+         // Yes, physical memory is available, use VirtualCopy
+         if (!VirtualCopy (lpRet, (LPVOID) (PHYS_MEM_ADDR &gt;&gt; 8), cbSize, PAGE_READWRITE|PAGE_PHYSICAL)) {
+               SetLastError (ERROR_OUTOFMEMORY);
+               break;
+         }
+         g_fPhysMemUsed = TRUE;
+         *pdwData = PHYS_MEM_ADDR;
+      } 
+      else {
+         *pdwData = 0;   // Indicates this is not using physical memory
+      }
+      break;
+
+      case MEM_COMMIT:
+      // MEM_COMMIT should not change the content of *pdwData, as the data
+      // is a 'per-reservation' information.
+      if (PHYS_MEM_ADDR  == *pdwData) {
+         // This is using physical memory, already committed
+         lpRet = pAddr;
+      } 
+      else {
+         lpRet = VirtualAlloc (pAddr, cbSize, MEM_COMMIT, PAGE_READWRITE);
+      }
+      break;
+
+      default:
+      // This should never happen
+         DEBUGCHK (0);
+         break;
+   }
+return lpRet;
+}
+//
+// The de-allocator
+//
+BOOL MyFreeMem (LPVOID pAddr, DWORD cbSize, DWORD fdwAction, DWORD dwData)
+{
+   BOOL fRet = FALSE;
+   switch (fdwAction) {
+      case MEM_DECOMMIT:
+         if (PHYS_MEM_ADDR  == dwData) {
+            // This is using physical memory; never needs to decommit
+            break;
+         }
+         // VirtualAlloc'd data, decommit the memory
+         fRet = VirtualFree (pAddr, cbSize, MEM_DECOMMIT);
+         break;
+
+      case MEM_RELEASE:
+         // Release the reservation
+         fRet = VirtualFree (pAddr, 0, MEM_RELEASE);
+         if (fRet &amp;&amp; (PHYS_MEM_ADDR  == dwData)) {
+            // Physical memory is released and is available again
+            g_fPhysMemUsed = TRUE;
+         }
+         break;
+
+      default:
+      // This should never happen
+         DEBUGCHK (0);
+         break;
+      }
+
+   return fRet;
+}
+//
+// To create a heap with the custom allocator/de-allocator
+int MyFunc ()
+{
+   HANDLE hHeap = CeHeapCreate (0, 0, 0, MyAllocMem, MyFreeMem);
+   LPVOID p;
+   if (hHeap) {
+      // Heap creation failed
+      // ErrorHandling ();
+      return 0;
+   }
+
+   // Ordinary heap operation can be performed on the heap
+   p = HeapAlloc (hHeap, 0, 100);  
+   HeapFree (hHeap, 0, p);
+   //...
+
+   // Finish using the heap, destroy it
+   HeapDestroy (hHeap);
+
+    return 0;
+}</PRE>
+
+<H4 class="dtH4">Requirements</H4>
+
+<P><B>OS Versions:</B> Windows CE 5.0 and later.<BR>
+<B>Header:</B> Winbase.h.<BR>
+<B>Link Library:</B> Coredll.lib.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50lrfgetsysteminfo.htm">GetSystemInfo</A> | <A HREF="wce50lrfheapalloc.htm">HeapAlloc</A> | <A HREF="wce50lrfheaprealloc.htm">HeapReAlloc</A> | <MSHelp:link keywords="wce50lrfPFN_AllocHeapMem" TABINDEX="0">PFN_AllocHeapMem</MSHelp:link> | <MSHelp:link keywords="wce50lrfPFN_FreeHeapMem" TABINDEX="0">PFN_FreeHeapMem</MSHelp:link> | <A HREF="wce50lrfvirtualalloc.htm">VirtualAlloc</A> | <A HREF="wce50lrfvirtualcopy.htm">VirtualCopy</A> | <A HREF="wce50lrfvirtualfree.htm">VirtualFree</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

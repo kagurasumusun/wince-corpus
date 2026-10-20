@@ -1,0 +1,159 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Creating the Keyboard DLL Sources File</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Creating the Keyboard DLL Sources File"/>
+<MSHelp:RLTitle Title="Creating the Keyboard DLL Sources File"/>
+<MSHelp:Keyword Index="A" Term="wce50tskCreatingtheKeyboardDLLSourcesFile"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Driver"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="False"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbTask"/>
+<MSHelp:Attr Name="Filename" Value="howto_migkbddrvrlayoutmgr.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="True"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+<MSHelp:Attr Name="PBFeature" Value="KeyboardDriver"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_3017591">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50tskcreatingthekeyboarddllsourcesfile"></A>Creating the Keyboard DLL Sources File</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>Typically, you build the keyboard dynamic-link libraries (DLLs) from the keyboard driver directory, which is in the %_WINCEROOT%\Platform\%_TGTPLAT%\Drivers directory. The directory paths vary slightly, depending on the hardware platform. </P>
+
+<P>The sources file that determines how a keyboard driver builds must link the platform-dependent driver (PDD), PDD list, interrupt service thread (IST), device layout, and input language, unless the device layout and input language are in separate DLLs.</P>
+
+<P>The following list shows some potential input locale directories, in the latest Platform Builder installation, where you can create the keyboard DLL sources file:
+
+<UL type="disc">
+	<LI>%_WINCEROOT%\Platform\%_TGTPLAT%\Drivers\Mykbdmouse\KBDXSCXTMSENGUS1</li>
+
+	<LI>%_WINCEROOT%\Platform\%_TGTPLAT%\Drivers\Mykbdmouse\KBDXSCXTMSJPN1</li>
+
+	<LI>%_WINCEROOT%\Platform\%_TGTPLAT%\Drivers\Mykbdmouse\KBDXSCXTMSJPN2</li>
+
+	<LI>%_WINCEROOT%\Platform\%_TGTPLAT%\Drivers\Mykbdmouse\KBDXSCXTMSKOR1</li>
+</UL>
+
+<P class="labelproc"><B>To create the keyboard DLL sources file</B>
+
+<OL type="1">
+	<LI>Create a sources file in every directory that represents an input locale.
+<P>You can use other sources files as templates.
+</li>
+
+	<LI>Add .lib files to the SOURCELIBS macro definition. 
+<P>The following table shows the libraries to add to the SOURCELIBS macro definition.
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=42%>Library</TH>
+<TH width=58%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=42%>LayoutManager.lib</TD>
+<TD width=58%>Required</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=42%>Kbdmscommon.lib, or the library representing your keyboard PDD</TD>
+<TD width=58%>Required</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=42%>Kbdpddlist.lib, or the library representing your PDD list</TD>
+<TD width=58%>Required</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=42%>KeybdIst.lib</TD>
+<TD width=58%>Required if you are using the generic IST from %_WINCEROOT%\Public\Common\Oak\Drivers\Keybd\Ist</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=42%>InputLang_0409.lib, or the library representing the input languages</TD>
+<TD width=58%>Required unless the input language is in a separate DLL</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=42%>PS2_AT_00000409.lib, or the library representing the device layouts</TD>
+<TD width=58%>Required unless the device layout is in a separate DLL</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=42%>NumPadRmp.lib </TD>
+<TD width=58%>Required if any of the device layout remapping functions use this library</TD>
+</TR>
+</table></div>
+</li>
+
+	<LI>Verify the content of the entire sources file. 
+<P>The following sources file code example is a model for the sources files for each input locale that you support in your keyboard driver.
+
+<PRE class="code">SYNCHRONIZE_DRAIN=1
+
+RELEASETYPE=PLATFORM
+
+TARGETNAME=KbdXscXTMsEngUs1
+DEFFILE=$(_COMMONOAKROOT)\INC\kbdmouse.def
+TARGETTYPE=DYNLINK
+DLLENTRY=DllMain
+TARGETLIBS= \
+    $(_COMMONSDKROOT)\lib\$(_CPUINDPATH)\coredll.lib \
+    $(_COMMONOAKROOT)\lib\$(_CPUINDPATH)\ceddk.lib   \
+    $(_TARGETPLATROOT)\lib\$(_CPUINDPATH)\drvlib.lib
+
+SOURCELIBS=\
+    $(_TARGETPLATROOT)\lib\$(_CPUINDPATH)\KbdmsCommon.lib   \
+    $(_COMMONOAKROOT)\lib\$(_CPUINDPATH)\KeybdIst.lib     \
+    $(_COMMONOAKROOT)\lib\$(_CPUINDPATH)\PS2_AT_00000409.lib   \
+    $(_COMMONOAKROOT)\lib\$(_CPUINDPATH)\layoutmanager.lib   \
+    $(_TARGETPLATROOT)\lib\$(_CPUINDPATH)\kbdpddlist.lib   \
+    $(_COMMONOAKROOT)\lib\$(_CPUINDPATH)\InputLang_0409.lib  \
+    $(_COMMONOAKROOT)\lib\$(_CPUINDPATH)\numpadrmp.lib
+
+
+WINCETARGETFILE=dummy
+
+SOURCES=</PRE>
+</li>
+</OL>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50conlayoutmanager.htm">Layout Manager</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

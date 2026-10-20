@@ -1,0 +1,1392 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>State and Notifications Broker Sample</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="State and Notifications Broker Sample"/>
+<MSHelp:RLTitle Title="State and Notifications Broker Sample"/>
+<MSHelp:Keyword Index="A" Term="wce51samStateNotificationBrokerSample"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Application"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbsmartphone"/>
+<MSHelp:Attr Name="Product" Value="kbPocketPC"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="Technology" Value="kbPocketPC"/>
+<MSHelp:Attr Name="Technology" Value="kbSmartphone"/>
+<MSHelp:Attr Name="TopicType" Value="kbSampleProd"/>
+<MSHelp:Attr Name="Filename" Value="State_Notification_Broker_Sample_magneto.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="True"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_1075980">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Windows Mobile Version 5.0 SDK<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce51samstatenotificationbrokersample"></A>State and Notifications Broker Sample</H1>
+<!--Feedback Link Top Start-->
+<P CLASS="feedback"><font size="1"><a href="mailto:medfdbk&#64;microsoft.com?subject=Product: Windows Mobile | Version: 5.0 | Release: SDK | Title: State and Notifications Broker Sample | Filename: wce51samstatenotificationbrokersample.htm | Built on: Wednesday, September 14, 2005">Send Feedback</a> on this topic to the authors</font></p>
+<!--Feedback Link Top End-->
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>This sample demonstrates how to use the State and Notifications Broker APIs.</P>
+
+<BLOCKQUOTE class="dtBlock">
+<b class="le">Note</b>&nbsp;&nbsp;&nbsp;To make the following code example easier to read, security checking and error handling are not included. This code example should not be used in a release configuration unless it has been modified to include them.</BLOCKQUOTE>
+
+<H4 class="dtH4">Building the Sample</H4>
+
+<P>This sample was originally created using Microsoft Visual Studio 2005 Beta 2 and the Windows Mobile 5.0 SDK for Pocket PC. To build this sample, add all of the files below to a new solution and add in a standard icon file named BattStat.ico. Compile and link the solution. The executable BattStat.exe will be created.</P>
+
+<H4 class="dtH4">Running the Sample</H4>
+
+<P>To run the sample, launch the BattStat.exe executable. A window with the main battery and backup battery status information will be displayed. The command line arguments are also displayed for demonstration purposes. The battery status will be updated as the information changes. For example, if the Pocket PC is placed in its cradle, the Battery State will change to "Charging". If you want to make the notifications persistant, then you can select "Persist" from the menu. The BattStat application will then be launched whenever a battery notification is received. To remove the persistent notification, select "Remove Persist" from the menu. To exit the application, select "Quit".</P>
+
+<H4 class="dtH4">How the Sample Works</H4>
+
+<P>The sample registers four transient notifications when it is launched in the procedure RegisterWindows(). The notifications are for changes in main battery state, main battery strength, backup battery state, and backup battery strength. For demonstration purposes, a callback is used to receive changes in main battery state. The other notifications are received as custom window messages.</P>
+
+<P>When registering the notifications, a series of definitions are used from the snapi.h header file. This file contains a set of definitions for each base notification - the registry root, the registry key, the registry value name. A bitmask indicating which bits are relevant is also defined for some notifications when it is needed.</P>
+
+<P>The subroutine RegisterApps() is called when the "Persist" menu item is selected. The four battery notifications are again registered but this time are made persistent.</P>
+
+<P>When a notification is received, the changed value is interpreted according to the relevant bitmask and value for the notification and the status window is updated.</P>
+
+<H4 class="dtH4">BattStat.cpp</H4>
+
+<PRE class="code">//
+// BattStat.exe
+//
+// This sample demonstrates how to use the State and Notification Broker APIs.  More specifically, it
+// demonstrates:
+// - use of Window Message Notifications - RegistryNotifyWindow
+// - use of Window Callback Notifications - RegistryNotifyCallback
+// - use of Persistent Notifications - RegistryNotifyApp
+// - use of the Main Battery and Backup Battery Strength and State notifications
+// - how to apply bitmasks when registering the notifications 
+// - how to extract and interpret the changed values using the proper bitmasks
+// - how to include or exclude command line information in the Persistent Notifications
+// - how to form the proper application path in a Persistent Notification  (ie  inserting quotes around the path)
+// - how to unregister Message Notifications
+// - how to unregister Callback Notifications
+// - how to unregister Persistent Notifications
+//
+// The program is designed to show the user the current status of their main and backup battery.  
+// Whenever a battery notification event is received, the battery status information will be updated
+// in the display.
+//
+// To notification can be made persistent by selecting the "Persist" command from the menu.  Then, when
+// a battery notification is sent, BattStat will be launched and display the updated status.
+//
+// The command line information is also included in the status area for demonstration purposes.
+//
+
+
+
+// BattStat.cpp : Defines the entry point for the application.
+//
+
+#include "stdafx.h"
+#include "BattStat.h"
+#include &lt;windows.h&gt;
+#include &lt;commctrl.h&gt;
+#include &lt;regext.h&gt;
+#include &lt;snapi.h&gt;
+
+#define MAX_LOADSTRING      100
+#define STATUS_STRING_LEN   500
+
+#define WM_OFFSET                 10000
+#define WM_CHANGE_BATTSTRENGTH    (WM_OFFSET + 1)
+#define WM_CHANGE_BATTSTATE       (WM_OFFSET + 2)
+#define WM_CHANGE_BACKUPSTRENGTH  (WM_OFFSET + 3)
+#define WM_CHANGE_BACKUPSTATE     (WM_OFFSET + 4)
+
+
+#define IDC_BATTSTRENGTH    (WM_OFFSET + 200)
+#define IDC_BATTSTATE       (WM_OFFSET + 201)
+#define IDC_BACKUPSTRENGTH  (WM_OFFSET + 202)
+#define IDC_BACKUPSTATE     (WM_OFFSET + 203)
+#define IDC_CMDLINE         (WM_OFFSET + 204)
+
+// Global Variables:
+HINSTANCE g_hInst;      // Current instance
+
+HWND g_hWndMenuBar;     // Menu bar handle
+HWND g_hCurWndDialog;   // Primary Window Dialog
+
+HWND g_hBattStrength;   // Status text windows
+HWND g_hBattState;
+HWND g_hBackupStrength;
+HWND g_hBackupState;
+HWND g_hCmdLine;
+
+// RegistryNotifyApp names
+const WCHAR c_wszAppBattStrengthName[]     = L"BattStat.BattStrength";
+const WCHAR c_wszAppBattStateName[]        = L"BattStat.BattState";
+const WCHAR c_wszAppBackupStrengthName[]   = L"BattStat.BackupStrength";
+const WCHAR c_wszAppBackupStateName[]      = L"BattStat.BackupState";
+
+
+#define NOTIFY_CNT 4
+HREGNOTIFY  g_hNotify[NOTIFY_CNT];  // Handles to notifications
+
+
+
+// Forward declarations of functions included in this code module:
+ATOM    MyRegisterClass(HINSTANCE, LPTSTR);
+BOOL    InitInstance(HINSTANCE, int);
+LRESULT CALLBACK  WndProc(HWND, UINT, WPARAM, LPARAM);
+INT_PTR CALLBACK  About(HWND, UINT, WPARAM, LPARAM);
+HRESULT RegisterWindows();
+HRESULT RegisterApps();
+HRESULT UnregisterWindows();
+HRESULT UnregisterApps();
+void    BattStateCallback(HREGNOTIFY hNotify, DWORD dwUserData, const PBYTE pData, const UINT cbData);
+
+//
+//  FUNCTION: int WINAPI WinMain(HINSTANCE hInstance,
+//                   HINSTANCE hPrevInstance,
+//                   LPTSTR    lpCmdLine,
+//                   int       nCmdShow)
+//
+//  PURPOSE: Main loop.
+//
+//  COMMENTS:
+//
+int WINAPI WinMain(HINSTANCE hInstance,
+                   HINSTANCE hPrevInstance,
+                   LPTSTR    lpCmdLine,
+                   int       nCmdShow)
+{
+  MSG msg;
+
+  // Perform application initialization.
+  if (!InitInstance(hInstance, nCmdShow)) 
+  {
+    return FALSE;
+  }
+
+  HACCEL hAccelTable;
+  hAccelTable = LoadAccelerators(hInstance, MAKEINTRESOURCE(IDC_BATTSTAT));
+
+  // Main message loop.
+  while (GetMessage(&amp;msg, NULL, 0, 0)) 
+  {
+    if (!TranslateAccelerator(msg.hwnd, hAccelTable, &amp;msg)) 
+    {
+      TranslateMessage(&amp;msg);
+      DispatchMessage(&amp;msg);
+    }
+  }
+
+  return (int) msg.wParam;
+}
+
+//
+//  FUNCTION: ATOM MyRegisterClass(HINSTANCE hInstance, LPTSTR szWindowClass)
+//
+//  PURPOSE: Registers the window class.
+//
+//  COMMENTS:
+//
+ATOM MyRegisterClass(HINSTANCE hInstance, LPTSTR szWindowClass)
+{
+  WNDCLASS wc;
+
+  wc.style         = CS_HREDRAW | CS_VREDRAW;
+  wc.lpfnWndProc   = WndProc;
+  wc.cbClsExtra    = 0;
+  wc.cbWndExtra    = 0;
+  wc.hInstance     = hInstance;
+  wc.hIcon         = LoadIcon(hInstance, MAKEINTRESOURCE(IDI_BATTSTAT));
+  wc.hCursor       = 0;
+  wc.hbrBackground = (HBRUSH) GetStockObject(WHITE_BRUSH);
+  wc.lpszMenuName  = 0;
+  wc.lpszClassName = szWindowClass;
+
+  return RegisterClass(&amp;wc);
+}
+
+
+ 
+//
+//  FUNCTION: void GetBattStateStr(DWORD dwBattState, LPTSTR  pszBattStateStr)
+//
+//  PURPOSE: Form the battery state string from the given battery state flag.
+//
+//  COMMENTS:
+//
+
+void GetBattStateStr(DWORD dwBattState, LPTSTR  pszBattStateStr)
+{
+  if (dwBattState == 0)
+  {
+    StringCchCat(pszBattStateStr, STATUS_STRING_LEN, L"Normal");
+  }
+  else
+  {
+    // Check each bit; specific battery drivers may set different combinations of bits.
+    if (dwBattState &amp; 1)
+    {
+      StringCchCat(pszBattStateStr, STATUS_STRING_LEN, L"Not Present ");
+    }
+
+    if (dwBattState &amp; 2)
+    {
+      StringCchCat(pszBattStateStr, STATUS_STRING_LEN, L"Charging ");
+    }
+
+    if (dwBattState &amp; 4)
+    {
+      StringCchCat(pszBattStateStr, STATUS_STRING_LEN, L"Low ");
+    }
+
+    if (dwBattState &amp; 8)
+    {
+      StringCchCat(pszBattStateStr, STATUS_STRING_LEN, L"Critical");
+    }
+  }
+}
+
+
+
+//
+//  FUNCTION: void UpdateBattState(HKEY hKey, LPCWSTR wszSubKey, LPCWSTR wszName, 
+//                                 DWORD dwBitMask, int nControlID)
+//
+//  PURPOSE:  Update the given battery state.
+//
+//  COMMENTS:
+//
+void UpdateBattState(HKEY hKey, LPCWSTR wszSubKey, LPCWSTR wszName, DWORD dwBitMask, int nControlID)
+{
+  HRESULT hr;
+  DWORD dwRegValue;
+  DWORD dwBattState;
+  TCHAR szBattStateStr[STATUS_STRING_LEN];
+  
+  StringCchCopy(szBattStateStr, STATUS_STRING_LEN, L"");
+
+  // Read the new value.
+  hr = RegistryGetDWORD(hKey, wszSubKey, wszName, &amp;dwRegValue);
+
+  if (hr == S_OK)
+  {
+    // Only look at specified bits.
+    dwBattState = dwRegValue  &amp; dwBitMask;
+    GetBattStateStr(dwBattState, szBattStateStr);
+  }
+
+  // Update the status text.
+  SetDlgItemText(g_hCurWndDialog, nControlID, szBattStateStr);
+}
+
+
+ 
+//
+//  FUNCTION: void UpdateBattStrength(HKEY hKey, LPCWSTR wszSubKey, LPCWSTR wszName, 
+//                                    DWORD dwBitMask, int nControlID)
+//
+//  PURPOSE: Update the given battery strength level.
+//
+//  COMMENTS:
+//
+void UpdateBattStrength(HKEY hKey, LPCWSTR wszSubKey, LPCWSTR wszName, DWORD dwBitMask, int nControlID)
+{
+  HRESULT hr;
+  DWORD dwRegValue;
+  ULONG dwBattStrength;
+  TCHAR szBattStrengthStr[STATUS_STRING_LEN];
+  
+  StringCchCopy(szBattStrengthStr, STATUS_STRING_LEN, L"");
+
+  // Read the new value from the registry.
+  hr = RegistryGetDWORD(hKey, wszSubKey, wszName, &amp;dwRegValue);
+
+  if (hr == S_OK)
+  {
+    // Get the value of the highword and shift the bits over to read the actual value.
+    dwBattStrength = (dwRegValue  &amp; dwBitMask) &gt;&gt; 16;
+
+    // Check the value to get the appropriate string.
+    if (dwBattStrength == 0)
+    {
+      StringCchCopy(szBattStrengthStr, STATUS_STRING_LEN, L"Very Low");
+    }
+    else if (dwBattStrength == 21)
+    {
+      StringCchCopy(szBattStrengthStr, STATUS_STRING_LEN, L"Low");
+    }
+    else if (dwBattStrength == 41)
+    {
+      StringCchCopy(szBattStrengthStr, STATUS_STRING_LEN, L"Medium");
+    }
+    else if (dwBattStrength == 61)
+    {
+      StringCchCopy(szBattStrengthStr, STATUS_STRING_LEN, L"High");
+    }
+    else if (dwBattStrength == 81)
+    {
+      StringCchCopy(szBattStrengthStr, STATUS_STRING_LEN, L"Very High");
+    }
+
+  }
+
+  // Update the status text.
+  SetDlgItemText(g_hCurWndDialog, nControlID, szBattStrengthStr);
+}
+
+
+//
+//  FUNCTION: void UpdateAll()
+//
+//  PURPOSE: Update all the battery values.
+//
+//  COMMENTS:
+//
+void UpdateAll()
+{
+  UpdateBattStrength(SN_POWERBATTERYSTRENGTH_ROOT, SN_POWERBATTERYSTRENGTH_PATH, SN_POWERBATTERYSTRENGTH_VALUE, SN_POWERBATTERYSTRENGTH_BITMASK, IDC_BATTSTRENGTH);
+  UpdateBattState(SN_POWERBATTERYSTATE_ROOT, SN_POWERBATTERYSTATE_PATH, SN_POWERBATTERYSTATE_VALUE, SN_POWERBATTERYSTATE_BITMASK, IDC_BATTSTATE);
+  UpdateBattStrength(SN_POWERBATTERYBACKUPSTRENGTH_ROOT, SN_POWERBATTERYBACKUPSTRENGTH_PATH, SN_POWERBATTERYBACKUPSTRENGTH_VALUE, SN_POWERBATTERYBACKUPSTRENGTH_BITMASK, IDC_BACKUPSTRENGTH);
+  UpdateBattState(SN_POWERBATTERYBACKUPSTATE_ROOT, SN_POWERBATTERYBACKUPSTATE_PATH, SN_POWERBATTERYBACKUPSTATE_VALUE, SN_POWERBATTERYBACKUPSTATE_BITMASK, IDC_BACKUPSTATE);
+  SetDlgItemText(g_hCurWndDialog, IDC_CMDLINE, GetCommandLine());
+}
+
+
+
+
+//
+//   FUNCTION: InitInstance(HINSTANCE, int)
+//
+//   PURPOSE: Saves instance handle and creates main window.
+//
+//   COMMENTS:
+//
+//        In this function, we save the instance handle in a global variable and
+//        create and display the main program window.
+//
+BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
+{
+  HWND hWnd;
+  TCHAR szTitle[MAX_LOADSTRING];        // Title bar text
+  TCHAR szWindowClass[MAX_LOADSTRING];  // Main window class name
+
+  // Store instance handle in our global variable.
+  g_hInst = hInstance;                  
+
+  // SHInitExtraControls should be called once during your application's initialization to initialize any
+  // of the Pocket PC special controls such as CAPEDIT and SIPPREF.
+  SHInitExtraControls();
+
+  LoadString(hInstance, IDS_APP_TITLE, szTitle, MAX_LOADSTRING); 
+  LoadString(hInstance, IDC_BATTSTAT, szWindowClass, MAX_LOADSTRING);
+
+  //If it is already running, then focus on the window, and exit.
+  hWnd = FindWindow(szWindowClass, szTitle);  
+
+  if (hWnd) 
+  {
+    // Set focus to foremost child window.
+    // The "| 0x00000001" is used to bring any owned windows to the foreground and
+    // activate them.
+    SetForegroundWindow((HWND)((ULONG) hWnd | 0x00000001));
+
+    return 0;
+  } 
+
+  if (!MyRegisterClass(hInstance, szWindowClass))
+  {
+    return FALSE;
+  }
+
+  hWnd = CreateWindow(szWindowClass, szTitle, WS_VISIBLE,
+      CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, NULL, NULL, hInstance, NULL);
+
+  if (!hWnd)
+  {
+      return FALSE;
+  }
+
+  g_hCurWndDialog = hWnd;
+
+  // When the main window is created using CW_USEDEFAULT the height of the menubar (if one
+  // is created is not taken into account). So we resize the window after creating it
+  // if a menubar is present
+  if (g_hWndMenuBar)
+  {
+    RECT rc;
+    RECT rcMenuBar;
+
+    GetWindowRect(hWnd, &amp;rc);
+    GetWindowRect(g_hWndMenuBar, &amp;rcMenuBar);
+    rc.bottom -= (rcMenuBar.bottom - rcMenuBar.top);
+
+    MoveWindow(hWnd, rc.left, rc.top, rc.right-rc.left, rc.bottom-rc.top, FALSE);
+  }
+
+  ShowWindow(hWnd, nCmdShow);
+  UpdateWindow(hWnd);
+
+  // Create the status text windows - the labels and the current value.
+  CreateWindow(TEXT("STATIC"), 
+         TEXT("Battery Strength : "), 
+         WS_VISIBLE,
+         10, 20, 110, 14, 
+         hWnd, NULL, hInstance, NULL);
+
+  g_hBattStrength = CreateWindow(TEXT("STATIC"), 
+         TEXT(""), 
+         WS_VISIBLE,
+         10, 35, 200, 14, 
+         hWnd, (HMENU)IDC_BATTSTRENGTH, hInstance, NULL);
+
+  CreateWindow(TEXT("STATIC"), 
+         TEXT("Battery State : "), 
+         WS_VISIBLE,
+         10, 60, 110, 14, 
+         hWnd, NULL, hInstance, NULL);
+
+  g_hBattState = CreateWindow(TEXT("STATIC"), 
+         TEXT(""), 
+         WS_VISIBLE,
+         10, 75, 200, 14, 
+         hWnd, (HMENU)IDC_BATTSTATE, hInstance, NULL);
+
+  CreateWindow(TEXT("STATIC"), 
+         TEXT("Backup Strength : "), 
+         WS_VISIBLE,
+         10, 100, 110, 14, 
+         hWnd, NULL, hInstance, NULL);
+
+  g_hBackupStrength = CreateWindow(TEXT("STATIC"), 
+         TEXT(""), 
+         WS_VISIBLE,
+         10, 115, 200, 14, 
+         hWnd, (HMENU)IDC_BACKUPSTRENGTH, hInstance, NULL);
+
+  CreateWindow(TEXT("STATIC"), 
+         TEXT("Backup State : "), 
+         WS_VISIBLE,
+         10, 140, 110, 14, 
+         hWnd, NULL, hInstance, NULL);
+
+  g_hBackupState = CreateWindow(TEXT("STATIC"), 
+         TEXT(""), 
+         WS_VISIBLE,
+         10, 155, 200, 14, 
+         hWnd, (HMENU)IDC_BACKUPSTATE, hInstance, NULL);
+
+  CreateWindow(TEXT("STATIC"), 
+         TEXT("Command Line : "), 
+         WS_VISIBLE,
+         10, 200, 110, 14, 
+         hWnd, NULL, hInstance, NULL);
+
+  g_hCmdLine = CreateWindow(TEXT("STATIC"), 
+         TEXT(""), 
+         WS_VISIBLE,
+         10, 215, 200, 14, 
+         hWnd, (HMENU)IDC_CMDLINE, hInstance, NULL);
+
+  // Register our window notifications.
+  RegisterWindows();
+
+  // Initialize the display of the battery values.
+  UpdateAll();
+
+  return TRUE;
+}
+
+
+
+//
+//  FUNCTION: LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
+//
+//  PURPOSE:  Processes messages for the main window.
+//
+//  WM_COMMAND  - process the application menu
+//  WM_PAINT  - Paint the main window
+//  WM_DESTROY  - post a quit message and return
+//
+//
+LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
+{
+  int wmId, wmEvent;
+  PAINTSTRUCT ps;
+  HDC hdc;
+
+  static SHACTIVATEINFO s_sai;
+
+  switch (message) 
+  {
+    case WM_COMMAND:
+      wmId    = LOWORD(wParam); 
+      wmEvent = HIWORD(wParam); 
+
+      // Parse the menu selections.
+      switch (wmId)
+      {
+        case IDM_HELP_ABOUT:
+          DialogBox(g_hInst, (LPCTSTR)IDD_ABOUTBOX, hWnd, About);
+
+          break;
+
+        case IDM_OK:
+          // Unregister our window notifications and exit.
+          UnregisterWindows();
+          SendMessage (hWnd, WM_CLOSE, 0, 0);        
+
+          break;
+
+        case ID_MENU_UPDATE:
+          // Manually update all battery status values.
+          UpdateAll();
+
+          break;
+
+        case ID_MENU_PERSIST:
+          // Register the app notifications.
+          RegisterApps();
+
+          break;
+
+        case ID_MENU_REMOVEPERSIST:
+          // Unregister the app notifications.
+          UnregisterApps();
+
+          break;
+
+        default:
+          return DefWindowProc(hWnd, message, wParam, lParam);
+      }
+
+      break;
+
+    case WM_CREATE:
+      SHMENUBARINFO mbi;
+
+      memset(&amp;mbi, 0, sizeof(SHMENUBARINFO));
+      mbi.cbSize     = sizeof(SHMENUBARINFO);
+      mbi.hwndParent = hWnd;
+      mbi.nToolBarId = IDR_MENU;
+      mbi.hInstRes   = g_hInst;
+
+      if (!SHCreateMenuBar(&amp;mbi)) 
+      {
+          g_hWndMenuBar = NULL;
+      }
+      else
+      {
+          g_hWndMenuBar = mbi.hwndMB;
+      }
+
+      // Initialize the shell activate info structure.
+      memset(&amp;s_sai, 0, sizeof (s_sai));
+      s_sai.cbSize = sizeof (s_sai);
+
+      break;
+
+    case WM_PAINT:
+      hdc = BeginPaint(hWnd, &amp;ps);
+      
+      // TODO: Add any drawing code here...
+      
+      EndPaint(hWnd, &amp;ps);
+
+      break;
+
+    case WM_DESTROY:
+      CommandBar_Destroy(g_hWndMenuBar);
+      PostQuitMessage(0);
+      break;
+
+    case WM_ACTIVATE:
+      // Notify shell of our activate message.
+      SHHandleWMActivate(hWnd, wParam, lParam, &amp;s_sai, FALSE);
+
+      break;
+
+    case WM_SETTINGCHANGE:
+      SHHandleWMSettingChange(hWnd, wParam, lParam, &amp;s_sai);
+
+      break;
+
+    case WM_CHANGE_BATTSTRENGTH:
+      // Main battery strength value changed.
+      UpdateBattStrength(SN_POWERBATTERYSTRENGTH_ROOT, SN_POWERBATTERYSTRENGTH_PATH, SN_POWERBATTERYSTRENGTH_VALUE, SN_POWERBATTERYSTRENGTH_BITMASK, IDC_BATTSTRENGTH);
+
+      break;
+
+    case WM_CHANGE_BATTSTATE:
+      // Main battery state value changed.
+      UpdateBattState(SN_POWERBATTERYSTATE_ROOT, SN_POWERBATTERYSTATE_PATH, SN_POWERBATTERYSTATE_VALUE, SN_POWERBATTERYSTATE_BITMASK, IDC_BATTSTATE);
+
+      break;
+
+    case WM_CHANGE_BACKUPSTRENGTH:
+      // Backup battery strength value changed.
+      UpdateBattStrength(SN_POWERBATTERYBACKUPSTRENGTH_ROOT, SN_POWERBATTERYBACKUPSTRENGTH_PATH, SN_POWERBATTERYBACKUPSTRENGTH_VALUE, SN_POWERBATTERYBACKUPSTRENGTH_BITMASK, IDC_BACKUPSTRENGTH);
+
+      break;
+
+    case WM_CHANGE_BACKUPSTATE:
+      // Backup battery state value changed.
+      UpdateBattState(SN_POWERBATTERYBACKUPSTATE_ROOT, SN_POWERBATTERYBACKUPSTATE_PATH, SN_POWERBATTERYBACKUPSTATE_VALUE, SN_POWERBATTERYBACKUPSTATE_BITMASK, IDC_BACKUPSTATE);
+
+      break;
+
+    default:
+      return DefWindowProc(hWnd, message, wParam, lParam);
+  }
+
+  return 0;
+
+}
+
+
+//
+//  FUNCTION: INT_PTR CALLBACK About(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
+//
+//  PURPOSE: Message handler for about box.
+//
+//  COMMENTS:
+//
+INT_PTR CALLBACK About(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
+{
+  switch (message)
+  {
+    case WM_INITDIALOG:
+        {
+            // Create a Done button and size it.  
+            SHINITDLGINFO shidi;
+            shidi.dwMask = SHIDIM_FLAGS;
+            shidi.dwFlags = SHIDIF_DONEBUTTON | SHIDIF_SIPDOWN | SHIDIF_SIZEDLGFULLSCREEN | SHIDIF_EMPTYMENU;
+            shidi.hDlg = hDlg;
+            SHInitDialog(&amp;shidi);
+        }
+        return (INT_PTR)TRUE;
+
+    case WM_COMMAND:
+        if (LOWORD(wParam) == IDOK)
+        {
+            EndDialog(hDlg, LOWORD(wParam));
+            return TRUE;
+        }
+        break;
+
+    case WM_CLOSE:
+        EndDialog(hDlg, message);
+        return TRUE;
+
+#ifdef _DEVICE_RESOLUTION_AWARE
+    case WM_SIZE:
+      {
+        DRA::RelayoutDialog(
+            g_hInst, 
+            hDlg, 
+            DRA::GetDisplayMode() != DRA::Portrait ? MAKEINTRESOURCE(IDD_ABOUTBOX_WIDE) : MAKEINTRESOURCE(IDD_ABOUTBOX));
+      }
+
+      break;
+
+#endif
+  }
+
+  return (INT_PTR)FALSE;
+
+}
+
+
+//
+//  FUNCTION: HRESULT RegisterWindows()
+//
+//  PURPOSE: Register the window notifications.
+//
+//  COMMENTS:
+//
+HRESULT RegisterWindows()
+{
+  HRESULT hr;
+  NOTIFICATIONCONDITION nc;
+
+  // Make sure we aren't already registered.
+  UnregisterWindows();
+
+  nc.ctComparisonType = REG_CT_ANYCHANGE;
+  nc.dwMask           = SN_POWERBATTERYSTRENGTH_BITMASK;
+  nc.TargetValue.dw   = 0;
+
+  // Register battery strength notification.
+  hr = RegistryNotifyWindow(
+                SN_POWERBATTERYSTRENGTH_ROOT,
+                SN_POWERBATTERYSTRENGTH_PATH,
+                SN_POWERBATTERYSTRENGTH_VALUE,
+                g_hCurWndDialog, 
+                WM_CHANGE_BATTSTRENGTH,       // This notification uses a custom window message.
+                0,
+                &amp;nc,
+                &amp;g_hNotify[0]
+                );
+
+  if (FAILED(hr))
+  {
+      goto Error;
+  }
+
+  // Notify us of any change in the value and set the bitmask of the value to check.
+  nc.ctComparisonType = REG_CT_ANYCHANGE;
+  nc.dwMask           = SN_POWERBATTERYSTATE_BITMASK;
+  nc.TargetValue.dw   = 0;
+
+  // Register battery state notification.
+  hr = RegistryNotifyCallback(
+                SN_POWERBATTERYSTATE_ROOT,
+                SN_POWERBATTERYSTATE_PATH,
+                SN_POWERBATTERYSTATE_VALUE,
+                BattStateCallback,          // This notification uses a callback.
+                0,       
+                &amp;nc,
+                &amp;g_hNotify[1]
+                );
+
+  if (FAILED(hr))
+  {
+    goto Error;
+  }
+
+  nc.ctComparisonType = REG_CT_ANYCHANGE;
+  nc.dwMask           = SN_POWERBATTERYBACKUPSTRENGTH_BITMASK;
+  nc.TargetValue.dw   = 0;
+
+  // Register backup battery strength notification.
+  hr = RegistryNotifyWindow(
+                SN_POWERBATTERYBACKUPSTRENGTH_ROOT,
+                SN_POWERBATTERYBACKUPSTRENGTH_PATH,
+                SN_POWERBATTERYBACKUPSTRENGTH_VALUE,
+                g_hCurWndDialog, 
+                WM_CHANGE_BACKUPSTRENGTH,
+                0,
+                &amp;nc,
+                &amp;g_hNotify[2]
+                );
+
+  if (FAILED(hr))
+  {
+    goto Error;
+  }
+
+  nc.ctComparisonType = REG_CT_ANYCHANGE;
+  nc.dwMask           = SN_POWERBATTERYBACKUPSTATE_BITMASK;
+  nc.TargetValue.dw   = 0;
+
+  // Register backup battery state notification.
+  hr = RegistryNotifyWindow(
+                SN_POWERBATTERYBACKUPSTATE_ROOT,
+                SN_POWERBATTERYBACKUPSTATE_PATH,
+                SN_POWERBATTERYBACKUPSTATE_VALUE,
+                g_hCurWndDialog, 
+                WM_CHANGE_BACKUPSTATE,
+                0,
+                &amp;nc,
+                &amp;g_hNotify[3]
+                );
+
+  if (FAILED(hr))
+  {
+    goto Error;
+  }
+
+
+Error:
+    return hr;
+}
+
+
+
+//
+//  FUNCTION: HRESULT RegisterApps()
+//
+//  PURPOSE: Register the application notifications.
+//
+//  COMMENTS:
+//
+HRESULT RegisterApps()
+{
+  HRESULT hr;
+  NOTIFICATIONCONDITION nc;
+  TCHAR szExePath[MAX_PATH];
+  TCHAR szThisPath[MAX_PATH];
+
+  // Make sure we aren't already registered.
+  UnregisterApps();
+
+  // Get the path to this application.
+  GetModuleFileName(NULL, szThisPath, MAX_PATH);
+
+  // Need to put a quote before and after the path, in case the path contains spaces.
+  StringCchCopy(szExePath, MAX_PATH, L"\"");
+  StringCchCat(szExePath, MAX_PATH, szThisPath);
+  StringCchCat(szExePath, MAX_PATH, L"\"");
+
+  // Notify us of any change in the value and set the bitmask of the value to check.
+  nc.ctComparisonType = REG_CT_ANYCHANGE;
+  nc.dwMask           = SN_POWERBATTERYSTRENGTH_BITMASK;
+  nc.TargetValue.dw   = 0;
+
+  // Register battery strength notification.
+  hr = RegistryNotifyApp(
+                SN_POWERBATTERYSTRENGTH_ROOT,
+                SN_POWERBATTERYSTRENGTH_PATH,
+                SN_POWERBATTERYSTRENGTH_VALUE,
+                c_wszAppBattStrengthName,
+                szExePath,                      // Path to our app so that BattStat will be launched if it is not already running.
+                NULL,
+                NULL,
+                WM_CHANGE_BATTSTRENGTH,
+                RNAF_NONAMEONCMDLINE,         // Don't pass along anything on the command line.
+                &amp;nc
+                );
+
+  if (FAILED(hr))
+  {
+    goto Error;
+  }
+
+  
+  nc.ctComparisonType = REG_CT_ANYCHANGE;
+  nc.dwMask           = SN_POWERBATTERYSTATE_BITMASK;
+  nc.TargetValue.dw   = 0;
+
+  // Register battery state notification.
+  hr = RegistryNotifyApp(
+                SN_POWERBATTERYSTATE_ROOT,
+                SN_POWERBATTERYSTATE_PATH,
+                SN_POWERBATTERYSTATE_VALUE,
+                c_wszAppBattStateName,
+                szExePath,
+                NULL,
+                NULL,
+                WM_CHANGE_BATTSTATE,
+                0,                      // Command line will contain   "/notify &lt;notification name&gt;".
+                &amp;nc
+                );
+
+  if (FAILED(hr))
+  {
+    goto Error;
+  }
+
+  nc.ctComparisonType = REG_CT_ANYCHANGE;
+  nc.dwMask           = SN_POWERBATTERYBACKUPSTRENGTH_BITMASK;
+  nc.TargetValue.dw   = 0;
+
+  // Register backup battery strength notification.
+  hr = RegistryNotifyApp(
+                SN_POWERBATTERYBACKUPSTRENGTH_ROOT,
+                SN_POWERBATTERYBACKUPSTRENGTH_PATH,
+                SN_POWERBATTERYBACKUPSTRENGTH_VALUE,
+                c_wszAppBackupStrengthName,
+                szExePath,
+                NULL,
+                NULL,
+                WM_CHANGE_BACKUPSTRENGTH,
+                RNAF_NONAMEONCMDLINE,           // Don't pass along anything on the command line.
+                &amp;nc
+                );
+
+  if (FAILED(hr))
+  {
+    goto Error;
+  }
+
+  nc.ctComparisonType = REG_CT_ANYCHANGE;
+  nc.dwMask           = SN_POWERBATTERYBACKUPSTATE_BITMASK;
+  nc.TargetValue.dw   = 0;
+
+  // Register backup battery state notification.
+  hr = RegistryNotifyApp(
+                SN_POWERBATTERYBACKUPSTATE_ROOT,
+                SN_POWERBATTERYBACKUPSTATE_PATH,
+                SN_POWERBATTERYBACKUPSTATE_VALUE,
+                c_wszAppBackupStateName,
+                szExePath,
+                NULL,
+                NULL,
+                WM_CHANGE_BACKUPSTATE,
+                0,                        // Command line will contain   "/notify &lt;notification name&gt;".
+                &amp;nc
+                );
+
+  if (FAILED(hr))
+  {
+    goto Error;
+  }
+
+Error:
+
+  return hr;
+}
+
+
+//
+//  FUNCTION: HRESULT UnregisterWindows()
+//
+//  PURPOSE: Unregister all window notifications.
+//
+//  COMMENTS:
+//
+HRESULT UnregisterWindows()
+{
+  long lNotifyIndx;
+
+  // For each notification handle:
+  for (lNotifyIndx=0; lNotifyIndx &lt; NOTIFY_CNT; lNotifyIndx++)
+  {
+    if (g_hNotify[lNotifyIndx] != NULL)
+    {
+      // Close off the notification.
+      RegistryCloseNotification(g_hNotify[lNotifyIndx]);
+    }
+
+    g_hNotify[lNotifyIndx] = 0;
+  }
+
+  return S_OK;
+}
+
+//
+//  FUNCTION: HRESULT UnregisterApps()
+//
+//  PURPOSE: Unregister all application notifications.
+//
+//  COMMENTS:
+//
+HRESULT UnregisterApps()
+{
+
+  RegistryStopNotification(c_wszAppBattStrengthName);
+  RegistryStopNotification(c_wszAppBattStateName);
+  RegistryStopNotification(c_wszAppBackupStrengthName);
+  RegistryStopNotification(c_wszAppBackupStateName);
+
+  return S_OK;
+}
+
+
+//
+//  FUNCTION: void BattStateCallback(HREGNOTIFY hNotify, DWORD dwUserData, 
+//                                   const PBYTE pData, const UINT cbData)
+//
+//  PURPOSE: Callback function that is called when battery state changes.
+//
+//  COMMENTS:
+//
+void BattStateCallback(HREGNOTIFY hNotify, DWORD dwUserData, const PBYTE pData, const UINT cbData)
+{
+  DWORD dwBattState = 0;
+  PDWORD pdwData;
+  TCHAR szBattStateStr[STATUS_STRING_LEN];
+    
+  StringCchCopy(szBattStateStr, STATUS_STRING_LEN, L"");
+
+  // Get the new value.
+  pdwData = (DWORD *)pData;
+  dwBattState = *pdwData;
+
+  // Apply our bitmap mask and form the battery state as a string.
+  dwBattState = dwBattState &amp; SN_POWERBATTERYSTATE_BITMASK;
+  GetBattStateStr(dwBattState, szBattStateStr);
+
+  // Update the status text.
+  SetDlgItemText(g_hCurWndDialog, IDC_BATTSTATE, szBattStateStr);
+
+}</PRE>
+
+<H4 class="dtH4">BattStat.h</H4>
+
+<PRE class="code">#pragma once
+#include "resourceppc.h"</PRE>
+
+<H4 class="dtH4">resourceppc.h</H4>
+
+<PRE class="code">//{{NO_DEPENDENCIES}}
+// Microsoft Visual C++ generated include file.
+// Used by BattStatppc.rc
+//
+#define IDS_APP_TITLE                   1
+#define IDC_BATTSTAT                    2
+#define IDI_BATTSTAT                    101
+#define IDR_MENU                        102
+#define IDS_OK                          103
+#define IDS_HELP                        104
+#define IDD_ABOUTBOX                    105
+#define IDD_ABOUTBOX_WIDE               106
+#define IDC_STATIC_1                    201
+#define IDC_STATIC_2                    202
+#define IDC_STATIC_3                    203
+#define ID_MENU_UPDATE                  32771
+#define ID_MENU_PERSIST                 32772
+#define ID_MENU_REMOVEPERSIST           32773
+#define IDM_OK                          40000
+#define IDM_HELP                        40001
+#define IDM_HELP_ABOUT                  40002
+#define IDC_STATIC                      -1
+
+// Next default values for new objects
+// 
+#ifdef APSTUDIO_INVOKED
+#ifndef APSTUDIO_READONLY_SYMBOLS
+#define _APS_NO_MFC                     1
+#define _APS_NEXT_RESOURCE_VALUE        129
+#define _APS_NEXT_COMMAND_VALUE         32774
+#define _APS_NEXT_CONTROL_VALUE         1000
+#define _APS_NEXT_SYMED_VALUE           110
+#endif
+#endif</PRE>
+
+<H4 class="dtH4">stdafx.h</H4>
+
+<PRE class="code">// stdafx.h : include file for standard system include files,
+// or project specific include files that are used frequently, but
+// are changed infrequently
+//
+
+#pragma once
+
+#ifdef _X86_
+   #pragma comment(linker, "/nodefaultlib:libc.lib")
+   #pragma comment(linker, "/nodefaultlib:libcd.lib")
+   #pragma comment(linker, "/nodefaultlib:oldnames.lib")
+#endif
+
+// NOTE - this value is not strongly correlated to the Windows CE OS version being targeted
+#define WINVER _WIN32_WCE
+
+#include &lt;ceconfig.h&gt;
+#if defined(WIN32_PLATFORM_PSPC) || defined(WIN32_PLATFORM_WFSP)
+#define SHELL_AYGSHELL
+#endif
+
+#include &lt;aygshell.h&gt;
+#pragma comment(lib, "aygshell.lib") 
+
+
+// Windows Header Files:
+#include &lt;windows.h&gt;
+
+// C RunTime Header Files
+#include &lt;stdlib.h&gt;
+#include &lt;malloc.h&gt;
+#include &lt;memory.h&gt;
+#include &lt;tchar.h&gt;
+
+#if defined(WIN32_PLATFORM_PSPC) || defined(WIN32_PLATFORM_WFSP)
+#ifndef _DEVICE_RESOLUTION_AWARE
+#define _DEVICE_RESOLUTION_AWARE
+#endif
+#endif
+
+#ifdef _DEVICE_RESOLUTION_AWARE
+#include "DeviceResolutionAware.h"
+#endif
+
+#include &lt;altcecrt.h&gt;
+
+#ifdef _DLL // /MD
+   #if defined(_DEBUG)
+      #pragma comment(lib, "msvcrtd.lib")
+   #else
+      #pragma comment(lib, "msvcrt.lib")
+   #endif
+#else // /MT
+   #if defined(_DEBUG)
+      #pragma comment(lib, "libcmtd.lib")
+   #else
+      #pragma comment(lib, "libcmt.lib")
+   #endif
+#endif
+
+#if _WIN32_WCE &lt; 0x500 &amp;&amp; ( defined(WIN32_PLATFORM_PSPC) || defined(WIN32_PLATFORM_WFSP) )
+   #pragma comment(lib, "ccrtrtti.lib")
+   #ifdef _X86_   
+      #if defined(_DEBUG)
+         #pragma comment(lib, "libcmtx86d.lib")
+      #else
+         #pragma comment(lib, "libcmtx86.lib")
+      #endif
+   #endif
+#endif
+
+// TODO: reference additional headers your program requires here</PRE>
+
+<H4 class="dtH4">BattStatppc.rc</H4>
+
+<PRE class="code">// Microsoft Visual C++ generated resource script.
+//
+#include "resourceppc.h"
+
+#define APSTUDIO_READONLY_SYMBOLS
+/////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 2 resource.
+//
+#define APSTUDIO_HIDDEN_SYMBOLS
+#include "resdefce.h"
+#undef APSTUDIO_HIDDEN_SYMBOLS
+
+/////////////////////////////////////////////////////////////////////////////
+#undef APSTUDIO_READONLY_SYMBOLS
+
+/////////////////////////////////////////////////////////////////////////////
+// English (U.S.) resources
+
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_ENU)
+#ifdef _WIN32
+LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
+#pragma code_page(1252)
+#endif //_WIN32
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Icon
+//
+
+// Icon with lowest ID value placed first to ensure application icon
+// remains consistent on all systems.
+IDI_BATTSTAT            ICON                    "BattStat.ico"
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Menu
+//
+
+IDR_MENU MENU 
+BEGIN
+    POPUP "Menu"
+    BEGIN
+        MENUITEM "About",                       IDM_HELP_ABOUT
+        MENUITEM SEPARATOR
+        MENUITEM "Update",                      ID_MENU_UPDATE
+        MENUITEM "Persist",                     ID_MENU_PERSIST
+        MENUITEM "Remove Persist",              ID_MENU_REMOVEPERSIST
+    END
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Accelerator
+//
+
+IDC_BATTSTAT ACCELERATORS 
+BEGIN
+    "A",            IDM_HELP_ABOUT,         VIRTKEY, CONTROL, NOINVERT
+    "Q",            IDM_OK,                 VIRTKEY, CONTROL, NOINVERT
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Dialog
+//
+
+IDD_ABOUTBOX DIALOG  0, 0, 156, 129
+STYLE DS_SETFONT | DS_FIXEDSYS | WS_POPUP | WS_CAPTION
+EXSTYLE 0x80000000L
+CAPTION "About BattStat"
+FONT 8, "MS Shell Dlg"
+BEGIN
+    ICON            IDI_BATTSTAT,IDC_STATIC_1,12,12,21,20,SS_REALSIZEIMAGE
+    LTEXT           "BattStat Version 1.0",IDC_STATIC_2,12,36,70,8,SS_NOPREFIX
+    LTEXT           "Copyright (C) 2005",IDC_STATIC_3,12,48,66,8
+END
+
+IDD_ABOUTBOX_WIDE DIALOG  0, 0, 210, 129
+STYLE DS_SETFONT | WS_POPUP | WS_CAPTION
+EXSTYLE 0x80000000L
+CAPTION "About BattStat"
+FONT 8, "MS Shell Dlg"
+BEGIN
+    ICON            IDI_BATTSTAT,IDC_STATIC_1,12,12,21,20,SS_REALSIZEIMAGE
+    LTEXT           "BattStat Version 1.0",IDC_STATIC_2,48,12,66,8,SS_NOPREFIX
+    LTEXT           "Copyright (C) 2005",IDC_STATIC_3,48,24,66,8
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// DESIGNINFO
+//
+
+#ifdef APSTUDIO_INVOKED
+GUIDELINES DESIGNINFO 
+BEGIN
+    IDD_ABOUTBOX, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 149
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 122
+    END
+
+    IDD_ABOUTBOX_WIDE, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 203
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 122
+    END
+END
+#endif    // APSTUDIO_INVOKED
+
+
+#ifdef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// TEXTINCLUDE
+//
+
+1 TEXTINCLUDE 
+BEGIN
+    "resourceppc.h\0"
+END
+
+2 TEXTINCLUDE 
+BEGIN
+    "#define APSTUDIO_HIDDEN_SYMBOLS\r\n"
+    "#include ""resdefce.h""\r\n"
+    "#undef APSTUDIO_HIDDEN_SYMBOLS\r\n"
+    "\0"
+END
+
+3 TEXTINCLUDE 
+BEGIN
+    "\r\n"
+    "#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_ENU)\r\n"
+    "LANGUAGE 9, 1\r\n"
+    "#pragma code_page(1252)\r\n"
+    "#include ""BattStatppc.rc2""  // non-Microsoft Visual C++ edited resources\r\n"
+    "#endif\r\n"
+    "\0"
+END
+
+#endif    // APSTUDIO_INVOKED
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// String Table
+//
+
+STRINGTABLE 
+BEGIN
+    IDS_APP_TITLE           "BattStat"
+    IDC_BATTSTAT            "BATTSTAT"
+END
+
+STRINGTABLE 
+BEGIN
+    IDS_OK                  "Quit"
+    IDS_HELP                "Menu"
+END
+
+#endif    // English (U.S.) resources
+/////////////////////////////////////////////////////////////////////////////
+
+
+
+#ifndef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 3 resource.
+//
+
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_ENU)
+LANGUAGE 9, 1
+#pragma code_page(1252)
+#include "BattStatppc.rc2"  // non-Microsoft Visual C++ edited resources
+#endif
+
+/////////////////////////////////////////////////////////////////////////////
+#endif    // not APSTUDIO_INVOKED</PRE>
+
+<H4 class="dtH4">BattStatppc.rc2</H4>
+
+<PRE class="code">//
+// BattStatPPC.RC2 - resources Microsoft Visual C++ does not edit directly
+//
+
+#ifdef APSTUDIO_INVOKED
+#error this file is not editable by Microsoft Visual C++
+#endif //APSTUDIO_INVOKED
+
+
+/////////////////////////////////////////////////////////////////////////////
+// Add manually edited resources here...
+
+/////////////////////////////////////////////////////////////////////////////
+HI_RES_AWARE CEUX {1}   // turn off the emulation layer
+         // Remove this resource to enable pixel-
+         // doubling on platforms that support it
+/////////////////////////////////////////////////////////////////////////////
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// RCDATA
+//
+
+IDR_MENU RCDATA
+BEGIN
+    IDR_MENU, 
+    2,
+
+    I_IMAGENONE, IDM_OK, TBSTATE_ENABLED, TBSTYLE_BUTTON | TBSTYLE_AUTOSIZE,
+    IDS_OK, 0, NOMENU,
+    
+    I_IMAGENONE, IDM_HELP, TBSTATE_ENABLED, TBSTYLE_DROPDOWN | TBSTYLE_AUTOSIZE,
+    IDS_HELP, 0, 0,
+END</PRE>
+
+<H4 class="dtH4">stdafx.cpp</H4>
+
+<PRE class="code">// stdafx.cpp : source file that includes just the standard includes
+// BattStat.pch will be the pre-compiled header
+// stdafx.obj will contain the pre-compiled type information
+
+#include "stdafx.h"
+
+// TODO: reference any additional headers you need in STDAFX.H
+// and not in this file
+</PRE>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Feedback Link Bottom Start-->
+<p><font size="1"><a href="mailto:medfdbk&#64;microsoft.com?subject=Product: Windows Mobile | Version: 5.0 | Release: SDK | Title: State and Notifications Broker Sample | Filename: wce51samstatenotificationbrokersample.htm | Built on: Wednesday, September 14, 2005">Send Feedback</a> on this topic to the authors</font></p>
+<!--Feedback Link Bottom End-->
+<!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="mob5conCopyrightInformationForMagneto" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link></font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

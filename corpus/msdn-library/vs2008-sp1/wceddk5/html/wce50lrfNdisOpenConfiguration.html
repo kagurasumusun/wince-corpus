@@ -1,0 +1,137 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>NdisOpenConfiguration</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="NdisOpenConfiguration"/>
+<MSHelp:RLTitle Title="NdisOpenConfiguration"/>
+<MSHelp:Keyword Index="K" Term="NdisOpenConfiguration"/>
+<MSHelp:Keyword Index="A" Term="wce50lrfNdisOpenConfiguration"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Driver"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="False"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="apiref"/>
+<MSHelp:Attr Name="Filename" Value="ndis_library_functions3.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="False"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="True"/>
+<MSHelp:Attr Name="APIName" Value="NdisOpenConfiguration"/>
+<MSHelp:Attr Name="PBFeature" Value="NetworkDriver"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_3018636">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50lrfndisopenconfiguration"></A>NdisOpenConfiguration</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>This function returns a handle for an NDIS NIC driver's <B>\<I>DriverName</I>\Parms</B> registry key.</P>
+
+<PRE class="syntax"><B>VOID</B> <B>NdisOpenConfiguration(</B>
+  <B>PNDIS_STATUS</B> <I>Status</I><B>,</B>
+  <B>PNDIS_HANDLE</B> <I>ConfigurationHandle</I><B>,</B>
+  <B>NDIS_HANDLE</B> <I>WrapperConfigurationContext</I>
+<B>);</B></PRE>
+
+<H4 class="dtH4">Parameters</H4>
+
+<DL>
+<DT><I>Status</I></DT>
+
+<DD>[out] Pointer to a caller-supplied variable in which this function returns the status of its attempt to open the registry key</dd>
+
+<DT><I>ConfigurationHandle</I></DT>
+
+<DD>[out] Pointer to a caller-supplied variable in which this function returns a handle to the registry <B>HKEY_LOCAL_MACHINE\Comm\<I>DriverName</I>\Parms</B> key. Value entries under this key are provided by the driver's installation script.</dd>
+
+<DT><I>WrapperConfigurationContext</I></DT>
+
+<DD>[in] Handle input to the <A HREF="wce50lrfminiportinitialize.htm">MiniportInitialize</A> function.</dd>
+</DL>
+
+<H4 class="dtH4">Return Values</H4>
+
+<P>The following table shows the possible return values.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=36%>Value</TH>
+<TH width=64%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=36%>NDIS_STATUS_SUCCESS</TD>
+<TD width=64%>The value at <I>ConfigurationHandle</I> is valid.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=36%>NDIS_STATUS_FAILURE</TD>
+<TD width=64%>The key could not be opened.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=36%>Handle</TD>
+<TD width=64%>Specifies a handle to the registry <B>HKEY_LOCAL_MACHINE\Comm\<I>DriverName</I>\Parms</B> key.</TD>
+</TR>
+</table></div>
+
+<H4 class="dtH4">Remarks</H4>
+
+<P>With the handle returned by this function, an NDIS miniport can call the <A HREF="wce50lrfndisreadconfiguration.htm">NdisReadConfiguration</A> function one or more times to extract configuration information about its NIC from the registry. A miniport can also call <A HREF="wce50lrfndisreadnetworkaddress.htm">NdisReadNetworkAddress</A> with this handle to retrieve software-configurable network address information that was stored in the registry when its NIC was installed in the current computer.</P>
+
+<P>A miniport's installation script must store at least the following configuration information in the registry:
+
+<UL type="disc">
+	<LI>The NIC's I/O bus interface type.</li>
+
+	<LI>If it is not on an ISA bus, the bus number.</li>
+
+	<LI>The NIC's adapter identifier value, which, depending on the I/O bus interface type, is equivalent to the following bus-type-specific configuration data value:
+<P>If the NIC is on a PCI bus, the value of the PCI <B>DeviceId</B>
+</li>
+</UL>
+
+<P>Drivers of NICs on ISA buses usually get bus-relative configuration parameters for an NIC from the registry with the <B>NdisReadConfiguration</B> function. Drivers of NICs on other types of I/O buses can also call <B>Ndis<I>XXX</I></B> bus-type-specific configuration functions to get bus-relative NIC-specific configuration parameters suitable for calling functions, such as <A HREF="wce50lrfndismregisterinterrupt.htm">NdisMRegisterInterrupt</A>, <A HREF="wce50lrfndismmapiospace.htm">NdisMMapIoSpace</A>, and/or <A HREF="wce50lrfndismregisterioportrange.htm">NdisMRegisterIoPortRange</A>.</P>
+
+<P>An NIC driver calls the <A HREF="wce50lrfndismsetattributes.htm">NdisMSetAttributes</A> or the <A HREF="wce50lrfndismsetattributesex.htm">NdisMSetAttributesEx</A> function to identify the type of I/O bus on which its NIC is likely to be found before that driver calls any of the bus-type-specific configuration functions.</P>
+
+<P>After a driver has consumed and, possibly, modified the registry configuration information, the driver must call the <A HREF="wce50lrfndiscloseconfiguration.htm">NdisCloseConfiguration</A> function to release the handle obtained from this function and to free any temporary storage that NDIS allocated in the driver's calls to <B>NdisReadConfiguration</B>, <B>NdisReadNetworkAddress</B>, and/or <A HREF="wce50lrfndiswriteconfiguration.htm">NdisWriteConfiguration</A>.</P>
+
+<H4 class="dtH4">Requirements</H4>
+
+<P><B>OS Versions:</B> Windows CE .NET 4.0 and later.<BR>
+<B>Header:</B> Ndis.h.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50lrfminiportinitialize.htm">MiniportInitialize</A> | <A HREF="wce50lrfndiscloseconfiguration.htm">NdisCloseConfiguration</A> | <A HREF="wce50lrfndismmapiospace.htm">NdisMMapIoSpace</A> | <A HREF="wce50lrfndismregisterinterrupt.htm">NdisMRegisterInterrupt</A> | <A HREF="wce50lrfndismregisterioportrange.htm">NdisMRegisterIoPortRange</A> | <A HREF="wce50lrfndismregisterminiport.htm">NdisMRegisterMiniport</A> | <A HREF="wce50lrfndismsetattributes.htm">NdisMSetAttributes</A> | <A HREF="wce50lrfndismsetattributesex.htm">NdisMSetAttributesEx</A> | <A HREF="wce50lrfndisopenprotocolconfiguration.htm">NdisOpenProtocolConfiguration</A> | <A HREF="wce50lrfndisreadconfiguration.htm">NdisReadConfiguration</A> | <A HREF="wce50lrfndisreadnetworkaddress.htm">NdisReadNetworkAddress</A> | <A HREF="wce50lrfndisreadpcislotinformation.htm">NdisReadPciSlotInformation</A> | <A HREF="wce50lrfndisregisterprotocol.htm">NdisRegisterProtocol</A> | <A HREF="wce50lrfndiswriteconfiguration.htm">NdisWriteConfiguration</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

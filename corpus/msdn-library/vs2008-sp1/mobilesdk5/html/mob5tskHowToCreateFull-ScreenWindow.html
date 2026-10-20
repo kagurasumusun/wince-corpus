@@ -1,0 +1,128 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>How to: Create a Full-Screen Window</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="How to: Create a Full-Screen Window"/>
+<MSHelp:RLTitle Title="How to: Create a Full-Screen Window"/>
+<MSHelp:Keyword Index="K" Term="code example, How to create a full-screen window"/>
+<MSHelp:Keyword Index="A" Term="mob5tskHowToCreateFull-ScreenWindow"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Application"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbsmartphone"/>
+<MSHelp:Attr Name="Product" Value="kbPocketPC"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="Technology" Value="kbPocketPC"/>
+<MSHelp:Attr Name="Technology" Value="kbSmartphone"/>
+<MSHelp:Attr Name="TopicType" Value="kbTask"/>
+<MSHelp:Attr Name="Filename" Value="Full-Screen_Application_Windows_magneto.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="True"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_1063760">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Windows Mobile Version 5.0 SDK<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="mob5tskhowtocreatefull-screenwindow"></A>How to: Create a Full-Screen Window</H1>
+<!--Feedback Link Top Start-->
+<P CLASS="feedback"><font size="1"><a href="mailto:medfdbk&#64;microsoft.com?subject=Product: Windows Mobile | Version: 5.0 | Release: SDK | Title: How to: Create a Full-Screen Window | Filename: mob5tskhowtocreatefull-screenwindow.htm | Built on: Wednesday, September 14, 2005">Send Feedback</a> on this topic to the authors</font></p>
+<!--Feedback Link Top End-->
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>The SDK for Windows Mobile-based devices provides the <MSHelp:link keywords="wce50lrfSHFullScreen" TABINDEX="0">SHFullScreen</MSHelp:link> function to give your application full control over the screen. The Win32 sample HTMLHost demonstrates how to use <B>SHFullScreen</B> in your application. </P>
+
+<BLOCKQUOTE class="dtBlock">
+<b class="le">Note</b>&nbsp;&nbsp;&nbsp;If you require even more control over the display than the <B>SHFullScreen</B> function provides, the <A HREF="mob5oriwindowsmobilegameprogramming.htm">Game API</A> allows full programmatic access to the display buffer. </BLOCKQUOTE>
+
+<H4 class="dtH4">Remarks</H4>
+
+<P>Full-screen applications can be optionally designed to remove the user's access to the <B>Start</B> menu, in which case your application must provide a way for the user to access other applications on the device. </P>
+
+<H4 class="dtH4">Code Example</H4>
+
+<P>The following code example demonstrates how to call <B>SHFullScreen</B> from within the MFC <B>InitInstance</B> function.</P>
+
+<BLOCKQUOTE class="dtBlock">
+<b class="le">Note</b>&nbsp;&nbsp;&nbsp;To make the following code example easier to read, security checking and error handling are not included. This code example should not be used in a release configuration unless it has been modified to include them.</BLOCKQUOTE>
+
+<PRE class="code">BOOL rb;
+BOOL chgScreen;
+int rc;
+RECT rect;
+HWND hWnd;
+
+<code><b class="cfe">rb = SystemParametersInfo(SPI_GETWORKAREA, 0, &amp;rect, 0);</b></code>
+if (rb == FALSE)  // SystemParametersInfo failed.
+{
+    rc = MessageBox(NULL, _T("Could not get work area."),
+                    _T("Error"), MB_OK);
+    if (rc == 0)  // Not enough memory to create MessageBox.
+        return E_OUTOFMEMORY;
+    return E_FAIL;  // Replace with specific error handling.
+}
+
+<code><b class="cfe">hWnd = CreateWindow(szWindowClass, szTitle, WS_VISIBLE,</b></code>
+<code><b class="cfe">       CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT,</b></code>
+<code><b class="cfe">       CW_USEDEFAULT, NULL, NULL, hInstance, NULL);</b></code>
+if (hWnd == NULL)// CreateWindow failed.
+{
+    rc = MessageBox(NULL, _T("Could not create main window."),
+                    _T("Error"), MB_OK);
+    if (rc == 0)  // Not enough memory to create MessageBox.
+        return E_OUTOFMEMORY;
+    return E_FAIL;  // Replace with specific error handling.
+}
+
+GetWindowRect(hWnd, &amp;rect);
+<code><b class="cfe">chgScreen = SHFullScreen(hWnd, SHFS_HIDETASKBAR | SHFS_HIDESIPBUTTON | </b></code>
+<code><b class="cfe">                  SHFS_HIDESTARTICON);</b></code>
+if (chgScreen == FALSE);
+{
+    // SHFullScreen failed.
+    rc = MessageBox(NULL, _T("Could not modify the window."),
+                    _T("Error"), MB_OK);
+    if (rc == 0)  // Not enough memory to create MessageBox.
+        return E_OUTOFMEMORY;
+    return E_FAIL;  // Replace with specific error handling.
+}
+MoveWindow( hWnd, 
+            rect.left, 
+            rect.top - MENU_HEIGHT, 
+            rect.right, 
+            rect.bottom + MENU_HEIGHT, 
+            TRUE);</PRE>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="mob5tskhowtopreventdisplayofsmartminimizebuttonsinapplicationwindows.htm">How to: Prevent Display of Smart Minimize Buttons in Application Windows</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Feedback Link Bottom Start-->
+<p><font size="1"><a href="mailto:medfdbk&#64;microsoft.com?subject=Product: Windows Mobile | Version: 5.0 | Release: SDK | Title: How to: Create a Full-Screen Window | Filename: mob5tskhowtocreatefull-screenwindow.htm | Built on: Wednesday, September 14, 2005">Send Feedback</a> on this topic to the authors</font></p>
+<!--Feedback Link Bottom End-->
+<!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="mob5conCopyrightInformationForMagneto" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link></font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

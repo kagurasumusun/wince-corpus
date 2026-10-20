@@ -1,0 +1,93 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>USB Function Controller Driver Transfers</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="USB Function Controller Driver Transfers"/>
+<MSHelp:RLTitle Title="USB Function Controller Driver Transfers"/>
+<MSHelp:Keyword Index="A" Term="wce50conUSBFunctionControllerDriverTransfers"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Driver"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="False"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="usbfunction_guide.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="False"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+<MSHelp:Attr Name="PBFeature" Value="USBFunctionDriver"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_1035464">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50conusbfunctioncontrollerdrivertransfers"></A>USB Function Controller Driver Transfers</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>The following table shows the types of USB function controller driver transfers.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=50%>Transfer type</TH>
+<TH width=50%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>Isochronous</TD>
+<TD width=50%>Used when the client identifies that the host regularly sends packets of 1 KB or less to its OUT endpoint. Packets of 1 KB or less are sent due to transmission errors. The maximum packet size is 1024 bytes.
+<P>The client calls <A HREF="wce50lrfissuevendortransfer.htm">IssueVendorTransfer</A> with USB_OUT_TRANSFER and a 1024 byte buffer. Calling <B>IssueVendorTransfer</B> four times ensures that when one transfer is retired, another queues immediately. When the client receives notification that a transfer has completed, it checks the count of bytes transferred and the transfer status with <A HREF="wce50lrfgettransferstatus.htm">GetTransferStatus</A>. It then closes the transfer with <A HREF="wce50lrfclosetransfer.htm">CloseTransferHandle</A>, processes the data, and calls <B>IssueVendorTransfer</B> again to recycle the buffer.</P>
+</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>Bulk</TD>
+<TD width=50%>Used when the client identifies that the host sends packets of 64 KB to its OUT endpoint. The maximum packet size of these packets is 512 bytes. Bulk transfer is also used when the client knows that the host requests packets of 64 KB from its IN endpoint. The maximum size of these packets is 512 bytes.
+<P>The client calls <B>IssueVendorTransfer</B> with a 64 KB buffer and the appropriate IN or OUT flag. The function controller driver retires the transfer after the buffer is full or after it receives a short packet.</P>
+</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>Interrupt</TD>
+<TD width=50%>Used when the client identifies that the host sends packets of up to 8 bytes to its OUT endpoint. The maximum size of these packets is 8 bytes.
+<P>The client calls <B>IssueVendorTransfer</B> with USB_OUT_TRANSFER and an 8 byte buffer. When <B>IssueVendorTransfer </B>receives any packet of zero to 8 bytes, the transfer is retired.</P>
+</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>DMA</TD>
+<TD width=50%>Used when the client driver identifies the interface type and bus number for which to translate the physical address. Additionally, it must know any type of alignment guarantees. For more information, see the <B>UFN_PDD_INFO</B> structure.</TD>
+</TR>
+</table></div>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50conusbfunctioncontrollerdriver.htm">USB Function Controller Drivers</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

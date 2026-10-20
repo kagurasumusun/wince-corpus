@@ -1,0 +1,143 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>PCI Library</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="PCI Library"/>
+<MSHelp:RLTitle Title="PCI Library"/>
+<MSHelp:Keyword Index="A" Term="wce50conPCIBusSupport"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Hardware"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="True"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="PQOAL_concepts.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="False"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_1042612">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50conpcibussupport"></A>PCI Library</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>The PCI library supports a simplified initialization of the PCI configuration space to provide support for the boot loader and OS startup. This library supports bus initialization to allow KITL initialization of a PCI resident network interface card (NIC). For more information, see %_WINCEROOT%\Platform\Common\Src\Inc\Oal_pci.h.</P>
+
+<P>To support the PCI bus, the OAL (<A HREF="wce50lrfoeminit.htm">OEMInit</A>) or boot loader code (<A HREF="wce50lrfoemplatforminit.htm">OEMPlatformInit</A>) must call the <B>OEMPCIBusConfigure</B> function. <B>OEMPCIBusConfigure</B> accepts the valid PCI memory and I/O address ranges for the hardware platform. The information and associated bridge window registers are hardware platform-specific.</P>
+
+<H2 class="dtH2">OAL Interface</H2>
+
+<DL>
+<DT><code class="ce">typedef union {</code><BR>
+<code class="ce">   struct {</code><BR>
+<code class="ce">      UINT8 fnc;                    // function</code><BR>
+<code class="ce">      UINT8 dev;                    // device</code><BR>
+<code class="ce">      UINT8 bus;                    // bus</code><BR>
+<code class="ce">   };</code><BR>
+<code class="ce">   UINT32 logicalLoc;</code><BR>
+<code class="ce">} OAL_PCI_LOCATION, *POAL_PCI_LOCATION;</code></DT>
+
+<DD>This structure defines the location of the PCI bus, device, and function.</dd>
+
+<DT><code class="ce">BOOL OALPCIInit();</code></DT>
+
+<DD>This function initializes the PCI module. It is called from the <A HREF="wce50lrfoeminit.htm">OEMInit</A> function to initialize the PCI bus. In most cases, <B>OALPCIInit</B> is implemented in the SOC library or it is hardware platform-specific.</dd>
+
+<DT><code class="ce">UINT32 OALPCICfgRead(UINT32 busId, OAL_PCI_LOCATION pciLoc, </code><BR>
+<code class="ce">UINT32 offset, UINT32 size, VOID *pData);</code></DT>
+
+<DD>This function reads the PCI configuration space located at the address specified by the <I>pciLoc</I> parameter. <B>OALPCICfgRead</B> is hardware dependent and, in most cases, it is implemented in the SOC library or it is hardware platform specific.</dd>
+
+<DT><code class="ce">UINT32 OALPCICfgWrite(UINT32 busId, OAL_PCI_LOCATION pciLoc, </code><BR>
+<code class="ce">UINT32 offset, UINT32 size, VOID *pData);</code></DT>
+
+<DD>This function writes the PCI configuration space at the location specified by <I>pciLoc</I>. <B>OALPCICfgWrite</B> is hardware dependent and, in most cases, it is implemented in the SOC library or it is hardware platform-specific.</dd>
+
+<DT><code class="ce">VOID OALPCIPowerOn(UINT32 busId);</code></DT>
+
+<DD>This function powers on the PCI hardware, restores the PCI clock, and issues a PCI bus reset. It is called from the power module to restore the PCI hardware after the system is powered off or suspended. The PCI bus driver should save the PCI bus configuration.</dd>
+
+<DT><code class="ce">VOID OALPCIPowerOff(UINT32 busId);</code></DT>
+
+<DD>This function prepares the PCI hardware to be powered off or suspended. It is called from the power module. The PCI bus driver should save the PCI bus configuration when it powers off. <B>OALPCIPowerOff</B> should only power off the PCI clock and other hardware related to PCI support.</dd>
+
+<DT><code class="ce">BOOL OALPCITransBusAddress(UINT32 busId, UINT64 busAddress, </code><BR>
+<code class="ce">UINT32 *pAddressSpace, UINT64 *pSystemAddress);</code></DT>
+
+<DD>This function translates the PCI bus-relative address to the CPU address space.</dd>
+
+<DT><code class="ce">BOOL OALPCIConfig(UINT32 busId, UINT32 memBase, </code><BR>
+<code class="ce">UINT32 memSize, UINT32 ioBase, UINT32 ioSize, </code><BR>
+<code class="ce">UINT32 pciLocCount, OAL_PCI_LOCATION *aPciLoc);</code></DT>
+
+<DD>This function provides simple PCI bus configuration. It configures the PCI bus device resources. By default, this function configures all bridges and devices specified in the location list specified by the <I>pciLocCount</I> and <I>aPciLoc</I> parameters. When <I>pciLocCount</I> is set to -1, all devices are configured. In most cases, you should configure only the device used by KITL because configuration does not optimize resource use.</dd>
+
+<DT><code class="ce">BOOL OALPCIRegisterAsUsed(UINT32 busId, OAL_PCI_LOCATION pciLoc);</code></DT>
+
+<DD>This fuction registers the KITL device as used in the OS registry.</dd>
+
+<DT><code class="ce">BOOL OALPCIFindNextId(UINT32 busId, UINT32 deviceId,</code></DT>
+
+<DT><code class="ce">OAL_PCI_LOCATION *pPciLoc);</code></DT>
+
+<DD>This function searches the PCI bus for cards that match <I>deviceId</I>. Search starts from the position next to the actual position specified by <I>pPciLoc</I>. When a device with a specified identifier is found, <B>OALPCIFindNextId</B> returns TRUE. The device location is specified in <I>pPciLoc</I>.</dd>
+</DL>
+
+<H2 class="dtH2">Helper Functions - KITL</H2>
+
+<P>KITL uses the following helper functions to read specific configuration registers:</P>
+
+<P><code class="ce">UINT32 OALPCIGetId(UINT32 busId, OAL_PCI_LOCATION pciLoc);</code></P>
+
+<P><code class="ce">UINT32 OALPCIGetMBAR(UINT32 busId, OAL_PCI_LOCATION pciLoc, UINT32 index);</code></P>
+
+<P><code class="ce">UINT32 OALPCIGetInterruptPin(UINT32 busId, OAL_PCI_LOCATION pciLoc);</code></P>
+
+<P><code class="ce">UINT8  OALPCIGetHeaderType(UINT32 busId, OAL_PCI_LOCATION pciLoc);</code></P>
+
+<P><code class="ce">UINT8  OALPCIGetSecBusNum(UINT32 busId, OAL_PCI_LOCATION pciLoc);</code></P>
+
+<P><code class="ce">UINT8  OALPCIGetSubBusNum(UINT32 busId, OAL_PCI_LOCATION pciLoc);</code></P>
+
+<H2 class="dtH2">Helper Functions - Dump</H2>
+
+<P>The following helper functions dump information about the device or bus configuration space:</P>
+
+<P><code class="ce">VOID OALPCIDumpConfig(UINT32 busId, OAL_PCI_LOCATION pciLoc);</code></P>
+
+<P><code class="ce">VOID OALPCIDump(UINT32 busId, BOOL full);</code></P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50conproductionqualityoalcomponents.htm">Production-Quality OAL Components</A> </P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

@@ -1,0 +1,152 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Window Layout and Mirroring</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Window Layout and Mirroring"/>
+<MSHelp:RLTitle Title="Window Layout and Mirroring"/>
+<MSHelp:Keyword Index="A" Term="wce50conMirroring"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Feature"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="Uniscribe_app_dev.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="True"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+<MSHelp:Attr Name="PBFeature" Value="SYSGEN_UNISCRIBE"/>
+<MSHelp:Attr Name="PBOnly" Value="False"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_1044834">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50conmirroring"></A>Window Layout and Mirroring</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>The window layout defines how text and Microsoft Windows Graphics Device Interface (GDI) objects are laid out in a window or device context (DC). Most languages, such as English, French, and German, require a left-to-right (LTR) layout. Other languages, such as Arabic and Hebrew, require right-to-left (RTL) layout. </P>
+
+<P>The window layout applies to text but also affects the other GDI elements of the window. These other GDI elements include bitmaps, icons, the location of the origin, buttons, cascading tree controls, and whether the horizontal coordinate increases as you go left or right. For example, after an application has set RTL layout, the origin is positioned at the right edge of the window or device, and the number representing the horizontal coordinate increases as you move left. </P>
+
+<P>However, not all GDI elements are affected by the layout of a window. For example, the layout for dialog boxes, message boxes, and device contexts that are not associated with a window, such as metafile and printer DCs, must be handled separately. Specifics for these are mentioned later in this topic.</P>
+
+<BLOCKQUOTE class="dtBlock">
+<B>Note</B>&nbsp;&nbsp;&nbsp;The Windows CE Standard Shell, formerly known as the HPC Shell, has been mirrored. You can use this shell as an example for a mirroring implementation. To view the mirrored shell at run time, you need to build a run-time image with Arabic or Hebrew as your default language.</BLOCKQUOTE>
+
+<P>By default, the window layout is LTR. To set the RTL window layout, call <MSHelp:link keywords="wce50lrfCreateWindowEx" TABINDEX="0">CreateWindowEx</MSHelp:link> with the style WS_EX_LAYOUTRTL. Also by default, a child window (one created with the WS_CHILD style and with a valid parent <I>hWnd</I> parameter in the call to <MSHelp:link keywords="wce50lrfCreateWindow" TABINDEX="0">CreateWindow</MSHelp:link> or <B>CreateWindowEx</B>) has the same layout as its parent. </P>
+
+<P>To disable inheritance of mirroring for an individual window, as in the case of a child window that should not inherit the layout of its parent, process the WM_CREATE message with <MSHelp:link keywords="wce50lrfGetWindowLong" TABINDEX="0">GetWindowLong</MSHelp:link> and <MSHelp:link keywords="wce50lrfSetWindowLong" TABINDEX="0">SetWindowLong</MSHelp:link> to turn off the WS_EX_LAYOUTRTL flag. This processing is in addition to whatever other processing is needed. The following code fragment shows how this is done.</P>
+
+<PRE class="code">SetWindowLong (hWnd, 
+               GWL_EXSTYLE, 
+               GetWindowLong(hWnd,GWL_EXSTYLE) &amp; ~WS_EX_LAYOUTRTL))</PRE>
+
+<P>To mirror any DC, call <B>SetLayout </B>(hdc, LAYOUT_RTL). To query the layout settings of the device context, call <B>GetLayout</B>. Upon a successful return, <B>GetLayout</B> returns a DWORD that indicates the layout settings by the settings of the LAYOUT_RTL bit.</P>
+
+<P>After a window has been created, change the layout using the <B>SetWindowLong</B> function. For example, this is necessary when the user changes the user interface language of an existing window from Arabic or Hebrew to German. However, when changing the layout of an existing window, you must invalidate and update the window to ensure that the contents of the window are all drawn on the same layout. The following code sample changes the window layout as needed:</P>
+
+<PRE class="code">lExStyles = GetWindowLong(hWnd, GWL_EXSTYLE);
+
+// Check whether new layout is opposite the current layout
+if (!(pLState -&gt; IsRTLLayout) != !(lExStyles &amp; WS_EX_LAYOUTRTL))
+{
+    // the following lines will update the window layout
+
+    lExStyles ^= WS_EX_LAYOUTRTL;        // toggle layout
+    SetWindowLong(hWnd, GWL_EXSTYLE, lExStyles);
+    InvalidateRect(hWnd, NULL, TRUE);    // to update layout in the client area
+}</PRE>
+
+<P>In mirroring, it is helpful to think in terms of "near" and "far" instead of "left" and "right". Failure to do so can cause problems. One common coding practice that causes problems in a mirrored window occurs when mapping between screen coordinates and client coordinates. For example, applications often use code similar to the following to position a control in a window:</P>
+
+<PRE class="code">// DO NOT USE THIS IF APPLICATION MIRRORS THE WINDOW
+
+// get coordinates of the window in screen coordinates
+GetWindowRect(hControl, (LPRECT) &amp;rControlRect);  
+
+// map screen coordinates to client coordinates in dialog
+ScreenToClient(hDialog, (LPPOINT) &amp;rControlRect.left); 
+ScreenToClient(hDialog, (LPPOINT) &amp;rControlRect.right);</PRE>
+
+<P>This causes problems in mirroring because the left edge of the rectangle becomes the right edge in a mirrored window, and vice versa. To avoid this problem, replace the <MSHelp:link keywords="wce50lrfScreenToClient" TABINDEX="0">ScreenToClient</MSHelp:link> calls with a call to <MSHelp:link keywords="wce50lrfMapWindowPoints" TABINDEX="0">MapWindowPoints</MSHelp:link> as follows:</P>
+
+<PRE class="code">// USE THIS FOR MIRRORING
+
+GetWindowRect(hControl, (LPRECT) &amp;rControlRect);
+MapWindowPoints(NULL, hDialog, (LPPOINT) &amp;rControlRect, 2)</PRE>
+
+<P>This code works because, on platforms that support mirroring, <B>MapWindowPoints</B> is modified to swap the left and right point coordinates when the client window is mirrored. For more information, see the Remarks section of <B>MapWindowPoints</B>.</P>
+
+<P>Another common practice that can cause problems in mirrored windows is positioning objects in a client window using offsets in screen coordinates instead of client coordinates. For example, the following code uses the difference in screen coordinates as the x position in client coordinates to position a control in a dialog box.</P>
+
+<PRE class="code">// OK if LTR layout but WRONG for a mirrored dialog 
+
+RECT rdDialog;
+RECT rcControl;
+
+HWND hControl = GetDlgItem(hDlg, IDD_CONTROL);
+GetWindowRect(hDlg, &amp;rcDialog);             // gets rect in screen coordinates
+GetWindowRect(hControl, &amp;rcControl);
+MoveWindow(hControl,
+           rcControl.left - rcDialog.left,  // uses x position in client coords
+           rcControl.top - rcDialog.top,
+           nWidth,
+           nHeight,
+           FALSE);</PRE>
+
+<P>This code is applicable when the dialog window has LTR layout and the mapping mode of the client is MM_TEXT, because the new x position in the client coordinates correspond to the difference in left edges of the control and the dialog box in screen coordinates. However, in a mirrored dialog box, left and right are reversed, so instead you should use <B>MapWindowPoints</B> as follows:</P>
+
+<PRE class="code">RECT rcDialog;
+RECT rcControl;
+
+HWND hControl - GetDlgItem(hDlg, IDD_CONTROL);
+GetWindowRect(hControl, &amp;rcControl);
+
+// MapWindowPoints works correctly in both mirrored and non-mirrored windows.
+MapWindowPoints(NULL, hDlg, (LPPOINT) &amp;rcControl, 2);
+
+// Now rcControl is in client coordinates.
+MoveWindow(hControl, rcControl.left, rcControl.top, nWidth, nHeight, FALSE)</PRE>
+
+<P class="label"><B>Mirroring Dialog Boxes and Message Boxes</B></P>
+
+<P>Dialog boxes and message boxes do not inherit layout, so you must set the layout explicitly. To mirror a message box, call <MSHelp:link keywords="wce50lrfMessageBox" TABINDEX="0">MessageBox</MSHelp:link> with the MB_RTLREADING option. To lay out a dialog box right-to-left, use the extended style WS_EX_LAYOUTRTL in the dialog template structure DLGTEMPLATEEX. Property sheets are a special case of dialog boxes. Each tab is treated as a separate dialog box, so you need to include the WS_EX_LAYOUTRTL style in every tab that you want mirrored.</P>
+
+<P class="label"><B>Mirroring Device Contexts Not Associated with a Window</B></P>
+
+<P>DCs that are not associated with a window, such as metafile or printer DCs, do not inherit layout, so you must set the layout explicitly. To change the device context layout, use the <B>SetLayout</B> function.</P>
+
+<P>The <B>SetLayout</B> function is rarely used with windows. Typically, windows receive an associated DC only in processing a WM_PAINT message. Occasionally, a program creates a DC for a window by calling <MSHelp:link keywords="wce50lrfGetDC" TABINDEX="0">GetDC</MSHelp:link>. Either way, the initial layout for the DC is set by <MSHelp:link keywords="wce50lrfBeginPaint" TABINDEX="0">BeginPaint</MSHelp:link> or <B>GetDC</B> according to the window's WS_EX_LAYOUTRTL flag.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50oricomplexscriptsapplicationdevelopment.htm">Uniscribe Application Development</A> | <MSHelp:link keywords="wce50conWindowandControlStyles" TABINDEX="0">Window and Control Styles</MSHelp:link> | <MSHelp:link keywords="wce50conWorkingwithWindowsandMessages" TABINDEX="0">Working with Windows and Messages</MSHelp:link> | <MSHelp:link keywords="wce50conGettingaHandletoaDeviceContext" TABINDEX="0">Getting a Handle to a Device Context</MSHelp:link> | <MSHelp:link keywords="wce50conWorkingwithGraphics" TABINDEX="0">Graphics Device Interface (GDI)</MSHelp:link></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

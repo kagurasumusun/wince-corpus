@@ -1,0 +1,504 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Basic Lighting Formula</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Basic Lighting Formula"/>
+<MSHelp:RLTitle Title="Basic Lighting Formula"/>
+<MSHelp:Keyword Index="A" Term="wce50conBasicLightingFormula"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Feature"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="d3dm_concepts.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="True"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+<MSHelp:Attr Name="PBFeature" Value="SYSGEN_D3DM"/>
+<MSHelp:Attr Name="PBOnly" Value="False"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_1032092">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50conbasiclightingformula"></A>Basic Lighting Formulas</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>The output of the lighting stage is the diffuse and possibly the specular colors of the vertex in ARGB format. The D3DMRS_LIGHTING render state (see <A HREF="wce50lrfd3dmrenderstatetype.htm">D3DMRENDERSTATETYPE</A>) controls whether the lighting computations are performed.</P>
+
+<P>If the lighting computations are not enabled, the vertices color values are computed as follows:
+
+<UL type="disc">
+	<LI>D3DMRS_COLORVERTEX is ignored.</li>
+
+	<LI>If the diffuse vertex color is present then it is passed on through the rendering pipeline, otherwise the diffuse color is the default diffuse color value 0xFFFFFFFF (white) is used.</li>
+
+	<LI>If the specular vertex color is already present then it is passed on through the rendering pipeline, otherwise the specular color is the default specular color 0 (black) is used. </li>
+</UL>
+
+<P>If the lighting computations are enabled, then the vertex colors are computed and then clamped (0.0 to 1.0) and scaled (0 to 255) before being passed to the rasterizer.</P>
+
+<P>If vertex normals are not specified, all of the dot products involving the vertex normal are set to 0 and the lighting computation is still performed.</P>
+
+<H2 class="dtH2">Ambient Lighting </H2>
+
+<P>The ambient lighting for a scene is described by the following equation.</P>
+
+<PRE class="code">Ambient Lighting = C<SUB>a</SUB> * ( G<SUB>a</SUB> + Atten<SUB>i</SUB> * sum[ L<SUB>ai</SUB> ])</PRE>
+
+<P>Where:</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=25%>Parameter</TH>
+<TH width=25%>Default value</TH>
+<TH width=25%>Type</TH>
+<TH width=25%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=25%>
+<PRE class="code">C<SUB>a</SUB></PRE>
+</TD>
+<TD width=25%>(0,0,0,0)</TD>
+<TD width=25%><A HREF="wce50lrfd3dmcolorvalue.htm">D3DMCOLORVALUE</A></TD>
+<TD width=25%>Material ambient color</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=25%>
+<PRE class="code">G<SUB>a</SUB></PRE>
+</TD>
+<TD width=25%>(0,0,0,0)</TD>
+<TD width=25%><B>D3DMCOLORVALUE</B></TD>
+<TD width=25%>Global ambient color</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=25%>
+<PRE class="code">Atten<SUB>i</SUB></PRE>
+</TD>
+<TD width=25%>(0,0,0,0)</TD>
+<TD width=25%><B>D3DMCOLORVALUE</B></TD>
+<TD width=25%>Light attenuation of the <I>i</I><SUP>th</SUP> light. See the Attenuation section below.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=25%>
+<PRE class="code">sum</PRE>
+</TD>
+<TD width=25%>N/A</TD>
+<TD width=25%>N/A</TD>
+<TD width=25%>Sum of the ambient light</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=25%>
+<PRE class="code">L<SUB>ai</SUB></PRE>
+</TD>
+<TD width=25%>(0,0,0,0)</TD>
+<TD width=25%><A HREF="wce50lrfd3dmvector.htm">D3DMVECTOR</A></TD>
+<TD width=25%>Light ambient color of the <I>i</I>th light</TD>
+</TR>
+</table></div>
+
+<P>The value for <CODE>C<SUB>a</SUB></CODE> is either:
+
+<UL type="disc">
+	<LI>vertex color1, if D3DMRS_AMBIENTMATERIALSOURCE = D3DMMCS_COLOR1, and the first vertex color is supplied in the vertex declaration (see <A HREF="wce50lrfd3dmrenderstatetype.htm">D3DMRENDERSTATETYPE</A> and <A HREF="wce50lrfd3dmmaterialcolorsource.htm">D3DMMATERIALCOLORSOURCE</A>). </li>
+
+	<LI>vertex color2, if D3DMRS_AMBIENTMATERIALSOURCE = D3DMMCS_COLOR2, and the second vertex color is supplied in vertex declaration. </li>
+
+	<LI>material ambient color.</li>
+</UL>
+
+<BLOCKQUOTE class="dtBlock">
+<b class="le">Note</b>&nbsp;&nbsp;&nbsp;If either D3DMRS_AMBIENTMATERIALSOURCE option is used, and the vertex color is not provided, then the material ambient color is used.</BLOCKQUOTE>
+
+<P>To use the material ambient color, use <A HREF="wce50lrfidirect3dmobiledevicesetmaterial.htm">IDirect3DMobileDevice::SetMaterial</A> as shown in the example code below. </P>
+
+<P><CODE>G<SUB>a</SUB></CODE> is the global ambient color, which is set by the D3DMRS_AMBIENT render state. There is one global ambient color in a Direct3D Mobile scene. This parameter is not associated with a Direct3D Mobile light object.</P>
+
+<P><CODE>L<SUB>ai</SUB></CODE> is the ambient color of the <I>i</I><SUP>th</SUP> light in the scene.  Each Direct3D Mobile light has a set of properties, one of which is the ambient color. The term, <CODE>sum[ L<SUB>ai</SUB> ]</CODE> is a sum of all the ambient colors in the scene.</P>
+
+<H2 class="dtH2">Diffuse Lighting</H2>
+
+<P>Diffuse lighting is described by the following equation.</P>
+
+<PRE class="code">Diffuse Lighting = sum[ C<SUB>d</SUB> * L<SUB>d</SUB> * (N<SUP>.</SUP>L<SUB>dir</SUB>) * Atten]</PRE>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=25%>Parameter</TH>
+<TH width=25%>Default value</TH>
+<TH width=25%>Type</TH>
+<TH width=25%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=25%>
+<PRE class="code">sum</PRE>
+</TD>
+<TD width=25%>N/A</TD>
+<TD width=25%>N/A</TD>
+<TD width=25%>Summation of each light's diffuse component.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=25%>
+<PRE class="code">C<SUB>d</SUB></PRE>
+</TD>
+<TD width=25%>(0,0,0,0)</TD>
+<TD width=25%><A HREF="wce50lrfd3dmcolorvalue.htm">D3DMCOLORVALUE</A></TD>
+<TD width=25%>Diffuse color.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=25%>
+<PRE class="code">L<SUB>d</SUB></PRE>
+</TD>
+<TD width=25%>(0,0,0,0)</TD>
+<TD width=25%><B>D3DMCOLORVALUE</B></TD>
+<TD width=25%>Light diffuse color.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=25%>
+<PRE class="code">N</PRE>
+</TD>
+<TD width=25%>N/A</TD>
+<TD width=25%><A HREF="wce50lrfd3dmvector.htm">D3DMVECTOR</A></TD>
+<TD width=25%>Vertex normal</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=25%>
+<PRE class="code">L<SUB>dir</SUB></PRE>
+</TD>
+<TD width=25%>N/A</TD>
+<TD width=25%><B>D3DMVECTOR</B></TD>
+<TD width=25%>Direction vector from object vertex to the light.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=25%>
+<PRE class="code">Atten</PRE>
+</TD>
+<TD width=25%>N/A</TD>
+<TD width=25%>float</TD>
+<TD width=25%>Light attenuation.  See the Attenuation section below. </TD>
+</TR>
+</table></div>
+
+<P>The value for <CODE>C<SUB>d</SUB></CODE> is either:
+
+<UL type="disc">
+	<LI>vertex color1, if D3DMRS_DIFFUSEMATERIALSOURCE = D3DMCS_COLOR1, and the first vertex color is supplied in the vertex declaration. </li>
+
+	<LI>vertex color2, if D3DMRS_DIFFUSEMATERIALSOURCE = D3DMCS_COLOR2, and the second vertex color is supplied in the vertex declaration. </li>
+
+	<LI>material diffuse color </li>
+</UL>
+
+<BLOCKQUOTE class="dtBlock">
+<b class="le">Note</b>&nbsp;&nbsp;&nbsp;If either DIFFUSEMATERIALSOURCE option is used, and the vertex color is not provided, the material diffuse color is used.</BLOCKQUOTE>
+
+<P>Diffuse components are limited to be from 0 to 255, after all lights are processed and interpolated separately. The resulting diffuse lighting value is a combination of the ambient and diffuse light values.</P>
+
+<H2 class="dtH2">Specular Lighting</H2>
+
+<P>Specular Lighting is described by the following equation.</P>
+
+<PRE class="code">Specular Lighting = C<SUB>s</SUB> * sum[ L<SUB>s</SUB> * (N<SUP>.</SUP>H)<SUP>P</SUP> * Atten ]</PRE>
+
+<P>The following table identifies the variables, their types, and their ranges.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=25%>Parameter</TH>
+<TH width=25%>Default value</TH>
+<TH width=25%>Type</TH>
+<TH width=25%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=25%>
+<PRE class="code">C<SUB>s</SUB></PRE>
+</TD>
+<TD width=25%>(0,0,0,0)</TD>
+<TD width=25%><A HREF="wce50lrfd3dmcolorvalue.htm">D3DMCOLORVALUE</A></TD>
+<TD width=25%>Specular color.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=25%>
+<PRE class="code">sum</PRE>
+</TD>
+<TD width=25%>N/A</TD>
+<TD width=25%>N/A</TD>
+<TD width=25%>Summation of each light's specular component.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=25%>
+<PRE class="code">N</PRE>
+</TD>
+<TD width=25%>N/A</TD>
+<TD width=25%>
+<DL>
+<DT><A HREF="wce50lrfd3dmvector.htm">D3DMVECTOR</A></DT>
+</DL>
+</TD>
+<TD width=25%>Vertex normal.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=25%>
+<PRE class="code">H</PRE>
+</TD>
+<TD width=25%>N/A</TD>
+<TD width=25%><B>D3DMVECTOR</B></TD>
+<TD width=25%>Half way vector. See below.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=25%>
+<PRE class="code">P</PRE>
+</TD>
+<TD width=25%>0.0</TD>
+<TD width=25%>float</TD>
+<TD width=25%>Specular reflection power. Range is 0 to +infinity</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=25%>
+<PRE class="code">L<SUB>d</SUB></PRE>
+</TD>
+<TD width=25%>(0,0,0,0)</TD>
+<TD width=25%><B>D3DMCOLORVALUE</B></TD>
+<TD width=25%>Light specular color.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=25%>
+<PRE class="code">Atten</PRE>
+</TD>
+<TD width=25%>N/A</TD>
+<TD width=25%>float</TD>
+<TD width=25%>Light attenuation.  See the Attenuation section below. </TD>
+</TR>
+</table></div>
+
+<P>The value for <CODE>C<SUB>s</SUB></CODE> is either: 
+
+<UL type="disc">
+	<LI>vertex color1, if D3DMRS_SPECULARMATERIALSOURCE is D3DMMCS_COLOR1 , and the first vertex color is supplied in the vertex declaration. </li>
+
+	<LI>vertex color2, if D3DMRS_SPECULARMATERIALSOURCE is D3DMMCS_COLOR2, and the second vertex color is supplied in the vertex declaration. </li>
+
+	<LI>material specular color </li>
+</UL>
+
+<BLOCKQUOTE class="dtBlock">
+<b class="le">Note</b>&nbsp;&nbsp;&nbsp;If either specular material source option is used and the vertex color is not provided, then the material specular color is used.</BLOCKQUOTE>
+
+<P>Specular components are limited to be from 0 to 255, after all lights are processed and interpolated separately.</P>
+
+<P class="label"><B>The Halfway Vector</B></P>
+
+<P>The halfway vector, <CODE>H</CODE> ,exists midway between two vectors: the vector from an object vertex to the light source, and the vector from an object vertex to the camera position. Microsoft Direct3D provides two ways to compute the halfway vector. When D3DMRS_LOCALVIEWER is set to TRUE, the system calculates the halfway vector using the position of the camera and the position of the vertex, along with the light's direction vector. The following formula illustrates this.</P>
+
+<PRE class="code">H = norm(norm(C<SUB>p</SUB> - V<SUB>p</SUB>) + L<SUB>dir</SUB>)</PRE>
+
+<P>Where:</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=25%>Parameter</TH>
+<TH width=25%>Default value</TH>
+<TH width=25%>Type</TH>
+<TH width=25%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=25%>
+<PRE class="code">C<SUB>p</SUB></PRE>
+</TD>
+<TD width=25%>N/A</TD>
+<TD width=25%><B>D3DMVECTOR</B></TD>
+<TD width=25%>Camera position.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=25%>
+<PRE class="code">V<SUB>p</SUB></PRE>
+</TD>
+<TD width=25%>N/A</TD>
+<TD width=25%><B>D3DMVECTOR</B></TD>
+<TD width=25%>Vertex position.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=25%>
+<PRE class="code">L<SUB>dir</SUB></PRE>
+</TD>
+<TD width=25%>N/A</TD>
+<TD width=25%><B>D3DMVECTOR</B></TD>
+<TD width=25%>Direction vector from vertex position to the light position.</TD>
+</TR>
+</table></div>
+
+<P>Determining the halfway vector in this manner can be computationally intensive. As an alternative, setting D3DMRS_LOCALVIEWER = FALSE instructs the system to act as though the viewpoint is infinitely distant on the <I>z</I>-axis. This is reflected in the following formula.</P>
+
+<PRE class="code">H = norm([0,0,1] + L<SUB>dir</SUB>)</PRE>
+
+<P>This setting is less computationally intensive, but much less accurate, so it is best used by applications that use orthogonal projection. </P>
+
+<H2 class="dtH2">Attenuation</H2>
+
+<P>The attenuation of a light depends on the type of light and the distance between the light and the vertex position. To calculate attenuation, use one of the following equations.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=50%>Equation</TH>
+<TH width=50%>Condition</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>
+<PRE class="code">Atten<SUB>i</SUB> = 0</PRE>
+</TD>
+<TD width=50%>The distance between the light and the vertex exceeds the light's range</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>
+<PRE class="code">Atten<SUB>i</SUB> = 1</PRE>
+</TD>
+<TD width=50%>The light is directional.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>
+<PRE class="code">Atten<SUB>i</SUB> = 1/(att0<SUB>i </SUB>+ att1<SUB>i</SUB> * d<SUB>i </SUB>+ att2<SUB>i</SUB> * d<SUB>i</SUB><SUP>2</SUP>)</PRE>
+</TD>
+<TD width=50%>All other cases.</TD>
+</TR>
+</table></div>
+
+<P>Where:</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=20%>Parameter</TH>
+<TH width=20%>Default Value</TH>
+<TH width=20%>Type</TH>
+<TH width=20%>Description</TH>
+<TH width=20%>Range</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=20%>
+<PRE class="code">att0<SUB>i</SUB></PRE>
+</TD>
+<TD width=20%>0.0</TD>
+<TD width=20%>FLOAT</TD>
+<TD width=20%>Constant attenuation factor</TD>
+<TD width=20%>0 to +infinity</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=20%>
+<PRE class="code">att1<SUB>i</SUB></PRE>
+</TD>
+<TD width=20%>0.0</TD>
+<TD width=20%>FLOAT</TD>
+<TD width=20%>Linear attenuation factor</TD>
+<TD width=20%>0 to +infinity</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=20%>
+<PRE class="code">att2<SUB>i</SUB></PRE>
+</TD>
+<TD width=20%>0.0</TD>
+<TD width=20%>FLOAT</TD>
+<TD width=20%>Quadratic attenuation factor</TD>
+<TD width=20%>0 to +infinity</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=20%>
+<PRE class="code">d<SUB>i</SUB></PRE>
+</TD>
+<TD width=20%>N/A</TD>
+<TD width=20%>FLOAT</TD>
+<TD width=20%>Distance from vertex position to light position</TD>
+<TD width=20%>N/A </TD>
+</TR>
+</table></div>
+
+<P>The value <CODE>att0</CODE>, <CODE>att1</CODE>, and <CODE>att2</CODE> are specified by the <B>Attenuation0</B>, <B>Attenuation1, </B>and <B>Attenuation2</B> members of <A HREF="wce50lrfd3dmlight.htm">D3DMLIGHT</A>.</P>
+
+<P>The distance between the light and the vertex position is always positive.</P>
+
+<PRE class="code">d = | L<SUB>dir</SUB> |</PRE>
+
+<P>Where:</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=20%>Parameter</TH>
+<TH width=20%>Default Value</TH>
+<TH width=20%>Type</TH>
+<TH width=40%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=20%>
+<PRE class="code">L<SUB>dir</SUB></PRE>
+</TD>
+<TD width=20%>N/A</TD>
+<TD width=20%><A HREF="wce50lrfd3dmvector.htm">D3DMVECTOR</A></TD>
+<TD width=40%>Direction vector from the vertex position to the light position.</TD>
+</TR>
+</table></div>
+
+<P>If <CODE>d</CODE> is greater than the light's range, that is, the <B>Range</B> member of a <B>D3DMLIGHT</B> structure, Microsoft Direct3D Mobile makes no further attenuation calculations and applies no effects from the light to the vertex.</P>
+
+<P>The attenuation constants act as coefficients in the formula&#0151;you can produce a variety of attenuation curves by making simple adjustments to them. You can set <B>Attenuation1</B> to 1.0 to create a light that doesn't attenuate but is still limited by range, or you can experiment with different values to achieve various attenuation effects.</P>
+
+<P>The attenuation at the maximum range of the light is not 0.0. To prevent lights from suddenly appearing when they are at the light range, an application can increase the light range. Or, the application can set up attenuation constants so that the attenuation factor is close to 0.0 at the light range. The attenuation value is multiplied by the red, green, and blue components of the light's color to scale the light's intensity as a factor of the distance light travels to a vertex. </P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50conlighting.htm">Lighting</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

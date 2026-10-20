@@ -1,0 +1,123 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Maintaining the UIAL</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Maintaining the UIAL"/>
+<MSHelp:RLTitle Title="Maintaining the UIAL"/>
+<MSHelp:Keyword Index="A" Term="wce51grfMaintainingUIAL"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Debugging"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="True"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="UIALDevGuide.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="False"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_1076640">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce51grfmaintaininguial"></A>Maintaining the UIAL</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>When UI or resource changes are made in the product the UIAL must be updated to reflect these changes.</P>
+
+<P class="label"><B>Rebuild the RCML files</B>
+
+<UL type="disc">
+	<LI>In a build window go to the directory where resources are built for your application (example: private\apps\outlook\resfiles\outres\ppc).</li>
+
+	<LI>Check out the sources file in this directory.</li>
+
+	<LI>Add the following line to the sources file in this directory: "RCMLFLAGS=$(RCMLFLAGS) -refresh".</li>
+
+	<LI>Build in this directory.</li>
+
+	<LI>RCMX files are generated if changes are required to RCML files but you don't have them checked out. Do "sd edit" on the RCML files that correspond to any generated RCMX files and then build the directory again.</li>
+
+	<LI>Do "sd revert" on your sources file - checking in the refresh change will slow down builds.</li>
+</UL>
+
+<P class="label"><B>If new RCML files are generated</B>
+
+<UL type="disc">
+	<LI>Do "sd add" on any new RCML files that are generated.</li>
+
+	<LI>Check out the IdnHolders.cs file for your UIAL project, since a new class will be added for every new RCML file.</li>
+
+	<LI>Decorate the RCML for processing by RCTOCS.</li>
+</UL>
+
+<P class="label"><B>Re-run RCTOCS to update the UIAL files</B>
+
+<UL type="disc">
+	<LI>See RCTOCS for information on running the tool.</li>
+</UL>
+
+<P class="label"><B>If new Dialog classes resulted from re-running RCTOCS</B>
+
+<UL type="disc">
+	<LI>Do "sd add" on any new Dialog classes that are generated.</li>
+
+	<LI>Add properties for each new Dialog class to the Application class of your UIAL.</li>
+
+	<LI>Add code to the UIAL self-test that navigates to each new Dialog and calls VerifyAllControls() on each dialog.</li>
+</UL>
+
+<P class="label"><B>If you have changed a top-level window or a Smartphone CPL dialog</B>
+
+<UL type="disc">
+	<LI>Top-level windows are not generated from RCML, so you will not see changes in the UIAL using RCTOCS.</li>
+
+	<LI>If you added a top-level window you need to run RcmlSnap on the new window and then rerun RCTOCS to integrate the resulting class into the UIAL.</li>
+
+	<LI>If you added a new Smartphone CPL dialog you need to run SpRcmlGen on the associate xml file and then rerun RCTOCS to integrate the resulting class into the UIAL.</li>
+
+	<LI>If you changed a top-level window or Smartphone CPL dialog you will need to rerun RcmlSnap/SpRcmlGen and RCTOCS.</li>
+
+	<LI>If you removed a top-level window or Smartphone CPL dialog you will need to manually remove the Dialog class from the UIAL project.</li>
+</UL>
+
+<P class="label"><B>&middot;Make sure the UIAL self-test passes</B>
+
+<UL type="disc">
+	<LI>Build the UIAL (run "buildManaged -c from your build window)</li>
+
+	<LI>Run the test from PB by typing "s harness -assembly &lt;dll_name&gt;" where &lt;dll_name&gt; is the name of your UIAL project dll.</li>
+
+	<LI>If the test does not pass you will need to debug it in VS - see Getting Ready To Automate for information on setting up your environment and debugging the test.</li>
+</UL>
+
+<P class="label"><B>Have UIAL and RCML files reviewed by your area SDE/T and Toolbx</B></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

@@ -1,0 +1,113 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>CCHookProc</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="CCHookProc"/>
+<MSHelp:RLTitle Title="CCHookProc"/>
+<MSHelp:Keyword Index="K" Term="CCHookProc"/>
+<MSHelp:Keyword Index="A" Term="wce50lrfCCHookProc"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Feature"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="apiref"/>
+<MSHelp:Attr Name="Filename" Value="commdlg.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="False"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+<MSHelp:Attr Name="APIName" Value="CCHookProc"/>
+<MSHelp:Attr Name="PBFeature" Value="UI"/>
+<MSHelp:Attr Name="PBOnly" Value="False"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_3021718">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50lrfcchookproc"></A>CCHookProc</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>This function is an application-defined or library-defined callback function that is used with the <B>Color</B> common dialog box. <B>CCHookProc</B> receives messages or notifications intended for the default dialog box procedure.</P>
+
+<PRE class="syntax"><B>UINT APIENTRY CCHookProc(</B>
+  <B>HWND</B> <I>hdlg</I><B>, </B>
+  <B>UINT</B> <I>uiMsg</I><B>, </B>
+  <B>WPARAM</B> <I>wParam</I><B>, </B>
+  <B>LPARAM</B> <I>lParam</I>
+<B>);</B></PRE>
+
+<H4 class="dtH4">Parameters</H4>
+
+<DL>
+<DT><I>hdlg</I></DT>
+
+<DD>[in] Handle to the <B>Color</B> dialog box window for which the message is intended. </dd>
+
+<DT><I>uiMsg</I></DT>
+
+<DD>[in] Identifies the message being received.</dd>
+
+<DT><I>wParam</I></DT>
+
+<DD>[in] Specifies additional information about the message. The exact meaning depends on the value of the <I>uiMsg</I> parameter.</dd>
+
+<DT><I>lParam</I></DT>
+
+<DD>[in] Specifies additional information about the message. The exact meaning depends on the value of the <I>uiMsg </I>parameter.
+
+<P>If the <I>uiMsg</I> parameter indicates the <A HREF="wce50lrfwminitdialog.htm">WM_INITDIALOG</A> message, <I>lParam</I> is a pointer to a <A HREF="wce50lrfchoosecolor153.htm">CHOOSECOLOR (structure)</A> containing the values specified when the dialog was created. 
+</dd>
+</DL>
+
+<H4 class="dtH4">Return Values</H4>
+
+<P>Zero indicates that the default dialog box procedure processes the message. Nonzero indicates that the default dialog box procedure ignores the message.</P>
+
+<H4 class="dtH4">Remarks</H4>
+
+<P>When you use the <A HREF="wce50lrfchoosecolor150.htm">ChooseColor (function)</A> function to create a <B>Color</B> dialog box, you can provide a <B>CCHookProc</B> hook procedure to process messages or notifications intended for the dialog box procedure. To enable the hook procedure, use the <B>CHOOSECOLOR</B> structure that you passed to the dialog creation function. Specify the address of the hook procedure in the <B>lpfnHook</B> member and specify the CC_ENABLEHOOK flag in the <B>Flags</B> member.</P>
+
+<P>The default dialog box procedure processes the WM_INITDIALOG message before passing it to the hook procedure. For all other messages, the hook procedure receives the message first. Then, the return value of the hook procedure determines whether the default dialog procedure processes the message or ignores it.</P>
+
+<P>If the hook procedure processes the <A HREF="wce50lrfwmctlcolordlg.htm">WM_CTLCOLORDLG</A> message, it must return a valid brush handle for painting the background of the dialog box. In general, if the hook procedure processes any WM_CTLCOLOR* message, it must return a valid brush handle for painting the background of the specified control.</P>
+
+<P>Do not call the <A HREF="wce50lrfenddialog.htm">EndDialog</A> function from the hook procedure. Instead, the hook procedure can call the <A HREF="wce50lrfpostmessage.htm">PostMessage</A> function to post a WM_COMMAND message with the IDABORT value to the dialog box procedure. Posting IDABORT closes the dialog box and causes the dialog box function to return FALSE. If you need to know why the hook procedure closed the dialog box, you must provide your own communication mechanism between the hook procedure and your application.</P>
+
+<P>You can subclass the standard controls of the common dialog box. However, the common dialog box procedure may also subclass the controls. Because of this, you should subclass controls when your hook procedure processes the WM_INITDIALOG message. This ensures that your subclass procedure receives the control-specific messages before the subclass procedure set by the dialog box procedure. </P>
+
+<H4 class="dtH4">Requirements</H4>
+
+<P><B>OS Versions:</B> Windows CE 2.0 and later.<BR>
+<B>Header:</B> Commdlg.h.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50lrfchoosecolor150.htm">ChooseColor (function)</A> | <A HREF="wce50lrfenddialog.htm">EndDialog</A> | <A HREF="wce50lrfpostmessage.htm">PostMessage</A> | <A HREF="wce50lrfwminitdialog.htm">WM_INITDIALOG</A> | <A HREF="wce50lrfwmctlcolordlg.htm">WM_CTLCOLORDLG</A> | <A HREF="wce50lrfchoosecolor153.htm">CHOOSECOLOR (structure)</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

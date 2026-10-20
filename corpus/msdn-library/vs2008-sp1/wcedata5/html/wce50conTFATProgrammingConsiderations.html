@@ -1,0 +1,72 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>TFAT Programming Considerations</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="TFAT Programming Considerations"/>
+<MSHelp:RLTitle Title="TFAT Programming Considerations"/>
+<MSHelp:Keyword Index="A" Term="wce50conTFATProgrammingConsiderations"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Feature"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="fatfs_guide.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="False"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+<MSHelp:Attr Name="PBFeature" Value="SYSGEN_STOREMGR"/>
+<MSHelp:Attr Name="PBOnly" Value="False"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_3009254">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50contfatprogrammingconsiderations"></A>TFAT Programming Considerations</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>The interfaces exposed by TFAT are equivalent to those associated with FATFS. To ensure transaction safety, you should understand the FAT file system and take note of the enhancements provided by TFAT.</P>
+
+<P>When the file attribute FILE_FLAG_WRITE_THROUGH is set to true for any file, each <A HREF="wce50lrfwritefile.htm">WriteFile</A> function call is committed to the disk in an individual transaction. The committing of data implies that all data written has been written to both the volume and the FAT tables. If this attribute is not set, the data written by the <B>WriteFile</B> function is committed until a <A HREF="wce50lrfclosehandle.htm">CloseHandle</A> or <A HREF="wce50lrfflushfilebuffers.htm">FlushFileBuffers</A> function is called.</P>
+
+<P>Other operations such as <MSHelp:link keywords="wce50lrfrename" TABINDEX="0">rename</MSHelp:link>, <MSHelp:link keywords="wce50lrfcreatedir" TABINDEX="0">createdir</MSHelp:link>, and <A HREF="wce50lrfremovedirectory.htm">RemoveDirectory</A> are all transaction-safe and committed when a <B>CloseHandle</B>, <B>FlushFileBuffers</B>, or <B>WriteFile</B> function is called.</P>
+
+<P>Memory mapped files are automatically created with the <B>CreateFile</B> function setting the FILE_FLAG_WRITE_THROUGH value to true. As with any form of FAT, all databases and memory mapped files must commit every <B>WriteFile</B> operation to the FAT atomically and must have the FILE_FLAG_WRITE_THROUGH value set to true.</P>
+
+<P>Any write operations performed in the root directory of a FAT12 or FAT16 volume are not transaction-safe. The operations on the sub-directories of FAT12 and FAT16 volumes and all FAT32 volumes are transaction-safe.</P>
+
+<P>TFAT requires that a FAT volume have exactly two FAT tables. TFAT can still read and write FAT volumes that do not meet this requirement, but the operations are no longer transaction-safe.</P>
+
+<P>The action of committing requires that the FAT table be copied. Write operations are slower if the FILE_FLAG_WRITE_THROUGH attribute opens the file streams. This operation adds the time necessary to copy the FAT to the operation that is used to commit the data. All file streams are opened by default with this flag. If you use TFAT to improve performance, Microsoft recommends that you disable this operation by clearing the 0x20 bit in the FATFS Flags registry setting.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50contransactionsafefatfilesystem.htm">Transaction-Safe FAT File System</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

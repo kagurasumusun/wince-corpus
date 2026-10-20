@@ -1,0 +1,80 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Filter States</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Filter States"/>
+<MSHelp:RLTitle Title="Filter States"/>
+<MSHelp:Keyword Index="A" Term="wce51conFilterStates"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Feature"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="directshow_concepts1.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="True"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+<MSHelp:Attr Name="PBFeature" Value="SYSGEN_DSHOW"/>
+<MSHelp:Attr Name="PBOnly" Value="False"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_1067861">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce51confilterstates"></A>Filter States</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>Filters have three possible states: stopped, paused, and running. The purpose of the paused state is to cue data in the graph, so that a run command responds immediately. The Filter Graph Manager controls all state transitions. When an application calls <A HREF="wce50lrfimediacontrolrun.htm">IMediaControl::Run</A>, <A HREF="wce50lrfimediacontrolpause.htm">IMediaControl::Pause</A>, or <A HREF="wce50lrfimediacontrolstop.htm">IMediaControl::Stop</A>, the Filter Graph Manager calls the corresponding <A HREF="wce50lrfimediafilterinterface.htm">IMediaFilter</A> method on all of the filters. Transitions between stopped and running always go through the paused state, so if the application calls <B>Run</B> on a stopped graph, the Filter Graph Manager pauses the graph before running it. </P>
+
+<P>For most filters, the running and paused states are identical. Consider the following filter graph:</P>
+
+<PRE class="code">    Source &gt; Transform &gt; Renderer</PRE>
+
+<P>Assume for now that the source filter is not a live capture source. When the source filter pauses, it creates a thread that generates new data and writes it into media samples as quickly as possible. The thread "pushes" the samples downstream by calling <A HREF="wce50lrfimeminputpinreceive.htm">IMemInputPin::Receive</A> on the transform filter's input pin. The transform filter receives the samples on the source filter's thread. It may use a worker thread to deliver the samples to the renderer, but typically it delivers them on the same thread. While the renderer is paused, it waits to receive a sample. After it receives one, it blocks and holds that sample indefinitely. If it is a video renderer, it displays the sample as a poster image, repainting the image as necessary. </P>
+
+<P>At this point, the stream is fully cued and ready for rendering. If the graph remains paused, samples will "pile up" in the graph behind the first sample, until every filter is blocked in <B>Receive</B> or <B>GetBuffer</B>. No data is lost, though. Once the source thread is unblocked, it simply resumes from the point where it blocked. </P>
+
+<P>The source filter and the transform filter ignore the transition from paused to running&#0151;they simply continue to process data as fast as possible. But when the renderer runs, it starts rendering samples. First it renders the sample it held while it was paused. Then, each time it receives a new sample, it calculates the sample's presentation time. (For details, see <A HREF="wce50contimeandclocksindirectshow.htm">Time and Clocks in DirectShow</A>.) The renderer holds each sample until the presentation time, at which point it renders the sample. While it waits for the presentation time, it either blocks in the <B>Receive</B> method, or receives new samples on a worker thread with a queue. Filters upstream from the renderer are not involved in scheduling.</P>
+
+<P>Live sources, such as capture devices, are an exception to this general architecture. With a live source, it is not appropriate to cue any data in advance. The application might pause the graph and then wait for a long time before running it. The graph should not render "stale" samples. Therefore, a live source produces no samples while paused, only while running. To signal this fact to the Filter Graph Manager, the source filter's <A HREF="wce50lrfimediafiltergetstate.htm">IMediaFilter::GetState</A> method returns VFW_S_CANT_CUE. This return code indicates that the filter has switched to the paused state, even though the renderer did not receive any data.</P>
+
+<P>When a filter stops, it rejects any more samples delivered to it. Source filters shut down their streaming threads, and other filters shut down any worker threads they may have created. Pins decommit their allocators.</P>
+
+<H2 class="dtH2">State Transitions</H2>
+
+<P>The Filter Graph Manager carries out all state transitions in upstream order, starting from the renderer and working backward to the source filter. This ordering is necessary to prevent samples from being dropped and to prevent the graph from deadlocking. The most crucial state transitions are between paused and stopped: 
+
+<UL type="disc">
+	<LI><B>Stopped to paused:</B> As each filter pauses, it becomes ready to receive samples from the next filter. The source filter is the last to pause. It creates the streaming thread and begins delivering samples. Because all of the downstream filters are paused, no filter rejects any samples. The Filter Graph Manager does not complete the transition until every renderer in the graph has received a sample (with the exception of live sources, as described earlier). </li>
+
+	<LI><B>Paused to stopped:</B> When a filter stops, it releases any samples that it holds, which unblocks any upstream filters waiting in <B>GetBuffer</B>. If the filter is waiting for a resouce inside the <B>Receive</B> method, it stops waiting and returns from <B>Receive</B>, which unblocks the calling filter. Therefore, when the Filter Graph Manager stops the next upstream filter, that filter is not blocked in either <B>GetBuffer</B> or <B>Receive</B>, and can respond to the stop command. The upstream filter might deliver a few extra samples before it gets the stop command, but the downstream filter simply rejects them, because it already stopped. </li>
+</UL>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

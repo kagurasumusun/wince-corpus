@@ -1,0 +1,101 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Provisioning OTA Through a WAP Push</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Provisioning OTA Through a WAP Push"/>
+<MSHelp:RLTitle Title="Provisioning OTA Through a WAP Push"/>
+<MSHelp:Keyword Index="A" Term="wce51conOTABootstrappingThroughWAPPush"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Application"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbsmartphone"/>
+<MSHelp:Attr Name="Product" Value="kbPocketPC"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="Technology" Value="kbPocketPC"/>
+<MSHelp:Attr Name="Technology" Value="kbSmartphone"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="provisioning_mo.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="False"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_1060706">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Windows Mobile Version 5.0 SDK<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce51conotabootstrappingthroughwappush"></A>Provisioning OTA Through a WAP Push</H1>
+<!--Feedback Link Top Start-->
+<P CLASS="feedback"><font size="1"><a href="mailto:medfdbk&#64;microsoft.com?subject=Product: Windows Mobile | Version: 5.0 | Release: SDK | Title: Provisioning OTA Through a WAP Push | Filename: wce51conotabootstrappingthroughwappush.htm | Built on: Wednesday, September 14, 2005">Send Feedback</a> on this topic to the authors</font></p>
+<!--Feedback Link Top End-->
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P><b class="le">Note:</b>&nbsp;&nbsp;&nbsp;&nbsp;OTA bootstrapping is disabled by default in Windows Mobile-based devices. Before you can bootstrap or continuously provision the device OTA you must enable OTA bootstrapping. For more information see <A HREF="wce51conenablingotabootstrapping.htm">Enabling OTA Bootstrapping</A>.</P>
+
+<P>Windows Mobile-based Smartphones and Windows Mobile-based Pocket PCs (Phone Edition) can be bootstrapped by means of over-the-air (OTA) Wireless Application Protocol (WAP) push. This method is useful if the mobile operator prefers to bootstrap the device over the air at the point of sale or after purchase. In this method, a provisioning document that uses the format defined in the WAP Provisioning specifications can be pushed to the device over the air through the WAP connectionless nonsecure push mechanism over the Mobile Terminated Short Message Service (SMS) bearer.</P>
+
+<P>The content of the push message is a WAP provisioning XML file. For more information about the WAP connectivity parms that can be used in a provisioning XML file, <A HREF="wce51samwapconnectivitybootstrapmessage.htm">WAP Connectivity Bootstrap Message Example</A> section. For information about additional custom configuration parms that can also be put in the provisioning XML file, see the <A HREF="wce51conconfigurationserviceproviders.htm">Configuration Service Providers</A>. </P>
+
+<BLOCKQUOTE class="dtBlock">
+<B>Benefits</B>&nbsp;&nbsp;&nbsp;The mobile operator does not need to preconfigure the device at manufacture. Operators can bootstrap the device with the configuration data in demand on the fly. </BLOCKQUOTE>
+
+<BLOCKQUOTE class="dtBlock">
+<B>Drawbacks</B>&nbsp;&nbsp;&nbsp;The mobile operator's network must support the WAP push and the WAP provisioning bootstrap requirements. Only the mobile operator can use this method because only the mobile operator knows the device's network PIN.</BLOCKQUOTE>
+
+<P>Mobile operators can use the following steps to complete the bootstrap process through an OTA WAP push:
+
+<OL type="1">
+	<LI>Define the configuration data required for the bootstrap process, including the WAP gateways (WAP PROVCONT) and any custom settings; for example, updating security policies, the SSL channel server root certificate, HTTP proxy, and Point-to-Point Protocol (PPP) settings. </li>
+
+	<LI>Generate the provisioning XML file. Details about the structure of the XML file are covered later in this document. The XML file must be UTF-8 encoded.</li>
+
+	<LI>Compress the message to WAP Binary XML (WBXML). For information about the custom binary tokens that are not defined in the WAP PROVCONT specification, see <A HREF="wce51congsmsmartphonepocketpcphoneeditionprovisioningwbxml.htm">WBXML and Windows Mobile-based Devices</A>. 
+<BLOCKQUOTE class="dtBlock">
+<b class="le">Note</b>&nbsp;&nbsp;&nbsp;This step is optional. The provisioning XML can be sent in compressed or uncompressed form.</BLOCKQUOTE>
+</li>
+
+	<LI>For security, sign the message with a network PIN and a user PIN, as defined in the OMA Provisioning Bootstrap Specification Version 1.1. For Global System for Mobile Communications (GSM) Short Message Service (SMS), the network PIN is the International Mobile Subscriber Identity (IMSI) number on the Subscriber Identity Module (SIM) card. </li>
+
+	<LI>Send the XML file to the Push Proxy Gateway through a Password Authentication Protocol (PAP) constructed as a WAP push message. At the Push Proxy Gateway, use the WAP push OTA protocol to send the message to the device over the air through the appropriate OTA bearer &#0151; for example, GSM SMS. The device supports a WAP non-secure connectionless push.</li>
+
+	<LI>After the message arrives at the device, the message will be sent to the SMS Router. The SMS Router uses other tools to route the message to the WAP stack. The WAP component decodes the WAP push message and sends it to the Push Router. The user enters the user PIN from the UI after the Push Router displays an authentication UI. The Push Router authenticates the message and routes the provisioning message to Configuration Manager. If the message is signed with a user PIN and a network PIN, this message will be assigned both an Operator role and a User Authenticated role. For more information, see <MSHelp:link keywords="wce51conSecurityPolicies" TABINDEX="0">Security Policies</MSHelp:link>, <MSHelp:link keywords="wce51conSecurityRoles" TABINDEX="0">Security Roles</MSHelp:link>, and <MSHelp:link keywords="conPushRouter" TABINDEX="0">Push Router</MSHelp:link>.</li>
+
+	<LI>Configuration Manager grants the Manager role to the configuration XML according to the Grant Manager policy and calls specific Configuration Service Providers to process the decompressed XML.
+<P>If the bootstrap process is successful, the customer will receive a configuration update success message in Inbox.
+</li>
+</OL>
+
+<P>For more information about the components of Windows Mobile-based devices, see <MSHelp:link keywords="conPushRouter" TABINDEX="0">Push Router</MSHelp:link>, and <MSHelp:link keywords="conConfigurationManager" TABINDEX="0">Configuration Manager</MSHelp:link>. The section about Push Router includes an example of a WAP push message.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce51conbootstrappingmethods.htm">Options for Delivering Provisioning XML Files to Windows Mobile-Based Devices</A> </P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Feedback Link Bottom Start-->
+<p><font size="1"><a href="mailto:medfdbk&#64;microsoft.com?subject=Product: Windows Mobile | Version: 5.0 | Release: SDK | Title: Provisioning OTA Through a WAP Push | Filename: wce51conotabootstrappingthroughwappush.htm | Built on: Wednesday, September 14, 2005">Send Feedback</a> on this topic to the authors</font></p>
+<!--Feedback Link Bottom End-->
+<!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="mob5conCopyrightInformationForMagneto" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link></font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

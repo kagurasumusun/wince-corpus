@@ -1,0 +1,70 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>IEEE 1394 Unit Filter Driver Destination Selection</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="IEEE 1394 Unit Filter Driver Destination Selection"/>
+<MSHelp:RLTitle Title="IEEE 1394 Unit Filter Driver Destination Selection"/>
+<MSHelp:Keyword Index="A" Term="wce50conIEEE1394UnitFilterDriverDestinationSelection"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Driver"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="False"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="1394_ufd.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="False"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+<MSHelp:Attr Name="PBFeature" Value="1394Driver"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_3016978">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50conieee1394unitfilterdriverdestinationselection"></A>IEEE 1394 Unit Filter Driver Destination Selection</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>The <I>AV/C Connection and Compatibility Management Specification</I> contains a model in which destination devices do not directly connect with sources. Instead, destination devices request that source devices connect to them. </P>
+
+<P>The current Windows CE IEEE 1394 support does not support connection and compatibility management (CCM). For future compatibility with CCM, virtual subunits should provide these callbacks when registering with the unit filter driver:
+
+<UL type="disc">
+	<LI><A HREF="wce50lrfunitconnecttoremoteplugcb.htm">UNIT_ConnectToRemotePlugCB</A></li>
+
+	<LI><A HREF="wce50lrfunitdisconnectfromremoteplugcb.htm">UNIT_DisconnectFromRemotePlugCB</A></li>
+</UL>
+
+<P>These request that the virtual subunit initiate a connection from itself to a given plug, presumably on a different bus node. This is in contrast to the model where anyone who desires a connection simply establishes one. When a virtual subunit receives this type of request, it must determine how to perform the request. </P>
+
+<P>The model states that if already connected to a different remote plug, the virtual subunit should disconnect automatically from that remote plug and connect to the newly defined remote plug. As a result, requests such as a disconnect command must be validated by the virtual subunit before being carried out, especially in the case where that the connection is already broken.</P>
+
+<P>These types of connections equate directly to AVC_STREAM sessions. These types of AV/C connections are externally visible and non-abstract. As they require external commands to carry out, they are not necessarily instantaneous actions. To facilitate this, the callback has the ability to return STATUS_PENDING to the call, and to complete the action asynchronously later by calling <A HREF="wce50lrfioctlunitconnectionrequestprocessed.htm">IOCTL_UNIT_CONNECTION_REQUEST_PROCESSED</A> or <A HREF="wce50lrfioctlunitdisconnectionrequestprocessed.htm">IOCTL_UNIT_DISCONNECTION_REQUEST_PROCESSED</A>.</P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

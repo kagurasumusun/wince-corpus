@@ -1,0 +1,181 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Linker Tools Error LNK2001</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Linker Tools Error LNK2001"/>
+<MSHelp:RLTitle Title="Linker Tools Error LNK2001"/>
+<MSHelp:Keyword Index="A" Term="wce50errLinkerToolsErrorLNK2001"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Guide"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="True"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbRef"/>
+<MSHelp:Attr Name="Filename" Value="errlink.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="False"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_3026189">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50errlinkertoolserrorlnk2001"></A>Linker Tools Error LNK2001</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<PRE class="syntax"><B>unresolved external symbol "<I>symbol</I>"</B></PRE>
+
+<P>Code references something (such as a function, variable, or label) that the linker can't find in the libraries and object files.</P>
+
+<P class="label"><B>Possible causes</B>
+
+<UL type="disc">
+	<LI>What the code asks for doesn't exist (the symbol is spelled incorrectly or uses the wrong case, for example).</li>
+
+	<LI>The code asks for the wrong thing (you are using mixed versions of the libraries, some from one version of the product, others from another version).</li>
+</UL>
+
+<P>This error message is followed by fatal error LNK1120.</P>
+
+<P class="label"><B>Specific causes </B></P>
+
+<P><B>Coding Problems</B>
+
+<UL type="disc">
+	<LI>Mismatched case in your code or module-definition (.def) file can cause LNK2001 (for example, if you named a variable var1 in one C++ source file and tried to access it as VAR1 in another).</li>
+
+	<LI>A program that uses function inlining but defines the functions in a .cpp file rather than in the header file can cause LNK2001. </li>
+
+	<LI>Calling a C function from a C++ program without using <B>extern</B> "C" (which causes the compiler to use the C naming convention) can cause LNK2001. 
+<P>Compiler options /Tp and /Tc cause the compiler to compile files as C or C++, respectively, regardless of the filename extension. 
+
+<P>These options can cause function names different from what you expect.
+</li>
+
+	<LI>Attempting to reference functions or data that don't have external linkage can cause LNK2001. In C++, inline functions and <B>const</B> data have internal linkage unless explicitly specified as <B>extern</B>. </li>
+
+	<LI>A missing function body or variable can cause LNK2001. With just a function prototype or <B>extern</B> declaration the compiler can continue without error, but the linker cannot resolve a call to an address or reference to a variable because there is no function code or variable space reserved. </li>
+
+	<LI>Calling a function with parameter types that do not match those in the function declaration can cause LNK2001. Name decoration incorporates the parameters of a function into the final decorated function name.</li>
+
+	<LI>Incorrectly included prototypes, which cause the compiler to expect a function body that is not provided can cause LNK2001. If you have a class and nonclass implementation of a function F, beware of C++ scope-resolution rules. </li>
+
+	<LI>When using C++, including a function prototype in a class definition and failing to include the implementation of the function for that class can cause LNK2001.</li>
+
+	<LI>Attempting to call a pure virtual function from the constructor or destructor of an abstract base class can cause LNK2001. A pure virtual function has no base class implementation.</li>
+
+	<LI>Trying to access a static variable from outside the file in which it is declared can cause LNK2001. Functions declared with the static modifier by definition have file scope. Static variables have the same limitation.</li>
+
+	<LI>Trying to use a variable declared within a function (a local variable) outside the scope of that function can cause LNK2001.</li>
+
+	<LI>Trying to use a global constant in C++ in multiple files can cause LNK2001. 
+<P>In C++, unlike C, global constants have <B>static</B> linkage. To get around this limitation, include the <B>const</B> initializations in a header file and include that header in your .cpp files, or make the variable nonconstant and use a constant reference to access it.
+</li>
+
+	<LI>When building a release version of an Active Template Library (ATL) for Windows CE project, indicates that CRT startup code is required. To fix, do one of the following,
+<UL type="disc">
+	<LI>Remove <B>_ATL_MIN_CRT</B> from the list of preprocessor defines to allow CRT startup code to be included. 
+<P>On the <B>Project</B> menu, click <B>Settings</B>. 
+
+<P>In the <B>Settings For:</B> drop down list, choose <B>Multiple Configurations</B>. 
+
+<P>In the <B>Select project configuration(s) to modify</B> dialog box, click the check boxes for all Release versions, and then click <B>OK</B>. 
+
+<P>On the <B>C/C++</B> tab, choose the <B>General</B> category and remove <B>_ATL_MIN_CRT</B> from the <B>Preprocessor definitions</B> edit box.
+</li>
+
+	<LI>If possible, remove calls to CRT functions that require CRT startup code. Instead, use their Microsoft&reg; Win32&reg; equivalents. 
+<P>For example, use <B>lstrcmp</B> instead of <B>strcmp</B>. 
+
+<P>Known functions that require CRT startup code are some of the string and floating point functions. 
+</li>
+</UL>
+</li>
+</UL>
+
+<P><B>Compiling and Linking Problems</B>
+
+<UL type="disc">
+	<LI>Using /NOD if the names of the run-time and Microsoft Foundation Classes (MFC) for Windows CE libraries are included in the object file module can cause LNK2001. If you use the /NOD (/NODEFAULTLIB) option, these libraries are not<I> </I>linked into the project unless you have explicitly included them.</li>
+
+	<LI>If you are using Unicode and MFC, you will get an unresolved external on _<B>WinMain@16</B> if you do not create an entrypoint to <B>wWinMainCRTStartup</B>. Use the /ENTRY option or type this value in the <B>Project Settings</B> dialog box. 
+<P>To find this option in the development environment, click <B>Settings</B> on the <B>Project</B> menu, then click the <B>Link</B> tab and click <B>Output in the Category</B> box.
+
+<P>For more information, see the following Knowledge Base articles in the MSDN Library. In the MSDN Library, click the <B>Search</B> tab, paste the article number or article title into the text box, then click <B>List Topics</B>. If you search on the article number, make sure the <B>Search titles only</B> option is clear.
+
+<UL type="disc">
+	<LI>Q125750&nbsp;&nbsp;&nbsp;"PRB: Error LNK2001: '_WinMain@16': Unresolved External Symbol"</li>
+
+	<LI>Q131204&nbsp;&nbsp;&nbsp;"PRB: Wrong Project Selection Causes LNK2001 on _WinMain@16"</li>
+
+	<LI>Q100639&nbsp;&nbsp;&nbsp;"Unicode Support in the Microsoft Foundation Class Library"</li>
+</UL>
+</li>
+
+	<LI>Linking code compiled with /MT with the library LIBC.lib causes LNK2001 on <B>_beginthread</B>, <B>_beginthreadex</B>, <B>_endthread</B>, and <B>_endthreadex</B>. </li>
+
+	<LI>When compiling with /MD, a reference to "func" in your source becomes a reference "__imp__func" in the object because all the run-time is now held within a DLL. 
+<P>If you try to link with the static libraries LIBC.lib or LIBCMT.lib, you get LNK2001 on __imp__func. 
+
+<P>If you try to link with MSVCxx.lib when compiling without /MD you do not always get LNK2001, but you will likely have other problems. 
+</li>
+
+	<LI>Linking code compiled with an explicit or implicit /ML to the LIBCMT.lib causes LNK2001 on <B>_errno</B>. </li>
+
+	<LI>Linking with the release mode libraries when building a debug version of an application can cause LNK2001. Similarly, using an /Mxd option (/MLd, /MTd, or /MDd) and/or defining _<B>DEBUG</B> and then linking with the release libraries will give you potential unresolved externals (among other problems). Linking a release mode build with the debug libraries also causes similar problems.</li>
+
+	<LI>Mixing versions of Microsoft libraries and compiler products can be problematic. A new compiler version's libraries can contain new symbols that cannot be found in the libraries included with previous versions. Use DUMPBIN to find out if a symbol is in a 32-bit object file or library. </li>
+
+	<LI>There is no standard for C++ naming between compiler vendors or between different versions of a compiler. Therefore, linking object files compiled with other compilers might not produce the same naming scheme and thus cause error LNK2001.</li>
+
+	<LI>Mixing inline and noninline compile options on different modules can cause LNK2001. If a C++ library is created with function inlining turned on (/Ob1 or /Ob2) but the corresponding header file describing the functions has inlining turned off (no <B>inline</B> keyword), you will get this error. 
+<P>To prevent this problem, have the inline functions defined with <B>inline</B> in the header file you are going to include in other files.
+</li>
+
+	<LI>If you are using the <B>#pragma inline_depth</B> compiler directive, make sure you have a value of 2 or greater set, and make sure you are using the /Ob1 or /Ob2 compiler option. </li>
+
+	<LI>Omitting the LINK option /NOENTRY when creating a resource-only DLL causes LNK2001.</li>
+
+	<LI>Using incorrect /SUBSYSTEM or /ENTRY settings can cause LNK2001. For example, if you write a character-based application (a console application) and specify /SUBSYSTEM:WINDOWS, you will get an unresolved external for <B>WinMain</B>.</li>
+</UL>
+
+<P><B>Export Problems</B>
+
+<UL type="disc">
+	<LI>When you are porting an application from 16 to 32 bits, LNK2001 can occur. The current 32-bit module-definition (.def) file syntax requires that <B>__cdecl</B>, <B>__stdcall</B>, and <B>__fastcall</B> functions be listed in the EXPORTS section without underscores (undecorated). 
+<P>This differs from the 16-bit syntax, where they must be listed with underscores (decorated). 
+
+<P>For more information, see the description of the EXPORTS section of module-definition files. 
+</li>
+
+	<LI>Any export listed in the .def file and not found will cause LNK2001. This could be because it does not exist, is spelled incorrectly, or uses C++ decorated names (.def files do not take decorated names) </li>
+</UL>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

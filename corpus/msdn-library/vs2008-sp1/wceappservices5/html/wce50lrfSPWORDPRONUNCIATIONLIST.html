@@ -1,0 +1,139 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>SPWORDPRONUNCIATIONLIST</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="SPWORDPRONUNCIATIONLIST"/>
+<MSHelp:RLTitle Title="SPWORDPRONUNCIATIONLIST"/>
+<MSHelp:Keyword Index="K" Term="SPWORDPRONUNCIATIONLIST"/>
+<MSHelp:Keyword Index="A" Term="wce50lrfSPWORDPRONUNCIATIONLIST"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Feature"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="apiref"/>
+<MSHelp:Attr Name="Filename" Value="sapi_structures.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="True"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+<MSHelp:Attr Name="APIName" Value="SPWORDPRONUNCIATIONLIST"/>
+<MSHelp:Attr Name="PBFeature" Value="SYSGEN_SPEECH"/>
+<MSHelp:Attr Name="PBOnly" Value="False"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="Author" CONTENT="Desktop">
+<META NAME="msdnID" CONTENT="_3007464">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50lrfspwordpronunciationlist"></A>SPWORDPRONUNCIATIONLIST</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>This structure contains information about possible variations in pronunciation for a given word. It is the start of a linked list of <A HREF="wce50lrfspwordpronunciation.htm">SPWORDPRONUNCIATION</A> structures, and contains the size and actual buffer of all subsequent pronunciations. The structure is used with <A HREF="wce50lrfisplexicongetpronunciations.htm">ISpLexicon::GetPronunciations</A>. </P>
+
+<PRE class="syntax"><B>typedef struct SPWORDPRONUNCIATIONLIST{</B>
+<B>  ULONG</B> <I>ulSize</I><B>;</B>
+<B>  BYTE* </B><I>pvBuffer</I><B>;</B>
+<B>  SPWORDPRONUNCIATION* </B><I>pFirstWordPronunciation</I><B>;</B>
+<B>} SPWORDPRONUNCIATIONLIST;</B></PRE>
+
+<H4 class="dtH4">Members</H4>
+
+<DL>
+<DT><B>ulSize </B></DT>
+
+<DD>Size, in bytes, of the pronunciation buffer (<B>pvBuffer</B>). </dd>
+
+<DT><B>pvBuffer </B></DT>
+
+<DD>Pointer to the pronunciation buffer. </dd>
+
+<DT><B>pFirstWordPronunciation </B></DT>
+
+<DD>Pointer to an <A HREF="wce50lrfspwordpronunciation.htm">SPWORDPRONUNCIATION</A> structure representing the first pronunciation in the linked list contained in the buffer specified by <B>pvBuffer</B>. </dd>
+</DL>
+
+<H4 class="dtH4">Remarks</H4>
+
+<P>The client should call the Platform SDK memory management function <B>ZeroMemory</B> before using this structure to initialize it, and call <MSHelp:link keywords="wce50lrfCoTaskMemFree" TABINDEX="0">CoTaskMemFree</MSHelp:link> to free the buffer allocated during the calls The buffer should not be freed between the calls. <B>ISpLexicon::GetPronunciations</B> reuses the buffer for efficiency and will reallocate it when necessary. For more information about <B>ZeroMemory</B>, see the MSDN Library.</P>
+
+<H4 class="dtH4">Example</H4>
+
+<P>The following example is a code fragment demonstrating the use and creation of an <B>SPWORDPRONUNCIATIONLIST</B> structure.</P>
+
+<PRE class="code">SPWORDPRONUNCIATIONLIST spwordpronlist;
+memset(spwordpronlist, 0, sizeof(spwordpronlist));
+pISpLexicon-&gt;GetPronunciations(L"resume", 0, 0, &amp;spwordpronlist);
+for (SPWORDPRONUNCIATION *pwordpron = spwordpronlist.pFirstWordPronunciation;
+wordpron != NULL;
+wordpron = pwordpron-&gt;pNextWordPronunciation)
+{
+    DoSomethingWith(pwordpron-&gt;ePartOfSpeech, pwordpron-&gt;szPronunciation);
+}
+pISpLexicon-&gt;GetPronunciations(L"record", 0, 0, &amp;spwordpronlist);
+// repeat the previous for loop to process the pronunciations
+CoTaskMemFree(spwordpronlist.pvBuffer);</PRE>
+
+<P>The following helper class will ensure the correct use of <B>SPWORDPRONUNCIATIONLIST</B>. </P>
+
+<PRE class="code">class CSpPronList : public SPWORDPRONUNCIATIONLIST
+{
+    public:
+    CSpPronList()
+    {
+        ZeroMemory(static_cast&lt;SPWORDPRONUNCIATIONLIST*&gt;(this), sizeof(SPWORDPRONUNCIATIONLIST));
+    }
+    ~CSpPronList()
+    {
+        CoTaskMemFree(pvBuffer);
+    }
+};</PRE>
+
+<P>Using the helper class, the previous example becomes: </P>
+
+<PRE class="code">CSpPronList spwordpronlist;
+pISpLexicon-&gt;GetPronunciations(L"resume", 0, 0, &amp;spwordpronlist);
+for (SPWORDPRONUNCIATION *pwordpron = spwordpronlist.pFirstWordPronunciation;
+wordpron != NULL;
+wordpron = pwordpron-&gt;pNextWordPronunciation)
+{
+    DoSomethingWith(pwordpron-&gt;ePartOfSpeech, pwordpron-&gt;szPronunciation);
+}
+pISpLexicon-&gt;GetPronunciations(L"record", 0, 0, &amp;spwordpronlist);
+// repeat the previous for loop to process the pronunciations</PRE>
+
+<H4 class="dtH4">Requirements</H4>
+
+<P><B>OS Versions:</B> Windows CE .NET 4.1 and later.<BR>
+<B>Header:</B> Sapi.h, Sapi.idl.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50grfsapistructures.htm">SAPI Structures</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

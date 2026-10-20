@@ -1,0 +1,97 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Limiting Access to Sensitive Information in the TUI</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Limiting Access to Sensitive Information in the TUI"/>
+<MSHelp:RLTitle Title="Limiting Access to Sensitive Information in the TUI"/>
+<MSHelp:Keyword Index="A" Term="wce50conLimitingAccessToSensitiveInformationInTUI"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Feature"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="tui_appdev.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="False"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+<MSHelp:Attr Name="PBFeature" Value="SYSGEN_VOIPPHONE_UI"/>
+<MSHelp:Attr Name="PBOnly" Value="False"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_1049723">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50conlimitingaccesstosensitiveinformationintui"></A>Limiting Access to Sensitive Information in the TUI</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>It can be important to limit access to potentially sensitive information that is available using the TUI application. For example, you might not want someone who walks into your office to push a few buttons and see your Exchange contacts. </P>
+
+<P>One way to limit access is to require the phone user to enter a PIN to access private information. However, this is cumbersome when a user is already sitting next to an unlocked PC.</P>
+
+<P>Therefore, the TUI application includes additional functionality to limit access to potentially private information. The TUI attempts to determine if the user of the phone is authenticated, by seeing if a Windows PC to which the phone is tied is locked or unlocked. </P>
+
+<P>If TUI can determine that the PC is unlocked, it provides access to private information without user intervention. </P>
+
+<P>If the associated PC is locked, or TUI can't determine the status of the PC, or there is no associated PC, TUI forces the phone's user to enter a user-chosen PIN, using the phone keypad, before it displays sensitive information.</P>
+
+<P>TUI uses the Windows CE Local Authentication Subsystem (LASS) to abstract the authentication process. In the default IP phone OS design, the local authentication plugin (LAP) that LASS uses interacts over the network with an application running on a PC. </P>
+
+<P>The Windows CE LAP and the PC application are provided, in sample form, by the PC Authentication Catalog item. For more information about LASS, see <MSHelp:link keywords="wce50oriLocalAuthenticationSubsystemLASS" TABINDEX="0">Local Authentication Subsystem (LASS)</MSHelp:link>. For more information about the sample PC Authentication plug in, see <A HREF="wce50oripcauthentication.htm">PC Authentication</A>.</P>
+
+<P>The complete process works as follows:
+
+<OL type="1">
+	<LI>The user attempts to access sensitive information, like Exchange contacts.</li>
+
+	<LI>TUI calls the <B>IsPCUnlocked </B>function in laputils.cpp (in %_WINCEROOT%\Public\VoIP\OAK\Phone\TUI\Utilities). </li>
+
+	<LI><B>IsPCUnlocked</B> calls the LASS <MSHelp:link keywords="wce50lrfVerifyUser" TABINDEX="0">VerifyUser</MSHelp:link> function.</li>
+
+	<LI>LASS uses the currently active LAP to determine if the user is authenticated; then the default IP phone OS design sets the sample PC Authentication LAP as the active authentication plugin. 
+<P>This setup is accomplished by the <B>InitializeVoIPLAP</B> function in laputils.cpp. LASS uses the active LAP by calling the LAP's <B>VerifyUser</B> function, which is different from the generic LASS <B>VerifyUser</B> function. 
+
+<P>In this scenario, LASS calls the PC Authentication <MSHelp:link keywords="wce50lrfVerifyUser" TABINDEX="0">VerifyUser</MSHelp:link> function.
+</li>
+
+	<LI>The PC Authentication LAP connects to the specified PC using the network and uses the application on the PC to determine if the PC is locked.</li>
+
+	<LI>The PC lock or unlock status percolates back up to the TUI, which displays the requested information directly (if the PC is unlocked), or displays a PIN dialog (if the PC is locked or cannot be contacted).
+<BLOCKQUOTE class="dtBlock">
+<b class="le">Note</b>&nbsp;&nbsp;&nbsp;In addition to the process described in the preceding steps, there is one place where the TUI calls the LAP code directly and bypasses LASS. This happens in the TieToPCState.cpp file (in %_WINCEROOT%\Public\VoIP\OAK\Phone\TUI\State), in the <B>OnTieClick</B> function. <BR>
+<BR>
+Instead of calling the LASS <B>VerifyUser</B> function, <B>OnTieClick</B> calls the PC Authentication LAP <A HREF="wce50lrfattemptconnection.htm">AttemptConnection</A> function. <B>AttemptConnection</B> verifies authentication like the LAP normally does, but it waits a longer period of time before timing out.</BLOCKQUOTE>
+</li>
+</OL>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50contuisourcecodeorganization.htm">Examining the TUI Implementation</A> </P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, July 13, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

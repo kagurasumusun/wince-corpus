@@ -1,0 +1,142 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>USB Host Printer Client Driver</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="USB Host Printer Client Driver"/>
+<MSHelp:RLTitle Title="USB Host Printer Client Driver"/>
+<MSHelp:Keyword Index="A" Term="wce50conSampleUSBPrinterClassDriver"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Driver"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="False"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="usbhost_guide.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="True"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="True"/>
+<MSHelp:Attr Name="PBFeature" Value="USBHostDriver"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_3019354">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50consampleusbprinterclassdriver"></A>USB Host Printer Client Driver</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>The universal serial bus (USB) printer client driver is in the the %_WINCEROOT%\Public\Common\Oak\Drivers\USB\Class\Printer directory. The driver DLL is USBPRN.dll. Add the USB host printer client driver to your OS design from the Microsoft&reg; Platform Builder Catalog or by setting SYSGEN_USB_PRINTER.</P>
+
+<P>The USB printer client driver adheres to the USB host class device specifications.  This driver provides a universal solution for printing on Microsoft Windows&reg; CE operating systems through a USB port. The goal is to write the USB printer class driver as a transport driver that plugs into the existing print driver architecture. </P>
+
+<P>For each USB printer attached to the USB bus, the USB class driver installs the sample PCL printer driver PCL.dll as the default printer driver. If your printer does not support PCL printing, modify the printer registry keys as described in the Windows CE printer documentation. </P>
+
+<P>The USB printer class driver can support multiple printer devices. It presents each printer device as a single printer port to the system. The printer driver exposes the stream interface. For more information, see <A HREF="wce50oristreaminterfacedrivers.htm">Stream Interface Drivers</A>.</P>
+
+<P>The following illustration shows the components of the USB printer class driver in the Windows CE driver architecture.</P>
+
+<P class="fig"><IMG SRC="usbprinter.gif" ALT="" BORDER=0></P>
+
+<P>For information about the USB specification or the USB printer class specification, see the USB Web site.</P>
+
+<H2 class="dtH2">USB Host Printer Client Driver Interface</H2>
+
+<P>The USB printer class driver follows the standard Windows CE USB driver interface functions. The driver is implemented as a USB client driver and it exposes the <A HREF="wce50lrfusbinstalldriver.htm">USBInstallDriver</A>, <A HREF="wce50lrfusbdeviceattach.htm">USBDeviceAttach</A>, and <A HREF="wce50lrfusbuninstalldriver.htm">USBUnInstallDriver</A> entry points to support Plug-and-Play functionality. </P>
+
+<P>The USB printer driver is a transport driver similar to the parallel port driver. This driver exposes the stream interface and uses the index LPT for its name. This parallel port interface is also implemented in the USB printer class driver. From the perspective of the Print Monitor on a Windows-based desktop computer, the USB printer driver is just another parallel port printer driver. To implement the USB host printer client driver interface, no changes are needed to the upper level printer architecture. </P>
+
+<P>The USB host printer client driver supports the following IOCTLs, which are defined in Pegdpar.h:
+
+<UL type="disc">
+	<LI>IOCTL_PARALLEL_SET_TIMEOUTS</li>
+
+	<LI>IOCTL_PARALLEL_GET_TIMEOUTS</li>
+
+	<LI>IOCTL_PARALLEL_GETDEVICEID</li>
+
+	<LI>IOCTL_PARALLEL_WRITE</li>
+
+	<LI>IOCTL_PARALLEL_STATUS</li>
+</UL>
+
+<P>The driver also supports any USB printer device that has the following key parameters in its <A HREF="wce50lrfusbinterfacedescriptor.htm">USB_INTERFACE_DESCRIPTOR</A>.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=33%>Parameter</TH>
+<TH width=33%>Value</TH>
+<TH width=34%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%><B>bInterfaceClass</B></TD>
+<TD width=33%>07</TD>
+<TD width=34%>Base class for printers</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%><B>bInterfaceSubClass</B></TD>
+<TD width=33%>01</TD>
+<TD width=34%>Printers</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%><B>bInterfaceProtocol</B></TD>
+<TD width=33%>01
+<P>02</P>
+</TD>
+<TD width=34%>Unidirectional interface
+<P>Default bidirectional interface</P>
+</TD>
+</TR>
+</table></div>
+
+<H2 class="dtH2">USB Host Printer Client Driver Limitations and Known Issues</H2>
+
+<P>The following list shows the limitations and known issues with the USB printer class driver:
+
+<UL type="disc">
+	<LI>Because Windows CE has only a PCL printer driver, the following registry key entry is hard-coded into the registry to load the PCL driver. This enables testing all USB printers that support PCL print format. 
+<PRE class="code">HKEY_LOCAL_MACHINE\Printers\&lt;IEEE_1284_Device_String&gt;\Driver:"PCL.DLL"</PRE>
+</li>
+
+	<LI>Non-PCL printers still support ASCII-only printing with the default PCL driver. 
+<P>To support printing on non-PCL printers, you can load third-party printer drivers.
+</li>
+
+	<LI>The USB printer driver uses a hard-coded LPT: value in the registry.
+<P>Therefore, the printer driver shows up in Microsoft WordPad for Windows CE word processing software with two LPT1: ports, even though Device Manager has only started one printer driver: the USB printer driver with the LPT1: name. The printer's IEEE_1284_Device_String appears correctly in WordPad, however.
+</li>
+</UL>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50coninstallingtheusbprinterclassdriver.htm">Installing the USB Host Printer Client Driver on the Target Device</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

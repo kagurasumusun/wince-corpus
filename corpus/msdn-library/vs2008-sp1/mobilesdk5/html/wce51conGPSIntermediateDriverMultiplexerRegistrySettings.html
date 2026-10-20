@@ -1,0 +1,118 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>GPS Intermediate Driver Multiplexer Registry Settings</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="GPS Intermediate Driver Multiplexer Registry Settings"/>
+<MSHelp:RLTitle Title="GPS Intermediate Driver Multiplexer Registry Settings"/>
+<MSHelp:Keyword Index="A" Term="wce51conGPSIntermediateDriverMultiplexerRegistrySettings"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Application"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbsmartphone"/>
+<MSHelp:Attr Name="Product" Value="kbPocketPC"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="Technology" Value="kbPocketPC"/>
+<MSHelp:Attr Name="Technology" Value="kbSmartphone"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="gpsid_registry_bowmore.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="False"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="True"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_1062324">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Windows Mobile Version 5.0 SDK<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce51congpsintermediatedrivermultiplexerregistrysettings"></A>GPS Intermediate Driver Multiplexer Registry Settings</H1>
+<!--Feedback Link Top Start-->
+<P CLASS="feedback"><font size="1"><a href="mailto:medfdbk&#64;microsoft.com?subject=Product: Windows Mobile | Version: 5.0 | Release: SDK | Title: GPS Intermediate Driver Multiplexer Registry Settings | Filename: wce51congpsintermediatedrivermultiplexerregistrysettings.htm | Built on: Wednesday, September 14, 2005">Send Feedback</a> on this topic to the authors</font></p>
+<!--Feedback Link Top End-->
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>The GPS Intermediate Driver provides multiplexing functionality to enable multiple applications to retrieve GPS location data from the same physical GPS hardware. For information about using the multiplexer directly through the GPS Intermediate Driver raw interface, see <A HREF="wce51conaccessingrawgpsdata.htm">Accessing Raw GPS Data</A>. The multiplexer is used automatically when using the parsed API, as described in <A HREF="wce51conaccessingparsedgpsdata.htm">Accessing Parsed GPS Data</A>.</P>
+
+<BLOCKQUOTE class="dtBlock">
+<b class="le">Note</b>&nbsp;&nbsp;&nbsp;On some target devices, the root GPS Intermediate Driver registry key, and all subkeys, are protected. On these target devices, untrusted applications can read but cannot write GPS Intermediate Driver settings.</BLOCKQUOTE>
+
+<P>The <B>HKEY_LOCAL_MACHINE\System\CurrentControlSet\GPS Intermediate Driver\Multiplexer</B> key contains registry entries for multiplexer configuration. The following table shows the registry entries.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=50%>Value : type</TH>
+<TH width=50%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><B>DriverInterface </B>: REG_SZ </TD>
+<TD width=50%>No default setting.
+<P>Name of the communications port that applications use to access GPS location information provided by the GPS Intermediate Driver. For example, this value might be "COM4:" or "GPD2:". </P>
+
+<P>When using the raw interface, you use <MSHelp:link keywords="wce50lrfCreateFile" TABINDEX="0">CreateFile</MSHelp:link> with the value of this entry to open a connection to the GPS Intermediate Driver. For more information about the raw interface, see <A HREF="wce51conaccessingrawgpsdata.htm">Accessing Raw GPS Data</A>.</P>
+
+<P>The driver interface must begin with the string "COM" or "GPD". Other strings are not allowed.</P>
+
+<P>Entries that begin with "COM" can contain a number from 0 to 4294967295.</P>
+
+<P>Entries that being with "GPD" can contain a number from 1 to 4294967295. "GPD0" is reserved for controlling the operation of the GPS Intermediate Driver. For more information, see <A HREF="wce51concontrollinggpsintermediatedriverexecution.htm">Controlling GPS Intermediate Driver Execution</A>.</P>
+
+<P>Ideally, this entry should contain "GPD<I>x</I>", or "COM<I>y</I>" where y is greater than 9. That is, this entry should be "COM10", "COM11", and so on, or "GPD1", "GPD2", and so on. This saves the initial COM ports for applications that require them. However, many applications that use GPS only provide access to COM ports in the range from one to nine, so it may not always be possible to follow this advice.</P>
+</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><B>MaxBufferSize </B>: REG_DWORD</TD>
+<TD width=50%>Default setting is 16,384 bytes.
+<P>Size of the buffer, in bytes, that contains the raw data read from the physical GPS hardware.</P>
+
+<P>The GPS Intermediate Driver stores data it reads from GPS hardware in a buffer of this size. Because of this buffer, applications do not lose data if they read data from the GPS Intermediate Driver more slowly than the data is read from the GPS hardware. (Applications that read data more slowly than the data is read from the GPS hardware will eventually lose data, if this buffer is filled.)</P>
+</TD>
+</TR>
+</table></div>
+
+<P>The <B>HKEY_LOCAL_MACHINE\System\CurrentControlSet\GPS Intermediate Driver\Multiplexer\ActiveDevice</B> key contains additional configuration settings for the GPS Intermediate Driver multiplexer. All registry values except for the flags are for internal use only and are configured automatically by the GPS intermediate driver. The following table shows the registry entry to use. </P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=50%>Value : type</TH>
+<TH width=50%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><B>Flags </B>: REG_DWORD </TD>
+<TD width=50%>Device driver flags for the GPS Intermediate Driver multiplexer. These flags follow the conventions described for the Device Manager function <MSHelp:link keywords="wce50lrfActivateDeviceEx" TABINDEX="0">ActivateDeviceEx</MSHelp:link>. Of particular interest is DEVFLAGS_TRUSTEDCALLERONLY. When this flag is specified, Device.exe will allow only trusted applications to access the multiplexer.</TD>
+</TR>
+</table></div>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce51origpsintermediatedriverregistrysettings.htm">GPS Intermediate Driver Registry Settings</A> | <MSHelp:link keywords="wce50lrfActivateDeviceEx" TABINDEX="0">ActivateDeviceEx</MSHelp:link></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Feedback Link Bottom Start-->
+<p><font size="1"><a href="mailto:medfdbk&#64;microsoft.com?subject=Product: Windows Mobile | Version: 5.0 | Release: SDK | Title: GPS Intermediate Driver Multiplexer Registry Settings | Filename: wce51congpsintermediatedrivermultiplexerregistrysettings.htm | Built on: Wednesday, September 14, 2005">Send Feedback</a> on this topic to the authors</font></p>
+<!--Feedback Link Bottom End-->
+<!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="mob5conCopyrightInformationForMagneto" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link></font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

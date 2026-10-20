@@ -1,0 +1,90 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>High DPI Images</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="High DPI Images"/>
+<MSHelp:RLTitle Title="High DPI Images"/>
+<MSHelp:Keyword Index="A" Term="wce51conHighDPIImages"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Application"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbsmartphone"/>
+<MSHelp:Attr Name="Product" Value="kbPocketPC"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="Technology" Value="kbPocketPC"/>
+<MSHelp:Attr Name="Technology" Value="kbSmartphone"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="display_concepts_magneto.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="True"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_4000763">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Windows Mobile Version 5.0 SDK<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce51conhighdpiimages"></A>High DPI Images</H1>
+<!--Feedback Link Top Start-->
+<P CLASS="feedback"><font size="1"><a href="mailto:medfdbk&#64;microsoft.com?subject=Product: Windows Mobile | Version: 5.0 | Release: SDK | Title: High DPI Images | Filename: wce51conhighdpiimages.htm | Built on: Wednesday, September 14, 2005">Send Feedback</a> on this topic to the authors</font></p>
+<!--Feedback Link Top End-->
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>All raster-based image files, icons, and cursors, such as BMP, JPEG, and GIF are called images in this context. Because their dimensions are fixed in pixel units, they present unique problems for a DPI-aware application. Although image scaling can stretch images to the correct logical sizes, to take advantage of the high-DPI screen and create a positive customer experience, you should manually recreate high-visibility graphics.</P>
+
+<H2 class="dtH2">Stretching Images</H2>
+
+<P>If the display's DPI is not the same as the DPI for which the image was designed, the image needs to be stretched to display the correct physical size. However, you will need to determine whether the image should be stretched every time it is painted or whether a new bitmap should be created that is stretched only once.</P>
+
+<P>If the bitmap painting code is accessible to you, changing the code to stretch the bitmap when it paints is less memory intensive than stretching the bitmap when it loads. However, if you are using a function or object that does not allow you to scale the bitmap, such as an image list function, you might need to stretch the bitmap when it loads.</P>
+
+<P>To stretch the bitmap when it paints, you can scale it by calling the <MSHelp:link keywords="wce50lrfStretchBlt" TABINDEX="0">StretchBlt</MSHelp:link> function instead of the <MSHelp:link keywords="wce50lrfBitBlt" TABINDEX="0">BitBlt</MSHelp:link> function. The following code example assumes the bitmap was authored at 96-dpi dimensions and therefore should be stretched from its native width and height to SCALEX(width) and SCALEY(height).</P>
+
+<PRE class="code">BITMAP info;
+GetObject(bitmap, sizeof(info), (PTSTR) &amp;info);
+HDC hdcBitmap = CreateCompatibleDC(target);
+SelectObject(hdcBitmap, bitmap);
+StretchBlt(target, x, y, SCALEX(info.bmWidth), SCALEY(info.bmHeight),
+    hdcBitmap, 0, 0, info.bmWidth, info.bmHeight, SRCCOPY);
+DeleteDC(hdcBitmap);</PRE>
+
+<P>To stretch the bitmap when it loads, you can use the functions <B>HIDPI_StretchBitmap</B> or <B>HIDPI_ImageList_LoadImage</B> provided with the CrosswordSample code sample.</P>
+
+<H2 class="dtH2">Working with Bitmaps</H2>
+
+<P>Because<B> ImageList_LoadImage</B> function assumes no scaling, it has only one parameter, <I>cx</I>, which represents the width of each image in the bitmap on the disk as well as on the screen. Likewise, <B>HIDPI_ImageList_LoadImage</B> has only one <I>cx</I> parameter, which represents the width of each image on the disk. To determine how wide each image should appear on the screen, <B>HIDPI_ImageList_LoadImage</B> uses special fields to identify the DPI resolution for which the bitmaps were authored: the <I>biXPelsPerMeter</I> and <I>biYPelsPerMeter</I> fields in the <B>BITMAPINFO</B> header. <B>HIDPI_ImageList_LoadImage</B> examines these fields and scales the bitmap only if this information is different from the DPI resolution of the screen.</P>
+
+<P>Most graphics editing tools set these fields to 96 DPI by default. It's very important that your high-resolution image lists have them set correctly; otherwise, your bitmaps will be improperly scaled on high-DPI displays</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce51condevelopingdpiawareapplications.htm">Developing DPI Aware Applications</A> | <A HREF="wce51conhighdpidisplay.htm">High DPI Display</A> | <A HREF="wce51conmultipleimages.htm">Multiple Images</A> | <A HREF="wce51conimagesinstaticcontrols.htm">Images in Static Controls</A> </P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Feedback Link Bottom Start-->
+<p><font size="1"><a href="mailto:medfdbk&#64;microsoft.com?subject=Product: Windows Mobile | Version: 5.0 | Release: SDK | Title: High DPI Images | Filename: wce51conhighdpiimages.htm | Built on: Wednesday, September 14, 2005">Send Feedback</a> on this topic to the authors</font></p>
+<!--Feedback Link Bottom End-->
+<!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="mob5conCopyrightInformationForMagneto" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link></font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

@@ -1,0 +1,179 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>EDB Schema Support</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="EDB Schema Support"/>
+<MSHelp:RLTitle Title="EDB Schema Support"/>
+<MSHelp:Keyword Index="A" Term="wce50conEDBSchemaSupport"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Feature"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="edb_concepts.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="False"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_1044856">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50conedbschemasupport"></A>EDB Schema Support</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>EDB is built on a traditional database engine that supports defining the structure of a database. When you create an EDB database, you define its schema: the number of properties in the database and the data type for each property. You can also define sort orders for the database. By contrast, CEDB does not have the concept of schematization.</P>
+
+<P>Because EDB supports multiple users concurrently accessing the same database, you must ensure that no user has access when schema changes are being made. Therefore, it is more efficient to define the schema of an EDB database before the database is used.</P>
+
+<H2 class="dtH2">Adding and Removing Properties</H2>
+
+<P>After designing the schema for an EDB database, you add properties (columns) to the database. Each property is defined by the <A HREF="wce50lrfcepropspecedb.htm">CEPROPSPEC</A> structure, which is passed to the <A HREF="wce50lrfceadddatabasepropsedb.htm">CeAddDatabaseProps</A> and <A HREF="wce50lrfcecreatedatabasewithprops.htm">CeCreateDatabaseWithProps</A> functions when adding the property.</P>
+
+<P>Properties are removed from an EDB database by using the <A HREF="wce50lrfceremovedatabasepropsedb.htm">CeRemoveDatabaseProps</A> function. When a property is added or removed, EDB locks the entire database during the process; therefore, you cannot add or remove a property if any client has opened the database on any thread. </P>
+
+<BLOCKQUOTE class="dtBlock">
+<b class="le">Note</b>&nbsp;&nbsp;&nbsp;An EDB database must contain at least one property; all properties except one can be removed.</BLOCKQUOTE>
+
+<H2 class="dtH2">Naming Properties</H2>
+
+<P>EDB requires that each property have a name that is unique for each database. You can specify a user-friendly name for each property, or you can let EDB automatically generate a property name. You name the properties as they are added to the database using the <B>CEPROPSPEC</B> structure with the <B>CeAddDatabaseProps</B> function, and you read the name information by using the <A HREF="wce50lrfcegetdatabasepropsedb.htm">CeGetDatabaseProps</A> function.</P>
+
+<BLOCKQUOTE class="dtBlock">
+<b class="le">Note</b>&nbsp;&nbsp;&nbsp;When writing new properties to a database, the name of a new property may conflict with an existing property name. If a naming conflict occurs, EDB returns an ERROR_ALREADY_EXISTS error.</BLOCKQUOTE>
+
+<H2 class="dtH2"><A NAME="wce50conedbschemasupportanchor1"></A>Property ID Mapping</H2>
+
+<P>For each property in an EDB database, EDB maps a CEDB property ID. If you do not specify a name when adding a property, EDB generates a name based on the CEDB property ID. The CEDB property ID consists of an application-defined ID in the hi-word and the CEDB data type value in the lo-word. This ensures that each property name is unique within each database.</P>
+
+<P>Mapping the CEDB property ID to each EDB property means that you can have two properties in the same database that have the same application-defined ID but different data types.</P>
+
+<H2 class="dtH2">Reading and Writing Property Values</H2>
+
+<P>You can read property values using the <A HREF="wce50lrfcereadrecordpropsexedb.htm">CeReadRecordPropsEx</A> function. If you specify an invalid property ID when calling the <B>CeReadRecordPropsEx</B> function, EDB returns the CEDB_PROPNOTFOUND flag for that specific property.</P>
+
+<P>Values are written using the <A HREF="wce50lrfcewriterecordpropsedb.htm">CeWriteRecordProps</A> function. If you specify an invalid property ID when calling the <B>CeWriteRecordProps</B> function, the function call fails unless the database is currently empty. If the database contains no data, the <B>CeWriteRecordProps</B> function adds the new property.</P>
+
+<BLOCKQUOTE class="dtBlock">
+<b class="le">Note</b>&nbsp;&nbsp;&nbsp;The value of an EDB property can be NULL. Even if a property is NULL, it still uses the storage required for the property. This differs from CEDB, which does not require any storage if there is no value for a property.</BLOCKQUOTE>
+
+<H2 class="dtH2">Using Sort Orders</H2>
+
+<P>Sort orders arrange the data as they are added to the database. You can specify sort orders by using the <A HREF="wce50lrfsortorderspecexedb.htm">SORTORDERSPECEX</A> structure when calling the <A HREF="wce50lrfcecreatedatabasewithprops.htm">CeCreateDatabaseWithProps</A> or <A HREF="wce50lrfcesetdatabaseinfoedb.htm">CeSetDatabaseInfo</A> function. When you create a user-defined sort order, EDB automatically adds any property IDs specified in the sort order to the database. Therefore, the client application does not need to define the property IDs when adding a sort order. For more information on property IDs, see <A HREF="#wce50conedbschemasupportanchor1">Property ID Mapping</A>.</P>
+
+<H2 class="dtH2">EDB and CEDB Sort Order Compatibility</H2>
+
+<P>The following list describes differences between how EDB and CEDB use sort orders:
+
+<UL type="disc">
+	<LI>Default sort order
+<P>EDB does not create a default sort order.
+</li>
+
+	<LI>Unique constraints and NULL values
+<P>If you set the CEDB_SORT_UNIQUE flag in CEDB, the CEDB_SORT_NONNULL flag is implied, and so all records must include all of the sort properties, and none of the properties can be NULL. In EDB, however, one NULL value is allowed.
+
+<P>For example, if you have a sort order with two properties, and you have specified CEDB_SORT_UNIQUE, then the following table shows the behavior that exists for various values:
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=21%>Value</TH>
+<TH width=41%>EDB behavior</TH>
+<TH width=38%>CEDB behavior</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=21%>"A,B"</TD>
+<TD width=41%>Valid (considered unique)</TD>
+<TD width=38%>Valid (considered unique)</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=21%>"A,NULL"</TD>
+<TD width=41%>Valid (considered unique)</TD>
+<TD width=38%>Not permitted</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=21%>"NULL,B"</TD>
+<TD width=41%>Valid (considered unique)</TD>
+<TD width=38%>Not permitted</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=21%>"NULL,NULL"</TD>
+<TD width=41%>Valid (considered unique)</TD>
+<TD width=38%>Not permitted</TD>
+</TR>
+</table></div>
+</li>
+
+	<LI>Multiple sort orders
+<P>EDB supports up to 16 sort orders, each of which can contain up to 16 properties. CEDB supports only 4 sort orders, each of which can contain up to 3 properties. 
+</li>
+
+	<LI>Properties in sort orders
+<P>EDB allows a property to be used in more than one sort order. This is not possible in CEDB.
+</li>
+
+	<LI>Property types in sort orders
+<P>While the CEVT_BLOB and CEVT_LPWSTR data types can be included in a sort order, the CEVT_STREAM data type cannot.
+</li>
+
+	<LI>White space truncation
+<P>If you have a sort order with a unique constraint on a CEVT_LPWSTR (string) data type, EDB truncates any trailing white space in the string value. For example, EDB considers "MyValue" and "MyValue " as the same value. In CEDB, these two strings are considered unique.
+</li>
+
+	<LI>New EDB flags
+<P>EDB supports two new flags that can be used in the <B>SQLCESORTORDERSPEC::wKeyFlags</B> member:
+
+<UL type="disc">
+	<LI>CEDB_SORT_NO_POSITIONAL
+<P>If you do not need positional access on a sort order, you should specify this flag. By setting this flag, less information is stored in the sort order, saving space. If you use this flag, you must pass NULL for the <I>pdwIndex</I> parameter in the call to the <A HREF="wce50lrfceseekdatabaseexedb.htm">CeSeekDatabaseEx</A> function.
+
+<BLOCKQUOTE class="dtBlock">
+<b class="le">Note</b>&nbsp;&nbsp;&nbsp;If positional access is disabled on a sort order, then only four seek types are supported with the <B>CeSeekDatabaseEx</B> function: CEDB_SEEK_CEOID, CEDB_SEEK_BEGINNING, CEDB_SEEK_CURRENT, and CEDB_SEEK_END.</BLOCKQUOTE>
+</li>
+
+	<LI>CEDB_SORT_PRIMARYKEY
+<P>If you need entity integrity for a given sort order, you can specify this flag. Only one CEDB_SORT PRIMARYKEY constraint can be created per database. 
+
+<BLOCKQUOTE class="dtBlock">
+<b class="le">Note</b>&nbsp;&nbsp;&nbsp;A primary key is read-only; a user can't write a value to this property.</BLOCKQUOTE>
+</li>
+</UL>
+</li>
+</UL>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50lrfceadddatabasepropsedb.htm">CeAddDatabaseProps</A> | <A HREF="wce50lrfceremovedatabasepropsedb.htm">CeRemoveDatabaseProps</A> | <A HREF="wce50lrfcereadrecordpropsexedb.htm">CeReadRecordPropsEx</A> | <A HREF="wce50lrfcewriterecordpropsedb.htm">CeWriteRecordProps</A> | <A HREF="wce50lrfcecreatedatabasewithprops.htm">CeCreateDatabaseWithProps</A> | <A HREF="wce50lrfcesetdatabaseinfoedb.htm">CeSetDatabaseInfo</A> | <A HREF="wce50lrfceseekdatabaseexedb.htm">CeSeekDatabaseEx</A> | <A HREF="wce50lrfcepropspecedb.htm">CEPROPSPEC</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

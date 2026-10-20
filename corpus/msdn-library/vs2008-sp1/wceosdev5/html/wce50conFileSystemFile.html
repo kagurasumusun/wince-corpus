@@ -1,0 +1,103 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>File System File</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="File System File"/>
+<MSHelp:RLTitle Title="File System File"/>
+<MSHelp:Keyword Index="A" Term="wce50conFileSystemFile"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="OS"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="True"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="configuration_file_types.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="True"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_3012317">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50confilesystemfile"></A>File System File</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>A file system (.dat) file defines the directory and file locations for the initial settings on a target device. </P>
+
+<P>When you cold boot your run-time image on the target device, Filesys.exe uses these .dat files to create the directories, links, and files in the RAM file system on the target device.</P>
+
+<P>When updating the Project.dat file to define directory and file locations, you can specify any root directory name other than the Windows directory and its subdirectories. </P>
+
+<P>In addition, you can copy or link to a file in the ROM Windows directory. The file or link is created in the RAM file system that is part of the object store in the directory specified by the .dat file.</P>
+
+<P>The following code example shows typical entries in a Project.dat file.</P>
+
+<PRE class="code">root:-Directory("My Documents")
+root:-Directory("Program Files")
+Directory("\Program Files"):-Directory("My Projects")
+Directory("\Program Files"):-Directory("Accessories")
+Directory("\Program Files"):-Directory("Communication")
+Directory("\Program Files\My Projects"):-File("My Project Program", "\Windows\Myproj.exe")
+root:-File("\control.lnk", "\Windows\control.lnk")</PRE>
+
+<P>The <B>root:</B> statement defines the root directories for the run-time image. The <B>root:</B> statement is used to create any subdirectories that must be the first entry in the file. </P>
+
+<P>Two directories, My Documents and Program Files, are located below the root directory. In addition, three subdirectories &#0151; My Projects, Accessories, and Communication &#0151; are located in the Program Files directory. </P>
+
+<P>The <B>-File</B> parameter copies the file Myproj.exe from ROM, as defined by the Windows directory, into the My Projects directory with the My Project Program file name.</P>
+
+<P>When updating the .dat files, you can use <B>IF</B> and <B>ENDIF</B> conditional blocks and, optionally, the <B>NOT</B> (!) operator. Use the semicolon (;) to start a line of comments. </P>
+
+<P>The following code example shows how the subdirectory locations for the Program Files directory could be rewritten. </P>
+
+<PRE class="code">IF IMGINCLUDEAPPS
+  Directory("\Program Files"):-Directory("My Projects")
+ENDIF
+IF IMGNOACC !
+  Directory("\Program Files"):-Directory("Accessories")
+ENDIF
+Directory("\Program Files"):-Directory("Communication")</PRE>
+
+<P>In this example, Makeimg.exe includes the My Projects directory if the user-defined environment variable IMGINCLUDEAPPS has been set before running Makeimg.exe. If<I> </I>the environment variable IMGNOACC is not set, the Accessories directory is included. </P>
+
+<P>Regardless of environment variable settings, the Communication directory is included in the run-time image.</P>
+
+<P>At boot time, the OS parses the information that was in the .dat file and creates a more robust file system by creating other directories and copying files to their appropriate locations. This process uses RAM to store the files that were copied. </P>
+
+<P>Items listed in the .dat file are then copied, not moved. </P>
+
+<P>Shortcut or link (.lnk) files make up most of the items in the .dat file, because .lnk files are very small and are not symbolic links. Items placed in the ROM image appear in the Windows directory. The only way to make a file appear outside the Windows directory is through the .dat file.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50conimageconfigurationfiles.htm">Run-Time Image Configuration Files</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

@@ -1,0 +1,149 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Using Connection Manager URL Mapping</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Using Connection Manager URL Mapping"/>
+<MSHelp:RLTitle Title="Using Connection Manager URL Mapping"/>
+<MSHelp:Keyword Index="A" Term="wce51howConnectionManagerURLMapping"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Application"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbsmartphone"/>
+<MSHelp:Attr Name="Product" Value="kbPocketPC"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="Technology" Value="kbPocketPC"/>
+<MSHelp:Attr Name="Technology" Value="kbSmartphone"/>
+<MSHelp:Attr Name="TopicType" Value="kbTask"/>
+<MSHelp:Attr Name="Filename" Value="connmgr_app_dev.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="False"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_1069966">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Windows Mobile Version 5.0 SDK<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce51howconnectionmanagerurlmapping"></A>Using Connection Manager URL Mapping</H1>
+<!--Feedback Link Top Start-->
+<P CLASS="feedback"><font size="1"><a href="mailto:medfdbk&#64;microsoft.com?subject=Product: Windows Mobile | Version: 5.0 | Release: SDK | Title: Using Connection Manager URL Mapping | Filename: wce51howconnectionmanagerurlmapping.htm | Built on: Wednesday, September 14, 2005">Send Feedback</a> on this topic to the authors</font></p>
+<!--Feedback Link Top End-->
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>Connection Manager supports Uniform Resource Locator (URL) mapping, which enables users to specify whether a particular URL should be mapped to the Internet or a corporate network. The URL mapper resolves the particular URL with the GUID of the destination network.</P>
+
+<P>Connection Manager exposes the <A HREF="wce51grfconnmgrmapurl.htm">ConnMgrMapURL</A> function, which enables applications to use the URL mapping functionality. When an application calls <B>ConnMgrMapURL</B>, the URL mapper uses a primary list of URL mappings. This list maps specific domains to metanetworks that are XML-provisioned by device management. Users can also add mappings to this list by using the URL mapper override user interface.</P>
+
+<P>If a user tries to browse a URL on a corporate network that uses a dotted format, such as www.microsoft.com, the URL mapper checks the primary list of URL mappings to determine if this specific domain has been provisioned to connect through the Internet or the corporate network. If a match is found for this URL in the primary list, the associated GUID is returned.</P>
+
+<P>If there is no mapping in the primary list, the URL mapper searches a secondary list, which contains the mappings for the most general cases. The URL mapper follows the same steps when trying to locate a non-dotted Internet URL on a local area network (LAN) at a home office, such as myhomeoffice1.</P>
+
+<P>The URL mapper uses a mapping table, which lists specific URLs or URL patterns and their corresponding destination network. The URL patterns consist of literal characters and the control characters shown in the following table.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=38%>Character</TH>
+<TH width=62%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=38%>*</TD>
+<TD width=62%>Placeholder for zero or more of any character.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=38%>?</TD>
+<TD width=62%>Placeholder for any single character.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=38%>[]</TD>
+<TD width=62%>Contains a list of matching characters, or specific character ranges. For example, [a - zA - Z] matches any alpha character. Ranges are simple; there is no support for dash at the beginning of a range to denote the dash itself. Also, currently there is no support for the "or" (|) operator.</TD>
+</TR>
+</table></div>
+
+<P><B>ConnMgrMapURL</B> matches the input URL to the mapping table entries based on a literal match or a pattern match. The primary list contains identifier values ranging from 0 to 268435455. The secondary list contains identifiers from 268435456 and above.</P>
+
+<P>The following table shows the URL mapping table that is used by Connection Manager.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=50%>Range</TH>
+<TH width=50%>Use</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>1-500</TD>
+<TD width=50%>Wireless Application Protocol (WAP) network exceptions.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>501-16777215</TD>
+<TD width=50%>Device configuration of the primary list. These entries override manual URL entries.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>16777216-16842751</TD>
+<TD width=50%>Manually entered URL exceptions, sequentially numbered from 0x01000000. There can be up to 65536 entries.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>16842752-268435455</TD>
+<TD width=50%>Device configuration of the primary list. These entries do not override manual URL entries.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>268435456-536870911</TD>
+<TD width=50%>Device configuration of the secondary list.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>536870912</TD>
+<TD width=50%>WAP network.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>553648128</TD>
+<TD width=50%>Secure WAP network.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>570425344</TD>
+<TD width=50%>Internet metanetwork.</TD>
+</TR>
+</table></div>
+
+<P>Connection Manager calls the Windows Internet Services (WinInet) <a href="http://go.microsoft.com/fwlink/?LinkId=25375" Target="_Blank">InternetCrackUrl</A> function to parse the URL and pattern into separate pieces. Connection Manager then applies the pattern match to each piece separately. Patterns must be provisioned in a canonicalized format. For example, a blank space in the URL should be converted to the escape sequence %20. </P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><MSHelp:link keywords="mob5oriConnectionManager" TABINDEX="0">Connection Manager Concepts</MSHelp:link> | <MSHelp:link keywords="wce51grfCM_MappingsCSP" TABINDEX="0">CM_Mappings Configuration Service Provider</MSHelp:link></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Feedback Link Bottom Start-->
+<p><font size="1"><a href="mailto:medfdbk&#64;microsoft.com?subject=Product: Windows Mobile | Version: 5.0 | Release: SDK | Title: Using Connection Manager URL Mapping | Filename: wce51howconnectionmanagerurlmapping.htm | Built on: Wednesday, September 14, 2005">Send Feedback</a> on this topic to the authors</font></p>
+<!--Feedback Link Bottom End-->
+<!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="mob5conCopyrightInformationForMagneto" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link></font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

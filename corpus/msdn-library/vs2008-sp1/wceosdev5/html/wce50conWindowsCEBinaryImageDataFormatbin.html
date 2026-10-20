@@ -1,0 +1,162 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Windows CE Binary Image Data Format</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Windows CE Binary Image Data Format"/>
+<MSHelp:RLTitle Title="Windows CE Binary Image Data Format"/>
+<MSHelp:Keyword Index="A" Term="wce50conWindowsCEBinaryImageDataFormatbin"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="OS"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="True"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="configuration_file_types.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="True"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_3012340">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50conwindowscebinaryimagedataformatbin"></A>Windows CE Binary Image Data Format</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>The binary image (.bin) file format organizes data by sections. Each section contains a section header that specifies the starting address, length, and checksum for that section. </P>
+
+<P>Romimage.exe writes data organized by logical sections, such as an application's text or .data region, to the .bin file. The run-time image terminates with a run-time image record header with the physical address and checksum set to zero. </P>
+
+<P>A configuration file formatted as a .bin file is small and fast. A .bin file is about half the size of an .sre file. This smaller size allows a .bin file to download faster than an .sre file.</P>
+
+<P>The following table shows the .bin file format. </P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=32%>Field</TH>
+<TH width=11%>Length (bytes)</TH>
+<TH width=57%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=32%>Sync bytes (optional)<I> </I></TD>
+<TD width=11%>7 </TD>
+<TD width=57%>Byte 0 is B,<I> </I>indicating a .bin file format.
+<P>Bytes 1-6 are reserved and set to 0, 0, 0, F, F, \n.</P>
+</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=32%>Run-time image header, consisting of the following:</TD>
+<TD width=11%>&nbsp;</TD>
+<TD width=57%>&nbsp;</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=32%>
+<BLOCKQUOTE class="dtBlock">
+Run-time image address</BLOCKQUOTE>
+</TD>
+<TD width=11%>4</TD>
+<TD width=57%>Physical starting address of the run-time image.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=32%>
+<BLOCKQUOTE class="dtBlock">
+Run-time image length</BLOCKQUOTE>
+</TD>
+<TD width=11%>4</TD>
+<TD width=57%>Physical length, in bytes, of the run-time image.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=32%>One or more records, consisting of the following:</TD>
+<TD width=11%>&nbsp;</TD>
+<TD width=57%>&nbsp;</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=32%>
+<BLOCKQUOTE class="dtBlock">
+Record Address</BLOCKQUOTE>
+</TD>
+<TD width=11%>4</TD>
+<TD width=57%>Physical starting address of data record. 
+<P>If this value is zero, the Record Address is the end of the file, and<I> record length</I> contains the starting address of the run-time image.</P>
+</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=32%>
+<BLOCKQUOTE class="dtBlock">
+Record length</BLOCKQUOTE>
+</TD>
+<TD width=11%>4</TD>
+<TD width=57%>Length of <I>record data</I>, in bytes.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=32%>
+<BLOCKQUOTE class="dtBlock">
+Record checksum</BLOCKQUOTE>
+</TD>
+<TD width=11%>4</TD>
+<TD width=57%>Signed 32-bit sum of <I>record data</I> bytes.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=32%>
+<BLOCKQUOTE class="dtBlock">
+Record data</BLOCKQUOTE>
+</TD>
+<TD width=11%><I>Record length</I></TD>
+<TD width=57%>Record data.</TD>
+</TR>
+</table></div>
+
+<P>The following code example shows a .bin file format definition.</P>
+
+<PRE class="code">IMAGE HEADER 15 Bytes:
+4230303046460A - 7 byte sync record
+000000A0 - 4 byte starting physical address of image
+00004000 - 4 byte physical length of image
+
+IMAGE RECORD HEADER 12 Bytes:
+4 byte physical address of record
+4 byte length of record
+4 byte checksum of record
+Image Record Data - Length specified in length of record</PRE>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce51conrun-timeimagefiles.htm">Run-Time Image Files</A> | <A HREF="wce50conabsolutebinarydataformat.htm">Absolute Binary Data Format</A> | <MSHelp:link keywords="wce50lrfRomimage" TABINDEX="0">Romimage</MSHelp:link> | <MSHelp:link keywords="wce50lrfCvrtbinTool" TABINDEX="0">Cvrtbin Tool</MSHelp:link></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

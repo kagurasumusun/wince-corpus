@@ -1,0 +1,74 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Sending Protocol Driver-Originated Packets</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Sending Protocol Driver-Originated Packets"/>
+<MSHelp:RLTitle Title="Sending Protocol Driver-Originated Packets"/>
+<MSHelp:Keyword Index="A" Term="wce50conSendingProtocolDriverOriginatedPackets"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Driver"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="False"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="ndis_guide2.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="False"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+<MSHelp:Attr Name="PBFeature" Value="NetworkDriver"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_3018332">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50consendingprotocoldriveroriginatedpackets"></A>Sending Protocol Driver-Originated Packets</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>A protocol driver can transmit a single packet by calling <A HREF="wce50lrfndissend.htm">NdisSend</A>, passing a pointer to a packet descriptor with chained buffer descriptors mapping the buffered data to be sent. Alternatively, a protocol driver can transmit several packets using <A HREF="wce50lrfndissendpackets.htm">NdisSendPackets</A>, passing in a pointer to an array of pointers to one or more packet descriptors. </P>
+
+<P>In general, a protocol driver developer should choose whether to call <B>NdisSend</B> or <B>NdisSendPackets</B> based on the driver's requirements and on the characteristics of the underlying NIC driver. </P>
+
+<P>When it has bound itself to an underlying NIC driver, a connectionless protocol driver should call <A HREF="wce50lrfndisrequest.htm">NdisRequest</A> with an <A HREF="wce50lrfoidgenmaximumsendpackets.htm">OID_GEN_MAXIMUM_SEND_PACKETS</A> query to determine the maximum number of send packets that the underlying driver will accept in a packet array. If the NIC driver supports only single-packet sends, either at its <A HREF="wce50lrfminiportsend.htm">MiniportSend</A> or its <A HREF="wce50lrfminiportsendpackets.htm">MiniportSendPackets</A> function, the return value will be one or NDIS_STATUS_NOT_SUPPORTED. Either of these returns implies the protocol driver is likely to call <B>NdisSend</B> rather than <B>NdisSendPackets</B>. If the underlying driver returns a value greater than one, both drivers' performances will improve if the protocol driver sends an array of packets with <B>NdisSendPackets</B>. If OOB information is passed between the protocol driver and the NIC driver, either NDIS function can be called, because the underlying driver can read the OOB data using NDIS-supplied macros. </P>
+
+<P>When a protocol driver calls <B>NdisSend</B>, it relinquishes ownership of the given packet resources until the send completes, either synchronously or asynchronously. If the status returned by <B>NdisSend</B> is something other than NDIS_STATUS_PENDING, the send completes synchronously and ownership of the protocol-allocated packet resources reverts to the protocol driver. If the status returned by <B>NdisSend</B> is NDIS_STATUS_PENDING, when the send subsequently completes, the final status of the send and the protocol-allocated packet descriptor will be passed in to the <A HREF="wce50lrfprotocolsendcomplete.htm">ProtocolSendComplete</A> function.</P>
+
+<P>When a protocol driver transmits one or more packets by calling <B>NdisSendPackets</B>, send operations are always asynchronous. The protocol driver relinquishes ownership of the packet resources that it allocated until each packet descriptor and the final status of the send for that packet is returned to <B>ProtocolSendComplete</B>. </P>
+
+<P>Consequently, a protocol driver never reads the <B>Status</B> member in the OOB block associated with a packet descriptor on return from <B>NdisSend(Packets)</B>. The protocol cannot learn the status of its send request in this manner because this member is in use by NDIS to track the progress of an in-transition send request and is volatile until the packet descriptor is returned to <B>ProtocolSendComplete</B>. A protocol driver always obtains the status of a transmit request either by examining the value returned by <B>NdisSend</B> or from the <I>Status</I> parameter passed to <B>ProtocolSendComplete</B>.</P>
+
+<P>If a protocol driver requests the transmission of an array of packets of different priorities by arranging the packets it receives from clients before transmitting them, the protocol should place the highest priority packets at the beginning of the array. NDIS always preserves the ordering of packets in any array passed to <B>NdisSendPackets</B>, even if NDIS queues some of the packets internally. </P>
+
+<P>NDIS does not attempt to examine and make queuing decisions based on the OOB data associated with the packet descriptors given to <B>NdisSendPackets</B> or to <B>NdisSend</B>. Unless a protocol driver has special knowledge of how the underlying NIC driver handles packet priorities or the <B>TimeToSend</B> timestamps, the protocol should assume that the underlying NIC driver transmits all packets in the order in which it receives them, preserving the as-received order. Consequently, a protocol should order the packet arrays it sends according to the order in which those packets should be transmitted over the network. </P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50conprotocoldriversendandreceive.htm">Protocol Driver Send and Receive</A> | <A HREF="wce50lrfminiportsend.htm">MiniportSend</A> | <A HREF="wce50lrfminiportsendpackets.htm">MiniportSendPackets</A> | <A HREF="wce50lrfndisrequest.htm">NdisRequest</A> | <A HREF="wce50lrfndissend.htm">NdisSend</A> | <A HREF="wce50lrfndissendpackets.htm">NdisSendPackets</A> | <A HREF="wce50lrfoidgenmaximumsendpackets.htm">OID_GEN_MAXIMUM_SEND_PACKETS</A> | <A HREF="wce50lrfprotocolsendcomplete.htm">ProtocolSendComplete</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

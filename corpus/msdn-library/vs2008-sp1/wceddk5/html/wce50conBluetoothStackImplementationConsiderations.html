@@ -1,0 +1,88 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Bluetooth Stack Implementation Considerations</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Bluetooth Stack Implementation Considerations"/>
+<MSHelp:RLTitle Title="Bluetooth Stack Implementation Considerations"/>
+<MSHelp:Keyword Index="A" Term="wce50conBluetoothStackImplementationConsiderations"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Driver"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="False"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="bluetooth_guide.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="False"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+<MSHelp:Attr Name="PBFeature" Value="BluetoothHCITransportDriver"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_3017368">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50conbluetoothstackimplementationconsiderations"></A>Bluetooth Stack Implementation Considerations</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>The following are some implementation considerations you should keep in mind:
+
+<OL type="1">
+	<LI>Only one Bluetooth controller is supported.</li>
+
+	<LI>L2CAP links over unreliable channels are not supported. See the note on isochronous channels below. Flush timeout is not supported by L2CAP, upper layers are supposed to fail the connection when Flush Timeout is non-default, or it should negotiate it down to default.</li>
+
+	<LI>L2CAP does not support dynamic reconfiguration. Dynamic reconfiguration allows the system to enter CONFIG mode when a connection has already been opened. There is no appropriate way to reasonably communicate the change or handle this state using Winsock APIs.</li>
+</OL>
+
+<H2 class="dtH2">Note on isochronous channels and unreliable Baseband connections.</H2>
+
+<P>Isochronous channels are unreliable data channels when packets are dropped because they cannot be delivered within a certain time interval. They are typically used for audio and video data transmissions. Isochronous transfers in Bluetooth are implemented over ACL (asynchronous channels), and not SCO (synchronous channels) because ACL has a bigger data throughput. SCO channels are limited to 56Kbps.</P>
+
+<P>Typically, a baseband connection over Bluetooth is reliable. An ACL link is responsible for repeating the message until it is acknowledged, and failing the connection if the acknowledgement does not arrive within the configured time.</P>
+
+<P>However, it also allows specifying a flush timeout, in which packets that have not been delivered are flushed. Undelivered packets are flushed by the Bluetooth controller. However, information returned by the controller on flush does not allow the determination of which data packet has been flushed; therefore, requiring the application to add its own checks. This allows implementation of isochronous communications over Bluetooth.</P>
+
+<P>This introduces the following problems. An asynchronous baseband connection is shared by all logical connections between two devices, multiplexed by L2CAP, and at a higher layer, again, by RFCOMM.</P>
+
+<P>L2CAP does not introduce any protection against data loss, deferring it to an application, even though it protects its own packets by implementing a request-response scheme with transaction IDs. The L2CAP also does not expose any failure to deliver data packet to the user application. This forces all upper layer protocols to be prepared to run over an unreliable link.</P>
+
+<P>However, RFCOMM explicitly cannot function in an unreliable setting because it defines only the basic option of TS7.10. There is no windowing or error recovery on RFCOMM, no user data protection, and it cannot be deferred to the application because the data is streamed. The basic option also defines that the link MUST be failed in case of any command packet loss, which it does protect against. This, therefore, precludes baseband links sharing between isochronous transmissions and practically any other user data.</P>
+
+<P>The only option left for implementing isochronous channels is establishing and managing a baseband link by creating a custom stack layer that is hosted on top of the HCI. </P>
+
+<P>This stack cannot be a generic incoming connection handler. It must allow incoming connections only from well-known Bluetooth addresses, or device classes.</P>
+
+<P>A baseband connection established by this layer will be owned the layer. Because there is only one baseband connection between two devices, all layers above and including the L2CAP stack is disabled by this connection for the duration of the physical connection.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50conbluetoothprotocolstack.htm">Bluetooth Protocol Stack</A> | <MSHelp:link keywords="wce50oriBluetooth" TABINDEX="0">Bluetooth</MSHelp:link></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

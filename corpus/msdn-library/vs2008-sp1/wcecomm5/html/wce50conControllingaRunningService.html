@@ -1,0 +1,83 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Controlling a Running Service</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Controlling a Running Service"/>
+<MSHelp:RLTitle Title="Controlling a Running Service"/>
+<MSHelp:Keyword Index="A" Term="wce50conControllingaRunningService"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Feature"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="servdotexe_concepts.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="True"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_3007689">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50concontrollingarunningservice"></A>Controlling a Running Service</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>A running service can be controlled in much the same way as a device driver can be controlled using Device.exe. To do this, you need to open a handle to the service using the <MSHelp:link keywords="wce50lrfCreateFile" TABINDEX="0">CreateFile</MSHelp:link> function with the appropriate prefix and index values for a previously registered service.</P>
+
+<P>You can use Input/Output Controls (IOCTLs) to control a running service. Windows CE supports a set of IOCTLs to perform different tasks, such as stopping or starting a server. These IOCTLs facilitate the task of administering servers by providing a common interface for different services. Although servers are not required to implement handling for these IOCTLs, it is recommended that they do so. </P>
+
+<P>To send an IOCTL to the service, the application must call the <MSHelp:link keywords="wce50lrfDeviceIoControl" TABINDEX="0">DeviceIoControl</MSHelp:link> function on an open service handle. <B>DeviceIoControl</B> then calls the <A HREF="wce50lrfxxxiocontrol319.htm">xxx_IOControl (Services.exe)</A> function related to that service. The following code sample shows how to obtain the current state of a Telnet server.</P>
+
+<PRE class="code">HANDLE hService = CreateFile(L"TEL0:",0,0,NULL,OPEN_EXISTING,0,NULL);
+if(hService != INVALID_HANDLE_VALUE){
+   DWORD dwState;  //state values are defined in service.h
+   DeviceIoControl(hService, IOCTL_SERVICE_STATUS, NULL, 0, &amp;dwState,
+   sizeof(DWORD), NULL, NULL);
+      if (DeviceIOControl(hService, IOCTL_SERVICE_REFRESH, NULL, 0, NULL, 
+      0, NULL, NULL))
+         _tprintf(TEXT(("Service refresh successful"));
+      else
+         _tprintf((TEXT("Service refresh failed!"));
+      CloseHandle(hService);
+}</PRE>
+
+<P>Some of the IOCTLs for Services.exe require an input or output parameter, or both. The input parameters refer to the <I>pBufIn</I> and <I>dwLenIn</I> parameters of the <B>xxx_IOControl</B> function. The output parameters refer to the <I>pOutBuf</I>, <I>dwLenOut</I>, and <I>pdwActualOut</I> parameters of <B>xxx_IOControl</B>. Unless noted otherwise in the reference page for a specific IOCTL, the service will ignore input parameters and is not responsible for setting output parameters for a specific IOCTL. You can also define customized IOCTLs that are specific to a particular application. These IOCTLs will also have customized input and output buffers. For more information, see <A HREF="wce50conioctlsthataresentbyapplications.htm">IOCTLs that are Sent by Applications</A>. </P>
+
+<P>Not all IOCTLs that a service receives are sent by applications. Services.exe also generates some IOCTLs internally because it calls services from time to time when certain events occur. It is not necessary to implement all or any of these IOCTLs for some services. Certain scenarios may require the implementation of a specific IOCTL depending on what function your service performs. For more information, see <A HREF="wce50conioctlsthataresentbyservicesexe.htm">IOCTLs that are Sent by Services.exe</A>.</P>
+
+<P>If the service supports a stream-based interface, you can also use the <MSHelp:link keywords="wce50lrfReadFile" TABINDEX="0">ReadFile</MSHelp:link>, <MSHelp:link keywords="wce50lrfWriteFile" TABINDEX="0">WriteFile</MSHelp:link>, and <MSHelp:link keywords="wce50lrfSetFilePointer" TABINDEX="0">SetFilePointer</MSHelp:link> functions to control a running service. The implementation of these functions is specific to the desired service. </P>
+
+<P>Services may also be controlled by using the <A HREF="wce50lrfgetservicehandle.htm">GetServiceHandle</A> function. The <B>ReadFile</B>, <B>WriteFile</B>, and <B>SetFilePointer</B> functions will not work with a handle returned by <B>GetServiceHandle</B>. They can only use a handle returned by <B>CreateFile</B>. </P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50conservicesexe.htm">Services.exe</A> | <A HREF="wce50grfservicesexefunctions.htm">Services.exe Functions</A> | <A HREF="wce50lrfservicecloseport.htm">ServiceClosePort</A> | <MSHelp:link keywords="wce50lrfCreateFile" TABINDEX="0">CreateFile</MSHelp:link> | <MSHelp:link keywords="wce50lrfDeviceIoControl" TABINDEX="0">DeviceIoControl</MSHelp:link> | <A HREF="wce50lrfxxxiocontrol319.htm">xxx_IOControl (Services.exe)</A> | <MSHelp:link keywords="wce50lrfReadFile" TABINDEX="0">ReadFile</MSHelp:link> | <MSHelp:link keywords="wce50lrfWriteFile" TABINDEX="0">WriteFile</MSHelp:link> | <A HREF="wce50lrfgetservicehandle.htm">GetServiceHandle</A> | <MSHelp:link keywords="wce50lrfSetFilePointer" TABINDEX="0">SetFilePointer</MSHelp:link> | <A HREF="wce50conioctlsthataresentbyapplications.htm">IOCTLs that are Sent by Applications</A> | <A HREF="wce50conioctlsthataresentbyservicesexe.htm">IOCTLs that are Sent by Services.exe</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

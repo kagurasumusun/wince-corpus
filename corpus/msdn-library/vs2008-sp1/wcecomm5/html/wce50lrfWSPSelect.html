@@ -1,0 +1,220 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>WSPSelect</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="WSPSelect"/>
+<MSHelp:RLTitle Title="WSPSelect"/>
+<MSHelp:Keyword Index="K" Term="WSPSelect"/>
+<MSHelp:Keyword Index="A" Term="wce50lrfWSPSelect"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Feature"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="apiref"/>
+<MSHelp:Attr Name="Filename" Value="winsock2spi_functions.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="False"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+<MSHelp:Attr Name="APIName" Value="WSPSelect"/>
+<MSHelp:Attr Name="APIType" Value="LibDef"/>
+<MSHelp:Attr Name="APILocation" Value="Ws2.lib"/>
+<MSHelp:Attr Name="PBFeature" Value="SYSGEN_WINSOCK"/>
+<MSHelp:Attr Name="PBOnly" Value="False"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_3008300">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50lrfwspselect"></A>WSPSelect</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>This function determines the status of one or more sockets.</P>
+
+<PRE class="syntax"><B>int WSPSelect(</B>
+  <B>int </B><I>nfds</I><B>,</B>
+  <B>fd_set FAR* </B><I>readfds</I><B>,</B>
+  <B>fd_set FAR* </B><I>writefds</I><B>,</B>
+  <B>fd_set FAR* </B><I>exceptfds</I><B>,</B>
+  <B>const struct timeval FAR* </B><I>timeout</I><B>,</B>
+  <B>LPINT </B><I>lpErrno </I>
+<B>);</B></PRE>
+
+<H4 class="dtH4">Parameters</H4>
+
+<DL>
+<DT><I>nfds</I></DT>
+
+<DD>[in] Ignored and included only for the sake of compatibility.</dd>
+
+<DT><I>readfds</I></DT>
+
+<DD>[in, out] An optional pointer to a set of sockets to be checked for readability.</dd>
+
+<DT><I>writefds</I></DT>
+
+<DD>[in, out] An optional pointer to a set of sockets to be checked for writability</dd>
+
+<DT><I>exceptfds</I></DT>
+
+<DD>[in, out] An optional pointer to a set of sockets to be checked for errors.</dd>
+
+<DT><I>timeout</I></DT>
+
+<DD>[in] Maximum time for <B>WSPSelect</B> to wait, or NULL for a blocking operation.</dd>
+
+<DT><I>lpErrno</I></DT>
+
+<DD>[out] Pointer to the error code.</dd>
+</DL>
+
+<H4 class="dtH4">Return Values</H4>
+
+<P>This function returns the total number of descriptors that are ready and contained in the <A HREF="wce50lrffdset.htm">fd_set</A> structures, or SOCKET_ERROR if an error occurred. If the return value is SOCKET_ERROR, a specific error code is available in <I>lpErrno</I>.</P>
+
+<P>The following table shows the possible error codes.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=26%>Error value</TH>
+<TH width=74%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=26%>WSAEFAULT</TD>
+<TD width=74%>Windows Sockets service provider was unable to allocated needed resources for its internal operations, or the <I>readfds</I>, <I>writefds</I>, <I>exceptfds</I> or <I>timeval</I> parameters are not part of the user address space.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=26%>WSAENETDOWN</TD>
+<TD width=74%>Network subsystem has failed.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=26%>WSAEINVAL</TD>
+<TD width=74%>The <I>timeout</I> value is not valid, or all three descriptor parameters were NULL.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=26%>WSAEINPROGRESS</TD>
+<TD width=74%>Blocking Windows Sockets call is in progress, or the service provider is still processing a callback function.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=26%>WSAENOTSOCK</TD>
+<TD width=74%>One of the descriptor sets contains an entry that is not a socket.</TD>
+</TR>
+</table></div>
+
+<H4 class="dtH4">Remarks</H4>
+
+<P>This function is used to determine the status of one or more sockets. For each socket, the caller can request information on read, write, or error status. The set of sockets for which a given status is requested is indicated by an <B>fd_set</B> structure. All entries in an <B>fd_set</B> correspond to sockets created by the service provider. On return, the structures are updated to reflect the subset of these sockets that meet the specified condition, and <B>WSPSelect</B> returns the total number of sockets meeting the conditions. A set of macros is provided for manipulating an <B>fd_set</B>. These macros are compatible with those used in the Berkeley software, but the underlying representation is completely different.</P>
+
+<P>The parameter <I>readfds</I> identifies those sockets that are to be checked for readability. If the socket is currently listening through <A HREF="wce50lrfwsplisten.htm">WSPListen</A>, it will be marked as readable if an incoming connection request has been received, so that a <A HREF="wce50lrfwspaccept.htm">WSPAccept</A> is guaranteed to complete without blocking. For other sockets, readability means that queued data is available for reading so that a <A HREF="wce50lrfwsprecv.htm">WSPRecv</A> or <A HREF="wce50lrfwsprecvfrom.htm">WSPRecvFrom</A> is guaranteed not to block.</P>
+
+<P>For connection-oriented sockets, readability can also indicate that a close request has been received from the peer. If the virtual circuit was closed gracefully, then a <B>WSPRecv</B> will return immediately with zero bytes read. If the virtual circuit was reset, then a <B>WSPRecv</B> will complete immediately with an error code, such as WSAECONNRESET. The presence of OOB data will be checked if the socket option SO_OOBINLINE has been enabled (see <A HREF="wce50lrfwspsetsockopt.htm">WSPSetSockOpt</A>).</P>
+
+<P>The following list shows ways in which the parameter <I>writefds</I> identifies sockets that are to be checked for writability: 
+
+<UL type="disc">
+	<LI>If a socket is connecting through <A HREF="wce50lrfwspconnect.htm">WSPConnect</A>, writability means that the connection establishment successfully completed. </li>
+
+	<LI>If the socket is not in the process of listening through <B>WSPConnect</B>, writability means that a <A HREF="wce50lrfwspsend.htm">WSPSend</A> or <A HREF="wce50lrfwspsendto.htm">WSPSendTo</A> are guaranteed to succeed. </li>
+</UL>
+
+<P>However, they can block on a blocking socket if the <I>len</I> exceeds the amount of outgoing system buffer space available. It is not specified how long these guarantees can be assumed to be valid, particularly in a multithreaded environment.</P>
+
+<P>The parameter <I>exceptfds</I> identifies those sockets that are to be checked for the presence of OOB data or any exceptional error conditions. Note that OOB data will only be reported in this way if the option SO_OOBINLINE is FALSE. If a socket is making a <B>WSPConnect</B> (nonblocking) connection, failure of the connect attempt is indicated in <I>exceptfds.</I> This specification does not define which other errors will be included.</P>
+
+<P>Any two of <I>readfds</I>, <I>writefds</I>, or <I>exceptfds</I> can be given as NULL if no descriptors are to be checked for the condition of interest. At least one must be non-NULL, and any non-NULL descriptor set must contain at least one socket descriptor.</P>
+
+<P>A socket will be identified in a particular set when <B>WSPSelect</B> returns specific parameters. The following table shows these parameters.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=23%>Parameter</TH>
+<TH width=77%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=23%><I>readfds</I></TD>
+<TD width=77%>If <B>WSPListen</B> is called, a connection is pending, <B>WSPAccept</B> will succeed.<BR>
+Data is available for reading (includes OOB data if SO_OOBINLINE is enabled).<BR>
+Connection has been closed/reset/terminated.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=23%><I>writefds</I></TD>
+<TD width=77%>If <B>WSPConnect</B> (nonblocking), connection has succeeded.<BR>
+Data can be sent.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=23%><I>Exceptfds</I></TD>
+<TD width=77%>If <B>WSPConnect</B> (nonblocking), connection attempt failed.<BR>
+OOB data is available for reading (only if SO_OOBINLINE is disabled).</TD>
+</TR>
+</table></div>
+
+<P>Three macros and one upcall function are defined in the header file Ws2spi.h for manipulating and checking the descriptor sets. The variable FD_SETSIZE determines the maximum number of descriptors in a set. (The default value of FD_SETSIZE is 64, which can be modified by #defining FD_SETSIZE to another value before #including Ws2spi.h.) Internally, socket handles in a <B>fd_set</B> are not represented as bit flags as in Berkeley UNIX. Their data representation is opaque. Use of these macros will maintain software portability between different socket environments. </P>
+
+<P>You can manipulate and check <B>fd_set</B> contents for the following macros:
+
+<DL>
+<DT><B>FD_CLR(</B><I>s</I><B>, </B>*<I>set</I><B>)</B></DT>
+
+<DD>Removes the descriptor <I>s</I> from <I>set</I>.</dd>
+
+<DT><B>fd_set(</B><I>s</I><B>, </B>*<I>set</I><B>)</B></DT>
+
+<DD>Adds descriptor <I>s</I> to <I>set</I>.</dd>
+
+<DT><B>FD_ZERO(</B>*<I>set</I><B>)</B></DT>
+
+<DD>Initializes the <I>set</I> to the NULL set.</dd>
+</DL>
+
+<P>The upcall function used to check the membership is <B>int</B> <B>WPUFDIsSet (</B> <B>SOCKET</B> <I>s</I>, <B>fd_set FAR *</B> <I>set</I> <B>)</B>, which will return nonzero if <I>s</I> is a member of the <I>set</I> or otherwise zero.</P>
+
+<P>The parameter <I>timeout</I> controls how long the <B>WSPSelect</B> can take to complete. If <I>timeout</I> is a NULL pointer, <B>WSPSelect</B> will block indefinitely until at least one descriptor meets the specified criteria. Otherwise, <I>timeout</I> points to a <A HREF="wce50lrftimeval.htm">timeval</A> structure that specifies the maximum time that <B>WSPSelect</B> should wait before returning. When <B>WSPSelect</B> returns, the contents of the <B>timeval</B> structure are not altered. If <B>timeval</B> is initialized to {0, 0}, <B>WSPSelect</B> will return immediately; this is used to poll the state of the selected sockets. If this is the case, then the <B>WSPSelect</B> call is considered nonblocking and the standard assumptions for nonblocking calls apply. For example, the blocking hook will <I>not</I> be called, and the Windows Sockets provider will not yield.</P>
+
+<BLOCKQUOTE class="dtBlock">
+<b class="le">Note</b>&nbsp;&nbsp;&nbsp;<B>WSPSelect</B> has no effect on the persistence of socket events registered with <A HREF="wce50lrfwspeventselect.htm">WSPEventSelect</A>.</BLOCKQUOTE>
+
+<H4 class="dtH4">Requirements</H4>
+
+<P><B>OS Versions:</B> Windows CE .NET 4.0 and later.<BR>
+<B>Header:</B> Ws2spi.h.<BR>
+<B>Link Library:</B> Ws2.lib.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50lrfwspaccept.htm">WSPAccept</A> | <A HREF="wce50lrfwspconnect.htm">WSPConnect</A> | <A HREF="wce50lrfwsprecv.htm">WSPRecv</A> | <A HREF="wce50lrfwsprecvfrom.htm">WSPRecvFrom</A> | <A HREF="wce50lrfwspsend.htm">WSPSend</A> | <A HREF="wce50lrfwspsendto.htm">WSPSendTo</A> | <A HREF="wce50lrfwspeventselect.htm">WSPEventSelect</A> </P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

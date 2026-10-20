@@ -1,0 +1,115 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Changing the Properties of an Existing Route</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Changing the Properties of an Existing Route"/>
+<MSHelp:RLTitle Title="Changing the Properties of an Existing Route"/>
+<MSHelp:Keyword Index="A" Term="wce50conChangingthePropertiesofanExistingRoute"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Feature"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="iphelper_concepts.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="True"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+<MSHelp:Attr Name="PBFeature" Value="SYSGEN_TCPIP"/>
+<MSHelp:Attr Name="PBOnly" Value="False"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_3006703">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50conchangingthepropertiesofanexistingroute"></A>Changing the Properties of an Existing Route</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>This code sample finds a route in the table and changes its metric to NewMetric. The metric change must be viable otherwise TCP/IP will not accept it.</P>
+
+<PRE class="code">   PMIB_IPFORWARDTABLE pIpForwardTable = NULL;
+   ULONG dwSize = 0;
+   BOOL bOrder = FALSE;
+   DWORD dwStatus = 0;
+   DWORD Dest = 0xDDCCBBAA; // this is in host order Ip Address AA.BB.CC.DD is 0xDDCCBBAA
+   DWORD NewMetric = 3;
+
+   // Find out how big our buffer needs to be
+   dwStatus = GetIpForwardTable(pIpForwardTable, &amp;dwSize, bOrder);
+   if (dwStatus == ERROR_INSUFFICIENT_BUFFER) {
+
+      // Allocate the memory for the table
+      if (!(pIpForwardTable = (PMIB_IPFORWARDTABLE)malloc(dwSize))) {
+         OutputMessage(TEXT("Malloc failed, Out of Memory!\r\n"));
+         exit(1);
+      }
+
+      // Now get the table
+      dwStatus = GetIpForwardTable(pIpForwardTable, &amp;dwSize, bOrder);
+   }
+
+   if (dwStatus != ERROR_SUCCESS) {
+      OutputMessage(TEXT("GetIpForwardTable Failed, ERROR %d\r\n"), dwStatus);
+      if (pIpForwardTable) 
+         free(pIpForwardTable);
+      exit(1);
+   }
+   
+   // Search for the row in the table that is wanted.
+   for (unsigned long int i=0; i &lt; pIpForwardTable-&gt;dwNumEntries; i++) {
+      if (pIpForwardTable-&gt;table[i].dwForwardDest == 0x0000389D) {
+         
+         pIpForwardTable-&gt;table[i].dwForwardMetric1 = 3;
+
+         // Delete the old default gateway entry
+         dwStatus = SetIpForwardEntry(&amp;(pIpForwardTable-&gt;table[i]));
+
+         if (dwStatus != ERROR_SUCCESS) {
+            OutputMessage(TEXT("Could not change route metric\n"));
+            exit(1);
+         }
+      }
+   }           
+
+   if (dwStatus == NO_ERROR)
+      OutputMessage(TEXT("Metric changed successfully\n"));
+   else if (dwStatus == ERROR_INVALID_PARAMETER)
+      OutputMessage(TEXT("Invalid Parameter\n"));
+   else 
+      DisplayErrorMessage(dwStatus);
+
+   // Free resources
+   if (pIpForwardTable) 
+      free(pIpForwardTable);</PRE>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50coniphelpercodesamples.htm">IP Helper Code Samples</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

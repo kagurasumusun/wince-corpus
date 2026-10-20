@@ -1,0 +1,121 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Mounting an Installable File System as the Root Directory</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Mounting an Installable File System as the Root Directory"/>
+<MSHelp:RLTitle Title="Mounting an Installable File System as the Root Directory"/>
+<MSHelp:Keyword Index="A" Term="wce50conMountinganInstallableFileSystemastheRootDirectory"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Feature"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="filesys_overview.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="True"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="True"/>
+<MSHelp:Attr Name="PBFeature" Value="FILESYSTEM"/>
+<MSHelp:Attr Name="PBOnly" Value="True"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_1055739">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50conmountinganinstallablefilesystemastherootdirectory"></A>Mounting an Installable File System as the Root Directory</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>A Windows Mobile-based device can mount an installable file system as the root of the virtual file system ("\"). When you mount an external file system as the root, all data below the root directory is stored in the mounted file system. Files and directories of the external file system appear as directories off the root directory; subdirectories of the external file system appear as subdirectories of the root directory. Calls routed to other external volumes, such as \NETWORK or \HardDisk, will retain those names, and calls into those volumes will be routed appropriately.</P>
+
+<H2 class="dtH2">Including the ROM-only component</H2>
+
+<P>To implement an installable file system as the root, you must include the ROM-only file system component in the run-time image instead of the ROM/RAM file system component (SYSGEN_FSROMONLY=1). If the combined RAM and ROM object store system is present in the run-time image, then the object store will always become the root file system.</P>
+
+<BLOCKQUOTE class="dtBlock">
+<b class="le">Note:  </b>If you choose to use a file system other than the object store as the root file system, the majority of ActiveSync functionality will not work correctly. ActiveSync assumes that the object store is used as the root file system.</BLOCKQUOTE>
+
+<P>Only one file system may be registered as the root file system. After one root file system is registered, any subsequent file system making the attempt will be registered, but will not become the root file system. To register a different file system as the root file system, first de-register the previous root file system. At that point, there will be no root file system and the directory Windows will no longer be shadowed.</P>
+
+<H2 class="dtH2">Registering the file system as root</H2>
+
+<P>When drivers are loaded and file systems are mounted, the desired file system is registered in a special way to indicate that it should become the root. Before this registration is made, all file API calls accessing files or directories in paths off the root will fail, except those paths that are in ROM.</P>
+
+<P>The following list describes important registry values that must be set in the <B>HKEY_LOCAL_MACHINE\System\StorageManager\Profiles\&lt;MyProfile&gt;\&lt;MyFileSystem&gt;</B> registry key.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=50%>Value:type</TH>
+<TH width=50%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><B>MountAsRoot: </B>dword</TD>
+<TD width=50%>To explicitly mount a file system as the root directory, set the <B>MountAsRoot </B>value to 1.
+<P>The root file system is defined as the first file system volume to mount that has the <B>MountAsRoot</B> property. The property is specified in the registry profile of a storage device. </P>
+</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><B>MountAsBootable: </B>dword</TD>
+<TD width=50%>To explicitly mount a file system as the boot file system, set the <B>MountAsBootable</B> value to 1. 
+<P>If multiple mounted file systems have the <B>MountAsBootable</B> value set, the first one to mount will be used as the boot file system. </P>
+
+<P>For most target devices, Microsoft recommends mounting the same file system as both the root and boot file system.</P>
+</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><B>MountPermanent</B></TD>
+<TD width=50%>To explicitly prevent a file system from being programmatically dismounted, set the <B>MountPermanent</B> value to 1.
+<P>A boot partition typically contains critical system files, such as the registry. If you mount a partition as bootable, this value ensures that the bootable partition cannot later be programmatically dismounted. </P>
+</TD>
+</TR>
+</table></div>
+
+<H2 class="dtH2">Example</H2>
+
+<P>The following example mounts the first FATFS partition on a storage device reporting profile MyProfile as both the root and boot file system, and makes the partition permanent to prevent programmatic dismounting:</P>
+
+<PRE class="code">[HKEY_LOCAL_MACHINE\System\StorageManager\Profiles\&lt;MyProfile&gt;\FATFS]
+    "MountAsRoot"=dword:1
+    "MountAsBootable"=dword:1
+    "MountPermanent"=dword:1
+</PRE>
+
+<H2 class="dtH2">File shadowing</H2>
+
+<P>In Windows CE 4.x, true shadowing was not possible; the \Windows directory was either the installed file system, or a ROM-only file system, rather than the combination of both implied by the term shadow. </P>
+
+<P>In Windows CE versions 5.0 and later, an installed file system provides true shadowing between a Windows directory at the root and the ROM; that is, the files a user sees are in a combination of the two places. </P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50conaddinganinstallablefilesystem.htm">Installable File System</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

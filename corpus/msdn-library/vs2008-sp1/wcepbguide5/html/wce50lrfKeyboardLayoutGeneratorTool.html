@@ -1,0 +1,155 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Keyboard Layout Generator Tool</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Keyboard Layout Generator Tool"/>
+<MSHelp:RLTitle Title="Keyboard Layout Generator Tool"/>
+<MSHelp:Keyword Index="K" Term="Keyboard Layout Generator Tool [Devices]"/>
+<MSHelp:Keyword Index="A" Term="wce50lrfKeyboardLayoutGeneratorTool"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Guide"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="True"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="tools.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="True"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="True"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="AllowSearch" CONTENT="True">
+<META NAME="msdnID" CONTENT="_3014218">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50lrfkeyboardlayoutgeneratortool"></A>Keyboard Layout Generator Tool</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>The Keyboard Layout Generator tool (Kbdgen.exe) produces Windows CE input language and device layout source files from a Windows XP keyboard layout DLL. </P>
+
+<P>These source files can be placed in the same or separate DLLs as long as the registry entries are set appropriately. You must expose the input language and device layout entry points: <B>IL_<I>XXXXXXXX</I> </B>and <B>PS2_AT_<I>XXXXXXXX</I> </B>entry points.</P>
+
+<PRE class="syntax"><B>kbdgen</B> &lt;<I>DLL Name</I>&gt; [-v] [-o <I>&lt;Output File Prefix&gt;</I>] [-i <I>&lt;Input Locale&gt;</I>]</PRE>
+
+<H4 class="dtH4">Parameters</H4>
+
+<DL>
+<DT>&lt;<I>DLL Name</I>&gt;</DT>
+
+<DD>Name of the Windows XP keyboard layout DLL. Kbdgen will attempt to load this file from the current directory. If this fails, Kbdgen will then attempt to load the file from the Windows system directory. The keyboard layouts that come with Windows XP can be found in the registry under <B>[HKEY_LOCAL_MACHINE\SYSTEM\ControlSet001\Control\Keyboard Layouts]</B>.</dd>
+
+<DT>-v</DT>
+
+<DD>Optional. Specifies verbose output.</dd>
+
+<DT>-o <I>&lt;Output File Prefix&gt;</I></DT>
+
+<DD>Optional. Specifies that Kbdgen must write output to a file instead of writing to the console, and defines what prefix to use for the output files. By default, Kbdgen places the output files in the current directory.</dd>
+
+<DT>-i <I>&lt;Input Locale&gt;</I></DT>
+
+<DD>Optional. Specifies that Kbdgen must use the given input locale for function names and registry entries. If it is not specified, <I>XXXXXXXX </I>is used and the user is responsible for changing the name in the files.</dd>
+</DL>
+
+<H4 class="dtH4">Example</H4>
+
+<P>The following code example shows how to use Kbdgen on the Kbddv.dll file in the current directory. Once Kbdgen locates the file, it generates Dvorakil.cpp, Dvoraldl.cpp, and Dvorak.reg, using the input locale 00010409.</P>
+
+<PRE class="code">kbdgen kbddv.dll &#0150;o dvorak &#0150;i 00010409</PRE>
+
+<H4 class="dtH4">Remarks</H4>
+
+<P>Kbdgen extracts keyboard layout information for any PS/2 keyboard layout supported by Windows XP.</P>
+
+<P>The following table shows the files that Kbdgen generates if you specify the -o parameter. If you have not specified the -o parameter, the output is written to the console.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=50%>File name</TH>
+<TH width=50%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><I>&lt;Output File Prefix&gt;</I>IL.cpp</TD>
+<TD width=50%>Input language source file.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><I>&lt;Output File Prefix&gt;</I>DL.cpp</TD>
+<TD width=50%>Device layout source file. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><I>&lt;Output File Prefix&gt;</I>.reg</TD>
+<TD width=50%>Sample registry entries that may be used for this layout.</TD>
+</TR>
+</table></div>
+
+<P>After these files are generated, you must perform the following tasks for each file type.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=16%>File type</TH>
+<TH width=84%>Tasks</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=16%>Input language source file</TD>
+<TD width=84%>The default keyboard layout uses the right and left Shift, Control, and Alt keys, and the CAPS LOCK, NUM LOCK, and SCROLL LOCK keys as shift or toggle keys. 
+<P>If your keyboard layout uses different shift or toggle keys, you must add the appropriate conversion tables, <B>VkToToggledStateTable</B>, <B>VkToShiftStateTable</B>, or both, to the generated Input Language file. </P>
+
+<P>If the input locale is not specified, fill in the <I>XXXX</I> in the IL_0000<I>XXXX</I> function name with the proper input language identifier.</P>
+
+<P>For example, the Japanese input language file, which demonstrates a case where the Kana toggle key is added, is at %_WINCEROOT%\Public\Common\OAK\Drivers\Keybd\Inputlangs\0411\IL_0411.cpp. </P>
+
+<P>Duplicate entries have been removed from the <B>VKeyToXTScanCodeTable </B>array, as described in comments and in console output. Verify that the proper XT scan code is used for these virtual keys.</P>
+</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=16%>Device layout source file</TD>
+<TD width=84%>This file includes remapping for the numeric keypad. When building this file, be sure the keypad remapping library is included in your run-time image. This library is at %_COMMONOAKROOT%\lib\%_CPUINDPATH%\NumPadRmp.lib.
+<P>If the input locale is not specified, substitute the proper input locale identifier for the <I>XXXXXXXX</I> in the <B>PS2_AT_<I>XXXXXXXX</I> </B>function name.</P>
+</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=16%>Sample registry file</TD>
+<TD width=84%>Fill in all the fields in the registry entries. 
+<P>Choose a <B>Preload</B> index that will not conflict with others installed on the system.</P>
+</TD>
+</TR>
+</table></div>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><MSHelp:link keywords="wce50conLayoutManager" TABINDEX="0">Layout Manager</MSHelp:link> | <MSHelp:link keywords="wce50conKeyboardDrivers" TABINDEX="0">Keyboard Drivers</MSHelp:link> | <MSHelp:link keywords="wce50conKeyboardLayouts" TABINDEX="0">Keyboard Layouts</MSHelp:link></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

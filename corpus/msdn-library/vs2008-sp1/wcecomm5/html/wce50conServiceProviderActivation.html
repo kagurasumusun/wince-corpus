@@ -1,0 +1,80 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Service Provider Activation</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Service Provider Activation"/>
+<MSHelp:RLTitle Title="Service Provider Activation"/>
+<MSHelp:Keyword Index="A" Term="wce50conServiceProviderActivation"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Feature"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="winsock2spi_concepts.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="False"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+<MSHelp:Attr Name="PBFeature" Value="SYSGEN_WINSOCK"/>
+<MSHelp:Attr Name="PBOnly" Value="False"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_3008201">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50conserviceprovideractivation"></A>Service Provider Activation</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>Ws2.dll loads the service provider's interface DLL into the system by using the standard Microsoft Windows dynamic library loading mechanisms, and initializes it by calling <A HREF="wce50lrfwspstartup.htm">WSPStartup</A>. This is usually triggered by an application calling either <A HREF="wce50lrfsocketwindowssockets.htm">socket</A> or <A HREF="wce50lrfwsasocket.htm">WSASocket</A> in order to create a new socket that is to be associated with a service provider whose interface DLL is not currently loaded into memory. The path to each service provider's interface DLL is stored by Ws2.dll at the time the service provider is being installed.</P>
+
+<P>Over time, different versions may exist for the Winsock DLLs, applications, and service providers. New versions may define new functionality, new parameters to data structures and bit parameters, and so on. Version numbers therefore indicate how to interpret various data structures. </P>
+
+<P>To allow optimal mixing and matching of different versions of applications, versions of Ws2.dll itself, and versions of service providers by different vendors, the SPI provides a version negotiation mechanism for use between Ws2.dll and the service providers. This version negotiation is handled by <B>WSPStartup</B>. Basically, Ws2.dll passes to the service provider the highest version numbers with which it is compatible. The service provider compares this with its own supported range of version numbers. If these ranges overlap, the service provider returns a value within the overlapping portion of the range as the result of the negotiation. Usually, this should be the highest possible value. If the ranges do not overlap, the two parties are incompatible and the function returns an error. </P>
+
+<P><A HREF="wce50lrfwspstartup.htm">WSPStartup</A> must be called at least once by each client process, and may be called multiple times by Ws2.dll or other entities. A matching <A HREF="wce50lrfwspcleanup.htm">WSPCleanup</A> must be called for each successful <B>WSPStartup</B> call. The service provider should maintain a reference count on a per-process basis. On each <B>WSPStartup</B> call, the caller may specify any version number supported by the SP DLL. </P>
+
+<P>A service provider must store the pointer to the client's upcall dispatch table that is received as a <B>WSPStartup</B> parameter on a per-process basis. If a given process calls <B>WSPStartup</B> multiple times, the service provider must use only the most recently supplied dispatch table pointer. </P>
+
+<P>As part of the service provider initialization process, Ws2.dll retrieves the service provider's dispatch table through the <I>lpProcTable</I> parameter in order to obtain entry points to the rest of the SPI functions specified in this document. </P>
+
+<P>Using a dispatch table, as opposed to the usual DLL mechanisms for accessing entry points, serves the following two purposes: 
+
+<UL type="disc">
+	<LI>It is more convenient for Ws2.dll because a single call can be made to discover the entire set of entry points. </li>
+
+	<LI>It enables layered service providers formed into provider chains to operate more efficiently. </li>
+</UL>
+
+<P class="label"><B>Initializing Provider Chains</B></P>
+
+<P>At the time the <B>WSAPROTOCOL_INFOW</B> structure for a provider chain is installed, the path to the first layered provider in the chain is also specified. When a provider chain is initialized, Ws2.dll uses this path to load the provider DLL and then invokes <A HREF="wce50lrfwspstartup.htm">WSPStartup</A>. Because <B>WSPStartup</B> includes a pointer to the chain's <B>WSAPROTOCOL_INFOW</B> structure as one of its parameters, layered providers can determine what type of provider chain they are being initialized into, and the identity of the next lower layer in the chain. A layered provider would then in turn load the next protocol provider in the chain and initialize it with a call to <B>WSPStartup</B>, and so forth. Whenever the next lower layer is another layered provider, the chain's <B>WSAPROTOCOL_INFOW</B> structure must be referenced in the <B>WSPStartup</B> call. When the next lower layer is a base protocol (signifying the end of the chain), the chain's <B>WSAPROTOCOL_INFOW</B> structure is no longer propagated downward. Instead, the current layer must reference a <B>WSAPROTOCOL_INFOW</B> structure that corresponds to the protocol that the base provider should use. Thus, the base provider has no notion of being involved in a provider chain. </P>
+
+<P>The dispatch table provided by any given layered provider will, in many instances, duplicate the entry points of an underlying provider. The layered provider would only insert its own entry points for functions that it needed to be directly involved in. Note, however, that it is imperative that a layered provider <B>not</B> modify the contents of the upcall table that it received when calling <A HREF="wce50lrfwspstartup.htm">WSPStartup</A> on the next lower layer in a provider chain. These upcalls <I>must</I> be made directly to the Winsock DLL.</P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

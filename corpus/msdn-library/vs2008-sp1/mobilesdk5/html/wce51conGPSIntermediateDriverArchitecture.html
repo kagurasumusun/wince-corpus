@@ -1,0 +1,76 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>GPS Intermediate Driver Architecture</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="GPS Intermediate Driver Architecture"/>
+<MSHelp:RLTitle Title="GPS Intermediate Driver Architecture"/>
+<MSHelp:Keyword Index="A" Term="wce51conGPSIntermediateDriverArchitecture"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Application"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbsmartphone"/>
+<MSHelp:Attr Name="Product" Value="kbPocketPC"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="Technology" Value="kbPocketPC"/>
+<MSHelp:Attr Name="Technology" Value="kbSmartphone"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="gpsid_overview_bowmore.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="False"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_1061896">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Windows Mobile Version 5.0 SDK<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce51congpsintermediatedriverarchitecture"></A>GPS Intermediate Driver Architecture</H1>
+<!--Feedback Link Top Start-->
+<P CLASS="feedback"><font size="1"><a href="mailto:medfdbk&#64;microsoft.com?subject=Product: Windows Mobile | Version: 5.0 | Release: SDK | Title: GPS Intermediate Driver Architecture | Filename: wce51congpsintermediatedriverarchitecture.htm | Built on: Wednesday, September 14, 2005">Send Feedback</a> on this topic to the authors</font></p>
+<!--Feedback Link Top End-->
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>The GPS Intermediate Driver works by injecting itself between applications and GPS hardware. To an application, the GPS Intermediate Driver appears like GPS hardware. To GPS hardware, the GPS Intermediate Driver appears like a single client - it requests GPS information. This abstraction layer provides multiple benefits to developers. For more information about these benefits, as well as a brief comparison between the model used by the GPS Intermediate Driver and a model where an application interacts directly with GPS hardware, see <A HREF="wce51congpsintermediatedriverbenefits.htm">GPS Intermediate Driver Benefits</A>.</P>
+
+<P>The GPS Intermediate Driver is implemented as a normal Windows CE device driver. It is loaded into the device.exe process like all device drivers, even though it doesn't interact with device hardware directly. Instead, it uses another device driver - the one provided with or used by the GPS hardware - which then interacts with the actual hardware.</P>
+
+<P>For example, suppose that, without the GPS Intermediate Driver, an application interacts with GPS hardware by calling <MSHelp:link keywords="wce50lrfCreateFile" TABINDEX="0">CreateFile</MSHelp:link> and passing "COM1:" as the first parameter. With the GPS Intermediate Driver, the application no longer connects directly to the GPS hardware. For the application to retrieve data using the GPS Intermediate Driver, it must first configure the GPS Intermediate Driver to connect to the GPS hardware using COM1. You can do this using the GPS Intermediate Driver Control Panel application (if present on your target device), or by manipulating the registry. For detailed information about configuring the GPS Intermediate Driver, see <A HREF="wce51conconfiguringgpsintermediatedriver.htm">Configuring the GPS Intermediate Driver</A>.</P>
+
+<P>Once the GPS Intermediate Driver knows where to find the actual GPS hardware, applications can use the GPS hardware through either of two interfaces:
+
+<UL type="disc">
+	<LI>Parsed mode, using the GPS Intermediate Driver API. This interface enables developers to retrieve GPS data without calling <B>CreateFile</B> and <MSHelp:link keywords="wce50lrfReadFile" TABINDEX="0">ReadFile</MSHelp:link>. Instead, they call <A HREF="wce51lrfgpsopendevice.htm">GPSOpenDevice</A>, <A HREF="wce51lrfgpsgetlocation.htm">GPSGetLocation</A>, and <A HREF="wce51lrfgpsclosedevice.htm">GPSCloseDevice</A>. For more information about this interface, see <A HREF="wce51conaccessingparsedgpsdata.htm">Accessing Parsed GPS Data</A>.</li>
+
+	<LI>Raw mode, using the Windows CE stream device driver interface (<B>CreateFile</B>/<B>ReadFile</B>/<MSHelp:link keywords="wce50lrfCloseHandle" TABINDEX="0">CloseHandle</MSHelp:link>). The information provided by each <B>ReadFile</B> call is the data as it was retrieved from the GPS hardware. Applications are responsible for parsing the NMEA strings themselves. This interface provides backward compatibility by supporting applications that expect to interact with GPS hardware directly through a stream interface. For more information about this interface, see <A HREF="wce51conaccessingrawgpsdata.htm">Accessing Raw GPS Data</A>.</li>
+</UL>
+
+<P>Internally, the GPS Intermediate Driver reads location data from the GPS hardware and provides it to application developers that call either <B>GPSGetLocation</B> or <B>ReadFile</B>. It tracks which data has been provided to each client, so that the act of one client obtaining location information does not mean that another client cannot obtain the same data. The fact that the GPS Intermediate Driver may be handling multiple connections is completely transparent to the applications using the GPS Intermediate Driver.</P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Feedback Link Bottom Start-->
+<p><font size="1"><a href="mailto:medfdbk&#64;microsoft.com?subject=Product: Windows Mobile | Version: 5.0 | Release: SDK | Title: GPS Intermediate Driver Architecture | Filename: wce51congpsintermediatedriverarchitecture.htm | Built on: Wednesday, September 14, 2005">Send Feedback</a> on this topic to the authors</font></p>
+<!--Feedback Link Bottom End-->
+<!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="mob5conCopyrightInformationForMagneto" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link></font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

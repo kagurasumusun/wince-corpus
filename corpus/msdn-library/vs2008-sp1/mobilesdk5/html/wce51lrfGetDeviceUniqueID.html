@@ -1,0 +1,200 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>GetDeviceUniqueID</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="GetDeviceUniqueID"/>
+<MSHelp:RLTitle Title="GetDeviceUniqueID"/>
+<MSHelp:Keyword Index="K" Term="GetDeviceUniqueID"/>
+<MSHelp:Keyword Index="A" Term="wce51lrfGetDeviceUniqueID"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Application"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbsmartphone"/>
+<MSHelp:Attr Name="Product" Value="kbPocketPC"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="Technology" Value="kbPocketPC"/>
+<MSHelp:Attr Name="Technology" Value="kbSmartphone"/>
+<MSHelp:Attr Name="TopicType" Value="apiref"/>
+<MSHelp:Attr Name="Filename" Value="core_os_reference_bowmore.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="True"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_1072290">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Windows Mobile Version 5.0 SDK<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce51lrfgetdeviceuniqueid"></A>GetDeviceUniqueID</H1>
+<!--Feedback Link Top Start-->
+<P CLASS="feedback"><font size="1"><a href="mailto:medfdbk&#64;microsoft.com?subject=Product: Windows Mobile | Version: 5.0 | Release: SDK | Title: GetDeviceUniqueID | Filename: wce51lrfgetdeviceuniqueid.htm | Built on: Wednesday, September 14, 2005">Send Feedback</a> on this topic to the authors</font></p>
+<!--Feedback Link Top End-->
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>This function returns an application-specific hash of the device identifier. The application can use this hash to uniquely identify the device.</P>
+
+<PRE class="syntax"><B>HRESULT GetDeviceUniqueID(
+  LPBYTE </B><I>pbApplicationData</I><B>,
+  DWORD </B><I>cbApplictionData</I><B>,
+  DWORD</B> <I>dwDeviceIDVersion</I>,<B>
+  LPBYTE </B><I>pbDeviceIDOutput</I><B>,
+  DWORD *</B><I>pcbDeviceIDOutput</I><B>
+);</B></PRE>
+
+<H4 class="dtH4">Parameters</H4>
+
+<DL>
+<DT><I>pbApplicationData</I></DT>
+
+<DD>[in] Application-provided data, which is hashed with the device identifier. 
+
+<P>As long as the application provides the same data as this input, the same hash will always be returned on the same device, even if the device is re-flashed and/or cold-booted. This application data must have a minimum length of 8 bytes and should be unique to the application. 
+</dd>
+
+<DT><I>cbApplicationData</I></DT>
+
+<DD>[in] Length of the application data, <I>pbApplicationData</I>. 
+
+<P>This parameter must be at least 8 bytes or the function call will fail.
+</dd>
+
+<DT><I>dwDeviceIDVersion</I></DT>
+
+<DD>[in] Version number of the algorithm used to calculate the device identifier returned from <B>GetDeviceUniqueID</B>. 
+
+<P>Currently, the only defined version number is 1. This parameter must use this value or the function call will fail.
+</dd>
+
+<DT><I>pbDeviceIDOutput</I></DT>
+
+<DD>[out] Application-provided output buffer for the device identifier. 
+
+<P>This buffer should be at least equal to GETDEVICEUNIQUEID_VI_OUTPUT (20 bytes). If the provided buffer is smaller than the complete hash, the hash will be truncated and only the bytes that fit will be copied into the output buffer.
+
+
+<P>If the buffer is not large enough, <B>GetDeviceUniqueID</B> truncates the output data to fit the buffer, and then returns HRESULT_FROM_WIN32(ERROR_INSUFFICIENT_BUFFER).
+</dd>
+
+<DT><I>pcbDeviceIDOutput</I></DT>
+
+<DD>[in, out] Specifies the length of the device identifier. 
+
+<P>The input parameter is the length of the application-supplied buffer. The output parameter is the number of bytes written into the output buffer. 
+
+
+<P>If this pointer is equal to NULL, the call to <B>GetDeviceUniqueID</B> will fail.
+</dd>
+</DL>
+
+<H4 class="dtH4">Return Values</H4>
+
+<P>If <I>pbApplicationData</I> is set to NULL, this function returns E_POINTER.</P>
+
+<P>If <I>cbApplicationData</I> is not at least 8 bytes, this function fails and returns E_INVALIDARG.</P>
+
+<P>If <I>dwDeviceIDversion</I> is not equal to 1, this function fails and returns E_INVALIDARG.</P>
+
+<P>If <I>pbDeviceIDOutput</I> is set to NULL, this function returns the maximum output hash length in <I>pcbDeviceIDOutput</I>.</P>
+
+<P>If <I>pcbDeviceIDOutput</I> is set to NULL, this function fails and returns with E_INVALIDARG.</P>
+
+<P>The following table shows the return values for GetDeviceUniqueID depending on the values of the <I>pbDeviceIDOutput</I> and <I>pcbDeviceIDOutput</I> parameters.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=25%>pbDeviceIDOutput value</TH>
+<TH width=25%>pcbDeviceIDOutput value</TH>
+<TH width=25%>*pcbDeviceIDOutput</TH>
+<TH width=25%>Return value</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=25%>NULL</TD>
+<TD width=25%>Non-NULL</TD>
+<TD width=25%>Ignored</TD>
+<TD width=25%>S_OK is returned and <B>GetDeviceUniqueID</B> places the required buffer size in <I>*pcbDeviceIDOutput</I>.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=25%>Non-NULL</TD>
+<TD width=25%>Non-NULL</TD>
+<TD width=25%>Too small</TD>
+<TD width=25%>HRESULT_FROM_WIN32(ERROR_INSUFFICIENT_BUFFER) is returned and <B>GetDeviceUniqueID</B> truncates the output data to fit <I>pbDeviceIDOutput</I>, and puts the amount of data copied into <I>*pcbDeviceIDOutput</I>.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=25%>Non-NULL</TD>
+<TD width=25%>Non-NULL</TD>
+<TD width=25%>Large enough</TD>
+<TD width=25%>S_OK is returned and <B>GetDeviceUniqueID</B> fills <I>pbDeviceIDOutput</I> with the output data and places the amount copied into <I>*pcbDeviceIDOutput</I>.</TD>
+</TR>
+</table></div>
+
+<H4 class="dtH4">Remarks</H4>
+
+<P><B>GetDeviceUniqueID</B> protects the privacy of a device. Multiple applications need to use a device's unique identifier to communicate with servers. To protect a device's privacy, multiple servers should not be able to correlate data from the same device. <B>GetDeviceUniqueID</B> does not use any additional information other than the data that is provided by the application, so any application that passes in the same application data buffer will obtain the same hash.</P>
+
+<H4 class="dtH4">Example Code</H4>
+
+<P>The following code example shows how to use the <B>GetDeviceUniqueID</B> function.</P>
+
+<PRE class="code">#define DEVICE_ID_LENGTH            20
+#define APPLICATION_DATA            "@^!MyAppName!^@"
+#define APPLICATION_DATA_LENGTH     15
+
+HRESULT         hr              = NOERROR;
+BYTE            rgDeviceId[DEVICE_ID_LENGTH];
+DWORD           cbDeviceId      = sizeof(rgDeviceId);
+
+hr = GetDeviceUniqueID(reinterpret_cast&lt;PBYTE&gt;(APPLICATION_DATA),
+                         APPLICATION_DATA_LENGTH,
+                        GETDEVICEUNIQUEID_V1,
+                        rgDeviceId,
+                        &amp;cbDeviceId);
+CHR(hr);
+
+hr = DoSomethingWithDeviceId(rgDeviceId, cbDeviceId);
+        .
+        .
+        .</PRE>
+
+<H4 class="dtH4">Requirements</H4>
+
+<P><B>Pocket PC Platforms:</B> Windows Mobile 5.0 and later.<BR>
+<B>Smartphone Platforms:</B> Windows Mobile 5.0 and later.<BR>
+<B>OS Versions:</B> Windows CE 5.01 and later.<BR>
+<B>Header:</B> GetDeviceUniqueId.h.<BR>
+<B>Link Library:</B> Coredll.lib.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><MSHelp:link keywords="wce50conTrustedAPIs" TABINDEX="0">Trusted APIs</MSHelp:link> </P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Feedback Link Bottom Start-->
+<p><font size="1"><a href="mailto:medfdbk&#64;microsoft.com?subject=Product: Windows Mobile | Version: 5.0 | Release: SDK | Title: GetDeviceUniqueID | Filename: wce51lrfgetdeviceuniqueid.htm | Built on: Wednesday, September 14, 2005">Send Feedback</a> on this topic to the authors</font></p>
+<!--Feedback Link Bottom End-->
+<!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="mob5conCopyrightInformationForMagneto" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link></font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

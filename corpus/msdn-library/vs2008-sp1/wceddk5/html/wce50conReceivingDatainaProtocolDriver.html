@@ -1,0 +1,89 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Receiving Data in a Protocol Driver</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Receiving Data in a Protocol Driver"/>
+<MSHelp:RLTitle Title="Receiving Data in a Protocol Driver"/>
+<MSHelp:Keyword Index="A" Term="wce50conReceivingDatainaProtocolDriver"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Driver"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="False"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="ndis_guide2.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="False"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+<MSHelp:Attr Name="PBFeature" Value="NetworkDriver"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_3018328">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50conreceivingdatainaprotocoldriver"></A>Receiving Data in a Protocol Driver</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>The following list shows how underlying NIC drivers can indicate packets in two ways: 
+
+<UL type="disc">
+	<LI>A NIC driver calls <A HREF="wce50lrfndismindicatereceivepacket.htm">NdisMIndicateReceivePacket</A>, passing a pointer to an array of packet descriptor pointers to one or more full packets and relinquishing ownership of the resources for these packets to the overlying drivers. This process can consume the data and return the packet resources at a later time. </li>
+
+	<LI>A NIC driver calls a filter-specific <B>NdisM<I>XXX</I>IndicateReceive</B> function, passing a pointer to a lookahead buffer, the size of the lookahead buffer, and the total size of the received net packet. </li>
+</UL>
+
+<P>Every protocol driver must have at least one of two possible receive handlers. The following table shows the possible receive handlers for a protocol driver.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=33%>Handler</TH>
+<TH width=67%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%><A HREF="wce50lrfprotocolreceive.htm">ProtocolReceive</A></TD>
+<TD width=67%>A required function that is called with a pointer to a lookahead buffer. After <B>ProtocolReceive</B> examines the lookahead data and determines that the packet is intended for one or more of its clients, it must copy the lookahead data into a protocol-allocated buffer, possibly to be chained to a protocol-allocated packet descriptor. <BR>
+If the size of the lookahead buffer is less than the total size of the received packet, <B>ProtocolReceive</B> must call <A HREF="wce50lrfndistransferdata.htm">NdisTransferData</A> with the protocol-allocated packet descriptor to obtain the remaining received data, which the underlying driver copies into the protocol-supplied buffer. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%><A HREF="wce50lrfprotocolreceivepacket.htm">ProtocolReceivePacket</A></TD>
+<TD width=67%>An optional function that receives a pointer to packet descriptor specifying a buffered full network packet. <BR>
+<B>ProtocolReceivePacket</B> also examines the packet data and determines whether the packet is intended for one or more of its clients. If so, the protocol can give its clients ownership of the indicated packet resources, including direct read-only access to the buffered net packet data, by returning a nonzero value from <B>ProtocolReceivePacket</B>. The protocol driver's clients must subsequently return the packet descriptor and all the resources it specifies to the underlying driver. Each client must return the packet descriptor until all clients' calls total the nonzero value returned from <B>ProtocolReceivePacket</B> for that receive indication. <BR>
+When the client call to the protocol driver returns the packet descriptor the required number of times, it relinquishes ownership of the returned packet resources to the NIC driver.<BR>
+If a protocol driver returns 0 from <B>ProtocolReceivePacket</B>, it relinquishes ownership of the packet resources when <B>ProtocolReceivePacket</B> returns. </TD>
+</TR>
+</table></div>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50conprotocoldriversendandreceive.htm">Protocol Driver Send and Receive</A> | <A HREF="wce50lrfndismethindicatereceive.htm">NdisMEthIndicateReceive</A> | <A HREF="wce50lrfndismtrindicatereceive.htm">NdisMTrIndicateReceive</A> | <A HREF="wce50lrfndismwanindicatereceive.htm">NdisMWanIndicateReceive</A> | <A HREF="wce50lrfprotocolreceive.htm">ProtocolReceive</A> | <A HREF="wce50lrfprotocolreceivepacket.htm">ProtocolReceivePacket</A> | <A HREF="wce50lrfndismindicatereceivepacket.htm">NdisMIndicateReceivePacket</A> | <A HREF="wce50lrfndistransferdata.htm">NdisTransferData</A> </P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

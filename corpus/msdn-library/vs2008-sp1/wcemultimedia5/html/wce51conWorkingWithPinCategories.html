@@ -1,0 +1,154 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Working with Pin Categories</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Working with Pin Categories"/>
+<MSHelp:RLTitle Title="Working with Pin Categories"/>
+<MSHelp:Keyword Index="A" Term="wce51conWorkingWithPinCategories"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Feature"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="directshow_concepts1.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="True"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+<MSHelp:Attr Name="PBFeature" Value="SYSGEN_DSHOW"/>
+<MSHelp:Attr Name="PBOnly" Value="False"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_1066827">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce51conworkingwithpincategories"></A>Working with Pin Categories</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P><B>Applies to:</B> Devices based on Windows Mobile Version 5.0 and later</P>
+
+<P>To search on a filter for a pin with a given pin category, you can use the <MSHelp:link keywords="wce51lrfICaptureGraphBuilder2FindPin" TABINDEX="0">ICaptureGraphBuilder2::FindPin</MSHelp:link> method. The following code searches for a video preview pin: </P>
+
+<PRE class="code">int i = 0;
+hr = pBuild-&gt;FindPin(
+    pFilter,               // Pointer to a filter to search.
+    PINDIR_OUTPUT,         // Which pin direction?
+    &amp;PIN_CATEGORY_PREVIEW, // Which category? (NULL means "any category")
+    &amp;MEDIATYPE_Video,      // What media type? (NULL means "any type")
+    FALSE,                 // Must be connected?
+    i,                     // Get the i'th matching pin (0 = first match)
+    &amp;pPin                  // Receives a pointer to the pin.
+);</PRE>
+
+<P>The first parameter is a pointer to the filter's <A HREF="wce50lrfibasefilterinterface.htm">IBaseFilter Interface</A>. The next three parameters specify the direction, pin category, and media type. The value FALSE in the fifth parameter indicates that the pin can be either connected or unconnected. (For the exact definitions of these parameters, refer to the documentation for the method.) If the method finds a matching pin, it returns a pointer to the <A HREF="wce50lrfipininterface.htm">IPin Interface</A> in the <I>pPin</I> parameter. </P>
+
+<P>Although the <B>ICaptureGraphBuilder2::FindPin </B>method is convenient, you can also write your own helper functions if you prefer. To determine a pin's category, call the <MSHelp:link keywords="wce51lrfIKsPropertySetGet" TABINDEX="0">IKsPropertySet::Get</MSHelp:link> method as described in the topic <A HREF="wce51conpinpropertyset.htm">Pin Property Set</A>. </P>
+
+<P>The following code shows a helper function that checks whether a pin matches a specified category:</P>
+
+<PRE class="code">BOOL PinMatchesCategory(IPin *pPin, const GUID&amp; Category)
+{
+    if (pPin == NULL) return E_POINTER;
+
+    BOOL bFound = FALSE;
+    IKsPropertySet *pKs;
+    HRESULT hr = pPin-&gt;QueryInterface(IID_IKsPropertySet, (void **)&amp;pKs);
+    if (SUCCEEDED(hr))
+    {
+        GUID PinCategory;
+        DWORD cbReturned;
+        hr = pKs-&gt;Get(AMPROPSETID_Pin, AMPROPERTY_PIN_CATEGORY, NULL, 0, 
+            &amp;PinCategory, sizeof(GUID), &amp;cbReturned);
+        if (SUCCEEDED(hr))
+        {
+            bFound = (PinCategory == Category);
+        }
+        pKs-&gt;Release();
+    }
+    return bFound;
+}</PRE>
+
+<P>The next example is a function that searches for a pin by category, similar to the <B>ICaptureGraphBuilder2::FindPin</B> method:</P>
+
+<PRE class="code">HRESULT FindPinByCategory(
+    IBaseFilter *pF,      // Pointer to the filter to search.
+    PIN_DIRECTION PinDir, // Direction of the pin.
+    const GUID&amp; Category, // Pin category.
+    IPin **ppPin)         // Receives a pointer to the pin.
+{
+    if (!pF || !ppPin) return E_POINTER;
+
+    *ppPin = 0;
+    HRESULT hr;
+    IEnumPins *pEnum = 0;
+    if (SUCCEEDED(pF-&gt;EnumPins(&amp;pEnum)))
+    {
+        IPin *pPin = 0;
+        while (hr = pEnum-&gt;Next(1, &amp;pPin, 0), hr == S_OK)
+        {
+            PIN_DIRECTION ThisPinDir;
+            hr = pPin-&gt;QueryDirection(&amp;ThisPinDir);
+            if (FAILED(hr))
+            {
+                pPin-&gt;Release();
+                pEnum-&gt;Release();
+                return E_UNEXPECTED; // Something strange happened.
+            }
+            if ((ThisPinDir == PinDir) &amp;&amp; 
+                PinMatchesCategory(pPin, Category))
+            {
+                *ppPin = pPin;  // Caller must release the interface.
+                pEnum-&gt;Release();
+                return S_OK;
+            }
+            pPin-&gt;Release();
+        }
+        pEnum-&gt;Release();
+    }
+    // No pin matches.
+    return E_FAIL;
+}</PRE>
+
+<P>The following code uses the previous function to search for a still image pin on a filter:</P>
+
+<PRE class="code">IPin *pVP; 
+hr = FindPinByCategory(pFilter, PINDIR_OUTPUT, 
+    PIN_CATEGORY_STILL, &amp;pVP);
+if (SUCCEEDED(hr))
+{
+    // Use pVP ... 
+    // Release when you are done.
+    pVP-&gt;Release();
+}</PRE>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce51conadvancedcapturetopics.htm">Advanced Capture Topics</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

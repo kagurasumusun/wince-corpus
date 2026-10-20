@@ -1,0 +1,107 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Notification Through Windows Messages</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Notification Through Windows Messages"/>
+<MSHelp:RLTitle Title="Notification Through Windows Messages"/>
+<MSHelp:Keyword Index="A" Term="mob5conNotificationThroughWindowsMessages"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Application"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbsmartphone"/>
+<MSHelp:Attr Name="Product" Value="kbPocketPC"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="Technology" Value="kbPocketPC"/>
+<MSHelp:Attr Name="Technology" Value="kbSmartphone"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="Bluetooth_API_magneto.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="True"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="True"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_1077214">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Windows Mobile Version 5.0 SDK<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="mob5connotificationthroughwindowsmessages"></A>Notification Through Windows Messages</H1>
+<!--Feedback Link Top Start-->
+<P CLASS="feedback"><font size="1"><a href="mailto:medfdbk&#64;microsoft.com?subject=Product: Windows Mobile | Version: 5.0 | Release: SDK | Title: Notification Through Windows Messages | Filename: mob5connotificationthroughwindowsmessages.htm | Built on: Wednesday, September 14, 2005">Send Feedback</a> on this topic to the authors</font></p>
+<!--Feedback Link Top End-->
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>An application can use the <MSHelp:link keywords="wce50lrfRegistryNotifyWindow" TABINDEX="0">RegistryNotifyWindow</MSHelp:link> function to register a custom Windows message that detects changes in the <B>Bluetooth </B>registry value located under the <B>HKEY_LOCAL_MACHINE\System\State\Hardware</B> key. When the state of the Bluetooth radio changes, the specified Window is notified through the custom message. The <I>pCondition</I> parameter points to the <MSHelp:link keywords="wce50lrfNOTIFICATIONCONDITION" TABINDEX="0">NOTIFICATIONCONDITION</MSHelp:link> structure that stores the the registration criteria.</P>
+
+<P>To stop receiving notifications through messages, call the <MSHelp:link keywords="wce50lrfRegistryCloseNotification" TABINDEX="0">RegistryCloseNotification</MSHelp:link> function and pass the handle returned by <B>RegistryNotifyWindow</B> as a parameter.</P>
+
+<P>The following code example shows how to register for notifications using <B>RegistryNotifyWindow</B>.</P>
+
+<BLOCKQUOTE class="dtBlock">
+<b class="le">Note</b>&nbsp;&nbsp;&nbsp;Error handling has been omitted in this topic for clarity.</BLOCKQUOTE>
+
+<PRE class="code">HRESULT RegisterBluetoothWindowsMessage(HWND hDlg)
+{
+  #define SN_BLUETOOTHPOWERBSTATE_ROOT    HKEY_LOCAL_MACHINE
+  #define SN_BLUETOOTHPOWERBSTATE_PATH    TEXT("System\\State\\Hardware")
+  #define SN_BLUETOOTHPOWERBSTATE_VALUE   TEXT("Bluetooth")
+  #define SN_BLUETOOTHPOWERBSTATE_BITMASK 3
+
+  HRESULT  hr        = NULL;
+  NOTIFICATIONCONDITION  nc;
+  HREGNOTIFY  g_hNotify_Windows = NULL;   // Handles to notifications through Windows message
+
+  nc.ctComparisonType    = REG_CT_ANYCHANGE;
+  nc.dwMask              = SN_BLUETOOTHPOWERBSTATE_BITMASK;
+  nc.TargetValue.dw      = 0;
+
+   hr = RegistryNotifyWindow(
+          SN_BLUETOOTHPOWERBSTATE_ROOT,
+          SN_BLUETOOTHPOWERBSTATE_PATH,
+          SN_BLUETOOTHPOWERBSTATE_VALUE,
+          hDlg, 
+          WM_CHANGE_BLUETOOTH,  // This notification uses a custom window message.
+          0,
+          &amp;nc,
+          &amp;g_hNotify_Windows
+        );
+
+  if (FAILED(hr))
+  {
+    //perform error handling;
+    return hr;
+  }
+  return S_OK;
+}</PRE>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="mob5condetectingpowerstatechangesbyusingstatenotificationsbroker.htm">Detecting Power State Changes By Using State and Notifications Broker</A> | <A HREF="mob5connotificationthroughcallback.htm">Notification Through Callback</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Feedback Link Bottom Start-->
+<p><font size="1"><a href="mailto:medfdbk&#64;microsoft.com?subject=Product: Windows Mobile | Version: 5.0 | Release: SDK | Title: Notification Through Windows Messages | Filename: mob5connotificationthroughwindowsmessages.htm | Built on: Wednesday, September 14, 2005">Send Feedback</a> on this topic to the authors</font></p>
+<!--Feedback Link Bottom End-->
+<!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="mob5conCopyrightInformationForMagneto" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link></font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

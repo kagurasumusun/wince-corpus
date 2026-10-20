@@ -1,0 +1,106 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>DLL Interface Declarations</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="DLL Interface Declarations"/>
+<MSHelp:RLTitle Title="DLL Interface Declarations"/>
+<MSHelp:Keyword Index="A" Term="wce50conDLLInterfaceDeclarations"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Guide"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="True"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="comp_modifiers.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="True"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_1042665">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50condllinterfacedeclarations"></A>DLL Interface Declarations</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>The DLL interface refers to all items (functions and data) that are known to be exported by a program in the system; that is, all items that are declared as <A HREF="wce50condllexportdllimport.htm">dllexport</A><B> </B>or <B>dllimport</B>. </P>
+
+<P>All declarations included in the DLL interface must specify either the <B>dllimport</B> or <B>dllexport </B>attribute. However, the definition must specify only the <B>dllexport </B>attribute. </P>
+
+<P>For example, the following function definition generates a compiler error:</P>
+
+<PRE class="code">__declspec( dllimport ) int func()  // Error; dllimport
+                                    // prohibited on definition.
+{
+  return 1;
+}
+This code also generates an error:
+#define DllImport  __declspec( dllimport )
+
+__declspec( dllimport ) int i = 10;  // Error; this is a
+                                     // definition.</PRE>
+
+<P>However, this is correct syntax:</P>
+
+<PRE class="code">__declspec( dllexport ) int i = 10;    // Okay--export definition</PRE>
+
+<P>The use of <B>dllexport </B>implies a definition, while <B>dllimport</B> implies a declaration. You must use the extern keyword with <B>dllexport </B>to force a declaration; otherwise, a definition is implied. Thus, the following examples are correct:</P>
+
+<PRE class="code">#define DllImport  __declspec( dllimport )
+#define DllExport  __declspec( dllexport )
+
+extern DllImport int k; // These are both correct and imply a
+DllImport int j;        // declaration.</PRE>
+
+<P>The following examples clarify the preceding:</P>
+
+<PRE class="code">static __declspec( dllimport ) int l; // Error; not declared extern.
+
+void func()
+{
+    static __declspec( dllimport ) int s;  // Error; not declared
+                                           // extern.
+    __declspec( dllimport ) int m;         // Okay; this is a 
+                                           // declaration.
+    __declspec( dllexport ) int n;         // Error; implies external
+                                           // definition in local scope.
+    extern __declspec( dllimport ) int i;  // Okay; this is a
+                                           // declaration.
+    extern __declspec( dllexport ) int k;  // Okay; extern implies
+                                           // declaration.
+    __declspec( dllexport ) int x = 5;     // Error; implies external
+                                           // definition in local scope.
+}</PRE>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50condllexportdllimport.htm">dllexport, dllimport</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

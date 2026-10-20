@@ -1,0 +1,118 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>IOleLink::GetSourceMoniker</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="IOleLink::GetSourceMoniker"/>
+<MSHelp:RLTitle Title="IOleLink::GetSourceMoniker"/>
+<MSHelp:Keyword Index="K" Term="IOleLink, GetSourceMoniker"/>
+<MSHelp:Keyword Index="A" Term="wce50lrfIOleLinkGetSourceMoniker"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Feature"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="apiref"/>
+<MSHelp:Attr Name="Filename" Value="com_interfaces2.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="False"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+<MSHelp:Attr Name="APIName" Value="IOleLink.GetSourceMoniker"/>
+<MSHelp:Attr Name="APIType" Value="LibDef"/>
+<MSHelp:Attr Name="APILocation" Value="Ole32.lib, Uuid.lib"/>
+<MSHelp:Attr Name="PBFeature" Value="SYSGEN_DCOM"/>
+<MSHelp:Attr Name="PBOnly" Value="False"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_3003689">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50lrfiolelinkgetsourcemoniker"></A>IOleLink::GetSourceMoniker</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>This method retrieves the moniker identifying the link source of a linked object.</P>
+
+<PRE class="syntax"><B>HRESULT GetSourceMoniker(</B>
+  <B>IMoniker** </B><I>ppmk</I> 
+<B>);</B></PRE>
+
+<H4 class="dtH4">Parameters</H4>
+
+<DL>
+<DT><I>ppmk </I></DT>
+
+<DD>[out] Address of the <A HREF="wce50lrfimonikeriunknown.htm">IMoniker</A><B>*</B> pointer variable that receives the interface pointer to an absolute moniker that identifies the link source. 
+
+<P>When successful, the implementation must call the <A HREF="wce50lrfiunknownaddref.htm">IUnknown::AddRef</A> method on <I>*ppmk</I>; it is the caller's responsibility to call <A HREF="wce50lrfiunknownrelease.htm">IUnknown::Release</A>. 
+
+
+<P>If an error occurs, the implementation must set <I>*ppmk</I> to NULL. 
+</dd>
+</DL>
+
+<H4 class="dtH4">Return Values</H4>
+
+<P>If the method succeeds, the return value is S_OK. </P>
+
+<P>If no moniker is available, the method returns MK_E_UNAVAILABLE. </P>
+
+<H4 class="dtH4">Remarks</H4>
+
+<P>The linked object stores both an absolute and a relative moniker for the link source. </P>
+
+<P>If the relative moniker is non-NULL and a moniker is available for the compound document, <B>IOleLink::GetSourceMoniker</B> returns the moniker created by composing the relative moniker onto the end of the compound document's moniker. Otherwise, it returns the absolute moniker or, if an error occurs, NULL.</P>
+
+<P>The container specifies the absolute moniker when it calls one of the <B>OleCreateLink</B> functions to create a link. </P>
+
+<P>The application can call the <A HREF="wce50lrfiolelinksetsourcemoniker.htm">IOleLink::SetSourceMoniker</A> or <A HREF="wce50lrfiolelinksetsourcedisplayname.htm">IOleLink::SetSourceDisplayName</A> method to change the absolute moniker. In addition, the linked object automatically updates the monikers whenever it successfully binds to the link source or when it is bound to the link source and it receives a rename notification through the <A HREF="wce50lrfiadvisesinkonrename.htm">IAdviseSink::OnRename</A> method.</P>
+
+<P>To determine whether the platform supports this interface, see <A HREF="wce50condeterminingsupportedcomapis.htm">Determining Supported COM APIs</A>.</P>
+
+<P class="label"><B>Notes to Callers</B></P>
+
+<P>Your container application can call <B>IOleLink::GetSourceMoniker</B> to display the current source of a link in the <B>Links</B> dialog box. </P>
+
+<P>Note that this requires your container to use the <A HREF="wce50lrfimonikergetdisplayname.htm">IMoniker::GetDisplayName</A> method to get the display name of the moniker. </P>
+
+<P>If you would rather get the display name directly, your container can call <B>IOleLink::GetSourceDisplayName</B> instead of <B>IOleLink::GetSourceMoniker</B>.</P>
+
+<P>If you use the <MSHelp:link keywords="wce50conProgrammingElementNotSupported" TABINDEX="0">OleUIEditLinks</MSHelp:link> function to display the <B>Links</B> dialog box, you must implement the <MSHelp:link keywords="wce50conProgrammingElementNotSupported" TABINDEX="0">IOleUILinkContainer</MSHelp:link> interface. </P>
+
+<P>The dialog box calls your implementations of <MSHelp:link keywords="wce50conProgrammingElementNotSupported" TABINDEX="0">IOleUILinkContainer::GetLinkSource</MSHelp:link> to get the string it should display. Your implementation of that method can call <B>IOleLink::GetSourceMoniker</B>. </P>
+
+<H4 class="dtH4">Requirements</H4>
+
+<P><B>OS Versions:</B> Windows CE 3.0 and later.<BR>
+<B>Header:</B> Oleidl.h, Oleidl.idl.<BR>
+<B>Link Library:</B> Ole32.lib, Uuid.lib.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50lrfimonikeriunknown.htm">IMoniker</A> | <A HREF="wce50lrfiadvisesinkonrename.htm">IAdviseSink::OnRename</A> | <A HREF="wce50lrfimonikergetdisplayname.htm">IMoniker::GetDisplayName</A> | <A HREF="wce50lrfiolelinksetsourcedisplayname.htm">IOleLink::SetSourceDisplayName</A> | <A HREF="wce50lrfiolelinksetsourcemoniker.htm">IOleLink::SetSourceMoniker</A> | <A HREF="wce50lrfiunknownaddref.htm">IUnknown::AddRef</A> | <A HREF="wce50lrfiunknownrelease.htm">IUnknown::Release</A> </P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

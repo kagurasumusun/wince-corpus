@@ -1,0 +1,99 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>__assume</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="__assume"/>
+<MSHelp:RLTitle Title="__assume"/>
+<MSHelp:Keyword Index="A" Term="wce50grf__assume"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Guide"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="True"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="comp_intrinsics.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="True"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_1049894">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50grf__assume"></A>__assume</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>The <B>__assume</B> intrinsic function passes a hint to the optimizer.</P>
+
+<PRE class="syntax">__assume(expression)</PRE>
+
+<H4 class="dtH4">Remarks</H4>
+
+<P>The optimizer assumes that the condition represented by expression is true at the point where the keyword appears and remains true until expression is altered (for example, by assignment to a variable). Selective use of hints passed to the optimizer by <B>__assume</B> can improve optimization. </P>
+
+<H4 class="dtH4">Example</H4>
+
+<P>The most common use of <B>__assume</B> is with the default case of a switch statement, as shown in the following code example.</P>
+
+<PRE class="code">#ifdef DEGUG
+# define ASSERT(e)   ( ((e) || assert(__FILE__, __LINE__) )
+#else
+# define ASSERT(e)   ( __assume(e) )
+#endif
+
+void gloo(int p)
+{
+  switch(p){
+    case 1:
+      blah(1);
+      break;
+    case 2:
+      blah(-1);
+      break;
+    default:
+         __assume(0);
+        // This tells the optimizer that the default
+        // cannot be reached. As so it does not have to generate
+            // the extra code to check that 'p' has a value 
+            // not represented by a case arm.  This makes the switch 
+            // run faster.
+  }
+}</PRE>
+
+<P>The use of <B>__assume</B>(0) tells the optimizer that the default case cannot be reached. As a result, the compiler does not generate code to test whether p has a value not represented in a case statement. Note that <B>__assume</B>(0) must be the first statement in the body of the default case for this to work. </P>
+
+<P>Because the compiler generates code based on the <B>__assume</B> statement, that code may not correctly if the expression inside the <B>__assume</B> statement is false at runtime. If you are not sure that the expression will always be true at runtime, you can use the assert function to protect the code:</P>
+
+<H4 class="dtH4">Requirements</H4>
+
+<P><B>OS Versions:</B> Windows CE 5.0 and later.<BR>
+<B>Header:</B> Cmnintrin.h.</P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

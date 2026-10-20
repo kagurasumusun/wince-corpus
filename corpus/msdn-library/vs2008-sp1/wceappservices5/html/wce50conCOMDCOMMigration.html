@@ -1,0 +1,94 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>COM and DCOM Migration</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="COM and DCOM Migration"/>
+<MSHelp:RLTitle Title="COM and DCOM Migration"/>
+<MSHelp:Keyword Index="A" Term="wce50conCOMDCOMMigration"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Feature"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="com_concepts.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="False"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="True"/>
+<MSHelp:Attr Name="PBFeature" Value="SYSGEN_DCOM"/>
+<MSHelp:Attr Name="PBOnly" Value="False"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_1053298">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50concomdcommigration"></A>COM and DCOM Migration</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>This topic contains information about migrating this functionality from earlier versions of Windows CE. </P>
+
+<P>For general migration information, see <MSHelp:link keywords="wce50oriMigratingFromEarlierVersionOfWindowsCE" TABINDEX="0">Migrating from an Earlier Version of Windows CE</MSHelp:link>.</P>
+
+<H4 class="dtH4">Migrating from Windows CE 2.12 and Windows CE 3.0</H4>
+
+<P>With the introduction of DCOM in Windows CE .NET 4.0, compliance with COM rules is required because DCOM supports multiple apartment models and DCOM objects have a strong affinity for the apartments they occupy. In addition, the DCOM code base was consolidated with the small in-proc only COM code base. </P>
+
+<P>For example, the following COM rules are now enforced:
+
+<UL type="disc">
+	<LI>The requirement to initialize apartments before using COM.</li>
+
+	<LI>Regarding reference counting for <MSHelp:link keywords="wce50lrfCoInitializeEx" TABINDEX="0">CoInitializeEx</MSHelp:link> and <MSHelp:link keywords="wce50lrfCoUninitialize" TABINDEX="0">CoUninitialize</MSHelp:link>: Calls to <B>CoInitializeEx</B> must be paired with an equal number of calls to <B>CoUninitialize</B>. Prior to Windows&nbsp;CE&nbsp;.NET 4.0, <B>CoInitializeEx</B> was an empty function and paired calls were not required.</li>
+
+	<LI>Rules on apartment declarations for COM objects. The previous COM implementation only supported multithreaded apartments but still allowed loading of objects declared as single-threaded.</li>
+</UL>
+
+<P>As a result of these changes, Windows CE .NET 4.0 and later are not backwards compatible with older applications that do not comply with these requirements. To partially rectify this problem without requiring changing code or adding registry entries, the following changes were made in Windows CE .NET 4.0:
+
+<UL type="disc">
+	<LI>For executable (.exe) files linked using tools prior to version 4.0, if an apartment was not initialized before using COM functionality, the apartment is automatically initialized to multithreaded when a COM API function is called. 
+<P>This causes a memory leak when the thread terminates, but it enables the application to run. This approach does not work with .dll files.
+</li>
+
+	<LI>To enable older .dll files hosted in newer executables, you can use the registry to identify executables that should be automatically initialized. 
+<P>To do this, add a new <B>DWORD</B> entry to the <B>HKEY_LOCAL_MACHINE\Software\Microsoft\OLE\LegacyApps</B> key. The new entry should have the same name as the executable and a value of 1. 
+
+<P>This step is only necessary for executables that load .dll files. 
+</li>
+
+	<LI>Any declaration of apartment requirements in the registry is ignored for .dll files that were linked using tools prior to version 4.0. Instead, the apartment requirement is automatically set to free-threaded.</li>
+
+	<LI>The DEFAULT apartment type on Windows CE .NET is free-threaded, in contrast to Windows, where it is single-threaded. This apartment type is used if one is not declared in the registry.</li>
+</UL>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50oricomponentservicescomanddcom.htm">Component Services (COM and DCOM)</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

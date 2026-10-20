@@ -1,0 +1,113 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Branching in SH-4 Inline Assembly</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Branching in SH-4 Inline Assembly"/>
+<MSHelp:RLTitle Title="Branching in SH-4 Inline Assembly"/>
+<MSHelp:Keyword Index="A" Term="wce50conBranchinginSHxInlineAssembly"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Guide"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="True"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="comp_sh4_callspec.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="True"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_3023884">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50conbranchinginshxinlineassembly"></A>Branching in SH-4 Inline Assembly</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>You can define a branch instruction in SH-4 inline assembly as a fixed displacement or as a jump to a targeted label. </P>
+
+<P>If a label is used, the label must be defined within a <B>__asm</B> string in the current function. The <B>__asm</B> label must be isolated in its own <B>__asm</B> block. </P>
+
+<P>The distance from a label reference to its definition must fit within the displacement field of the corresponding branch instruction. </P>
+
+<P class="label"><B>Branch with Fixed Displacement</B></P>
+
+<P>The following code example demonstrates how to use displacement branch instructions within <B>__asm</B> statements. </P>
+
+<PRE class="code">  __asm(
+    "sett      ; set T bit\n"
+    "bf 6      ; branch to print FAIL if not set\n"
+    "jsr @R6   ; print PASS\n"
+    "nop       ; delay slot\n"
+    "bra 4     ; branch using displacement\n"
+    "nop       ; delay slot\n"
+    "jsr @R6   ; print PASS\n"
+    "nop       ; delay slot\n"
+    ,"PASS\n"  // argument #1 (R4)
+    ,"FAIL\n"  // argument #2 (R5)
+    ,printf    // argument #3 (R6)
+  );</PRE>
+
+<P class="label"><B>Branch to Labeled Statement</B></P>
+
+<P>The following code example demonstrates how to use labels in branch instructions within <B>__asm</B> statements. </P>
+
+<PRE class="code">#include &lt;stdio.h&gt;
+
+void main()
+{
+  __asm(
+    "sett      ; set T bit\n"
+    "bf lab1   ; branch to print FAIL if not set\n"
+    "jsr @R5   ; print PASS\n"
+    "nop       ; delay slot\n"
+    "bra lab2  ; branch using label\n"
+    "nop       ; delay slot"
+    ,"PASS\n"
+    ,printf
+    );
+  __asm(
+    "lab1:     ; isolate label"
+    );
+  __asm(
+    "jsr @R5   ; print FAIL\n"
+    "nop       ; delay slot"
+    ,"FAIL\n"
+    ,printf
+    );
+  __asm(
+    "lab2:"
+    );
+}</PRE>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50conshxinlineassemblylanguage.htm">SH-4 Inline Assembly Language</A> | <A HREF="wce50samshxinlineassemblysamples.htm">SH-4 Inline Assembly Code Examples</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

@@ -1,0 +1,104 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Compiler Errors when Implementing a CObject-Derived Class</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Compiler Errors when Implementing a CObject-Derived Class"/>
+<MSHelp:RLTitle Title="Compiler Errors when Implementing a CObject-Derived Class"/>
+<MSHelp:Keyword Index="A" Term="wce50errCompilerErrorswhenImplementingaCObjectDerivedClass"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Guide"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="True"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbRef"/>
+<MSHelp:Attr Name="Filename" Value="err46xx.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="True"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_3025629">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50errcompilererrorswhenimplementingacobjectderivedclass"></A>Compiler Errors when Implementing a CObject-Derived Class</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>When you implement a class derived from <B>CObject</B> and your code is written so that the copy constructor or assignment operator for the class needs to be called, the compiler may report errors similar to the following:</P>
+
+<PRE class="code">error C2660: 'CSample::CSample' : function does not take 1 parameters
+
+error C2582: 'CSample' : 'operator =' function is unavailable</PRE>
+
+<P>You can reproduce the problem by compiling the example in the Sample Code section below.</P>
+
+<BLOCKQUOTE class="dtBlock">
+<b class="le">Note</b>&nbsp;&nbsp;&nbsp;The sample code shown in this article generates the following error messages:</BLOCKQUOTE>
+
+<PRE class="code"><code class="ce">error C2558: 'CSample::CSample' : no copy constructor available
+error C2582: 'CSample' : 'operator =' function is unavailable</code></PRE>
+
+<P>The reason for the compiler errors is that <B>CObject</B> declares a private copy constructor and assignment operator in the AFX.h file. Consequently, the compiler does not generate a default copy constructor and assignment operator for the <B>CObject</B>-derived class. </P>
+
+<P>Because the compiler does not find these functions declared in the class, it reports the errors. </P>
+
+<P>To avoid the compiler errors, you need to implement a copy constructor and assignment operator for the <B>CObject</B>-derived class. This is illustrated in the sample code below. You can avoid the errors by uncommenting the lines indicated in the sample code. </P>
+
+<P class="label"><B>Sample Code</B></P>
+
+<PRE class="code">/* Compile options needed: /c
+*/
+ 
+// replace with #define _CONSOLE when compiling for Windows NT
+#define _DOS
+ 
+#include &lt;afx.h&gt;
+ 
+class CSample : public CObject
+{
+private:
+    short m_nValue;
+public:
+// uncomment the lines below to avoid the compiler errors
+//    CSample() {}
+//    CSample( const CSample &amp;s )  // copy ctor
+//        { m_nValue = s.m_nValue; }
+//    CSample&amp; operator=( const CSample &amp;s )  // assignment operator
+//        { m_nValue = s.m_nValue; return *this; }
+};
+ 
+void main()
+{
+    CSample a;
+    CSample b = a;
+    a = b;
+}
+</PRE>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

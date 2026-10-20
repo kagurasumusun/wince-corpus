@@ -1,0 +1,107 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>eXDI Run-State Control</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="eXDI Run-State Control"/>
+<MSHelp:RLTitle Title="eXDI Run-State Control"/>
+<MSHelp:Keyword Index="A" Term="wce51coneXDIRun-stateControl"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Debugging"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="True"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="exdi_overview.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="False"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_1060507">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce51conexdirun-statecontrol"></A>eXDI Run-State Control</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>eXDI provides interfaces that allow you to have full run-state control. You can:
+
+<UL type="disc">
+	<LI>Command the target device to reset, run, or halt</li>
+
+	<LI>Perform single-step</li>
+
+	<LI>Insert and manage code and data breakpoints</li>
+
+	<LI>Notify clients of halt reasons, and obtain client permission before resuming execution</li>
+
+	<LI>Change exception-handling actions</li>
+</UL>
+
+<H3 class="dtH3">Target device control</H3>
+
+<P>You can command the target device to run, halt, or reset with the following methods:
+
+<UL type="disc">
+	<LI><A HREF="wce50lrfiexdi2execrun.htm">IeXdi2Exec::Run</A> commands the target device to run. You can use this method to pass an exception on to the OS, or to designate an exception as Go Unhandled.</li>
+
+	<LI><A HREF="wce50lrfiexdi2exechalt.htm">IeXdi2Exec::Halt</A> commands the target device to halt</li>
+
+	<LI><A HREF="wce50lrfiexdi2execreboot.htm">IeXdi2Exec::Reboot</A> conducts and external reset of the target device.</li>
+</UL>
+
+<H3 class="dtH3">Single Step</H3>
+
+<P>If a single-step primitive exists in the underlying hardware, you can use <A HREF="wce50lrfiexdi2execsinglestep.htm">IeXdi2Exec::SingleStep</A> to have the debugging target execute a single instruction and then halt. If no single-step primitive exists, you can have eXDI emulate single-step functionality by implementing single step as one of the eXDI helpers.</P>
+
+<P>For more information about eXDI helpers, see <A HREF="wce51conusingexdi2helpers.htm">Using the eXDI2 Helpers</A>.</P>
+
+<H3 class="dtH3">Breakpoints</H3>
+
+<P>eXDI provides interfaces that allow you to manage user code and data breakpoints, including hardware-based and software-based breakpoints.</P>
+
+<P><A HREF="wce50lrfiexdi2execaddcodebps.htm">IeXdi2Exec::AddCodeBps</A> adds new code breakpoints. To enumerate user code breakpoints, you can use the <A HREF="wce50grfiexdi2enumcodebp.htm">IeXdi2EnumCodeBP</A> interface. <A HREF="wce50grfiexdi2codebp.htm">IeXdi2CodeBP</A> provides methods to access a particular code breakpoint object.</P>
+
+<P><A HREF="wce50lrfiexdi2execadddatabps.htm">IeXdi2Exec::AddDataBps</A> adds new data breakpoints. To enumerate user data breakpoints, you can use the <A HREF="wce50grfiexdi2enumdatabp.htm">IeXdi2EnumDataBP</A> interface. <A HREF="wce50grfiexdi2databp.htm">IeXdi2DataBP</A> provides methods to access a particular data breakpoint object.</P>
+
+<H3 class="dtH3">Halt notifications</H3>
+
+<P>eXDI notifies clients when execution is halted, through <A HREF="wce50lrfiexdi2clientnotifyrunchgnotifyrunstatechange.htm">IeXdi2ClientNotifyRunChg::NotifyRunStateChange</A>. The notification includes details about the halt reason, such as an exception, an asynchronous break, a breakpoint or single step, and so on.</P>
+
+<P>Using the exception-filtering helper component, you can filter exceptions at the eXDI service level or below. In addition, you can use <A HREF="wce50lrfiexdi2execchangeexceptionaction.htm">IeXdi2Exec::ChangeExceptionAction</A> to change the action taken when an exception occurs. Note that this functionality is not controlled by the exception dialog.</P>
+
+<P>For more information about using the exception-filtering component, see <A HREF="wce51conusingexdi2helpers.htm">Using the eXDI2 Helpers</A>.</P>
+
+<P>Because a debugging client may be in the process of gathering or modifying information on the target, an eXDI service should obtain permission from the client before resuming execution with <A HREF="wce50lrfiexdi2clientauthorizecontinuationauthorizetargetrestart.htm">IeXdi2ClientAuthorizeContinuation::AuthorizeTargetRestart</A>.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce51conosaccess.htm">OS Access</A> | <A HREF="wce51conmemoryaccess.htm">Memory and Register Access</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

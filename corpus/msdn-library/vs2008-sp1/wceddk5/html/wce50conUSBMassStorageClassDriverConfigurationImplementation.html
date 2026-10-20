@@ -1,0 +1,68 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>USB Function Mass Storage Client Driver Configuration and Implementation</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="USB Function Mass Storage Client Driver Configuration and Implementation"/>
+<MSHelp:RLTitle Title="USB Function Mass Storage Client Driver Configuration and Implementation"/>
+<MSHelp:Keyword Index="A" Term="wce50conUSBMassStorageClassDriverConfigurationImplementation"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Driver"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="False"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="usbfunction_guide.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="False"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+<MSHelp:Attr Name="PBFeature" Value="USBFunctionDriver"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_1034137">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50conusbmassstorageclassdriverconfigurationimplementation"></A>USB Function Mass Storage Client Driver Configuration and Implementation</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>To implement a USB mass storage class driver, you must provide an emulation implementation for a particular type of mass storage device. The transport handles all USB communication, and the emulation implementation handles commands.</P>
+
+<P>The USB mass storage class driver must abstract one mass storage device. In the USB mass storage class driver registry settings, you must include the arguments to supply to <MSHelp:link keywords="wce50lrfCreateFile" TABINDEX="0">CreateFile</MSHelp:link>: <B>lpFileName</B>, <B>dwDesiredAccess</B>, <B>dwShareMode</B>, <B>dwCreationDisposition</B>, and <B>dwFlagsAndAttributes</B>. In the registry settings for the USB mass storage class driver, you must include the appropriate USB mass storage <B>SubClass</B> and <B>Protocol</B> codes. For more information about the SubClass and Protocol codes, see the <I>USB Mass Storage Class Specification</I>.</P>
+
+<P>During initialization, the emulator reads the <B>SubClass</B> code from the registry to determine whether it can emulate it. Then, the emulator reads the <B>Protocol</B> code from the registry and initializes the transport. The <B>BOT_Init</B> function, <B>CBIT_Init</B> function, or an equivalent function, initializes the transport.</P>
+
+<P>Through the initialization function, the transport determines whether it can support the specified transport protocol. If it can support the specified transport protocol, then the transport adds the specified <B>SubClass</B> and <B>Protocol</B> to the interface descriptor that describes the mass storage device. Otherwise, the transport fails to initialize. The transport layer might contain multiple transport schemes and apply the scheme appropriate to the <B>Protocol</B> code specified at initialization. The transport utilizes CBIT with 64-byte bulk DATA_IN and DATA_OUT endpoints, and a 16-byte interrupt endpoint.</P>
+
+<P>After the emulator initializes the transport, it continues to initialize itself by mounting its associated device. Before exposing the store to the USB host, the USB function mass storage driver dismounts all of partitions in the device storage, including logical partitions. Although the partitions are still visible, they appear unmounted when accessed using the Storage Manager. The device storage partitions should not be remounted while the device storage is exposed to the USB host, because remounting while being exposed can corrupt the device storage.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50conusbmassstorageclassdriver.htm">USB Function Mass Storage Client Driver</A> | <MSHelp:link keywords="wce50conFileSystems3" TABINDEX="0">File Systems</MSHelp:link></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

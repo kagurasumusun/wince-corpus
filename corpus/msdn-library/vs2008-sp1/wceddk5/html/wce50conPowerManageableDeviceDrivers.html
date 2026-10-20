@@ -1,0 +1,112 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Power-Manageable Device Drivers</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Power-Manageable Device Drivers"/>
+<MSHelp:RLTitle Title="Power-Manageable Device Drivers"/>
+<MSHelp:Keyword Index="A" Term="wce50conPowerManageableDeviceDrivers"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Driver"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="False"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="powermgrdrv_guide.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="False"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+<MSHelp:Attr Name="PBFeature" Value="SYSGEN_PM"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_3019107">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50conpowermanageabledevicedrivers"></A>Power-Manageable Device Drivers</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>To create a device driver that recognizes the power states of a target device, you must first create a driver that advertises a non-COM-related device interface. This non-COM-related device interface, in turn, specifies that the device is power-managed.</P>
+
+<P>You can advertise a device interface in the following ways:
+
+<UL type="disc">
+	<LI>You can define the interface in the IClass value of the registry key used to activate the device.</li>
+
+	<LI>You can define the IClass value in the Active registry key using the Init function of the device driver.</li>
+
+	<LI>You can define the IClass value using the REGINI parameter for the <MSHelp:link keywords="wce50lrfActivateDeviceEx" TABINDEX="0">ActivateDeviceEx</MSHelp:link> function.</li>
+
+	<LI>You can explicitly call the <MSHelp:link keywords="wce50lrfAdvertiseInterface" TABINDEX="0">AdvertiseInterface</MSHelp:link> function in the device driver.</li>
+</UL>
+
+<P>For additional information on advertising a non-COM-related interface for power management, see <A HREF="wce50condeviceinterfacenotifications.htm">Device Interface Notifications</A>.</P>
+
+<P>You can register a device driver for power management notifications by calling the <A HREF="wce50lrfrequestpowernotifications.htm">RequestPowerNotifications</A> function and passing a handle to a message queue created exclusively for power management notifications. You should only do this if your driver must respond to a power notification and can afford to incur the associated overhead. Typically, once a driver has been advertised as a power-aware driver, the driver needs only to process <MSHelp:link keywords="wce50lrfDeviceIoControl" TABINDEX="0">DeviceIoControl</MSHelp:link> calls from the Power Manager.</P>
+
+<P>The Power Manager communicates to a device with IOCTL codes. The following table shows the IOCTL codes the Power Manager uses to communicate with a device.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=50%>Function</TH>
+<TH width=50%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><A HREF="wce50lrfioctlpowercapabilities.htm">IOCTL_POWER_CAPABILITIES</A></TD>
+<TD width=50%>Requests that the device inform the Power Manager of supported power states along with any associated characteristics.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><A HREF="wce50lrfioctlpowerset.htm">IOCTL_POWER_SET</A></TD>
+<TD width=50%>Requests that the device update the power state information.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><A HREF="wce50lrfioctlpowerquery.htm">IOCTL_POWER_QUERY</A></TD>
+<TD width=50%>Queries to verify that the device is ready to enter a new device power state.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><A HREF="wce50lrfioctlpowerget.htm">IOCTL_POWER_GET</A></TD>
+<TD width=50%>Requests that the device inform the Power Manager of the current device power state.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><A HREF="wce50lrfioctlregisterpowerrelationship.htm">IOCTL_REGISTER_POWER_RELATIONSHIP</A></TD>
+<TD width=50%>Notifies the parent device to register all controlled devices.</TD>
+</TR>
+</table></div>
+
+<P>You can implement and use the optional <A HREF="wce50lrfioctlpowerquery.htm">IOCTL_POWER_QUERY</A> control code as a way to delay power state transitions until a driver has completed preparation for a change in power state. You can do this by modifying the MDD layer to support <B>IOCTL_POWER_QUERY</B>, although this modification may make the MDD layer incompatible with future versions of the Power Manager.</P>
+
+<H4 class="dtH4">See Also </H4>
+
+<P><A HREF="wce50condevicepowermanagementguidelines.htm">Device Power Management Guidelines</A> | <A HREF="wce50howhowtoaddpowermanagementtoadevicedriver.htm">How to Add Power Management to a Device Driver</A> | <A HREF="wce50conpowermanagementimplementationindrivers.htm">Power Management Implementation in Drivers</A> | <A HREF="wce50constreaminterfaceconfigurationforpowermanagement.htm">Power Management Implementation in Stream Interface Drivers</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

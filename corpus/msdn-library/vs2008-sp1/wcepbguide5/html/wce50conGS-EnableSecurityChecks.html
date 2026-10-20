@@ -1,0 +1,99 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>/GS - Enable Security Checks</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="/GS - Enable Security Checks"/>
+<MSHelp:RLTitle Title="/GS - Enable Security Checks"/>
+<MSHelp:Keyword Index="A" Term="wce50conGS-EnableSecurityChecks"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Guide"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="True"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="comp_compiler_linker.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="True"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_1042171">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50congs-enablesecuritychecks"></A>/GS - Enable Security Checks</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P><B>/GS </B>is the default build flag for device compilers.</P>
+
+<P><B>/GS</B> attempts to detect direct buffer overruns into the return address. When a buffer overruns overwrites the return address, it provides an opportunity to exploit code that does not enforce buffer size restrictions. </P>
+
+<P>You can inject security checks into compiled code by enforcing buffer size restrictions. </P>
+
+<P>Buffer overruns are more easily exploited on machines, such as x86, with calling conventions that pass the return address of function calls on the stack. When a function is compiled with <B>/GS</B>, the compiler identifies functions that might be subject to buffer overrun problems and inserts a security cookie on the stack before the return address. If, on function exit, the security cookie has changed, then the compiler reports an error and terminates the process.</P>
+
+<P>The security cookie can be an issue when <B>/GS</B> is used to compile an EXE or DLL that does not use one of the default CRT entrypoints. The issue can occur because <B>/GS</B> requires CRT startup code, and the CRT function <B>_cinit</B> resets the expected value of the security cookie. If you have a function that is compiled with <B>/GS</B> (and thus has the security cookie) that in turn calls <B>_cinit</B>, the <B>_cinit</B> function changes the expected security cookie value and causes your program to falsely detect a buffer overrun. </P>
+
+<P>To avoid this issue: 
+
+<UL type="disc">
+	<LI>Do not use arrays or <B>_alloca</B> in any functions that call (or end up calling) <B>_cinit</B>. </li>
+
+	<LI>Let the CRT initialize normally with a default entrypoint, such as <B>WinMainCRTStartup</B> or <B>_DllMainCRTStartup</B>. </li>
+</UL>
+
+<P><B>/GS</B> does not protect against all buffer overrun security attacks. For example, buffer overrun attacks are still possible by overwriting into the parameters area.</P>
+
+<P>Even if you use <B>/GS</B>, you should strive to write secure code. That is, make sure that your code has no buffer overruns. <B>/GS</B> might protect your application from buffer overruns that do remain in your code.</P>
+
+<H4 class="dtH4">Example</H4>
+
+<P>This sample overruns a buffer. It will display a message box and terminate the process when built with <B>/GS</B>.</P>
+
+<PRE class="code">#include &lt;cstring&gt;
+
+// Vulnerable function
+void vulnerable(const char *str)
+{
+   char buffer[10];
+   strcpy(buffer, str); // overrun buffer !!!
+}
+
+int main()
+{
+   // declare buffer that is bigger than expected
+   char large_buffer[] = "This string is longer than 10 characters!!!";
+   vulnerable(large_buffer);
+}</PRE>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50congeneralpurposecompileroptions.htm">Compiler Options</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

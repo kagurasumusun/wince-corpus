@@ -1,0 +1,122 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Shared IST for NDIS</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Shared IST for NDIS"/>
+<MSHelp:RLTitle Title="Shared IST for NDIS"/>
+<MSHelp:Keyword Index="A" Term="wce50conSharedISTForNDIS"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Driver"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="False"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="ndisminiportdriveroptimization.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="True"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+<MSHelp:Attr Name="PBFeature" Value="NetworkDriver"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_1034159">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50consharedistforndis"></A>Shared IST for NDIS</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>Typically, the Windows CE <I>Network Driver Interface Specification</I> (NDIS) implementation creates one interrupt service thread (IST) for each adapter instance interrupt request (IRQ). In routing scenarios, you can often improve throughput by combining interrupt handling into one IST that services all IRQs. This reduces the number of thread switches during the routing processing. However, because performance can be specific to network configuration, OS, and hardware, you should profile your system performance with and without the shared IST to confirm that it improves performance.</P>
+
+<P>To achieve a performance improvement, the miniport driver must indicate multiple packets, for example, using <A HREF="wce50lrfndismindicatereceivepacket.htm">NdisMIndicateReceivePacket</A>. The miniport driver must also receive NDIS_STATUS_SUCCESS, allowing it to keep the packets for processing.</P>
+
+<P>To enable the shared IST behavior, you must also implement changes in the OEM abstraction layer (OAL) code. The following list shows the global variables that you must add between NDIS and the interrupt service routine (ISR):
+
+<UL type="disc">
+	<LI><B>OEMIntrMask</B> stores the bitmask value of the 1 &lt;&lt; IRQ.</li>
+
+	<LI><B>OEMIntrEnable</B> stores the IRQ number.</li>
+</UL>
+
+<P>If the query for IOCTL_HAL_SYSINTR_NETWORK_SHARED returns FALSE, the shared IST functionality is not enabled, and the system behaves as before.</P>
+
+<P>The following code example shows how NDIS uses the IOCTL_HAL_SYSINTR_NETWORK_SHARED to query the address of the <B>OEMIntrMask</B> and <B>OEMIntrEnable</B> variables:</P>
+
+<PRE class="code">ULONG OEMIntrEnable = 0;
+ULONG OEMIntrMask = 0;
+  
+BOOL OEMIoControl(
+   DWORD code, PVOID pInpBuffer, DWORD inpSize, PVOID pOutBuffer, DWORD outSize,
+   DWORD *pOutSize
+) {      
+   BOOL ok = TRUE;
+ 
+....
+   case IOCTL_HAL_SYSINTR_NETWORK_SHARED:
+      if (outSize &lt; 2*sizeof(ULONG) || pOutBuffer == NULL) {
+         ok = FALSE;
+         SetLastError(ERROR_INVALID_PARAMETER);
+         break;
+      }
+      ((ULONG*)pOutBuffer)[0] = (ULONG)&amp;OEMIntrMask;
+      ((ULONG*)pOutBuffer)[1] = (ULONG)&amp;OEMIntrEnable;
+      if (pOutSize != NULL) *pOutSize = 2*sizeof(ULONG);
+      break;
+...
+return ok;
+}</PRE>
+
+<P>The following MIPS code example shows how the <B>OEMIntrMask</B> variable is updated by the ISR code as SYSINTR_NETWORK_SHARED is returned:</P>
+
+<PRE class="code">    la   a0, OEMIntrMask
+    lw   a1, 0(a0)
+    or   a1, (1 &lt;&lt; IRQ_MAC1)
+    sw   a1, 0(a0)
+    j    ra
+    li   v0, SYSINTR_NETWORK_SHARED</PRE>
+
+<P>The <B>OEMIntrEnable</B> variable is updated by NDIS before it calls <MSHelp:link keywords="wce50lrfInterruptDone" TABINDEX="0">InterruptDone</MSHelp:link> and <B>InterurptDisable</B>, which map to <B>OEMInterruptEnable</B> and <B>OEMInterruptDisable</B> respectively.</P>
+
+<P>The following code example shows how the HAL code must then consider <B>OEMIntrEnable</B> to determine the interrupt to enable or disable:</P>
+
+<PRE class="code">   BOOL OEMInterruptEnable(DWORD sysIntr, LPVOID pvData, DWORD cbData)
+   {
+      DEBUGMSG(FALSE, (L"+OEMInterruptEnable %d\n", sysIntr));
+      switch (sysIntr) {
+         case SYSINTR_NETWORK_SHARED:
+            if (OEMIntrEnable == IRQ_PCI) {
+               OUT32(PCI_BASE + PCI_INTMASK, PCI_INT_PA);
+               OEMIntrEnable = 0x00;
+          }
+          break;</PRE>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50conoptimizationofndisminiportdriverperformance.htm">Improving Performance of an NDIS Miniport Driver</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

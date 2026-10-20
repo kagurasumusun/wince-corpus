@@ -1,0 +1,90 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>NDIS Packet Structure</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="NDIS Packet Structure"/>
+<MSHelp:RLTitle Title="NDIS Packet Structure"/>
+<MSHelp:Keyword Index="A" Term="wce50conNDISPacketStructure"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Driver"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="False"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="ndis_guide1.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="False"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+<MSHelp:Attr Name="PBFeature" Value="NetworkDriver"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_3018296">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50conndispacketstructure"></A>NDIS Packet Structure</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>A protocol driver allocates an NDIS packet, fills it with data, and passes it to the next lower NDIS driver so that the data can be sent on the network. Some lowest level NIC drivers allocate packets to hold received data and pass the packet to interested higher-layer drivers. Sometimes, a protocol driver allocates a packet and passes it to a NIC driver with a request that the NIC driver copy received data into the provided packet. NDIS provides functions for allocating and manipulating the substructures that constitute a packet. A packet contains packet descriptors and buffer descriptors, each of which contains other elements. </P>
+
+<P>The following list shows the contents of a typical packet descriptor:
+
+<UL type="disc">
+	<LI>Private areas for the miniport NIC driver and a protocol driver</li>
+
+	<LI>Flags associated with the packet, defined by a cooperating miniport(s) and protocol driver(s)</li>
+
+	<LI>Number of physical pages that contain the packet</li>
+
+	<LI>Total length of the packet</li>
+
+	<LI>Pointer to the first buffer descriptor that maps the first buffer in the packet</li>
+</UL>
+
+<P>The following list shows the contents of a typical buffer descriptor:
+
+<UL type="disc">
+	<LI>Starting virtual address of each buffer</li>
+
+	<LI>Buffer's byte offset into the page pointed to by the virtual address</li>
+
+	<LI>Total number of bytes in the buffer</li>
+
+	<LI>Pointer to the next buffer descriptor, if any</li>
+
+	<LI>Virtual range, possibly spanning more than one page that makes up the buffer described by the buffer descriptor. These virtual pages map to physical memory. </li>
+</UL>
+
+<P>A driver that allocates shared memory, such as a bus master NIC driver for receiving incoming packets or a protocol driver that allocates memory for sending a packet, must ensure that any buffer used to contain incoming or outgoing data is cache-aligned. This is necessary so that the miniport can flush the buffer to assure coherency before sending a packet and to flush a received buffer before indicating the data to an upper layer. </P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50connetworkdriverprogrammingconsiderations.htm">Network Driver Programming Considerations</A> | <A HREF="wce50conndisdriverupperedgefunctions.htm">NDIS Driver Upper-Edge Functions</A> | <A HREF="wce50conwanminiportdrivers.htm">WAN Miniport Drivers</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

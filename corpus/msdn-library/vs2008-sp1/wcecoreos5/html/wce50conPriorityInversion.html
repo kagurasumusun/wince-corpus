@@ -1,0 +1,108 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Priority Inversion</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Priority Inversion"/>
+<MSHelp:RLTitle Title="Priority Inversion"/>
+<MSHelp:Keyword Index="A" Term="wce50conPriorityInversion"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Feature"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="kernel_scheduling.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="False"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+<MSHelp:Attr Name="PBFeature" Value="CORE"/>
+<MSHelp:Attr Name="PBOnly" Value="True"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_3009396">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50conpriorityinversion"></A>Priority Inversion</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P><I>Priority inversion</I> occurs when a mutex, critical section, or semaphore resource held by a lower-priority thread delays the execution of a higher-priority thread when both are contending for the same resource. </P>
+
+<P>To correct this situation and free the higher-priority thread, Windows CE enables the lower-priority thread to inherit the more critical thread's priority and run at the higher priority until it releases its use of the resource. This is called priority inheritance.</P>
+
+<P>Because an unbounded amount of time is needed to relinquish the inverted thread and it is out of the control of the kernel, the OEM loses control of the scheduling process. To guarantee real-time performance, OEMs should ensure that a priority inversion condition does not occur.</P>
+
+<P>Consider an example that shows how a system without priority inheritance could lead to poor thread scheduling. </P>
+
+<P>Suppose an application has three threads:
+
+<UL type="disc">
+	<LI>Thread 1 has high priority </li>
+
+	<LI>Thread 2 has medium priority </li>
+
+	<LI>Thread 3 has low priority </li>
+</UL>
+
+<P>Thread 1 and thread 2 are sleeping or blocked at the beginning of the example. Thread 3 then runs and enters a critical section. </P>
+
+<P>At that moment, thread 2 begins running, preempting thread 3 because thread 2 has a higher priority. So, thread 3 continues to own a critical section. </P>
+
+<P>Later, thread 1 begins running, preempting thread 2. Thread 1 tries to enter the same critical section that thread 3 owns, but because it is owned by another thread, thread 1 blocks, waiting for the critical section. </P>
+
+<P>At that point, thread 2 would begin running because it has a higher priority than thread 3, and thread 1 is not running. Thread 3 would never release the critical section that thread 1 is waiting on because thread 2 would continue running. </P>
+
+<P>So, the highest-priority thread in the system, thread 1, becomes blocked waiting for lower-priority threads to execute.</P>
+
+<P>To resolve the threading issue, Windows CE enables priority inheritance to a depth of one level. </P>
+
+<P>In the preceding example, when thread 1 is blocked as it waits for thread 3 to complete, Windows CE boosts the priority of thread 3. When the priority of thread 3 is boosted, it runs and eventually releases the shared resource to thread 1. </P>
+
+<P>After the shared resource is released by thread 3, Windows CE restores thread 3 to its original priority and thread 1 then runs.</P>
+
+<P>However, if thread 3 is blocked and waiting for another thread, X, to release an object, Windows CE does not boost the priority of thread X, which might be the lowest priority thread. </P>
+
+<P>If the priority of a thread is inverted, the thread receives a fresh quantum when its priority is no longer inverted.</P>
+
+<BLOCKQUOTE class="dtBlock">
+<b class="le">Note</b>&nbsp;&nbsp;&nbsp;Abandon waiting on mutex causes threads blocking the mutex to keep the inherited priority. </BLOCKQUOTE>
+
+<BLOCKQUOTE class="dtBlock">
+When a lower priority thread holds a mutex, and a higher priority thread that is waiting on the mutex abandons the wait (because it timed out or because another object signaled using the <B>WaitForMultipleObjects</B> function), the lower priority thread inherits the priority of the higher priority thread until it starts running again. </BLOCKQUOTE>
+
+<BLOCKQUOTE class="dtBlock">
+This is usually not a problem, unless the lower priority thread is also blocked on another object when the wait is abandoned. </BLOCKQUOTE>
+
+<BLOCKQUOTE class="dtBlock">
+Microsoft recommends that you avoid priority inversion by keeping all threads waiting on the mutex at the same priority, or by setting the timeout to INFINITE for threads that are waiting for the mutex.</BLOCKQUOTE>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50conprocessesandthreads.htm">Processes and Threads</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

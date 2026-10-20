@@ -1,0 +1,137 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>FileDrmNotifyEnable</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="FileDrmNotifyEnable"/>
+<MSHelp:RLTitle Title="FileDrmNotifyEnable"/>
+<MSHelp:Keyword Index="A" Term="wce51grfFileDrmNotifyEnable"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Application"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbsmartphone"/>
+<MSHelp:Attr Name="Product" Value="kbPocketPC"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="Technology" Value="kbPocketPC"/>
+<MSHelp:Attr Name="Technology" Value="kbSmartphone"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="fdrm_reference_magneto.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="False"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="True"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_1058388">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Windows Mobile Version 5.0 SDK<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce51grffiledrmnotifyenable"></A>FileDrmNotifyEnable</H1>
+<!--Feedback Link Top Start-->
+<P CLASS="feedback"><font size="1"><a href="mailto:medfdbk&#64;microsoft.com?subject=Product: Windows Mobile | Version: 5.0 | Release: SDK | Title: FileDrmNotifyEnable | Filename: wce51grffiledrmnotifyenable.htm | Built on: Wednesday, September 14, 2005">Send Feedback</a> on this topic to the authors</font></p>
+<!--Feedback Link Top End-->
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>This function registers an application with the FDRM provider for updates when updated rights are received on the device. </P>
+
+<PRE class="syntax"><B>HRESULT FileDrmNotifyEnable (
+  LPCTSTR</B> <I>pszFileName</I>,<B>
+  LPTSTR</B> <I>pszValueName</I>,<B>
+  DWORD</B> <I>cchValueLen</I><B>
+);</B></PRE>
+
+<H4 class="dtH4">Parameters</H4>
+
+<DL>
+<DT><I>pszFileName</I> </DT>
+
+<DD>[in] Fully qualified path to the file for which notifications are to be received.</dd>
+
+<DT><I>pszValueName</I></DT>
+
+<DD>[out] Pointer to a buffer to be filled with the name of a registry DWORD value that is updated when the rights associated with the object change. The returned string must always be terminated with a NULL character as long as <I>cchValueLen</I> is greater than or equal to one.</dd>
+
+<DT><I>cchValueLen</I> </DT>
+
+<DD>[in] Length of the <I>pszValueName</I> buffer. A buffer of size MAX_PATH must always be sufficient to hold the returned string. Passing in a smaller buffer will cause this function to return E_INSUFFICIENT_BUFFER if the buffer is too small to hold the returned string, including the NULL terminator.
+
+<P>MAX_PATH is a standard Windows constant to indicate the maximum length of the buffer required. If the buffer length that is passed is MAX_PATH then the function will not fail because the buffer is too small, although it may fail for other reasons.
+</dd>
+</DL>
+
+<H4 class="dtH4">Return Values:</H4>
+
+<P>The function can return any HRESULT and the application should use the SUCCEEDED and FAILED macros to check the results. The following table shows additional HRESULT values that may be returned.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=50%>Value</TH>
+<TH width=50%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>E_FDRM_NOPROVIDER</TD>
+<TD width=50%>No provider found.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>E_FDRM_NOTDRMOBJECT</TD>
+<TD width=50%>The target is not a FDRM object.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>E_INSUFFICIENTBUFFER</TD>
+<TD width=50%>The buffer pointed to by <I>pszValueName</I> is too small to hold the returned string.</TD>
+</TR>
+</table></div>
+
+<H4 class="dtH4">Remarks</H4>
+
+<P>On success the <I>psValueName</I> is filled in with the name of a registry value that can be monitored by the application. A new registry value may have been created in the registry. These values must be under the registry key <B>HKEY_CURRENT_USER\FDRM\Monitor</B>.</P>
+
+<P>An application that requires notification when a rights renewal update has arrived can use this function with the <B>RegistryNotifyxxxx</B> functions to receive notifications from the FDRM provider.</P>
+
+<P>The FDRM provider uses the passed-in filename to generate the name of a registry value that is used as a proxy for the file. The calling application can then register for registry notifications by using this value. When the FDRM provider changes the rights store it also writes the new FDRRF_* rights value to that proxy registry value. For a table of the FDRRF_* rights, see the <A HREF="wce51grffiledrmcommitrights.htm">FileDrmCommitRights</A> function's <I>dwRight</I> paramter.</P>
+
+<P>The FDRM provider references count calls to <B>FileDrmNotifyEnable</B> and <B>FileDrmNotifyDisable</B> and only stops updating and removes the registry value when the reference count goes to 0. The FDRM provider also monitors processes and removes all outstanding references to the notification upon process exit. Registrations by multiple processes or threads within a single process that refer to the same filename must return the same registry value name to be monitored.</P>
+
+<P>The FDRM provider also monitors calls to <B>DeleteFile</B> and removes any outstanding notifications when a FDRM-protected file is deleted.</P>
+
+<H4 class="dtH4">Requirements</H4>
+
+<P><B>Pocket PC Platforms:</B> Windows Mobile Version 5.0 and later<B><BR>
+Smartphone Platforms:</B> Windows Mobile Version 5.0 and later<B><BR>
+OS Versions:</B> Windows CE 5.01 and later.<BR>
+<B>Header:</B> FDRM.h.<BR>
+<B>Link Library:</B> Aygshell.lib.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce51grffdrmapireference.htm">FDRM API Reference</A> | <A HREF="wce51grffdrmfunctions.htm">FDRM Functions</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Feedback Link Bottom Start-->
+<p><font size="1"><a href="mailto:medfdbk&#64;microsoft.com?subject=Product: Windows Mobile | Version: 5.0 | Release: SDK | Title: FileDrmNotifyEnable | Filename: wce51grffiledrmnotifyenable.htm | Built on: Wednesday, September 14, 2005">Send Feedback</a> on this topic to the authors</font></p>
+<!--Feedback Link Bottom End-->
+<!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="mob5conCopyrightInformationForMagneto" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link></font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

@@ -1,0 +1,128 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>MiniportReconfigure</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="MiniportReconfigure"/>
+<MSHelp:RLTitle Title="MiniportReconfigure"/>
+<MSHelp:Keyword Index="K" Term="MiniportReconfigure"/>
+<MSHelp:Keyword Index="A" Term="wce50lrfMiniportReconfigure"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Driver"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="False"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="apiref"/>
+<MSHelp:Attr Name="Filename" Value="ndis_upper_edge_functions.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="False"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+<MSHelp:Attr Name="APIName" Value="MiniportReconfigure"/>
+<MSHelp:Attr Name="PBFeature" Value="NetworkDriver"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_3018955">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50lrfminiportreconfigure"></A>MiniportReconfigure</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>Although the NDIS library currently never calls this function, a <A HREF="wce50lrfminiportinitialize.htm">MiniportInitialize</A> function can call it as an internal driver function.</P>
+
+<PRE class="syntax"><B>NDIS_STATUS</B> <B>MiniportReconfigure(</B>
+  <B>PNDIS_STATUS</B> <I>OpenErrorStatus</I><B>,</B>
+  <B>NDIS_HANDLE</B> <I>MiniportAdapterContext</I><B>,</B>
+  <B>NDIS_HANDLE</B> <I>WrapperConfigurationContext</I>
+<B>);</B></PRE>
+
+<H4 class="dtH4">Parameters</H4>
+
+<DL>
+<DT><I>OpenErrorStatus</I></DT>
+
+<DD>[out] Points to a variable that <B>MiniportReconfigure</B> sets to an NDIS_STATUS_<I>XXX</I> code specifying additional information about the error if <B>MiniportReconfigure</B> will return NDIS_STATUS_OPEN_ERROR.</dd>
+
+<DT><I>MiniportAdapterContext</I></DT>
+
+<DD>[in] Specifies the handle to a miniport-allocated context area in which the driver maintains per-network adapter state, set up by <B>MiniportInitialize</B> with <A HREF="wce50lrfndismsetattributes.htm">NdisMSetAttributes</A> or <A HREF="wce50lrfndismsetattributesex.htm">NdisMSetAttributesEx</A>.</dd>
+
+<DT><I>WrapperConfigurationContext</I></DT>
+
+<DD>[in] Specifies a handle used only during initialization for calls to <B>Ndis<I>XXX</I></B> configuration and initialization functions. For example, this handle is a required parameter to <A HREF="wce50lrfndisopenconfiguration.htm">NdisOpenConfiguration</A>.</dd>
+</DL>
+
+<H4 class="dtH4">Return Values</H4>
+
+<P>The following table shows the status values that <B>MiniportReconfigure</B> returns </P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=39%>Value</TH>
+<TH width=61%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=39%>NDIS_STATUS_SUCCESS </TD>
+<TD width=61%>The miniport was successfully reconfigured.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=39%>NDIS_STATUS_NOT_ACCEPTED</TD>
+<TD width=61%>This value usually is a nonspecific default, returned when none of the more specific NDIS_STATUS_<I>XXX</I> caused NDIS or the underlying NIC driver to fail the request. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=39%>NDIS_STATUS_OPEN_ERROR</TD>
+<TD width=61%>An error of type NDIS_STATUS_<I>XXX</I> caused the error. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=39%>NDIS_STATUS_FAILURE</TD>
+<TD width=61%>The miniport could not be reconfigured.</TD>
+</TR>
+</table></div>
+
+<H4 class="dtH4">Remarks</H4>
+
+<P>As an internal driver function, <B>MiniportReconfigure</B> might be called from <B>MiniportInitialize</B> to reconfigure a network adapter to new parameters returned by one of the <B>Ndis<I>XXX</I></B> bus-relative configuration functions. For example, a <B>MiniportReconfigure</B> function might be used to support plug-and-play network adapters or software-configurable network adapters.</P>
+
+<P>Because an internal <B>MiniportReconfigure</B> function is called from <B>MiniportInitialize</B>, no other driver request can be outstanding when <B>MiniportReconfigure</B> is called, and NDIS will never submit another request to the miniport until its caller, <B>MiniportInitialize</B>, returns control.</P>
+
+<P>As an internal driver function called from <B>MiniportInitialize</B>, <B>MiniportReconfigure</B> can be pageable code.</P>
+
+<H4 class="dtH4">Requirements</H4>
+
+<P><B>OS Versions:</B> Windows CE .NET 4.0 and later.<BR>
+<B>Header:</B> Externs.h.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50lrfminiportinitialize.htm">MiniportInitialize</A> | <A HREF="wce50lrfndismregisterinterrupt.htm">NdisMRegisterInterrupt</A> | <A HREF="wce50lrfndismsetattributes.htm">NdisMSetAttributes</A> | <A HREF="wce50lrfndismsetattributesex.htm">NdisMSetAttributesEx</A> | <A HREF="wce50lrfndisopenconfiguration.htm">NdisOpenConfiguration</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

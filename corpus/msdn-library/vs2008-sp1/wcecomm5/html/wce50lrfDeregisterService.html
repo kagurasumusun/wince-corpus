@@ -1,0 +1,95 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>DeregisterService</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="DeregisterService"/>
+<MSHelp:RLTitle Title="DeregisterService"/>
+<MSHelp:Keyword Index="K" Term="DeregisterService"/>
+<MSHelp:Keyword Index="A" Term="wce50lrfDeregisterService"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Feature"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="apiref"/>
+<MSHelp:Attr Name="Filename" Value="servdotexe_functions.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="False"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+<MSHelp:Attr Name="APIName" Value="DeregisterService"/>
+<MSHelp:Attr Name="APIType" Value="LibDef"/>
+<MSHelp:Attr Name="APILocation" Value="Coredll.lib"/>
+<MSHelp:Attr Name="PBFeature" Value="SYSGEN_SERVICES"/>
+<MSHelp:Attr Name="PBOnly" Value="False"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_3007648">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50lrfderegisterservice"></A>DeregisterService</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>This function stops a service instance.</P>
+
+<PRE class="syntax"><B>BOOL DeregisterService(</B>
+  <B>HANDLE</B> <I>hDevice</I>
+<B>);</B></PRE>
+
+<H4 class="dtH4">Parameters</H4>
+
+<DL>
+<DT><I>hDevice</I></DT>
+
+<DD>[in] Handle to the service instance returned by <A HREF="wce50lrfactivateservice.htm">ActivateService</A>, <A HREF="wce50lrfregisterservice.htm">RegisterService</A>, or <A HREF="wce50lrfgetservicehandle.htm">GetServiceHandle</A>.</dd>
+</DL>
+
+<H4 class="dtH4">Return Values</H4>
+
+<P>A nonzero value indicates success. A value of zero indicates failure. To get extended error information, call <MSHelp:link keywords="wce50lrfGetLastError" TABINDEX="0">GetLastError</MSHelp:link>.</P>
+
+<H4 class="dtH4">Remarks</H4>
+
+<P><B>DeregisterService</B> will first call into the service's exported <A HREF="wce50lrfxxxiocontrol319.htm">xxx_IOControl (Services.exe)</A> with the <I>dwCode </I>value set to IOCTL_SERVICE_QUERY_CAN_DEINIT. If <B>xxx_IOControl</B> returns a value of TRUE and sets the buffer passed in to a nonzero value, <B>DeregisterService</B> will not unload the service. If the service is to be unloaded, all super service sockets associated with the service instance will be unbound and Services.exe will call <A HREF="wce50lrfxxxdeinit317.htm">xxx_Deinit (Services.exe)</A>.</P>
+
+<P>If the service instance is the last service loaded by a service DLL, the DLL will be unloaded from memory after the call to <B>xxx_Deinit</B> returns. It is extremely important that no other threads created by the DLL are running after the DLL has been unloaded from memory because unloading the DLL will unload any code pages. Any thread that attempts to access these code pages will cause an exception.</P>
+
+<BLOCKQUOTE class="dtBlock">
+<b class="le">Security Note</b>&nbsp;&nbsp;&nbsp;<B>DeregisterService</B> can be called from either trusted or untrusted applications, regardless of the setting of the DEVFLAGS_TRUSTEDCALLERONLY registry flag for the service. If a trusted application has loaded a service, an untrusted application cannot unload the service. However, if an untrusted application has loaded the service, then either a trusted application or an untrusted application can unload the service.</BLOCKQUOTE>
+
+<H4 class="dtH4">Requirements</H4>
+
+<P><B>OS Versions:</B> Windows CE .NET 4.0 and later.<BR>
+<B>Header:</B> Service.h. <BR>
+<B>Link Library:</B> Coredll.lib.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50lrfactivateservice.htm">ActivateService</A> | <A HREF="wce50lrfregisterservice.htm">RegisterService</A> | <A HREF="wce50lrfgetservicehandle.htm">GetServiceHandle</A> | <A HREF="wce50lrfxxxdeinit317.htm">xxx_Deinit (Services.exe)</A>| <A HREF="wce50lrfxxxiocontrol319.htm">xxx_IOControl (Services.exe)</A> | <A HREF="wce50conservicesexe.htm">Services.exe</A> | <A HREF="wce50conservicesexeregistrysettings.htm">Services.exe Registry Settings</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

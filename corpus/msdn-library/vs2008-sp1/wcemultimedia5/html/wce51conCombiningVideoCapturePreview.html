@@ -1,0 +1,88 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Combining Video Capture and Preview</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Combining Video Capture and Preview"/>
+<MSHelp:RLTitle Title="Combining Video Capture and Preview"/>
+<MSHelp:Keyword Index="A" Term="wce51conCombiningVideoCapturePreview"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Feature"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="directshow_concepts1.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="True"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+<MSHelp:Attr Name="PBFeature" Value="SYSGEN_DSHOW"/>
+<MSHelp:Attr Name="PBOnly" Value="False"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_1066815">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce51concombiningvideocapturepreview"></A>Combining Video Capture and Preview</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P><B>Applies to:</B> Devices based on Windows Mobile Version 5.0 and later</P>
+
+<P>The section <A HREF="wce51concapturingvideotofile.htm">Capturing Video to a File</A> describes how to capture video to various file formats. The section <A HREF="wce51convideopreviews.htm">Video Previews</A> describes how to build a live preview graph. However, many applications must do both at once. To build a combined preview and file-writing graph, make two calls to <MSHelp:link keywords="wce51lrfICaptureGraphBuilder2RenderStream" TABINDEX="0">ICaptureGraphBuilder2::RenderStream</MSHelp:link> as shown in the following code.</P>
+
+<PRE class="code">// Render the preview stream to the video renderer.
+hr = pBuild-&gt;RenderStream(&amp;PIN_CATEGORY_PREVIEW, &amp;MEDIATYPE_Video, pCap, 
+    NULL, NULL);
+
+// Render the capture stream to the mux.
+hr = pBuild-&gt;RenderStream(&amp;PIN_CATEGORY_CAPTURE, &amp;MEDIATYPE_Video, pCap, 
+    NULL, pMux);</PRE>
+
+<P>In the above code, the Capture Graph Builder is hiding some details: 
+
+<UL type="disc">
+	<LI>If the capture filter has a preview pin and a capture pin, the <B>ICaptureGraphBuilder2::RenderStream</B> method simply renders both pins, as shown in the following illustration. </li>
+</UL>
+
+<P class="fig"><IMG SRC="dshow_capture_and_preview1.gif" ALT="" BORDER=0>
+
+<UL type="disc">
+	<LI>If the filter has only a capture pin, the Capture Graph Builder uses the <A HREF="wce51consmartteefilter.htm">Smart Tee Filter</A> to split the capture stream. The following illustration shows the graph with a Smart Tee. </li>
+</UL>
+
+<P class="fig"><IMG SRC="dshow_capture_and_preview2.gif" ALT="" BORDER=0></P>
+
+<P>The Smart Tee filter has a capture pin and a preview pin. It takes a single video stream from the capture filter and splits it into two streams, one for capture and one for preview. To maintain throughput on the capture pin, the preview pin drops frames as needed. It also strips the time stamps from each sample before delivering it, for the reasons discussed in the topic <A HREF="wce51convideocapturefilters.htm">Video Capture Filters</A>. </P>
+
+<P>Although the Smart Tee splits the stream, it does not physically duplicate the video data. Instead, it uses custom media sample objects that share the buffers. The samples are marked "read-only" to ensure that downstream filters do not write on the data.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce51concapturingvideotofile.htm">Capturing Video to a File</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

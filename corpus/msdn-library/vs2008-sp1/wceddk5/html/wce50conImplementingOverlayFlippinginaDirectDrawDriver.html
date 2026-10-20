@@ -1,0 +1,72 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Implementing Overlay Flipping in a DirectDraw Driver</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Implementing Overlay Flipping in a DirectDraw Driver"/>
+<MSHelp:RLTitle Title="Implementing Overlay Flipping in a DirectDraw Driver"/>
+<MSHelp:Keyword Index="A" Term="wce50conImplementingOverlayFlippinginaDirectDrawDriver"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Driver"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="False"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="ddraw_guide.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="False"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+<MSHelp:Attr Name="PBFeature" Value="DirectDrawDriver"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_3017636">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50conimplementingoverlayflippinginadirectdrawdriver"></A>Implementing Overlay Flipping in a DirectDraw Driver</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>The DirectDraw API provides support for both surface flipping and for overlay surfaces. Applications can combine these two capabilities within DirectDraw to flip overlay surfaces just as they can with primary display surfaces. For more information, see <MSHelp:link keywords="wce50conFlippingSurfaces58" TABINDEX="0">Flipping Surfaces</MSHelp:link>, <MSHelp:link keywords="wce50conOverlaySurfaceOverview" TABINDEX="0">Overlay Surface Overview</MSHelp:link>, and <MSHelp:link keywords="wce50conFlippingOverlaySurfaces" TABINDEX="0">Flipping Overlay Surfaces</MSHelp:link>.</P>
+
+<P>The DirectDraw middleware provides the infrastructure to maintain display surfaces support and allow flipping between them. The digital-to-analog converter (DAC) within the graphics hardware handles the composition of the primary and overlay surfaces. The driver acts as an intermediary between the middleware and the DAC, correctly exposing the hardware's capabilities to the DirectDraw middleware and also managing the flow of data to the graphics hardware.</P>
+
+<P>Overlay surfaces must always be stored in video memory. To implement overlay flipping, your display hardware must have enough video memory to support as many overlay back buffers as you need for your overlay's flipping chain.</P>
+
+<P>To let DirectDraw applications know that your driver supports overlay flipping, you must prepare a <A HREF="wce50lrfddhalddsurfacecallbacks.htm">DDHAL_DDSURFACECALLBACKS</A> structure by setting the capability bits and by specifying your driver's implementations of the DirectDraw surface management functions. Specifically, your driver must set the DDHAL_SURFCB32_FLIP and DDHAL_SURFCB32_UPDATEOVERLAY flags and provide implementations for the <A HREF="wce50lrfflip.htm">Flip</A> and <A HREF="wce50lrfupdateoverlay.htm">UpdateOverlay</A> functions. You expose the information in this <B>DDHAL_DDSURFACECALLBACKS</B> structure when you prepare your <A HREF="wce50lrfddhalinfo.htm">DDHALINFO</A> structure in your implementation of <A HREF="wce50lrfhalinit.htm">HALInit</A>.</P>
+
+<P>Just as with the primary surface, you should flip between overlay surfaces during the vertical blanking period. This process, called tearing, prevents a partial view your new display surface from appearing while the previous surface is still being drawn. Tearing depends on whether your display hardware is able to send an interrupt for the vertical blanking period. </P>
+
+<P>The preferred method to handle vertical blanking is to have the display driver, when it first loads, set up a vertical blanking interrupt on your system bus. This allows you to implement an interrupt handler that runs on its own infinite thread and reacts to your vertical blanking events from calls to <MSHelp:link keywords="wce50lrfWaitForSingleObject" TABINDEX="0">WaitForSingleObject</MSHelp:link>. This approach eliminates guesswork about when the vertical blanking period will occur. It is not only exact, but also efficient because it requires an absolute minimum amount of CPU time while waiting for the vertical blanking period, which is just enough to monitor the handler's thread. When your driver's interrupt handler is triggered, it can then release the right data to the display hardware at the right time. </P>
+
+<P>If your display hardware does not support a vertical blanking interrupt, then your driver must spend some CPU time to determine when the vertical blanking will occur. A good approach is to have the driver's surface flipping thread predict when the next vertical blank will occur, and then sleep until that time. This frees the CPU for other tasks while the scan lines for the current surface are being drawn. It is preferable to having the driver actively monitor the location of each scan line, and thereby stall the CPU. For an example, see the implementation of the <B>HalFlip</B> function in the Tvia5000 sample driver code %_WINCEROOT%\Public\Common\OAK\Drivers\Display\Tvia5000\Halsurf.cpp.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50condirectdrawdisplaydrivercreation.htm">DirectDraw Display Driver Creation</A> | <A HREF="wce50coninterrupts.htm">Interrupts</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

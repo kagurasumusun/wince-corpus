@@ -1,0 +1,100 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Adding Support for Download Progress Indication</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Adding Support for Download Progress Indication"/>
+<MSHelp:RLTitle Title="Adding Support for Download Progress Indication"/>
+<MSHelp:Keyword Index="A" Term="wce50tskAddingSupportforDownloadProgressIndication"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Hardware"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="True"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbTask"/>
+<MSHelp:Attr Name="Filename" Value="howto_developing_a_bootloader.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="True"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_3010341">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50tskaddingsupportfordownloadprogressindication"></A>Adding Support for Download Progress Indication</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>To add support for download progress indication, you need to implement the <A HREF="wce50lrfoemshowprogress.htm">OEMShowProgress</A> function. </P>
+
+<P>The <B>OEMShowProgress</B> function is called on a per-.bin record basis and is provided the record number that was just downloaded. </P>
+
+<P>You can implement this function to compute the number of bytes downloaded by tracking it in the <A HREF="wce50lrfoemreaddata.htm">OEMReadData</A> routine. The computed value should not increment consistently because record sizes can differ. </P>
+
+<P>The <B>OEMShowProgress</B> function can then display the download progress to the user through some visual indication such as a LED display.</P>
+
+<P class="labelproc"><B>To implement the OEMShowProgress function</B>
+
+<OL type="1">
+	<LI>Edit the file Main.c.</li>
+
+	<LI>Add the code necessary to fully implement the <B>OEMShowProgress</B> function.
+<P>The following code example shows the implementation of the <B>OEMShowProgress</B> function for the hardware platform used in this boot loader example.
+
+<PRE class="code">void OEMShowProgress(DWORD dwPacketNum)
+{
+    static BYTE PrevPercentComplete = -1;
+    BYTE PercentComplete;
+
+    // g_dwBytesRead and g_dwTotalBytes are global variables.
+    // g_dwBytesRead is updated during a data packet read.
+    // g_dwTotalBytes is determined from the size of the download image
+    // (which is obtained from the .bin file header for example).
+
+    PercentComplete = ((g_dwBytesRead * 100) / g_dwTotalBytes);
+
+    // Update the display only when the percent complete changes.
+    if (PercentComplete != PrevPercentComplete)
+    {
+        //
+        // Write PercentComplete to board LEDs here.
+        //
+
+        PrevPercentComplete = PercentComplete;
+    }
+
+    return;
+}</PRE>
+</li>
+</OL>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50howhowtodevelopabootloader.htm">How to Develop a Boot Loader</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

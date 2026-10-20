@@ -1,0 +1,205 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Changing the Bluetooth Radio Mode</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Changing the Bluetooth Radio Mode"/>
+<MSHelp:RLTitle Title="Changing the Bluetooth Radio Mode"/>
+<MSHelp:Keyword Index="A" Term="moconChangingBluetoothRadioMode"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Application"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbsmartphone"/>
+<MSHelp:Attr Name="Product" Value="kbPocketPC"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="Technology" Value="kbPocketPC"/>
+<MSHelp:Attr Name="Technology" Value="kbSmartphone"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="Bluetooth_API_magneto.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="True"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_1075550">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Windows Mobile Version 5.0 SDK<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="moconchangingbluetoothradiomode"></A>Changing the Bluetooth Radio Mode</H1>
+<!--Feedback Link Top Start-->
+<P CLASS="feedback"><font size="1"><a href="mailto:medfdbk&#64;microsoft.com?subject=Product: Windows Mobile | Version: 5.0 | Release: SDK | Title: Changing the Bluetooth Radio Mode | Filename: moconchangingbluetoothradiomode.htm | Built on: Wednesday, September 14, 2005">Send Feedback</a> on this topic to the authors</font></p>
+<!--Feedback Link Top End-->
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>Microsoft Windows Mobile provides the following APIs that enable you to change the Bluetooth power status on a local device. 
+
+<UL type="disc">
+	<LI><MSHelp:link keywords="wce51lrfBthGetMode" TABINDEX="0">BthGetMode</MSHelp:link></li>
+
+	<LI><MSHelp:link keywords="wce51lrfBthSetMode" TABINDEX="0">BthSetMode</MSHelp:link></li>
+</UL>
+
+<P>The supported power states for Bluetooth are as follows:
+
+<UL type="disc">
+	<LI>Power off
+<P>Bluetooth is turned off on the device.
+</li>
+
+	<LI>Connectable
+<P>Bluetooth is turned on. The local device can initiate a connection with a peer device but the local device is not discoverable by peer devices that are within range.
+</li>
+
+	<LI>Discoverable
+<P>Bluetooth is turned on. The local device is listed, when a peer device searches for available devices within range. The peer device can pair with the local device.
+
+<BLOCKQUOTE class="dtBlock">
+<b class="le">Security Note</b>&nbsp;&nbsp;&nbsp;Turn off Bluetooth after data transfer is complete. Enable Discoverable mode only when required. Use a different passkey for the pairing process each time.</BLOCKQUOTE>
+</li>
+</UL>
+
+<P>These values are defined in the <MSHelp:link keywords="wce51lrfBTH_RADIO_MODE" TABINDEX="0">BTH_RADIO_MODE</MSHelp:link> enumeration.</P>
+
+<H2 class="dtH2">Sample Code</H2>
+
+<P>The following code example shows how to change the Bluetooth radio state.</P>
+
+<H3 class="dtH3">[C++]</H3>
+
+<PRE class="code">  DWORD dwMode;
+  WCHAR szMessage[50];
+  iResult = BthGetMode(&amp;dwMode);
+  StringCchPrintf( szMessage, sizeof(szMessage), L"Current mode: %x. Change state? ", dwMode);
+  
+  if (MessageBox(NULL, szMessage, L"Info", MB_YESNO) == IDYES)
+  {
+    if (dwMode == BTH_POWER_OFF )
+    {
+      BthSetMode(BTH_DISCOVERABLE);
+    }
+    else
+    {
+      BthSetMode(BTH_POWER_OFF);
+    }
+
+    StringCchPrintf( szMessage, sizeof(szMessage), L"Status changed. \n Current Status: %x", dwMode);
+    MessageBox(NULL, szMessage, L"Info", MB_OK);
+  }</PRE>
+
+<H3 class="dtH3">[C#]</H3>
+
+<PRE class="code">using System;
+using System.Runtime.InteropServices;
+using System.Windows.Forms;
+using System.Collections.Generic;
+using System.Text;
+
+namespace BthToggleRadio
+{
+  class BthRadio
+  {
+    public enum  RadioMode
+    {
+      Off = 0,
+      Connectable = 1,
+      Discoverable =2
+    }
+
+    [DllImport ("BthUtil.dll")]
+    public static extern int BthGetMode (out RadioMode dwMode);
+
+    [DllImport("BthUtil.dll")]
+    public static extern int BthSetMode(RadioMode dwMode);
+
+    public static void Main()
+    {
+      RadioMode mode=RadioMode.Off;
+      int ret = 0;
+      ret=BthGetMode (out mode);
+      DialogResult resDlg;
+      resDlg=MessageBox.Show("Current mode: " + mode.ToString() + "\n" + "Change status?", "Bluetooth Status", MessageBoxButtons .YesNo, MessageBoxIcon.None, MessageBoxDefaultButton.Button1);
+      if (resDlg == DialogResult.Yes)
+      {
+          if (mode == RadioMode.Off)
+          {
+          ret = BthSetMode(RadioMode.Discoverable);
+        }
+        else
+        {
+            ret = BthSetMode(RadioMode.Off);
+        }
+        ret = BthGetMode(out mode);
+        resDlg = MessageBox.Show("Status changed. \n" + "Current Status: " + mode.ToString(), "Bluetooth Status");
+      }
+    }
+  }
+}</PRE>
+
+<H3 class="dtH3">[Visual Basic]</H3>
+
+<PRE class="code">Imports System
+Imports System.Runtime.InteropServices
+Imports System.Windows.Forms
+
+Class BthRadio
+    
+    Public Enum RadioMode
+        RadioOff = 0
+        Connectable = 1
+        Discoverable = 2
+    End Enum 'RadioMode 
+    
+    Public Declare Function BthGetMode Lib "BthUtil.dll" (ByRef dwMode As RadioMode) As Integer    
+    
+    Public Declare Function BthSetMode Lib "BthUtil.dll" (ByVal dwMode As RadioMode) As Integer        
+    
+    Public Shared Sub Main() 
+        Dim mode As RadioMode = RadioMode.RadioOff 
+        Dim ret As Integer = 0
+        ret = BthGetMode(mode)
+        Dim resDlg As DialogResult
+        resDlg = MessageBox.Show("Current mode: " + mode.ToString() + vbLf + "Change status?", "Bluetooth Status", MessageBoxButtons.YesNo, MessageBoxIcon.None, MessageBoxDefaultButton.Button1)
+        If resDlg = DialogResult.Yes Then
+            If mode = RadioMode.RadioOff  Then
+                ret = BthSetMode(RadioMode.Discoverable)
+            Else
+                ret = BthSetMode(RadioMode.RadioOff )
+            End If
+            ret = BthGetMode(mode)
+            resDlg = MessageBox.Show("Status changed. " + vbLf + "Current Status: " + mode.ToString(), "Bluetooth Status")
+        End If
+     
+    End Sub 'Main
+End Class 'BthRadio </PRE>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="mob5conbluetoothconcepts.htm">Bluetooth Application Development for Windows Mobile-based Devices</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Feedback Link Bottom Start-->
+<p><font size="1"><a href="mailto:medfdbk&#64;microsoft.com?subject=Product: Windows Mobile | Version: 5.0 | Release: SDK | Title: Changing the Bluetooth Radio Mode | Filename: moconchangingbluetoothradiomode.htm | Built on: Wednesday, September 14, 2005">Send Feedback</a> on this topic to the authors</font></p>
+<!--Feedback Link Bottom End-->
+<!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="mob5conCopyrightInformationForMagneto" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link></font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

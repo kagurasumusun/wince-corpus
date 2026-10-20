@@ -1,0 +1,164 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>DoOptionsDialog</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="DoOptionsDialog"/>
+<MSHelp:RLTitle Title="DoOptionsDialog"/>
+<MSHelp:Keyword Index="K" Term="DoOptionsDialog"/>
+<MSHelp:Keyword Index="A" Term="wce51lrfDoOptionsDialog"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Application"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbsmartphone"/>
+<MSHelp:Attr Name="Product" Value="kbPocketPC"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="Technology" Value="kbPocketPC"/>
+<MSHelp:Attr Name="Technology" Value="kbSmartphone"/>
+<MSHelp:Attr Name="TopicType" Value="apiref"/>
+<MSHelp:Attr Name="Filename" Value="activesync_reference_magneto.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="True"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="True"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_1073487">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Windows Mobile Version 5.0 SDK<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce51lrfdooptionsdialog"></A>DoOptionsDialog</H1>
+<!--Feedback Link Top Start-->
+<P CLASS="feedback"><font size="1"><a href="mailto:medfdbk&#64;microsoft.com?subject=Product: Windows Mobile | Version: 5.0 | Release: SDK | Title: DoOptionsDialog | Filename: wce51lrfdooptionsdialog.htm | Built on: Wednesday, September 14, 2005">Send Feedback</a> on this topic to the authors</font></p>
+<!--Feedback Link Top End-->
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>This method shows the <B>Settings</B> dialog box if SSP is not enabled.</P>
+
+<PRE class="syntax"><B>HRESULT</B> <B>DoOptionsDialog</B> <B>(</B>
+  <B>HWND</B> <I>hwndParent</I><B>,</B> 
+  <B>LPCSTR</B> <I>lpszObjType</I><B>,</B> 
+  <B>IReplNotify*</B> <I>pntfy</I>
+<B>);</B></PRE>
+
+<H4 class="dtH4">Parameters</H4>
+
+<DL>
+<DT><I>hwndParent</I></DT>
+
+<DD>HWND the SSP should use to parent any dialog box it displays when this function is called.</dd>
+
+<DT><I>lpszObjType</I></DT>
+
+<DD>The name of the folder to show settings.</dd>
+
+<DT><I>pntfy</I></DT>
+
+<DD>A pointer to <MSHelp:link keywords="wce50lrfIReplNotifyIUnknown" TABINDEX="0">IReplNotify:IUnknown</MSHelp:link>.</dd>
+</DL>
+
+<H4 class="dtH4">Return Values</H4>
+
+<P>The following table shows the return values for this function.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=29%>Return value</TH>
+<TH width=71%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=29%>NOERROR</TD>
+<TD width=71%>User selected. OK to save the changes.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=29%>RERR_CANCEL</TD>
+<TD width=71%>User selected. Cancel.</TD>
+</TR>
+</table></div>
+
+<H4 class="dtH4">Remarks</H4>
+
+<P>The <MSHelp:link keywords="wce50lrfIReplStoreInitialize" TABINDEX="0">IReplStore::Initialize</MSHelp:link> method might not have been called prior to this method being called, so you must not use any internal variables that depend on <B>IReplStore::Initialize</B> being called.</P>
+
+<P>The SSP must be marked "Version 3" to use this interface. When you register the SSP, create a DWORD registry value <B>Version</B> with a value of 0x00030000 under the <B>HKCR\&lt;<I>prog id</I>&gt;</B> registry key.</P>
+
+<P>The following code example shows how to register the SSP:</P>
+
+<PRE class="code">[HKEY_CLASSES_ROOT\MS.WinCE.StockPor2]
+@="StockPor"
+"Display Name"="Stock Sample"
+"Version"=dword:00030000:</PRE>
+
+<H4 class="dtH4">Code Example</H4>
+
+<P>The following code example demonstrates how to use <B>DoOptionsDialog</B>.</P>
+
+<BLOCKQUOTE class="dtBlock">
+<b class="le">Note</b>&nbsp;&nbsp;&nbsp;To make the following code example easier to read, security checking and error handling are not included. This code example should not be used in a release configuration unless it has been modified to include them.</BLOCKQUOTE>
+
+<PRE class="code">HRESULT DoOptionsDialog(HWND hwndParent, LPCSTR pszObjType, IReplNotify * pntfy )
+{
+
+    // The IReplStore::Initialize function might not have been called prior
+    // to this function being called, so you must not use internal
+    // variables that depend upon IReplStore::Initialize being called.
+
+    //  If your SSP supports multiple folders, then the folder selected is pszObjType.
+    HRESULT hrReturn = S_OK;
+    int nSave;
+
+    nSave = MessageBox(hwndParent, _T("Options for my SSP. Click Yes to save changes."), _T("My SSP"), MB_YESNO);
+
+    if (IDYES == nSave)
+    {
+        hrReturn = S_OK;
+    }
+
+    else
+    {
+        hrReturn = RERR_CANCEL;
+    }
+
+    return hrReturn;
+
+}</PRE>
+
+<H4 class="dtH4">Requirements</H4>
+
+<P><B>Pocket PC:</B> Windows Mobile Version 5.0 and later<BR>
+<B>Smartphone:</B> Windows Mobile Version 5.0 and later<BR>
+<B>OS Versions:</B> Windows CE 5.01 and later.<BR>
+<B>Header:</B> Cesync.h.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce51lrfireplstore2.htm">IReplStore2</A> | <A HREF="wce51lrfonsspenable.htm">OnSSPEnable</A> | <A HREF="wce51lrfonsspdisable.htm">OnSSPDisable</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Feedback Link Bottom Start-->
+<p><font size="1"><a href="mailto:medfdbk&#64;microsoft.com?subject=Product: Windows Mobile | Version: 5.0 | Release: SDK | Title: DoOptionsDialog | Filename: wce51lrfdooptionsdialog.htm | Built on: Wednesday, September 14, 2005">Send Feedback</a> on this topic to the authors</font></p>
+<!--Feedback Link Bottom End-->
+<!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="mob5conCopyrightInformationForMagneto" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link></font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

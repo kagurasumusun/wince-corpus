@@ -1,0 +1,188 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>ActivateDeviceEx</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="ActivateDeviceEx"/>
+<MSHelp:RLTitle Title="ActivateDeviceEx"/>
+<MSHelp:Keyword Index="K" Term="ActivateDeviceEx"/>
+<MSHelp:Keyword Index="A" Term="wce50lrfActivateDeviceEx"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Driver"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="False"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="apiref"/>
+<MSHelp:Attr Name="Filename" Value="device.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="False"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="True"/>
+<MSHelp:Attr Name="APIName" Value="ActivateDeviceEx"/>
+<MSHelp:Attr Name="APIType" Value="LibDef"/>
+<MSHelp:Attr Name="APILocation" Value="Coredll.lib"/>
+<MSHelp:Attr Name="PBFeature" Value="CoreDriver"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_3006419">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50lrfactivatedeviceex"></A>ActivateDeviceEx</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>This function loads a driver and adds its registry values to the <B>Active</B> key in the registry. </P>
+
+<PRE class="syntax"><B>HANDLE ActivateDeviceEx(</B>
+  <B>LPCWSTR </B><I>lpszDevKey</I><B>, </B>
+  <B>LPCVOID </B><I>lpRegEnts</I><B>, </B>
+  <B>DWORD </B><I>cRegEnts</I><B>, </B>
+  <B>LPVOID </B><I>lpvParam</I>
+<B>);</B></PRE>
+
+<H4 class="dtH4">Parameters</H4>
+
+<DL>
+<DT><I>lpszDevKey</I></DT>
+
+<DD>[in] Pointer to a string containing the registry path of the device driver's registry key. This key contains the driver's DLL name, prefix, and other data. For information about the subkeys of the <B>HKEY_LOCAL_MACHINE\Drivers\Active </B>registry key, see <A HREF="wce50condevicemanagerregistrykeys.htm">Device Manager Registry Keys</A>.</dd>
+
+<DT><I>lpRegEnts</I></DT>
+
+<DD>[in] Pointer to an array of <A HREF="wce50lrfregini.htm">REGINI</A> structures, each of which defines a registry value to add to the device's <B>Active</B> registry key before its driver is loaded. Set to NULL unless it is for a bus driver.</dd>
+
+<DT><I>cRegEnts</I></DT>
+
+<DD>[in] Count of the number of <B>REGINI</B> structures to which <I>lpRegEnts</I> points. This affects a generalization of the <A HREF="wce50lrfactivatedevice.htm">ActivateDevice</A> function.</dd>
+
+<DT><I>lpvParam</I></DT>
+
+<DD>[in] Opaque pointer to a driver-specific data structure. You can use it to pass parameters to the loaded driver without having to write them through the registry. <I>lpvParam</I> is passed to the <A HREF="wce50lrfxxxinit15.htm">XXX_Init (Device Manager)</A> function as a second parameter. <I>lpvParam</I> can be used by bus drivers to pass bus-specific information, entry points, or both to loaded drivers. Using this parameter prevents clients of that bus from becoming bus-agnostic. This is acceptable for some busses, especially those whose drivers cannot become bus-agnostic.</dd>
+</DL>
+
+<H4 class="dtH4">Return Values</H4>
+
+<P>Returns a handle that you can use later as the parameter to the <A HREF="wce50lrfdeactivatedevice.htm">DeactivateDevice</A> function, if successful. If the function is not successful, it returns INVALID_HANDLE_VALUE. To obtain extended error information, call <MSHelp:link keywords="wce50lrfGetLastError" TABINDEX="0">GetLastError</MSHelp:link>.</P>
+
+<H4 class="dtH4">Remarks</H4>
+
+<P>Loading a device with <B>ActivateDeviceEx</B> allows a device to read its activation handle from its <B>Active </B>registry key. In versions of Windows CE prior to Windows CE 5.0, the <B>Active </B>registry key value was not written to the registry until the driver's <B>Init</B> entry point completed.</P>
+
+<P><B>ActivateDeviceEx</B> offers more functionality than <B>ActivateDevice</B>. Both of these functions replace the <A HREF="wce50lrfregisterdevice.htm">RegisterDevice</A> function.</P>
+
+<P><B>ActivateDeviceEx</B> can load non-stream drivers, protocols, and services that are bound to the <MSHelp:link keywords="wce50conDeviceManager" TABINDEX="0">Device Manager</MSHelp:link>. It can also load multiple drivers with Bus Enumerator (BusEnum.dll) and can add bus-specific values to the <B>Active</B> key. For more information on BusEnum.dll, see <MSHelp:link keywords="wce50conRegistryEnumerator" TABINDEX="0">Bus Enumerator</MSHelp:link>.</P>
+
+<P><B>ActivateDeviceEx</B> reads the registry key specified in <I>lpszDevKey</I> to get the DLL name, device prefix, index, and other values. Next, it adds the device to the active device list, and stores the relevant values in the active device list. If there is no device index specified in the key named in <I>lpszDevKey</I>, it then assigns a free index. Finally, it loads the device driver DLL in the process space of the Device Manager. </P>
+
+<P><B>ActivateDeviceEx</B> can return zero for success rather than failure. If either DEVFLAGS_NOLOAD or DEVFLAGS_UNLOAD is set in the <B>Flags</B> value of the device key, <B>ActivateDeviceEx</B> returns zero. In this case, there is no way to tell the difference between success and failure.</P>
+
+<P>The <B>Index</B> value indicates port numbering with stream interface drivers, such as COM0: or COM1:. If there is no <B>Index</B> value, the Device Manager generates one.</P>
+
+<P>The <B>Flags</B> value is a set of bits that modify the behavior of <B>ActivateDeviceEx</B>. This value is optional and is set to zero, if there is no value present. Bits 3 through 23 are reserved and must be set to zero. The driver being loaded can use bits 24 through 31 of the <B>Flags</B> value. The following table shows the defined bits, which are defined in %_WINCEROOT%\Public\Common\DDK\Inc\Devload.h.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=33%>Flag</TH>
+<TH width=30%>Value</TH>
+<TH width=37%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%>DEVFLAGS_NONE</TD>
+<TD width=30%>0x00000000</TD>
+<TD width=37%>No flags are defined.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%>DEVFLAGS_UNLOAD</TD>
+<TD width=30%>0x00000001</TD>
+<TD width=37%>Driver unloads after a call to the <B><I>XXX</I>_Init</B> entry point or after the <B><I>XXX</I></B>_<B>Init</B> entry point returns. No error code is returned.
+<P>Bus Enumerator typically runs with this flag.</P>
+</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%>DEVFLAGS_LOADLIBRARY</TD>
+<TD width=30%>0x00000002</TD>
+<TD width=37%>Driver is loaded with <MSHelp:link keywords="wce50lrfLoadLibrary" TABINDEX="0">LoadLibrary</MSHelp:link> instead of <MSHelp:link keywords="wce50lrfLoadDriver" TABINDEX="0">LoadDriver</MSHelp:link>.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%>DEVFLAGS_NOLOAD</TD>
+<TD width=30%>0x00000004</TD>
+<TD width=37%>Driver is not loaded.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%>DEVFLAGS_NAKEDENTRIES</TD>
+<TD width=30%>0x00000008</TD>
+<TD width=37%>Driver entry points do not have a <B><I>XXX</I></B> <B>Prefix</B> prepended.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%>DEVFLAGS_BOOTPHASE_1</TD>
+<TD width=30%>0x00001000</TD>
+<TD width=37%>Driver is loaded during boot phase one. By default, device drivers are loaded during boot phase two.
+<P>Boot phase zero is before the Device Manager loads.</P>
+
+<P>Boot phase one is to find the registry.</P>
+
+<P>Boot phase two is when initial device drivers load.</P>
+
+<P>Boot phase three is after initial device drivers load.</P>
+</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%>DEVFLAGS_IRQ_EXCLUSIVE</TD>
+<TD width=30%>0x00000100</TD>
+<TD width=37%>Driver loads only when it has exclusive access to the IRQ.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%>DEVFLAGS_TRUSTEDCALLERONLY </TD>
+<TD width=30%>0x00010000</TD>
+<TD width=37%>Driver can only be opened by a trusted application.</TD>
+</TR>
+</table></div>
+
+<BLOCKQUOTE class="dtBlock">
+<b class="le">Note</b>&nbsp;&nbsp;&nbsp;The DEVFLAGS_FSD_NEEDTOWAIT flag also exists. For more information, see <MSHelp:link keywords="wce50conHiveBasedRegistry" TABINDEX="0">Hive-Based Registry</MSHelp:link>.</BLOCKQUOTE>
+
+<P>The <I>dwClientInfo</I> parameter of <B>ActivateDevice</B> is a registry entry for the DEVLOAD_CLIENTINFO_VALNAME value.</P>
+
+<H4 class="dtH4">Requirements</H4>
+
+<P><B>OS Versions:</B> Windows CE .NET 4.0 and later.<BR>
+<B>Header:</B> Winbase.h.<BR>
+<B>Link Library:</B> Coredll.lib.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><MSHelp:link keywords="wce50conRegistryEnumerator" TABINDEX="0">Bus Enumerator</MSHelp:link> | <A HREF="wce50condeviceinterfacenotifications.htm">Device Interface Notifications</A> | <A HREF="wce51condevicemanagersecurity.htm">Device Manager Security</A> | <MSHelp:link keywords="wce50conHiveBasedRegistry" TABINDEX="0">Hive-Based Registry</MSHelp:link> | <A HREF="wce50lrfdeactivatedevice.htm">DeactivateDevice</A> | <A HREF="wce50lrfregini.htm">REGINI</A> | <A HREF="wce50lrfxxxinit15.htm">XXX_Init (Device Manager)</A> | </P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

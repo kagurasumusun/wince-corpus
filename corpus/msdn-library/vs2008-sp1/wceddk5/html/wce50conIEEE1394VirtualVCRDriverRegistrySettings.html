@@ -1,0 +1,88 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>IEEE 1394 Virtual VCR Driver Registry Settings</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="IEEE 1394 Virtual VCR Driver Registry Settings"/>
+<MSHelp:RLTitle Title="IEEE 1394 Virtual VCR Driver Registry Settings"/>
+<MSHelp:Keyword Index="A" Term="wce50conIEEE1394VirtualVCRDriverRegistrySettings"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Driver"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="False"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="1394_vvcr.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="True"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="True"/>
+<MSHelp:Attr Name="PBFeature" Value="1394Driver"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_3017005">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50conieee1394virtualvcrdriverregistrysettings"></A>IEEE 1394 Virtual VCR Driver Registry Settings</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>Virtual subunits require registry entries to ensure that they are automatically enumerated by the Windows Driver Model (WDM). Virtual instances of ISO/IEC-61883 and AVC need to be instantiated first. The CEBASE environment variable SYSGEN_1394_AVC_VIRTUAL ensures that the correct modules are included in the build and as a result, the correct registry entries are made. </P>
+
+<P>The following registry entries are required.</P>
+
+<PRE class="code">; This entry is for exporting a VCR subunit.  The virtual AV/C subunit listed
+; in the previous entry will read this registry entry and determine that we
+; wish to export a subunit type of '4' (top five bits in the byte, so 0x20).
+; The name of the value is immaterial.
+[HKEY_LOCAL_MACHINE\WDMDrivers\{095780C3-48A1-4570-BD95-46707F78C2DC}\0002\Virtual Device List]
+    "VirtualVCR"=hex:20
+
+; This entry is related to the 'VirtualVCR' entry a few lines above.
+; AV/C determines the MatchingDeviceId by simply using VAVC\TYP_# where
+; # is the subunit type in hex.
+[HKEY_LOCAL_MACHINE\WDMDrivers\{A7F514FB-8FF1-442f-9547-F5CCDA55EAE0}\0000]
+    "MatchingDeviceId"="VAVC\\TYP_4"
+    "Dll"="AVC_VVCR.DLL"
+    "FriendlyName"="AV/C Virtual VCR Subunit"</PRE>
+
+<P>The first entry refers to the GUID for the AVC Driver, <B>{095780C3-48A1-4570-BD95-46707F78C2DC}</B>. It also refers to a specific instance of the driver, <B>0002</B>. The drivers <B>0000</B> and <B>0001</B> in the sample entries from Common.reg are for non-virtual instances of AV/C, which is the virtual AV/C instance of the driver. The AV/C driver looks for a list of the subunits that it exports by reading registry values under the virtual device list key. The value is the encoded version of the defined subunit type for the virtual subunit. The encoding specifics are defined in the <I>AV/C Digital Interface Command Set, General Specification</I>, available from the IEEE 1394 Trade Association. However, for the simplest of forms, subunit types 0x00 through 0x1D, the value is the type shifted left by three bits. For extended types, the value must be encoded into a series of bytes, and those bytes must be listed in the <B>Virtual Device List</B> registry entry. The type is hexadecimal, not <B>DWORD</B>. </P>
+
+<P>The second registry entry refers to defining the actual virtual VCR driver itself for WDM. The GUID for the virtual VCR driver is listed as <B>{A7F514FB-8FF1-442f-9547-F5CCDA55EAE0}</B>, along with the single instance of the driver, <B>0000</B>. The device identifier for the driver has the form <B>VAVC\TYP_#</B>, where the number listed must be the same subunit type defined in the previous entry, unencoded in this case. The first entry causes AV/C to list this as a dependent to WDM during enumeration, and the second entry permits WDM to locate and instantiate the virtual VCR driver.</P>
+
+<P>Most subunits will likely leverage the streaming support provided in the AVC_STREAM driver. The following registry key example shows this driver. </P>
+
+<PRE class="code">; This entry is related to our VCR subunit -- it states that the
+; virtual VCR subunit driver requires that we insert a driver whose 
+; MatchingDeviceId is 'AVC_STREAM' BELOW the virtual VCR subunit driver when 
+; adding it to a stack.
+[HKEY_LOCAL_MACHINE\WDMDrivers\{A7F514FB-8FF1-442f-9547-F5CCDA55EAE0}]
+    "LowerFilters"=multi_sz:"AVC_STREAM"</PRE>
+
+<P>At least one filter driver, AVC_STREAM, exists closer to the hardware for the virtual VCR driver denoted by the GUID in the registry path. </P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

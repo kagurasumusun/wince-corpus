@@ -1,0 +1,92 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Optimizing a USB Function Driver Stack</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Optimizing a USB Function Driver Stack"/>
+<MSHelp:RLTitle Title="Optimizing a USB Function Driver Stack"/>
+<MSHelp:Keyword Index="A" Term="wce51conOptimizingUSBFunctionDriverStack"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Driver"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="False"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="usbfunction_guide.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="True"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+<MSHelp:Attr Name="PBFeature" Value="USBFunctionDriver"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_1062782">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce51conoptimizingusbfunctiondriverstack"></A>Optimizing a USB Function Driver Stack</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>When a USB function client driver issues a transfer, the USB function client driver passes a customizable parameter to the USB function client driver PDD. The USB function client driver can use this variable for intensive operations or for optimizing your USB function driver stack. Using this parameter may force you to make hardware platform specific modifications to your USB function client driver. After making these modifications, your USB function client driver may only operate with the hardware platform specific USB function controller driver PDD. None of the USB function client drivers provided by Microsoft use this customizable parameter. For more information, see the <B>STransfer</B> structure in %_WINCEROOT%\Public\Common\OAK\Inc\Usbfn.h.</P>
+
+<H2 class="dtH2">Configuring DMA Transfers between a Client Driver and a PDD</H2>
+
+<P>When the USB function client driver issues a transfer, the client driver can pass DMA addresses to the PDD. This can allow the PDD to perform DMA transfers directly to the disk, instead of performing DMA transfers to memory, and then having the USB function client driver perform the DMA transfer to the disk after the transfer completes.</P>
+
+<P>Typically, the USB function controller driver PDD can implement DMA using an internal physical buffer. For example, in the case of an OUT transfer, the PDD can DMA one or more USB packets to its own physical buffer and then use <MSHelp:link keywords="wce50lrfmemcpy" TABINDEX="0">memcpy</MSHelp:link> to copy the packets to the client buffer. This <B>memcpy</B> is extra additional overhead and it would be ideal to remove it.</P>
+
+<P>In order to remove this <B>memcpy</B>, the USB function client driver and the USB function controller driver PDD must both be modified to allow for DMA directly to the client buffer.</P>
+
+<P>The client must create its buffer using <A HREF="wce50lrfhalallocatecommonbuffer.htm">HalAllocateCommonBuffer</A>. It gets the hardware-specific parameters for this routine by calling into the MDD/PDD with IOCTL_UFN_GET_PDD_INFO. If IOCTL_UFN_GET_PDD_INFO fails, then the PDD does not support DMA directly to the clients buffer and it is better to not use <B>HalAllocateCommonBuffer</B>, because <B>HalAllocateCommonBuffer</B> always creates an uncached buffer. If the client is using <B>HalAllocateCommonBuffer</B>, it should pass the physical buffer address in addition to its corresponding virtual address to the <B>lpIssueTransfer</B> function.</P>
+
+<P>The USB function controller driver PDD must implement IOCTL_UFN_GET_PDD_INFO in <B>UfnPdd_IOControl</B>.</P>
+
+<P>If the USB function controller client driver passes a physical address in its call to <B>lpIssueTransfer</B>, the PDD will see it in the <B>dwBufferPhysicalAddress </B>field of the <B>STransfer </B>structure passed to <B>UfnPdd_IssueTransfer</B>. It should use this contiguous physical buffer for DMA.</P>
+
+<P>The following code samples shows how to check if the USB function controller driver PDD can handle DMA transfers.</P>
+
+<PRE class="code">HANDLE hBus = CreateBusAccessHandle(lpActiveRegPath); // path from drivers Init call
+
+if (hBus == NULL) {
+  //  fail somehow
+}
+
+UFN_PDD_INFO PddInfo;
+
+BOOL fSuccess = BusIoControl(hBus, IOCTL_UFN_GET_PDD_INFO, 0, NULL, &amp;PddInfo, sizeof(PddInfo), NULL, NULL);
+
+if (!fSuccess) {
+  //  PDD cannot do DMA directly to the client buffer
+}
+
+CloseBusAccessHandle(hBus);</PRE>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50howhowtodevelopusbfunctionclientdriver.htm">USB Function Controller Driver Migration</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

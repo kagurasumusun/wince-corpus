@@ -1,0 +1,162 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Best Practices for Managing Performance in a Windows Mobile-based Application</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Best Practices for Managing Performance in a Windows Mobile-based Application"/>
+<MSHelp:RLTitle Title="Best Practices for Managing Performance in a Windows Mobile-based Application"/>
+<MSHelp:Keyword Index="A" Term="moconBestPracticesForManagingPerformanceInWindowsMobileApplication"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Application"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbsmartphone"/>
+<MSHelp:Attr Name="Product" Value="kbPocketPC"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="Technology" Value="kbPocketPC"/>
+<MSHelp:Attr Name="Technology" Value="kbSmartphone"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="mem_perf_power_mgmt.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="False"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_1076673">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Windows Mobile Version 5.0 SDK<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="moconbestpracticesformanagingperformanceinwindowsmobileapplication"></A>Best Practices for Managing Performance in a Windows Mobile-based Application</H1>
+<!--Feedback Link Top Start-->
+<P CLASS="feedback"><font size="1"><a href="mailto:medfdbk&#64;microsoft.com?subject=Product: Windows Mobile | Version: 5.0 | Release: SDK | Title: Best Practices for Managing Performance in a Windows Mobile-based Application | Filename: moconbestpracticesformanagingperformanceinwindowsmobileapplication.htm | Built on: Wednesday, September 14, 2005">Send Feedback</a> on this topic to the authors</font></p>
+<!--Feedback Link Top End-->
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>Before you begin developing your application, put together a plan for evaluating performance frequently and regularly during the development process. If possibly, evaluate performance on hardware that most closely resembles your retail device. Define your baseline performance criteria based on customer scenarios with your application. For example, require your application to open in less than one second, and for it to be able to render its window in less than 200 milliseconds (ms).</P>
+
+<P>To thoroughly evaluate performance in your Windows Mobile-based application, profile manually, use the <MSHelp:link keywords="wce50conRemoteCallProfiler" TABINDEX="0">Remote Call Profiler</MSHelp:link>, and use the <MSHelp:link keywords="wce50conRemoteKernelTracker" TABINDEX="0">Remote Kernel Tracker</MSHelp:link>.</P>
+
+<H4 class="dtH4">Profiling Overview</H4>
+
+<P>Profiling your code can provide information that you can use to refine the design of your application. It helps you identify bottlenecks in your application and it helps you optimize your application. Always use multiple methods when profiling your application.</P>
+
+<H4 class="dtH4">Profiling Manually</H4>
+
+<P>Manual profiling is a low overhead way to get coarse data that provides the execution time of instrumented parts of your code. Instrument your code with <MSHelp:link keywords="wce50lrfGetTickCount" TABINDEX="0">GetTickCount</MSHelp:link>, which provides millisecond granularity, and with <MSHelp:link keywords="wce50lrfQueryPerformanceCounter" TABINDEX="0">QueryPerformanceCounter</MSHelp:link>, which provides granularity dependent on the hardware platform. Hardware platform dependent granularity can be accurate up to one microsecond (&mu;s).</P>
+
+<P>The following table shows the advantages and disadvantages of manually profiling your code.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=50%>Advantages</TH>
+<TH width=50%>Disadvantages</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>
+<UL type="disc">
+	<LI>Provides results with low overhead. You only need to add appropriate function calls and variables.</li>
+
+	<LI>Allows an accurate representation of user scenarios because you are manually instrumenting the code.</li>
+
+	<LI>Provides good data, especially on full retail code.</li>
+</UL>
+</TD>
+<TD width=50%>
+<UL type="disc">
+	<LI>Provides coarse data.</li>
+
+	<LI>Requires more work to get more granular data.</li>
+
+	<LI>Provides data that includes time spent in other threads.</li>
+</UL>
+</TD>
+</TR>
+</table></div>
+
+<H4 class="dtH4">Using the Remote Call Profiler</H4>
+
+<P>The Remote Call Profiler provides relative profiling data with function call granularity. It has many options for user configuration to collect and view detailed data. Depending on the microprocessor, you may not be able to profile system-level code. For example, you cannot profile system-level code with an x86-based microprocessor, but with an ARM-based microprocessor, you can profile operating system (OS) functions. You cannot modify the OS functions, but you can view how much time they spend executing. Keep in mind that the Remote Call Profiler adds overhead, so the system is not guaranteed to run at full speed. You will have to recompile your application for the Remote Call Profiler.</P>
+
+<P>The following table shows the compiler options to specify depending on the microprocessor of the hardware platform.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=50%>Microprocessor</TH>
+<TH width=50%>Compiler options</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>ARM-based
+<BLOCKQUOTE class="dtBlock">
+<b class="le">Note</b>&nbsp;&nbsp;&nbsp;With ARM-based microprocessors, you must link with CECap.lib.</BLOCKQUOTE>
+</TD>
+<TD width=50%>Can use either:
+<UL type="disc">
+	<LI><MSHelp:link keywords="wce50concallcapEnablecallcapprofiling" TABINDEX="0">/callcap -Enable callcap profiling</MSHelp:link>
+<P>- or -
+</li>
+
+	<LI><MSHelp:link keywords="wce50confastcapEnablefastcapprofiling" TABINDEX="0">/fastcap - Enable fastcap profiling</MSHelp:link></li>
+</UL>
+</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>x86-based
+<BLOCKQUOTE class="dtBlock">
+<b class="le">Note</b>&nbsp;&nbsp;&nbsp;These options apply to both physical and emulated x86-based microprocessors.</BLOCKQUOTE>
+</TD>
+<TD width=50%>Must use both:
+<UL type="disc">
+	<LI><MSHelp:link keywords="wce50grfGh-Enable_penterHookFunction" TABINDEX="0">/Gh - Enable _penter Hook Function</MSHelp:link>
+<P>- and -
+</li>
+
+	<LI><MSHelp:link keywords="wce50grfGH-Enable_pexitHookFunction" TABINDEX="0">/GH - Enable _pexit Hook Function</MSHelp:link></li>
+</UL>
+</TD>
+</TR>
+</table></div>
+
+<BLOCKQUOTE class="dtBlock">
+<b class="le">Note</b>&nbsp;&nbsp;&nbsp;The Remote Call Profiler does not profile managed code.</BLOCKQUOTE>
+
+<P>Instrument your code with the <MSHelp:link keywords="wce50conStartProfile" TABINDEX="0">StartProfile</MSHelp:link> and <MSHelp:link keywords="wce50conStopProfile" TABINDEX="0">StopProfile</MSHelp:link> functions to use the Remote Call Profiler. These function increment counters. You can also use the <MSHelp:link keywords="wce50conMarkProfile" TABINDEX="0">MarkProfile</MSHelp:link> function to keep track of the location of the Remote Call Profiler in your application. Even though the Remote Call Profiler provides relative data, you should profile release builds of your application because profiling causes performance degradation. To obtain more absolute data than the Remote Call Profiler can provide, manually profile your code with the <B>GetTickCount</B> and the <B>QueryPerformanceCounter</B> functions. Use directives such as <code class="ce">#ifdef</code> around any code instrumentation so you can remove instrumentation code when you complete your application.</P>
+
+<P>For more information about using the Remote Call Profiler, see <MSHelp:link keywords="wce50howHowtoUseRemoteCallProfilertoFindPerformanceProblems" TABINDEX="0">How to Use Remote Call Profiler to Find Performance Problems</MSHelp:link>.</P>
+
+<H4 class="dtH4">Using the Remote Kernel Tracker</H4>
+
+<P>The Remote Kernel Tracker helps you understand how your application affects the entire system by providing very detailed system-wide information, such as when a thread blocks waiting for a semaphore, when an event signals, when an interrupt occurs, and any other system-event that passes through the kernel. This is useful for system-wide development, debugging device drivers and applications that communicate with each other, or for trying to balance the entire system. A system-wide view is useful because your application may not be directly degrading performance, but your application may be causing other parts of the system to degrade performance.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><MSHelp:link keywords="wce50conRemoteCallProfiler" TABINDEX="0">Remote Call Profiler</MSHelp:link> | <MSHelp:link keywords="wce50conRemoteKernelTracker" TABINDEX="0">Remote Kernel Tracker</MSHelp:link> | <MSHelp:link keywords="wce50lrfGetTickCount" TABINDEX="0">GetTickCount</MSHelp:link> | <MSHelp:link keywords="wce50lrfQueryPerformanceCounter" TABINDEX="0">QueryPerformanceCounter</MSHelp:link></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Feedback Link Bottom Start-->
+<p><font size="1"><a href="mailto:medfdbk&#64;microsoft.com?subject=Product: Windows Mobile | Version: 5.0 | Release: SDK | Title: Best Practices for Managing Performance in a Windows Mobile-based Application | Filename: moconbestpracticesformanagingperformanceinwindowsmobileapplication.htm | Built on: Wednesday, September 14, 2005">Send Feedback</a> on this topic to the authors</font></p>
+<!--Feedback Link Bottom End-->
+<!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="mob5conCopyrightInformationForMagneto" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link></font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

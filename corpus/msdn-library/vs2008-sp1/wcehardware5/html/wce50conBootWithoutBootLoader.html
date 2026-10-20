@@ -1,0 +1,77 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Boot without a Boot Loader</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Boot without a Boot Loader"/>
+<MSHelp:RLTitle Title="Boot without a Boot Loader"/>
+<MSHelp:Keyword Index="A" Term="wce50conBootWithoutBootLoader"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Hardware"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="True"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="bootloader_concepts.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="False"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_1036947">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50conbootwithoutbootloader"></A>Boot without a Boot Loader</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>In some cases, the boot loader does not download the image, but the run-time image is already present on the system. The image might be located at the location where the CPU starts executing. In case the image is not located at the address where the CPU starts executing, use <MSHelp:link keywords="wce50lrfRESETVECTOR" TABINDEX="0">RESETVECTOR</MSHelp:link> to specify the jump address. 
+
+<UL type="disc">
+	<LI>Boot using <B>RESETVECTOR</B>
+<P>If the image is not at the address where the CPU starts executing, use <B>RESETVECTOR</B> in Config.bib to specify where to jump to and start looking for the <A HREF="wce50lrfstartup.htm">StartUp</A> function. <B>RESETVECTOR</B> tells Romimage.exe where the reset vector for the CPU is located. At the jump location, add a jump instruction to the start of the image. Romimage.exe is a locator application that creates Windows CE binary image (.bin) files.
+
+<P>The image can overwrite code that instructs the CPU to jump to the start of the image. To prevent this from happening, reserve a page of memory using the <B>RESERVE</B> keyword. For example, if the microprocessor starts executing after reset at 0x9FC00000, but the image is loaded starting at 0x9F80000, instruct ROMIMAGE that the reset vector is 9fC00000. The following code example shows how to reserve one page of this portion of memory using the <B>RESERVE</B> keyword in Config.bib so the jump instruction to the start of the image is not overwritten. 
+
+<P><code class="ce">RESETVECTOR=9F800000</code>
+
+<P>The following code example shows how to reserve 4 KB at reset vector for boot loader and diagnostics: 
+
+<P><code class="ce">RESERVE    9fc00000    00001000</code>
+</li>
+
+	<LI>Boot without using RESETVECTOR 
+<P>If you are not using the boot loader and RESETVECTOR is not defined, the jump page is at the start of the image. The image is located at the address where the CPU starts executing. 
+</li>
+</UL>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50conbootwithbootloader.htm">Boot with a Boot Loader</A> | <A HREF="wce50conmodesforbootingos.htm">Modes for Booting the OS</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

@@ -1,0 +1,108 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Layered Protocols and Provider Chains</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Layered Protocols and Provider Chains"/>
+<MSHelp:RLTitle Title="Layered Protocols and Provider Chains"/>
+<MSHelp:Keyword Index="A" Term="wce50conLayeredProtocolsandProtocolChains"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Feature"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="winsock.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="False"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+<MSHelp:Attr Name="PBFeature" Value="SYSGEN_WINSOCK"/>
+<MSHelp:Attr Name="PBOnly" Value="False"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_3008423">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50conlayeredprotocolsandprotocolchains"></A>Layered Protocols and Provider Chains</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>Winsock supports layered protocols. A layered protocol implements only higher-level communications functions while relying on an underlying transport stack for the actual exchange of data with a remote endpoint. An example of this type of layered protocol is a security layer that adds a protocol to the socket connection process in order to perform authentication and establish an encryption scheme. Such a security protocol generally requires the services of an underlying and reliable transport protocol such as Transmission Control Protocol (TCP) or Sequenced Packed Exchange (SPX).</P>
+
+<P>The term <I>base protocol</I> refers to a protocol, such as TCP or SPX, that is fully capable of performing data communications with a remote endpoint. A <I>layered protocol</I> is a protocol that cannot stand alone, and a <I>provider chain</I> is one or more layered protocols strung together and anchored by a base protocol.</P>
+
+<P>The following illustration shows Winsock with only a base provider of TCP/IPv4 installed.</P>
+
+<P class="fig"><IMG SRC="baseprovider.gif" ALT="" BORDER=0></P>
+
+<P>The base provider has a chain identifier, that is a Globally Unique Identifier (GUID). </P>
+
+<BLOCKQUOTE class="dtBlock">
+<b class="le">Note</b>&nbsp;&nbsp;&nbsp;These illustrations show a simplified view of provider chains. This model is the same for each base provider. </BLOCKQUOTE>
+
+<P>You can create a provider chain if providers at both the upper and lower edges of the chain support the Winsock SPI. </P>
+
+<P>The following illustration shows the provider chains when you install an Encryption LSP over the TCP/IPv4 base provider.</P>
+
+<P class="fig"><IMG SRC="isprovider1.gif" ALT="" BORDER=0></P>
+
+<P>Each time an LSP is installed, the original base chain remains, and a new chain is created that has the added LSP and a unique identifier. When the provider chain 0xAAAA is used, TCP/IPv4 data is encrypted or decrypted between TCP/IP and Winsock.</P>
+
+<P>Winsock uses the address family, socket type, and protocol that is passed into <A HREF="wce50lrfsocketwindowssockets.htm">socket</A> to determine which chain is best. Or, to use  a specific chain, you can call <A HREF="wce50lrfwsasocket.htm">WSASocket</A> and pass the appropriate <A HREF="wce50lrfwsaprotocolinfo.htm">WSAPROTOCOL_INFO</A> structure. </P>
+
+<BLOCKQUOTE class="dtBlock">
+<b class="le">Note</b>&nbsp;&nbsp;&nbsp;Winsock verifies that all sockets that are passed to <A HREF="wce50lrfselect.htm">select</A> are from the same provider. Sockets are considered to be from the same service provider if the <A HREF="wce50lrfwsaprotocolinfo.htm">WSAPROTOCOL_INFO</A> structures describing their protocols have the same <I>ProviderId</I> value. If the <I>ProviderId</I> values do not match, the <B>select</B> call fails and the socket is not passed to any providers.</BLOCKQUOTE>
+
+<BLOCKQUOTE class="dtBlock">
+Although you can not call <A HREF="wce50lrfselect.htm">select</A> with sockets created by different provider chains, Winsock determines that TCP/IPv4, TCP/IPv6, UDP/IPv4, UDP/IPv6, and Bluetooth are from the same provider because they are all handled by the same base provider, wspm.dll.</BLOCKQUOTE>
+
+<P>The following illustration shows the provider chains when you install an Auth LSP over the TCP/IPv4 base provider.</P>
+
+<P class="fig"><IMG SRC="isprovider2.gif" ALT="" BORDER=0></P>
+
+<P>The new provider chain is now available with the Auth LSP. When the provider chain 0xFFFF is used, TCP/IPv4 data is not only encrypted or decrypted between TCP/IP and Winsock, but it is also authenticated.</P>
+
+<BLOCKQUOTE class="dtBlock">
+<b class="le">Note</b>&nbsp;&nbsp;&nbsp;An LSP should not modify an unrecognized handle. It should pass the handle to the next lower level.</BLOCKQUOTE>
+
+<P>This illustration shows the importance of the LSP installation order. The connection can be authenticated before it is encrypted, but might fail authentication if it is encrypted first. For information about installing an LSP and setting the installation order, see <A HREF="wce50conlayeredserviceprovider.htm">Installing an LSP</A>.</P>
+
+<P>The <A HREF="wce50lrfwsaprotocolinfo.htm">WSAPROTOCOL_INFO</A> structure refers to the provider chain as a whole and describes the explicit order in which the layered protocols are joined. Because only base protocols and provider chains are directly usable by applications, they are the only ones listed when the installed protocols are enumerated with the <A HREF="wce50lrfwsaenumprotocols.htm">WSAEnumProtocols</A> function.</P>
+
+<P>An application uses the <A HREF="wce50lrfwsaenumprotocols.htm">WSAEnumProtocols</A> function to determine which transport protocols and provider chains are present, and to obtain information about each one as that information is contained in the associated <A HREF="wce50lrfwsaprotocolinfo.htm">WSAPROTOCOL_INFO</A> structure.</P>
+
+<P>In most instances, there is a single <B>WSAPROTOCOL_INFO</B> structure for each protocol or provider chain. However, some protocols exhibit multiple behaviors. For example, the SPX protocol is message-oriented. That is, the network preserves the sender's message boundaries, but the receiving socket can ignore these message boundaries and treat them as a byte stream. Consequently, two different <B>WSAPROTOCOL_INFO</B> structure entries could exist for SPX, one for each behavior.</P>
+
+<P>Applications that need to be protocol-independent are encouraged to select a protocol on the basis of its suitability rather than on the basis of the values assigned to their <I>socket_type</I> or <I>protocol</I> parameters. Protocol suitability is indicated by the communications attributes, such as message-versus-byte stream, and reliable-versus-unreliable, that are contained in the <A HREF="wce50lrfwsaprotocolinfo.htm">WSAPROTOCOL_INFO</A> structure. Selecting protocols on the basis of suitability as opposed to on the basis of well-known protocol names and socket types lets protocol-independent applications take advantage of new transport protocols and their associated media types, as these become available.</P>
+
+<P>The server half of a client/server application benefits by establishing listening sockets on all suitable transport protocols. Then, the client can establish its connection using any suitable protocol. For example, this lets a client application be unmodified whether it is running on a desktop system, connected through a Local Area Network (LAN), or on a laptop using a wireless network.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50conmultipletransportprotocols.htm">Multiple Transport Protocols</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

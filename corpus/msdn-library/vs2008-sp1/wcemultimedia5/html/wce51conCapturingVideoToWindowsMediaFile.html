@@ -1,0 +1,86 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Capturing Video to a Windows Media File</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Capturing Video to a Windows Media File"/>
+<MSHelp:RLTitle Title="Capturing Video to a Windows Media File"/>
+<MSHelp:Keyword Index="A" Term="wce51conCapturingVideoToWindowsMediaFile"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Feature"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="directshow_concepts1.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="True"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+<MSHelp:Attr Name="PBFeature" Value="SYSGEN_DSHOW"/>
+<MSHelp:Attr Name="PBOnly" Value="False"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_1066811">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce51concapturingvideotowindowsmediafile"></A>Capturing Video to a Windows Media File</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P><B>Applies to:</B> Devices based on Windows Mobile Version 5.0 and later</P>
+
+<P>To capture video and encode it to a Windows Media Video (WMV) file, connect the capture pin to the <A HREF="wce51lrfwmasfwriterfilter.htm">WM ASF Writer filter</A>:</P>
+
+<P class="fig"><IMG SRC="dshow_video_to_wm.gif" ALT="" BORDER=0></P>
+
+<P>You can build the above graph by specifying MEDIASUBTYPE_Asf in the <MSHelp:link keywords="wce51lrfICaptureGraphBuilder2SetOutputFileName" TABINDEX="0">ICaptureGraphBuilder2::SetOutputFileName</MSHelp:link> method, as demonstrated in the following code.</P>
+
+<PRE class="code">IBaseFilter* pASFWriter = 0;
+hr = pBuild-&gt;SetOutputFileName(
+    &amp;MEDIASUBTYPE_Asf,   // Create a Windows Media file.
+    L"\\My Documents\VidCap.wmv",   // File name.
+    &amp;pASFWriter,         // Receives a pointer to the filter.
+    NULL);  // Receives an IFileSinkFilter interface pointer (optional).</PRE>
+
+<P>The value MEDIASUBTYPE_Asf tells the Capture Graph Builder to use the WM ASF Writer filter as the file sink. The Capture Graph Builder creates the filter, adds it to the graph, and calls <MSHelp:link keywords="wce51lrfIFileSinkFilterSetFileName" TABINDEX="0">IFileSinkFilter::SetFileName</MSHelp:link> to set the name of the output file. It returns a pointer to the filter as an outgoing parameter (<I>pASFWriter</I> in the previous code example). </P>
+
+<P>Call <MSHelp:link keywords="wce51lrfICaptureGraphBuilder2RenderStream" TABINDEX="0">ICaptureGraphBuilder2::RenderStream</MSHelp:link> to connect the capture filter to the ASF Writer:</P>
+
+<PRE class="code">hr = pBuild-&gt;RenderStream(
+    &amp;PIN_CATEGORY_CAPTURE,   // Capture pin.
+    &amp;MEDIATYPE_Video,        // Video. Use MEDIATYPE_Audio for audio.
+    pCap,                    // Pointer to the capture filter. 
+    0, 
+    pASFWriter);             // Pointer to the sink filter (ASF Writer).</PRE>
+
+<P>Each input pin on the WM ASF Writer filter corresponds to a stream in the Windows Media profile. You must connect every pin, so that the file content matches the profile.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce51concapturingvideotofile.htm">Capturing Video to a File</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

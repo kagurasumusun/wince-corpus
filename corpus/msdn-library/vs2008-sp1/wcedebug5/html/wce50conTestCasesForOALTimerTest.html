@@ -1,0 +1,194 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Test Cases for the OAL Timer Test</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Test Cases for the OAL Timer Test"/>
+<MSHelp:RLTitle Title="Test Cases for the OAL Timer Test"/>
+<MSHelp:Keyword Index="A" Term="wce50conTestCasesForOALTimerTest"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Debugging"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="True"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="oaltimertest.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="True"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_1054820">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50contestcasesforoaltimertest"></A>Test Cases for the OAL Timer Test</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>Each test case for the OAL Timer Test falls into one of several categories. Test cases 102, 111, and 121 calculate the resolution of a specified timer and compare the resolution to an upper bound. Test cases 103, 112, and 122 confirm that the timer monotonically increases, except in an overflow condition. Test cases 131, 132, and 133 compare two clocks to each other, calculate the drift between the clocks, and confirm that the drift is less than an acceptable threshold. Test case 141 is a manual test. You must edit the command line for the OAL Timer Test to run test case 141. To run test case 141, specify the command line <code class="ce">tux -o -d oaltest -x141</code>, and then run the OAL Timer Test. For information about editing the command line for a CETK test, see <A HREF="wce50coneditingthecommandlineforatest.htm">Editing the Command Line for a Test</A>.</P>
+
+<P>The following table shows the test cases for the OAL Timer Test.</P>
+
+<BLOCKQUOTE class="dtBlock">
+<b class="le">Note</b>&nbsp;&nbsp;&nbsp;If a tested clock does not run accurately, the expected duration of a test case shown in the following table might not be accurate.</BLOCKQUOTE>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=50%>Test case</TH>
+<TH width=50%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>102: Tick Count Latency/Resolution (high priority)</TD>
+<TD width=50%>Determines the latency of the <MSHelp:link keywords="wce50lrfGetTickCount" TABINDEX="0">GetTickCount</MSHelp:link> function and the resolution of the corresponding clock. This test case records the resolution of the clock for 300 intervals, and then averages the recorded values to report a result.
+<P>This test case runs at a scheduler priority of 1.</P>
+
+<P>This test case passes if the average of the recorded values is less than 2 milliseconds (ms).</P>
+
+<P>This test case also reports the latency of the system call, but does not compare this value to a threshold value.</P>
+
+<BLOCKQUOTE class="dtBlock">
+<b class="le">Note</b>&nbsp;&nbsp;&nbsp;This test case evaluates resolution, not precision. The precision of a clock is the smallest unit of measurement that the clock displays. The resolution is the smallest unit that the clock accurately measures. In general, the precision of a clock is greater than the resolution of the clock because the unit of measurement for a clock is typically chosen so that the unit does not prevent an accurate reading of the clock. In some cases, a higher precision is possible but not used because no application requires a higher precision.</BLOCKQUOTE>
+</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>103: Tick Count Backwards Check</TD>
+<TD width=50%>Confirms that the clock for the <B>GetTickCount</B> function is a monotonically increasing value that runs backward only if it overflows. This test case reads each subsequent clock tick and verifies that the value is greater than the previous value. If the value is less than the previous value, the difference between the values must be less than twice the resolution of the clock. If the difference between the values is greater than twice the resolution of the clock, this test case fails.
+<P>By default, this test case runs for 10 minutes. You can specify the length of time that it runs by specifying the -c command-line parameter and appending <code class="ce">"&#0150;tt_it &lt;seconds&gt;"</code>, where &lt;<I>seconds</I>&gt; is the number of seconds for which you want the test case to run. If the clock does not tick correctly, the test case might not run for the length of time that you specify.</P>
+
+<P>The timer for the <B>GetTickCount</B> function wraps once approximately every 49 days. To test the condition where the timer overflows, set the timer so that the timer will soon wrap.</P>
+</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>111: High Performance Latency/Resolution (high priority)</TD>
+<TD width=50%>Determines the latency of the <MSHelp:link keywords="wce50lrfQueryPerformanceCounter" TABINDEX="0">QueryPerformanceCounter</MSHelp:link> function and the resolution of the high-performance clock. This test case records the resolution of the clock for 300 intervals, and then averages the recorded values to report a result.
+<P>This test case runs at a scheduler priority of 1.</P>
+
+<P>This test case passes if the average of the recorded values is less than 2 ms.</P>
+
+<P>This test case also reports the latency of the system call, but does not compare this value to a threshold value.</P>
+
+<P>This test case skips if the test determines that the OAL does not implement a high-performance clock.</P>
+
+<BLOCKQUOTE class="dtBlock">
+<b class="le">Note</b>&nbsp;&nbsp;&nbsp;This test case evaluates resolution, not precision. The precision of a clock is the smallest unit of measurement that the clock displays. The resolution is the smallest unit that the clock accurately measures. In general, the precision of a clock is greater than the resolution of the clock because the unit of measurement for a clock is typically chosen so that the unit does not prevent an accurate reading of the clock. In some cases, a higher precision is possible but not used because no application requires a higher precision.</BLOCKQUOTE>
+</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>112: High Performance Backwards Check</TD>
+<TD width=50%>Confirms that the high-performance counter is a monotonically increasing value that runs backward only if it overflows. This test case reads each subsequent clock tick and verifies that the value is greater than the previous value. If the value is less than the previous value, the difference between the values must be less than twice the resolution of the clock. If the difference between the values is greater than twice the resolution of the clock, this test case fails.
+<P>By default, this test case runs for 10 minutes. You can specify the length of time that this test case runs by specifying the -c command-line parameter and appending <code class="ce">"&#0150;tt_it &lt;seconds&gt;"</code>, where &lt;<I>seconds</I>&gt; is the number of seconds for which you want the test case to run. If the clock does not tick correctly, the test case might not run for the length of time that you specify.</P>
+</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>121: RTC Latency/Resolution (high priority)</TD>
+<TD width=50%>Determines the latency of the <MSHelp:link keywords="wce50lrfGetSystemTime" TABINDEX="0">GetSystemTime</MSHelp:link> function and the resolution of the real-time clock (RTC). This test case records the resolution of the clock for 300 intervals, and then averages the recorded values to report a result.
+<P>This test case runs at a scheduler priority of 1.</P>
+
+<P>This test case passes if the average of the recorded values is less than 2 seconds (s).</P>
+
+<P>This test case also reports the latency of the system call, but does not compare this value to a threshold value.</P>
+
+<BLOCKQUOTE class="dtBlock">
+<b class="le">Note</b>&nbsp;&nbsp;&nbsp;This test case evaluates resolution, not precision. The precision of a clock is the smallest unit of measurement that the clock displays. The resolution is the smallest unit that the clock accurately measures. In general, the precision of a clock is greater than the resolution of the clock because the unit of measurement for a clock is typically chosen such that the unit does not prevent an accurate reading of the clock. In some cases, a higher precision is possible but not used because no application requires a higher precision.</BLOCKQUOTE>
+</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>122: RTC Backwards Check</TD>
+<TD width=50%>Confirms that the RTC is a monotonically increasing value that runs backward only if it overflows. This test case reads each subsequent clock tick and verifies that the value is greater than the previous value. If the value is less than the previous value, the difference between the values must be less than twice the resolution of the clock. If the difference between the values is greater than twice the resolution of the clock, this test case fails.
+<P>By default, this test case runs for 10 minutes. You can specify the length of time that this test case runs by specifying the -c command-line parameter and appending <code class="ce">"&#0150;tt_it &lt;seconds&gt;"</code>, where &lt;<I>seconds</I>&gt; is the number of seconds for which you want the test case to run. If the clock does not tick correctly, the test case might not run for the length of time that you specify.</P>
+</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>131: Compare High Perf to GetTickCount</TD>
+<TD width=50%>Calculates the drift between the high-performance counter and the clock for the <B>GetTickCount</B> function. This test case runs for 30 intervals. Each interval is 5 minutes. This test case calculates drift by comparing the beginning and ending values for each clock over each interval.
+<P>This test case fails if the clocks drift by more than 1.44 seconds in any hour, or if the average drift per hour exceeds 0.75 seconds.</P>
+
+<P>This test case runs for approximately 2.5 hours. The clock for the <B>GetTickCount</B> function has relatively low resolution. Significant time is required to detect drift in a clock with low resolution.</P>
+</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>132: Compare RTC to GetTickCount</TD>
+<TD width=50%>Calculates the drift between the RTC and the clock for the <B>GetTickCount</B> function. This test case runs for 30 intervals. Each interval is 5 minutes. This test case calculates drift by comparing the beginning and ending values for each clock over each interval.
+<P>This test case fails if the clocks drift by more than 1.44 seconds in any hour, or if the average drift per hour exceeds 0.75 seconds.</P>
+
+<P>This test case runs for approximately 2.5 hours. The clock for the <B>GetTickCount</B> function has relatively low resolution. Significant time is required to detect drift in a clock with low resolution.</P>
+</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>133: Compare High Perf to RTC</TD>
+<TD width=50%>Calculates the drift between the high-performance counter and the RTC. This test case runs for 30 intervals. Each interval is 5 minutes. This test case calculates drift by comparing the beginning and ending values for each clock over each interval.
+<P>This test case fails if the clocks drift by more than 1.44 seconds in any hour, or if the average drift per hour exceeds 0.75 seconds.</P>
+
+<P>This test case runs for approximately 2.5 hours.</P>
+</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>141: Wall Clock Drift Test (manual)</TD>
+<TD width=50%>Compares the clock for the <B>GetTickCount</B> function to a wall clock. This test case catches a condition in which the clock for the <B>GetTickCount</B> function, the high-performance counter, and the RTC agree with each other but do not keep accurate time. This condition might occur if all three clocks derive from a common clock that does not keep accurate time.
+<P>Test case 141 is a manual test. To run test case 141, specify the command line <code class="ce">tux -o -d oaltest -x141</code>, and then run the OAL Timer Test.</P>
+
+<P>This test case assumes that the time between clock ticks is relatively constant.</P>
+
+<P>Before starting this test case, obtain a stopwatch or other external clock that you can use to measure the length of events during the test.</P>
+
+<P>By default, this test case runs for 3 hours. You can specify the length of the test from the command line. Specify the -c command-line parameter and append <code class="ce">"&#0150;tt_wc &lt;minutes&gt;"</code>, where &lt;<I>minutes</I>&gt; is the number of minutes that you want the test case to run.</P>
+
+<P>This test case displays a start time, waits for the length of time that you specified in the command line, and then displays a stop time. The test displays a message that tells you when to start your stopwatch, and then periodically displays messages that tell you how much time remains. Observe these messages and prepare to stop the stopwatch when the test completes. The test displays messages more frequently when the test nears completion.</P>
+
+<P>If the time that you record is the same as the time reported by the test, the clocks keep accurate time. If the time that you record differs from the time reported by the test, at least one of the clocks does not keep accurate time.</P>
+
+<P>When this test case starts, it determines whether a timer would overflow during the test. The test case fails if it determines that a timer would overflow. Run the test when a timer is not set to overflow during the test.</P>
+
+<P>A noisy <MSHelp:link keywords="wce50lrfSleep" TABINDEX="0">Sleep</MSHelp:link> routine might cause this test case to report a false positive. A false positive might occur if one end of the test is close to the overflow boundary and a <B>Sleep</B> call returned after the timer overflowed. Run the test when the timer is not near the overflow boundary.</P>
+
+<P>This test case displays the following error message if a timer suddenly jumps forward in time during the test:</P>
+
+<PRE class="code">ERROR: The current time overshot the stop time for the test.
+ERROR: This is quite odd, because it shouldn't have happened.
+ERROR: Something is most likely wrong with either sleep or the timers.</PRE>
+
+<P>This error causes the test to end. This error occurs if the <B>Sleep</B> function does not behave correctly or if a timer does not behave correctly.</P>
+</TD>
+</TR>
+</table></div>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50conoaltimertest.htm">OAL Timer Test</A> | <MSHelp:link keywords="wce50tskSupportingHighResolutionTimers" TABINDEX="0">Supporting High-Resolution Timers</MSHelp:link></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

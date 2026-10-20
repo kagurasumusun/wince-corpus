@@ -1,0 +1,184 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Downloading the Boot Loader to the AMD DBAu1000 Development Board</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Downloading the Boot Loader to the AMD DBAu1000 Development Board"/>
+<MSHelp:RLTitle Title="Downloading the Boot Loader to the AMD DBAu1000 Development Board"/>
+<MSHelp:Keyword Index="A" Term="wce50tskDownloadingBootLoaderToAMDDBAu1000DevelopmentBoard"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Hardware"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="True"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbTask"/>
+<MSHelp:Attr Name="Filename" Value="howto_setupDBAu1000.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="True"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_1049632">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50tskdownloadingbootloadertoamddbau1000developmentboard"></A>Downloading the Boot Loader to the AMD DBAu1000 Development Board</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>If you are downloading the Windows CE boot loader to the AMD DBAu1000 Development Board for the first time, you can use the following procedure.</P>
+
+<P class="labelproc"><B>To download the Windows CE boot loader for the first time</B>
+
+<OL type="1">
+	<LI>Verify that the AMD DBAu1000 Development Board is turned off.</li>
+
+	<LI>Switch the red SWAP_BOOT switch, S8, to the upper position.</li>
+
+	<LI>On the development workstation, configure the terminal emulation software to the settings shown in the following table.<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=28%>Bits per second</TH>
+<TH width=19%>Data bits</TH>
+<TH width=15%>Parity</TH>
+<TH width=18%>Stop bits</TH>
+<TH width=20%>Flow control</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=28%>115200</TD>
+<TD width=19%>8</TD>
+<TD width=15%>None</TD>
+<TD width=18%>1</TD>
+<TD width=20%>None</TD>
+</TR>
+</table></div>
+</li>
+
+	<LI>Turn on the AMD DBAu1000 Development Board by pressing the power switch, S3.
+<P>The Yamon ROM Monitor should run and you should see the following output on the terminal window:
+
+<PRE class="code">YAMON ROM Monitor, Revision 02.19DB1000.
+Copyright (c) 1999-2000 MIPS Technologies, Inc. - All Rights Reserved.
+
+For a list of available commands, type 'help'.
+
+Compilation time =            May 22 2003  16:42:39
+MAC address =                 00.00.1a.1b.d1.18
+Processor Company ID =        0x03
+Processor ID/revision =       0x02 / 0x03
+Endianness =                  Little
+CPU =                         396 MHz
+Flash memory size =           32 MByte
+SDRAM size =                  64 MByte
+First free SDRAM address =    0x8008d314
+
+YAMON&gt;</PRE>
+</li>
+
+	<LI>Download the Eboot image into RAM on the AMD DBAu1000 Development Board by typing the following command at the <CODE>YAMON&gt;</CODE> command prompt:
+<PRE class="code">load asc:</PRE>
+
+<P>The following output appears after you type this command:
+
+<PRE class="code">About to load asc://tty0
+Press Ctrl-C to break
+Start dump from terminal program</PRE>
+</li>
+
+	<LI>Start the download process from the terminal emulator using the Boot.sre file from the Release directory. The following output appears after you type this command:
+<PRE class="code">Start = 0x83f80004, range = (0x83f80000,0x83f8b4eb), format = SREC
+YAMON&gt;</PRE>
+</li>
+
+	<LI>At the <CODE>YAMON&gt;</CODE> command prompt, type the following command to erase flash memory:
+<PRE class="code">erase 9ec00000 40000</PRE>
+
+<P>The following output appears after you type this command:
+
+<PRE class="code">what...
+The following area will be erased:
+Start address = 0x1ec00000
+Size          = 0x00040000
+Confirm ? (y/n) y
+Erasing...Done
+YAMON&gt;</PRE>
+</li>
+
+	<LI>Copy the Eboot image into flash memory by typing the following command at the <CODE>YAMON&gt;</CODE> command prompt:
+<PRE class="code">copy 83f80000 9ec00000 20000</PRE>
+
+<P>The following output appears after you type this command:
+
+<PRE class="code">Copying...Done
+YAMON&gt;</PRE>
+
+<BLOCKQUOTE class="dtBlock">
+<b class="le">Note</b>&nbsp;&nbsp;&nbsp;To determine the correct size of the image copy, add 1 to the download result.</BLOCKQUOTE>
+</li>
+
+	<LI>Turn off the AMD DBAu1000 Development Board.</li>
+
+	<LI>Swap flash memory blocks by switching the red SWAP_BOOT switch, S8, to the lower position.</li>
+
+	<LI>Configure the terminal emulation software to the following settings:<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=27%>Bits per second</TH>
+<TH width=20%>Data bits</TH>
+<TH width=15%>Parity</TH>
+<TH width=18%>Stop bits</TH>
+<TH width=20%>Flow control</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>38400</TD>
+<TD width=20%>8</TD>
+<TD width=15%>None</TD>
+<TD width=18%>1</TD>
+<TD width=20%>None</TD>
+</TR>
+</table></div>
+</li>
+
+	<LI>Turn on the AMD DBAu1000 Development Board and verify that you downloaded the Windows CE boot loader.
+<P>For the format of the Windows CE boot loader message, see <A HREF="wce50conwindowscebootloaderoutputforamddbau1000developmentboard.htm">Windows CE Boot Loader Output for the AMD DBAu1000 Development Board</A>.
+</li>
+
+	<LI>Set the Media Access Control (MAC) addresses for the Au1000 on-chip Ethernet controllers and change other boot loader parameters as required.
+<BLOCKQUOTE class="dtBlock">
+<b class="le">Note</b>&nbsp;&nbsp;&nbsp;Save new configuration settings to flash memory.</BLOCKQUOTE>
+</li>
+
+	<LI>Turn on the AMD DBAu1000 Development Board and verify that the device does not use the broadcast MAC address.</li>
+</OL>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50howhowtousebspforamddbau1000developmentboard.htm">How to Use the BSP for the AMD DBAu1000 Development Board</A> | <A HREF="wce50condownloadingrun-timeimagetoamddbau1000developmentboard.htm">Downloading the Run-Time Image to the AMD DBAu1000 Development Board</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

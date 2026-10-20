@@ -1,0 +1,135 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>CeFindFirstDatabaseEx (EDB)</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="CeFindFirstDatabaseEx (EDB)"/>
+<MSHelp:RLTitle Title="CeFindFirstDatabaseEx (EDB)"/>
+<MSHelp:Keyword Index="K" Term="CeFindFirstDatabaseEx (EDB)"/>
+<MSHelp:Keyword Index="A" Term="wce50lrfCeFindFirstDatabaseExEDB"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Feature"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="apiref"/>
+<MSHelp:Attr Name="Filename" Value="edb_functions.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="False"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+<MSHelp:Attr Name="APIName" Value="CeFindFirstDatabaseEx"/>
+<MSHelp:Attr Name="APIType" Value="LibDef"/>
+<MSHelp:Attr Name="APILocation" Value="Coredll.lib"/>
+<MSHelp:Attr Name="PBFeature" Value="SYSGEN_EDB"/>
+<MSHelp:Attr Name="PBOnly" Value="False"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_1044892">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50lrfcefindfirstdatabaseexedb"></A>CeFindFirstDatabaseEx (EDB)</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>This function is used to create a handle which can then be used with the <A HREF="wce50lrfcefindnextdatabaseexedb.htm">CeFindNextDatabaseEx (EDB)</A> function to enumerate databases in a specific volume, or all of the databases across all mounted volumes.</P>
+
+<P>This function does not work with CEDB databases. For more information about CEDB, see <A HREF="wce50oricedbreference.htm">CEDB Reference</A>.</P>
+
+<PRE class="syntax"><B>HANDLE CeFindFirstDatabaseEx( </B>
+  <B>PCEGUID</B> <I>pGuid</I><B>,</B> 
+  <B>DWORD</B> <I>dwDbaseType</I>
+<B>);</B></PRE>
+
+<H4 class="dtH4">Parameters</H4>
+
+<DL>
+<DT><I>pGuid </I></DT>
+
+<DD>[in] If <I>pGuid</I> is NULL or is a value generated with <B>CREATE_INVALIDEDBGUID</B>, this function enumerates all volumes. If <I>pGuid</I> is not NULL and not an invalid GUID, then this function searches the specified mounted volume. </dd>
+
+<DT><I>dwDbaseType </I></DT>
+
+<DD>[in] The type of database to enumerate. If <I>dwDbaseType</I> is not 0, then this function enumerates all databases whose type matches the value of this parameter. A value of 0 results in all databases being enumerated. The type of a database is set when creating a database by using the <A HREF="wce50lrfcecreatedatabasewithprops.htm">CeCreateDatabaseWithProps (EDB)</A> function or when setting database information by using the <A HREF="wce50lrfcesetdatabaseinfoedb.htm">CeSetDatabaseInfo (EDB)</A> function.</dd>
+</DL>
+
+<H4 class="dtH4">Return Values</H4>
+
+<P>A return value of INVALID_HANDLE_VALUE indicates failure. To get extended error information, call <MSHelp:link keywords="wce50lrfGetLastError" TABINDEX="0">GetLastError</MSHelp:link>. The following table lists possible values returned by <B>GetLastError</B>:</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=50%>Return Value</TH>
+<TH width=50%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>ERROR_NOT_FOUND</TD>
+<TD width=50%>Indicates one of the following:
+<UL type="disc">
+	<LI><I>pGuid</I> is not an invalid GUID and the specified mounted volume does not exist.</li>
+
+	<LI><I>pGuid</I> is set to <B>CREATE_INVALIDEDBGUID </B>and there are no mounted volumes.</li>
+</UL>
+</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>ERROR_NOT_ENOUGH_MEMORY</TD>
+<TD width=50%>Indicates that there is no memory available to create the enumeration context.</TD>
+</TR>
+</table></div>
+
+<H4 class="dtH4">Remarks</H4>
+
+<P>This function only returns the handle to an enumeration context. To begin enumerating databases, an application must first call the <B>CeFindNextDatabaseEx</B> function. The handle returned from this function can be used on multiple threads at the same time.</P>
+
+<BLOCKQUOTE class="dtBlock">
+<b class="le">Note</b>&nbsp;&nbsp;&nbsp;If you call this function by passing NULL, it enumerates through all volumes on the device, including CEDB volumes. Therefore, the handle returned by this function may be to a CEDB volume; this handle cannot be used with EDB functions.</BLOCKQUOTE>
+
+<P>If a new database volume is mounted after calling this function, that new database volume is not included in the enumeration, because this function takes a snapshot of the currently mounted volumes. If a volume is unmounted after calling this function, then the enumeration skips that volume.</P>
+
+<P>The handle returned from this function must be closed by calling the <A HREF="wce50lrfclosehandle.htm">CloseHandle</A> function.</P>
+
+<P>The following list highlights the differences between this function and the CEDB equivalent function:
+
+<UL type="disc">
+	<LI>If the <I>pGuid</I> has no mounted volume associated with it, EDB returns ERROR_NOT_FOUND, while CEDB returns ERROR_INVALID_PARAMETER. NULL and INVALIDGUID are exceptions.</li>
+
+	<LI><B>CREATE_INVALIDEDBGUID</B> is used to enumerate CEDB and EDB volumes.</li>
+</UL>
+
+<H4 class="dtH4">Requirements</H4>
+
+<P><B>OS Versions:</B> Windows CE 5.0 and later.<BR>
+<B>Header:</B> Windbase.h.<BR>
+<B>Link Library:</B> Coredll.lib.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50lrfcefindnextdatabaseexedb.htm">CeFindNextDatabaseEx (EDB)</A> | <A HREF="wce50lrfcesetdatabaseinfoedb.htm">CeSetDatabaseInfo (EDB)</A> | <A HREF="wce50lrfcecreatedatabasewithprops.htm">CeCreateDatabaseWithProps (EDB)</A> | <A HREF="wce50lrfclosehandle.htm">CloseHandle</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

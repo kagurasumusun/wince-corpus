@@ -1,0 +1,104 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Exchange Client Security</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Exchange Client Security"/>
+<MSHelp:RLTitle Title="Exchange Client Security"/>
+<MSHelp:Keyword Index="A" Term="wce50conExchangeClientSecurity"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Feature"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="exchclient_security.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="False"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+<MSHelp:Attr Name="Technology" Value="Security"/>
+<MSHelp:Attr Name="PBFeature" Value="SYSGEN_OWAEXCHANGECLIENT"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_1042400">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50conexchangeclientsecurity"></A>Exchange Client Security</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>The Exchange Client Catalog item can be a potential security risk because it can transmit information over a public network like the Internet. </P>
+
+<P>If security is compromised, the Exchange Client can compromise sensitive data. </P>
+
+<P>To mitigate security risks, use the following best practices.</P>
+
+<H2 class="dtH2">Best Practices</H2>
+
+<P>The following are best practices for mitigating security risks for the Exchange client.</P>
+
+<P class="label"><B>Protect credentials using a Trusted Environment </B></P>
+
+<P>Any device that uses the Exchange Client Catalog item should use the trusted environment functionality in Windows CE. When used correctly, a trusted environment enables only trusted code to access the credentials used by the Exchange Client.</P>
+
+<P>The Exchange Client stores credentials in the <A HREF="wce50lrfiexchangeclientsetcredentials.htm">IExchangeClient::SetCredentials</A> implementation by calling the Credential Manager <MSHelp:link keywords="wce50grfCredWrite" TABINDEX="0">CredWrite</MSHelp:link> function and passing <MSHelp:link keywords="wce50grfCRED" TABINDEX="0">CRED</MSHelp:link> instances that contain the CRED_FLAG_TRUSTED flag. When used in a trusted environment, credentials that use this flag cannot be accessed by modules that aren't trusted.</P>
+
+<P>One way to implement a trusted environment is to store all your modules in ROM and build your device using the IMGTRUSTROMONLY flag (documented in <MSHelp:link keywords="wce50conIMGEnvironmentVariables" TABINDEX="0">IMG Environment Variables</MSHelp:link>. Run-time images built with this flag trust only modules in ROM, and so only modules in ROM have access to the credentials used by the Exchange Client. </P>
+
+<P>For more information about using trusted environments, see <MSHelp:link keywords="wce50conCreateaTrustedEnvironment" TABINDEX="0">Trusted Environment Creation</MSHelp:link>.</P>
+
+<P class="label"><B>Use CRED_FLAG_TRUSTED when storing credentials </B></P>
+
+<P>The Exchange Client library uses the default domain and default plaintext credentials stored using Credential Manager. </P>
+
+<P>The <B>IExchangeClient::SetCredentials</B> method provides an easy way to set these credentials. Custom code can also set them without using this method by directly using the Credential Manager API, as explained in the <A HREF="wce50lrfiexchangeclientsetcredentials.htm">IExchangeClient::SetCredentials</A> documentation.</P>
+
+<P>Any code that sets credentials for use by the Exchange Client library should use the CRED_FLAG_TRUSTED flag in the <B>CRED</B> instance it passes to <B>CredWrite</B>. When used in a trusted environment, credentials that use this flag cannot be accessed by modules that aren't trusted.</P>
+
+<P class="label"><B>Use Secure Sockets Layer (SSL)</B></P>
+
+<P>If the Exchange Client cannot authenticate with the Exchange server using the default Credential Manager domain credentials, it attempts to authenticate using the default plaintext credentials.</P>
+
+<P>If authentication using plaintext credentials is necessary, the credentials are transmitted in clear text. Therefore, only use this authentication method over SSL or other encrypted connections. </P>
+
+<P class="label"><B>Be aware that data travelling over non-TLS connection is visible on the network</B></P>
+
+<P>The Exchange Client can connect to an Exchange Outlook Web Access server using normal HTTP (http://) or HTTP over TLS (https://). If the connection is over normal HTTP, all data sent and received by the phone remains in plaintext and is visible to anyone on the network.</P>
+
+<P>For more information about credentials used by the Exchange Client in both connection modes, see <A HREF="wce50lrfiexchangeclientsetcredentials.htm">IExchangeClient::SetCredentials</A>.</P>
+
+<H2 class="dtH2">Default Registry Settings</H2>
+
+<P>You should be aware of the registry settings that impact security. The registry settings documentation contains a <B>Security Note </B>section for those values with security implications.</P>
+
+<P>For Exchange Client registry information, see <A HREF="wce50grfexchangeclientregistrysettings.htm">Exchange Client Registry Settings</A>.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50conexchangeclient.htm">Exchange Client</A> | <MSHelp:link keywords="wce50conCreatingaSecureDevice" TABINDEX="0">Enhancing the Security of a Device</MSHelp:link></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

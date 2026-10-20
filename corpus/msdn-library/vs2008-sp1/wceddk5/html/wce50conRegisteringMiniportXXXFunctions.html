@@ -1,0 +1,230 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Registering MiniportXXX Functions</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Registering MiniportXXX Functions"/>
+<MSHelp:RLTitle Title="Registering MiniportXXX Functions"/>
+<MSHelp:Keyword Index="A" Term="wce50conRegisteringMiniportXXXFunctions"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Driver"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="False"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="ndis_guide1.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="False"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+<MSHelp:Attr Name="PBFeature" Value="NetworkDriver"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_3018298">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50conregisteringminiportxxxfunctions"></A>Registering MiniportXXX Functions</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>Each address member of the <A HREF="wce50lrfndisminiportcharacteristics.htm">NDIS_MINIPORT_CHARACTERISTICS</A> structure must be initialized. To initialize, the address members must be set to the address of a miniport-supplied function or to NULL. The miniport must supply entry points for all mandatory <B>Miniport<I>XXX</I></B> functions; otherwise, NDIS will unload the driver. The <B>Miniport<I>XXX</I></B> functions are defined in the Ndis.h file. </P>
+
+<P>Because the miniport supplies the addresses, and not the names, of its <B>Miniport<I>XXX</I></B> functions, driver developers are free to name these functions whatever they want. A reasonable miniport-development strategy is to give these functions names that make debugging easier. For instance, the miniport NIC driver Mp.sys could name the entry points MpISR, MpSend, and so on.</P>
+
+<P>Some <B>Miniport<I>XXX</I></B> functions are optional. For instance, if a NIC does not generate interrupts, the miniport must poll its NIC. Such a miniport must have a <A HREF="wce50lrfminiporttimer.htm">MiniportTimer</A> function but does not need a <A HREF="wce50lrfminiportisr.htm">MiniportISR</A> function, a <A HREF="wce50lrfminiportenableinterrupt.htm">MiniportEnableInterrupt</A> function, or a <A HREF="wce50lrfminiportdisableinterrupt.htm">MiniportDisableInterrupt</A> function.</P>
+
+<P>A typical miniport driver uses a small number of functions to communicate through NDIS with the upper layers and hardware. NDIS calls <B>Miniport<I>XXX</I></B> functions to communicate with a miniport on its own behalf or on the behalf of a protocol driver.</P>
+
+<P>NDIS NIC miniports and upper-layer drivers use the NDIS library, called Ndis.sys, to communicate with each other through calls to <B>Ndis<I>XXX</I></B> functions. </P>
+
+<P>The following table shows the <A HREF="wce50conndisdriverupperedgefunctions.htm">NDIS Driver Upper-Edge Functions</A>, or miniport driver functions, that a miniport can export.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=33%>Function</TH>
+<TH width=40%>Description</TH>
+<TH width=27%>Asynchronous operation</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%><A HREF="wce50lrfdriverentry.htm">DriverEntry</A></TD>
+<TD width=40%>Called by the operating system to activate and initialize the miniport driver. </TD>
+<TD width=27%>Not applicable</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%><A HREF="wce50lrfminiportcheckforhang.htm">MiniportCheckForHang</A></TD>
+<TD width=40%>Checks the internal state of the NIC. </TD>
+<TD width=27%>No</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%><A HREF="wce50lrfminiportdisableinterrupt.htm">MiniportDisableInterrupt</A></TD>
+<TD width=40%>Disables the NIC from generating interrupts. </TD>
+<TD width=27%>No</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%><A HREF="wce50lrfminiportenableinterrupt.htm">MiniportEnableInterrupt</A></TD>
+<TD width=40%>Enables the NIC to generate interrupts.</TD>
+<TD width=27%>No</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%><A HREF="wce50lrfminiporthalt.htm">MiniportHalt</A></TD>
+<TD width=40%>Deallocates and deregisters resources for the NIC and halts the NIC so that it is no longer functioning.</TD>
+<TD width=27%>No</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%><A HREF="wce50lrfminiporthandleinterrupt.htm">MiniportHandleInterrupt</A></TD>
+<TD width=40%>Deferred processing function called to complete interrupt-driven I/O processing.</TD>
+<TD width=27%>No</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%><A HREF="wce50lrfminiportinitialize.htm">MiniportInitialize</A></TD>
+<TD width=40%>Initializes the NIC. </TD>
+<TD width=27%>No</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%><A HREF="wce50lrfminiportisr.htm">MiniportISR</A></TD>
+<TD width=40%>Runs at a high priority as the interrupt service routine for the NIC. </TD>
+<TD width=27%>No</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%><A HREF="wce50lrfminiportqueryinformation.htm">MiniportQueryInformation</A></TD>
+<TD width=40%>Queries the capabilities and status of the miniport driver.</TD>
+<TD width=27%>Yes</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%><A HREF="wce50lrfminiportreconfigure.htm">MiniportReconfigure</A></TD>
+<TD width=40%>Currently, the NDIS library never calls this function, but a <B>MiniportInitialize</B> function can call a <B>MiniportReconfigure</B> function as an internal driver function.</TD>
+<TD width=27%>Not<BR>
+Applicable</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%><A HREF="wce50lrfminiportreset.htm">MiniportReset</A></TD>
+<TD width=40%>Issues a hardware reset to the NIC. </TD>
+<TD width=27%>Yes</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%><A HREF="wce50lrfminiportreturnpacket.htm">MiniportReturnPacket</A></TD>
+<TD width=40%>Receives a packet from an upper layer that was previously passed by a call to <A HREF="wce50lrfndismindicatereceivepacket.htm">NdisMIndicateReceivePacket</A>.</TD>
+<TD width=27%>No</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%><A HREF="wce50lrfminiportsend.htm">MiniportSend</A></TD>
+<TD width=40%>Transmits a packet through the NIC onto the network. Required if the driver has no <B>MiniportSendPackets</B> or <B>MiniportWanSend</B> function.</TD>
+<TD width=27%>Yes</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%><A HREF="wce50lrfminiportsendpackets.htm">MiniportSendPackets</A></TD>
+<TD width=40%>Transmits an array of packets through the NIC onto the network.</TD>
+<TD width=27%>Yes</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%><A HREF="wce50lrfminiportsetinformation.htm">MiniportSetInformation</A></TD>
+<TD width=40%>Changes information about the miniport driver or its NIC.</TD>
+<TD width=27%>Yes</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%><A HREF="wce50lrfminiportshutdown.htm">MiniportShutdown</A></TD>
+<TD width=40%>Restores a NIC to its initial state when the system is shut down.</TD>
+<TD width=27%>No</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%><A HREF="wce50lrfminiportsynchronizeisr.htm">MiniportSynchronizeISR</A></TD>
+<TD width=40%>Synchronizes access to resources shared with <B>MiniportISR</B> or <B>MiniportDisableInterrupt</B>.</TD>
+<TD width=27%>No</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%><A HREF="wce50lrfminiporttransferdata.htm">MiniportTransferData</A></TD>
+<TD width=40%>Copies the contents of a packet received by the NIC into a given packet buffer.</TD>
+<TD width=27%>Yes</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%><A HREF="wce50lrfminiportwansend.htm">MiniportWanSend</A></TD>
+<TD width=40%>Transmits a packet through the NIC onto the network. Required if the driver controls a WAN NIC.</TD>
+<TD width=27%>No</TD>
+</TR>
+</table></div>
+
+<P>Many miniport functions can operate either synchronously or asynchronously. The asynchronous functions have functions that must be called when an operation is finished, as shown in the following table. For example, if a protocol driver calls the <A HREF="wce50lrfndisreset.htm">NdisReset</A> function to reset a NIC, the miniport's <B>MiniportReset</B> function can change the reset operation by returning NDIS_STATUS_PENDING. Eventually, the <B>MiniportReset</B> function must call the <A HREF="wce50lrfndismresetcomplete.htm">NdisMResetComplete</A> function to indicate the final status of the reset request. </P>
+
+<P>The following table shows the NDIS completion function that corresponds to each possibly asynchronous upper-edge miniport driver function. </P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=41%>Function</TH>
+<TH width=59%>Completion function</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=41%><B>MiniportSend,</B><BR>
+<B>MiniportSendPackets</B></TD>
+<TD width=59%><A HREF="wce50lrfndismsendcomplete.htm">NdisMSendComplete</A></TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=41%><B>MiniportQueryInformation</B></TD>
+<TD width=59%><A HREF="wce50lrfndismqueryinformationcomplete.htm">NdisMQueryInformationComplete</A></TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=41%><B>MiniportReset</B></TD>
+<TD width=59%><A HREF="wce50lrfndismresetcomplete.htm">NdisMResetComplete</A></TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=41%><B>MiniportSetInformation</B></TD>
+<TD width=59%><A HREF="wce50lrfndismsetinformationcomplete.htm">NdisMSetInformationComplete</A></TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=41%><B>MiniportTransferData</B></TD>
+<TD width=59%><A HREF="wce50lrfndismtransferdatacomplete.htm">NdisMTransferDataComplete</A></TD>
+</TR>
+</table></div>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50conminiportdrivers.htm">Miniport Drivers</A> | <A HREF="wce50conchoosingasendfunction.htm">Choosing a Send Function</A> | <A HREF="wce50conchoosingareceivefunction.htm">Choosing a Receive Function</A> | <A HREF="wce50conregisteringacheckforhanghandler.htm">Registering a CheckForHang Handler</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

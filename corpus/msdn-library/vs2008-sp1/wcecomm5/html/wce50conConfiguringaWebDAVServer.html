@@ -1,0 +1,141 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Configuring a WebDAV Server</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Configuring a WebDAV Server"/>
+<MSHelp:RLTitle Title="Configuring a WebDAV Server"/>
+<MSHelp:Keyword Index="A" Term="wce50conConfiguringaWebDAVServer"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Feature"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="webserver_app_development.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="True"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="True"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_3006086">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50conconfiguringawebdavserver"></A>Configuring a WebDAV Server</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>The WebDAV protocol is defined by RFC 2518. RFC 2518 defines a number of verbs, such as delete and copy that correspond to desired actions performed on the WebDAV server.</P>
+
+<P>Configuring user permissions to a WebDAV share is the same as configuring Web Server virtual roots. For more information about configuring virtual roots, see <A HREF="wce50convirtualpathsettings.htm">Virtual Path Settings</A>. </P>
+
+<BLOCKQUOTE class="dtBlock">
+<b class="le">Note</b>&nbsp;&nbsp;&nbsp;To map to a virtual root share, WebDAV clients require that directory browsing is enabled. By default, directory browsing is not enabled. You can enable directory browsing by setting <B>DirBrowse</B> to a nonzero value in the registry. For more information, see <A HREF="wce50conbaseregistrysettings.htm">Base Registry Settings</A>. </BLOCKQUOTE>
+
+<P>To help understand what happens when a WebDAV client sends a command to a WebDAV server, the following example shows the sequence of events.</P>
+
+<P>In this example, a Windows CE-based device has an existing virtual root mapping between /MyURL and \Windows\MyPath. 
+
+<OL type="1">
+	<LI>The user wants to delete http://&lt;Device Name&gt;/MyURL/&lt;File name&gt;.</li>
+
+	<LI>The WebDAV client sends the HTTP header information to the device.
+<P>The following example shows the header:
+
+<PRE class="code">DELETE /MyURL/&lt;File name&gt; HTTP/1.1
+[extra header information]</PRE>
+</li>
+
+	<LI>When the device receives the request, the Web Server parses out the /MyURL URL and verifies the user access permission to /MyURL virtual directory.</li>
+
+	<LI>If the user does not have access the virtual directory, the Web Server will return an unauthorized code to the client. Most clients will prompt the user for a user name and password and attempt to authenticate the user.
+<P>- or -
+
+<P>If the user has access to the virtual root, the Web Server maps the virtual root /MyURL to the physical directory \Windows\MyPath.
+</li>
+
+	<LI>The Web Server examines the HTTP verb from the header, DELETE in this example, and dispatches a request to WebDAV.</li>
+
+	<LI>WebDAV checks the user permission in the registry to verify that the write permission is enabled.
+<P>The permissions are set in the registry and loaded when the Web Server starts. For more information, see <A HREF="wce50conwebserverauthenticationandpermissions.htm">Web Server Authentication and Permissions</A>.
+</li>
+
+	<LI>If the user does not have write permission, WebDAV returns an error to the client and ends the request. 
+<P>&#0150; or -
+
+<P>If the user has write permission, WebDAV attempts to delete the file and returns the status of the operation to the client.
+
+<BLOCKQUOTE class="dtBlock">
+<b class="le">Note</b>&nbsp;&nbsp;&nbsp;By default, if the permission value in the registry does not exist, then only generic reading is enabled.</BLOCKQUOTE>
+
+<P>The write permission allows users to view, delete, and create any file unless the file extension is .asp or .dll. In addition, users are not allowed to access script mapped files. This prevents users from modifying and adding scripts that the Web Server can run. 
+
+<P>To allow users to access Web Server scripts, you can set the HSE_URL_FLAGS_SCRIPTS_SOURCE permission flag in the P value in the registry. For more information, see <A HREF="wce50conwebserverauthenticationandpermissions.htm">Web Server Authentication and Permissions</A>.
+</li>
+</OL>
+
+<H4 class="dtH4">Sample Virtual Roots</H4>
+
+<P>The following examples show how to map the file \Windows\www and set permission levels.
+
+<UL type="disc">
+	<LI>To create a share named /ReadOnly that gives a user read-only permission, use the following registry key:
+<PRE class="code">[HKEY_LOCAL_MACHINE\COMM\HTTPD\VROOTS\/ReadOnly]
+@="\\Windows\\www"
+"P"=dword:205
+"DirBrowse"=dword:1</PRE>
+
+<P>In this example, the P values are HSE_URL_FLAGS_READ | HSE_URL_FLAGS_EXECUTE | HSE_URL_FLAGS_SCRIPT. 
+</li>
+
+	<LI>To create a share named /Write that gives a user read and write permissions for all files except server scripts, use the following registry key: 
+<PRE class="code">[HKEY_LOCAL_MACHINE\COMM\HTTPD\VROOTS\/Write]
+@="\\Windows\\www"
+"P"=dword:207
+"DirBrowse"=dword:1</PRE>
+
+<P>In this example, the P values are HSE_URL_FLAGS_READ | HSE_URL_FLAGS_EXECUTE | HSE_URL_FLAGS_SCRIPT | HSE_URL_FLAGS_WRITE. 
+</li>
+
+	<LI>To create a share named /WriteScript that gives a user permission to read and write for all files including scripts, use the following registry key:
+<PRE class="code">HKEY_LOCAL_MACHINE\COMM\HTTPD\VROOTS\/Write]
+@="\\Windows\\www"
+"p"=dword:207
+"DirBrowse"=dword:1</PRE>
+
+<P>In this example, the P values are HSE_URL_FLAGS_READ | HSE_URL_FLAGS_EXECUTE | HSE_URL_FLAGS_SCRIPT | HSE_URL_FLAGS_WRITE | HSE_URL_FLAGS_SCRIPT_SOURCE. 
+
+<BLOCKQUOTE class="dtBlock">
+<b class="le">Security Note&nbsp;&nbsp;&nbsp;</b>Be careful when using the HSE_URL_FLAGS_SCRIPTS_SOURCE and HSE_URL_FLAGS_WRITE at the same time. This combination allows users to upload ASP pages and ISAPI extensions to the device. </BLOCKQUOTE>
+</li>
+</UL>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50conwebdav.htm">WebDAV</A> | <A HREF="wce51conwebserverregistrysettings.htm">Web Server Registry Settings</A> | <A HREF="wce50conwebserversecurity.htm">Web Server Security</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

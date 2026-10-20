@@ -1,0 +1,102 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Critical Section Objects</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Critical Section Objects"/>
+<MSHelp:RLTitle Title="Critical Section Objects"/>
+<MSHelp:Keyword Index="A" Term="wce50conCriticalSectionObjects"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Feature"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="kernel_scheduling.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="True"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+<MSHelp:Attr Name="PBFeature" Value="CORE"/>
+<MSHelp:Attr Name="PBOnly" Value="True"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_3009406">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50concriticalsectionobjects"></A>Critical Section Objects</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>When multiple threads have shared access to the same data, the threads can interfere with one another. </P>
+
+<P>A critical section object protects a section of code from being accessed by more than one thread. However, a critical section is limited to only one process or DLL and cannot be shared with other processes.</P>
+
+<P>Critical sections work by having a thread call the <A HREF="wce50lrfentercriticalsection.htm">EnterCriticalSection</A> or <A HREF="wce50lrftryentercriticalsection.htm">TryEnterCriticalSection</A> function to indicate that the thread has entered a critical section of code. </P>
+
+<P>If another thread calls <B>EnterCriticalSection</B> and references the same critical section object, it is blocked until the first thread calls the <A HREF="wce50lrfleavecriticalsection.htm">LeaveCriticalSection</A> function. </P>
+
+<P>A critical section can protect more than one section of code as long as the same critical section object protects each section of code.</P>
+
+<P>To use a critical section, you must first declare a <B>CRITICAL_SECTION</B> structure. Because other critical section functions require a pointer to this structure, be sure to allocate it within the scope of all functions that are using the critical section. Then, create a handle to the critical section object by calling the<B> </B><A HREF="wce50lrfinitializecriticalsection.htm">InitializeCriticalSection</A> function. </P>
+
+<P>To request ownership of a critical section, call <B>EnterCriticalSection</B> or <B>TryEnterCriticalSection</B>; to release ownership, call <B>LeaveCriticalSection</B>. When you finish with a critical section, call the <A HREF="wce50lrfdeletecriticalsection.htm">DeleteCriticalSection</A> function to release the system resources that were allocated when you initialized the critical section.</P>
+
+<P>The following code example shows the prototype for the critical section functions. Notice that they all require a pointer to the <B>CRITICAL_SECTION</B> structure.</P>
+
+<PRE class="code">void InitializeCriticalSection (LPCRITICAL_SECTION lpCriticalSection);
+void EnterCriticalSection (LPCRITICAL_SECTION lpCriticalSection);
+void LeaveCriticalSection (LPCRITICAL_SECTION lpCriticalSection);
+void DeleteCriticalSection (LPCRITICAL_SECTION lpCriticalSection);</PRE>
+
+<P>The following C++ code example shows how a thread initializes, enters, and leaves a critical section. This example uses the <B>try</B>-<B>finally</B> structured exception-handling syntax to ensure that the thread calls <B>LeaveCriticalSection</B> to release the critical section object. </P>
+
+<PRE class="code">void func1()
+{
+   // The critical section, sampleCriticalSection, should already have been
+   // initialized from any thread of the current process using InitializeCriticalSection
+
+   // Obtain ownership of the critical section
+   EnterCriticalSection (&amp;sampleCriticalSection);   // blocks until the
+                   // thread can take ownership of the critical section
+   __try {
+   // Your code to access the shared resource goes here
+   }  __except (EXCEPTION_EXECUTE_HANDLER) {
+   // Your code to handle exception goes here
+   }
+
+   // Release ownership of the critical section
+   LeaveCriticalSection (&amp;sampleCriticalSection);
+}</PRE>
+
+<BLOCKQUOTE class="dtBlock">
+<b class="le">Note</b>&nbsp;&nbsp;&nbsp;In the preceding code example, you must implement the class and include your implementation when you build your code.</BLOCKQUOTE>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50consynchronization280.htm">Synchronization</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

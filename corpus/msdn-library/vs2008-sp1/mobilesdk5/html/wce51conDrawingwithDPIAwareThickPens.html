@@ -1,0 +1,100 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Drawing with DPI Aware Thick Pens</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Drawing with DPI Aware Thick Pens"/>
+<MSHelp:RLTitle Title="Drawing with DPI Aware Thick Pens"/>
+<MSHelp:Keyword Index="A" Term="wce51conDrawingwithDPIAwareThickPens"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Application"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbsmartphone"/>
+<MSHelp:Attr Name="Product" Value="kbPocketPC"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="Technology" Value="kbPocketPC"/>
+<MSHelp:Attr Name="Technology" Value="kbSmartphone"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="display_concepts_magneto.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="True"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_4000760">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Windows Mobile Version 5.0 SDK<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce51condrawingwithdpiawarethickpens"></A>Drawing with DPI Aware Thick Pens</H1>
+<!--Feedback Link Top Start-->
+<P CLASS="feedback"><font size="1"><a href="mailto:medfdbk&#64;microsoft.com?subject=Product: Windows Mobile | Version: 5.0 | Release: SDK | Title: Drawing with DPI Aware Thick Pens | Filename: wce51condrawingwithdpiawarethickpens.htm | Built on: Wednesday, September 14, 2005">Send Feedback</a> on this topic to the authors</font></p>
+<!--Feedback Link Top End-->
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>At higher DPIs, the thickness of lines has to be increased in order to maintain their visual size. To be DPI aware, your application should scale the width of any pens with which it draws.</P>
+
+<P>The behavior of the Windows CE Graphics Device Interface (GDI) with respect to drawing thick (greater than 1 pixel) lines makes precise and correct positioning tricky. For calls to the Windows CE-based functions <MSHelp:link keywords="wce50lrfLineTo" TABINDEX="0">LineTo</MSHelp:link> and <MSHelp:link keywords="wce50lrfPolyline" TABINDEX="0">Polyline</MSHelp:link>, GDI takes the specified origin point as the center of the pen's width. For lines with odd-numbered pixel thickness, the width of the line is equally distributed to each side of the origin point; but for lines with even-numbered pixel thickness, GDI biases the top and left sides.</P>
+
+<P>If your application has been positioning lines without making assumptions about the thickness of pens, it will probably handle thicker pens due to high-DPI without any changes. But if it has been assuming a constant pen width, such as one pixel, then you should be aware of the effect that GDI's behavior can have on layouts.</P>
+
+<P>This illustration shows how GDI's behavior can cause unexpected shifts in your layout. The following code is executed on a 96-DPI and a 192-DPI device, with a scaled pen selected into hDC, and the results are shown side-by-side.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=50%>1-pixel thick pen at 96-DPIfrom (1,1) to (6,6)</TH>
+<TH width=50%>2-pixel thick pen at 192-DPIfrom (2,2) to (12,12)</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD class="fig" width=50%><IMG SRC="dpi_awareness_1px.gif" ALT="" BORDER=0></TD>
+<TD class="fig" width=50%><IMG SRC="dpi_awareness_2px.gif" ALT="" BORDER=0></TD>
+</TR>
+</table></div>
+
+<PRE class="code">rgptEndpoints[0].x = SCALEX(1);
+rgptEndpoints[0].y = SCALEY(1);
+rgptEndpoints[1].x = SCALEX(6);
+rgptEndpoints[0].y = SCALEY(6);
+Polyline(hDC, rgptEndpoints, 2);</PRE>
+
+<P>Although the use of the SCALEX and SCALEY macros correctly placed the origin, and the scaled pen ensured a line of the right thickness, the line draws higher in 192-DPI than in 96-DPI. This is because GDI centers the ink around the origin and biases to the top.</P>
+
+<P>Included in the code example are some helpers that let you precisely control how to draw thick lines relative to origin coordinates. The HIDPI_Rectangle and HIDPI_Polyline functions in the CrosswordSample code wrap GDI calls that are likely to be problematic. Returning to the previous example, here is how you can draw a DPI-aware horizontal line in which the 192-DPI layout will match the 96-DPI layout.</P>
+
+<PRE class="code">rgptEndpoints[0].x = SCALEX(1);
+rgptEndpoints[0].y = SCALEY(1);
+rgptEndpoints[1].x = SCALEX(6);
+rgptEndpoints[0].y = SCALEY(6);
+HIDPI_Polyline(hDC, rgptEndpoints, 2, PS_DOWNRIGHT);</PRE>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce51condevelopingdpiawareapplications.htm">Developing DPI Aware Applications</A> | <A HREF="wce51conhighdpidisplay.htm">High DPI Display</A> </P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Feedback Link Bottom Start-->
+<p><font size="1"><a href="mailto:medfdbk&#64;microsoft.com?subject=Product: Windows Mobile | Version: 5.0 | Release: SDK | Title: Drawing with DPI Aware Thick Pens | Filename: wce51condrawingwithdpiawarethickpens.htm | Built on: Wednesday, September 14, 2005">Send Feedback</a> on this topic to the authors</font></p>
+<!--Feedback Link Bottom End-->
+<!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="mob5conCopyrightInformationForMagneto" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link></font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

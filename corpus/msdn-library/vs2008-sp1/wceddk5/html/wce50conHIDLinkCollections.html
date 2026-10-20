@@ -1,0 +1,132 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>HID Link Collections</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="HID Link Collections"/>
+<MSHelp:RLTitle Title="HID Link Collections"/>
+<MSHelp:Keyword Index="A" Term="wce50conHIDLinkCollections"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Driver"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="False"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="hid_guide.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="True"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+<MSHelp:Attr Name="PBFeature" Value="HIDDriver"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_3018096">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50conhidlinkcollections"></A>HID Link Collections</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>A link collection is a nested collection within a top-level collection. A top-level collection can have zero or more link collections.</P>
+
+<P>The <A HREF="wce50lrfhidpgetlinkcollectionnodes.htm">HidP_GetLinkCollectionNodes</A> function returns a top-level collection's link collection array, which contains information about a top-level collection's link collections.</P>
+
+<H2 class="dtH2">Link Collection Arrays</H2>
+
+<P>A link collection array describes all the link collections contained within a top-level collection. One <A HREF="wce50lrfhidplinkcollectionnode.htm">HIDP_LINK_COLLECTION_NODE</A> structure represents one link collection. The organization of the array's link nodes identifies the link collection's sequential and hierarchical order within a top-level collection. The first element of a link collection array represents a top-level collection, and the remaining members represent the top-level collection's link collections.</P>
+
+<P>By traversing through the nodes in the link connection array, a HID client driver can determine the organization and usage of all the link collections in a top-level collection. In addition, the driver can organize controls by their associated link collections. This is possible because a top-level collection's button capability arrays and value capability arrays identify the link collection that contains each HID usage described by the capability arrays.</P>
+
+<H2 class="dtH2">Link Collection Nodes</H2>
+
+<P>Link collections link together in a top-to-bottom and left-to-right order. </P>
+
+<P>The following table shows the relationships of different nodes in a link collection array.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=27%>Array element</TH>
+<TH width=73%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>Parent</TD>
+<TD width=73%>A collection's parent is the collection immediately above the collection in the top-to-bottom hierarchy. Link collections have one parent. The <B>Parent</B> member of a link node specifies the index of its parent in the link collection array.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>Children</TD>
+<TD width=73%>A link collection is a child of its parent. A parent can have zero or more children. The <B>NumberOfChildren</B> member of a link node structure specifies the number of children of that structure's parent.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>First child</TD>
+<TD width=73%>The first child is the left-most sibling in a set of siblings. The <B>FirstChild</B> member of a link collection node specifies the index to its first child in the link collection array. If a link collection node has no children, <B>FirstChild</B> is zero.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>Sibling</TD>
+<TD width=73%>All children of a parent are siblings.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>Next sibling</TD>
+<TD width=73%>Siblings are ordered from left to right. If there is more than one sibling, the sibling to the immediate right is the first sibling. The <B>NextSibling</B> member of a link collection node specifies the index to its next sibling in the link collection array. If a link collection node does not have a next sibling, <B>NextSibling</B> is zero.</TD>
+</TR>
+</table></div>
+
+<P>A HID client driver can determine a parent collection's children by starting with the parent's first child, and then traversing through the siblings of the first child until the <B>NextSibling</B> member of a sibling node is zero.</P>
+
+<P>The following code example shows how to use a link collection node index to find the first child of link collection seven.</P>
+
+<PRE class="code">HIDP_LINK_COLLECTION_NODE Collection[10];
+HIDP_LINK_COLLECTION_NODE Node1;
+Node1 = Collection[Collection[7].FirstChild];</PRE>
+
+<H2 class="dtH2">Aliased Collections</H2>
+
+<P>A device can use delimiter items in its report descriptor to delimit a set of aliased collections. An aliased link collection node represents each aliased collection.</P>
+
+<P>The following list shows how a complete and unique set of more than two aliased nodes link together:
+
+<UL type="disc">
+	<LI>Aliased nodes are in consecutive order in the link collection array.</li>
+
+	<LI>Except for the last aliased node, every node's <B>IsAlias</B> member is TRUE.</li>
+
+	<LI>The last node's <B>IsAlias</B> member is FALSE.</li>
+
+	<LI>The last node terminates the sequence of aliased nodes.</li>
+
+	<LI>The usage associated with the last node is the preferred usage.</li>
+</UL>
+
+<P>A client driver can determine which collections are aliased by repeatedly incrementing the array index of a link collection array to find such sequences.</P>
+
+<P>Each usage that button capability arrays and value capability arrays describe identifies the link collection that contains the usage. If a link collection is aliased, the capability arrays specify the preferred usage.</P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

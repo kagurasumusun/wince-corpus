@@ -1,0 +1,152 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>NDIS_PACKET</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="NDIS_PACKET"/>
+<MSHelp:RLTitle Title="NDIS_PACKET"/>
+<MSHelp:Keyword Index="K" Term="NDIS_PACKET"/>
+<MSHelp:Keyword Index="A" Term="wce50lrfNDISPACKET"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Driver"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="False"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="apiref"/>
+<MSHelp:Attr Name="Filename" Value="ndis_structures.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="False"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+<MSHelp:Attr Name="APIName" Value="NDIS_PACKET"/>
+<MSHelp:Attr Name="PBFeature" Value="NetworkDriver"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_3018885">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50lrfndispacket"></A>NDIS_PACKET</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>This structure contains chained buffer descriptors for which pointers are passed to many <B>Ndis<I>XXX</I></B>, <B>Miniport<I>XXX</I></B>, and <B>Protocol<I>XXX</I></B> functions.</P>
+
+<PRE class="syntax"><B>typedef struct _NDIS_PACKET {</B>
+  <B>NDIS_PACKET_PRIVATE </B><I>Private</I><B>;</B>
+  <B>union {</B>
+<B>    struct {</B>
+<B>      UCHAR </B><I>MiniportReserved</I>[2*sizeof(PVOID)]<B>;</B>
+<B>      UCHAR </B><I>WrapperReserved</I>[2*sizeof(PVOID)]<B>;</B>
+<B>    };</B>
+<B>    struct {</B>
+<B>      UCHAR </B><I>MiniportReservedEx</I>[3*sizeof(PVOID)]<B>;</B>
+<B>      UCHAR </B><I>WrapperReservedEx</I>[sizeof(PVOID)]<B>;</B>
+<B>    };</B>
+<B>    struct {</B>
+<B>      UCHAR </B><I>MacReserved</I>[4*sizeof(PVOID)]<B>;</B>
+<B>    };</B>
+  <B>};</B>
+  <B>ULONG_PTR </B><I>Reserved</I>[2]<B>;</B>
+  <B>UCHAR </B><I>ProtocolReserved</I>[1]<B>;</B>
+<B>} NDIS_PACKET, *PNDIS_PACKET, **PPNDIS_PACKET;</B></PRE>
+
+<H4 class="dtH4">Members</H4>
+
+<DL>
+<DT><B>Private</B></DT>
+
+<DD>Reserved for use exclusively by NDIS. Drivers must call the appropriate <B>Ndis<I>XXX</I></B> functions or NDIS-supplied macros to affect the contents of this area.</dd>
+
+<DT><B>MiniportReserved</B></DT>
+
+<DD>Serialized miniport drivers and NDIS intermediate drivers can use this area for their own purposes.</dd>
+
+<DT><B>WrapperReserved</B></DT>
+
+<DD>Reserved for use exclusively by NDIS.</dd>
+
+<DT><B>MiniportReservedEx</B></DT>
+
+<DD>Deserialized and connection-oriented miniport drivers can use this area for their own purposes.</dd>
+
+<DT><B>WrapperReservedEx</B></DT>
+
+<DD>Reserved for use exclusively by NDIS.</dd>
+
+<DT><B>MacReserved</B></DT>
+
+<DD>Reserved for use by legacy drivers.</dd>
+
+<DT><B>Reserved</B></DT>
+
+<DD>Reserved for use with Microsoft&reg; Windows&reg; 95 and Microsoft&reg; Windows&reg; 98.</dd>
+
+<DT><B>ProtocolReserved</B></DT>
+
+<DD>Highest-level protocol drivers and NDIS intermediate drivers can use this variable-sized area for their own purposes, as long as each such driver is given a fresh packet descriptor.</dd>
+</DL>
+
+<H4 class="dtH4">Remarks</H4>
+
+<P>NDIS drivers must call <A HREF="wce50lrfndisallocatepacket.htm">NdisAllocatePacket</A> to allocate all packet descriptors they use to indicate receives to higher-level drivers with <A HREF="wce50lrfndismindicatereceivepacket.htm">NdisMIndicateReceivePacket</A>. NDIS drivers must call <B>NdisAllocatePacket </B>to allocate all packet descriptors they use for sends to underlying drivers with <A HREF="wce50lrfndissendpackets.htm">NdisSendPackets</A> or <A HREF="wce50lrfndissend.htm">NdisSend</A>, as well as packet descriptors they pass to <A HREF="wce50lrfndistransferdata.htm">NdisTransferData</A>.</P>
+
+<P>Chained to each packet descriptor are one or more buffer descriptors mapping buffers that contain network packet data, either received or to be transmitted. NIC drivers and intermediate drivers allocate packet descriptors with at least 16 bytes of <B>ProtocolReserved</B><I> </I>space to be used by protocols for receive indications.</P>
+
+<P>Any buffers allocated by lower-level NDIS drivers must be mapped by buffer descriptors that were allocated from the buffer pool with <A HREF="wce50lrfndisallocatebuffer.htm">NdisAllocateBuffer</A>. Only highest-level Microsoft&reg; Windows&reg; 2000 protocols can use memory descriptor lists (MDLs) set up by still higher-level drivers as substitutes for <A HREF="wce50lrfndisbuffer.htm">NDIS_BUFFER</A> descriptors.</P>
+
+<P>NDIS drivers typically use their respective <B><I>XXX</I>Reserved</B> areas to maintain per-packet state about outstanding transfers. For example, a protocol might store a pointer to a protocol-allocated buffer containing lookahead data, which its <A HREF="wce50lrfprotocolreceive.htm">ProtocolReceive</A> function has already copied, in the <B>ProtocolReserved</B> area of a packet descriptor that the protocol allocates for a call to <B>NdisTransferData</B>.</P>
+
+<P>A single driver can use the <B>MiniportReserved(Ex)</B> area and a single driver can use the <B>ProtocolReserved</B> area while a particular packet descriptor is being used in a transfer operation. Consequently, NDIS intermediate drivers, which have both <B>Miniport<I>XXX</I></B> and <B>Protocol<I>XXX</I></B> functions, cannot use these areas in incoming packet descriptors for their own purposes.</P>
+
+<P>Instead, NDIS intermediate drivers must repackage each incoming packet in a fresh packet descriptor before it passes the transfer request down to an underlying driver or up to a higher-level driver.</P>
+
+<P>This strategy ensures that the NDIS intermediate driver and the underlying driver each have a <B>MiniportReserved(Ex)</B> area to use, that the intermediate driver and overlying protocol each have a <B>ProtocolReserved</B> area to use, and that the intermediate driver has a convenient and economical way to maintain per-packet state information about all current transfers. This also ensures that NDIS has correct information in the Private portion of each packet descriptor.</P>
+
+<P>Drivers that supply and consume out-of-band data on network transfers and drivers that support multipacket receives and/or sends must use the member-specific <B>NDIS_GET/SET_<I>XXX</I></B> macros or the <A HREF="wce50lrfndisoobdatafrompacket.htm">NDIS_OOB_DATA_FROM_PACKET</A> macro to access the <A HREF="wce50lrfndispacketoobdata.htm">NDIS_PACKET_OOB_DATA</A> block associated with each packet descriptor.</P>
+
+<P>When a protocol driver calls <B>NdisSendPackets</B> or <B>NdisSend</B> with a packet descriptor, it relinquishes ownership of the following until that packet descriptor is returned to its <A HREF="wce50lrfprotocolsendcomplete.htm">ProtocolSendComplete</A> function:
+
+<UL type="disc">
+	<LI>The protocol-allocated packet descriptors</li>
+
+	<LI>All data buffers mapped by buffer descriptors chained to the packet descriptors</li>
+
+	<LI>All <B>NDIS_PACKET_OOB_DATA</B> blocks associated with each protocol-allocated packet descriptor</li>
+
+	<LI>Any out-of-band data buffer specified in an <B>NDIS_PACKET_OOB_DATA</B> block for an associated buffer descriptor</li>
+</UL>
+
+<H4 class="dtH4">Requirements</H4>
+
+<P><B>OS Versions:</B> Windows CE .NET 4.0 and later.<BR>
+<B>Header:</B> Ndis.h.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50lrfndisallocatepacket.htm">NdisAllocatePacket</A> | <A HREF="wce50lrfndismindicatereceivepacket.htm">NdisMIndicateReceivePacket</A> | <A HREF="wce50lrfndissendpackets.htm">NdisSendPackets</A> | <A HREF="wce50lrfndissend.htm">NdisSend</A> | <A HREF="wce50lrfndistransferdata.htm">NdisTransferData</A> | <A HREF="wce50lrfndisallocatebuffer.htm">NdisAllocateBuffer</A> | <A HREF="wce50lrfndisbuffer.htm">NDIS_BUFFER</A> | <A HREF="wce50lrfprotocolreceive.htm">ProtocolReceive</A> | <A HREF="wce50lrfndisoobdatafrompacket.htm">NDIS_OOB_DATA_FROM_PACKET</A> | <A HREF="wce50lrfndispacketoobdata.htm">NDIS_PACKET_OOB_DATA</A> | <A HREF="wce50lrfprotocolsendcomplete.htm">ProtocolSendComplete</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

@@ -1,0 +1,147 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Using Align with Data Packing</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Using Align with Data Packing"/>
+<MSHelp:RLTitle Title="Using Align with Data Packing"/>
+<MSHelp:Keyword Index="A" Term="wce50conUsingAlignWithDataPacking"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Guide"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="True"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="comp_modifiers.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="True"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_1042662">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50conusingalignwithdatapacking"></A>Using Align with Data Packing</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>Problems can arise when a structure requires more bytes than the programmer intended, especially when space requirements are very important.</P>
+
+<P>Data packing can provide a solution to this problem, but must be used with care to prevent alignment issues.</P>
+
+<P>For information about aligning data for optimal processing, see <A HREF="wce50conworkingwithdataalignmentissues.htm">Working with Data Alignment Issues</A>.</P>
+
+<P>You can use the <B>align </B>attribute with data packing to offset these issues. The <A HREF="wce50conzppackstructuremembers.htm">/Zp - Pack Structure Members</A><B> </B>compiler option and the <B>pack </B>pragma have the effect of packing data for structure and union members. </P>
+
+<P>This example shows how <B>/Zp - Pack Structure Members</B> and <A HREF="wce50con__declspec.htm">__declspec</A><B>(align( # ))</B> work together:</P>
+
+<PRE class="code">struct S
+{
+  char a;
+  short b;
+  double c;
+  CACHE_ALIGN double d;
+  char e;
+  double f;
+};</PRE>
+
+<P>The following table lists the offset of each member under a variety of <B>/Zp</B> (or <B>#pragma pack</B>) values, showing how the two interact.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=20%>variable</TH>
+<TH width=20%>/Zp1</TH>
+<TH width=20%>/Zp2</TH>
+<TH width=20%>/Zp4</TH>
+<TH width=20%>/Zp8</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=20%>a</TD>
+<TD width=20%>0</TD>
+<TD width=20%>0</TD>
+<TD width=20%>0</TD>
+<TD width=20%>0</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=20%>b</TD>
+<TD width=20%>1</TD>
+<TD width=20%>2</TD>
+<TD width=20%>2</TD>
+<TD width=20%>2</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=20%>c</TD>
+<TD width=20%>3</TD>
+<TD width=20%>4</TD>
+<TD width=20%>4</TD>
+<TD width=20%>8</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=20%>d</TD>
+<TD width=20%>32</TD>
+<TD width=20%>32</TD>
+<TD width=20%>32</TD>
+<TD width=20%>32</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=20%>e</TD>
+<TD width=20%>40</TD>
+<TD width=20%>40</TD>
+<TD width=20%>40</TD>
+<TD width=20%>40</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=20%>f</TD>
+<TD width=20%>41</TD>
+<TD width=20%>42</TD>
+<TD width=20%>44</TD>
+<TD width=20%>48</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=20%>sizeof(S)</TD>
+<TD width=20%>64</TD>
+<TD width=20%>64</TD>
+<TD width=20%>64</TD>
+<TD width=20%>64</TD>
+</TR>
+</table></div>
+
+<P>Thus, the offset of an object is based on the offset of the previous object and the current packing setting, unless the object has a <B>__declspec(align( # ))</B> attribute, in which case the alignment is based on the offset of the previous object and the <B>__declspec(align( # ))</B> value for the object.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50con__declspec.htm">__declspec</A> | <A HREF="wce50conalign.htm">align</A> | <A HREF="wce50conzppackstructuremembers.htm">/Zp - Pack Structure Members</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

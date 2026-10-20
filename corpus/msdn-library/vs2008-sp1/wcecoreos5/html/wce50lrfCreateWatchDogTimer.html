@@ -1,0 +1,167 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>CreateWatchDogTimer</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="CreateWatchDogTimer"/>
+<MSHelp:RLTitle Title="CreateWatchDogTimer"/>
+<MSHelp:Keyword Index="K" Term="CreateWatchDogTimer"/>
+<MSHelp:Keyword Index="A" Term="wce50lrfCreateWatchDogTimer"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Feature"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="apiref"/>
+<MSHelp:Attr Name="Filename" Value="kernel_reference.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="False"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+<MSHelp:Attr Name="APIName" Value="CreateWatchDogTimer"/>
+<MSHelp:Attr Name="APIType" Value="LibDef"/>
+<MSHelp:Attr Name="APILocation" Value="Coredll.lib"/>
+<MSHelp:Attr Name="PBFeature" Value="CORE"/>
+<MSHelp:Attr Name="PBOnly" Value="True"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_1043784">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50lrfcreatewatchdogtimer"></A>CreateWatchDogTimer</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>This function creates a watchdog timer.</P>
+
+<PRE class="syntax"><B>HANDLE</B> <B>CreateWatchDogTimer(</B>
+  <B>LPCWSTR </B><I>pszWatchDogName</I><B>,</B> 
+  <B>DWORD </B><I>dwPeriod</I><B>,</B> 
+  <B>DWORD </B><I>dwWait</I><B>,</B> 
+  <B>DWORD </B><I>dwDfltAction</I><B>,</B> 
+  <B>DWORD </B><I>dwParam</I><B>,</B> 
+  <B>DWORD </B><I>dwFlags</I> 
+<B>);</B></PRE>
+
+<H4 class="dtH4">Parameters</H4>
+
+<DL>
+<DT><I>pszWatchDogName</I></DT>
+
+<DD>[in] Name of the watchdog timer to be created.</dd>
+
+<DT><I>dwPeriod</I></DT>
+
+<DD>[in] Watchdog period, in milliseconds.</dd>
+
+<DT><I>dwWait</I></DT>
+
+<DD>[in] Time to wait, in milliseconds, when the watchdog timer is not refreshed within the watchdog period before the default action is taken.
+
+<P>This is useful when handling false alarms or saving important information before system reset.
+</dd>
+
+<DT><I>dwDfltAction</I></DT>
+
+<DD>[in] Default action to be taken when the watchdog timer is not refreshed within <I>dwPeriod</I>.
+
+<P>The following values can be used to specify the default action to take.
+
+
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=35%>Value</TH>
+<TH width=65%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=35%>WDOG_NO_DFLT_ACTION</TD>
+<TD width=65%>Take no default action</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=35%>WDOG_KILL_PROCESS</TD>
+<TD width=65%>Terminate the process to be watched</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=35%>WDOG_RESET_DEVICE</TD>
+<TD width=65%>Reset the device by calling <MSHelp:link keywords="wce50lrfIOCTLHALREBOOT" TABINDEX="0">IOCTL_HAL_REBOOT</MSHelp:link></TD>
+</TR>
+</table></div>
+
+</dd>
+
+<DT><I>dwParam</I></DT>
+
+<DD>[in] Parameter to be passed to IOCTL_HAL_REBOOT.
+
+<P>The OAL can use this information to determine if an immediate system reboot is needed or to perform a delayed system reboot.
+</dd>
+
+<DT><I>dwFlags</I></DT>
+
+<DD>[in] Reserved; must be set this value to 0.</dd>
+</DL>
+
+<H4 class="dtH4">Return Values</H4>
+
+<P>A handle to the watchdog timer indicates success. </P>
+
+<P>NULL indicates failure.</P>
+
+<P>The returned handle can be used in <A HREF="wce50lrfwaitforsingleobject.htm">WaitForSingleObject</A> or <A HREF="wce50lrfwaitformultipleobjects.htm">WaitForMultipleObjects</A>, and is signaled when the watchdog is not refreshed within the specified watchdog period, <I>dwPeriod</I>. Use the <MSHelp:link keywords="wce50lrfCloseHandle" TABINDEX="0">CloseHandle</MSHelp:link> function to release the memory used by the watchdog timer.</P>
+
+<P>If a watchdog timer of the given name exists, the handle to the existing watchdog timer is returned and <A HREF="wce50lrfgetlasterror.htm">GetLastError</A> returns ERORR_ALREADY_EXISTS.</P>
+
+<H4 class="dtH4">Remarks</H4>
+
+<P>Watchdog is used to make sure critical processes are running as expected. Typically, every critical process creates a watchdog timer and refreshes it by calling the <A HREF="wce50lrfrefreshwatchdogtimer.htm">RefreshWatchDogTimer</A> function from time to time to determine that the watchdog is working correctly. </P>
+
+<P>You can create a monitor process to wait on the watchdog handles to perform actions when the critical processes fail to signal the watchdog timers.</P>
+
+<P>If the critical process fails to refresh its watchdog timer within the watchdog period (specified by <I>dwPeriod</I>), the watchdog is signaled. </P>
+
+<P>The monitor process, if it exists, has up to <I>dwWait</I> milliseconds to determine if it is a false alarm or save critical information before the default action is taken. </P>
+
+<P>In case of a false alarm, the monitor process should refresh the watchdog to prevent the default action from being taken.</P>
+
+<P>When the default action is taken, the watchdog is considered stopped. That is, the same watchdog timer is not signaled again until it is started again.</P>
+
+<P><B>CreateWatchDogTimer</B> is a trusted API because it gives you the ability to reset the device. Only trusted applications can access this function. For more information, see <MSHelp:link keywords="wce50conTrustedAPIs" TABINDEX="0">Trusted APIs</MSHelp:link>.</P>
+
+<H4 class="dtH4">Requirements</H4>
+
+<P><B>OS Versions:</B> Windows CE 5.0 and later.<BR>
+<B>Header:</B> Pkfuncs.h.<BR>
+<B>Link Library:</B> Coredll.lib.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><MSHelp:link keywords="wce50lrfIOCTLHALREBOOT" TABINDEX="0">IOCTL_HAL_REBOOT</MSHelp:link> | <A HREF="wce50lrfwaitforsingleobject.htm">WaitForSingleObject</A> | <A HREF="wce50lrfwaitformultipleobjects.htm">WaitForMultipleObjects</A> | <MSHelp:link keywords="wce50lrfCloseHandle" TABINDEX="0">CloseHandle</MSHelp:link> | <A HREF="wce50lrfopenwatchdogtimer.htm">OpenWatchDogTimer</A> | <A HREF="wce50lrfstartwatchdogtimer.htm">StartWatchDogTimer</A> | <A HREF="wce50lrfstopwatchdogtimer.htm">StopWatchDogTimer</A> | <A HREF="wce50lrfrefreshwatchdogtimer.htm">RefreshWatchDogTimer</A> | <A HREF="wce50lrfgetlasterror.htm">GetLastError</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

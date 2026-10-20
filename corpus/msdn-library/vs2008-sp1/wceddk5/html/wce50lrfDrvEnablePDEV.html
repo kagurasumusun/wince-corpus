@@ -1,0 +1,223 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>DrvEnablePDEV</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="DrvEnablePDEV"/>
+<MSHelp:RLTitle Title="DrvEnablePDEV"/>
+<MSHelp:Keyword Index="K" Term="DrvEnablePDEV"/>
+<MSHelp:Keyword Index="A" Term="wce50lrfDrvEnablePDEV"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Driver"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="False"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="apiref"/>
+<MSHelp:Attr Name="Filename" Value="display_reference.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="False"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+<MSHelp:Attr Name="APIName" Value="DrvEnablePDEV"/>
+<MSHelp:Attr Name="APIType" Value="LibDef"/>
+<MSHelp:Attr Name="APILocation" Value="Ddi_ati_lib.lib, Ddi_flat_lib.lib, Ddi_gx_lib.lib, Ddi_mq200_lib.lib, Ddi_nop_lib.lib, Ddi_rflat_lib.lib, Ddi_rgx_lib.lib, or Ddi_tvia5_lib.lib"/>
+<MSHelp:Attr Name="PBFeature" Value="DisplayDriver"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_3017904">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50lrfdrvenablepdev"></A>DrvEnablePDEV</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>This function enables a device context for drawing and returns device metrics for the target printer or display device in a <B>GDIINFO</B> structure. Printer drivers call a display driver's <B>DrvEnablePDEV</B> function to create and initialize the device context, and then substitute the printer's device metrics before returning the device context to the graphics device interface (GDI) for bitmap rendering.</P>
+
+<PRE class="syntax"><B>DHPDEV APIENTRY DrvEnablePDEV(</B>
+  <B>DEVMODEW* </B><I>pdm</I><B>,</B>
+  <B>LPWSTR </B><I>pwszLogAddress</I><B>,</B>
+  <B>ULONG </B><I>cPat</I><B>,</B>
+  <B>HSURF* </B><I>phsurfPatterns</I><B>,</B>
+  <B>ULONG </B><I>cjCaps</I><B>,</B>
+  <B>ULONG* </B><I>pdevcaps</I><B>,</B>
+  <B>ULONG </B><I>cjDevInfo</I><B>,</B>
+  <B>DEVINFO* </B><I>pdi</I><B>,</B>
+  <B>HDEV </B><I>hdev</I><B>,</B>
+  <B>LPWSTR </B><I>pwszDeviceName</I><B>,</B>
+  <B>HANDLE </B><I>hDriver</I> 
+<B>);</B></PRE>
+
+<H4 class="dtH4">Parameters</H4>
+
+<DL>
+<DT><I>pdm</I></DT>
+
+<DD>[in] Pointer to a <B>DEVMODEW</B> structure that contains driver data. <B>DrvEnablePDEV</B> should return the default mode of the hardware when GDI calls it with the <B>dmBitsPerPel</B>, <B>dmPelsWidth</B>, <B>dmPelsHeight</B>, and <B>dmDisplayFrequency</B> members of <B>DEVMODEW</B> set to 0.</dd>
+
+<DT><I>pwszLogAddress</I></DT>
+
+<DD>[in] Display drivers should ignore this parameter. For printer drivers, a pointer to the logical address string that is the user's name for the location to which the driver is writing. Examples include "LPT1" or "My Printer." </dd>
+
+<DT><I>cPat</I></DT>
+
+<DD>[in] Display drivers should ignore this parameter. For printer drivers, the number of surface handles in the buffer pointed to by <I>phsurfPatterns</I>. The driver cannot access memory beyond the end of the buffer. </dd>
+
+<DT><I>phsurfPatterns</I></DT>
+
+<DD>[out] Display drivers should ignore this parameter. For printer drivers, this is a pointer to a buffer that the driver fills with surface handles that represent the standard fill patterns. GDI calls <B>DrvRealizeBrush</B> with one of these surfaces to realize a brush with a standard pattern. 
+
+<P>Each of these surfaces must be a monochrome, 1 bit per pixel, GDI bitmap for raster devices. The device driver should choose patterns that will look most like standard patterns when written on the device surface. 
+
+
+<P>GDI is never required to use these brushes in support routines for a vector device. Therefore, surfaces can be device-supported surfaces that <B>DrvRealizeBrush</B> recognizes as standard patterns.
+
+
+<P>The following table shows the patterns that you must define, in order.
+
+
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=30%>Pattern </TH>
+<TH width=70%>Description </TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=30%>HS_HORIZONTAL </TD>
+<TD width=70%>Horizontal hatch.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=30%>HS_VERTICAL </TD>
+<TD width=70%>Vertical hatch.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=30%>HS_FDIAGONAL</TD>
+<TD width=70%>45-degree upward hatch from left to right.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=30%>HS_BDIAGONAL </TD>
+<TD width=70%>45-degree downward hatch from left to right.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=30%>HS_CROSS </TD>
+<TD width=70%>Horizontal and vertical cross hatch.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=30%>HS_DIAGCROSS </TD>
+<TD width=70%>45-degree crosshatch.</TD>
+</TR>
+</table></div>
+
+</dd>
+
+<DT><I>cjCaps</I></DT>
+
+<DD>[in] Size of the buffer pointed to by <I>pdevcaps</I>. The driver must not access memory beyond the end of the buffer. </dd>
+
+<DT><I>pdevcaps</I></DT>
+
+<DD>[out] Pointer to a <B>GDIINFO</B> structure that describes device capabilities. GDI zero-initializes this structure calling <B>DrvEnablePDEV</B>. </dd>
+
+<DT><I>cjDevInfo</I></DT>
+
+<DD>[in] Number of bytes in the <B>DEVINFO</B> structure pointed to by <I>pdi</I>. The driver should modify no more than this number of bytes in <B>DEVINFO</B>. </dd>
+
+<DT><I>pdi</I></DT>
+
+<DD>[out] Pointer to the <B>DEVINFO</B> structure, which describes the driver and the physical device. The driver should only alter the members it understands. GDI fills this structure with zeros before a call to <B>DrvEnablePDEV</B>. </dd>
+
+<DT><I>hdev</I></DT>
+
+<DD>[in] GDI-supplied handle to the device. This handle is the input to some GDI callbacks, such as <B>EngGetDriverName</B>. </dd>
+
+<DT><I>pwszDeviceName</I></DT>
+
+<DD>[in] Pointer to a zero-terminated string that is the user-readable name of the device.</dd>
+
+<DT><I>hDriver</I></DT>
+
+<DD>[in] Driver that supports the device. For a printer driver, use this parameter as a handle to the printer when calling the spooler. </dd>
+</DL>
+
+<H4 class="dtH4">Return Values</H4>
+
+<P>Handle to the <B>PDEV</B> that identifies the enabled device if the function succeeds. That is, <B>DrvEnablePDEV</B> returns a handle to the private, driver-defined device instance information upon success. Otherwise, it returns NULL.</P>
+
+<H4 class="dtH4">Remarks</H4>
+
+<P><B>DrvEnablePDEV</B> is required for graphics drivers.</P>
+
+<P>A graphics device driver might support several physical devices attached to different logical addresses. Drivers must also support simultaneous use of different drawing surfaces.</P>
+
+<P>The purposes of <B>DrvEnablePDEV</B> are to inform GDI of the physical characteristics of the device and to create a private <B>PDEV</B> structure describing the current device instance based on the received <B>DEVMODE</B> structure and device name. When GDI subsequently calls other graphics device driver interface (DDI) functions, it supplies the handle returned by <B>DrvEnablePDEV</B> as input, usually within a <B>SURFOBJ</B> structure, so the driver can identify the device instance.</P>
+
+<P>A single logical device can manage several <B>PDEV</B> data structures. The following table shows how you can differentiate the <B>PDEV</B> data structures.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=33%>Differentiation method</TH>
+<TH width=67%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%>Type of hardware</TD>
+<TD width=67%>A single device driver might support "LaserWhiz," "LaserWhiz II," and "LaserWhiz Super." </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%>Logical address</TD>
+<TD width=67%>A single device driver can support printers attached to "LPT1," "COM2," "\SERVER1\PSLAZER," and so on. A display driver that can support more than one VGA display simultaneously might differentiate them according to port numbers; for example, 0x3CE or 0x2CE. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%>Surfaces</TD>
+<TD width=67%>A printer driver can process two print jobs simultaneously. The two surfaces represent two printed pages. Similarly, a display device driver might support two desktops on the same device. </TD>
+</TR>
+</table></div>
+
+<P>When receiving a call to this function, the driver must allocate the memory to support the <B>PDEV</B>. However, then you do not need to support the actual surface until GDI calls <A HREF="wce50lrfdrvenablesurface.htm">DrvEnableSurface</A>.</P>
+
+<P>If a device surface requires an allocated bitmap, you do not need to make these allocations until you actually need them. Although applications often request device information long before actually writing to the device, waiting to allocate resources, such as large bitmaps, can conserve memory.</P>
+
+<P>GDI zero-initializes the buffer pointed to by <I>phsurfPatterns</I> before calling this function.</P>
+
+<H4 class="dtH4">Requirements</H4>
+
+<P><B>OS Versions:</B> Windows CE 1.0 and later.<BR>
+<B>Header:</B> Winddi.h.<BR>
+<B>Link Library:</B> Ddi_ati_lib.lib, Ddi_flat_lib.lib, Ddi_gx_lib.lib, Ddi_mq200_lib.lib, Ddi_nop_lib.lib, Ddi_rflat_lib.lib, Ddi_rgx_lib.lib, or Ddi_tvia5_lib.lib.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50condisplaydrivers.htm">Display Drivers</A> | <A HREF="wce50oriprinterdrivers.htm">Printer Drivers</A> | <A HREF="wce50lrfdrvenablesurface.htm">DrvEnableSurface</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

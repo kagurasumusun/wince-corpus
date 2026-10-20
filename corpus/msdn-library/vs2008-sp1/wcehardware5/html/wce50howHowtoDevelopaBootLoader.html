@@ -1,0 +1,517 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>How to Develop a Boot Loader</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="How to Develop a Boot Loader"/>
+<MSHelp:RLTitle Title="How to Develop a Boot Loader"/>
+<MSHelp:Keyword Index="A" Term="wce50howHowtoDevelopaBootLoader"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Hardware"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="True"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbHowTo"/>
+<MSHelp:Attr Name="Filename" Value="howto_developing_a_bootloader.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="True"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_3010320">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50howhowtodevelopabootloader"></A>How to Develop a Boot Loader</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>A boot loader manages the boot process of the target device by initializing the target device, downloading the run-time image, and booting the run-time image on the target device. </P>
+
+<P>After you develop a boot loader, you can use the boot management capabilities of your boot loader to save time during the OS development process. </P>
+
+<P>Without a boot loader, you must transfer a run-time image to your target device through a slow, manual process. </P>
+
+<P>With a boot loader, you can quickly download a new development run-time image to your target device. </P>
+
+<P>For more information about boot loaders, see <A HREF="wce50conbootloaders.htm">Boot Loaders</A>.</P>
+
+<H4 class="dtH4">Hardware and Software Assumptions</H4>
+
+<UL type="disc">
+	<LI>The boot loader described in this topic is developed for an example hardware platform containing the following hardware specifications:
+<UL type="disc">
+	<LI>ARM V4I CPU</li>
+
+	<LI>64 MB RAM</li>
+
+	<LI>32 MB Intel Strataflash (28F128)</li>
+
+	<LI>A supported Ethernet controller, such as NE2000 or SMC9000. As a simplification for this boot loader development process, the controller is built-in and not a PCI or PCMCIA device.</li>
+</UL>
+
+<P>The following table shows the memory map for this hardware platform.
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=33%>Physical address</TH>
+<TH width=33%>Length</TH>
+<TH width=34%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%>0000.0000 - 01FF.FFFF</TD>
+<TD width=33%>32 MB</TD>
+<TD width=34%>Flash</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%>A000.0000 - A3FF.FFFF</TD>
+<TD width=33%>64 MB</TD>
+<TD width=34%>RAM</TD>
+</TR>
+</table></div>
+
+<P>The boot loader design assumes that the CPU begins fetching code at physical address 0 following a reset.
+</li>
+
+	<LI>You are developing a new boot loader, using as much from the included support libraries as possible.
+<BLOCKQUOTE class="dtBlock">
+<b class="le">Note</b>&nbsp;&nbsp;&nbsp;If you have an existing boot loader and want to migrate from a previous version of Microsoft Windows CE to the current version, see <A HREF="wce50howhowtomigrateboardsupportpackagetomacallan.htm">How to Migrate a Board Support Package to Windows CE 5.0</A>.</BLOCKQUOTE>
+</li>
+
+	<LI>Your reference OS is Windows CE 5.0.</li>
+
+	<LI>You have access and familiarity with Microsoft Platform Builder 5.0 and the build process. Platform Builder includes with all the sources and libraries needed to support boot loader development.</li>
+
+	<LI>You have available documentation, such as databooks or datasheets and the latest errata, on the hardware platform, CPU, peripheral chips, and other hardware on which your boot loader will run.</li>
+
+	<LI>This procedure used a sample boot loader with the following design simplifications:
+<UL type="disc">
+	<LI>The boot loader resides in system flash memory and runs at every hardware reboot.</li>
+
+	<LI>Use Ethernet for the download transport. This is built in with no PCMCIA or PCI interface.</li>
+
+	<LI>Download a Windows CE .bin file, for example, Nk.bin, to RAM.</li>
+
+	<LI>There is no support for booting a local run-time image, although the flash memory routines are covered. Memory management unit (MMU) or caches are not used. The ROMOFFSET configuration option in the run-time image Config.bib file should reflect the fact that all addresses are physical.</li>
+</UL>
+</li>
+</UL>
+
+<P>When designing your own boot loader, you can implement enhancements within the framework presented in this topic. For example, you may support a removable Ethernet adapter using PCMCIA or Compact Flash memory or use USB as your download transport. </P>
+
+<P>You might want to store the run-time image in NAND flash memory. For more information about memory design tradeoffs, see the article <I>System Memory Management in Windows CE .NET</I> at this <A HREF="http://go.microsoft.com/fwlink/?linkid=17190">Microsoft Web site</A>.</P>
+
+<P>For more information about the hardware platform description and design of the boot loader described in this process, see <A HREF="wce50conbootloaderdesign.htm">Boot Loader Design</A>.</P>
+
+<P>Although the boot loader and the OEM adaptation layer (OAL) typically share hardware platform initialization code, the steps in the following procedure focus on the boot loader. However, keep code sharing in mind when organizing the source files. </P>
+
+<P>The following procedure explains the boot loader development process from the beginning. However, you can save development time by modifying an existing boot loader image for a hardware platform of similar design. </P>
+
+<P>Platform Builder includes tested boot loader source code for various hardware platforms, which you can use as the basis for further development.</P>
+
+<P>To track your progress in the following table, select the check box next to each step. </P>
+
+<BLOCKQUOTE class="dtBlock">
+<b class="le">Note</b>&nbsp;&nbsp;&nbsp;In the following steps, code examples are used to demonstrate each step. In some cases, these examples are code fragments and might be brought together from different parts of the boot loader development process. Because of this, not all code examples compile.</BLOCKQUOTE>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=6%>&nbsp;</TH>
+<TH width=52%>Step</TH>
+<TH width=42%>Topic</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=6%><INPUT TYPE="Checkbox" Value="ON"></TD>
+<TD width=52%>1. Create a directory for your new boot loader code.
+<P>For example: %_WINCEROOT%\Platform\MyPlatform\Src\Bootloader\Eboot.</P>
+
+<P>The boot loader code directory is typically in a hardware platform directory. </P>
+
+<P>You must include the directory in the hardware platform dirs file to build it as part of Platform Builder.</P>
+</TD>
+<TD width=42%>Not applicable</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=6%><INPUT TYPE="Checkbox" Value="ON"></TD>
+<TD width=52%>2. Set up a command-line build shell to create and build the boot loader.
+<BLOCKQUOTE class="dtBlock">
+<b class="le">Note</b>&nbsp;&nbsp;&nbsp;All further steps rely on the assumption that the boot loader development process takes place in a build shell environment.</BLOCKQUOTE>
+</TD>
+<TD width=42%><A HREF="wce50tsksettingupacommandlinebuildshell.htm">Setting Up a Command-Line Build Shell</A></TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=6%><INPUT TYPE="Checkbox" Value="ON"></TD>
+<TD width=52%>3. Generate all static libraries required by the boot loader image.
+<UL type="disc">
+	<LI>At the command prompt, enter the following command:
+<PRE class="code">sysgen</PRE>
+</li>
+</UL>
+
+<P>For more information about Sysgen.bat, see <MSHelp:link keywords="wce50conSysgenTool" TABINDEX="0">Sysgen Tool</MSHelp:link>.</P>
+</TD>
+<TD width=42%>Not applicable</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=6%><INPUT TYPE="Checkbox" Value="ON"></TD>
+<TD width=52%>4. Create a file for your boot loader's <B>StartUp</B> function, and then establish a function framework as a starting point.</TD>
+<TD width=42%><A HREF="wce50tskcreatingafileforthebootloaderstartupfunction.htm">Creating a File for the Boot Loader StartUp Function</A></TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=6%><INPUT TYPE="Checkbox" Value="ON"></TD>
+<TD width=52%>5. Create a sources file and makefile file in the boot loader directory.</TD>
+<TD width=42%><A HREF="wce50tskcreatingthebootloadersourcesandmakefilefiles.htm">Creating the Boot Loader Sources and Makefile Files</A></TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=6%><INPUT TYPE="Checkbox" Value="ON"></TD>
+<TD width=52%>6. Build your first boot loader executable (.exe) file.</TD>
+<TD width=42%><A HREF="wce50tskbuildingthebootloadersourcecode.htm">Building the Boot Loader Source Code</A></TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=6%><INPUT TYPE="Checkbox" Value="ON"></TD>
+<TD width=52%>7. Implement the boot loader's <B>StartUp</B> function.</TD>
+<TD width=42%><A HREF="wce50tskimplementingthebootloaderstartupfunction.htm">Implementing the Boot Loader StartUp Function</A></TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=6%><INPUT TYPE="Checkbox" Value="ON"></TD>
+<TD width=52%>8. Create a boot loader <B>main</B> function. 
+<P>This is typically using C programming language.</P>
+
+<P>Starting with this step, all boot loader code should be able to operate in C instead of assembly language.</P>
+
+<BLOCKQUOTE class="dtBlock">
+<b class="le">Note</b>&nbsp;&nbsp;&nbsp;If you build during this step, you receive a number of undefined values, because BLCOMMON expects to call a number of functions that have not yet been implemented. Therefore, you should at least implement stub versions of these functions.</BLOCKQUOTE>
+</TD>
+<TD width=42%><A HREF="wce50tskcreatingthebootloadermainfunction.htm">Creating the Boot Loader Main Function</A></TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=6%><INPUT TYPE="Checkbox" Value="ON"></TD>
+<TD width=52%>9. Create stub versions for a number of OEM functions, including generic hardware platform routines and flash memory operations.</TD>
+<TD width=42%><A HREF="wce50tskcreatingstubsforthebootloaderoemfunctions.htm">Creating Stubs for the Boot Loader OEM Functions</A></TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=6%><INPUT TYPE="Checkbox" Value="ON"></TD>
+<TD width=52%>10. Add the new source files, Main.c. and Flash.c, created in the previous step to the <B>SOURCES</B> line in the sources file.
+<UL type="disc">
+	<LI>Add a <B>TARGETLIBS</B> entry that includes references to the BLCOMMON and FullLibc libraries.</li>
+</UL>
+</TD>
+<TD width=42%><A HREF="wce50tskeditingthebootloadersourcesfile.htm">Editing the Boot Loader Sources File</A></TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=6%><INPUT TYPE="Checkbox" Value="ON"></TD>
+<TD width=52%>11. Create the .bib file, which will be used by Romimage.exe to convert the boot loader .exe file into .bin and .nb0 files.</TD>
+<TD width=42%><A HREF="wce50tskcreatingthebootloaderbibfile.htm">Creating the Boot Loader .bib File</A></TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=6%><INPUT TYPE="Checkbox" Value="ON"></TD>
+<TD width=52%>12. Rebuild the boot loader.
+<BLOCKQUOTE class="dtBlock">
+<b class="le">Note</b>&nbsp;&nbsp;&nbsp;After this point, the basic boot loader source infrastructure is in place.</BLOCKQUOTE>
+
+<BLOCKQUOTE class="dtBlock">
+To complete the remaining steps of this procedure, you must do the following:</BLOCKQUOTE>
+
+<UL type="disc">
+	<LI>Fully implement the routines that were stubbed</li>
+
+	<LI>Add incremental functionality to the boot loader </li>
+
+	<LI>Rebuild the boot loader </li>
+
+	<LI>Test the functionality of the loader up to that point</li>
+</UL>
+</TD>
+<TD width=42%><A HREF="wce50tskrebuildingthebootloader.htm">Rebuilding the Boot Loader</A></TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=6%><INPUT TYPE="Checkbox" Value="ON"></TD>
+<TD width=52%>13. Implement the following serial debug functions in your boot loader code:
+<UL type="disc">
+	<LI><A HREF="wce50lrfoemdebuginit.htm">OEMDebugInit</A></li>
+
+	<LI><A HREF="wce50lrfoemwritedebugstring.htm">OEMWriteDebugString</A></li>
+
+	<LI><A HREF="wce50lrfoemwritedebugbyte.htm">OEMWriteDebugByte</A></li>
+
+	<LI><A HREF="wce50lrfoemreaddebugbyte.htm">OEMReadDebugByte</A></li>
+</UL>
+
+<P>These functions are required BLCOMMON callback functions that you must implement in your boot loader code. </P>
+
+<P>You can use other libraries to help implement the functions. </P>
+
+<P>You can copy and possibly modify much of the code from existing hardware platforms. </P>
+
+<P>You should choose a hardware platform that is as similar to your own as possible to minimize the need for changes.</P>
+</TD>
+<TD width=42%><A HREF="wce50tskimplementingtheserialdebugfunctions.htm">Implementing the Serial Debug Functions</A></TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=6%><INPUT TYPE="Checkbox" Value="ON"></TD>
+<TD width=52%>14. Rebuild the boot loader and verify that your code works by testing it on the target device.
+<P>You should now be able to verify the following:
+
+<UL type="disc">
+	<LI>The startup code initializes the CPU</li>
+
+	<LI>The debug routines initialize and write debug text to the serial universal asynchronous receiver-transmitter (UART).</li>
+</UL>
+
+<P>If you encounter problems, verify that you correctly implemented serial debug functions.</P>
+</TD>
+<TD width=42%><A HREF="wce50tskrebuildingthebootloader.htm">Rebuilding the Boot Loader</A></TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=6%><INPUT TYPE="Checkbox" Value="ON"></TD>
+<TD width=52%>15. Create the driver globals and boot args shared data areas.</TD>
+<TD width=42%><A HREF="wce50tskcreatingdriverglobalsandbootargs.htm">Creating Driver Globals and Boot Args</A></TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=6%><INPUT TYPE="Checkbox" Value="ON"></TD>
+<TD width=52%>16. Implement the remaining hardware platform initialization code by implementing the <A HREF="wce50lrfoemplatforminit.htm">OEMPlatformInit</A> function.</TD>
+<TD width=42%><A HREF="wce50tskimplementingtheoemplatforminitfunction.htm">Implementing the OEMPlatformInit Function</A></TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=6%><INPUT TYPE="Checkbox" Value="ON"></TD>
+<TD width=52%>17. Add Ethernet debug libraries that have routines referenced in <B>OEMPlatformInit</B> to the <B>TARGETLIBS</B> entry in the boot loader sources file.
+<BLOCKQUOTE class="dtBlock">
+<b class="le">Note</b>&nbsp;&nbsp;&nbsp;After this point in the development process, the CPU, board-level logic, and network controller are all initialized.</BLOCKQUOTE>
+
+<BLOCKQUOTE class="dtBlock">
+To complete the remaining steps in this procedure, you must do the following:</BLOCKQUOTE>
+
+<UL type="disc">
+	<LI>Obtain an IP address, either statically or through Dynamic Host Configuration Protocol (DHCP) from a server. </li>
+
+	<LI>Connect to Platform Builder and establish a Trivial File Transfer Protocol (TFTP) connection. </li>
+
+	<LI>Add code to act as a bridge between BLCOMMON callbacks and the Ethernet controller access primitives. </li>
+
+	<LI>Handle flash memory images, which are images built to reside in flash memory after being downloaded from the development workstation.</li>
+</UL>
+</TD>
+<TD width=42%><A HREF="wce50tskeditingthebootloadersourcesfile.htm">Editing the Boot Loader Sources File</A></TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=6%><INPUT TYPE="Checkbox" Value="ON"></TD>
+<TD width=52%>18. Implement the following Ethernet controller-related functions:
+<UL type="disc">
+	<LI><A HREF="wce50lrfoemreaddata.htm">OEMReadData</A></li>
+
+	<LI><A HREF="wce50lrfoemethgetframe.htm">OEMEthGetFrame</A></li>
+
+	<LI><A HREF="wce50lrfoemethsendframe.htm">OEMEthSendFrame</A></li>
+
+	<LI><A HREF="wce50lrfoemethgetsecs.htm">OEMEthGetSecs</A></li>
+</UL>
+</TD>
+<TD width=42%><A HREF="wce50tskimplementingtheethernetcontrollerrelatedfunctions.htm">Implementing the Ethernet Controller-Related Functions</A></TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=6%><INPUT TYPE="Checkbox" Value="ON"></TD>
+<TD width=52%>19. Implement the <A HREF="wce50lrfoempredownload.htm">OEMPreDownload</A> function.</TD>
+<TD width=42%><A HREF="wce50tskimplementingtheoempredownloadfunction.htm">Implementing the OEMPreDownload Function</A></TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=6%><INPUT TYPE="Checkbox" Value="ON"></TD>
+<TD width=52%>20. Test boot loader communications by doing the following: 
+<UL type="disc">
+	<LI>Verify that the code can obtain an IP address from the DHCP server and can retrieve the user settings from Platform Builder. </li>
+
+	<LI>Verify that your device name appears in Platform Builder.</li>
+</UL>
+</TD>
+<TD width=42%>Not applicable</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=6%><INPUT TYPE="Checkbox" Value="ON"></TD>
+<TD width=52%>21. Create a test .bin file to download from Platform Builder.</TD>
+<TD width=42%><A HREF="wce50tskcreatingatestbinfilefordownload.htm">Creating a Test .bin File for Download</A></TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=6%><INPUT TYPE="Checkbox" Value="ON"></TD>
+<TD width=52%>22. Verify that the boot loader can use Platform Builder to download a .bin file.</TD>
+<TD width=42%><A HREF="wce50tskverifyingbinfiledownload.htm">Verifying .bin File Download</A></TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=6%><INPUT TYPE="Checkbox" Value="ON"></TD>
+<TD width=52%>23. Implement the <A HREF="wce50lrfoemlaunch.htm">OEMLaunch</A> function.
+<BLOCKQUOTE class="dtBlock">
+<b class="le">Note</b>&nbsp;&nbsp;&nbsp;After you complete this step, you have essentially completed development of the boot loader. </BLOCKQUOTE>
+
+<BLOCKQUOTE class="dtBlock">
+The boot loader should now be able to </BLOCKQUOTE>
+
+<UL type="disc">
+	<LI>Initialize the hardware platform. </li>
+
+	<LI>Obtain an IP address from a DHCP server. </li>
+
+	<LI>Establish contact with Platform Builder. </li>
+
+	<LI>Download a .bin file. </li>
+
+	<LI>Obtain user preferences from Platform Builder. </li>
+
+	<LI>Execute the downloaded run-time image.</li>
+</UL>
+
+<BLOCKQUOTE class="dtBlock">
+To complete the remaining steps in this procedure, you must add support for writing the downloaded boot loader image to flash memory. </BLOCKQUOTE>
+
+<BLOCKQUOTE class="dtBlock">
+By doing so, the boot loader can update its own saved image. </BLOCKQUOTE>
+
+<BLOCKQUOTE class="dtBlock">
+You can also do the following:</BLOCKQUOTE>
+
+<UL type="disc">
+	<LI>Save user settings, such as a static IP address and subnet mask, in flash memory and then restore these settings after a reset.</li>
+
+	<LI>Add optional functionality such as memory range verification, run-time image signature checking, and NAND flash memory support.</li>
+</UL>
+
+<BLOCKQUOTE class="dtBlock">
+For more information about design tradeoffs, especially NOR versus NAND flash memory, see this <A HREF="http://go.microsoft.com/fwlink/?linkid=17190">Microsoft Web site</A>.</BLOCKQUOTE>
+</TD>
+<TD width=42%><A HREF="wce50tskimplementingtheoemlaunchfunction.htm">Implementing the OEMLaunch Function</A></TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=6%><INPUT TYPE="Checkbox" Value="ON"></TD>
+<TD width=52%>24. Implement the <A HREF="wce50lrfoemisflashaddr.htm">OEMIsFlashAddr</A> function.</TD>
+<TD width=42%><A HREF="wce50tskimplementingtheoemisflashaddrfunction.htm">Implementing the OEMIsFlashAddr Function</A></TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=6%><INPUT TYPE="Checkbox" Value="ON"></TD>
+<TD width=52%>25. Implement the <A HREF="wce50lrfoemmapmemaddr.htm">OEMMapMemAddr</A> function.</TD>
+<TD width=42%><A HREF="wce50tskimplementingtheoemmapmemaddrfunction.htm">Implementing the OEMMapMemAddr Function</A></TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=6%><INPUT TYPE="Checkbox" Value="ON"></TD>
+<TD width=52%>26. Implement the following flash memory erase functions:
+<UL type="disc">
+	<LI><A HREF="wce50lrfoemstarteraseflash.htm">OEMStartEraseFlash</A></li>
+
+	<LI><A HREF="wce50lrfoemcontinueeraseflash.htm">OEMContinueEraseFlash</A></li>
+
+	<LI><A HREF="wce50lrfoemfinisheraseflash.htm">OEMFinishEraseFlash</A></li>
+</UL>
+</TD>
+<TD width=42%><A HREF="wce50tskimplementingtheflashmemoryerasefunctions.htm">Implementing the Flash Memory Erase Functions</A></TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=6%><INPUT TYPE="Checkbox" Value="ON"></TD>
+<TD width=52%>27. Implement the <A HREF="wce50lrfoemwriteflash.htm">OEMWriteFlash</A> function.</TD>
+<TD width=42%><A HREF="wce50tskimplementingtheoemwriteflashfunction.htm">Implementing the OEMWriteFlash Function</A></TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=6%><INPUT TYPE="Checkbox" Value="ON"></TD>
+<TD width=52%>28. Modify the .bib file to produce a boot loader image that downloads to flash memory.
+<BLOCKQUOTE class="dtBlock">
+<b class="le">Note</b>&nbsp;&nbsp;&nbsp;After you complete this step, you have completed development of a basic Ethernet boot loader that can download a run-time image to RAM or to flash memory. You can now add additional functionality to enhance the basic boot loader.</BLOCKQUOTE>
+
+<BLOCKQUOTE class="dtBlock">
+The following list shows some of the additional functionality you can include in an enhanced boot loader: </BLOCKQUOTE>
+
+<UL type="disc">
+	<LI>Ability to load run-time images from local storage instead of over the network </li>
+
+	<LI>Support for run-time image signing or checking for bad images</li>
+
+	<LI>Support for multiple region .bin files or multi-XIP </li>
+
+	<LI>Ability to handle <B>NAND</B> flash memory
+<P>Because the boot loader can have many variations, the following steps show only a few enhancements you can add to a basic boot loader.
+</li>
+</UL>
+</TD>
+<TD width=42%><A HREF="wce50tskmodifyingthebibfiletoproduceadownloadableimage.htm">Modifying the .bib File to Produce a Downloadable Image</A></TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=6%><INPUT TYPE="Checkbox" Value="ON"></TD>
+<TD width=52%>29. To add support for download progress indication, implement the <A HREF="wce50lrfoemshowprogress.htm">OEMShowProgress</A> function.
+<P>You do not need to add functionality to the <B>OEMShowProgress</B> function, but you must leave the stub version in your boot loader code to prevent errors when the compiler compiles the code.</P>
+</TD>
+<TD width=42%><A HREF="wce50tskaddingsupportfordownloadprogressindication.htm">Adding Support for Download Progress Indication</A></TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=6%><INPUT TYPE="Checkbox" Value="ON"></TD>
+<TD width=52%>30. To verify the RAM or flash memory used by the run-time image before the run-time image is downloaded completely, add support for memory verification.</TD>
+<TD width=42%><A HREF="wce50tskaddingsupportformemoryverification.htm">Adding Support for Memory Verification</A></TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=6%><INPUT TYPE="Checkbox" Value="ON"></TD>
+<TD width=52%>31. If you are developing a multi-BIN run-time image and you would find multi-BIN run-time image notification useful, add support for multi-BIN run-time image notification.</TD>
+<TD width=42%><A HREF="wce50tskaddingsupportformultipleregionimagenotification.htm">Adding Support for Multiple-BIN Image Notification</A></TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=6%><INPUT TYPE="Checkbox" Value="ON"></TD>
+<TD width=52%>32. To have your boot loader validate the run-time image before downloading or running it, add support for run-time image signatures.</TD>
+<TD width=42%><A HREF="wce50tskaddingsupportforimagesignatures.htm">Adding Support for Image Signatures</A></TD>
+</TR>
+</table></div>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50howhowtodevelopanoemadaptationlayer.htm">How to Develop an OEM Adaptation Layer</A> | <A HREF="wce50howhowtocreateaboardsupportpackage.htm">How to Create a Board Support Package</A> | <A HREF="wce50howhowtobringupadevicebycreatinganewbsp.htm">How to Bring Up a Hardware Platform by Creating a New BSP</A> | <MSHelp:link keywords="wce50oriHowtoTopics" TABINDEX="0">How-to Topics</MSHelp:link></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

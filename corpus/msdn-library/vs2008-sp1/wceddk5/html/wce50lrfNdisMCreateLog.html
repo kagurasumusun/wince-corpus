@@ -1,0 +1,126 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>NdisMCreateLog</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="NdisMCreateLog"/>
+<MSHelp:RLTitle Title="NdisMCreateLog"/>
+<MSHelp:Keyword Index="K" Term="NdisMCreateLog"/>
+<MSHelp:Keyword Index="A" Term="wce50lrfNdisMCreateLog"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Driver"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="False"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="apiref"/>
+<MSHelp:Attr Name="Filename" Value="ndis_library_functions2.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="False"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+<MSHelp:Attr Name="APIName" Value="NdisMCreateLog"/>
+<MSHelp:Attr Name="APIType" Value="DLLExport"/>
+<MSHelp:Attr Name="APILocation" Value="Ndis.dll"/>
+<MSHelp:Attr Name="PBFeature" Value="NetworkDriver"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_3018542">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50lrfndismcreatelog"></A>NdisMCreateLog</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>This function allocates and opens a log file in which a NIC miniport can write data to be displayed by a driver-dedicated Microsoft&reg; Win32&reg; application.</P>
+
+<PRE class="syntax"><B>NDIS_STATUS NdisMCreateLog(</B>
+  <B>NDIS_HANDLE</B> <I>MiniportAdapterHandle</I><B>,</B>
+  <B>UINT</B> <I>Size</I><B>,</B>
+  <B>PNDIS_HANDLE</B> <I>LogHandle</I>
+<B>);</B></PRE>
+
+<H4 class="dtH4">Parameters</H4>
+
+<DL>
+<DT><I>MiniportAdapterHandle</I></DT>
+
+<DD>[in] Specifies the handle input to <A HREF="wce50lrfminiportinitialize.htm">MiniportInitialize</A>.</dd>
+
+<DT><I>Size</I></DT>
+
+<DD>[in] Specifies how many bytes to allocate for the log file. NDIS creates a temporary file that is not stored on disk.</dd>
+
+<DT><I>LogHandle</I></DT>
+
+<DD>[out] Points to a caller-supplied variable in which this function returns a handle to the log file. This handle is a required parameter to the <B>Ndis<I>XXX</I>Log</B> functions that the miniport calls subsequently.</dd>
+</DL>
+
+<H4 class="dtH4">Return Values</H4>
+
+<P>The following table shows the return values for this function.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=34%>Value</TH>
+<TH width=66%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=34%>NDIS_STATUS_SUCCESS</TD>
+<TD width=66%>The miniport can use the handle returned at <I>LogHandle</I> to write data to the NDIS-allocated log file.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=34%>NDIS_STATUS_RESOURCES</TD>
+<TD width=66%>A log file of the specified size could not be allocated.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=34%>NDIS_STATUS_FAILURE</TD>
+<TD width=66%>The driver already called <B>NdisMCreateLog</B> successfully.</TD>
+</TR>
+</table></div>
+
+<H4 class="dtH4">Remarks</H4>
+
+<P>A NIC miniport can call the <B>NdisM<I>XXX</I>Log</B> functions to provide any information the driver writer chooses. Whatever the miniport logs can be displayed by a driver-dedicated Win32 application. Such an application calls the Win32 function <B>DeviceIoControl</B> with IOCTL_NDIS_GET_LOG_DATA periodically to retrieve whatever the miniport has written to the log file. For example, an under-development miniport might write test data to be displayed by its corresponding application.</P>
+
+<P>If <B>NdisMCreateLog</B> returns NDIS_STATUS_RESOURCES, the driver can adjust the original <I>Size</I> down and try calling this function again. However, a miniport cannot call <B>NdisMCreateLog</B> to create more than one log file after a call succeeds.</P>
+
+<P>Whatever size of log file is allocated, subsequent calls to <A HREF="wce50lrfndismwritelogdata.htm">NdisMWriteLogData</A> store data in this file, which is treated as a circular buffer. That is, a sequence of calls to <B>NdisMWriteLogData</B> eventually overwrites the data originally written to the log file.</P>
+
+<H4 class="dtH4">Requirements</H4>
+
+<P><B>OS Versions:</B> Windows CE .NET 4.0 and later.<BR>
+<B>Header:</B> Ndis.h.<BR>
+<B>Link Library:</B> Ndis.dll.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50lrfminiportinitialize.htm">MiniportInitialize</A> | <A HREF="wce50lrfndismcloselog.htm">NdisMCloseLog</A> | <A HREF="wce50lrfndismflushlog.htm">NdisMFlushLog</A> | <A HREF="wce50lrfndismwritelogdata.htm">NdisMWriteLogData</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

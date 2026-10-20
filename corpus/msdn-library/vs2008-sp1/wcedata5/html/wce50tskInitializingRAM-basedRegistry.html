@@ -1,0 +1,101 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Initializing the RAM-based Registry</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Initializing the RAM-based Registry"/>
+<MSHelp:RLTitle Title="Initializing the RAM-based Registry"/>
+<MSHelp:Keyword Index="A" Term="wce50tskInitializingRAM-basedRegistry"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Feature"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="registry_overview.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="False"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="True"/>
+<MSHelp:Attr Name="PBFeature" Value="REGISTRY"/>
+<MSHelp:Attr Name="PBOnly" Value="True"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_1055682">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50tskinitializingram-basedregistry"></A>Initializing the RAM-based Registry</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>To persist data with the RAM-based registry, you must understand how an OS initializes the RAM-based registry. The following list of steps shows the OS process of initializing the RAM-based registry:
+
+<OL type="1">
+	<LI>The OS initializes the kernel.</li>
+
+	<LI>The kernel runs Filesys.exe.</li>
+
+	<LI>Filesys.exe initializes the RAM file system.</li>
+
+	<LI>Filesys.exe initializes the database subsystem.</li>
+
+	<LI>Filesys.exe initializes the registry by checking for a registry in RAM. If one is found, proceed to step 7.</li>
+
+	<LI>If Filesys.exe does not find a registry in step 5, it restores the registry from ROM. Filesys.exe loads \Windows\Default.fdf, which was created using Makeimg.exe.</li>
+
+	<LI>Filesys.exe checks for the <MSHelp:link keywords="wce50lrfReadRegistryFromOEM" TABINDEX="0">ReadRegistryFromOEM</MSHelp:link> OEM adaptation layer (OAL) function. If Filesys.exe does not find <B>ReadRegistryFromOEM</B> it keeps the registry from ROM, as described in step 6.</li>
+
+	<LI>Filesys.exe attempts to restore \Windows\Restore.fdf, which is created with the <A HREF="wce50lrfregcopyfile.htm">RegCopyFile</A> function. If Filesys.exe cannot restore \Windows\Restore.fdf, it keeps the registry from ROM, as described in step 6.</li>
+
+	<LI>Filesys.exe checks one more time for <B>ReadRegistryFromOEM</B>. If Filesys.exe does not find <B>ReadRegistryFromOEM</B>, it keeps the registry from ROM as described in step 6.</li>
+</OL>
+
+<BLOCKQUOTE class="dtBlock">
+<b class="le">Note</b>&nbsp;&nbsp;&nbsp;Files that exist on a PC Card or a device that is serviced by a device driver cannot be accessed during initialization, because Device.exe has not been loaded. Also, memory cannot be allocated to pass to the OS because functionality for saving and loading the registry is implemented in the OAL.</BLOCKQUOTE>
+
+<P>The following procedure shows additional steps you must take in order to initialize the RAM-based registry of your OS.</P>
+
+<P class="labelproc"><B>To initialize a RAM-based registry</B>
+
+<OL type="1">
+	<LI>Expose the <B>ReadRegistryFromOEM</B> and <MSHelp:link keywords="wce50lrfWriteRegistryToOEM" TABINDEX="0">WriteRegistryToOEM</MSHelp:link> functions in your OAL after Filesys.exe initializes the RAM file system. 
+<P>For more information about developing an OAL, see <MSHelp:link keywords="wce50howHowtoDevelopanOEMAdaptationLayer" TABINDEX="0">How to Develop an OEM Adaptation Layer</MSHelp:link>.
+</li>
+
+	<LI>If an OAL is not available, use the <B>RegCopyFile</B> and <A HREF="wce50lrfregrestorefile.htm">RegRestoreFile</A> functions to initialize a registry from RAM. </li>
+
+	<LI>After <B>RegRestoreFile</B> succeeds, reset your device for the new registry settings to take effect. </li>
+</OL>
+
+<P>To keep the user unaware that a reset is occurring, you can create a boot sequence by configuring the <B>HKEY_LOCAL_MACHINE\Init</B> registry key. In this registry key, you can restore the registry and reboot without running Gwes.exe. You can then perform a full boot. By preventing Gwes.exe from running, the display does not become active, and therefore the user is unaware that any reset has occurred.</P>
+
+<P>Using <B>RegCopyFile</B> and <B>RegRestoreFile</B> to initialize a registry from RAM requires enough of the OS to be running to restore the registry. The portions of the OS that must be running depend on where your registry file resides. For example, if your registry file resides on a PC Card, Device.exe must be running before the registry can be restored. Otherwise, the OS cannot access the registry file on the PC Card.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><MSHelp:link keywords="wce50lrfReadRegistryFromOEM" TABINDEX="0">ReadRegistryFromOEM</MSHelp:link> | <A HREF="wce50lrfregcopyfile.htm">RegCopyFile</A> | <MSHelp:link keywords="wce50lrfWriteRegistryToOEM" TABINDEX="0">WriteRegistryToOEM</MSHelp:link> | <MSHelp:link keywords="wce50howHowtoDevelopanOEMAdaptationLayer" TABINDEX="0">How to Develop an OEM Adaptation Layer</MSHelp:link> | <A HREF="wce50lrfregrestorefile.htm">RegRestoreFile</A> | <A HREF="wce50conpersistingdatawiththerambasedregistry.htm">Persisting Data with the RAM-Based Registry</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

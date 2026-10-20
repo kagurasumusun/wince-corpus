@@ -1,0 +1,92 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>PREfast Warning 209</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="PREfast Warning 209"/>
+<MSHelp:RLTitle Title="PREfast Warning 209"/>
+<MSHelp:Keyword Index="A" Term="wce50grfPREfastWarning209"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Guide"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="True"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="prefast_warnings.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="True"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_1053515">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50grfprefastwarning209"></A>PREfast Warning 209</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<PRE class="syntax">209 - Using sizeof(<I>&lt;variable&gt;</I>) as parameter &lt;number&gt; in call to <I>&lt;function&gt;</I> where <I>&lt;variable&gt;</I> is an array of wide characters.
+Question: Should this be character count rather than byte count?</PRE>
+
+<P>This warning indicates that PREfast has identified a parameter to a function call that may incorrectly be a byte count instead of a character count. </P>
+
+<P>This defect can result in a memory corruption or program crash, although some cases can result in an exploitable security hole.</P>
+
+<P>Sometimes the heuristic PREfast uses can be incorrect for certain coding styles. Therefore, this warning might not correspond to a defect in the code.</P>
+
+<P>A common cause of this defect comes from using sizeof on a character array. The sizeof operator always computes the number of bytes. For ANSI characters, this is the same as the number of characters, but for Unicode characters, it is twice the number of characters.</P>
+
+<P>It is typically safe to compute the number of elements in an array by dividing the size of the array by the size of each individual element.</P>
+
+<P>If PREfast knows that the specific function involved definitely takes a character count rather than a byte count, it produces the more precise warning 53 instead.</P>
+
+<P>PREfast generates this warning in cases where: 
+
+<UL type="disc">
+	<LI>A variable is passed as one parameter and the sizeof that variable is passed as another parameter. </li>
+
+	<LI>Both the variable type and the formal parameter type are some variety of pointer-to-wide char. </li>
+</UL>
+
+<H4 class="dtH4">Example</H4>
+
+<P class="label"><B>Defective Source</B></P>
+
+<PRE class="code">extern void my_wcsncpy(wchar_t *, wchar_t *, size_t);
+WCHAR pPtr1[5];
+
+my_wcsncpy(pPtr1, input, sizeof pPtr1);</PRE>
+
+<P class="label"><B>Corrected Source</B></P>
+
+<PRE class="code">extern void my_wcsncpy(wchar_t *, wchar_t *, size_t);
+WCHAR pPtr1[5];
+
+my_wcsncpy(pPtr1, input, (sizeof pPtr1) / (sizeof pPtr1[0]));</PRE>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

@@ -1,0 +1,86 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Implementing a ProtocolReceive Handler</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Implementing a ProtocolReceive Handler"/>
+<MSHelp:RLTitle Title="Implementing a ProtocolReceive Handler"/>
+<MSHelp:Keyword Index="A" Term="wce50conImplementingaProtocolReceiveHandler"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Driver"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="False"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="ndis_guide2.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="False"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+<MSHelp:Attr Name="PBFeature" Value="NetworkDriver"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_3018330">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50conimplementingaprotocolreceivehandler"></A>Implementing a ProtocolReceive Handler</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>If the underlying NIC driver calls a filter-specific <B>NdisMXxxIndicateReceive </B>function, NDIS always calls the <A HREF="wce50lrfprotocolreceive.htm">ProtocolReceive</A> function of each bound protocol driver.</P>
+
+<P>If one or more protocol driver clients are the target of the packet and if the lookahead buffer size is less than the total packet size, <B>ProtocolReceive</B> must perform the following steps: 
+
+<OL type="1">
+	<LI>Copy the lookahead data into an internal buffer mapped by a protocol-allocated packet descriptor. </li>
+
+	<LI>Chain buffer descriptors mapping sufficient protocol-allocated buffers to contain the remaining network packet data to a protocol-allocated packet descriptor. </li>
+
+	<LI>Call <A HREF="wce50lrfndistransferdata.htm">NdisTransferData</A> with the packet descriptor, so the underlying driver copies the remaining received data into the protocol's buffers. </li>
+</OL>
+
+<P>If <B>NdisTransferData</B> returns STATUS_SUCCESS or the <A HREF="wce50lrfprotocoltransferdatacomplete.htm">ProtocolTransferDataComplete</A> function is called, you can chain the lookahead buffer to the packet descriptor that contains this transferred data and is indicated to any interested clients. </P>
+
+<P>You may call <B>NdisTransferData</B> once for each receive indication. It is the responsibility of the protocol driver to set up its packet descriptor with chained buffers of a sufficient size to contain the full network packet. After <B>NdisTransferData</B> returns, the received data is no longer available from the underlying NIC driver.</P>
+
+<P>The size of the lookahead buffer passed to <B>ProtocolReceive</B> is the minimum of the size returned by a call to <A HREF="wce50lrfndisrequest.htm">NdisRequest</A> with <A HREF="wce50lrfoidgencurrentlookahead.htm">OID_GEN_CURRENT_LOOKAHEAD</A> and the total packet size. All data in the lookahead buffer is read-only to the <B>ProtocolReceive</B>. </P>
+
+<P>If the lookahead buffer size is greater than or equal to the size of the total packet indicated by a filter-specific <B>NdisMXxxIndicateReceive </B>function, <B>ProtocolReceive</B> should call <B>NdisTransferData</B> to copy the lookahead data into an internal buffer. </P>
+
+<P>If the call to ProtocolReceive occurred because the underlying NIC driver set the status for one or more packets in a packet array to NDIS_STATUS_RESOURCES before calling <A HREF="wce50lrfndismindicatereceivepacket.htm">NdisMIndicateReceivePacket</A>, the size of the lookahead buffer will always be equal to the size of the full network packet. In this case, the protocol driver never calls <B>NdisTransferData</B> because ProtocolReceive can copy the full indication into an internal buffer immediately.</P>
+
+<P>If the NDIS_MAC_OPTION_COPY_LOOKAHEAD_DATA bit is set in response to an <A HREF="wce50lrfoidgenmacoptions.htm">OID_GEN_MAC_OPTIONS</A> request, a protocol driver can use any means to copy lookahead data into an internal buffer, such as calling <A HREF="wce50lrfndismovememory.htm">NdisMoveMemory</A>. If this flag was not set, the protocol driver must call <A HREF="wce50lrfndiscopylookaheaddata.htm">NdisCopyLookaheadData</A> to copy the indicated data; otherwise, the copy operation results cannot be determined. </P>
+
+<P><B>ProtocolReceive</B> must execute as quickly as possible. The protocol driver must ensure that it has protocol-allocated packet resources available before it receives incoming indications. After the protocol driver examines the packet and determines that the packet is not one it will copy, <B>ProtocolReceive</B> should simply return NDIS_STATUS_NOT_ACCEPTED.</P>
+
+<P><B>ProtocolReceive</B> must not process the received data as soon as it is copied because that would adversely impact system performance, as well as possibly causing dropped receives in the underlying NIC driver. Instead, the protocol driver processes the received data later in its <A HREF="wce50lrfprotocolreceivecomplete.htm">ProtocolReceiveComplete</A> function. Following one or more receive indications, <B>ProtocolReceiveComplete</B> is called when the underlying NIC driver calls <B>NdisM<I>XXX</I>IndicateReceiveComplete</B>. Typically, this occurs when the underlying NIC driver has received and indicated a miniport-determined number of packets or before it exits its receive handler. The protocol driver must queue the received data in <B>ProtocolReceive</B> so that it is available to <B>ProtocolReceiveComplete</B> for post-processing.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50conreceivingdatainaprotocoldriver.htm">Receiving Data in a Protocol Driver</A> | <A HREF="wce50lrfprotocolreceivecomplete.htm">ProtocolReceiveComplete</A> | <A HREF="wce50lrfndismovememory.htm">NdisMoveMemory</A> | <A HREF="wce50lrfndiscopylookaheaddata.htm">NdisCopyLookaheadData</A> | <A HREF="wce50lrfoidgenmacoptions.htm">OID_GEN_MAC_OPTIONS</A> | <A HREF="wce50lrfndistransferdata.htm">NdisTransferData</A> | <A HREF="wce50lrfprotocolreceive.htm">ProtocolReceive</A> | <A HREF="wce50lrfndismethindicatereceivecomplete.htm">NdisMEthIndicateReceiveComplete</A> | <A HREF="wce50lrfndismtrindicatereceivecomplete.htm">NdisMTrIndicateReceiveComplete</A> | <A HREF="wce50lrfndismwanindicatereceivecomplete.htm">NdisMWanIndicateReceiveComplete</A> | <A HREF="wce50lrfndismindicatereceivepacket.htm">NdisMIndicateReceivePacket</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

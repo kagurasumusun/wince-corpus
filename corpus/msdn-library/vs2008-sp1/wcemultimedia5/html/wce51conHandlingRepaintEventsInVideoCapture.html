@@ -1,0 +1,74 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Handling Repaint Events in Video Capture</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Handling Repaint Events in Video Capture"/>
+<MSHelp:RLTitle Title="Handling Repaint Events in Video Capture"/>
+<MSHelp:Keyword Index="A" Term="wce51conHandlingRepaintEventsInVideoCapture"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Feature"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="directshow_concepts1.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="True"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+<MSHelp:Attr Name="PBFeature" Value="SYSGEN_DSHOW"/>
+<MSHelp:Attr Name="PBOnly" Value="False"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_1066826">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce51conhandlingrepainteventsinvideocapture"></A>Handling Repaint Events in Video Capture</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P><B>Applies to:</B> Devices based on Windows Mobile Version 5.0 and later</P>
+
+<P>If you build a video capture graph <I>without</I> using the <MSHelp:link keywords="wce51lrfICaptureGraphBuilder2Interface" TABINDEX="0">ICaptureGraphBuilder2 interface</MSHelp:link>, and you preview the video using the old <A HREF="wce50lrfvideorendererfilter.htm">DirectShow Video Renderer filter</A>, then you should override the default handling for <A HREF="wce50lrfecrepaint.htm">EC_REPAINT</A> events. Query the Filter Graph Manager for the <A HREF="wce50lrfimediaeventinterface.htm">IMediaEvent Interface</A> and call the <A HREF="wce50lrfimediaeventcanceldefaulthandling.htm">IMediaEvent::CancelDefaultHandling</A> method with the value EC_REPAINT:</P>
+
+<PRE class="code">IMediaEvent *pEvent = 0;
+hr = pGraph-&gt;QueryInterface(IID_IMediaEvent, (void**)&amp;pEvent);
+if (SUCCEEDED(hr))
+{
+    pEvent-&gt;CancelDefaultHandling (EC_REPAINT);
+    pEvent-&gt;Release();
+}</PRE>
+
+<P>This prevents a possible error that can corrupt your capture file. If the user covers and uncovers the preview window, the Video Renderer filter receives a WM_PAINT message. By default, the Video Renderer requests a new frame, and the Filter Graph Manager pauses the graph in order to cue another video frame. If that happens while the graph is writing a file, it will corrupt the file. Overriding the default EC_REPAINT behavior prevents the renderer from requesting a new frame. </P>
+
+<P>You do not have to perform this step if you are using the <B>ICaptureGraphBuilder2</B> interface, because the Capture Graph Builder does it for you automatically.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce51conadvancedcapturetopics.htm">Advanced Capture Topics</A> | <A HREF="wce50coneventnotificationindirectshow.htm">Event Notification in DirectShow</A> </P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

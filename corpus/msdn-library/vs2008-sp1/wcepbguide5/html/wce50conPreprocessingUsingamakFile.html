@@ -1,0 +1,191 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Preprocessing Using a .mak File</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Preprocessing Using a .mak File"/>
+<MSHelp:RLTitle Title="Preprocessing Using a .mak File"/>
+<MSHelp:Keyword Index="A" Term="wce50conPreprocessingUsingamakFile"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Guide"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="True"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="nmake.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="False"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_3012984">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50conpreprocessingusingamakfile"></A>Preprocessing Using a .mak File</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>You can control the Nmake.exe session by using preprocessing directives and expressions. </P>
+
+<P>Preprocessing directives can be placed in the .mak file or in Tools.ini. </P>
+
+<P>Using directives, you can do the following:
+
+<UL type="disc">
+	<LI>Conditionally process your .mak file</li>
+
+	<LI>Display error messages</li>
+
+	<LI>Include other .mak files</li>
+
+	<LI>Undefine a macro</li>
+
+	<LI>Turn specific options on or off</li>
+</UL>
+
+<P>Preprocessing directives are not case-sensitive. </P>
+
+<P>The initial exclamation point (<B>!</B>) must appear at the beginning of the line. </P>
+
+<P>Zero or more spaces or tabs can appear after the exclamation point, for indentation.</P>
+
+<P>The following table shows the preprocessing directives</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=34%>Directive</TH>
+<TH width=66%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=34%><B>!CMDSWITCHES</B> {<B>+</B> | <B>&#0150;</B>} <I>option</I></TD>
+<TD width=66%>Turns each <I>option</I> listed on or off
+<P>Spaces or tabs must appear before the plus (<B>+)</B> or minus (<B>&#0150;</B>) operator; none can appear between the operator and the option letters. </P>
+
+<P>Letters are not case-sensitive and are specified without a slash mark ( / ). </P>
+
+<P>To turn some options on and others off, use a separate <B>!CMDSWITCHES</B> preprocessor directive for each option.</P>
+
+<P>Only <B>/D</B>, <B>/I</B>, <B>/N</B>, and <B>/S</B> can be used in a .mak file. </P>
+
+<P>In Tools.ini, all options are allowed except <B>/F</B>, <B>/HELP</B>, <B>/NOLOGO</B>, <B>/X</B>, and <B>/?</B>. </P>
+
+<P>Changes specified in a description block do not take effect until the next description block. </P>
+
+<P>This directive updates <B>MAKEFLAGS</B>; changes are inherited during recursion if <B>MAKEFLAGS</B> is specified.</P>
+</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=34%><B>!ERROR</B> <I>text</I></TD>
+<TD width=66%>Displays <I>text</I> in error U1050; then stops Nmake.exe, even if <B>/K</B>, <B>/I</B>, <B>.IGNORE</B>, <B>!CMDSWITCHES</B>, or the hyphen (<B>-</B>) command modifier is used. 
+<P>Spaces or tabs before <I>text</I> are ignored.</P>
+</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=34%><B>!MESSAGE</B> <I>text</I></TD>
+<TD width=66%>Displays <I>text</I> to standard output. 
+<P>Spaces or tabs before <I>text</I> are ignored.</P>
+</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=34%><B>!INCLUDE</B> [<B>&lt;</B>]<I>FileName</I>[<B>&gt;</B>]</TD>
+<TD width=66%>Reads <I>FileName</I> as a .mak file and then continues with the current .mak file. 
+<P>Nmake.exe searches for <I>FileName</I> in the following order:
+
+<OL type="1">
+	<LI>It first searches in the specified or current directory.</li>
+
+	<LI>It then searches recursively through directories of any parent .mak files.</li>
+
+	<LI>If <I>FileName</I> is enclosed by angle brackets (&lt; &gt;), Nmake.exe searches last in directories specified by the <B>INCLUDE</B> macro, which is initially set to the <B>INCLUDE</B> environment variable. </li>
+</OL>
+
+<P>This is useful to pass <B>.SUFFIXES</B> settings, <B>.PRECIOUS</B>, and inference rules to recursive .mak files.</P>
+</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=34%><B>!IF</B> <I>ConstantExpression</I></TD>
+<TD width=66%>Processes statements between <B>!IF</B> and the next <B>!ELSE</B> or <B>!ENDIF</B>, if <I>ConstantExpression</I> evaluates to a nonzero value.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=34%><B>!IFDEF</B> <I>MacroName</I></TD>
+<TD width=66%>Processes statements between <B>!IFDEF</B> and the next <B>!ELSE</B> or <B>!ENDIF</B>, if <I>MacroName</I> is defined. 
+<P>A null macro is considered to be defined.</P>
+</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=34%><B>!IFNDEF</B> <I>MacroName</I></TD>
+<TD width=66%>Processes statements between <B>!IFNDEF</B> and the next <B>!ELSE</B> or <B>!ENDIF</B>, if <I>MacroName</I> is not defined.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=34%><B>!ELSE</B>[<B>IF</B> <I>ConstantExpression </I>| <B>IFDEF</B> <I>MacroName</I> | <B>IFNDEF</B> <I>MacroName</I>]</TD>
+<TD width=66%>Processes statements between <B>!ELSE</B> and the next <B>!ENDIF</B> if the prior <B>!IF</B>, <B>!IFDEF</B>, or <B>!IFNDEF</B> statement evaluated to zero. 
+<P>The optional keywords give further control of preprocessing.</P>
+</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=34%><B>!ELSEIF</B></TD>
+<TD width=66%>Synonym for <B>!ELSE IF</B>.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=34%><B>!ELSEIFDEF</B></TD>
+<TD width=66%>Synonym for <B>!ELSE IFDEF</B>.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=34%><B>!ELSEIFNDEF</B></TD>
+<TD width=66%>Synonym for <B>!ELSE IFNDEF</B>.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=34%><B>!ENDIF</B></TD>
+<TD width=66%>Marks the end of an <B>!IF</B>, <B>!IFDEF</B>, or <B>!IFNDEF</B> block. 
+<P>Any text after <B>!ENDIF</B> on the same line is ignored.</P>
+</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=34%><B>!UNDEF</B> <I>MacroName</I></TD>
+<TD width=66%>Undefines <I>MacroName</I>.</TD>
+</TR>
+</table></div>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50concommandsinamakfile.htm">Commands in a .mak File</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

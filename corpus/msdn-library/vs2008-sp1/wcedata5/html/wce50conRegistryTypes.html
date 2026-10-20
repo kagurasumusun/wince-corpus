@@ -1,0 +1,114 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Registry Types</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Registry Types"/>
+<MSHelp:RLTitle Title="Registry Types"/>
+<MSHelp:Keyword Index="A" Term="wce50conRegistryTypes"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Feature"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="registry_overview.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="False"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="True"/>
+<MSHelp:Attr Name="PBFeature" Value="REGISTRY"/>
+<MSHelp:Attr Name="PBOnly" Value="True"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_1055670">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50conregistrytypes"></A>Registry Types</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>Windows CE supports two different registry types: the RAM-based registry and the hive-based registry. You determine the registry type a device uses, which is transparent to both applications and users.</P>
+
+<H2 class="dtH2">RAM-Based Registry</H2>
+
+<P>The RAM-based registry stores all registry data within the object store. This is efficient in terms of speed and size in devices that have battery-backed RAM. Devices that do not power the RAM while turned off must back up the registry during power off and restore the registry when power is restored. </P>
+
+<P>The RAM-based registry is intended for use on devices that experience warm boot often, but rarely or never cold boot.</P>
+
+<H2 class="dtH2">Hive-Based Registry</H2>
+
+<P>The hive-based registry stores registry data inside files, or hives, which can be kept on any file system. This removes the need to perform backup and restore on power off. Removing this work during boot and power off makes the cold boot process faster.</P>
+
+<P>Each file or hive contains a collection of registry data. The hive-based registry is split into two hives: the system hive, which contains all system data, and the user hive, which contains all data pertinent to one particular user. A multi-user system will contain several user hives. A user's hive will be mounted on logon and unmounted on logoff.</P>
+
+<P>The hive-based registry is intended for use on devices that cold boot often, but rarely or never warm boot. It is also useful on devices that require support for multiple users.</P>
+
+<P>A hive is a group of keys, subkeys, and values in the registry that has a set of supporting files containing backups of the data in the hive. A hive is treated as a single unit and is saved and restored as one file.</P>
+
+<P>The system hive contains system settings that do not pertain to any one user. The OEM selects the system hive file name and location. The system hive file is typically named System.hv, but the location can vary.</P>
+
+<P>The registry value <B>SystemHive</B> under <B>HKEY_LOCAL_MACHINE\init\BootVars</B> indicates the path and file name of the system hive.</P>
+
+<P>A user hive contains user-specific settings. All user hives are named User.hv and are located inside separate user directories. Each directory is given the name of the user to which it belongs.</P>
+
+<P>The registry value <B>ProfileDir</B> under <B>HKEY_LOCAL_MACHINE\init\BootVars</B> indicates the location where all user directories are placed.</P>
+
+<P>The boot hive contains system settings that are applied only during boot. The boot hive is read out of ROM and used to start drivers and file systems needed to reach the system hive file. Once the system hive is mounted, the boot hive is discarded. Changes made to the registry during the boot process are copied into the system hive once it is available. The boot hive in ROM remains unchanged.</P>
+
+<P>The following table shows the standard hives and their supporting files under Windows CE.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=23%>Registry hive</TH>
+<TH width=25%>File</TH>
+<TH width=52%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=23%>Boot hive</TD>
+<TD width=25%>Boot.hv, in ROM</TD>
+<TD width=52%>All data under <B>HKEY_LOCAL_MACHINE</B>, <B>HKEY_CLASSES_ROOT</B>, <B>HKEY_USERS</B>. Used during boot only. Changes are propagated to the system hive after boot.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=23%>System hive</TD>
+<TD width=25%>OEM-dependent (usually System.hv)</TD>
+<TD width=52%>All data under <B>HKEY_LOCAL_MACHINE</B>, <B>HKEY_CLASSES_ROOT</B>, <B>HKEY_USERS</B>. Contains device-wide settings that do not vary for each user.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=23%>User hive</TD>
+<TD width=25%>User.hv</TD>
+<TD width=52%>All data under <B>HKEY_CURRENT_USER</B>. <B>HKEY_CURRENT_USER</B> is not located under <B>HKEY_USERS</B>. Contains user-specific settings. Each user will have a separate hive that is mounted on logon and unmounted on logoff.</TD>
+</TR>
+</table></div>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50conuserprofilehives.htm">User Profile Hives</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

@@ -1,0 +1,138 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Best Practices for Managing Storage in a Windows Mobile-based Application</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Best Practices for Managing Storage in a Windows Mobile-based Application"/>
+<MSHelp:RLTitle Title="Best Practices for Managing Storage in a Windows Mobile-based Application"/>
+<MSHelp:Keyword Index="A" Term="moconBestPracticesForManagingStorageInWindowsMobileApplication"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Application"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbsmartphone"/>
+<MSHelp:Attr Name="Product" Value="kbPocketPC"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="Technology" Value="kbPocketPC"/>
+<MSHelp:Attr Name="Technology" Value="kbSmartphone"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="mem_perf_power_mgmt.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="False"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_1076675">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Windows Mobile Version 5.0 SDK<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="moconbestpracticesformanagingstorageinwindowsmobileapplication"></A>Best Practices for Managing Storage in a Windows Mobile-based Application</H1>
+<!--Feedback Link Top Start-->
+<P CLASS="feedback"><font size="1"><a href="mailto:medfdbk&#64;microsoft.com?subject=Product: Windows Mobile | Version: 5.0 | Release: SDK | Title: Best Practices for Managing Storage in a Windows Mobile-based Application | Filename: moconbestpracticesformanagingstorageinwindowsmobileapplication.htm | Built on: Wednesday, September 14, 2005">Send Feedback</a> on this topic to the authors</font></p>
+<!--Feedback Link Top End-->
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>Storage performance varies depending on the storage hardware and the overall system design. Currently, Pocket PC devices can choose a RAM-based file system or a flash-based file system. Smartphone devices use a flash-based persistent storage file system. </P>
+
+<P>For an in-depth discussion of storage hardware technologies, see this <a href="http://go.microsoft.com/fwlink/?LinkId=17190" TARGET="_blank">Microsoft Web site</A>.</P>
+
+<H4 class="dtH4">Storage Hardware Performance Considerations</H4>
+
+<P>The following table shows a relative comparison of the performance of various operations on flash-based persistent storage file systems and RAM-based file systems.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=33%>Operation</TH>
+<TH width=33%>Flash-based</TH>
+<TH width=34%>RAM-based</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%>Local read</TD>
+<TD width=33%>Slower</TD>
+<TD width=34%>Faster</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%>Local write</TD>
+<TD width=33%>Slowest</TD>
+<TD width=34%>Faster</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%>Network read</TD>
+<TD width=33%>Faster</TD>
+<TD width=34%>Slower</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%>Network write</TD>
+<TD width=33%>Faster</TD>
+<TD width=34%>Slower</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%>Battery-backed hardware</TD>
+<TD width=33%>No</TD>
+<TD width=34%>Yes</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%>Registry persistence</TD>
+<TD width=33%>Preferable over RAM-based</TD>
+<TD width=34%>Yes</TD>
+</TR>
+</table></div>
+
+<H4 class="dtH4">Best Practices for Storage Software Performance</H4>
+
+<P>Adhering to the following list of best practices can help you minimize any performance impacts your application may have:
+
+<UL type="disc">
+	<LI>Minimize the size of your application.</li>
+
+	<LI>Minimize the amount of persisted data. The file system's resources may be limited, so ensure that your application is tolerant of a storage system that may not perform ideally at all times.</li>
+
+	<LI>Minimize the frequency of altering data. Do not constantly change data.</li>
+
+	<LI>Minimize any periodic writing to the registry. Do not constantly write to the registry.</li>
+
+	<LI>Minimize the number of dynamically-linked libraries (DLLs). If the library is not called into very often, dynamically loading the library is better than statically loading the library, but be sure to unload the DLL after you are done with it.</li>
+
+	<LI>Minimize polling. Instead of polling with a while loop, use an event driven design so your application is notified of any changes that it requests.</li>
+
+	<LI>Execute less code. Code is compressed in ROM, so before code can execute, it must be decompressed. Decompressing code affects performance. For example, on a typical Smartphone development platform, it takes three milliseconds (ms) to decompress one page of code. Executing code consumes power; execute code only if absolutely necessary.</li>
+
+	<LI>Execute code only when appropriate. For example, stop an animation when it is not visible to the user.</li>
+
+	<LI>Minimize reading and writing to flash hardware. On a typical Smartphone development platform, it takes 83 ms to write one page of code to flash hardware. Instead of writing to flash hardware, write to RAM as much as possible. If the write to flash hardware is unavoidable, postpone writing for as long as possible. Writing to flash hardware consumes more power than writing to RAM, so minimize writing to flash hardware to minimize power consumption.</li>
+
+	<LI>Mark drivers as pageable as much as possible. As long as the driver does not execute during suspend or resume, and it is not needed to service a page fault, you can mark it as pageable. RAM contains all nonpageable drivers and DLLs. During boot-time, all nonpageable drivers and DLLs must decompress into RAM.</li>
+</UL>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Feedback Link Bottom Start-->
+<p><font size="1"><a href="mailto:medfdbk&#64;microsoft.com?subject=Product: Windows Mobile | Version: 5.0 | Release: SDK | Title: Best Practices for Managing Storage in a Windows Mobile-based Application | Filename: moconbestpracticesformanagingstorageinwindowsmobileapplication.htm | Built on: Wednesday, September 14, 2005">Send Feedback</a> on this topic to the authors</font></p>
+<!--Feedback Link Bottom End-->
+<!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="mob5conCopyrightInformationForMagneto" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link></font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

@@ -1,0 +1,134 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>IShellFolder::BindToObject</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="IShellFolder::BindToObject"/>
+<MSHelp:RLTitle Title="IShellFolder::BindToObject"/>
+<MSHelp:Keyword Index="K" Term="IShellFolder, BindToObject"/>
+<MSHelp:Keyword Index="A" Term="wce50lrfIShellFolderBindToObject"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Feature"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="apiref"/>
+<MSHelp:Attr Name="Filename" Value="ceshell_reference.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="True"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+<MSHelp:Attr Name="APIName" Value="IShellFolder.BindToObject"/>
+<MSHelp:Attr Name="APIType" Value="IDLDef"/>
+<MSHelp:Attr Name="APILocation" Value="Implementation dependent"/>
+<MSHelp:Attr Name="PBFeature" Value="SYSGEN_STANDARDSHELL"/>
+<MSHelp:Attr Name="PBOnly" Value="False"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_3021507">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50lrfishellfolderbindtoobject"></A>IShellFolder::BindToObject</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>This method retrieves an <A HREF="wce50lrfishellfolder.htm">IShellFolder</A> object for a subfolder.</P>
+
+<H4 class="dtH4">Syntax</H4>
+
+<PRE class="syntax"><B>HRESULT BindToObject(</B>
+<B>  LPCITEMIDLIST </B><I>pidl</I><B>,</B>
+<B>  LPBC </B><I>pbc</I><B>,</B>
+<B>  REFIID </B><I>riid</I><B>,</B>
+<B>  VOID** </B><I>ppvOut</I>
+<B>);</B></PRE>
+
+<H4 class="dtH4">Parameters</H4>
+
+<DL>
+<DT><I>pidl</I></DT>
+
+<DD>[in] Pointer to an <A HREF="wce50lrfitemidlist.htm">ITEMIDLIST</A> structure (PIDL) that identifies the subfolder.</dd>
+
+<DT><I>pbc</I></DT>
+
+<DD>[in] Optional address of an <B>IBindCtx</B> interface on a bind context object to be used during this operation. If this parameter is not used, set it to NULL. Because support for <I>pbc</I> is optional for folder object implementations, some folders may not support the use of bind contexts.</dd>
+
+<DT><I>riid</I></DT>
+
+<DD>[in] Identifier of the interface to return.</dd>
+
+<DT><I>ppvOut</I></DT>
+
+<DD>[out] Address that receives the interface pointer. If an error occurs, a NULL pointer is returned in this address.</dd>
+</DL>
+
+<H4 class="dtH4">Return Values</H4>
+
+<P>Returns NOERROR if successful, or an error value otherwise.</P>
+
+<H4 class="dtH4">Remarks</H4>
+
+<P>The <I>pidl</I> parameter can refer to an object at any level below the parent folder in the namespace hierarchy. The <I>pidl</I> can thus be either a multi-level pointer to an item identifier list (PIDL), relative to the parent folder. The structure will contain one or more <A HREF="wce50lrfshitemid.htm">SHITEMID</A> structures, followed by a terminating NULL.</P>
+
+<P>Applications use <B>IShellFolder::BindToObject</B> to obtain a directly exposed interface from the shell folder object of a subitem. Usually the calling application passes IID_IShellFolder as the interface identifier to retrieve the <B>IShellFolder</B> interface. However, sometimes the calling application needs to obtain some other directly exposed interface, such as <B>IRemoteComputer</B>. A shell namespace extension can implement this function by creating the shell folder object for the specified subitem and then calling <MSHelp:link keywords="wce50lrfIUnknownQueryInterface" TABINDEX="0">IUnknown::QueryInterface</MSHelp:link> to convert it into the desired interface pointer, which is returned to the calling application.</P>
+
+<P>This call is also useful if a particular interface is not implemented. For example, if the shell folder object of the subitem does not support the <B>IRemoteComputer</B> interface, the implementation can return E_NOINTERFACE immediately instead of needlessly creating the shell folder object for the subitem and then finding that <B>IRemoteComputer</B> was not supported after all.</P>
+
+<P>This optimization is useful if creating a shell folder object is an expensive operation. In other words, the following two code fragments are equivalent.</P>
+
+<PRE class="code">/* This is the more efficient way */
+   HRESULT hres = psf-&gt;BindToObject(pidl, pbc, riid, ppvOut);
+
+/* This is the equivalent slower way */
+   IShellFolder *psfOut;
+   HRESULT hres = psf-&gt;BindToObject(pidl,
+                                    pbc,
+                                    IID_IShellFolder,
+                                    (LPVOID)&amp;psfOut);
+
+   if (SUCCEEDED(hres)) 
+   {
+      hres = psfOut-&gt;QueryInterface(riid, ppvOut);
+      psfOut-&gt;Release();
+   } 
+   
+   else 
+   {
+      *ppvOut = NULL;
+   }</PRE>
+
+<H4 class="dtH4">Requirements</H4>
+
+<P><B>OS Versions:</B> Windows CE .NET 4.2 and later.<BR>
+<B>Header:</B> Shobjidl.h, Shobjidl.idl.<BR>
+<B>Link Library:</B> Implementation dependent.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50lrfishellfolder.htm">IShellFolder</A> | <A HREF="wce50lrfitemidlist.htm">ITEMIDLIST</A> | <A HREF="wce50lrfshitemid.htm">SHITEMID</A> | <A HREF="wce50lrfshgetdesktopfolder.htm">SHGetDesktopFolder</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

@@ -1,0 +1,119 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Writing a Test Case</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Writing a Test Case"/>
+<MSHelp:RLTitle Title="Writing a Test Case"/>
+<MSHelp:Keyword Index="A" Term="wce51howWritingTestCase"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Debugging"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="True"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbHowTo"/>
+<MSHelp:Attr Name="Filename" Value="DATKTestAutomationDev.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="True"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_1076634">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce51howwritingtestcase"></A>Writing a Test Case</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<OL>
+	<LI>Rename suite1.cs to RunDialogTests.cs.</li>
+
+	<LI>Open RunDialogTests.cs.</li>
+
+	<LI>Rename the TuxNetSkeletonTests class to RunDialogTests (be sure to rename both the class and the constructor).</li>
+
+	<LI>At the top of RunDialogTests.cs, expand the usings block, and add the following code:<BR>
+<code class="ce">using Microsoft.MobileDevices.AbstractionLayer.Shell.PocketPC;</code></li>
+
+	<LI>Add a Launch method to the RunDialogTests class. Copy and paste the following code into the class:
+<PRE class="code">#region Utility Methods
+/// &lt;summary&gt;
+/// Launch the run dialog using Win+R
+/// &lt;/summary&gt;
+public void Launch()
+{
+   Utils.GlobalLogger.AddComment("Launch the Run Dialog");
+   Datk.KeyBoard.SendKey(Datk.KeyBoard.Key.LWin, Datk.KeyBoard.EventFlags.KeyDown);
+   Datk.KeyBoard.SendKey('R');
+   Datk.KeyBoard.SendKey(Datk.KeyBoard.Key.LWin, Datk.KeyBoard.EventFlags.KeyUp);
+}
+#endregion</PRE>
+</li>
+
+	<LI>Now, expand the Functional Test Cases region. Remove the code that is currently in this region and paste the following code in its place:
+<PRE class="code">/// &lt;summary&gt;
+/// Uses the Run dialog to launch iexplore.exe
+/// NOTE: This test case will only run on a Pocket PC phone.
+/// &lt;/summary&gt;
+/// &lt;returns&gt;LogResult.Pass on success&lt;/returns&gt;
+[TestCaseAttribute("RunDialog launching iexplore", Type = TestType.Functional)]
+[MobileDevicesDescriptor ( Product = Products.PocketPC ) ]
+public Log.LogResult LaunchIExplore()
+{
+   RunDialog run = new RunDialog();
+
+   Launch();
+   Utils.GlobalLogger.AddComment("Select the edit control");
+   run.OpenTextBox.Click();
+   Utils.GlobalLogger.AddComment("Enter 'iexplore'");
+   Datk.KeyBoard.SendString("iexplore");
+   Utils.GlobalLogger.AddComment("Click Ok");
+   run.OKButton.Click();
+
+   Utils.GlobalLogger.AddComment("Verify that iexplore is launched");
+   Datk.WindowFinder iexploreFinder = new Datk.WindowFinder();
+   iexploreFinder.ProcessName = "iexplore.exe";
+
+   // This will throw an exception if the iexplore is not found,
+   // effectively failing the test.
+   iexploreFinder.FindForm();
+
+   return Log.LogResult.Pass;
+}</PRE>
+</li>
+
+	<LI>Remove the BVT (Build Verification Test) region.</li>
+
+	<LI>If you are using the emulator, make sure that it is not cradled (you can not deploy to a cradled emulator using VS). You can uncradle it from the Device Emulator Manager.</li>
+
+	<LI>Use F5 to deploy and run the test case!  You will see it typing into the run dialog, clicking the OK button, and then Internet Explorer being launched.</li>
+
+	<LI>You can get the log file Results.log in \test through ActiveSync.</li>
+</OL>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

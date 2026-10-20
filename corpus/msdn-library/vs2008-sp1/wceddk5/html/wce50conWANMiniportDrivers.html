@@ -1,0 +1,86 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>WAN Miniport Drivers</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="WAN Miniport Drivers"/>
+<MSHelp:RLTitle Title="WAN Miniport Drivers"/>
+<MSHelp:Keyword Index="A" Term="wce50conWANMiniportDrivers"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Driver"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="False"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="ndis_guide1.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="False"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+<MSHelp:Attr Name="PBFeature" Value="NetworkDriver"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_3018290">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50conwanminiportdrivers"></A>WAN Miniport Drivers</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>The NDIS wide area network (NDISWAN) architecture does not use the PPP protocol driver to bind to TCP/IP as an 802.3 miniport. Instead, it interfaces directly with IP. The operating system does not support multilink PPP.</P>
+
+<P>The following illustration shows the NDISWAN architecture that is implemented.</P>
+
+<P class="fig"><IMG SRC="ndiswan.gif" ALT="" BORDER=0></P>
+
+<P>In the NDISWAN architecture, PPP is implemented as an NDIS protocol driver. PPP communicates with the underlying AsyncMAC miniport through the NDIS layer, which exposes an NDIS protocol interface on the upper edge and an NDIS miniport interface on the lower edge. When PPP receives a WAN packet from TCP/IP, it passes the packet on to the AsyncMAC miniport. After receiving a packet from PPP, the AsyncMAC miniport performs the asynchronous framing, and then forwards the packet to the TAPI device by calling Microsoft&reg; Win32&reg; serial APIs. When receiving a packet through the network, the AsyncMAC miniport strips the flags off the packet, checks the Cyclic Redundancy Check (CRC), and then passes the packet up to PPP through the NDIS layer. The NDISWAN architecture also supports a Point-to-Point Tunneling Protocol (PPTP) miniport, which communicates directly with TCP/IP.</P>
+
+<P>A sample implementation of AsyncMAC is included with Windows CE and is located in the %_WINCEROOT%\public\common\oak\drivers\netsamp\asyncmac directory.</P>
+
+<P>Before the WAN miniport can send or receive packets on the network, an application must create a connection on the sending node or accept a connection on a remote node by making or accepting a call. Requests from TAPI and status indications to TAPI pass through the WAN miniport.</P>
+
+<P>After a connection with a remote node has been established, packets can be exchanged over the network. The WAN miniport driver specifies the default number of outstanding packets that it can have per data channel in the <B>MaxTransmit</B> value and submits the <B>MaxTransmit</B> value to PPP as a response to an <A HREF="wce50lrfoidwangetinfo.htm">OID_WAN_GET_INFO</A> request. The <B>OID_WAN_GET_INFO</B> structure contains the following information:
+
+<UL type="disc">
+	<LI>The type of framing that is required for a packet</li>
+
+	<LI>The amount of padding that must be placed at the head and tail of a frame</li>
+
+	<LI>The maximum size frame that the network adapter driver can send and receive</li>
+
+	<LI>The maximum number of frames that can be queued for transmission</li>
+
+	<LI>The number of links that are supported by the network adapter</li>
+</UL>
+
+<P>The WAN miniport driver might have to modify or add to the header as well as the end of a packet. The NDISWAN implementation provides appropriate padding at the beginning and end of each packet. The WAN miniport can alter the data in the packet in any way that it sees fit to send it on the WAN medium.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50conminiportdrivers.htm">Miniport Drivers</A> | <A HREF="wce50conregisteringasawanminiportdriver.htm">Registering as a WAN Miniport Driver</A> | <A HREF="wce50conqueryingwanminiportdriverinformation.htm">Querying WAN Miniport Driver Information</A> | <A HREF="wce50consendingonawanminiportdriver.htm">Sending on a WAN Miniport Driver</A> | <A HREF="wce50conwanminiportdriverindications.htm">WAN Miniport Driver Indications</A> | <A HREF="wce50conndislibraryfunctionsusedbywanminiportdrivers.htm">NDIS Library Functions Used by WAN Miniport Drivers</A> | <A HREF="wce50lrfoidwangetinfo.htm">OID_WAN_GET_INFO</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

@@ -1,0 +1,116 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Layered Drivers vs. Monolithic Drivers</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Layered Drivers vs. Monolithic Drivers"/>
+<MSHelp:RLTitle Title="Layered Drivers vs. Monolithic Drivers"/>
+<MSHelp:Keyword Index="A" Term="wce50conDriverCodeStructure"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Driver"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="False"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="driverarchitecture.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="False"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+<MSHelp:Attr Name="PBFeature" Value="CoreDriver"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_3017996">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50condrivercodestructure"></A>Layered Drivers vs. Monolithic Drivers</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>Most Windows CE device drivers consist of a platform dependent driver (PDD) and a model device driver (MDD). A <I>monolithic driver</I> combines all PDDs and MDDs into one driver. A <I>layered driver </I>does not combine them. </P>
+
+<P>MDDs have the following characteristics:
+
+<UL type="disc">
+	<LI>Contain code that is common to all drivers of a given type.</li>
+
+	<LI>Call PDD functions to access the hardware.</li>
+
+	<LI>Link to the PDD layer and define the device driver service provider interface (DDSI) functions that the MDD expects to call in that layer.</li>
+
+	<LI>Expose device driver interface (DDI) functions to the operating system (OS). 
+<P>Other parts of the OS can call these functions. Related devices can share the same DDI. Monolithic drivers also expose the DDI functions.
+</li>
+
+	<LI>Handle interrupt processing.</li>
+
+	<LI>Provide for reuse by developers.</li>
+
+	<LI>Can link to multiple PDDs.</li>
+
+	<LI>Generally require no changes. 
+<P>If changed, you might have trouble migrating drivers to future versions.
+</li>
+
+	<LI>Contain any interrupt service threads (ISTs).</li>
+</UL>
+
+<P>PDDs have the following characteristics:
+
+<UL type="disc">
+	<LI>Consist of hardware platform specific code.</li>
+
+	<LI>Might require modification for your hardware platform.</li>
+
+	<LI>Are designed to work with specific MDD implementations.</li>
+
+	<LI>Expose the DDSI functions that the MDD calls. 
+<P>Monolithic drivers do not expose the DDSI functions.
+</li>
+</UL>
+
+<P>The following list shows considerations for choosing between implementing a layered driver or a monolithic driver:
+
+<UL type="disc">
+	<LI>A layered driver might only require modification to the PDD. </li>
+
+	<LI>A layered driver adds overhead to function calls in a device driver because the MDD calls into the PDD. </li>
+
+	<LI>A monolithic driver improves driver performance because it combines the MDD and PDD into one layer, which removes the MDD's function calls into the PDD.</li>
+
+	<LI>A monolithic driver is more difficult to migrate to future versions of Windows CE because most device drivers that Windows CE includes are divided into a PDD and an MDD.</li>
+
+	<LI>A monolithic driver can be simpler and more efficient, if the capabilities of your device are well matched to the tasks that the functions in the MDD layer perform.</li>
+</UL>
+
+<P>Regardless of whether you implement a layered driver or a monolithic driver, you can base your implementation on the source code for any of the sample drivers.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50condriverspostdevelopmenttasks.htm">Device Drivers and the Platform Builder IDE</A> | <A HREF="wce50condriverdevelopmenttools.htm">Driver Development Tools</A> | <A HREF="wce50howhowtousethecetktotestadriver.htm">How to Use the CETK to Test a Driver</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

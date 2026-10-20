@@ -1,0 +1,194 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>MiniportInitialize</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="MiniportInitialize"/>
+<MSHelp:RLTitle Title="MiniportInitialize"/>
+<MSHelp:Keyword Index="K" Term="MiniportInitialize"/>
+<MSHelp:Keyword Index="A" Term="wce50lrfMiniportInitialize"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Driver"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="False"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="apiref"/>
+<MSHelp:Attr Name="Filename" Value="ndis_upper_edge_functions.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="False"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+<MSHelp:Attr Name="APIName" Value="MiniportInitialize"/>
+<MSHelp:Attr Name="PBFeature" Value="NetworkDriver"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_3018958">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50lrfminiportinitialize"></A>MiniportInitialize</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>This function is a required function that sets up a network adapter, or virtual network adapter, for network I/O operations, claims all hardware resources necessary to the network adapter in the registry, and allocates resources the driver needs to carry out network I/O operations.</P>
+
+<PRE class="syntax"><B>NDIS_STATUS MiniportInitialize(</B>
+<B>  PNDIS_STATUS</B> <I>OpenErrorStatus</I><B>,</B>
+  <B>PUINT</B> <I>SelectedMediumIndex</I><B>,</B>
+  <B>PNDIS_MEDIUM</B> <I>MediumArray</I><B>,</B>
+  <B>UINT</B> <I>MediumArraySize</I><B>,</B>
+  <B>NDIS_HANDLE</B> <I>MiniportAdapterHandle</I><B>,</B>
+  <B>NDIS_HANDLE</B> <I>WrapperConfigurationContext</I>
+<B>);</B></PRE>
+
+<H4 class="dtH4">Parameters</H4>
+
+<DL>
+<DT><I>OpenErrorStatus</I></DT>
+
+<DD>[out] Points to a variable that <B>MiniportInitialize</B> sets to an NDIS_STATUS_<I>XXX</I> code specifying additional information about the error if <B>MiniportInitialize</B> will return NDIS_STATUS_OPEN_ERROR.</dd>
+
+<DT><I>SelectedMediumIndex</I></DT>
+
+<DD>[out] Points to a variable in which <B>MiniportInitialize</B> sets the index of the <I>MediumArray</I> element that specifies the medium type the driver or its network adapter uses.</dd>
+
+<DT><I>MediumArray</I></DT>
+
+<DD>[in] Specifies an array of <B>NdisMedium<I>XXX</I></B> values from which <B>MiniportInitialize</B> selects one that its network adapter supports or that the driver supports as an interface to higher-level drivers.</dd>
+
+<DT><I>MediumArraySize</I></DT>
+
+<DD>[in] Specifies the number of elements at <I>MediumArray</I>.</dd>
+
+<DT><I>MiniportAdapterHandle</I></DT>
+
+<DD>[in] Specifies a handle identifying the miniport's network adapter, which is assigned by the NDIS library. <B>MiniportInitialize</B> should save this handle; it is a required parameter in subsequent calls to <B>Ndis<I>XXX</I></B> functions.</dd>
+
+<DT><I>WrapperConfigurationContext</I></DT>
+
+<DD>[in] Specifies a handle used only during initialization for calls to <B>Ndis<I>XXX</I></B> configuration and initialization functions. For example, this handle is a required parameter to <A HREF="wce50lrfndisopenconfiguration.htm">NdisOpenConfiguration</A> and the <B>NdisImmediateRead<I>XXX</I></B> and <B>NdisImmediateWrite<I>XXX</I></B> functions.</dd>
+</DL>
+
+<H4 class="dtH4">Return Values</H4>
+
+<P>The following table shows status values that <B>MiniportInitialize</B> can return.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=47%>Value</TH>
+<TH width=53%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=47%>NDIS_STATUS_SUCCESS</TD>
+<TD width=53%><B>MiniportInitialize</B> configured and set up the network adapter, and it allocated all the resources the driver needs to carry out network I/O operations.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=47%>NDIS_STATUS_FAILURE</TD>
+<TD width=53%><B>MiniportInitialize</B> could not set up the network adapter to an operational state or could not allocate needed resources.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=47%>NDIS_STATUS_UNSUPPORTED_MEDIA</TD>
+<TD width=53%>The values at <I>MediumArray</I> did <B>not</B> include a medium the driver (or its network adapter) can support.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=47%>NDIS_STATUS_ADAPTER_NOT_FOUND</TD>
+<TD width=53%><B>MiniportInitialize</B> did not recognize the network adapter either from its description in the registry, using <B>NdisOpenConfiguration</B> and <A HREF="wce50lrfndisreadconfiguration.htm">NdisReadConfiguration</A>, or by probing the network adapter on a particular I/O bus, using one of the <B>NdisImmediate<I>XXX</I></B> or bus-type-specific <B>Ndis<I>XXX</I></B> configuration functions. This return can be propagated from the miniport's call to certain <B>Ndis<I>XXX</I></B> functions, such as <B>NdisOpenConfiguration</B>.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=47%>NDIS_STATUS_OPEN_ERROR</TD>
+<TD width=53%><B>MiniportInitialize</B> attempted to set up a network adapter but was unsuccessful.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=47%>NDIS_STATUS_NOT_ACCEPTED</TD>
+<TD width=53%><B>MiniportInitialize</B> could not get its network adapter to accept the configuration parameters that it got from the registry or from a bus-type-specific <B>Ndis<I>XXX</I></B> configuration function.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=47%>NDIS_STATUS_RESOURCES</TD>
+<TD width=53%>Either <B>MiniportInitialize</B> could not allocate sufficient resources to carry out network I/O operations or an attempt to claim bus-relative hardware resources in the registry for the network adapter failed. This return can be propagated from the miniport's call to an <B>Ndis<I>XXX</I></B> function.</TD>
+</TR>
+</table></div>
+
+<H4 class="dtH4">Remarks</H4>
+
+<P>NDIS submits no requests to a driver until its initialization is completed.</P>
+
+<P>In network adapter and intermediate drivers that call <A HREF="wce50lrfndismregisterminiport.htm">NdisMRegisterMiniport</A> from their <A HREF="wce50lrfdriverentry.htm">DriverEntry</A> functions, NDIS calls <B>MiniportInitialize</B> in the context of <B>NdisMRegisterMiniport</B>. The underlying device driver must initialize before an intermediate driver that depends on that device calls <B>NdisMRegisterMiniport</B>.</P>
+
+<P>For NDIS intermediate drivers that export both <B>ProtocolXXX</B> and <B>Miniport<I>XXX</I></B> functions and that call <A HREF="wce50lrfndisimregisterlayeredminiport.htm">NdisIMRegisterLayeredMiniport</A> from their <B>DriverEntry</B> functions, NDIS calls <B>MiniportInitialize</B> in the context of <A HREF="wce50lrfndisiminitializedeviceinstance.htm">NdisIMInitializeDeviceInstance</A>. Such a driver's <A HREF="wce50lrfprotocolbindadapter.htm">ProtocolBindAdapter</A> function usually makes the call to <B>NdisIMInitializeDeviceInstance</B>.</P>
+
+<P>In general, drivers of ISA network adapters call <B>NdisOpenConfiguration</B> and <B>NdisReadConfiguration</B> to get the bus-relative configuration parameters for their network adapters from the registry. Drivers for network adapters on other types of I/O buses usually call the appropriate bus-type-specific <B>NdisRead<I>XXX</I></B> function. Drivers of PCMCIA network adapters should call <B>NdisReadConfiguration</B> to maintain their binary compatibility across Microsoft operating systems that support Microsoft&reg; Win32&reg;.</P>
+
+<P>When it calls <B>MiniportInitialize</B>, the NDIS library supplies an array of supported media types, specified as system-defined <B>NdisMedium<I>XXX</I></B> values. <B>MiniportInitialize</B> reads the array elements and provides the index of the medium type that NDIS should use with this driver for its network adapter. If the miniport is emulating a medium type, its emulation must be transparent to NDIS.</P>
+
+<P>The <B>MiniportInitialize</B> function of a network adapter driver must call <A HREF="wce50lrfndismsetattributes.htm">NdisMSetAttributes</A> or <A HREF="wce50lrfndismsetattributesex.htm">NdisMSetAttributesEx</A> before it calls any <B>Ndis<I>XXX</I></B> function, such as <A HREF="wce50lrfndismregisterioportrange.htm">NdisMRegisterIoPortRange</A> or <A HREF="wce50lrfndismmapiospace.htm">NdisMMapIoSpace</A> that claims hardware resources in the registry for the network adapter. </P>
+
+<P>Intermediate driver <B>MiniportInitialize</B> functions must call <B>NdisMSetAttributesEx</B> with NDIS_ATTRIBUTE_INTERMEDIATE_DRIVER set in the <I>AttributeFlags</I> argument. Setting this flag causes NDIS to treat every intermediate driver as a full-duplex miniport, thereby preventing rare but intermittent deadlocks when concurrent send and receive events occur. Consequently, every intermediate driver must be written as a full-duplex driver capable of handling concurrent sends and indications.</P>
+
+<P>If the NDIS library's default four-second time-out interval on outstanding sends and requests is too short for the driver's network adapter, <B>MiniportInitialize</B> can call <B>NdisMSetAttributesEx</B> to extend the interval. Every intermediate driver also should call <B>NdisMSetAttributesEx</B> with NDIS_ATTRIBUTE_IGNORE_PACKET_TIMEOUT and NDIS_ATTRIBUTE_IGNORE_REQUEST_TIMEOUT set in the <I>AttributeFlags</I> so that NDIS will not attempt to time out sends and requests that NDIS holds queued to the intermediate driver.</P>
+
+<P>The call to <B>NdisMSetAttributes</B> or <B>NdisMSetAttributesEx</B> includes a <I>MiniportAdapterContext</I> handle to a driver-allocated context area, in which the miniport maintains runtime state information. NDIS subsequently passes the supplied <I>MiniportAdapterContext</I> handle as an input parameter to other <B>Miniport<I>XXX</I></B> functions.</P>
+
+<P>Consequently, the <B>MiniportInitialize</B> function of an intermediate driver must call <B>NdisMSetAttributesEx</B> to set up the <I>MiniportAdapterContext</I> handle for a driver-allocated per-virtual-network adapter context area. Otherwise, NDIS would pass a NULL <I>MiniportAdapterContext</I> handle in its subsequent calls to the intermediate driver's other <B>Miniport<I>XXX</I></B> functions.</P>
+
+<P>After a call to <B>NdisMRegisterIoPortRange</B>, a miniport must call the <B>NdisRaw<I>XXX</I></B> functions with the <I>PortOffset </I>value returned by <B>NdisMRegisterIoPortRange</B> to communicate with its network adapter. The network adapter driver can no longer call the <B>NdisImmediateRead/WritePort<I>XXX</I></B> functions. Similarly, after a call to <B>NdisMMapIoSpace</B>, a network adapter driver can no longer call <B>NdisImmediateRead/WriteSharedMemory</B>.</P>
+
+<P>After it has claimed any bus-relative hardware resources for its network adapter in the registry, a miniport should no longer call any bus-type-specific <B>NdisRead<I>XXX</I></B> function.</P>
+
+<P>After <B>MiniportInitialize</B> calls <A HREF="wce50lrfndismregisterinterrupt.htm">NdisMRegisterInterrupt</A>, the driver's <A HREF="wce50lrfminiportisr.htm">MiniportISR</A> function is called if the driver's network adapter generates an interrupt or if any other device with which the network adapter shares an IRQ interrupts. NDIS does not call the <A HREF="wce50lrfminiportdisableinterrupt.htm">MiniportDisableInterrupt</A> and <A HREF="wce50lrfminiportenableinterrupt.htm">MiniportEnableInterrupt</A> functions, if the driver supplied them, during initialization, so it is such a miniport's responsibility to acknowledge and clear any interrupts its network adapter generates. If the network adapter shares an IRQ, the driver must first determine whether its network adapter generated the interrupt; if not, the miniport must return FALSE as soon as possible.</P>
+
+<P>If the network adapter does not generate interrupts, <B>MiniportInitialize</B> should call <A HREF="wce50lrfndisminitializetimer.htm">NdisMInitializeTimer</A> with a driver-supplied polling <A HREF="wce50lrfminiporttimer.htm">MiniportTimer</A> function and a pointer to driver-allocated memory for a timer object. Drivers of network adapters that generate interrupts and intermediate drivers also can set up one or more <B>MiniportTimer</B> functions, each with its own timer object. <B>MiniportInitialize</B> usually calls <A HREF="wce50lrfndismsetperiodictimer.htm">NdisMSetPeriodicTimer</A> to enable a polling <B>MiniportTimer</B> function; a driver calls <A HREF="wce50lrfndismsettimer.htm">NdisMSetTimer</A> subsequently when conditions occur such that the driver's non-polling <B>MiniportTimer</B> function should be run.</P>
+
+<P>If the driver subsequently indicates receives with <A HREF="wce50lrfndismindicatereceivepacket.htm">NdisMIndicateReceivePacket</A>, the <B>MiniportInitialize</B> function should call <A HREF="wce50lrfndisallocatepacketpool.htm">NdisAllocatePacketPool</A> and <A HREF="wce50lrfndisallocatebufferpool.htm">NdisAllocateBufferPool</A> and save the handles returned by these NDIS functions. The packets that the driver subsequently indicates with <B>NdisMIndicateReceivePacket</B> must reference descriptors that were allocated with <A HREF="wce50lrfndisallocatepacket.htm">NdisAllocatePacket</A> and <A HREF="wce50lrfndisallocatebuffer.htm">NdisAllocateBuffer</A>.</P>
+
+<P>If driver functions other than <B>MiniportISR</B> or <B>MiniportDisableInterrupt</B> share resources, <B>MiniportInitialize</B> should call <A HREF="wce50lrfndisallocatespinlock.htm">NdisAllocateSpinLock</A> to set up any spin lock necessary to synchronize access to such a set of shared resources, particularly in a full-duplex driver or in a driver with a polling <B>MiniportTimer</B> function rather than an ISR. Resources shared by other driver functions with <B>MiniportISR</B> or the interrupt object set up when<B> MiniportInitialize</B> calls <B>NdisMRegisterInterrupt</B> and accessed subsequently by calling <A HREF="wce50lrfndismsynchronizewithinterrupt.htm">NdisMSynchronizeWithInterrupt</A> protects MiniportDisableInterrupt, such as network adapter registers.</P>
+
+<P>Any network adapter driver's <B>MiniportInitialize</B> function should test the network adapter to be sure the hardware is configured correctly to carry out subsequent network I/O operations. If it must wait for state changes to occur in the hardware, <B>MiniportInitialize</B> can call <A HREF="wce50lrfndismsleep.htm">NdisMSleep</A>.</P>
+
+<P>Unless the <B>MiniportInitialize</B> function of a network adapter driver will return an error status, it should call <A HREF="wce50lrfndismregisteradaptershutdownhandler.htm">NdisMRegisterAdapterShutdownHandler</A> with a driver-supplied <A HREF="wce50lrfminiportshutdown.htm">MiniportShutdown</A> function.</P>
+
+<P>If <B>MiniportInitialize</B> will fail the initialization, it must release all resources it has already allocated before it returns control.</P>
+
+<P>If <B>MiniportInitialize</B> returns NDIS_STATUS_OPEN_ERROR, NDIS can examine the value returned at <I>OpenErrorStatus</I> to obtain more information about the error.</P>
+
+<P>When <B>MiniportInitialize</B> returns NDIS_STATUS_SUCCESS, the NDIS library calls the driver's <A HREF="wce50lrfminiportqueryinformation.htm">MiniportQueryInformation</A> function next.</P>
+
+<H4 class="dtH4">Requirements</H4>
+
+<P><B>OS Versions:</B> Windows CE .NET 4.0 and later.<BR>
+<B>Header:</B> Externs.h.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50lrfminiportdisableinterrupt.htm">MiniportDisableInterrupt</A> | <A HREF="wce50lrfminiportenableinterrupt.htm">MiniportEnableInterrupt</A> | <A HREF="wce50lrfminiportisr.htm">MiniportISR</A> | <A HREF="wce50lrfminiportqueryinformation.htm">MiniportQueryInformation</A> | <A HREF="wce50lrfminiportshutdown.htm">MiniportShutdown</A> | <A HREF="wce50lrfminiporttimer.htm">MiniportTimer</A> | <A HREF="wce50lrfndisallocatebuffer.htm">NdisAllocateBuffer</A> | <A HREF="wce50lrfndisallocatebufferpool.htm">NdisAllocateBufferPool</A> | <A HREF="wce50lrfndisallocatepacket.htm">NdisAllocatePacket</A> | <A HREF="wce50lrfndisallocatepacketpool.htm">NdisAllocatePacketPool</A> | <A HREF="wce50lrfndisallocatespinlock.htm">NdisAllocateSpinLock</A> | <A HREF="wce50lrfndisiminitializedeviceinstance.htm">NdisIMInitializeDeviceInstance</A> | <A HREF="wce50lrfndisimregisterlayeredminiport.htm">NdisIMRegisterLayeredMiniport</A> | <A HREF="wce50lrfndismindicatereceivepacket.htm">NdisMIndicateReceivePacket</A> | <A HREF="wce50lrfndisminitializetimer.htm">NdisMInitializeTimer</A> | <A HREF="wce50lrfndismmapiospace.htm">NdisMMapIoSpace</A> | <A HREF="wce50lrfndismregisteradaptershutdownhandler.htm">NdisMRegisterAdapterShutdownHandler</A> | <A HREF="wce50lrfndismregisterinterrupt.htm">NdisMRegisterInterrupt</A> | <A HREF="wce50lrfndismregisterioportrange.htm">NdisMRegisterIoPortRange</A> | <A HREF="wce50lrfndismregisterminiport.htm">NdisMRegisterMiniport</A> | <A HREF="wce50lrfndismsetattributes.htm">NdisMSetAttributes</A> | <A HREF="wce50lrfndismsetattributesex.htm">NdisMSetAttributesEx</A> | <A HREF="wce50lrfndismsetperiodictimer.htm">NdisMSetPeriodicTimer</A> | <A HREF="wce50lrfndismsettimer.htm">NdisMSetTimer</A> | <A HREF="wce50lrfndismsleep.htm">NdisMSleep</A> | <A HREF="wce50lrfndismsynchronizewithinterrupt.htm">NdisMSynchronizeWithInterrupt</A> | <A HREF="wce50lrfndisopenconfiguration.htm">NdisOpenConfiguration</A> | <A HREF="wce50lrfndisreadconfiguration.htm">NdisReadConfiguration</A> | <A HREF="wce50lrfprotocolbindadapter.htm">ProtocolBindAdapter</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

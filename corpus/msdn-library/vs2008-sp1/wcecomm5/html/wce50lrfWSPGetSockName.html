@@ -1,0 +1,139 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>WSPGetSockName</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="WSPGetSockName"/>
+<MSHelp:RLTitle Title="WSPGetSockName"/>
+<MSHelp:Keyword Index="K" Term="WSPGetSockName"/>
+<MSHelp:Keyword Index="A" Term="wce50lrfWSPGetSockName"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Feature"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="apiref"/>
+<MSHelp:Attr Name="Filename" Value="winsock2spi_functions.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="False"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+<MSHelp:Attr Name="APIName" Value="WSPGetSockName"/>
+<MSHelp:Attr Name="APIType" Value="LibDef"/>
+<MSHelp:Attr Name="APILocation" Value="Ws2.lib"/>
+<MSHelp:Attr Name="PBFeature" Value="SYSGEN_WINSOCK"/>
+<MSHelp:Attr Name="PBOnly" Value="False"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_3008292">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50lrfwspgetsockname"></A>WSPGetSockName</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>This function gets the local name for a socket.</P>
+
+<PRE class="syntax"><B>int WSPGetSockName(</B>
+  <B>SOCKET </B><I>s</I><B>,</B>
+  <B>struct sockaddr FAR* </B><I>name</I><B>,</B>
+  <B>LPINT </B><I>namelen</I><B>,</B>
+  <B>LPINT </B><I>lpErrno </I>
+<B>);</B></PRE>
+
+<H4 class="dtH4">Parameters</H4>
+
+<DL>
+<DT><I>s</I></DT>
+
+<DD>[in] Descriptor identifying a bound socket.</dd>
+
+<DT><I>name</I></DT>
+
+<DD>[out] Pointer to a structure used to supply the address (name) of the socket.</dd>
+
+<DT><I>namelen</I></DT>
+
+<DD>[in, out] Pointer to an integer that, on input, indicates the size of the structure pointed to by <I>name, </I>and on output indicates the size of the returned name.</dd>
+
+<DT><I>lpErrno</I></DT>
+
+<DD>[out] Pointer to the error code.</dd>
+</DL>
+
+<H4 class="dtH4">Return Values</H4>
+
+<P>If no error occurs, this function returns zero. Otherwise, a value of SOCKET_ERROR is returned, and a specific error code is available in <I>lpErrno</I>.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=24%>Error value</TH>
+<TH width=76%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=24%>WSAENETDOWN</TD>
+<TD width=76%>Network subsystem has failed.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=24%>WSAEFAULT</TD>
+<TD width=76%><I>Name </I>or the <I>namelen </I>parameter is not a valid part of the user address space, or the <I>namelen</I> parameter is too small.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=24%>WSAEINPROGRESS</TD>
+<TD width=76%>Function is invoked when a callback is in progress.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=24%>WSAENOTSOCK</TD>
+<TD width=76%>Descriptor is not a socket.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=24%>WSAEINVAL</TD>
+<TD width=76%>Socket has not been bound to an address with <A HREF="wce50lrfwspbind.htm">WSPBind</A>, or ADDR_ANY is specified in <B>WSPBind</B> but connection has not yet occurred.</TD>
+</TR>
+</table></div>
+
+<H4 class="dtH4">Remarks</H4>
+
+<P>This function retrieves the current name for the specified socket descriptor in <I>name</I>. It is used on a bound and/or connected socket specified by the <I>s</I> parameter. The local association is returned. This call is especially useful when a <A HREF="wce50lrfwspconnect.htm">WSPConnect</A> call has been made without doing a <B>WSPBind</B> first; as this call provides the only means by which the local association that has been set by the service provider can be determined.</P>
+
+<P>If a socket was bound to an unspecified address (for example, ADDR_ANY), indicating that any of the host's addresses within the specified address family should be used for the socket, this function will <I>not</I> necessarily return information about the host address, unless the socket has been connected with <B>WSPConnect</B> or <A HREF="wce50lrfwspaccept.htm">WSPAccept</A>. The Windows Sockets SPI client must not assume that an address will be specified unless the socket is connected. This is because for a multihomed host, the address that will be used for the socket is unknown until the socket is connected.</P>
+
+<H4 class="dtH4">Requirements</H4>
+
+<P><B>OS Versions:</B> Windows CE .NET 4.0 and later.<BR>
+<B>Header:</B> Ws2spi.h.<BR>
+<B>Link Library:</B> Ws2.lib.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50lrfwspbind.htm">WSPBind</A> | <A HREF="wce50lrfwspsocket.htm">WSPSocket</A> | <A HREF="wce50lrfwspgetpeername.htm">WSPGetPeerName</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

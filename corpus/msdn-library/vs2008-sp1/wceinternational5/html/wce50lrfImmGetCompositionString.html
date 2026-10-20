@@ -1,0 +1,150 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>ImmGetCompositionString</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="ImmGetCompositionString"/>
+<MSHelp:RLTitle Title="ImmGetCompositionString"/>
+<MSHelp:Keyword Index="K" Term="ImmGetCompositionString"/>
+<MSHelp:Keyword Index="A" Term="wce50lrfImmGetCompositionString"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Feature"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="apiref"/>
+<MSHelp:Attr Name="Filename" Value="imm_functions.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="True"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+<MSHelp:Attr Name="APIName" Value="ImmGetCompositionString"/>
+<MSHelp:Attr Name="APIType" Value="LibDef"/>
+<MSHelp:Attr Name="APILocation" Value="Coreimm.lib"/>
+<MSHelp:Attr Name="PBFeature" Value="SYSGEN_IMM"/>
+<MSHelp:Attr Name="PBOnly" Value="False"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_3004052">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50lrfimmgetcompositionstring"></A>ImmGetCompositionString</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>This function retrieves information about the composition string.</P>
+
+<PRE class="syntax"><B>LONG ImmGetCompositionString(</B>
+<B>  HIMC</B> <I>hIMC</I><B>,</B> 
+<B>  DWORD</B> <I>dwIndex</I><B>,</B> 
+<B>  LPVOID</B> <I>lpBuf</I><B>,</B> 
+<B>  DWORD </B><I>dwBufLen</I>
+<B>);</B></PRE>
+
+<H4 class="dtH4">Parameters</H4>
+
+<DL>
+<DT><I>hIMC</I></DT>
+
+<DD>[in] Handle to the input context. In Windows CE 2.10 and later, if <I>hIMC </I>is NULL, then the length of the composition string, <I>dwBufLen</I>, is returned for the current active context.</dd>
+
+<DT><I>dwIndex</I></DT>
+
+<DD>[in] Index of the information to retrieve. This parameter can be one of the values specified in <A HREF="wce50lrfimecompositionstringvalues.htm">IME Composition String Values</A>. For each value except GCS_CURSORPOS and GCS_DELTASTART, the function copies the requested information to the specified buffer. The function returns the cursor and delta position values in the low 16-bits of the return value.</dd>
+
+<DT><I>lpBuf</I></DT>
+
+<DD>[out] Long pointer to the buffer that receives the requested information.</dd>
+
+<DT><I>dwBufLen</I></DT>
+
+<DD>[in] Size of the buffer, in bytes. If zero, the <B>ImmGetCompositionString</B> function returns the buffer size needed for the complete information.</dd>
+</DL>
+
+<H4 class="dtH4">Return Values</H4>
+
+<P>The number of bytes copied to the destination buffer or, if <I>dwBufLen</I> is zero, the buffer size, in bytes, needed to receive all of the requested information indicates success. IMM_ERROR_NODATA indicates that the composition data is not ready in the input context. IMM_ERROR_GENERAL indicates that a general error was detected by IME.</P>
+
+<H4 class="dtH4">Remarks</H4>
+
+<P>An application calls this function in response to the <A HREF="wce50lrfwmimecomposition.htm">WM_IME_COMPOSITION</A> or <A HREF="wce50lrfwmimestartcomposition.htm">WM_IME_STARTCOMPOSITION</A> message. The IMM removes the information when an application calls the <A HREF="wce50lrfimmreleasecontext.htm">ImmReleaseContext</A> function.</P>
+
+<H4 class="dtH4">Code Example</H4>
+
+<P>The following code example demonstrates how to use <B>ImmGetCompositionString</B>.</P>
+
+<BLOCKQUOTE class="dtBlock">
+<b class="le">Note</b>&nbsp;&nbsp;&nbsp;To make the following code example easier to read, security checking and error handling are not included. This code example should not be used in a release configuration unless it has been modified to include them.</BLOCKQUOTE>
+
+<PRE class="code">BOOL GetCompositionString( HWND hWnd, LPTSTR *pszCompStr, UINT *cchCompStr )
+{
+
+    ASSERT(hWnd);
+    DWORD dwBufLen = NULL;
+
+    HIMC hImc = ImmGetContext(hWnd);
+
+    if (!hImc)
+    {
+        DEBUGMSG(1, (_T("Failed to get handle to current input context.\r\n")));
+        return FALSE;
+    }
+
+    // Determine how much space is required to store the composition string.
+    if ( (dwBufLen = ImmGetCompositionString( hImc, GCS_COMPSTR, NULL, 0l)) &lt; 0 )
+    {
+        DEBUGMSG(1, (_T("No composition string.\r\n")));
+        return FALSE;
+    }
+    
+    if ( *cchCompStr &lt; (dwBufLen/sizeof(TCHAR)) + 1 )
+    {
+        DEBUGMSG(1, (_T("pszCompStr needs to be at least %i characters large.\r\n"), 
+                 (dwBufLen/sizeof(TCHAR)) + 1));
+      
+        *cchCompStr = (dwBufLen/sizeof(TCHAR)) + 1;
+      
+        return FALSE;
+    }
+
+    ImmGetCompositionString(hImc, GCS_COMPSTR, *pszCompStr, dwBufLen );
+    (*pszCompStr)[dwBufLen] = NULL;
+
+    return TRUE;
+   
+}</PRE>
+
+<H4 class="dtH4">Requirements</H4>
+
+<P><B>OS Versions:</B> Windows CE .NET 4.0 and later.<BR>
+<B>Header:</B> Imm.h.<BR>
+<B>Link Library:</B> Coreimm.lib.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50lrfimmreleasecontext.htm">ImmReleaseContext</A> | <A HREF="wce50lrfwmimecomposition.htm">WM_IME_COMPOSITION</A> | <A HREF="wce50lrfwmimestartcomposition.htm">WM_IME_STARTCOMPOSITION</A> | <A HREF="wce50lrfimecompositionstringvalues.htm">IME Composition String Values</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

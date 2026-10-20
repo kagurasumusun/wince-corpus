@@ -1,0 +1,180 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>MODULES Section</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="MODULES Section"/>
+<MSHelp:RLTitle Title="MODULES Section"/>
+<MSHelp:Keyword Index="A" Term="wce50conMODULESSection"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="OS"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="True"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="configuration_file_types.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="False"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_3012315">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50conmodulessection"></A>MODULES Section</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>The MODULES section specifies which Windows CE-based modules are included in the run-time image, and how they are loaded into the memory table as established in the MEMORY section of the Config.bib file. </P>
+
+<P>This section can contain up to 2,000 modules, which consist of a two-part combination of source code and data. </P>
+
+<P>The following code example shows the columnar format used by a MODULES section entry.</P>
+
+<PRE class="syntax"><I>Name        Path        Memory block        Section override        Type</I></PRE>
+
+<H4 class="dtH4">Parameters</H4>
+
+<DL>
+<DT><I>Name</I></DT>
+
+<DD>This parameter specifies the name of the MODULES section entry as it appears in the memory table. Usually, the <I>Name</I> entry is the same as the name of the file referenced by <I>Path</I>.</dd>
+
+<DT><I>Path</I></DT>
+
+<DD>This parameter specifies the full path to the file, as specified in the MODULES section that Romimage.exe incorporates into the run-time image. Usually, the <I>Path</I> file name is the same as the <I>Name </I>MODULES section entry.</dd>
+
+<DT><I>Memory block</I></DT>
+
+<DD>This parameter specifies the RAMIMAGE section of the memory region into which Romimage.exe loads the object module. 
+
+<P>Romimage.exe places the object modules in the specified memory location in the order in which they appear in the MEMORY section. This memory location corresponds to the MEMORY section defined in the Config.bib file. 
+
+
+<P>There is only one RAMIMAGE per run-time image. The name used to specify the MEMORY section must be the same as the name specified in the Config.bib file.
+</dd>
+
+<DT><I>Section override</I></DT>
+
+<DD>This parameter specifies what type of section entry Romimage.exe treats the entry as, and can be set to the following flags: 
+
+<UL type="disc">
+	<LI>MODULE to define it as a MODULES section entry</li>
+
+	<LI>FILES to define it as a FILES section entry</li>
+</UL>
+
+
+<P>When this is added to an entry, Romimage.exe ignores the section that the entry resides in, and treats the entry as a member of the specified section. 
+
+
+<P>This is optional. 
+</dd>
+
+<DT><I>Type</I></DT>
+
+<DD>This parameter specifies the file type and can be a combination of the following:
+
+<UL type="disc">
+	<LI>S to define it as a system file.</li>
+
+	<LI>H to define it as a hidden file.</li>
+
+	<LI>R to compress resources. Applies to the MODULES section only.</li>
+
+	<LI>C to compress everything if applied to a module. 
+<P>If a file is compressed, the kernel uncompresses, performs run-time fixups, and demand pages the image into RAM. 
+
+<P>If the compressed file is in RAM due to the RAMIMAGE section mapping to RAM, this results in the file occupying two RAM areas. However, the compressed image can reside in flash memory. For more information about compression, see <A HREF="wce50lrfcompression.htm">COMPRESSION</A>.
+
+<P>If this flag is set, it takes precedence over other settings.
+</li>
+
+	<LI>D to prevent a debugger from running.</li>
+
+	<LI>N to mark a module as nontrusted. Applies to the MODULES section only.</li>
+
+	<LI>P to signal that Romimage.exe must not check the CPU type specified in the header against the run-time image's target CPU type on a per-module basis. This flag is usually used for resource-only DLLs that can be built on one CPU type and used on different CPU types.</li>
+
+	<LI>K to signal that Romimage.exe must fixup the module to a kernel address. 
+<P>In this process, Romimage.exe assigns a fixed virtual address to the public exports that the DLL provides and which is identical for all programs that use the DLL. A module that has this flag set can only be loaded with <B>LoadKernelLibrary</B>.
+
+<P>Applies to the MODULES section only.
+</li>
+
+	<LI>X to signal that Romimage.exe must sign the module and include the signature file in the ROM, which helps determine whether a run-time image is valid.
+<P>Applies to the MODULES section only.
+</li>
+
+	<LI>M to signal that the kernel must not demand page the module. By default, the kernel demand pages modules as needed. This flag is usually set for system services that are called in paging, or which are in out-of-memory (OOM) condition.
+<P>Applies to the MODULES section only.
+</li>
+
+	<LI>L to signal Romimage.exe to not split a ROM DLL between the process virtual memory area and the process slot 1. This protects DLLs that require the code and data to reside at consecutive virtual addresses.
+<P>Applies to the MODULES section only.
+</li>
+
+	<LI>U to keep a specific file or both sections of a module uncompressed, unless the C flag is set. </li>
+</UL>
+</dd>
+</DL>
+
+<H4 class="dtH4">Example</H4>
+
+<P>The following code example shows an entry in the MODULES section.</P>
+
+<PRE class="syntax">INIT.EXE   %_WINCEROOT%\RELEASE\INIT.EXE   NK  SH
+MYDLL.DLL  %_WINCEROOT%\RELEASE\MYDLL.DLL  NK  SHC</PRE>
+
+<P>In this example, the entries tell Romimage.exe to include Init.exe and Mydll.dll in the run-time image, in the section labeled NK. </P>
+
+<P>The C flag in the second MODULES section entry also specifies that Romimage.exe needs to compress Mydll.dll. </P>
+
+<P>The S and H flags on both files indicate that these are system and hidden files.</P>
+
+<H4 class="dtH4">Remarks</H4>
+
+<P>By default, all modules are uncompressed.</P>
+
+<P>The R and C types refer to how the file is stored in ROM and how much RAM is used when the file is run. </P>
+
+<P>For example, variables are always compressed into ROM because they must be copied into RAM to run. However, code does not need to be compressed because it can run directly in ROM. </P>
+
+<P>When deciding these attributes, remember that as you increase the compression you need less ROM but more RAM.</P>
+
+<P>The D type prevents a debugger from running while the module is loaded and prevents a debugger from loading the module to debug it.</P>
+
+<P>The N type marks a module as nontrusted because by default every module in the ROM MODULES section of a .bib file and the resulting binary is considered to be a trusted application. This is better than putting the module in the FILES section of the .bib file because it keeps the XIP capabilities.</P>
+
+<P>The K type signals that a module is to be treated like the kernel for memory location and relocation fixup styles. The module must also be loaded with a special <MSHelp:link keywords="wce50lrfLoadKernelLibrary" TABINDEX="0">LoadKernelLibrary</MSHelp:link> instead of in the usual manner. This is currently only used for the debugger and Remote Kernel Tracker.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50confilessection.htm">FILES Section</A> | <A HREF="wce50conbinaryimagebuilderfile.htm">Binary Image Builder File</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

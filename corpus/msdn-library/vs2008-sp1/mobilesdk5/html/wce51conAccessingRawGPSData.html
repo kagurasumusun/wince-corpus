@@ -1,0 +1,75 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Accessing Raw GPS Data</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Accessing Raw GPS Data"/>
+<MSHelp:RLTitle Title="Accessing Raw GPS Data"/>
+<MSHelp:Keyword Index="A" Term="wce51conAccessingRawGPSData"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Application"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbsmartphone"/>
+<MSHelp:Attr Name="Product" Value="kbPocketPC"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="Technology" Value="kbPocketPC"/>
+<MSHelp:Attr Name="Technology" Value="kbSmartphone"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="gpsid_appdev_bowmore.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="False"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_1061820">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Windows Mobile Version 5.0 SDK<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce51conaccessingrawgpsdata"></A>Accessing Raw GPS Data</H1>
+<!--Feedback Link Top Start-->
+<P CLASS="feedback"><font size="1"><a href="mailto:medfdbk&#64;microsoft.com?subject=Product: Windows Mobile | Version: 5.0 | Release: SDK | Title: Accessing Raw GPS Data | Filename: wce51conaccessingrawgpsdata.htm | Built on: Wednesday, September 14, 2005">Send Feedback</a> on this topic to the authors</font></p>
+<!--Feedback Link Top End-->
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>The raw interface is one of two interfaces provided by the GPS Intermediate Driver for accessing GPS information. The raw interface, which makes GPS information available through a virtual COM port, mimics the design of many existing GPS scenarios. In both the existing scenarios and with the raw interface, applications call <MSHelp:link keywords="wce50lrfCreateFile" TABINDEX="0">CreateFile</MSHelp:link> to open a connection, call <MSHelp:link keywords="wce50lrfReadFile" TABINDEX="0">ReadFile</MSHelp:link> some number of times to retrieve raw data, and call <MSHelp:link keywords="wce50lrfCloseHandle" TABINDEX="0">CloseHandle</MSHelp:link> to close the connection.</P>
+
+<P>For information about how to use the raw interface, see <A HREF="wce51conoverallrawdatacodestructure.htm">Overall Raw Data Code Structure</A>, which explains how to use <B>CreateFile</B>, <B>ReadFile</B>, and <B>CloseHandle</B> with the GPS Intermediate Driver raw interface.</P>
+
+<P>While it is not recommended in most scenarios, trusted applications can also call <MSHelp:link keywords="wce50lrfWriteFile" TABINDEX="0">WriteFile</MSHelp:link> and <MSHelp:link keywords="wce50lrfDeviceIoControl" TABINDEX="0">DeviceIoControl</MSHelp:link> using the handle returned by <B>CreateFile</B>. In this case, the GPS Intermediate Driver forwards these calls to the hardware-specific device driver that interacts with the underlying GPS hardware. On platforms where trust is enabled, untrusted applications cannot successfully call <B>WriteFile</B> or <B>DeviceIoControl</B>. In this case, the last error, accessible through <MSHelp:link keywords="wce50lrfGetLastError" TABINDEX="0">GetLastError</MSHelp:link>, will be set to ERROR_ACCESS_DENIED.</P>
+
+<P>In most cases, applications should avoid calling <B>WriteFile</B> or <B>DeviceIoControl</B>. Without the GPS Intermediate Driver, applications often interact directly with GPS hardware. In addition, in most cases only a single application uses the GPS hardware at a time. In this situation, it often doesn't matter if an application uses <B>DeviceIoControl</B> to put the GPS hardware into a non-standard mode (for example, one where the hardware returns GPS data in a proprietary format). Because the application makes the change, it knows how to interpret data in the new format. In contrast, with the GPS Intermediate Driver, changing this type of setting affects all clients, some of which may not know how to interpret data in the proprietary format, or to even know that a change has been made.</P>
+
+<BLOCKQUOTE class="dtBlock">
+<b class="le">Note</b>&nbsp;&nbsp;&nbsp;Calling <B>DeviceIoControl</B> with the same handle used to access data is different from calling <B>DeviceIoControl</B> with a handle to the GPS Intermediate Driver. In the former case - the case that uses the handle discussed in this topic - the IOCTL is handled by the device driver that controls the underlying hardware. In the latter case - when you call <B>CreateFile</B> with "GPD0:" - the IOCTL is handled by the GPS Intermediate Driver itself. For more information about controlling the GPS Intermediate Driver using <B>DeviceIoControl</B>, see <A HREF="wce51concontrollinggpsintermediatedriverexecution.htm">Controlling GPS Intermediate Driver Execution</A>.</BLOCKQUOTE>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce51origpsintermediatedriverapplicationdevelopment.htm">GPS Intermediate Driver Application Development</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Feedback Link Bottom Start-->
+<p><font size="1"><a href="mailto:medfdbk&#64;microsoft.com?subject=Product: Windows Mobile | Version: 5.0 | Release: SDK | Title: Accessing Raw GPS Data | Filename: wce51conaccessingrawgpsdata.htm | Built on: Wednesday, September 14, 2005">Send Feedback</a> on this topic to the authors</font></p>
+<!--Feedback Link Bottom End-->
+<!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="mob5conCopyrightInformationForMagneto" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link></font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

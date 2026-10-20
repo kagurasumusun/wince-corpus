@@ -1,0 +1,139 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Partition Manager</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Partition Manager"/>
+<MSHelp:RLTitle Title="Partition Manager"/>
+<MSHelp:Keyword Index="A" Term="wce50conPartitionManager"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Feature"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="partitionmgr_guide.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="True"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="True"/>
+<MSHelp:Attr Name="PBFeature" Value="SYSGEN_STOREMGR"/>
+<MSHelp:Attr Name="PBOnly" Value="False"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_3009817">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50conpartitionmanager"></A>Partition Manager</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>The Partition Manager calls one of several different partition drivers and is contained within the Storage Manager. The Storage Manager is selected with the SYSGEN_STOREMGR variable.</P>
+
+<P>The Partition Manager manages, loads, and unloads logical partitions on a storage device. A storage device is composed of number of sectors that are contiguous set of bytes within the device. All sectors on a given storage device are of the same size. A partition is a logical division of a storage device and covers a span of whole sectors within the storage device. You should never overlap the partitions within a storage device or the operating system may stop responding. Space that is not included within any of the logical partitions is considered part of the unpartitioned space within the storage device. </P>
+
+<P>You can associate different file systems with each partition on a storage device. The file system type is associated with the partition when you create or format it. When you mount the partition, the Partition Manager informs the storage manager to activate the respective file system. </P>
+
+<P>The <B>PartitionTable</B> key contains entries where the volume name is the partition type. This entry is in %02X format. The value is the name of the file system. This is used to look up the module to load. Declare the NTFS file system partition type so that the file allocation table (FAT) is not loaded. The number 07 represents the NTFS file system partition. The following table shows the partition types</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=39%>Partition type</TH>
+<TH width=61%>Identifier</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=39%>Microsoft&reg; MS-DOS&reg; 12 bit FAT</TD>
+<TD width=61%>0x01</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=39%>XENIX1</TD>
+<TD width=61%>0x02</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=39%>XENIX2</TD>
+<TD width=61%>0x03</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=39%>MS-DOS 16 bit FAT</TD>
+<TD width=61%>0x04</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=39%>MS-DOS Extended</TD>
+<TD width=61%>0x05</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=39%>MS-DOS 24 bit FAT</TD>
+<TD width=61%>0x06</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=39%>NTFS</TD>
+<TD width=61%>0x07</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=39%>MS-DOS 32 bit FAT</TD>
+<TD width=61%>0x0B</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=39%>MS-DOS 32 bit FAT LBA</TD>
+<TD width=61%>0x0C</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=39%>MS-DOS 24 bit FAT LBA</TD>
+<TD width=61%>0x0E</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=39%>MS-DOS Extended LBA</TD>
+<TD width=61%>0x0F</TD>
+</TR>
+</table></div>
+
+<P>If the <B>PartitionDriver</B> key is blank, the null partition driver loads. If the <B>PartitionDriver</B> key is not found, the default file system is loaded. The Partition Manager tries to load a non-existent file system, in this case it tries to load NTFS, so no file system is associated with that particular profile. The following registry key shows NTFS file system declared as the non-existent partition type. </P>
+
+<PRE class="code">[HKEY_LOCAL_MACHINE\System\StorageManager\Profiles\HDProfile\PartitionTable]
+    "07"="NTFS"
+    
+[HKEY_LOCAL_MACHINE\System\StorageManager\Profiles\CDProfile]
+    "Name"="IDE CDROM/DVD Drive"
+    "Folder"="CDROM Drive"
+    "DefaultFileSystem"="UDFS"
+    "PartitionDriver"=""</PRE>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50conpartitiondriver.htm">Partition Driver</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

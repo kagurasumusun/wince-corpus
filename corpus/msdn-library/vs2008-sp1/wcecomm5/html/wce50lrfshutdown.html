@@ -1,0 +1,150 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>shutdown</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="shutdown"/>
+<MSHelp:RLTitle Title="shutdown"/>
+<MSHelp:Keyword Index="K" Term="shutdown"/>
+<MSHelp:Keyword Index="A" Term="wce50lrfshutdown"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Feature"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="apiref"/>
+<MSHelp:Attr Name="Filename" Value="winsock2_functions.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="False"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+<MSHelp:Attr Name="APIName" Value="shutdown"/>
+<MSHelp:Attr Name="APIType" Value="LibDef"/>
+<MSHelp:Attr Name="APILocation" Value="Ws2.lib"/>
+<MSHelp:Attr Name="PBFeature" Value="SYSGEN_WINSOCK"/>
+<MSHelp:Attr Name="PBOnly" Value="False"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_3008341">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50lrfshutdown"></A>shutdown</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>This function disables sends or receives on a socket.</P>
+
+<PRE class="syntax"><B>int shutdown(</B>
+  <B>SOCKET </B><I>s</I><B>,</B>
+  <B>int </B><I>how</I>
+<B>);</B></PRE>
+
+<H4 class="dtH4">Parameters</H4>
+
+<DL>
+<DT><I>s</I></DT>
+
+<DD>[in] Descriptor identifying a socket. </dd>
+
+<DT><I>how</I></DT>
+
+<DD>[in] Flag that describes what types of operation will no longer be allowed. </dd>
+</DL>
+
+<H4 class="dtH4">Return Values</H4>
+
+<P>If no error occurs, this function returns zero. If an error occurs, a value of SOCKET_ERROR is returned, and a specific error code can be retrieved by calling <A HREF="wce50lrfwsagetlasterror.htm">WSAGetLastError</A>. The following table shows a list of possible error codes.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=27%>Error code </TH>
+<TH width=73%>Description </TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>WSANOTINITIALISED </TD>
+<TD width=73%>A successful <A HREF="wce50lrfwsastartup.htm">WSAStartup</A> call must occur before using this function. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>WSAENETDOWN </TD>
+<TD width=73%>The network subsystem has failed. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>WSAEINVAL </TD>
+<TD width=73%>The <I>how</I> parameter is not valid or is not consistent with the socket type. For example, SD_SEND is used with a <B>UNI_RECV</B> socket type. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>WSAEINPROGRESS </TD>
+<TD width=73%>A blocking Winsock call is in progress, or the service provider is still processing a callback function. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>WSAENOTCONN </TD>
+<TD width=73%>The socket is not connected (connection-oriented sockets only). </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>WSAENOTSOCK </TD>
+<TD width=73%>The descriptor is not a socket. </TD>
+</TR>
+</table></div>
+
+<H4 class="dtH4">Remarks</H4>
+
+<P>This function is used on all types of sockets to disable reception, transmission, or both.</P>
+
+<P>If the <I>how</I> parameter is SD_RECEIVE, subsequent calls to the <A HREF="wce50lrfrecv.htm">recv</A> function on the socket will be disallowed. This has no effect on the lower protocol layers. For TCP sockets, if there is still data queued on the socket waiting to be received, or data arrives subsequently, the connection is reset because the data cannot be delivered to the user. For UDP sockets, incoming datagrams are accepted and queued. In no case will an Internet Control Message Protocol (ICMP) error packet be generated.</P>
+
+<P>If the <I>how</I> parameter is SD_SEND, subsequent calls to the <A HREF="wce50lrfsend.htm">send</A> function are disallowed. For TCP sockets, a FIN will be sent after all data is sent and acknowledged by the receiver.</P>
+
+<P>Setting <I>how</I> to SD_BOTH disables both sends and receives as described above.</P>
+
+<P>The <B>shutdown</B> function does not close the socket. Any resources attached to the socket will not be freed until <A HREF="wce50lrfclosesocket.htm">closesocket</A> is invoked.</P>
+
+<P>To ensure that all data is sent and received on a connected socket before it is closed, an application should use <B>shutdown</B> to close the connection before calling <B>closesocket</B>. </P>
+
+<BLOCKQUOTE class="dtBlock">
+<b class="le">Note</b>&nbsp;&nbsp;&nbsp;The <B>shutdown</B> function does not block regardless of the SO_LINGER setting on the socket.</BLOCKQUOTE>
+
+<P>An application should not rely on being able to reuse a socket after it has been shut down. In particular, a Windows Sockets provider is not required to support the use of the <A HREF="wce50lrfconnectwindowssockets.htm">connect (Windows Sockets)</A> function on a socket that has been shut down.</P>
+
+<BLOCKQUOTE class="dtBlock">
+<b class="le">Note</b>&nbsp;&nbsp;&nbsp;Asynchronous transfer mode (ATM) is not supported in Windows CE.</BLOCKQUOTE>
+
+<H4 class="dtH4">Requirements</H4>
+
+<P><B>OS Versions:</B> Windows CE 1.0 and later.<BR>
+<B>Header:</B> Winsock2.h.<BR>
+<B>Link Library:</B> Ws2.lib.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50lrfclosesocket.htm">closesocket</A> | <A HREF="wce50lrfconnectwindowssockets.htm">connect (Windows Sockets)</A> | <A HREF="wce50lrfrecv.htm">recv</A> | <A HREF="wce50lrfsend.htm">send</A> | <A HREF="wce50lrfsocketwindowssockets.htm">socket (Windows Sockets)</A> | <A HREF="wce50lrfwsagetlasterror.htm">WSAGetLastError</A> | <A HREF="wce50lrfwsastartup.htm">WSAStartup</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

@@ -1,0 +1,156 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Remote API 2 (RAPI2) Initialization</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Remote API 2 (RAPI2) Initialization"/>
+<MSHelp:RLTitle Title="Remote API 2 (RAPI2) Initialization"/>
+<MSHelp:Keyword Index="A" Term="wce51grfRemoteAPI2RAPI2Initialization"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Application"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbsmartphone"/>
+<MSHelp:Attr Name="Product" Value="kbPocketPC"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="Technology" Value="kbPocketPC"/>
+<MSHelp:Attr Name="Technology" Value="kbSmartphone"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="rapi2_interfaces_magneto.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="True"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_1076688">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Windows Mobile Version 5.0 SDK<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce51grfremoteapi2rapi2initialization"></A>Remote API 2 (RAPI2) Initialization</H1>
+<!--Feedback Link Top Start-->
+<P CLASS="feedback"><font size="1"><a href="mailto:medfdbk&#64;microsoft.com?subject=Product: Windows Mobile | Version: 5.0 | Release: SDK | Title: Remote API 2 (RAPI2) Initialization | Filename: wce51grfremoteapi2rapi2initialization.htm | Built on: Wednesday, September 14, 2005">Send Feedback</a> on this topic to the authors</font></p>
+<!--Feedback Link Top End-->
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>The <A HREF="wce51lrfirapisessioniunknown.htm">IRAPISession</A> interface provides the methods that perform operations on the remote Microsoft&reg; Windows&reg; CE-based device. This set of methods is essentially the same as the functions provided by the original RAPI library.</P>
+
+<P>The <A HREF="wce51lrfirapisynciunknown.htm">IRAPISink</A> interface should be implemented by RAPI2 applications in order to receive notifications from the connection manager when remote devices connect and disconnect.</P>
+
+<P>The <A HREF="wce51lrfirapidesktopiunknown.htm">IRAPIDesktop</A>, <A HREF="wce51lrfirapienumdevicesiunknown.htm">IRAPIEnumDevices</A>, and <A HREF="wce51lrfirapidesktopiunknown.htm">IRAPIDevice</A> interfaces are used to discover, query, and create a session with a connected device.</P>
+
+<P>Use the following steps to initialize RAPI2 and create a session with a connected device.
+
+<OL type="1">
+	<LI>Instantiate the <B>IRAPIDesktop</B> interface using COM's <B>CoInitializeEx</B> method.</li>
+
+	<LI>Call <B>IRAPIDesktop::Advise</B> to register your applications implementation of the <B>IRAPISink</B> interface. This will alert your application when a device connects.</li>
+
+	<LI>Once a device has connected, call <B>IRAPIDesktop::EnumDevices</B> to obtain an instance of the <B>IRAPIEnumDevices</B> interface.</li>
+
+	<LI>Call <B>IRAPIEnumDevices::Next</B> to obtain an instance of the <B>IRAPIDevice</B> interface. This interface can be used to query for information about the selected device.</li>
+
+	<LI>Call <B>IRAPIDevice::CreateSession</B> to establish a session with the selected device.</li>
+
+	<LI>Initialize the underlying communications layer for the session by calling <B>IRAPISession::CeRapiInit</B>. </li>
+
+	<LI>Call methods of the <B>IRAPISession</B> interface to perform operations on the connected device.</li>
+</OL>
+
+<H4 class="dtH4">Code Example</H4>
+
+<P>The following code example illustrates the initialization of the RAPI2 interfaces.</P>
+
+<PRE class="code">int _tmain(int argc, _TCHAR* argv[])
+{
+      HRESULT hr = S_OK;
+
+      // Initialize COM.
+      hr = CoInitializeEx(NULL, COINIT_MULTITHREADED);
+
+      // Create an instance of the IRAPIDesktop interface.
+      IRAPIDesktop *pIRapiDesktop = NULL;
+      hr = CoCreateInstance(CLSID_RAPI,
+                            NULL,
+                            CLSCTX_INPROC_SERVER,
+                            IID_IRAPIDesktop,
+                            (void**)&amp;pIRapiDesktop);
+
+      // Call EnumDevices to obtain an enumeration of connected devices.
+      IRAPIEnumDevices *pIRapiEnumDevices = NULL;
+      if (SUCCEEDED(hr) &amp;&amp; pIRapiDesktop)
+      {
+            hr = pIRapiDesktop-&gt;EnumDevices(&amp;pIRapiEnumDevices);
+      }
+      
+      // Call Next to get an interface to the device.
+      IRAPIDevice *pIRapiDevice = NULL;
+      if (SUCCEEDED(hr) &amp;&amp; pIRapiEnumDevices)
+      {
+            hr = pIRapiEnumDevices-&gt;Next(&amp;pIRapiDevice);
+      }
+
+      // Call CreateSession to establish a session with the connected device.
+      IRAPISession *pIRapiSession = NULL;
+      if (SUCCEEDED(hr) &amp;&amp; pIRapiDevice)
+      {
+            hr=pIRapiDevice-&gt;CreateSession(&amp;pIRapiSession);
+      }
+
+      if (SUCCEEDED(hr) &amp;&amp; pIRapiSession)
+      {
+            // Call CeRapiInit before you call any other IRAPISession methods.
+            hr = pIRapiSession-&gt;CeRapiInit();
+            if (FAILED(hr))
+            {
+                  hr = pIRapiSession-&gt;CeRapiGetError();
+            }
+            else
+            {
+                  // Make calls on the session object 
+                  BOOL bRet = pIRapiSession-&gt;CeCheckPassword(TEXT("Password"));
+
+                  if (!bRet)
+                  {
+                        hr = pIRapiSession-&gt;CeRapiGetError();
+                        if(SUCCEEDED(hr)) // If no rapi errors, call CeGetLastError for the error on device
+                        {
+                              DWORD dwErr = pIRapiSession-&gt;CeGetLastError();
+                        }
+                  }
+            }
+      }
+      
+      return 0;
+
+}</PRE>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce51grfremoteapi2rapi2applicationdevelopmentforwindowsmobile-baseddevices.htm">Remote API 2 (RAPI2) Application Development for Windows Mobile-based Devices</A> | <A HREF="wce51grfremoteapi2rapi2reference.htm">Remote API 2 (RAPI2) Reference</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Feedback Link Bottom Start-->
+<p><font size="1"><a href="mailto:medfdbk&#64;microsoft.com?subject=Product: Windows Mobile | Version: 5.0 | Release: SDK | Title: Remote API 2 (RAPI2) Initialization | Filename: wce51grfremoteapi2rapi2initialization.htm | Built on: Wednesday, September 14, 2005">Send Feedback</a> on this topic to the authors</font></p>
+<!--Feedback Link Bottom End-->
+<!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="mob5conCopyrightInformationForMagneto" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link></font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

@@ -1,0 +1,134 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>ICcService::Connect</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="ICcService::Connect"/>
+<MSHelp:RLTitle Title="ICcService::Connect"/>
+<MSHelp:Keyword Index="K" Term="ICcService, Connect"/>
+<MSHelp:Keyword Index="A" Term="wce50lrfICcServiceConnect"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Debugging"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="True"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="apiref"/>
+<MSHelp:Attr Name="Filename" Value="corecon_ccservice_interface.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="False"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+<MSHelp:Attr Name="APIName" Value="ICcService.Connect"/>
+<MSHelp:Attr Name="APIType" Value="IDLDef"/>
+<MSHelp:Attr Name="APILocation" Value="none"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_1050564">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50lrficcserviceconnect"></A>ICcService::Connect</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>This method establishes a connection for service between host and device.</P>
+
+<PRE class="syntax"><B>HRESULT Connect(</B>
+<B>  DWORD</B> <I>dwTimeout</I><B>,</B>
+  <B>VARIANT_BOOL</B> <I>bAsync</I><B>,</B>
+  <B>DWORD*</B> <I>pdwCookieId</I>
+<B>);</B></PRE>
+
+<H4 class="dtH4">Parameters</H4>
+
+<DL>
+<DT><I>dwTimeout</I></DT>
+
+<DD>[in] Timeout specified in milliseconds for the connection attempt to wait before returning to the client.</dd>
+
+<DT><I>bAsync</I></DT>
+
+<DD>[in] Indicator for asynchronous call. 
+
+<P>If this is set to VARIANT_TRUE, the method returns immediately. In that case, clients can get status on the connect progress through the callback function and <I>dwTimeout</I> is ignored.
+</dd>
+
+<DT><I>pdwCookieId</I></DT>
+
+<DD>[out, retval] A valid cookie that identifies the method call. Callers can use this cookie in calls to <A HREF="wce50lrficcserviceabort.htm">ICcService::Abort</A> to cancel a pending asynchronous call.</dd>
+</DL>
+
+<H4 class="dtH4">Return Values</H4>
+
+<P>The following table shows return values for this method.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=25%>Value</TH>
+<TH width=75%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=25%>S_OK</TD>
+<TD width=75%>Indicates success.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=25%>E_PENDING</TD>
+<TD width=75%>Indicates that a connection could not be established within the given <I>dwTimeout</I>. 
+<P>This status code is also returned if a connection request is pending on this same service.</P>
+
+<P>Users can try again with a different timeout.</P>
+</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=25%>E_FAIL</TD>
+<TD width=75%>Indicates failure.</TD>
+</TR>
+</table></div>
+
+<H4 class="dtH4">Remarks</H4>
+
+<P>If this call is successful, the service should set its internal state to the SERVICE_INIT_CONNECT value. </P>
+
+<P>If a client calls this method multiple times and the service is connected, the method call translates to a no-op. </P>
+
+<P>If clients pass in VARIANT_TRUE for the second parameter, the timeout parameter is ignored and the call returns immediately. In this case the service state is set to SERVICE_INIT_CONNECT_PENDING. </P>
+
+<P>Clients can get the status of this request through <A HREF="wce50grficcservicecb.htm">ICcServiceCB</A>. This call returns immediately if the service is initialized and an outstanding connection request is pending.</P>
+
+<H4 class="dtH4">Requirements</H4>
+
+<P><B>OS Version: </B>Windows CE 5.0 and later.<BR>
+<B>Header: </B>CcService.h.<BR>
+<B>Link Library: </B>none.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50grfcoreconinterfaces.htm">Core Connectivity Interfaces</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

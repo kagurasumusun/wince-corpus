@@ -1,0 +1,397 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Retrieving Network Information</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Retrieving Network Information"/>
+<MSHelp:RLTitle Title="Retrieving Network Information"/>
+<MSHelp:Keyword Index="A" Term="wce51conCompleteIPHelperApplicationSourceCode"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Feature"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="iphelper_concepts.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="True"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+<MSHelp:Attr Name="PBFeature" Value="SYSGEN_TCPIP"/>
+<MSHelp:Attr Name="PBOnly" Value="False"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_1076704">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce51concompleteiphelperapplicationsourcecode"></A>Retrieving Network Information</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>The following code sample demonstrates the use of IP Helper APIs for retrieving network information about the local system, such as:
+
+<UL type="disc">
+	<LI>Hostname and domain name by calling <A HREF="wce50lrfgetnetworkparams.htm">GetNetworkParams</A>.</li>
+
+	<LI>Network adapter and interface information by calling <A HREF="wce50lrfgetadaptersinfo.htm">GetAdaptersInfo</A> and <A HREF="wce50lrfgetinterfaceinfo.htm">GetInterfaceInfo</A>, respectively.</li>
+
+	<LI>Interface to IP address mapping table by calling <A HREF="wce50lrfgetipaddrtable.htm">GetIpAddrTable</A>.</li>
+</UL>
+
+<P>It also adds a new IP address that maps to an existing adapter on the local system, by calling <A HREF="wce50lrfaddipaddress.htm">AddIPAddress</A>.</P>
+
+<PRE class="code">#include &lt;stdio.h&gt;
+#include &lt;windows.h&gt;
+#include "iprtrmib.h"
+#include "iphlpapi.h"
+#include "winsock2.h"
+
+void main() {
+ ULONG  ulOutBufLen;
+ DWORD  dwRetVal;
+ LPVOID   lpMsgBuf;
+ 
+ RETAILMSG(TRUE, (TEXT("------------------------\n")));
+ RETAILMSG(TRUE, (TEXT("This is GetNetworkParams\n")));
+ RETAILMSG(TRUE, (TEXT("------------------------\n")));
+
+ FIXED_INFO  *pFixedInfo;
+ IP_ADDR_STRING *pIPAddr;
+
+ //Call GetNetworkParams to get the length of the buffer
+ ulOutBufLen = 0;
+ GetNetworkParams( NULL, &amp;ulOutBufLen );
+
+ //Now that we have the necessary size, allocate the memory
+ pFixedInfo = (FIXED_INFO *) malloc( ulOutBufLen );
+
+ dwRetVal = GetNetworkParams( pFixedInfo, &amp;ulOutBufLen );
+ if (dwRetVal != NO_ERROR ) {
+  RETAILMSG(TRUE, (TEXT("Call to GetNetworkParams failed, error %d.\n"), dwRetVal));
+  free(pFixedInfo);
+  return;
+ }
+ 
+ RETAILMSG(TRUE, (TEXT("\tHost Name: %s\n"), pFixedInfo -&gt; HostName));
+ RETAILMSG(TRUE, (TEXT("\tDomain Name: %s\n"), pFixedInfo -&gt; DomainName));
+ RETAILMSG(TRUE, (TEXT("\tDNS Servers:\n")));
+ RETAILMSG(TRUE, (TEXT("\t\t%s\n"), pFixedInfo -&gt; DnsServerList.IpAddress.String));
+
+ pIPAddr = pFixedInfo -&gt; DnsServerList.Next;
+ while ( pIPAddr ) {
+   RETAILMSG(TRUE, (TEXT("\t\t%s\n"), pIPAddr -&gt; IpAddress.String));
+   pIPAddr = pIPAddr -&gt; Next;
+ }
+
+ if (pFixedInfo -&gt; EnableRouting)
+  RETAILMSG(TRUE, (TEXT("\tEnable Routing: Yes\n")));
+ else
+  RETAILMSG(TRUE, (TEXT("\tEnable Routing: No\n")));
+
+ if (pFixedInfo -&gt; EnableProxy)
+  RETAILMSG(TRUE, (TEXT("\tEnable Proxy: Yes\n")));
+ else
+  RETAILMSG(TRUE, (TEXT("\tEnable Proxy: No\n")));
+
+ if (pFixedInfo -&gt; EnableDns)
+  RETAILMSG(TRUE, (TEXT("\tEnable DNS: Yes\n")));
+ else
+  RETAILMSG(TRUE, (TEXT("\tEnable DNS: No\n")));
+
+ //free the memory we used;
+ free(pFixedInfo);
+ ulOutBufLen = 0;
+
+
+ RETAILMSG(TRUE, (TEXT("------------------------\n")));
+ RETAILMSG(TRUE, (TEXT("This is GetAdapatersInfo\n")));
+ RETAILMSG(TRUE, (TEXT("------------------------\n")));
+
+ IP_ADAPTER_INFO  *pAdapterInfo;
+ IP_ADAPTER_INFO  *pAdapter;
+
+ //Call GetAdaptersInfo to get the size of the buffer
+ ulOutBufLen = 0;
+ GetAdaptersInfo( NULL, &amp;ulOutBufLen) ;
+
+ //Now that we know the necessary buffer size, allocate the memory
+ pAdapterInfo = (IP_ADAPTER_INFO *) malloc( ulOutBufLen );
+
+ dwRetVal = GetAdaptersInfo( pAdapterInfo, &amp;ulOutBufLen);
+ if (dwRetVal != ERROR_SUCCESS) {
+  RETAILMSG(TRUE, (TEXT("Call to GetAdaptersInfo failed, error %d.\n"), dwRetVal));
+  free (pAdapterInfo);
+  return;
+ }
+
+ //Loop through the adapters and print info on each one.
+ pAdapter = pAdapterInfo;
+ 
+ while (pAdapter) {
+  RETAILMSG(TRUE, (TEXT("\tAdapter Name: \t%s\n"), pAdapter-&gt;AdapterName));
+  RETAILMSG(TRUE, (TEXT("\tAdapter Desc: \t%s\n"), pAdapter-&gt;Description));
+  RETAILMSG(TRUE, (TEXT("\tAdapter Addr: \t%ld\n"), pAdapter-&gt;Address));
+  RETAILMSG(TRUE, (TEXT("\tIP Address: \t%s\n"), pAdapter-&gt;IpAddressList.IpAddress.String));
+  RETAILMSG(TRUE, (TEXT("\tIP Mask: \t%s\n"), pAdapter-&gt;IpAddressList.IpMask.String));
+
+  RETAILMSG(TRUE, (TEXT("\tGateway: \t%s\n"), pAdapter-&gt;GatewayList.IpAddress.String));
+  RETAILMSG(TRUE, (TEXT("\t***\n")));
+  if (pAdapter-&gt;DhcpEnabled) {
+   RETAILMSG(TRUE, (TEXT("\tDHCP Enabled: Yes\n")));
+   RETAILMSG(TRUE, (TEXT("\t\tDHCP Server: \t%s\n"), pAdapter-&gt;DhcpServer.IpAddress.String));
+   RETAILMSG(TRUE, (TEXT("\tLease Obtained: %ld\n"), pAdapter-&gt;LeaseObtained));
+  }
+  else
+   RETAILMSG(TRUE, (TEXT("\tDHCP Enabled: No\n")));
+  if (pAdapter-&gt;HaveWins) {
+   RETAILMSG(TRUE, (TEXT("\tHave Wins: Yes\n")));
+   RETAILMSG(TRUE, (TEXT("\t\tPrimary Wins Server: \t%s\n"), pAdapter-&gt;PrimaryWinsServer.IpAddress.String));
+   RETAILMSG(TRUE, (TEXT("\t\tSecondary Wins Server: \t%s\n"), pAdapter-&gt;SecondaryWinsServer.IpAddress.String));
+  }
+  else
+   RETAILMSG(TRUE, (TEXT("\tHave Wins: No\n")));
+  pAdapter = pAdapter-&gt;Next;
+ }
+
+ //Free the memory we used.
+ if (pAdapterInfo)
+  free(pAdapterInfo);
+
+ 
+ RETAILMSG(TRUE, (TEXT("------------------------\n")));
+ RETAILMSG(TRUE, (TEXT("This is GetInterfaceInfo\n")));
+ RETAILMSG(TRUE, (TEXT("------------------------\n")));
+
+ IP_INTERFACE_INFO* pInfo;
+
+ //Call GetInterfaceInfo to get the size of the buffer
+ ulOutBufLen = 0;
+ GetInterfaceInfo(NULL, &amp;ulOutBufLen);
+
+ //Now that we have the necessary size, allocate the memory and make a real call.
+ pInfo = (IP_INTERFACE_INFO *) malloc(ulOutBufLen);
+ dwRetVal = GetInterfaceInfo(pInfo, &amp;ulOutBufLen);
+
+ if ( dwRetVal != NO_ERROR ) {
+  RETAILMSG(TRUE, (TEXT("Call to GetInterfaceInfo failed, error %d.\n"), dwRetVal));
+  free ( pInfo );
+  return;
+ }
+
+ MIB_IFROW *pInterfaceInfo;
+ pInterfaceInfo = (MIB_IFROW *) malloc(sizeof( MIB_IFROW ));
+
+ //Loop through each of the interfaces to get information on each one.
+ RETAILMSG(TRUE, (TEXT("Num Adapters: %ld\n"), pInfo-&gt;NumAdapters));
+ for (int x = 0; x &lt; pInfo-&gt;NumAdapters; x++) {
+  RETAILMSG(TRUE, (TEXT("\tAdapter Name: %ws\n"), pInfo-&gt;Adapter[x].Name));
+  RETAILMSG(TRUE, (TEXT("\tAdapter Index: %ld\n"), pInfo-&gt;Adapter[x].Index));
+
+  pInterfaceInfo-&gt;dwIndex = pInfo-&gt;Adapter[x].Index;
+  dwRetVal = GetIfEntry(pInterfaceInfo);
+
+  if (dwRetVal != NO_ERROR) {
+   RETAILMSG(TRUE, (TEXT("Call to GetIfEntry failed, error %d.\n"), dwRetVal));
+   free (pInterfaceInfo);
+   return;
+  }
+  
+  RETAILMSG(TRUE, (TEXT("\tInterface Info:")));
+  RETAILMSG(TRUE, (TEXT("\t\tInterface Name: %ws\n"), pInterfaceInfo-&gt;wszName));
+  RETAILMSG(TRUE, (TEXT("\t\tLast operational status change: %d\n"), pInterfaceInfo-&gt;dwLastChange));
+  RETAILMSG(TRUE, (TEXT("\t\tOctets In:  %d\n"), pInterfaceInfo-&gt;dwInOctets));
+ }
+
+ //Free the memory we allocated.
+ free(pInfo);
+ free(pInterfaceInfo);
+
+ dwRetVal = FormatMessage( 
+  FORMAT_MESSAGE_ALLOCATE_BUFFER | 
+  FORMAT_MESSAGE_FROM_SYSTEM | 
+  FORMAT_MESSAGE_IGNORE_INSERTS,
+  NULL,
+  dwRetVal,
+  MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT), // Default language
+  (LPTSTR) &amp;lpMsgBuf,
+  0,
+  NULL );
+
+ if (!dwRetVal)
+  RETAILMSG(TRUE, (TEXT("\tFormatMessage error.")));
+
+ else
+  //Free the memory FormatMessage allocated.
+  LocalFree( lpMsgBuf );
+
+ /* THIS WORKS BUT IT TAKES A LONG TIME AND INTERRUPTS NET CONNECTIONS 
+ if ((dwRetVal = IpReleaseAddress(&amp;pInfo-&gt;Adapter[0])) == NO_ERROR) {
+  RETAILMSG(TRUE, (TEXT("Ip Release succeeded.\n")));
+ }
+ if ((dwRetVal = IpRenewAddress(&amp;pInfo-&gt;Adapter[0])) == NO_ERROR) {
+  RETAILMSG(TRUE, (TEXT("Ip Renew succeeded.\n")));
+ }
+ /**/
+
+ RETAILMSG(TRUE, (TEXT("----------------------\n")));
+ RETAILMSG(TRUE, (TEXT("This is GetIpAddrTable\n")));
+ RETAILMSG(TRUE, (TEXT("----------------------\n")));
+ 
+ MIB_IPADDRTABLE  *pIPAddrTable;
+
+ //Call to GetIpAddrTable to get the size of the buffer
+ ulOutBufLen = 0;
+ GetIpAddrTable(NULL, &amp;ulOutBufLen, FALSE);
+
+ //Now that we have the necessary size, allocate the memory and make a real call.
+ pIPAddrTable = (MIB_IPADDRTABLE *) malloc(ulOutBufLen);
+ dwRetVal = GetIpAddrTable(pIPAddrTable, &amp;ulOutBufLen, FALSE);
+
+ if ( dwRetVal != NO_ERROR ) {
+  RETAILMSG(TRUE, (TEXT("Call to GetIpAddrTable, error %d.\n"), dwRetVal));
+  free ( pIPAddrTable );
+  return;
+ }
+
+//Print the addresses in the mapping table
+ for (int x = 0; x &lt; (int)pIPAddrTable-&gt;dwNumEntries; x++) {
+  RETAILMSG(TRUE, (TEXT("Address: %ld\n"), pIPAddrTable-&gt;table[x].dwAddr));
+  RETAILMSG(TRUE, (TEXT("\tMask:    %ld\n"), pIPAddrTable-&gt;table[x].dwMask));
+  RETAILMSG(TRUE, (TEXT("\tIndex:   %ld\n"), pIPAddrTable-&gt;table[x].dwIndex));
+  RETAILMSG(TRUE, (TEXT("\tBCast:   %ld\n"), pIPAddrTable-&gt;table[x].dwBCastAddr));
+  RETAILMSG(TRUE, (TEXT("\tReasm:   %ld\n"), pIPAddrTable-&gt;table[x].dwReasmSize));
+ }
+
+ UINT iaIPAddress;
+ UINT imIPMask;
+
+ //Add a new IP address to the table.
+ iaIPAddress = inet_addr("192.168.0.27");
+ imIPMask = inet_addr("255.255.255.0");
+
+ ULONG NTEContext = 0;
+ ULONG NTEInstance = 0;
+
+ dwRetVal = AddIPAddress(
+   iaIPAddress, 
+   imIPMask, 
+   pIPAddrTable-&gt;table[0].
+   dwIndex, 
+   &amp;NTEContext, 
+   &amp;NTEInstance);
+
+ if ( dwRetVal != NO_ERROR) {
+  RETAILMSG(TRUE, (TEXT("\tError adding IP address.\n")));
+ }
+
+ dwRetVal = FormatMessage( 
+  FORMAT_MESSAGE_ALLOCATE_BUFFER | 
+  FORMAT_MESSAGE_FROM_SYSTEM | 
+  FORMAT_MESSAGE_IGNORE_INSERTS,
+  NULL,
+  dwRetVal,
+  MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT), // Default language
+  (LPTSTR) &amp;lpMsgBuf,
+  0,
+  NULL );
+
+ if (!dwRetVal)  {
+  RETAILMSG(TRUE, (TEXT("\tFormatMessage error.")));
+ }
+
+ else
+  //Free the memory FormatMessage allocated.
+  LocalFree( lpMsgBuf );
+
+ //Delete an IP Address.
+ dwRetVal = DeleteIPAddress(NTEContext);
+ 
+ if (dwRetVal != NO_ERROR) {
+  RETAILMSG(TRUE, (TEXT("Call to DeleteIPAddress failed, error %d.\n"), dwRetVal));
+ }
+
+ 
+ RETAILMSG(TRUE, (TEXT("-------------------------\n")));
+ RETAILMSG(TRUE, (TEXT("This is GetIPStatistics()\n")));
+ RETAILMSG(TRUE, (TEXT("-------------------------\n")));
+
+ MIB_IPSTATS   *pStats;
+
+ pStats = (MIB_IPSTATS*) malloc(sizeof(MIB_IPSTATS));
+ dwRetVal = GetIpStatistics(pStats);
+ 
+ if (dwRetVal != NO_ERROR) {
+  RETAILMSG(TRUE, (TEXT("\tError getting stats, error: %d.\n"), dwRetVal));
+  free(pStats);
+  return;
+ }
+
+ RETAILMSG(TRUE, (TEXT("\tNumber of IP addresses: %ld\n"), pStats-&gt;dwNumAddr));
+ RETAILMSG(TRUE, (TEXT("\tNumber of Interfaces: %ld\n"), pStats-&gt;dwNumIf));
+ RETAILMSG(TRUE, (TEXT("\tReceives: %ld\n"), pStats-&gt;dwInReceives));
+ RETAILMSG(TRUE, (TEXT("\tOut Requests: %ld\n"), pStats-&gt;dwOutRequests));
+ RETAILMSG(TRUE, (TEXT("\tRoutes: %ld\n"), pStats-&gt;dwNumRoutes));
+ RETAILMSG(TRUE, (TEXT("\tTimeout Time: %ld\n"), pStats-&gt;dwReasmTimeout));
+ RETAILMSG(TRUE, (TEXT("\tIn Delivers: %ld\n"), pStats-&gt;dwInDelivers));
+ RETAILMSG(TRUE, (TEXT("\tIn Discards: %ld\n"), pStats-&gt;dwInDiscards));
+ RETAILMSG(TRUE, (TEXT("\tTotal In: %ld\n"), pStats-&gt;dwInDelivers + pStats-&gt;dwInDiscards));
+ RETAILMSG(TRUE, (TEXT("\tIn Header Errors: %ld\n"), pStats-&gt;dwInHdrErrors));
+
+ //Free the memory we allocated.
+ free(pStats);
+ 
+
+ RETAILMSG(TRUE, (TEXT("-------------------------\n")));
+ RETAILMSG(TRUE, (TEXT("This is GetTCPStatistics()\n")));
+ RETAILMSG(TRUE, (TEXT("-------------------------\n")));
+
+ MIB_TCPSTATS  *pTCPStats;
+
+ pTCPStats = (MIB_TCPSTATS*) malloc (sizeof(MIB_TCPSTATS));
+
+ if ((dwRetVal = GetTcpStatistics(pTCPStats)) != NO_ERROR) {
+  RETAILMSG(TRUE, (TEXT("Error getting TCP Stats.\n")));
+  free(pTCPStats);
+  return;
+  }
+ 
+ RETAILMSG(TRUE, (TEXT("\tActive Opens: %ld\n"), pTCPStats-&gt;dwActiveOpens));
+ RETAILMSG(TRUE, (TEXT("\tPassive Opens: %ld\n"), pTCPStats-&gt;dwPassiveOpens));
+ RETAILMSG(TRUE, (TEXT("\tSegments Recv: %ld\n"),  pTCPStats-&gt;dwInSegs));
+ RETAILMSG(TRUE, (TEXT("\tSegments Xmit: %ld\n"), pTCPStats-&gt;dwOutSegs));
+ RETAILMSG(TRUE, (TEXT("\tTotal # Conxs: %ld\n"), pTCPStats-&gt;dwNumConns));
+
+ //Free the memory we allocated.
+ free(pTCPStats);
+
+ return;
+}</PRE>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50coniphelpercodesamples.htm">IP Helper Code Samples</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

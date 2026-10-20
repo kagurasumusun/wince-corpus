@@ -1,0 +1,87 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Supporting or Simulating More than 64 MB of RAM</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Supporting or Simulating More than 64 MB of RAM"/>
+<MSHelp:RLTitle Title="Supporting or Simulating More than 64 MB of RAM"/>
+<MSHelp:Keyword Index="A" Term="wce50tskSupportingorSimulatingMorethan64MBofRAM"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Hardware"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="True"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbTask"/>
+<MSHelp:Attr Name="Filename" Value="howto_building_os_image.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="True"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_3010170">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50tsksupportingorsimulatingmorethan64mbofram"></A>Supporting or Simulating More than 64 MB of RAM</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>The default end address of RAM is 28 MB, unless you set IMGRAM16, IMGRAM32, or IMGRAM64, or build a run-time image for a locale outside the United States. The Config.bib file specifies the end address of RAM. The <A HREF="wce50lrfoeminit.htm">OEMInit</A> function determines whether to search for additional RAM past the end address of RAM. If you modify Config.bib, <B>OEMInit</B> does not search for additional RAM. </P>
+
+<BLOCKQUOTE class="dtBlock">
+<b class="le">Note</b>&nbsp;&nbsp;&nbsp;In the following procedure, Microsoft assumes that Config.bib specifies the default 28 MB of RAM. If you want to change the default amount, edit the <B>IsDRAM</B> function in the %_WINCEROOT%\Public\Common\OAK\CSP\x86\OAL\Cfwpc.c file. Based on the existence of physical memory at the location passed to <B>IsDRAM</B>, <B>IsDRAM </B>returns TRUE or FALSE.</BLOCKQUOTE>
+
+<BLOCKQUOTE class="dtBlock">
+<b class="le">Note</b>&nbsp;&nbsp;&nbsp;Graphics hardware can use memory from system RAM. If that is the case for your hardware, deduct the amount of memory that the graphics hardware uses from the total system RAM available. The amount of memory that the graphics hardware uses might be available in the graphics driver registry file or another OS registry file.</BLOCKQUOTE>
+
+<P class="labelproc"><B>To support or simulate more than 64 MB of RAM</B>
+
+<OL type="1">
+	<LI>In %_WINCEROOT%\Public\Common\Oak\Csp\x86\Inc\Pc.h, change CEPC_EXTRA_RAM_SIZE to the total amount of RAM you want to support, minus the amount specified in the Config.bib file. 
+<P>The default value is 0x2400000 and the default RAM in Config.bib is 28 MB. To support 128 MB of RAM, change the value to 0x6400000.
+
+<P>The OAL uses the CEPC_EXTRA_RAM_START and CEPC_EXTRA_RAM_SIZE constants to determine the amount of memory to dynamically detect and add at run-time.
+</li>
+
+	<LI>In %_WINCEROOT%\Public\Common\Oak\Csp\x86\Oal\OEMInit.asm, change the first entry of <B>_OEMAddressTable </B>to the total amount of RAM you want to support. 
+<P>The default value is 0x04000000, which is 64 MB. To support 128 MB of RAM, change the value to 0x8000000.
+</li>
+
+	<LI>Build i486oal.lib with the following commands:
+<PRE class="code">cd %_WINCEROOT%\Public\Common\OAK\CSP\x86\Oal
+build -c
+sysgen i486oal</PRE>
+</li>
+
+	<LI>In the Workspace window, from the <B>FileView </B>tab, navigate to %_WINCEROOT%\Public\Common\OAK\CSP\x86\Oal, right-click on the <B>Oal</B> directory, verify that <B>Make Run-Time Image After Build </B>is selected, and then from the <B>Build OS</B> menu, choose <B>Build and Sysgen</B>.</li>
+</OL>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50howhowtoconfigureandbuildanosimageforacepc.htm">How to Configure and Build a Run-Time Image for a CEPC</A> | <A HREF="wce50conoemaddresstable.htm">OEMAddressTable</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

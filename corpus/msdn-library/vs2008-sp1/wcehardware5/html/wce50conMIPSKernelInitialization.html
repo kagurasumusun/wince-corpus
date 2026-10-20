@@ -1,0 +1,87 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>MIPS Kernel Initialization</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="MIPS Kernel Initialization"/>
+<MSHelp:RLTitle Title="MIPS Kernel Initialization"/>
+<MSHelp:Keyword Index="A" Term="wce50conMIPSKernelInitialization"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Hardware"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="True"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="howto_developing_an_OAL.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="False"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_3010419">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50conmipskernelinitialization"></A>MIPS Kernel Initialization</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>All MIPS BSPs are required to initialize <A HREF="wce50lrfoemtlbsize.htm">OEMTLBSize</A> to the number of translation look-aside buffer (TLB) entries supported by the CPU minus 1 before calling <B>KernelStart</B>. </P>
+
+<P>For example, the NEC Vr5500 MIPS CPU has 48 TLB entries. When defining <B>OEMTLBSize</B> for this MIPS CPU, it should look like the following example:</P>
+
+<P><code class="ce">OEMTLBSize:</code></P>
+
+<P><code class="ce">.word  47</code></P>
+
+<P>The kernel calls <A HREF="wce50lrfoemcacherangeflush.htm">OEMCacheRangeFlush</A> to flush the instruction cache and get to a known state. The OEM must implement<B> OEMCacheRangeFlush</B> in the OAL. </P>
+
+<P>The kernel also calls <B>OEMCacheRangeFlush</B> to flush the data cache and get to a known state. For more information about implementing <B>OEMCacheRangeFlush</B>, see <A HREF="wce50tskoemcacherangeflushfunctionimplementation.htm">OEMCacheRangeFlush Function Implementation</A>.</P>
+
+<P>The following sequence describes how the MIPS kernel is initialized by the operating system (OS):
+
+<UL type="disc">
+	<LI>Implement <B>OEMCacheRangeFlush</B> in the OAL.</li>
+
+	<LI>Initialize global data for the kernel.</li>
+
+	<LI>Perform serial debug operations.</li>
+
+	<LI>Call <A HREF="wce50lrfoeminit.htm">OEMInit</A>.</li>
+
+	<LI>Perform memory initializations.</li>
+
+	<LI>Perform other initializations.</li>
+</UL>
+
+<P>At this point, the scheduler is able to run and schedule threads.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50tskkernelinitialization.htm">Kernel Initialization</A> | <A HREF="wce50tskoalstartupfunctionimplementation.htm">OAL StartUp Function Implementation</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

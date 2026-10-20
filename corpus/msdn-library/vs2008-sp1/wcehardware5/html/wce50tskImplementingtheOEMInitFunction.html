@@ -1,0 +1,161 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Implementing the OEMInit Function</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Implementing the OEMInit Function"/>
+<MSHelp:RLTitle Title="Implementing the OEMInit Function"/>
+<MSHelp:Keyword Index="A" Term="wce50tskImplementingtheOEMInitFunction"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Hardware"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="True"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbTask"/>
+<MSHelp:Attr Name="Filename" Value="howto_developing_an_OAL.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="True"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_3010382">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50tskimplementingtheoeminitfunction"></A>Implementing the OEMInit Function</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>The <A HREF="wce50lrfoeminit.htm">OEMInit</A> function is responsible for initializing the board-level hardware. </P>
+
+<P>During <B>OEMInit</B>, you must:
+
+<UL type="disc">
+	<LI>Initialize all hardware peripherals needed to support the hardware platform.</li>
+
+	<LI>Initiate the debug KITL transport.</li>
+
+	<LI>Set kernel variables that are required by the kernel to enable or alter functionality. </li>
+</UL>
+
+<P>For more information about KITL initialization, see <A HREF="wce50tskaddingkitlinitializationcode.htm">Adding KITL Initialization Code</A>.</P>
+
+<P>The <B>OEMInit</B> function contains much of the functionality present in the <A HREF="wce50lrfoemplatforminit.htm">OEMPlatformInit</A> function in the boot loader. For more information, see <A HREF="wce50tskimplementingtheoemplatforminitfunction.htm">Implementing the OEMPlatformInit Function</A>.</P>
+
+<P>The following list shows the suggested initialization tasks for the <B>OEMInit</B> function:
+
+<UL type="disc">
+	<LI>Initialize interrupt mapping tables. These are two private OAL tables that map between physical interrupts &#0151; interrupt requests (IRQs) &#0151; and logical interrupts &#0151; SYSINTR values. The following code example shows how to initialize the interrupt mapping tables:
+<PRE class="code">for (i = 0; i &lt;= IRQ_MAXIMUM; i++) {
+    IRQToSysIntr[i] = SYSINTR_UNDEFINED;
+}
+
+for (i = 0; i &lt; SYSINTR_MAXIMUM; i++) {
+    SysIntrToIRQ[i] = IRQ_UNDEFINED;
+}</PRE>
+
+<BLOCKQUOTE class="dtBlock">
+<b class="le">Note</b>&nbsp;&nbsp;&nbsp;The interrupt mapping tables, for example, IRQToSysIntr and SysIntrToIRQ, are private to the OAL. OEMs can give these interrupt mapping tables any name. OEMs can use the interrupt mapping tables to implement the functions <A HREF="wce50lrfoemtranslateirq.htm">OEMTranslateIrq</A> and <A HREF="wce50lrfoemtranslatesysintr.htm">OEMTranslateSysIntr</A>.</BLOCKQUOTE>
+</li>
+
+	<LI>Create any initial static mappings required by the OAL. For example, SYSINTR_OS_TICK might map to hardware IRQ_OS_TICK, as shown in the following code example:
+<PRE class="code">SysIntrToIRQ[SYSINTR_OS_TICK] = IRQ_OS_TICK;
+IRQToSysIntr[IRQ_OS_TICK] = SYSINTR_OS_TICK;</PRE>
+
+<P>For more information about Windows CE interrupts, see <MSHelp:link keywords="wce50conInterrupts" TABINDEX="0">Interrupts</MSHelp:link> and <A HREF="wce50condefininganinterruptidentifier.htm">Defining an Interrupt Identifier</A>.
+</li>
+
+	<LI>Configure the system timer, real-time clock (RTC), or any other timekeeping device by implementing the <A HREF="wce50lrfinitclock.htm">InitClock</A> function and calling it from <B>OEMInit</B>. For more information, see <A HREF="wce50consystemticktimerinitialization.htm">System Tick Timer Initialization</A>.</li>
+
+	<LI>Configure any CPU-level and board-level interrupt controllers.</li>
+
+	<LI>Provide LED debug support. While optional, it is helpful when debugging the kernel.</li>
+
+	<LI>If necessary for your CPU type, call the <MSHelp:link keywords="wce50lrfHookInterrupt" TABINDEX="0">HookInterrupt</MSHelp:link> function to register one or more interrupt service routines (ISRs). 
+<P>The <B>HookInterrupt</B> function associates an ISR with an interrupt request line (IRQ) value. <B>OEMInit</B> must register the ISR for the system tick. This is the base functionality required by the kernel to schedule threads. For more information, see <A HREF="wce50consystemticktimerimplementation.htm">System Tick Timer Implementation</A>.
+
+<BLOCKQUOTE class="dtBlock">
+<b class="le">Note</b>&nbsp;&nbsp;&nbsp;<B>HookInterrupt</B> is not required or possible for ARM-based hardware platforms. There are only two interrupts and they are handled by <A HREF="wce50lrfoeminterrupthandler.htm">OEMInterruptHandler</A> and <A HREF="wce50lrfoeminterrupthandlerfiq.htm">OEMInterruptHandlerFIQ</A>.</BLOCKQUOTE>
+
+<P>The following code example shows how you can register the interval-timer ISR, <code class="ce">TimerISR</code>, for hardware interrupt 5.
+
+<PRE class="code">void OEMInit(void)
+{
+  ...
+  HookInterrupt(5, TimerISR); // Hook timer interrupt
+  ...
+}</PRE>
+</li>
+
+	<LI>Mask all unconfigured interrupt sources at the CPU-level and board-level. This prevents interrupts from accidentally being delivered during the kernel initialization.</li>
+
+	<LI>Leave the 1-millisecond (ms) system tick unmasked, so that timekeeping and thread scheduling function properly.</li>
+</UL>
+
+<P>The following list shows optional functionality that you can implement in the <B>OEMInit</B> function:
+
+<UL type="disc">
+	<LI>Logging functions</li>
+
+	<LI>Registry functions</li>
+
+	<LI>Secure loader functions</li>
+
+	<LI>Save and restore coprocessor registers</li>
+
+	<LI>High performance counters</li>
+
+	<LI>System halt</li>
+
+	<LI>Event tracking</li>
+
+	<LI>Detection of idle time</li>
+
+	<LI>User notification alarm</li>
+
+	<LI>Multiple execute-in-place (XIP) regions</li>
+
+	<LI>Default thread quantum</li>
+
+	<LI>Enable debug IO control</li>
+
+	<LI>Erasing the object store</li>
+
+	<LI>Supporting CPU utilization functionality</li>
+
+	<LI>Object store cold boot</li>
+
+	<LI>ARM FPU support</li>
+
+	<LI>Zeroing memory</li>
+</UL>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50howhowtodevelopanoemadaptationlayer.htm">How to Develop an OEM Adaptation Layer</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

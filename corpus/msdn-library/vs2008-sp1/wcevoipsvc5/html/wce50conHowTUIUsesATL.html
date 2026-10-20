@@ -1,0 +1,103 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>How TUI Uses ATL</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="How TUI Uses ATL"/>
+<MSHelp:RLTitle Title="How TUI Uses ATL"/>
+<MSHelp:Keyword Index="A" Term="wce50conHowTUIUsesATL"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Feature"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="tui_appdev.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="True"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+<MSHelp:Attr Name="PBFeature" Value="SYSGEN_VOIPPHONE_UI"/>
+<MSHelp:Attr Name="PBOnly" Value="False"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_1051355">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50conhowtuiusesatl"></A>How TUI Uses ATL</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>The TUI user interface implementation relies heavily on ATL window classes. All user interface objects, which are documented in <A HREF="wce50contuiuiobjectmodeloverview.htm">TUI UI Object Model</A>, are Win32 windows and use ATL to implement their window procedures and other expected Win32 window functionality.</P>
+
+<BLOCKQUOTE class="dtBlock">
+<b class="le">Note</b>&nbsp;&nbsp;&nbsp;The TUI Win32 window hierarchy is different from the TUI object hierarchy. For more information about the relationship between these hierarchies, see <A HREF="wce50contuiobjectwindowhierarchies.htm">TUI Object and Window Hierarchies</A>.</BLOCKQUOTE>
+
+<P>As an example, this topic explains the Desktop window, which is the top-most window in the TUI window hierarchy. The organization and files for other windows follow the same structure. </P>
+
+<P>All files mentioned in the following list are in directories beneath %_WINCEROOT%\Public\VoIP\Oak\Phone\TUI. The provided ATL macros and other definitions exist in %_WINCEROOT%\Others\ATL\Include\atlwin.h. For general information about ATL, see the documentation at this <A HREF="http://go.microsoft.com/fwlink/?linkid=28105">Microsoft Web site</A>.</P>
+
+<P>Conceptually, an ATL window consists of two pieces:
+
+<UL type="disc">
+	<LI>The C++ wrapper class
+<P>Clients use this class to interact with the window. 
+
+<P>The class inherits from the ATL <B>CWindow</B> class and is generally small, consisting primarily of C++ methods that in turn call <MSHelp:link keywords="wce50lrfSendMessage" TABINDEX="0">SendMessage</MSHelp:link> to interact with the actual window implementation (explained in the next bullet). 
+
+<P>Clients could interact with the window implementation by calling <B>SendMessage</B> directly, but the C++ wrapper class provides type safety. It does this by accepting only parameters of the correct type, and then casting these parameters to the appropriate <B>SendMessage</B> WPARAM and LPARAM types. 
+
+<P>Using the wrapper class methods produces more readable code because calling code contains calls to well-named methods instead of verbose <B>SendMessage</B> calls. 
+
+<P>In the TUI, all C++ wrapper classes are defined in Inc\VoIPControls.hxx. This file contains the TUI <B>CVoIPDesktop</B> class, among others. 
+</li>
+
+	<LI>The window implementation
+<P>All Win32 windows have a window procedure that handles all window messages posted to the window. 
+
+<P>Code that uses the ATL window classes can implement their window procedures by defining C++ methods as well as a macro that maps message codes to methods. All window procedure code is provided by ATL and does not exist in the window implementation.
+
+<P>An ATL window implementation consists of a C++ class that inherits from the ATL <B>CWindowImpl</B> class. The <B>CWindowImpl</B> class (and its parents) provides common window functionality, including the window procedure.
+
+<P>The class a developer implements contains a BEGIN_MSG_MAP macro, which precedes lines like the following:
+
+<PRE class="code">MESSAGE_HANDLER(WM_CREATE, OnCreate)</PRE>
+
+<P>This line maps all WM_CREATE messages to the class's <B>OnCreate</B> method. When the window receives a WM_CREATE message, provided ATL code calls the <B>OnCreate</B> method.
+
+<P>After the message map, the remainder of the class consists of methods referenced in the message map.
+
+<P>In the TUI, the window implementation classes reside in the Controls directory. For example, the Desktop.h file contains the class definition for the desktop window implementation, and Desktop.cpp contains method implementations.
+
+<P>TUI window implementation classes inherit from <B>CVoIPWindowImpl</B>, which in turn inherits from the ATL <B>CWindowImpl</B> class. <B>CVoIPWindowImpl</B> provides general TUI window functionality and is defined in Controls\VoIPWindowImpl.h.
+</li>
+</UL>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50conunderstandingtuisourcecode.htm">Understanding TUI Source Code</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, July 13, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

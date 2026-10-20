@@ -1,0 +1,145 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Wceload Tool</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Wceload Tool"/>
+<MSHelp:RLTitle Title="Wceload Tool"/>
+<MSHelp:Keyword Index="K" Term="Wceload Tool [Devices]"/>
+<MSHelp:Keyword Index="A" Term="wce50lrfWceloadTool"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Guide"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="True"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="tools.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="False"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="AllowSearch" CONTENT="True">
+<META NAME="msdnID" CONTENT="_3014219">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50lrfwceloadtool"></A>Wceload Tool</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>The Wceload tool (Wceload.exe) runs on your target device. You typically use this tool to install a .cab file to a location that you select on the target device. Most .cab files are configured to enable the user to select the destination volume where the .cab file will be installed, either \Device or \Storage Card. However, you can choose to suppress the destination volume selection prompt and install the .cab file to a default location, specified in the .inf file used to create the .cab file.</P>
+
+<P>Typically, you do not directly call Wceload. Instead, Wceload is called programmatically by other programs to install .cab files. For example, if you use File Explorer to view and open a .cab file, Shell automatically invokes Wceload for installation of the .cab file.</P>
+
+<P>For information about creating cab files, see <A HREF="wce50concabwizardoverview.htm">CAB Wizard</A>.</P>
+
+<PRE class="syntax"><B>wceload</B> [ /noaskdest | /askdest ] [ /delete <I>&lt;number&gt; </I>| /noui | /nouninstall 
+] <I>&lt;cab file location&gt;</I> </PRE>
+
+<H4 class="dtH4">Parameters</H4>
+
+<DL>
+<DT><B>/noaskdest</B></DT>
+
+<DD>Specifies that the user is not prompted for the installation directory. 
+
+<P>If this parameter is used, other parameters such as the .cab file path are ignored, and the default directory specified in the [DefaultInstall] section of the .inf file is used. For more information, see <A HREF="wce50concreatinganinffile.htm">Information File</A> and <A HREF="wce50lrfdefaultinstall.htm">DefaultInstall</A>.
+</dd>
+
+<DT><B>/askdest</B></DT>
+
+<DD>Specifies that the user is prompted for the installation directory.
+
+<BLOCKQUOTE class="dtBlock">
+</BLOCKQUOTE>
+</dd>
+
+<DT><B>/delete </B><I>&lt;number&gt;</I></DT>
+
+<DD>Specifies how Wceload removes the cab file after installation. 
+
+<BLOCKQUOTE class="dtBlock">
+<b class="le">Note</b>&nbsp;&nbsp;&nbsp;If you do not specify <B>/nodelete</B> or <B>/delete 0</B> when running Wceload, the .cab file is deleted even if the installation is not successful.</BLOCKQUOTE>
+
+
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=9%>Value</TH>
+<TH width=91%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=9%>0</TD>
+<TD width=91%>Does not remove the .cab file after the contents are installed.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=9%>1</TD>
+<TD width=91%>Removes the .cab file after the contents are installed. 
+<P>This is the default value.</P>
+</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=9%>2</TD>
+<TD width=91%>Treats the .cab file as discrete blocks of data, and dynamically deletes them.
+<P>This is useful in scenarios where the .cab file uses most of the available RAM on the device. Using this setting results in the unpacking and installation of data blocks of the .cab file in the unused RAM. </P>
+
+<P>The blocks are read and installed on the device in last to first order, the reverse of the file order in the .cab file. After unpacking and installation of each block into the device filesystem, the block is then deleted from the .cab file to free up RAM. This reverse ordering enables Wceload to truncate the .cab file on a per-block basis. </P>
+</TD>
+</TR>
+</table></div>
+
+</dd>
+
+<DT><B>/noui</B></DT>
+
+<DD>Specifies that the user will not be prompted for any input during the installation. By default, prompts are answered with 'Yes'. </dd>
+
+<DT><B>/nouninstall</B></DT>
+
+<DD>Specifies that the installed application cannot be removed. If this option is used, the unload file will not be generated.
+
+
+</dd>
+
+<DT><I>cab file location</I></DT>
+
+<DD>Specifies the location of the cab file to install or remove.</dd>
+</DL>
+
+<H4 class="dtH4">Remarks</H4>
+
+<P>By default, an unload file is generated during installation with <B>wceload</B>. The unload filename has the format <I>&lt;Software Provider Name&gt; &lt;Program Name&gt;</I>. This file will not be generated if the <I>nouninstall</I> option is used.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50concabwizardoverview.htm">CAB Wizard</A> | <A HREF="wce50lrfunloadtool.htm">Unload Tool</A> | <A HREF="wce51concabfileoverview.htm">Cabinet (cab) File Overview</A> | <A HREF="wce50concreatinganinffile.htm">Information File</A> </P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

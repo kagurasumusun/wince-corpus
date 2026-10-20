@@ -1,0 +1,134 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Virtual Path Registry Settings</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Virtual Path Registry Settings"/>
+<MSHelp:RLTitle Title="Virtual Path Registry Settings"/>
+<MSHelp:Keyword Index="A" Term="wce51conVirtualPathRegistrySettings"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Feature"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="webserver_registry.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="False"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="True"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_1070096">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce51convirtualpathregistrysettings"></A>Virtual Path Registry Settings</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>Virtual paths specify a mapping between the virtual path in a URL and the physical path on the device. <B>HKEY_LOCAL_MACHINE\COMM\HTTPD\VROOTS</B> is the virtual path protected registry key. This registry key contains one or more subkeys, one for each virtual path. Each subkey is named for the virtual path that it specifies. For example, to create a virtual path that maps requests for /www, create a registry key named <B>HKEY_LOCAL_MACHINE\COMM\HTTPD\VROOTS\/www</B>.</P>
+
+<P>Each subkey contains values that specify the physical path, as well as the permission levels, authorization level, and user list that are required for that virtual path. The following table shows the values for each virtual path registry key.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=26%>Value : type</TH>
+<TH width=74%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=26%><B>(Default)</B></TD>
+<TD width=74%>Specifies the physical directory that is mapped to the virtual directory.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=26%><B>A</B> : REG_DWORD</TD>
+<TD width=74%>If the value is not present in the registry, no authentication is performed. 
+<P>Sets the authorization level for a virtual directory.</P>
+
+<P><B>A</B>=0, anonymous users can access the virtual directory and may have permission to read and/or execute scripts depend on the P value for the virtual directory. In addition, anyone who can access the Web Server can access files in that virtual directory.</P>
+
+<P><B>A</B>=1, access to a virtual directory requires a valid user identifier and password.</P>
+
+<P><B>A</B>=2, access to virtual directory requires the browser user to have administrator privileges in addition to a valid user identifier and password.</P>
+
+<BLOCKQUOTE class="dtBlock">
+<B><b class="le">Security Note</b>&nbsp;&nbsp;&nbsp;</B>When A=0, anonymous users can gain access to the file system within the virtual root.</BLOCKQUOTE>
+
+<P>For more information, see <A HREF="wce50conwebserverauthenticationandpermissions.htm">Web Server Authentication and Permissions</A>.</P>
+</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=26%><B>P</B> : REG_DWORD</TD>
+<TD width=74%>If the value is not set in the registry, this value allows read, execute, and scripting. 
+<P>Sets the permission level in each virtual path for the browser. The permission list determines how a user can use the information provided on the Web site. If no value is set, the default value is set to HSE_URL_FLAGS_READ | HSE_URL_FLAGS_EXECUTE | HSE_URL_FLAGS_SCRIPT. </P>
+
+<P><B>P</B>=<B>DWORD</B> set by a bitwise OR of the HSE_URL flags found in Httpext.h file. The following flags are supported:
+
+<UL type="disc">
+	<LI>HSE_URL_FLAGS_READ</li>
+
+	<LI>HSE_URL_FLAGS_WRITE</li>
+
+	<LI>HSE_URL_FLAGS_SCRIPT_SOURCE</li>
+
+	<LI>HSE_URL_FLAGS_EXECUTE</li>
+
+	<LI>HSE_URL_FLAGS_SSL</li>
+
+	<LI>HSE_URL_FLAGS_NEGO_CERT</li>
+
+	<LI>HSE_URL_FLAGS_REQUIRE_CERT</li>
+
+	<LI>HSE_URL_FLAGS_MAP_CERT</li>
+
+	<LI>HSE_URL_FLAGS_SSL128</li>
+
+	<LI>HSE_URL_FLAGS_SCRIPT</li>
+</UL>
+
+<P><B>P</B>=1, ASP and DLLs will not run from the specified virtual root.</P>
+
+<P><B>P</B>=516, allows a virtual root execute and script permissions, but not read permissions.</P>
+
+<P>For more information, see <A HREF="wce50conwebserverauthenticationandpermissions.htm">Web Server Authentication and Permissions</A>.</P>
+</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=26%><B>UserList</B> : REG_SZ</TD>
+<TD width=74%>Default is not set in the registry.
+<P>Allows authenticated users, groups, or both to be set on a per-virtual-root basis.</P>
+</TD>
+</TR>
+</table></div>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce51conwebserverregistrysettings.htm">Web Server Registry Settings</A> | <A HREF="wce50conwebserverauthenticationandpermissions.htm">Web Server Authentication and Permissions</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

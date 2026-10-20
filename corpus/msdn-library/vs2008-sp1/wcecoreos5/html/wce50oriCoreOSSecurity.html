@@ -1,0 +1,83 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Core OS Security</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Core OS Security"/>
+<MSHelp:RLTitle Title="Core OS Security"/>
+<MSHelp:Keyword Index="A" Term="wce50oriCoreOSSecurity"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Feature"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="core_os_services_security.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="False"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+<MSHelp:Attr Name="PBFeature" Value="CORE"/>
+<MSHelp:Attr Name="PBOnly" Value="False"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_1044862">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50oricoreossecurity"></A>Core OS Security</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>Use the following best practices to enhance the security and reliability of the kernel:
+
+<UL type="disc">
+	<LI>Do not try to hide unencrypted information in ROM because it is information that can be read by everyone. </li>
+
+	<LI>Do not embed encryption keys in your applications and then save the encrypted files to the file system. Always use some form of encryption, such as the <MSHelp:link keywords="wce50conUsetheProtectedStoreAPI" TABINDEX="0">Protected Store API</MSHelp:link>.</li>
+
+	<LI>Trusted modules should always have the "SYSTEM\" prefix in their event names. This forces the kernel to check the caller's trust level. 
+<BLOCKQUOTE class="dtBlock">
+<b class="le">Note</b>&nbsp;&nbsp;&nbsp;The "SYSTEM\" prefix can only be used by trusted modules.</BLOCKQUOTE>
+</li>
+
+	<LI>Do not use the <A HREF="wce50lrfloadlibrary.htm">LoadLibrary</A> function to make assumptions about the system configuration. An application that is not trusted can load a false DLL with the same name as a trusted application. This causes subsequent attempts to load the trusted application to fail because the loader shows it has already loaded the DLL.
+<P>When a trusted application calls <B>LoadLibrary</B>, the loader checks the trust level. Because a false DLL is loaded, the loader will fail the check and return failed to <B>LoadLibrary</B>. For example, a rogue application can load a false encryption module, Capi.dll. When a trusted application tries to load Capi.dll, the load will fail. At this point, the trusted application should not make incorrect assumptions, such as it is running in a development configuration instead of a production configuration.
+
+<UL type="disc">
+	<LI>All configuration information should come from a known good source such as a secure registry or encrypted information.</li>
+
+	<LI>Failover should not cause behavior that is not secure.</li>
+</UL>
+</li>
+</UL>
+
+<P>For more information about Windows CE security services, see <MSHelp:link keywords="wce50conCreatingaSecureDevice" TABINDEX="0">Enhancing the Security of a Device</MSHelp:link>.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50oricoreosdesigndevelopment.htm">Core OS Design Development</A> | <A HREF="wce50concoreosinterface.htm">Core OS Reference</A> | <A HREF="wce50oricoreosregistrysettings.htm">Core OS Registry Settings</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

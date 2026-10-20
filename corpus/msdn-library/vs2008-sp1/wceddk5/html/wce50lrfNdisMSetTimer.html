@@ -1,0 +1,103 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>NdisMSetTimer</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="NdisMSetTimer"/>
+<MSHelp:RLTitle Title="NdisMSetTimer"/>
+<MSHelp:Keyword Index="K" Term="NdisMSetTimer"/>
+<MSHelp:Keyword Index="A" Term="wce50lrfNdisMSetTimer"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Driver"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="False"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="apiref"/>
+<MSHelp:Attr Name="Filename" Value="ndis_library_functions2.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="False"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+<MSHelp:Attr Name="APIName" Value="NdisMSetTimer"/>
+<MSHelp:Attr Name="APIType" Value="DLLExport"/>
+<MSHelp:Attr Name="APILocation" Value="Ndis.dll"/>
+<MSHelp:Attr Name="PBFeature" Value="NetworkDriver"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_3018553">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50lrfndismsettimer"></A>NdisMSetTimer</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>This function sets a timer to fire after a specified interval, thus running an associated <A HREF="wce50lrfminiporttimer.htm">MiniportTimer</A> function when the timer fires.</P>
+
+<PRE class="syntax"><B>VOID NdisMSetTimer(</B>
+  <B>PNDIS_MINIPORT_TIMER </B><I>Timer</I><B>,</B>
+  <B>UINT </B><I>MillisecondsToDelay</I>
+<B>);</B></PRE>
+
+<H4 class="dtH4">Parameters</H4>
+
+<DL>
+<DT><I>Timer</I></DT>
+
+<DD>[in] Pointer to caller-supplied resident storage for a timer object previously initialized with the <A HREF="wce50lrfndisminitializetimer.htm">NdisMInitializeTimer</A> function.</dd>
+
+<DT><I>MillisecondsToDelay</I></DT>
+
+<DD>[in] Specifies the interval, in milliseconds, to time out before calling the <B>MiniportTimer</B> function.</dd>
+</DL>
+
+<H4 class="dtH4">Return Values</H4>
+
+<P>None.</P>
+
+<H4 class="dtH4">Remarks</H4>
+
+<P>This function causes the driver-supplied <B>MiniportTimer</B> function, which was associated with the timer object when <A HREF="wce50lrfminiportinitialize.htm">MiniportInitialize</A> called <B>NdisMInitializeTimer</B>, to run once after the given <I>MillisecondsToDelay</I> expires. Execution of the <B>MiniportTimer</B> function associated with the <I>Timer</I> passed to this function is episodic, rather than periodic. A miniport must call this function each time the associated timer function should be run.</P>
+
+<P>By contrast, the <A HREF="wce50lrfndismsetperiodictimer.htm">NdisMSetPeriodicTimer</A> function causes the associated <B>MiniportTimer</B> function to be run repeatedly whenever the specified <I>MillisecondsPeriod</I> expires. At the initial call to <B>NdisMSetPeriodicTimer</B>, the timer object is queued until the <I>MillisecondsPeriod</I> expires; then the <B>MiniportTimer</B> function is run, and the timer object is automatically re-queued for the next interval.</P>
+
+<P>Generally, a miniport should allocate and initialize two separate timer objects if it calls both <B>NdisMSetPeriodicTimer</B> and this function. Such a driver is likely to have two <B>MiniportTimer</B> functions with different functionality, each associated with a particular timer object when it is initialized with <B>NdisMInitializeTimer</B>. For example, a <B>MiniportTimer</B> function that runs periodically might poll device state at regular intervals, whereas another <B>MiniportTimer</B> function might retry a particular run-time operation only if it times out on the NIC.</P>
+
+<P>If a miniport calls this function, <A HREF="wce50lrfndismcanceltimer.htm">NdisMCancelTimer</A>, or <B>NdisMSetPeriodicTimer</B> with the same <I>Timer</I> pointer originally passed to this function before the originally specified <I>MillisecondsToDelay</I> expires, the current call cancels its preceding call to this function. Any call to an NDIS timer function resets the specified timer to expire at the interval specified in the most recent call and causes the associated <B>MiniportTimer</B> function to run when the most recently specified interval has expired.</P>
+
+<P>Timer resolution on the host varies. Consequently, calling this function with very small time-out values does not necessarily cause the execution of <B>MiniportTimer</B> exactly when the specified interval expires.</P>
+
+<H4 class="dtH4">Requirements</H4>
+
+<P><B>OS Versions:</B> Windows CE .NET 4.0 and later.<BR>
+<B>Header:</B> Ndis.h.<BR>
+<B>Link Library:</B> Ndis.dll.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50lrfndisminitializetimer.htm">NdisMInitializeTimer</A> | <A HREF="wce50lrfminiportinitialize.htm">MiniportInitialize</A> | <A HREF="wce50lrfminiporttimer.htm">MiniportTimer</A> | <A HREF="wce50lrfndismsetperiodictimer.htm">NdisMSetPeriodicTimer</A> | <A HREF="wce50lrfndismcanceltimer.htm">NdisMCancelTimer</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

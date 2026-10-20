@@ -1,0 +1,168 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>SH-4 Prolog and Epilog Code Examples</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="SH-4 Prolog and Epilog Code Examples"/>
+<MSHelp:RLTitle Title="SH-4 Prolog and Epilog Code Examples"/>
+<MSHelp:Keyword Index="A" Term="wce50samSH4PrologandEpilogExamples"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Guide"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="True"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbSampleProd"/>
+<MSHelp:Attr Name="Filename" Value="comp_sh4_callspec.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="True"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_3023848">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50samsh4prologandepilogexamples"></A>SH-4 Prolog and Epilog Code Examples</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>The following code examples show how to use prolog and epilog to perform certain tasks.
+
+<UL type="disc">
+	<LI>Allocate a stack frame to save R14, R8, and PR
+<P>This example allocates a stack frame to save <B>R14</B>, <B>R8</B>, and <B>PR</B>, and to allow <B>alloca()</B> calls. It also allocates a 4-word argument build area. Local variables and temporaries do not need stack space.
+
+<PRE class="code">NESTED_ENTRY Function
+
+mov.l R14, @-R15 // Save old frame pointer.
+mov.l R8, @-R15 // Save a permanent register.
+sts.l PR, @-R15 // Save return address.
+mov  R15, R14  // Set up new frame pointer.
+add  #12, R14
+add  #-16, R15  // Allocate argument save area
+
+PROLOG_END
+ 
+// Routine body
+
+add  #-12, R14  // Find base of RSA.
+mov  R14, R15
+lds.l @R15+, PR  // Restore return address.
+mov.l @R15+, R8  // Restore R8.
+rts        // Return.
+ mov.l @R15+, R14 // Restore R14.
+
+ENTRY_END Function</PRE>
+</li>
+
+	<LI>Allocate a stack frame for a leaf routine
+<P>This example allocates a stack frame for a leaf routine that requires 40 bytes for local variables and temporaries. It uses permanent registers <B>R8</B>, <B>R9</B>, and <B>R10</B>. This routine has no <MSHelp:link keywords="wce50grf_alloca" TABINDEX="0">_alloca</MSHelp:link> locals, so no frame pointer is required.
+
+<PRE class="code">NESTED_ENTRY Function
+
+mov.l R8, @-R15
+mov.l R9, @-R15
+mov.l R10, @-R15
+add  #-40, R15
+
+PROLOG_END
+
+// Routine body
+
+add  #40, R15
+mov.l @R15+, R10
+mov.l @R15+, R9
+rts
+mov.l @R15+, R8
+
+ENTRY_END Function</PRE>
+</li>
+
+	<LI>Allocate a stack frame with 64KB of memory
+<P>This example allocates a stack frame that requires 64 KB of memory. It saves argument register <B>R4</B> to the incoming argument save area, and saves argument register <B>R5</B> to allocated register <B>R8</B>. No separate frame pointer is required. The segment saves return address and permanent register <B>R8</B>. It declares an exception handler.
+
+<PRE class="code">EXCEPTION_HANDLER RoutineHandler
+NESTED_ENTRY Function
+
+mov.l R4, @R15   // Save argument to incoming argument save area.
+mov.l R8, @-R15
+sts.l PR, @-R15
+mov.l @(0x0000001C,pc),r1 // Load constant -65528.
+add     r1,r15      // Allocate stack frame.
+mov.l R5, R8      // Save argument to register.
+
+PROLOG_END
+
+// Routine body
+
+mov.l @(0x0000000C,pc),r1 // Load constant 65528.
+add     r1,r15      // Remove stack frame.
+lds.l @R15+, PR      // Recover return address.
+rts
+mov.l @R15+, R8     // Restore R8.
+
+ENTRY_END Function</PRE>
+</li>
+
+	<LI>SH-4 function call
+<P>This example shows an SH-4 function call with permanent floating point register saves and restores. It distributes floating-point arguments to registers, and copies argument registers to allocated registers and the stack.
+
+<PRE class="code">NESTED_ENTRY Function
+
+mov.l    r8, @-sp // Store permanent registers.
+mov.l    r9, @-sp
+fmov.s   fr12, @-sp
+fmov.s   fr13, @-sp
+sts.l    pr,  @-sp
+add.l    #-80, sp // Allocate stack frame.
+mov.l    r5, r8 // Move incoming argument registers to 
+fmov.s   fr8, fr13 // allocated registers.
+mov.l    #112, r0  // Spill argument to stack.
+add.l    sp,  r0
+fmov.s   fr6, @r0
+fmov.s   fr7, @-r0
+PROLOG_END
+
+// Routine body
+
+add.l   #80, sp
+lds.l   @sp+,pr   // Restore permanent registers.
+fmov.s   @sp+,fr13
+fmov.s   @sp+,fr12
+mov.l   @sp+,r9
+rts
+mov.l   @sp+,r8
+
+ENTRY_END Function</PRE>
+</li>
+</UL>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50consh4prologandepilog.htm">SH-4 Prolog and Epilog</A> | SH-4 Assembler Macros </P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

@@ -1,0 +1,131 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>WSCInstallProvider</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="WSCInstallProvider"/>
+<MSHelp:RLTitle Title="WSCInstallProvider"/>
+<MSHelp:Keyword Index="K" Term="WSCInstallProvider"/>
+<MSHelp:Keyword Index="A" Term="wce50lrfWSCInstallProvider"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Feature"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="apiref"/>
+<MSHelp:Attr Name="Filename" Value="winsock2spi_functions.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="False"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+<MSHelp:Attr Name="APIName" Value="WSCInstallProvider"/>
+<MSHelp:Attr Name="APIType" Value="LibDef"/>
+<MSHelp:Attr Name="APILocation" Value="Ws2.lib"/>
+<MSHelp:Attr Name="PBFeature" Value="SYSGEN_WINSOCK"/>
+<MSHelp:Attr Name="PBOnly" Value="False"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_3008279">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50lrfwscinstallprovider"></A>WSCInstallProvider</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>This function installs the specified transport provider into the system configuration database.</P>
+
+<PRE class="syntax"><B>int WSCInstallProvider(</B>
+  <B>const LPGUID</B><I> lpProviderId</I><B>,</B>
+  <B>const LPWSTR </B><I>lpszProviderDllPath</I><B>,</B>
+  <B>const LPWSAPROTOCOL_INFOW </B><I>lpProtocolInfoList</I><B>,</B>
+  <B>DWORD</B><I> dwNumberOfEntries</I><B>,</B>
+  <B>LPINT</B><I> lpErrno</I> 
+<B>);</B></PRE>
+
+<H4 class="dtH4">Parameters</H4>
+
+<DL>
+<DT><I>lpProviderId</I></DT>
+
+<DD>[in] Pointer to a provider-selected, globally unique identifier (GUID).</dd>
+
+<DT><I>lpszProviderDllPath</I></DT>
+
+<DD>[in] Pointer to a string containing the load path to the provider's DLL. This string observes the usual rules for path resolution and can contain embedded environment strings (such as %SystemRoot%). Such environment strings are expanded whenever the ws2.dll needs to subsequently load the provider DLL on behalf of an application. After any embedded environment strings are expanded, the ws2.dll passes the resulting string into the <MSHelp:link keywords="wce50lrfLoadLibrary" TABINDEX="0">LoadLibrary</MSHelp:link> function to load the provider into memory. For more information, see <B>LoadLibrary</B>. </dd>
+
+<DT><I>lpProtocolInfoList</I></DT>
+
+<DD>[in] Points to an array of <B>WSAPROTOCOL_INFOW</B> structures. Each structure defines a protocol, address_family, and socket_type supported by the provider.</dd>
+
+<DT><I>dwNumberOfEntries</I></DT>
+
+<DD>[in] Contains the number of entries in the <I>lpProtocolInfoList</I> array.</dd>
+
+<DT><I>lpErrno</I></DT>
+
+<DD>[out] Pointer to the error code.</dd>
+</DL>
+
+<H4 class="dtH4">Return Values</H4>
+
+<P>If no error occurs, this function returns zero. Otherwise, it returns SOCKET_ERROR, and a specific error code is available in <I>lpErrno</I>.</P>
+
+<P>The following table shows the possible error code.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=25%>Error value</TH>
+<TH width=75%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=25%>WSAEFAULT</TD>
+<TD width=75%>One or more of the arguments<I> </I>is not in a valid part of the user address space.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=25%>WSANO_RECOVERY</TD>
+<TD width=75%>Caller application is not trusted.</TD>
+</TR>
+</table></div>
+
+<H4 class="dtH4">Remarks</H4>
+
+<P>This routine creates the necessary common Winsock configuration information for the specified provider. It is applicable to base protocols, layered protocols, and provider chains. After this routine completes successfully, the protocol information provided in <I>lpProtocolInfoList</I> will be returned by the <A HREF="wce50lrfwsaenumprotocols.htm">WSAEnumProtocols</A>. Note that in Win32 environments, only instances of the ws2.dll created after a successful completion of this function will include the new entries in <B>WSAEnumProtocols</B>.</P>
+
+<P>Any file installation or service provider-specific configuration must be performed by the caller.</P>
+
+<H4 class="dtH4">Requirements</H4>
+
+<P><B>OS Versions:</B> Windows CE .NET 4.0 and later.<BR>
+<B>Header:</B> Ws2spi.h.<BR>
+<B>Link Library:</B> Ws2.lib.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50lrfwscdeinstallprovider.htm">WSCDeinstallProvider</A> | <A HREF="wce50lrfwscenumprotocols.htm">WSCEnumProtocols</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

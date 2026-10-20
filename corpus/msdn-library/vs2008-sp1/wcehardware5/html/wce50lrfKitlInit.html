@@ -1,0 +1,102 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>KitlInit</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="KitlInit"/>
+<MSHelp:RLTitle Title="KitlInit"/>
+<MSHelp:Keyword Index="K" Term="KitlInit"/>
+<MSHelp:Keyword Index="A" Term="wce50lrfKitlInit"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Hardware"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="True"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="apiref"/>
+<MSHelp:Attr Name="Filename" Value="kitl_reference.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="False"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+<MSHelp:Attr Name="APIName" Value="KitlInit"/>
+<MSHelp:Attr Name="APIType" Value="LibDef"/>
+<MSHelp:Attr Name="APILocation" Value="Kitl.lib"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_3011375">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50lrfkitlinit"></A>KitlInit</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>This function is called by the OEM to initialize the KITL subsystem.</P>
+
+<PRE class="syntax"><B>BOOL KitlInit(</B>
+  <B>BOOL</B> <I>fStartKitl</I>
+<B>);</B></PRE>
+
+<H4 class="dtH4">Parameters</H4>
+
+<DL>
+<DT><I>fStartKitl</I></DT>
+
+<DD>[in] If set to TRUE, KITL is initialized and set to a working state; otherwise, KITL is initialized only and can be started later if <MSHelp:link keywords="wce50lrfKITLRegisterClient" TABINDEX="0">KITLRegisterClient</MSHelp:link> is called.</dd>
+</DL>
+
+<H4 class="dtH4">Return Values</H4>
+
+<P>If KITL is started, TRUE is returned; otherwise, FALSE is returned.</P>
+
+<H4 class="dtH4">Remarks</H4>
+
+<P>This function should be called by the OEM adaptation layer (OAL) to initialize the KITL subsystem. </P>
+
+<P>As part of the <B>KitlInit</B> processing, the kernel calls <A HREF="wce50lrfoemkitlinit.htm">OEMKitlInit</A> to perform hardware initialization. It can be called any time after the <B>KernelStart</B> function has been called, typically as part of <A HREF="wce50lrfoeminitdebugserial.htm">OEMInitDebugSerial</A> or <A HREF="wce50lrfoeminit.htm">OEMInit</A> processing. </P>
+
+<P>In the implementation of <A HREF="wce50lrfoempoweroff.htm">OEMPowerOff</A>, OEMs should reinitialize their KITL hardware after powering on. This is usually done by calling <A HREF="wce50lrfoemethinit.htm">OEMEthInit</A> for Ethernet KITL transport.</P>
+
+<BLOCKQUOTE class="dtBlock">
+<b class="le">Note</b>&nbsp;&nbsp;&nbsp;<B>OEMEthInit</B> should only be called if <B>KitlInit</B> was called during startup. It should not be called if there were no Ethernet KITL services before the ignition cycling.</BLOCKQUOTE>
+
+<P>The boot loader can pass information in BOOT_ARGS that determines whether <B>KitlInit</B> is called along with possible setting. If the boot loader signals not to use KITL, the OAL can skip this call. If the boot loader signals to use passive KITL mode, the OAL can call this call with <I>fStartKitl</I> set to FALSE.</P>
+
+<P>If <I>fStartKitl</I> is FALSE, KITL behaves in a completely passive mode and there will be no KITL activity until <MSHelp:link keywords="wce50lrfKITLRegisterClient" TABINDEX="0">KITLRegisterClient</MSHelp:link> is called. <B>KITLRegisterClient</B> is mostly used on devices that need to use a just-in-time (JIT) debugger.</P>
+
+<P>If <I>fStartKitl</I> is TRUE, KITL will start communicating with the development workstation and block until a connection is made. The default services, PPSH, DBGMSG, and KDBG, will also start based on the configuration setting from the development workstation.</P>
+
+<H4 class="dtH4">Requirements</H4>
+
+<P><B>OS Versions:</B> Windows CE .NET 4.0 and later.<BR>
+<B>Header:</B> Kitl.h.<BR>
+<B>Link Library:</B> Kitl.lib.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50lrfoemkitlinit.htm">OEMKitlInit</A> | <MSHelp:link keywords="wce50lrfSetKernelCommDev" TABINDEX="0">SetKernelCommDev</MSHelp:link> | <A HREF="wce50lrfoeminitdebugserial.htm">OEMInitDebugSerial</A> | <A HREF="wce50lrfoeminit.htm">OEMInit</A> | <A HREF="wce50lrfoempoweroff.htm">OEMPowerOff</A> | <MSHelp:link keywords="wce50lrfKITLRegisterClient" TABINDEX="0">KITLRegisterClient</MSHelp:link></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

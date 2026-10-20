@@ -1,0 +1,136 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Creating a Workspace from the Command-Line</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Creating a Workspace from the Command-Line"/>
+<MSHelp:RLTitle Title="Creating a Workspace from the Command-Line"/>
+<MSHelp:Keyword Index="A" Term="wce50tskCreatingaWorkspacefromtheCommandLine"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="OS"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="True"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbTask"/>
+<MSHelp:Attr Name="Filename" Value="build_system.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="True"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_3012206">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50tskcreatingaworkspacefromthecommandline"></A>Creating a Workspace from the Command-Line</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>When you create a workspace from the command line, you begin by creating an operating system (OS) design directory, which holds the dynamic link library (.dll) files and the executable (.exe) files that are built during the Sysgen phase of the build process. </P>
+
+<P>Platform Builder builds these files according to the build options that you select for your operating system (OS) design. </P>
+
+<P>For more information about the Sysgen phase, see <A HREF="wce50conbuildphases.htm">Build Phases</A>.</P>
+
+<P class="labelproc"><B>Creating a workspace from the command line</B>
+
+<OL type="1">
+	<LI>Create an OS design directory by copying the design template directory, in the Public directory of your Windows CE installation, typically C:\WINCE500, to a new location. 
+<P>The following code example shows how to copy the CEBASE directory to a directory named MyOSDesign.
+
+<PRE class="code">xcopy /s public\cebase \PBWorkspaces\MyOSDesign</PRE>
+
+<P>For more information, see <A HREF="wce50confeaturedependencies.htm">Catalog Item Dependencies</A>.
+</li>
+
+	<LI>From the Platform directory of your Windows CE installation, which contains the board support packages (BSPs) you selected when you installed Platform Builder on your development workstation, select the BSP you want to use for your OS design.
+<P>For example, you can create an OS design based on the x86 BSP, targeted toward the Emulator.
+
+<P>For information about BSPs, see <MSHelp:link keywords="wce50oriDevelopingBoardSupportPackage" TABINDEX="0">Developing a Board Support Package</MSHelp:link>.
+</li>
+
+	<LI>Create a batch application (.bat) file to set up your build environment. 
+<P>For easy reference, name this file after your OS design and locate it in the root directory on your development workstation. 
+
+<P>The following table lists the environment variables that you must set in the .bat file.
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=31%>Environment variable</TH>
+<TH width=69%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=31%>_WINCEROOT</TD>
+<TD width=69%>Set this to refer to your Windows CE installation directory, which is typically C:\WINCE500.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=31%>_FLATRELEASEDIR</TD>
+<TD width=69%>Set this to refer to the directory where the final Nk.bin file should be built, which is typically the release directory in your OS design directory.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=31%>WINCEDEBUG</TD>
+<TD width=69%>Set this to specify a debug or release configuration. By default, this is set to release. 
+<P>If you change the default setting, you must also reset _FLATRELEASEDIR to avoid conflicting debug and release binaries.</P>
+</TD>
+</TR>
+</table></div>
+
+<P>The .bat file should also call Wince.bat, the Windows CE Build Environment tool, to set up the rest of the default build environment. 
+
+<P>The following code example shows how to set the build environment for an OS design named MyOSDesign, based on the x86 BSP, and using the Emulator as the target device.
+
+<PRE class="code">call %_WINCEROOT%\PUBLIC\common\oak\misc\wince.bat x86 MyOSDesign emulator</PRE>
+
+<P>In this file, set any Sysgen variables that you want to set in your OS design. You can call one of the sample configuration batch files to set up defaults for standard design templates. 
+
+<P>The following code example shows how to set the variables for a typical Mobile Handheld design template. 
+
+<P><CODE>call %_WINCEROOT%\Public\CEBASE\mobile_handheld.bat</CODE>
+
+<P>Finally, to enable you to remember the build environment you set up, change the title of the command-line build window. 
+
+<P>The following code example shows how to set the title for a build environment targeted toward a Mobile Handheld design template for the Emulator.
+
+<PRE class="code">cd /d %_WINCEROOT%
+title WINCE BUILD - EMULATOR MOBILE</PRE>
+</li>
+
+	<LI>Run the .bat file to create your build environment.</li>
+</OL>
+
+<P>You have successfully created a workspace from the command line. You can now customize and build your OS design. </P>
+
+<P>For information about customizing your OS design, see <A HREF="wce50confeaturemanagement.htm">Catalog Item Management</A> and <A HREF="wce50conplatformcustomization.htm">Modifying an OS Design</A>. For information about building the run-time image based on your OS design, see <A HREF="wce50conplatformbuilding.htm">Run-Time Image Build Process</A>.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50conworkspacecreation.htm">Workspace Creation</A> | <A HREF="wce50conworkspacecreationintheide.htm">Workspace Creation in the IDE</A> | <A HREF="wce50howhowtousethecommandlinetocreatecustomizeandbuildaplatform.htm">How to Use the Command Line to Create, Customize, and Build a Run-Time Image</A> | <A HREF="wce50conmiscellaneousenvironmentvariables.htm">Miscellaneous Environment Variables</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

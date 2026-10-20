@@ -1,0 +1,86 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Implementing the OEMMapMemAddr Function</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Implementing the OEMMapMemAddr Function"/>
+<MSHelp:RLTitle Title="Implementing the OEMMapMemAddr Function"/>
+<MSHelp:Keyword Index="A" Term="wce50tskImplementingtheOEMMapMemAddrFunction"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Hardware"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="True"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbTask"/>
+<MSHelp:Attr Name="Filename" Value="howto_developing_a_bootloader.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="True"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_3010324">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50tskimplementingtheoemmapmemaddrfunction"></A>Implementing the OEMMapMemAddr Function</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>You need to implement code that maps the flash memory image to a temporary location in RAM. This temporary RAM cache allows the run-time image to be downloaded while the slower flash memory erase operation takes place. </P>
+
+<P>Typically, a flash memory image is downloaded to the RAM location first while the flash memory erase operation happens in parallel. If run-time image validation happens first, the erase operation is put on hold until the run-time image is completely downloaded and verified.</P>
+
+<P>The <A HREF="wce50lrfoemmapmemaddr.htm">OEMMapMemAddr</A> function is called to perform address translation between the flash memory address and a location in RAM where the run-time image is to be temporarily stored. It is called for a .bin file on a record-by-record basis.</P>
+
+<P class="labelproc"><B>To implement the OEMMapMemAddr function</B>
+
+<UL type="disc">
+	<LI>Edit the file Flash.c by adding the code necessary to fully implement the <B>OEMMapMemAddr</B> function.
+<P>The following code example shows the implementation of the <B>OEMMapMemAddr</B> function for the hardware platform used in this boot loader example.
+
+<PRE class="code">#define FCACHE 0x30040000
+LPBYTE OEMMapMemAddr (DWORD dwImageStart, DWORD dwAddr)
+{
+    if (OEMIsFlashAddr(dwAddr))
+    {
+        //
+        // This image is destined for flash; cache it in RAM temporarily.
+        //
+        dwAddr -= dwImageStart;
+        dwAddr += FCACHE;
+    }
+
+    return((LPBYTE) dwAddr);
+}</PRE>
+</li>
+</UL>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50howhowtodevelopabootloader.htm">How to Develop a Boot Loader</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

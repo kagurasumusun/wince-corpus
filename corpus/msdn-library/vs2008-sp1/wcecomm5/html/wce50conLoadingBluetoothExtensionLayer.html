@@ -1,0 +1,100 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Loading a Bluetooth Extension Layer</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Loading a Bluetooth Extension Layer"/>
+<MSHelp:RLTitle Title="Loading a Bluetooth Extension Layer"/>
+<MSHelp:Keyword Index="A" Term="wce50conLoadingBluetoothExtensionLayer"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Feature"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="bluetooth_stack.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="True"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="True"/>
+<MSHelp:Attr Name="PBFeature" Value="SYSGEN_BTH"/>
+<MSHelp:Attr Name="PBOnly" Value="True"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_1045219">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50conloadingbluetoothextensionlayer"></A>Loading a Bluetooth Extension Layer</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>With the installable device driver architecture you must compile the extension layer as a DLL. To use the extension layer the application must load and then create a driver instance by using standard stream driver procedures. </P>
+
+<P>The L2capapi sample located in the %_WINCEROOT%\Public\Common\Oak\Drivers\Bluetooth\Sample\L2capapi directory, shows how an application can use the L2capdev extension layer DLL.</P>
+
+<P class="labelproc"><B>To load the extension layer from your application</B>
+
+<OL type="1">
+	<LI>Register the DLL by calling the <MSHelp:link keywords="wce50lrfRegisterDevice" TABINDEX="0">RegisterDevice</MSHelp:link> function. 
+<P>The following example code shows a function L2CAPLoad, that is defined in the L2capapi sample. This function registers the L2CAP extension layer, L2capdev.dll by calling <B>RegisterDevice</B> and sets the appropriate registry key values.
+
+<PRE class="code">int L2CAPLoad (void) 
+{
+  HANDLE hDevice = RegisterDevice (L"L2C", 0, L"l2capdev.dll", 0);
+  if (hDevice) 
+  {
+    HKEY hk;
+    if (ERROR_SUCCESS == RegOpenKeyEx (HKEY_BASE, L"Software\\Microsoft\\Bluetooth", 0, KEY_READ, &amp;hk)) 
+    {
+      RegSetValueEx (hk, L"l2capdev_handle", 0, REG_DWORD, (LPBYTE)&amp;hDevice, sizeof(hDevice));
+      RegCloseKey (hk);
+    }
+  }
+  return hDevice != NULL ? ERROR_SUCCESS : ERROR_SERVICE_NOT_ACTIVE;
+}</PRE>
+</li>
+
+	<LI>To create an instance of the driver, call the <MSHelp:link keywords="wce50lrfCreateFile" TABINDEX="0">CreateFile</MSHelp:link> function. 
+<P>The following example code shows a function Initialize, that is declared in the L2capapi sample. This function creates an instance of the driver by calling <B>CreateFile</B>.
+
+<PRE class="code">HANDLE hDev = INVALID_HANDLE_VALUE;
+int Initialize (void) 
+{
+  if (hDev != INVALID_HANDLE_VALUE)
+  return TRUE;
+  hDev = CreateFile (L"L2C0:", 
+    GENERIC_READ | GENERIC_WRITE, FILE_SHARE_READ | FILE_SHARE_WRITE,
+    NULL, OPEN_EXISTING, 0, NULL);
+  return (hDev != INVALID_HANDLE_VALUE) ? TRUE : FALSE;
+}</PRE>
+</li>
+</OL>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50concreatingbluetoothstackextensionlayer.htm">Creating a Bluetooth Stack Extension Layer</A> | <A HREF="wce50oribluetoothosdesign.htm">Bluetooth OS Design Development</A> | <A HREF="wce50conhostcontrollerinterface.htm">Host Controller Interface</A> | <A HREF="wce50howhowtowritebluetoothstackextensionlayer.htm">How to Develop and Load a Bluetooth HCI Stack Extension Layer</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

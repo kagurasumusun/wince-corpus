@@ -1,0 +1,97 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Collecting Debug Messages in a Limited Buffer with OSCapture</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Collecting Debug Messages in a Limited Buffer with OSCapture"/>
+<MSHelp:RLTitle Title="Collecting Debug Messages in a Limited Buffer with OSCapture"/>
+<MSHelp:Keyword Index="A" Term="wce51tskCollectingDebugMessagesInLimitedBufferWithOSCapture"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Debugging"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="True"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbTask"/>
+<MSHelp:Attr Name="Filename" Value="celog_event_tracking_tools.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="True"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_1073102">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce51tskcollectingdebugmessagesinlimitedbufferwithoscapture"></A>Collecting Debug Messages in a Limited Buffer with OSCapture</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>You can use the event-tracking library, CeLog.dll, and OSCapture.exe to store debug output in a limited-size memory buffer on a target device. The messages will not be written to a file until you command OSCapture to do so. When you do, only the most recent messages will be saved.</P>
+
+<P>The following instructions use a shortcut file for maximum convenience. You can also use other techniques to set up the same behavior: be sure to enable the CELZONE_DEBUG zone, to trigger OSCapture to save the data to a file, and to view the data using the Readlog tool.</P>
+
+<P class="labelproc"><B>To collect debug output messages with OSCapture.exe</B>
+
+<OL type="1">
+	<LI>On the target device, create a file named LOAD.lnk with the following contents: 
+<PRE class="code">90#\Windows\oscapture.exe -buf 0x100000 -time 10000 &#0150;save 6 -n \celog.clg -z 0x00800000 -ui 1</PRE>
+</li>
+
+	<LI>On the target device, create a file named STORE.lnk with the following contents: 
+<PRE class="code">31#\Windows\oscapture.exe -c -ui 1</PRE>
+</li>
+
+	<LI>Copy CeLog.dll and OSCapture.exe into the \Windows directory of the target device. </li>
+
+	<LI>Copy the .lnk files you created in step 1 and step 2 into the same directory as the <B>Start</B> menu on the target device.</li>
+
+	<LI>From the <B>Start</B> menu, choose <B>LOAD.lnk</B>. 
+<P>This step configures the log file settings, and causes OSCapture.exe begin buffering debug output in a limited-size RAM buffer. It will buffer approximately 60 seconds of debug messages, or 1MB, whichever is smaller. If the messages overfill the buffer, it will keep the most recent data.
+</li>
+
+	<LI>Perform the actions you want to collect output for.</li>
+
+	<LI>From the <B>Start</B> menu, choose <B>STORE.lnk</B>. 
+<P>OSCapture.exe saves the buffered debug messages to a file named celog.clg in the root directory of the device. 
+
+<P>You can repeat steps 6 and 7 as often as needed to add the data you want to the output text file. The instance of OSCapture that you started in step 5 continues to buffer data in the background after you run step 7 to trigger it to flush data to a file.
+</li>
+
+	<LI>When you are done collecting data, copy celog.clg to a storage location off the device. </li>
+
+	<LI>To read the saved output, use the <A HREF="wce51orireadlogviewingtool.htm">Readlog Viewing Tool</A>. 
+<P>The following line shows how use Readlog to parse a log file called celog.clg and store readable text into a file called output.txt.
+
+<PRE class="code">Readlog celog.clg output.txt</PRE>
+</li>
+</OL>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce51orireadlogviewingtool.htm">Readlog Viewing Tool</A> | <A HREF="wce51grfoscapturecommand-lineoverrides.htm">OSCapture Command-Line Overrides</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

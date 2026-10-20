@@ -1,0 +1,215 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Implementing the Flash Memory Erase Functions</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Implementing the Flash Memory Erase Functions"/>
+<MSHelp:RLTitle Title="Implementing the Flash Memory Erase Functions"/>
+<MSHelp:Keyword Index="A" Term="wce50tskImplementingtheFlashMemoryEraseFunctions"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Hardware"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="True"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbTask"/>
+<MSHelp:Attr Name="Filename" Value="howto_developing_a_bootloader.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="True"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_3010339">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50tskimplementingtheflashmemoryerasefunctions"></A>Implementing the Flash Memory Erase Functions</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>The flash memory erase functions enable flash memory erase operations to occur before, during, and after the run-time image download operation. The BLCOMMON library calls these functions.</P>
+
+<BLOCKQUOTE class="dtBlock">
+<b class="le">Note</b>&nbsp;&nbsp;&nbsp;If you want your boot loader to be more secure and validate the downloaded run-time image before altering flash memory, you should keep the stubbed versions of the flash memory erase functions and implement the erase and write operations in <A HREF="wce50lrfoemwriteflash.htm">OEMWriteFlash</A>.</BLOCKQUOTE>
+
+<P>The flash memory erase functions can be implemented in many different ways and the implementation is mostly dependent on the flash memory technology being used in your hardware platform. </P>
+
+<P>For example, some flash memory technologies allow for N blocks to be marked for erasure in parallel, while in many cases, the flash memory is erased in sequential block order.</P>
+
+<P>The following table shows the flash memory erase functions that you need to implement.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=30%>Function</TH>
+<TH width=70%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=30%><A HREF="wce50lrfoemstarteraseflash.htm">OEMStartEraseFlash</A></TD>
+<TD width=70%>Called when the download process begins, and provides the overall run-time image start address and total run-time image length. 
+<P>The run-time image start address and total run-time image length specify the overall flash memory address range to be erased for the new run-time image.</P>
+</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=30%><A HREF="wce50lrfoemcontinueeraseflash.htm">OEMContinueEraseFlash</A></TD>
+<TD width=70%>Called on every run-time image .bin record download to allow the boot loader to continue the flash memory erase operation.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=30%><A HREF="wce50lrfoemfinisheraseflash.htm">OEMFinishEraseFlash</A></TD>
+<TD width=70%>Called after the run-time image is completely downloaded and allows the boot loader to finish all flash memory erase operations.</TD>
+</TR>
+</table></div>
+
+<P class="labelproc"><B>To implement flash memory erase functions</B>
+
+<UL type="disc">
+	<LI>Edit the file Flash.c by adding the code necessary to fully implement the flash memory erase functions.
+<P>The following code example shows the implementation of the flash memory erase functions for the hardware platform used in this boot loader example.
+
+<PRE class="code">BOOL OEMStartEraseFlash (DWORD dwStartAddr, DWORD dwLength)
+{
+    ULONG i = 0;
+    ULONG nNumBlocks = 0;
+
+    //
+    // Be sure the start and end addresses are in flash.
+    //
+    if (!OEMIsFlashAddr(dwStartAddr) || !OEMIsFlashAddr(dwStartAddr + dwLength - 1))
+    {
+        EdbgOutputDebugString("ERROR: OEMStartEraseFlash - not a flash address (0x%x or 0x%x).\r\n", dwStartAddr, (dwStartAddr + dwLength - 1));
+        return(FALSE);
+    }
+
+    // 
+    // Be sure start address is block-aligned.
+    //
+    if (dwStartAddr % FLASH_BLOCK_SIZE)
+    {
+        EdbgOutputDebugString("ERROR: OEMStartEraseFlash - start address isn't block aligned (0x%x).\r\n", dwStartAddr);
+        return(FALSE);
+    }
+    if (dwLength &amp; 0x03)
+    {
+        EdbgOutputDebugString("ERROR: OEMStartEraseFlash - length isn't an integral number of longwords (0x%x).\r\n", dwLength);
+        return(FALSE);
+    }
+
+    //
+    // Clear the flash cache, where the image will be stored during download.
+    //
+    //memset((void *)FCACHE, 0, dwLength);
+
+    //
+    // Determine affected flash blocks.
+    //
+    gnStartBlock = (dwStartAddr - FLASH_BASE) / FLASH_BLOCK_SIZE;
+    gnEndBlock   = ((dwStartAddr + dwLength + (FLASH_BLOCK_SIZE - 1) - FLASH_BASE) / FLASH_BLOCK_SIZE);
+    gnBlocks     = (int)(gnEndBlock - gnStartBlock);
+    gnBlockCount = gnStartBlock;
+
+    EdbgOutputDebugString("Erasing flash blocks: start block = %d  end block = %d\r\n", gnStartBlock, gnEndBlock);
+
+    return(TRUE);
+}
+
+void OEMContinueEraseFlash(void)
+{
+    UCHAR nEraseCount = BLOCK_ERASE_STEP;   // Number of blocks to erase...
+
+    // 
+    // Verify that all the blocks have been erased.
+    //
+    if (!gnBlocks || (gnBlockCount == gnEndBlock))
+        return;
+
+    //
+    // Erase a few blocks.
+    //
+    while ((gnBlockCount &lt; gnEndBlock) &amp;&amp; nEraseCount)
+    {
+        if (CFI_Erase_Block((unsigned32*)BLOCK_ADDR(gnBlockCount), 0, NULL) != PASS)
+        {
+            EdbgOutputDebugString("ERROR: OEMContinueEraseFlash - flash erase error (block number %d).\r\n", gnBlockCount);
+            return;
+        }
+
+        ++gnBlockCount;
+        --nEraseCount;
+    }
+
+    return;
+}
+
+BOOL OEMFinishEraseFlash(void)
+{
+    
+    EdbgOutputDebugString("INFO: Finishing flash erase...\r\n");
+
+    while(gnBlocks &amp;&amp; (gnBlockCount != gnEndBlock))
+    {
+        OEMContinueEraseFlash();
+    }
+
+    return(TRUE);
+}
+
+void OEMContinueEraseFlash(void)
+{
+    UCHAR nEraseCount = BLOCK_ERASE_STEP;   // Number of blocks to erase...
+
+    // 
+    // Verify that all the blocks have been erased.
+    //
+    if (!gnBlocks || (gnBlockCount == gnEndBlock))
+        return;
+
+    //
+    // Erase a few blocks...
+    //
+    while ((gnBlockCount &lt; gnEndBlock) &amp;&amp; nEraseCount)
+    {
+        if (CFI_Erase_Block((unsigned32*)BLOCK_ADDR(gnBlockCount), 0, NULL) != PASS)
+        {
+            EdbgOutputDebugString("ERROR: OEMContinueEraseFlash - flash erase error (block number %d).\r\n", gnBlockCount);
+            return;
+        }
+
+        ++gnBlockCount;
+        --nEraseCount;
+    }
+
+    return;
+}</PRE>
+</li>
+</UL>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50howhowtodevelopabootloader.htm">How to Develop a Boot Loader</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

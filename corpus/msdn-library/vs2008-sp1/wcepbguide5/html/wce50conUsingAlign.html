@@ -1,0 +1,137 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Using Align</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Using Align"/>
+<MSHelp:RLTitle Title="Using Align"/>
+<MSHelp:Keyword Index="A" Term="wce50conUsingAlign"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Guide"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="True"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="comp_modifiers.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="True"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_1042660">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50conusingalign"></A>Using Align</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>You can use the <B>align </B>attribute to force data structure elements to byte-align in a way that ensures optimal processing for the particular microprocessor family you use. </P>
+
+<P>Alternatively, you can use <B>align</B> to ensure that structure data alignment is as portable as possible.</P>
+
+<P>For information about aligning data for optimal processing, see <A HREF="wce50conworkingwithdataalignmentissues.htm">Working with Data Alignment Issues</A>.</P>
+
+<P>The following code examples show how <A HREF="wce50con__declspec.htm">__declspec</A><B>(align( # ))</B> affects the size and alignment of data structures. The examples assume the following definitions:</P>
+
+<PRE class="code">#define CACHE_LINE  32
+#define CACHE_ALIGN __declspec(align(CACHE_LINE))</PRE>
+
+<P>In the following example, the S1 structure is defined with <B>__declspec(align(</B>32<B>))</B>. </P>
+
+<P>All uses of S1, whether for a variable definition or other type declarations, ensure that this structure data is 32-byte aligned. <B>sizeof(struct S1)</B> returns 32, and S1 has 16 padding bytes following the 16 bytes required to hold the four integers. </P>
+
+<P>Each int member requires four-byte alignment, but the alignment of the structure is declared to be 32, so the overall alignment is 32.</P>
+
+<PRE class="code">struct CACHE_ALIGN S1  // cache align all instances of S1
+{
+    int a, b, c, d;
+};
+struct S1 s1;   // s1 is 32-byte cache aligned</PRE>
+
+<P>In the following example, <B>sizeof(struct S2)</B> returns 16, which is the sum of the member sizes, because that is a multiple of the largest alignment requirement (a multiple of 8).</P>
+
+<PRE class="code">__declspec(align(8)) struct S2
+{
+    int a, b, c, d;
+};</PRE>
+
+<P>In the following example, <B>sizeof(struct S3)</B> returns 64.</P>
+
+<PRE class="code">struct S3
+{
+  struct S1 s1;  // S3 inherits cache alignment requirement
+            // from S1 declaration
+  int a;      // a is now cache aligned because of s1
+            // 28 bytes of trailing padding
+};</PRE>
+
+<P>In the following code example, <B>a</B> has only the alignment of natural type; in this case, 4 bytes. However, <B>S1</B> must be 32-byte aligned. </P>
+
+<P>Twenty-eight bytes of padding follow a, so <B>S1</B> starts at offset 32. <B>S4</B> then inherits the alignment requirement of <B>S1</B>, because it is the largest alignment requirement in the structure. <B>sizeof(struct S4)</B> returns 64.</P>
+
+<PRE class="code">struct S4
+{
+    int a;
+    // 28 bytes padding
+    struct S1 s1;    // S4 inherits cache alignment requirement of S1
+};</PRE>
+
+<P>The following three variable declarations also use <B>__declspec(align( # )).</B> In each case, the variable must be 32-byte aligned. In the case of the array, the base address of the entire array is 32-byte aligned, not each array member. </P>
+
+<P>The <B>sizeof</B> value for each array member is not affected by the use of <B>__declspec(align( # )).</B></P>
+
+<PRE class="code">CACHE_ALIGN int i;
+CACHE_ALIGN int array[128];
+CACHE_ALIGN struct s2 s;</PRE>
+
+<P>To align each individual member of an array, code such as the following should be used:</P>
+
+<PRE class="code">typedef CACHE_ALIGN struct { int a; } S5;
+S5 array[10];</PRE>
+
+<P>In the following example, aligning the structure itself and aligning the first element are identical:</P>
+
+<PRE class="code">CACHE_ALIGN struct S6
+{
+    int a;
+    int b;
+};
+
+struct S7
+{
+   CACHE_ALIGN int a;
+               int b;
+};</PRE>
+
+<P><B>S6</B> and <B>S7 </B>have identical alignment, allocation, and size characteristics.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50con__declspec.htm">__declspec</A> | <A HREF="wce50conalign.htm">align</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

@@ -1,0 +1,90 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Laying Out Text with Uniscribe</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Laying Out Text with Uniscribe"/>
+<MSHelp:RLTitle Title="Laying Out Text with Uniscribe"/>
+<MSHelp:Keyword Index="A" Term="wce50tskLayingOutTextWithUniscribe"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Feature"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbTask"/>
+<MSHelp:Attr Name="Filename" Value="Uniscribe_app_dev.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="False"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+<MSHelp:Attr Name="PBFeature" Value="SYSGEN_UNISCRIBE"/>
+<MSHelp:Attr Name="PBOnly" Value="False"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_1051922">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50tsklayingouttextwithuniscribe"></A>Laying Out Text with Uniscribe</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>This procedure assumes that the application has already divided the paragraph into runs. </P>
+
+<P class="labelproc"><B>To Lay Out Text Using Uniscribe </B>
+
+<OL type="1">
+	<LI>Call <A HREF="wce50lrfscriptrecorddigitsubstitution.htm">ScriptRecordDigitSubstitution</A> only when the application starts, or when receiving a <MSHelp:link keywords="wce50lrfWMSETTINGCHANGE" TABINDEX="0">WM_SETTINGCHANGE</MSHelp:link> message. </li>
+
+	<LI>Call <A HREF="wce50lrfscriptiscomplex.htm">ScriptIsComplex</A> to determine if the paragraph requires complex processing. 
+<BLOCKQUOTE class="dtBlock">
+<b class="le">Note</b>&nbsp;&nbsp;&nbsp;This step is optional.</BLOCKQUOTE>
+</li>
+
+	<LI>For automatic digit substitution, call <A HREF="wce50lrfscriptapplydigitsubstitution.htm">ScriptApplyDigitSubstitution</A> to prepare the <A HREF="wce50lrfscript_control.htm">SCRIPT_CONTROL</A> and <A HREF="wce50lrfscript_state.htm">SCRIPT_STATE</A> structures in <A HREF="wce50lrfscriptitemize.htm">ScriptItemize</A>. If the application does its own reordering and layout, it must substitute the proper digits for Unicode U+0030 through U+0039 (the Western digits). </li>
+
+	<LI>Call <B>ScriptItemize</B> to divide the paragraph into items. If an application already knows the bidirectional order -- for example, because of the keyboard layout used to enter the character -- it can call <B>ScriptItemize</B> with NULL for the <B>SCRIPT_CONTROL</B> and <B>SCRIPT_STATE</B> parameters. The application can then reorder the items using its information. </li>
+
+	<LI>Merge the item information with the run information to produce runs with a single style, script, and direction. </li>
+
+	<LI>Call <A HREF="wce50lrfscriptgetcmap.htm">ScriptGetCMap</A> to assign a font to a run and get glyphs. If some glyphs are not supported by the font, either substitute another font or set the <B>eScript</B> member to SCRIPT_UNDEFINED. 
+<BLOCKQUOTE class="dtBlock">
+<b class="le">Note</b>&nbsp;&nbsp;&nbsp;If a font renders a code point by a combination of glyphs instead of a single glyph, this method may indicate that the code point is unsupported. In this case, call <A HREF="wce50lrfscriptshape.htm">ScriptShape</A>, check for an S_OK return code, and then check the output for missing glyphs. </BLOCKQUOTE>
+</li>
+
+	<LI>Call <B>ScriptShape</B> to identify clusters and generate glyphs. </li>
+
+	<LI>Call <A HREF="wce50lrfscriptplace.htm">ScriptPlace</A> to generate advance widths and x and y positions for the run width. </li>
+
+	<LI>Sum the run widths until the line overflows. </li>
+
+	<LI>Break the run on a word boundary by using the <B>fSoftBreak</B> and <B>fWhiteSpace</B> members in the logical attributes. To break a single character cluster off the run, use the information returned by calling <A HREF="wce50lrfscriptbreak.htm">ScriptBreak</A>. </li>
+</OL>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50tskdisplayingtextwithuniscribe.htm">Text Display with Uniscribe</A> | <MSHelp:link keywords="wce50grfSystemInformationMessages" TABINDEX="0">System Information Messages</MSHelp:link></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

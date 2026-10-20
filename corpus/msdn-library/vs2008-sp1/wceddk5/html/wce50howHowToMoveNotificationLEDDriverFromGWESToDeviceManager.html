@@ -1,0 +1,136 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Moving a Notification LED Driver from GWES to Device Manager</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Moving a Notification LED Driver from GWES to Device Manager"/>
+<MSHelp:RLTitle Title="Moving a Notification LED Driver from GWES to Device Manager"/>
+<MSHelp:Keyword Index="A" Term="wce50howHowToMoveNotificationLEDDriverFromGWESToDeviceManager"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Driver"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="False"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbTask"/>
+<MSHelp:Attr Name="Filename" Value="howto_nledtodevice.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="True"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+<MSHelp:Attr Name="PBFeature" Value="NLEDDriver"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_1044746">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50howhowtomovenotificationleddriverfromgwestodevicemanager"></A>Moving a Notification LED Driver from GWES to Device Manager</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>Starting with Windows CE .NET 4.2, the notification LED (NLED) driver was the only platform-specific component directly linked into GWES. If you move the NLED driver from GWES to a separate DLL loaded by Device Manager, there are no platform-specific components directly linked into GWES and you no longer need to build GWES in your platform. If your configuration requires the notification LED APIs <A HREF="wce50lrfnledgetdeviceinfo.htm">NLedGetDeviceInfo</A> and <A HREF="wce50lrfnledsetdevice.htm">NLedSetDevice</A>, you will need to set SYSGEN_NLED=1 to include them in your image. With this change, it is no longer necessary to build GWES in your platform &#0150; instead, use sysgen gwes.  The change deletes the GWE directory from the standard platforms. If you are using a different platform, you will need to remove GWE and possibly make your NLED driver, if it exists, an installable driver. The following steps explain how to move an existing NLED driver from GWES to a separate DLL. </P>
+
+<P class="labelproc"><B>To move a notification LED driver from GWES to Device Manager</B>
+
+<OL type="1">
+	<LI>Determine if your platform's NLED driver actually controls any hardware. Some platforms supply dummy drivers to satisfy the linker when building GWES. If your platform has a dummy NLED driver, you can use the sample NLED driver in public\common\oak\drivers\nleddrvr without modification, or you can delete NLED from your configuration entirely. In this case, go to step 11. </li>
+
+	<LI>Steps 2 through step 10 convert a GWES-based NLED driver into a platform-dependent driver (PDD) for the NLED driver. The model device driver (MDD) for the NLED driver is located in public\common\oak\drivers\nleddrvr. First, copy your NLED driver files to drivers\nleddrvr in your platform directory. </li>
+
+	<LI>If the <B>NLedDriverDllEntry</B> entry point in your driver source code, delete it. This entry point has not been invoked for several revisions of the OS, so it is useless if present in your driver. </li>
+
+	<LI>Because the NLED driver is now being loaded by Device Manager, it is possible that it will be unloaded as well. To handle unloading, add an <B>NLedDriverDeInitialize </B>entry point to your driver. You should already have an <A HREF="wce50lrfnleddriverinitialize.htm">NLedDriverInitialize</A> entry point. The <B>NLedDriverDeInitialize</B> routine handles cleanup if the driver is unloaded. It should have the following signature: 
+<PRE class="code">BOOL WINAPI NLedDriverDeInitialize(VOID);</PRE>
+
+<P>This routine should return TRUE if successful and FALSE if there is an error. 
+</li>
+
+	<LI>Copy Nleddrvr.def from public\common\oak\drivers\nleddrvr into your driver's directory. </li>
+
+	<LI>Edit your driver's SOURCES files as follows: 
+<UL type="disc">
+	<LI>Set TARGETTYPE=DYNLINK. </li>
+
+	<LI>Set TARGETNAME=nleddrvr. </li>
+
+	<LI>Set DEFFILE=nleddrvr.def. </li>
+
+	<LI>Set RELEASETYPE=PLATFORM. </li>
+
+	<LI>Set WINCEOEM=1. </li>
+
+	<LI>Add $(_COMMONOAKROOT)\lib\$(_CPUINDPATH)\nleddrvr_lib.lib to SOURCELIBS. </li>
+</UL>
+
+<P>Include any platform-specific libraries your driver needs to link successfully. Determine which libraries might fit in this category by looking at SOURCES files in your platform directories. 
+</li>
+
+	<LI>Compile and link your driver by running <code class="ce">build -c</code> in your platform's drivers\nleddrvr directory. Resolve any build errors before continuing. </li>
+
+	<LI>Add nleddrvr to the list of directories being built by modifying the DIRS file in your platform directory's drivers directory. This causes the NLED driver to be built automatically when the rest of the platform is compiled. </li>
+
+	<LI>Add the new NLED driver to your platform's Platform.bib file adding the following lines to the MODULES section: 
+<PRE class="code">; @CESYSGEN IF CE_MODULES_NLEDDRVR
+
+IF BSP_NONLED !
+IF IMG_NONLED !
+    nleddrvr.dll        $(_FLATRELEASEDIR)\nleddrvr.dll                $(REGION_NAME) SH
+ENDIF   ; IMG_NONLED !
+ENDIF   ; BSP_NONLED !
+
+; @CESYSGEN ENDIF CE_MODULES_NLEDDRVR</PRE>
+
+<P>Depending on your platform configuration, you may need to replace $(REGION_NAME) with NK in your Platform.bib file.
+
+<P>The CESYSGEN line is intended to make your platform easier to componentize. BSP_NONLED indicates that even though the NLED component has been selected, your platform does not support it. IMG_NONLED is useful for debugging because it excludes the NLED DLL from your image, which forces the DLL to be downloaded by means of KITL when the driver is loaded. All of these conditionals are optional. 
+</li>
+
+	<LI>Add the new NLED driver to your platform's Platform.reg file by adding the following lines: 
+<PRE class="code">; @CESYSGEN IF CE_MODULES_NLEDDRVR
+
+#include "$(DRIVERS_DIR)\nleddrvr\nleddrvr.reg"
+
+; @CESYSGEN ENDIF CE_MODULES_NLEDDRVR</PRE>
+
+<P>If your platform does not define DRIVERS_DIR, you can define it at the top of the file by adding this line: 
+
+<PRE class="code"><code class="ce">#define DRIVERS_DIR     $(_WINCEROOT)\public\common\oak\drivers</code></PRE>
+</li>
+
+	<LI>Delete the GWES directory from your platform. It is now linked during Sysgen, not built in your platform. If you do not want to delete the directory, you can remove GWES from your platform's top-level DIRS file. </li>
+
+	<LI>Delete any versions of GWES still in the platform's target directory. This directory contains executables and DLLs that are linked when the platform is built. To delete the files, use these commands: 
+<P>cd %_targetplatroot%\target 
+
+<P>del /s /q gwes.* 
+
+<P>If these files are not deleted, they overwrite the version linked during Sysgen when buildrel copies files to the release directory. 
+</li>
+
+	<LI>Rebuild your platform, make a new image, and verify that GWES and the NLED interface both work correctly. To do this, from the command line, use blddemo clean -q. In Platform Builder, use the Rebuild command. </li>
+</OL>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

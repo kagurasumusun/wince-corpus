@@ -1,0 +1,100 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>CeRapiInitEx</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="CeRapiInitEx"/>
+<MSHelp:RLTitle Title="CeRapiInitEx"/>
+<MSHelp:Keyword Index="K" Term="CeRapiInitEx"/>
+<MSHelp:Keyword Index="A" Term="wce50lrfCeRapiInitEx"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Feature"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="apiref"/>
+<MSHelp:Attr Name="Filename" Value="rapi.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="False"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+<MSHelp:Attr Name="APIName" Value="CeRapiInitEx"/>
+<MSHelp:Attr Name="APIType" Value="LibDef"/>
+<MSHelp:Attr Name="APILocation" Value="Rapi.lib"/>
+<MSHelp:Attr Name="PBFeature" Value="SYSGEN_AS_BASE"/>
+<MSHelp:Attr Name="PBOnly" Value="False"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_3001800">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50lrfcerapiinitex"></A>CeRapiInitEx</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>This function attempts to initialize the Windows CE remote application programming interface (RAPI) and initially returns an event handle.</P>
+
+<PRE class="syntax"><B>HRESULT</B> <B>CeRapiInitEx(</B>
+  <B>RAPIINIT* </B><I>pRapiInit</I>
+<B>);</B></PRE>
+
+<H4 class="dtH4">Parameters</H4>
+
+<DL>
+<DT><I>pRapiInit </I></DT>
+
+<DD>[in] Pointer to a <A HREF="wce50lrfrapiinit.htm">RAPIINIT</A> structure. The <B>cbSize</B> member of this structure contains the size of the structure being passed in. Initially, a handle to an event is passed back in the <B>heRapiInit</B> member of this structure. When the connection is made or an error occurs, the event is set. The <B>hrRapiInit</B> member of this structure contains the value S_OK if the connection is successful, or E_FAIL if an error occurred.</dd>
+</DL>
+
+<H4 class="dtH4">Return Values</H4>
+
+<P>S_OK indicates success. E_FAIL indicates failure. E_INVALIDARG indicates that an invalid value was encountered.</P>
+
+<H4 class="dtH4">Remarks</H4>
+
+<P>This function is a part of the remote application programming interface (RAPI), which invokes function calls on a Windows CE&#0150;based device. RAPI functions are supported only for applications that run on desktop platforms. </P>
+
+<P>The <B>CeRapiInitEx</B> or <A HREF="wce50lrfcerapiinit.htm">CeRapiInit</A> functions must be called before any remote API calls can be performed. They initialize the underlying communications layers between the desktop computer and the target device. </P>
+
+<P>Call <B>CeRapiInitEx</B> to avoid blocking a thread inside of a call to <B>CeRapiInit</B>. <B>CeRapiInitEx</B> returns immediately and continues initialization until the connection is made, until an error occurs, or until there is a call to <A HREF="wce50lrfcerapiuninit.htm">CeRapiUninit</A>. When <B>CeRapiInitEx</B> is complete it then sets the event specified in the <B>heRapiInit</B> member of the <B>RAPIINIT</B> structure. If the <B>CeRapiInitEx</B> function is used to initialize RAPI, all other RAPI calls should be made on a different thread than the thread that calls <B>CeRapiInitEx</B>. If a RAPI call is made in this same thread and the device disconnects in the middle of the RAPI call, the application may have some threads block.</P>
+
+<P>After calling <B>CeRapiInitEx</B>, check the return value to see if an error occurred. If the call was initially successful, call the <MSHelp:link keywords="wce50lrfMsgWaitForMultipleObjects" TABINDEX="0">MsgWaitForMultipleObjects</MSHelp:link> function to wait on the event handle passed back in the <B>heRapiInit</B> member of the <B>RAPIINIT</B> structure. When the event is set, check the <B>hrRapiInit</B> member of the structure to determine if the connection was successful.</P>
+
+<P>To shut down or to abort the connection process, call the <A HREF="wce50lrfcerapiuninit.htm">CeRapiUnInit</A> function.</P>
+
+<P>When writing applications for Windows CE 1.0 and 1.01, use the <B>PegRapiInitEx</B> function.</P>
+
+<H4 class="dtH4">Requirements</H4>
+
+<P><B>OS Versions:</B> Windows CE 2.0 and later.<BR>
+<B>Header:</B> Rapi.h.<BR>
+<B>Link Library: </B>Rapi.lib.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50grfrapifunctions.htm">RAPI Functions</A> | <A HREF="wce50lrfcerapiinit.htm">CeRapiInit</A> | <A HREF="wce50lrfcerapiuninit.htm">CeRapiUninit</A> | <MSHelp:link keywords="wce50lrfMsgWaitForMultipleObjects" TABINDEX="0">MsgWaitForMultipleObjects</MSHelp:link> | <A HREF="wce50lrfrapiinit.htm">RAPIINIT</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

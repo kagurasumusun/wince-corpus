@@ -1,0 +1,209 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Technote: Improved Conformance to ANSI C++</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Technote: Improved Conformance to ANSI C++"/>
+<MSHelp:RLTitle Title="Technote: Improved Conformance to ANSI C++"/>
+<MSHelp:Keyword Index="A" Term="wce50errTechnoteImprovedConformancetoANSIC"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Guide"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="True"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbRef"/>
+<MSHelp:Attr Name="Filename" Value="err26xx.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="True"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_3024910">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50errtechnoteimprovedconformancetoansic"></A>Technote: Improved Conformance to ANSI C++</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>Because of improved C++ conformance, some constructs that compiled in older versions of Microsoft&reg; eMbedded Visual C++&reg; now produce errors. The errors affected are:</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TD width=16%>C2434</TD>
+<TD width=17%>C2440</TD>
+<TD width=17%>C2446</TD>
+<TD width=16%>C2553</TD>
+<TD width=17%>C2585</TD>
+<TD width=17%>C2592</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=16%>C2664</TD>
+<TD width=17%>C2665</TD>
+<TD width=17%>C2666</TD>
+<TD width=16%>C2667</TD>
+<TD width=17%>C2668</TD>
+<TD width=17%>C2674</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=16%>C2675</TD>
+<TD width=17%>C2676</TD>
+<TD width=17%>C2677</TD>
+<TD width=16%>C2678</TD>
+<TD width=17%>C2679</TD>
+<TD width=17%>C2275</TD>
+</TR>
+</table></div>
+
+<H2 class="dtH2">Overload Resolution Changes</H2>
+
+<P>Microsoft eMbedded Visual C++ version 4.0 and later bring overload resolution rules closer to the C++ standard. This allows some code to work that did not work previously, but can result in ambiguities in code that compiled cleanly with earlier versions of Visual C++.</P>
+
+<P class="label"><B>Dereferencing a Reference is an Identity Conversion</B></P>
+
+<P>Versions of Microsoft eMbedded Visual C++ prior to 4.0 did not consider dereferencing a reference, or binding to a reference, to be an exact match. Microsoft eMbedded Visual C++ versions 4.0 and later considered the conversions trivial, as specified by the <I>Annotated C++ Reference Manual</I>.</P>
+
+<P class="label"><B>Example</B></P>
+
+<PRE class="code">void food(const int);
+void food(int&amp;);
+
+void bard(void)
+{
+    int i;
+    int &amp;ri = i;
+    food(i);  // Accepted by VC2.0, VC1.x, rejected by VC4.0, error C2668
+    food(ri);  // Accepted by VC2.0, VC1.x, rejected by VC4.0, error C2668
+}</PRE>
+
+<P class="label"><B>User-Defined Conversions (UDCs) are Selected by 'this' Pointer Types</B></P>
+
+<P>Versions of eMbedded Visual C++ prior to 4.0 selected a user-defined conversion to call by determining the required conversion from the UDC result type to the required type, ignoring the conversion required for the <B>this</B> pointer of the UDC. Later versions select a UDC based on the quality of match on the <B>this</B> pointer. If two conversions have identical <B>this</B> pointers, a Microsoft extension uses the quality of the conversion from the UDC result to the target type to determine the UDC. (This extension is not disabled by <B>/Za</B>).</P>
+
+<P>The new behavior catches some errors not previously detected. </P>
+
+<P class="label"><B>Example</B></P>
+
+<PRE class="code">
+struct C {
+
+    // some class
+
+};
+
+ 
+
+struct D {
+
+    // A class which wraps a C
+
+    C myC;
+
+ 
+
+    // Two user-defined conversion functions, one for 
+
+    //  using myC, and the other for modifying it
+
+    operator C () { return myC; } // conversion #1
+
+    operator C&amp; () { return myC; } // conversion #2
+
+};
+
+ 
+
+// A function that takes a C
+
+void func1(C);
+
+ 
+
+// A function that has a D
+
+void func2()
+
+{
+
+    D aD;
+
+ 
+    func1(D);  // Error diagnosed in VC4.0: error C2664; now diagnosed as C2275
+
+}
+</PRE>
+
+<P>In this example, the user-defined conversion is ambiguous because the conversions for the <B>this</B> pointers are identical and the UDC results have identical conversions. </P>
+
+<P>The following code (which follows the previous code) shows another error:</P>
+
+<PRE class="code">// A function that wants to modify a C
+void func3(C&amp;);
+
+// Some function that gets a D&amp;
+void func4(const D&amp; aD)
+{
+    func3(aD);  // Error diagnosed in VC4.0: error C2664
+}</PRE>
+
+<P>This time, neither UDC can be called. The <code class="ce">D</code> object is <B>const</B>, but neither UDC takes a <B>const</B> <B>this</B> pointer.</P>
+
+<P>To correct both these problems, rewrite conversion #1 as follows:</P>
+
+<PRE class="code">operator C () const { return myC; }  // conversion #1a</PRE>
+
+<P>or:</P>
+
+<PRE class="code">operator const C&amp; () const { return myC; }  // conversion #1b</PRE>
+
+<P>Both conversions take a <B>const</B> this pointer and can be called for <B>const</B> objects. Conversion #1b returns a reference to a <B>const</B> object, avoiding copy construction, but still ensuring that the original object cannot be modified.</P>
+
+<P>An additional, more subtle effect of this change is that user-defined conversions can silently change behavior:</P>
+
+<P class="label"><B>Example</B></P>
+
+<PRE class="code">void fopp(int);
+
+struct C {
+    operator int () const;
+    operator long ();
+};
+
+void main(void)
+{
+    C aC;
+    const C acC;
+
+    fopp(acC);  // calls "operator int() const"
+    fopp(aC);   // calls "operator int() const" in VC2.0, 
+               // but "operator long()" in VC4.0
+}
+</PRE>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

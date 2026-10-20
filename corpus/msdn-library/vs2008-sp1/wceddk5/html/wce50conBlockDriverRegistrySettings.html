@@ -1,0 +1,326 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Block Driver Registry Settings</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Block Driver Registry Settings"/>
+<MSHelp:RLTitle Title="Block Driver Registry Settings"/>
+<MSHelp:Keyword Index="A" Term="wce50conBlockDriverRegistrySettings"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Driver"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="False"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="block_guide.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="True"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="True"/>
+<MSHelp:Attr Name="PBFeature" Value="BlockDriver"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_3017311">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50conblockdriverregistrysettings"></A>Block Driver Registry Settings</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>The Device Manager uses and manages several registry keys under the <B>HKEY_LOCAL_MACHINE\Drivers</B> registry key to load, track, and unload linear block device drivers. </P>
+
+<P>Built-in devices rely on the registry settings to be present at startup. These keys must be part of the default registry, which includes the registry keys and values that you install. </P>
+
+<P>You can install keys for removable block devices, such as linear flash memory PC Cards, on first use of the device.</P>
+
+<P>This topic contains information about the following:
+
+<UL type="disc">
+	<LI><A HREF="#wce50conblockdriverregistrysettingsanchor5">Name Limitations For Autoload Block Devices</A></li>
+
+	<LI><A HREF="#wce50conblockdriverregistrysettingsanchor4">PC Card Block Device Registry Keys</A></li>
+
+	<LI><A HREF="#wce50conblockdriverregistrysettingsanchor3">Built-In Block Device Registry Keys</A></li>
+
+	<LI><A HREF="#wce50conblockdriverregistrysettingsanchor2">ATAPI Block Device Driver Registry Keys</A></li>
+
+	<LI><A HREF="#wce50conblockdriverregistrysettingsanchor6">Secure Digital Card Registry Settings</A></li>
+</UL>
+
+<H2 class="dtH2"><A NAME="wce50conblockdriverregistrysettingsanchor5"></A>Name Limitations For Autoload Block Devices</H2>
+
+<P>OEMs that add <B>AutoLoad </B>block drivers to their platform should keep <B>AutoLoad</B> sub-keys limited to seven characters to avoid possible name collisions. </P>
+
+<P>Within the registry code that configures the driver, the <B>AutoLoad </B>sub-key string determines the name of a storage device. Because of the seven character limit, two drivers named Block Device1 and BlockDevice2 are both shortened to BlockDe, creating a name conflict.</P>
+
+<P>The following example configures Storage Manager to <B>AutoLoad</B> two storage drivers, BlockDevice1 and BlockDevice2. </P>
+
+<PRE class="code">[HKEY_LOCAL_MACHINE\System\StorageManager\Autoload\BlockDevice1]
+    "DriverPath"="Drivers\\BuiltIn\\BlockDevice1"
+    "LoadFlags"=dword:1
+    "BootPhase"=dword:0
+
+[HKEY_LOCAL_MACHINE\System\StorageManager\Autoload\BlockDevice2]
+        "DriverPath"="Drivers\\BuiltIn\\BlockDevice2"
+        "LoadFlags"=dword:1
+        "BootPhase"=dword:1
+</PRE>
+
+<P>Note that both storage devices will still work, but one will not be accessibly via the storage manager API which can lead to limited functionality in some applications.</P>
+
+<P>To work around this problem, shorten the AutoLoad key names to be shorter than 7 characters:</P>
+
+<PRE class="code">
+[HKEY_LOCAL_MACHINE\System\StorageManager\Autoload\BlkDev1]
+    "DriverPath"="Drivers\\BuiltIn\\BlockDevice1"
+    "LoadFlags"=dword:1
+    "BootPhase"=dword:0
+
+[HKEY_LOCAL_MACHINE\System\StorageManager\Autoload\BlkDev2]
+        "DriverPath"="Drivers\\BuiltIn\\BlockDevice2"
+        "LoadFlags"=dword:1
+        "BootPhase"=dword:1
+</PRE>
+
+<H2 class="dtH2"><A NAME="wce50conblockdriverregistrysettingsanchor4"></A>PC Card Block Device Registry Keys</H2>
+
+<P>To detect removable block devices, the Device Manager initiates a detection sequence to determine the specific device type.</P>
+
+<P>The value of the <B>Folder</B> registry subkey under the <B>HKEY_LOCAL_MACHINE\Drivers\PCMCIA\MyDriver</B> registry key is optional. Its value determines the folder names that are associated with file system volumes. </P>
+
+<P>The default value is <B>Storage Card</B> for the first volume, <B>Storage Card2</B> for the second, and so on. </P>
+
+<P>For example, if you use the value of the <B>Folder</B> registry subkey to change the folder name to <B>My Folder</B>, that is the name of the first device. The second folder is <B>My Folder2</B>, and so on. </P>
+
+<P>The block device driver reads the <B>Folder</B> registry subkey when the file system driver requests a folder name.</P>
+
+<P>The <B>HKEY_LOCAL_MACHINE\Drivers\PCMCIA\Detect\20</B> registry key is an example. The <B>20</B> registry subkey can be any other number. Its value determines the order in which the Device Manager tries the driver's <B>MyDriverDetectdisk</B> function relative to other drivers' detection functions when attempting to identify an unknown type of PC Card. </P>
+
+<P>For more information about the Device Manager, see <MSHelp:link keywords="wce50conDeviceManager" TABINDEX="0">Device Manager</MSHelp:link>.</P>
+
+<P>The Device Manager requires registry keys to initiate the detection sequence. The following registry key examples show how a PC Card driver named MyDriver uses registry keys:</P>
+
+<PRE class="code">[HKEY_LOCAL_MACHINE\Drivers\PCMCIA\MyDriver]
+    "Prefix" = "XXX"
+    "Dll" = "MyDriver.DLL"
+    "Index" = DWORD:1
+    "Order" = DWORD:1
+    "IClass"="{A4E7EDDA-E575-4252-9D6B-4195D48BB865}"
+[HKEY_LOCAL_MACHINE\Drivers\PCMCIA\Detect\20]
+    "Dll"="MyDriver.DLL"
+    "Entry"="MyDriverDetectdisk"</PRE>
+
+<H2 class="dtH2"><A NAME="wce50conblockdriverregistrysettingsanchor3"></A>Built-In Block Device Registry Keys</H2>
+
+<P>The <B>HKEY_LOCAL_MACHINE\Drivers\BuiltIn</B> registry key recognizes built-in block devices. The value of the <B>Folder</B> registry subkey is optional.</P>
+
+<P>The following registry key example shows how a built-in driver called MyDriver should use the <B>HKEY_LOCAL_MACHINE\Drivers\BuiltIn</B> registry key:</P>
+
+<PRE class="code">[HKEY_LOCAL_MACHINE\Drivers\BuiltIn\MyDriver]
+    "Prefix" = "XXX"
+    "Dll" = "MyDriver.DLL"
+    "Index" = DWORD:1
+    "Order" = DWORD:1
+    "IClass"="{A4E7EDDA-E575-4252-9D6B-4195D48BB865}"</PRE>
+
+<H2 class="dtH2"><A NAME="wce50conblockdriverregistrysettingsanchor2"></A>ATAPI Block Device Driver Registry Keys</H2>
+
+<P>The ATA/ATAPI driver for Windows CE is contains components that can be added or removed based on SYSGEN variable settings. The following table shows the components for the ATA/ATAPI driver.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=50%>SYSGEN variable</TH>
+<TH width=50%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>SYSGEN_ATAPI_PCMCIA</TD>
+<TD width=50%>ATA PCMCIA/PC Card disk support.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>SYSGEN_ATAPI_PCIO</TD>
+<TD width=50%>On-board PCI ATA/ATAPI host bus adapter support. Hard disk only.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>SYSGEN_ATAPI_PCIO_CD</TD>
+<TD width=50%>On-board PCI ATA/ATAPI host bus adapter support. ATA hard disk and CD/DVD only.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>SYSGEN_ATAPI_PCIP_PDC20262</TD>
+<TD width=50%>On-board PCI ATA/ATAPI host bus adapter support. ATA hard disk, CD/DVD, and peripheral PCI Promise PDC2026 host bus adapter.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>SYSGEN_ATAPI</TD>
+<TD width=50%>Full ATA/ATAPI support, including, PCMCIA/PC Card disk, hard disk, CD/DVD, and PCI Promise PDC2026.</TD>
+</TR>
+</table></div>
+
+<P>The following table shows the dependencies for the ATA/ATAPI SYSGEN variables.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=50%>SYSGEN variables</TH>
+<TH width=50%>Dependencies</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>SYSGEN_ATAPI_PCIO_CD</TD>
+<TD width=50%>SYSGEN_ATAPI_PCIO</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>SYSGEN_ATAPI_PCIP_PDC20262</TD>
+<TD width=50%>SYSGEN_ATAPI_PCIO_CD, SYSGEN_ATAPI_PCIO</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>SYSGEN_ATAPI</TD>
+<TD width=50%>SYSGEN_ATAPI_PCMCIA, SYSGEN_ATAPI_PCIO, SYSGEN_ATAPI_PCIO_CD, SYSGEN_ATAPI_PCIP_PDC20262</TD>
+</TR>
+</table></div>
+
+<P>The ATAPI driver consists of an IDE enumerator and an ATA/ATAPI driver. The IDE enumerator is activated for each IDE controller. On activation, the IDE enumerator scans the primary and secondary channel, if present, of the controller in search of ATA/ATAPI devices.</P>
+
+<P>If the enumerator finds a device, it invokes a spawn function specified in the registry. Since a driver supports multiple IDE controllers, this spawn function distinguishes one IDE controller from another. This function is specified in the Platform.reg file for an OS design. No modification to the spawn function is necessary.</P>
+
+<P>The following list shows the location of the registry files for the ATAPI driver:
+
+<UL type="disc">
+	<LI>%_WINCEROOT%\public\common\oak\drivers\block\atapi
+<UL type="disc">
+	<LI>Ali1543.reg</li>
+
+	<LI>Genericide.reg</li>
+
+	<LI>Geodeide.reg</li>
+
+	<LI>I82371.reg</li>
+
+	<LI>Pdc20262.reg</li>
+</UL>
+</li>
+
+	<LI>%_WINCEROOT%\public\common\oak\files
+<UL type="disc">
+	<LI>Common.reg</li>
+</UL>
+</li>
+
+	<LI>%_WINCEROOT%\platform\&lt;<I>your platform</I>&gt;\files
+<UL type="disc">
+	<LI>Platform.reg</li>
+</UL>
+</li>
+</UL>
+
+<P>The following registry example shows the registry settings for the Intel i82371 driver.</P>
+
+<PRE class="code">; SpawnFunction specified in platform.reg.
+// The top-most key is that of the IDE enumerator
+
+[<B>$(BUS_ROOT)</B>\Template\<I>&lt;Controller&gt;</I>]
+   "IClass"=multi_sz:"{CDDC3621-3512-4b3f-BB6F-B4DD5E061795}"
+   "Prefix"="IDE"
+   "Dll"="atapi.dll"
+   "Order"=dword:06
+   "Class"=dword:01
+   "SubClass"=dword:01
+   "ProgIF"=dword:80
+   "VendorID"=dword:8086           ; e.g., i82371 Vendor ID
+   "ConfigEntry"="GenericConfig"   ; PCI configuration entry point
+   "Legacy"=dword:01               ; legacy mode; use Irq for IRQ of primary channel and Irq+1 for IRQ of secondary channel; only required for legacy on-board controllers
+   "Irq"=dword:0E                  ; 14; provided by bus driver
+   "SysIntr"=dword:00              ; SysIntr not specified; provided by bus driver
+   "DMAAlignment"=dword:04         ; default DMA alignment
+   "SoftResetTimeout"=dword:03     ; ATA/ATAPI spec defines 31s ceiling; this is too long
+;  "IsrDll"=""                     ; not required; only required for bus-agnostic drivers, e.g., Promise PDC20262; ATA PCMCIA/PC Card disk
+;  "IsrHandler"=""                 ; not required; only required for bus-agnostic drivers, e.g., Promise PDC20262; ATA PCMCIA/PC Card disk
+   "RegisterStride"=dword:01       ; ATA register stride; register block is contiguous
+
+// Under the IDE enumerator key are 4 subkeys; one subkey for each possible device on a // two-channel controller: Device0 = master on primary channel, Device1 = slave on
+// primary channel, Device2 = master on secondary channel, Device3 = slave on secondary
+// channel
+
+[<B>$(BUS_ROOT)</B>\Template\<I>&lt;Controller&gt;\Device0</I>]
+   "IClass"=multi_sz:"{A4E7EDDA-E575-4252-9D6B-4195D48BB865}"
+   "Prefix"="DSK"
+   "Dll"="atapi.dll"
+   "InterruptDriven"=dword:01      ; enable interrupt driven I/O
+   "DMA"=dword:01                  ; enable DMA; 0 = disabled, 1 = enabled, 2 = enabled for hard disks and disabled for CD-ROMs
+   "DoubleBufferSize"=dword:10000  ; 65536 byte (128 sectors) double buffer; maximum is 256 secotrs
+   "DrqDataBlockSize"=dword:200    ; 1 sector (512 byte) DRQ data block
+   "WriteCache"=dword:01           ; enable on-disk write cache
+   "LookAhead"=dword:01            ; enable on-disk look-ahead
+   "DeviceId"=dword:00             ; device 0, i.e., primary master
+   "TransferMode"=dword:FF         ; use device default transfer mode (Ultra DMA 3, 4 require 80-conductor cable)
+
+// The TransferMode byte value can take on the following values:
+
+Mode&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Value (Hex)
+----                                -----
+PIO default mode&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 00
+PIO default mode, disable IORDY&nbsp;&nbsp;&nbsp;&nbsp; 01
+PIO flow control transfer mode&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Mode 0=08, 1=09, 2=0A, 3=0B, 4=0C
+Multiword DMA mode&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Mode 0=20, 1=21, 2=22
+Ultra DMA mode&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Mode 0=40, 1=41, 2=42, 3=43, 4=44
+
+// Note: Not all drives support all DMA modes; Ultra DMA modes 3 and 4 require an 80-conductor cable.
+
+[<B>$(BUS_ROOT)</B>\Template\<I>&lt;Controller&gt;\Device1</I>]
+...
+[<B>$(BUS_ROOT)</B>\Template\<I>&lt;Controller&gt;\Device2</I>]
+...
+[<B>$(BUS_ROOT)</B>\Template\<I>&lt;Controller&gt;\Device3</I>]
+...</PRE>
+
+<H2 class="dtH2"><A NAME="wce50conblockdriverregistrysettingsanchor6"></A>Secure Digital Card Registry Settings</H2>
+
+<P>The following registry key examples show the registry settings for the SD memory driver.</P>
+
+<PRE class="code">; SD Memory Storage class driver
+[HKEY_LOCAL_MACHINE\Drivers\SDCARD\ClientDrivers\Class\SDMemory_Class]
+   "Dll"="SDMemory.dll"
+   "Prefix"="DSK"
+   "BlockTransferSize"=dword:40  ; send no more than 64 blocks of data per bus transfer
+   ;"SingleBlockWrites"=dword:1  ; alternatively force the driver to use single block access
+   ;"IdleTimeout"=dword:7D0      ; 2000 milliseconds
+   ;"IdlePowerState"=dword:2     ; 0 == D0, 1 == D1, etc.
+   ;"DisablePowerManagement"=""  ; if value present, then disable (remove value to enable)
+
+   "Profile"="SDMemory"
+   "IClass"=multi_sz:"{A4E7EDDA-E575-4252-9D6B-4195D48BB865}",
+                     "{A32942B7-920C-486b-B0E6-92A702A99B35}"</PRE>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50conblockdriverarchitecture.htm">Block Driver Architecture</A> | <A HREF="wce50conblockdriversamples.htm">Block Driver Samples</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

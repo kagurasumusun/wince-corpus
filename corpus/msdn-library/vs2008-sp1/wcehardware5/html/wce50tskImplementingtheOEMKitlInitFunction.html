@@ -1,0 +1,135 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Implementing the OEMKitlInit Function</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Implementing the OEMKitlInit Function"/>
+<MSHelp:RLTitle Title="Implementing the OEMKitlInit Function"/>
+<MSHelp:Keyword Index="A" Term="wce50tskImplementingtheOEMKitlInitFunction"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Hardware"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="True"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbTask"/>
+<MSHelp:Attr Name="Filename" Value="howto_developing_an_OAL.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="True"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_3010388">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50tskimplementingtheoemkitlinitfunction"></A>Implementing the OEMKitlInit Function</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>The following list shows the suggested tasks for the <A HREF="wce50lrfoemkitlinit.htm">OEMKitlInit</A> function:
+
+<UL type="disc">
+	<LI>Locate the KITL NIC, typically through driver globals. The KITL NIC is usually the same NIC used by the boot loader for download operations.</li>
+
+	<LI>Assign function pointers to the correct EDBG NIC driver functions. If the necessary EDBG driver is not provided, you will need to create your own. The following code example shows how you can assign function pointers to an EDBG NIC driver.
+<PRE class="code">pfnEDbgInit           = NE2000Init;
+pfnEDbgInitDMA        = NULL;
+pfnEDbgEnableInts     = NE2000EnableInts;
+pfnEDbgDisableInts    = NE2000DisableInts;
+pfnEDbgGetPendingInts = NE2000GetPendingInts;
+pfnEDbgGetFrame       = NE2000GetFrame;
+pfnEDbgSendFrame      = NE2000SendFrame;
+pfnEDbgReadEEPROM     = NE2000ReadEEPROM;
+pfnEDbgWriteEEPROM    = NE2000WriteEEPROM;
+pfnEDbgSetOptions     = NE2000SetOptions;
+pfnCurrentPacketFilter= Ne2000CurrentPacketFilter;
+pfnMulticastList      = NE2000MulticastList;</PRE>
+</li>
+
+	<LI>Include the library in the %_WINCEROOT%\Platform\&lt;<I>Hardware Platform Name</I>&gt;\Src\Kernel\Kernkitl sources file to satisfy the linker if any KITL driver support is required.</li>
+
+	<LI>Initialize the DMA buffers for the NIC, if required, and then initialize the NIC by calling the <B>pfnEdbgInitDMABuffer</B> or <B>pfnEdbgInit</B>, or both, function pointers. The NIC initialization function takes a NIC address and returns a MAC value for the NIC, which should be stored in the driver globals.</li>
+
+	<LI>Create a unique device name, which will be used as a handle by Platform Builder.
+<BLOCKQUOTE class="dtBlock">
+<b class="le">Note</b>&nbsp;&nbsp;&nbsp;The device name must be the same as the one used by the boot loader.</BLOCKQUOTE>
+</li>
+
+	<LI>Obtain an IP address from a DHCP server using the <B>EbootGetDHCPAddr</B> function or through a static IP address. If you are obtaining the IP address from a DHCP server, include Eboot.lib in the Kernel\Kernkitl sources file.</li>
+
+	<LI>Initialize the KITL Ethernet transport code by calling the <B>KitlEtherInit</B> function. If the call succeeds, fill out the <A HREF="wce50lrfkitltransport.htm">KITLTRANSPORT</A> structure.</li>
+
+	<LI>Implement the following OEM Ethernet functions:
+<UL type="disc">
+	<LI><B>OEMEthCurrentPacketFilter</B></li>
+
+	<LI><A HREF="wce50lrfoemethdisableints.htm">OEMEthDisableInts</A></li>
+
+	<LI><A HREF="wce50lrfoemethenableints.htm">OEMEthEnableInts</A></li>
+
+	<LI><A HREF="wce50lrfoemethgetframe.htm">OEMEthGetFrame</A></li>
+
+	<LI><A HREF="wce50lrfoemethgetsecs.htm">OEMEthGetSecs</A></li>
+
+	<LI><B>OEMEthMulticastList</B></li>
+
+	<LI><A HREF="wce50lrfoemethsendframe.htm">OEMEthSendFrame</A></li>
+
+	<LI><B>OEMEthSetFilter</B></li>
+</UL>
+</li>
+</UL>
+
+<P>During the call to <B>OEMKitlInit</B>, you provide the following information that the kernel will need to support KITL high-level functionality:
+
+<UL type="disc">
+	<LI>Complete the <B>KITLTRANSPORT</B> structure that describes what services to start on boot</li>
+
+	<LI>Determine whether it is a cold boot</li>
+
+	<LI>Provide the name of the device</li>
+
+	<LI>Provide an interrupt number for interrupt based devices</li>
+
+	<LI>Provide the window size for default services</li>
+
+	<LI>Provide the size of the frame header specific to your transport</li>
+
+	<LI>Provide the size of the frame trailer specific to your transport</li>
+
+	<LI>Provide the size of the physical buffer for default services</li>
+
+	<LI>Provide function pointers to the transport-specific functions described above</li>
+</UL>
+
+<P>When the kernel returns from <B>OEMInit</B>, it tries to initialize the KITL interrupt by calling the <A HREF="wce50lrftransportenableint.htm">TransportEnableInt</A> member of the <B>KITLTRANSPORT</B> structure. <B>TransportEnableInt</B> is also called when a device resumes from a suspended state.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50howhowtodevelopanoemadaptationlayer.htm">How to Develop an OEM Adaptation Layer</A> | <A HREF="wce50tskaddingkitlinitializationcode.htm">Adding KITL Initialization Code</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

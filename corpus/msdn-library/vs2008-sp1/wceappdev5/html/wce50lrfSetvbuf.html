@@ -1,0 +1,170 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>setvbuf</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="setvbuf"/>
+<MSHelp:RLTitle Title="setvbuf"/>
+<MSHelp:Keyword Index="K" Term="setvbuf"/>
+<MSHelp:Keyword Index="A" Term="wce50lrfSetvbuf"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Application"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="False"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="Technology" Value="CRT"/>
+<MSHelp:Attr Name="TechnologyVers" Value="kbCRT"/>
+<MSHelp:Attr Name="TopicType" Value="apiref"/>
+<MSHelp:Attr Name="Filename" Value="crt3.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="True"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+<MSHelp:Attr Name="APIName" Value="setvbuf"/>
+<MSHelp:Attr Name="APIType" Value="DLLExport"/>
+<MSHelp:Attr Name="APILocation" Value="coredll.dll"/>
+<MSHelp:Attr Name="PBFeature" Value="SYSGEN_FULL_CRT"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_1043678">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50lrfsetvbuf"></A>setvbuf</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>This function controls stream buffering and buffer size.</P>
+
+<PRE class="syntax"><B>int setvbuf(</B>
+<B>  FILE*</B> <I>stream</I><B>,</B>
+  <B>char*</B> <I>buffer</I><B>,</B>
+  <B>int</B> <I>mode</I><B>,</B>
+  <B>size_t</B> <I>size</I> 
+<B>);</B></PRE>
+
+<H4 class="dtH4">Parameters</H4>
+
+<DL>
+<DT><I>stream </I></DT>
+
+<DD>Pointer to <B>FILE</B> structure. </dd>
+
+<DT><I>buffer </I></DT>
+
+<DD>User-allocated buffer. </dd>
+
+<DT><I>mode </I></DT>
+
+<DD>Mode of buffering. </dd>
+
+<DT><I>size </I></DT>
+
+<DD>Buffer size in bytes. Allowable range: 2 &lt;= size &lt;= INT_MAX (2147483647). Internally, the value supplied for size is rounded down to the nearest multiple of 2. </dd>
+</DL>
+
+<H4 class="dtH4">Return Values</H4>
+
+<P>Returns 0 if successful, or a nonzero value if an illegal type or buffer size is specified.</P>
+
+<H4 class="dtH4">Remarks</H4>
+
+<P>The <B>setvbuf</B> function allows the program to control both buffering and buffer size for stream. stream must refer to an open file that has not undergone an I/O operation since it was opened. </P>
+
+<P>The array pointed to by buffer is used as the buffer, unless it is NULL, in which case <B>setvbuf</B> uses an allocated buffer of length size/2 * 2 bytes.</P>
+
+<P>The mode must be _IOFBF, _IOLBF, or _IONBF. If mode is _IOFBF or _IOLBF, then size is used as the size of the buffer. If mode is _IONBF, the stream is unbuffered and size and buffer are ignored. </P>
+
+<P>Values for mode and their meanings are as follows: </P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=16%>Value</TH>
+<TH width=84%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=16%>_IOFBF </TD>
+<TD width=84%>Full buffering; that is, buffer is used as the buffer and size is used as the size of the buffer. If buffer is NULL, an automatically allocated buffer size bytes long is used. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=16%>_IOLBF </TD>
+<TD width=84%>For some systems, this provides line buffering. However, for Win32, the behavior is the same as _IOFBF - Full Buffering. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=16%>_IONBF </TD>
+<TD width=84%>No buffer is used, regardless of buffer or size. </TD>
+</TR>
+</table></div>
+
+<H4 class="dtH4">Example</H4>
+
+<PRE class="code">// crt_setvbuf.c
+/* This program opens two streams: stream1
+ * and stream2. It then uses setvbuf to give stream1 a
+ * user-defined buffer of 1024 bytes and stream2 no buffer.
+ */
+
+#include &lt;stdio.h&gt;
+
+int main( void )
+{
+   char buf[1024];
+   FILE *stream1, *stream2;
+
+   if( ((stream1 = fopen( "data1", "a" )) != NULL) &amp;&amp;
+       ((stream2 = fopen( "data2", "w" )) != NULL) )
+   {
+      if( setvbuf( stream1, buf, _IOFBF, sizeof( buf ) ) != 0 )
+         printf( "Incorrect type or size of buffer for stream1\n" );
+      else
+         printf( "'stream1' now has a buffer of 1024 bytes\n" );
+      if( setvbuf( stream2, NULL, _IONBF, 0 ) != 0 )
+         printf( "Incorrect type or size of buffer for stream2\n" );
+      else
+         printf( "'stream2' now has no buffer\n" );
+      _fcloseall();
+   }
+}</PRE>
+
+<P><B>Output</B></P>
+
+<PRE class="code">'stream1' now has a buffer of 1024 bytes
+'stream2' now has no buffer</PRE>
+
+<H4 class="dtH4">Requirements</H4>
+
+<P><B>OS Versions:</B> Windows CE 2.0 and later.<BR>
+<B>Required header:</B> stdio.h.<BR>
+<B>Link Library:</B> coredll.dll.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50conrun-timeroutinesbycategory.htm">Run-time Routines by Category</A> | <A HREF="wce50lrffclosecmausfcloseall.htm">fclose</A> | <A HREF="wce50lrffflush.htm">fflush</A> | <A HREF="wce50lrffopencmauswfopen.htm">fopen</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

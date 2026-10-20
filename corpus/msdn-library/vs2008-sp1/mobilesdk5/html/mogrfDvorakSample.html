@@ -1,0 +1,150 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Dvorak Soft Input Panel</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Dvorak Soft Input Panel"/>
+<MSHelp:RLTitle Title="Dvorak Soft Input Panel"/>
+<MSHelp:Keyword Index="A" Term="mogrfDvorakSample"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Application"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbsmartphone"/>
+<MSHelp:Attr Name="Product" Value="kbPocketPC"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="Technology" Value="kbPocketPC"/>
+<MSHelp:Attr Name="Technology" Value="kbSmartphone"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="Code_Samples_magneto.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="False"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_1076585">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Windows Mobile Version 5.0 SDK<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="mogrfdvoraksample"></A>Dvorak Soft Input Panel</H1>
+<!--Feedback Link Top Start-->
+<P CLASS="feedback"><font size="1"><a href="mailto:medfdbk&#64;microsoft.com?subject=Product: Windows Mobile | Version: 5.0 | Release: SDK | Title: Dvorak Soft Input Panel | Filename: mogrfdvoraksample.htm | Built on: Wednesday, September 14, 2005">Send Feedback</a> on this topic to the authors</font></p>
+<!--Feedback Link Top End-->
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>This code sample is named <B>DvorakSIP</B>. It demonstrates how to create a custom Soft Input Panel (SIP) as a COM object. It is intended to help users and service providers in foreign countries support different languages in the SIP. The application is a COM component that implements the <MSHelp:link keywords="wce50lrfIInputMethod" TABINDEX="0">IInputMethod</MSHelp:link> Interface.</P>
+
+<H4 class="dtH4">Feature Area</H4>
+
+<UL type="disc">
+	<LI><MSHelp:link keywords="wce50oriSoftware-basedInputPanel" TABINDEX="0">Software-based Input Panel</MSHelp:link></li>
+
+	<LI><A HREF="moorishellapplicationdevelopment.htm">Shell Application Development for Windows Mobile-based Devices</A></li>
+</UL>
+
+<H4 class="dtH4">Relevant APIs</H4>
+
+<UL type="disc">
+	<LI><A HREF="mob5grfshellapi.htm">Shell and User Interface</A> Reference</li>
+
+	<LI><MSHelp:link keywords="wce50lrfIInputMethod" TABINDEX="0">IInputMethod</MSHelp:link> Interface</li>
+
+	<LI><A HREF="http://msdn.microsoft.com/library/en-us/vclib/html/vcrefATLReference.asp?frame=true">ATL</A> Class Library</li>
+
+	<LI><A HREF="http://msdn.microsoft.com/library/en-us/dnanchor/html/anch_win32com.asp?frame=true">COM</A></li>
+</UL>
+
+<H4 class="dtH4">Sequence of Events</H4>
+
+<P>The following events occur when the user selects this input panel, and begins tapping keys.
+
+<UL type="disc">
+	<LI>The system calls the DLL containing the code for the custom SIP mechanism, which implements the <MSHelp:link keywords="wce50lrfIInputMethod" TABINDEX="0">IInputMethod</MSHelp:link> Interface.</li>
+
+	<LI>The <MSHelp:link keywords="wce50lrfIInputMethodSelect" TABINDEX="0">IInputMethod::Select</MSHelp:link> method is called to create the input window using the Dvorak keyboard bitmap.</li>
+
+	<LI>The system calls <MSHelp:link keywords="wce50lrfIInputMethodGetInfo" TABINDEX="0">IInputMethod::GetInfo</MSHelp:link> to get information in an <MSHelp:link keywords="wce50lrfIMINFO" TABINDEX="0">IMINFO</MSHelp:link> structure about the size and other aspects of the input context.</li>
+
+	<LI>The system calls <MSHelp:link keywords="wce50lrfIInputMethodReceiveSipInfo" TABINDEX="0">IInputMethod::ReceiveSipInfo</MSHelp:link> to inform the input method of size, placement information. It reacts to this call by resizing itself appropriately.</li>
+
+	<LI><MSHelp:link keywords="wce50lrfIInputMethodRegisterCallback" TABINDEX="0">IInputMethod::RegisterCallback</MSHelp:link> is called to give the input method a pointer to a <MSHelp:link keywords="wce50lrfIIMCallback" TABINDEX="0">IIMCallback</MSHelp:link> interface. This interface is used to return keystrokes to applications.</li>
+
+	<LI>When the user taps a key on the keyboard, the input method recognizes the mouse event location on its keyboard bitmap. It scans the bitmap horizontally and vertically to place the tap inside a particular key.</li>
+
+	<LI>A large array of constants is maintained, that define the value of each key on the keyboard, and its pixel location so that this scanning mechanism can be accomplished.</li>
+
+	<LI>The keystroke is processed and various flags are checked such as CAPS lock, Shift, etc. Once the proper keystroke has been determined, it is returned to the application using the <MSHelp:link keywords="wce50lrfIIMCallbackSendCharEvents" TABINDEX="0">IIMCallback::SendCharEvents</MSHelp:link> method. <MSHelp:link keywords="wce50lrfIIMCallbackSendVirtualKey" TABINDEX="0">IIMCallback::SendVirtualKey</MSHelp:link> is used if the virtual key code is desired (an example could be when the Windows Key was pressed if such a key exists on the keyboard).</li>
+
+	<LI>The state of the keyboard is updated as the key is no longer pressed. Code must be careful to check for sticky keys such as CAPS in this situation.</li>
+</UL>
+
+<H4 class="dtH4">Usage</H4>
+
+<P class="labelproc"><B>To run the code sample</B>
+
+<OL type="1">
+	<LI>Navigate to the solution file (*.sln), and double-click it. By default, the solution file is copied to the following folder:
+<P><code class="ce">C:\Program Files\Windows CE Tools\wce500\Windows Mobile 5.0 Pocket PC SDK\Samples\CPP\ATL\Dvoraksip\dvoraksip.sln</code>
+
+<P><code class="ce">C:\Program Files\Windows CE Tools\wce500\Windows Mobile 5.0 Smartphone SDK\Samples\CPP\ATL\Dvoraksip\dvoraksip.sln</code>
+
+<P>Microsoft Visual Studio 2005 Beta 2 launches and loads the solution.
+</li>
+
+	<LI>Build the solution (Ctrl+Shift+B).</li>
+
+	<LI>Deploy the solution (F5).</li>
+</OL>
+
+<P class="labelproc"><B>To use the application</B>
+
+<UL type="disc">
+	<LI>Select the Dvorak SIP using the SIP button in the lower middle of the screen from within any application that supports the SIP (Word Mobile, Notes, etc.).</li>
+</UL>
+
+<H4 class="dtH4">Remarks</H4>
+
+<P>The soft input panel (SIP) is designed to support user-defined input mechanisms. By default, it includes a Standard Keyboard, a Block Recognizer, and a Letter Recognizer.</P>
+
+<P><MSHelp:link keywords="wce50lrfIInputMethodGetImData" TABINDEX="0">IInputMethod::GetImData</MSHelp:link>, <MSHelp:link keywords="wce50lrfIInputMethodSetImData" TABINDEX="0">IInputMethod::SetImData</MSHelp:link>, <MSHelp:link keywords="wce50lrfIInputMethodUserOptionsDlg" TABINDEX="0">IInputMethod::UserOptionsDlg</MSHelp:link> can simply return an HRESULT without any computation.  </P>
+
+<P><MSHelp:link keywords="wce50lrfIInputMethodUserOptionsDlg" TABINDEX="0">IInputMethod::UserOptionsDlg</MSHelp:link> can display the simple message "There are no options for this input method." This is just to show the function of the method so you can extend it further.</P>
+
+<P>For more information on hardware-specific keyboard layouts, see <A HREF="http://msdn.microsoft.com/library/en-us/wceddk40/html/cxcondevicelayouts.asp?frame=true">Device Layouts</A> on MSDN.</P>
+
+<H4 class="dtH4">Requirements</H4>
+
+<P><B>Pocket&nbsp;PC SDK:</B> Windows&nbsp;Mobile&nbsp;5.0&nbsp;Pocket&nbsp;PC&nbsp;SDK.<BR>
+<B>Development Environment:</B> Visual Studio 2005 Beta 2.<BR>
+<B>ActiveSync:</B> Version&nbsp;4.0.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><MSHelp:link keywords="mob5oriCodeSamples" TABINDEX="0">Code Samples</MSHelp:link> | <MSHelp:link keywords="wce50conUsingVirtualKeyCodes" TABINDEX="0">Using Virtual-Key Codes</MSHelp:link> | <MSHelp:link keywords="wce50lrfIInputMethod2" TABINDEX="0">IInputMethod2</MSHelp:link></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Feedback Link Bottom Start-->
+<p><font size="1"><a href="mailto:medfdbk&#64;microsoft.com?subject=Product: Windows Mobile | Version: 5.0 | Release: SDK | Title: Dvorak Soft Input Panel | Filename: mogrfdvoraksample.htm | Built on: Wednesday, September 14, 2005">Send Feedback</a> on this topic to the authors</font></p>
+<!--Feedback Link Bottom End-->
+<!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="mob5conCopyrightInformationForMagneto" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link></font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

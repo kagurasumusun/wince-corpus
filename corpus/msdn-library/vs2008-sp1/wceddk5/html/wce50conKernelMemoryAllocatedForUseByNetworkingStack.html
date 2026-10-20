@@ -1,0 +1,169 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Kernel Memory Allocated for Use by the Networking Stack</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Kernel Memory Allocated for Use by the Networking Stack"/>
+<MSHelp:RLTitle Title="Kernel Memory Allocated for Use by the Networking Stack"/>
+<MSHelp:Keyword Index="A" Term="wce50conKernelMemoryAllocatedForUseByNetworkingStack"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Driver"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="False"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="ndisminiportdriveroptimization.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="True"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="True"/>
+<MSHelp:Attr Name="PBFeature" Value="NetworkDriver"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_1034160">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50conkernelmemoryallocatedforusebynetworkingstack"></A>Kernel Memory Allocated for Use by the Networking Stack</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>Translation look-aside buffer (TLB) misses can improve or degrade performance in some situations. In Windows CE, you can allocate memory for the networking stack out of the kernel memory region, which includes addresses above 0x80000000. This address region is mapped as two large TLBs. Code running from this region, and data addressed from it, generates no TLB miss penalties.</P>
+
+<P>The following table shows how the addresses above 0x80000000 are partitioned.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=50%>Addresses </TH>
+<TH width=50%>Mapped to</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>0x80000000 - 0xa0000000</TD>
+<TD width=50%>Contiguous cached physical memory.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>0xa0000000 - 0xc0000000</TD>
+<TD width=50%>Uncached physical memory. </TD>
+</TR>
+</table></div>
+
+<P>In order for the OS to include DLLs in high-memory, information on the DLL files must be stored in the FILES section in the Common.bib file for your OS design. Examples of DLLs that can be loaded into the high-memory region for high-performance networking and routing scenarios include Tcpstk, Cxport, Ndis, Mbridge, Ipnat, Fw6, network miniport drivers, and wireless network miniport drivers.</P>
+
+<P>Since the FILES section typically follows the MODULES section in a BIB file, you can manage this change without modifying the Common.bib file for your OS design by running a script that moves the networking components to the FILES section. The following code example shows a script that moves the networking components to the FILES section of the Common.bib file for your OS design.</P>
+
+<PRE class="code">@echo off
+IF not "%IMGLOADNETHIGH%"=="1" goto :endfile
+echo Moving net components to the file regions
+
+pushd %_FLATRELEASEDIR%
+
+findstr "mbridge.dll ipnat.dll fw6.dll tcpstk.dll cxport.dll ndis.dll" ce.bib &gt; ce_net.bib
+findstr /v "mbridge.dll ipnat.dll fw6.dll tcpstk.dll cxport.dll ndis.dll" ec.bib &gt; ce_nonet.bib
+copy /A ce_nonet.bib+ce_net.bib ce.bib
+
+popd
+
+:endfile</PRE>
+
+<P>You can also move the networking components to the FILES section by configuring the Preromimage.bt file. For more information, see <MSHelp:link keywords="wce50tskConfiguringthePreromimagebatFile" TABINDEX="0">Configuring a Premakeimg.bat File</MSHelp:link>.</P>
+
+<BLOCKQUOTE class="dtBlock">
+<B>Note&nbsp;&nbsp;&nbsp;</B>The heap created in this high-memory region is not tracked with LMEMDEBUG. Also, the heap in this region is committed in 192 KB blocks, as opposed to the page granularity of a standard heap, and is not subject to per-page decommit on compacting. As such, it is considerably less memory-efficient than the standard heap.</BLOCKQUOTE>
+
+<P>To enable the networking stack to allocate memory from this kernel memory region, you must change the <B>HKEY_LOCAL_MACHINE\Comm\Cxport</B> registry key. The following registry example shows the value to set:</P>
+
+<PRE class="code">[HKEY_LOCAL_MACHINE\Comm\Cxport]
+    "PhysHeap"=dword:1</PRE>
+
+<P>To force loading DLLs into high-memory region, you must modify <MSHelp:link keywords="wce50lrfOEMInit" TABINDEX="0">OEMInit</MSHelp:link> in the hardward abstraction layer (HAL) code. You must set the *<I>pfnOEMIsKernelSpaceDll</I> variable early in <B>OEMInit</B> to point to a function that will be called by the loader every time a DLL is about to load. That function is then passed a pointer to the DLL's name. Return TRUE if the DLL needs to be loaded into high memory space.</P>
+
+<P>The uncaught exception in the high-memory region is treated as a kernel exception and causes the entire system to halt. Debug your run-time image fully before putting DLLs into high memory region.</P>
+
+<P>The following code example shows how to load DLLs into high memory region:</P>
+
+<PRE class="code">#if defined (IMGLOADNETHIGH)
+ 
+static LPCWSTR pszSpecialDlls[] = {
+    L"tcpstk",
+    L"cxport",
+    L"ndis",
+    L"mbridge",
+    L"ipnat",
+    L"fw6",
+    L"myminiportdriver",
+    L"mywirelessminiportdriver"
+};
+ 
+static WCHAR lowerW(WCHAR ch) {
+    return ((ch &gt;= 'A') &amp;&amp; (ch &lt;= 'Z')) ? (ch - 'A' + 'a') : ch;
+}
+ 
+static int strcmponeiW(const wchar_t *pwc1, const wchar_t *pwc2) {
+    while (*pwc1 &amp;&amp; (lowerW(*pwc1) == *pwc2)) {
+        pwc1++;
+        pwc2++;
+    }
+    return (*pwc1 ? 1 : 0);
+}
+ 
+static int strcmpdllnameW(LPCWSTR src, LPCWSTR tgt) {
+    while (*src &amp;&amp; (*src == lowerW(*tgt))) {
+        src++;
+        tgt++;
+    }
+    return ((*tgt &amp;&amp; strcmponeiW(tgt,L".dll") &amp;&amp; strcmponeiW(tgt,L".cpl")) || (*src &amp;&amp; memcmp(src,L".dll",10) &amp;&amp; memcmp(src,L".cpl",10))) ? 1 : 0;
+}
+ 
+static BOOL CheckDlls (LPCWSTR pszDllName) {
+    int i;
+ 
+    for (i = 0; i &lt; sizeof(pszSpecialDlls)/sizeof(pszSpecialDlls[0]); i ++) {
+        if (!strcmpdllnameW (pszSpecialDlls[i], pszDllName)) {
+            RETAILMSG (1, (L"CheckDll: %s returns TRUE\r\n", pszDllName));
+            return TRUE;
+        }
+    }
+    return FALSE;
+}
+ 
+extern BOOL (* pfnOEMIsKernelSpaceDll) (LPCWSTR pszDllName);
+ 
+#endif
+  
+void OEMInit(void)
+{
+...
+#if defined (IMGLOADNETHIGH)
+   pfnOEMIsKernelSpaceDll = CheckDlls;
+#endif</PRE>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50conoptimizationofndisminiportdriverperformance.htm">Improving Performance of an NDIS Miniport Driver</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

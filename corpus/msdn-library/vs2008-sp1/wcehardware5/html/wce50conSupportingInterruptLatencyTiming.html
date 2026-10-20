@@ -1,0 +1,95 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Supporting Interrupt Latency Timing</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Supporting Interrupt Latency Timing"/>
+<MSHelp:RLTitle Title="Supporting Interrupt Latency Timing"/>
+<MSHelp:Keyword Index="A" Term="wce50conSupportingInterruptLatencyTiming"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Hardware"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="True"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="howto_developing_an_OAL.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="False"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_3010356">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50consupportinginterruptlatencytiming"></A>Supporting Interrupt Latency Timing</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>Interrupt latency timing measures the following two times:
+
+<UL type="disc">
+	<LI>The time between an interrupt being generated and its interrupt service routine (ISR) being invoked.</li>
+
+	<LI>The time between the ISR exiting and when the interrupt service thread (IST) begins scheduled.</li>
+</UL>
+
+<P>Latency timing is measured using Iltiming.exe and requires significant support from the OAL. The interrupt latency measurement leverages the fact that timer ISRs should occur at known times, on whole milliseconds. The number of timer ticks in <I>dwIsrTime1</I> measures the interval between the timer interrupt occurring and the start of its ISR. </P>
+
+<P>Iltiming.exe creates an interrupt object for SYSINTR_TIMING. It obtains a kernel mode pointer to <A HREF="wce50lrfperfcountsincetick.htm">PerfCountSinceTick</A> using one of the <A HREF="wce50lrfioctlhaliltiming.htm">IOCTL_HAL_ILTIMING</A> calls. When the timer ISR returns with a value of SYSINTR_TIMING, the interrupt service thread in Iltiming.exe is scheduled. </P>
+
+<P>The service thread runs in kernel mode, so it calls directly into the kernel's code space to get the current <B>PerfCountSinceTick</B> value. It subtracts <I>dwIsrTime2 </I>from this to measure the latency between when the ISR exits, presumably very close to the time the IST is scheduled, and when the IST actually starts.</P>
+
+<P>In some cases, other interrupts will occur between the time the Iltiming.exe IST is scheduled and when it starts executing. </P>
+
+<P>Iltiming.exe determines when this has happened by comparing <I>dwIsrTime1</I> and <I>dwIsrTime2</I>; if an extra interrupt has occurred, <I>dwIsrTime1</I> will be greater than <I>dwIsrTime2</I>. </P>
+
+<P>Iltiming.exe can also determine if extra interrupts have occurred by examining <I>wNumInterrupts</I>; this is why all ISRs need to set these variables.</P>
+
+<P class="labelproc"><B>To support interrupt latency timing</B>
+
+<OL type="1">
+	<LI>Implement <A HREF="wce50lrfioctlhaliltiming.htm">IOCTL_HAL_ILTIMING</A> support in <A HREF="wce50lrfoemiocontrol.htm">OEMIoControl</A>. This code is hardware independent and can be copied from any of the sample OAL. It includes the global variables <I>fIntrTime</I>, <I>dwIsrTime1</I>, <I>dwIsrTime2</I>, and <I>wNumInterrupts</I>, among others that should all be copied.</li>
+
+	<LI><A HREF="wce50lrfoeminterruptenable.htm">OEMInterruptEnable</A> should return success for SYSINTR_TIMING without actually performing an action.</li>
+
+	<LI>Implement <A HREF="wce50lrfperfcountsincetick.htm">PerfCountSinceTick</A> and <A HREF="wce50conperfcountfreq.htm">PerfCountFreq</A>. <B>PerfCountSinceTick</B> is the number of counter ticks that have elapsed since the latest timer interrupt occurred. For more information, see <A HREF="wce50conperfcountsincetickandperfcountfreq.htm">PerfCountSinceTick and PerfCountFreq</A>.</li>
+
+	<LI>All ISRs must check <B>fIntrTime</B>, one of the global variables, at their entry point. If this variable is set, the ISR should set <I>dwIsrTime1</I> to <B>PerfCountSinceTick</B> and increment <I>wNumInterrupts</I>.</li>
+
+	<LI>If <I>fIntrTime</I> is set, the timer ISR should decrement <I>dwIntrTimeCountdown </I>and return SYSINTR_TIMING if it is zero. Otherwise, it should return SYSINTR_RESCHED or SYSINTR_NOP as normal. Once it is zero, <I>dwIntrTimeCountdown </I>should be reloaded from <I>dwIntrTimeCountdownRef</I>; this variable is initialized through an IOCTL_HAL_ILTIMING message.</li>
+
+	<LI>When it returns SYSINTR_TIMING, the timer ISR needs to set <I>dwIsrTime2</I> to <B>PerfCountSinceTick</B>.</li>
+</OL>
+
+<P>The sample implementation of <A HREF="wce50lrfoemidle.htm">OEMIdle</A> already checks <I>fIntrTime</I> and handles interrupt latency timing as a special case.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50howhowtodevelopanoemadaptationlayer.htm">How to Develop an OEM Adaptation Layer</A> | <A HREF="wce50tskimplementingtheoemiocontrolfunction.htm">Implementing the OEMIoControl Function</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

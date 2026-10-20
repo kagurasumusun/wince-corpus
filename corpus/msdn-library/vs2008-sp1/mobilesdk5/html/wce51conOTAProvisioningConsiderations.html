@@ -1,0 +1,141 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>OTA Provisioning Considerations</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="OTA Provisioning Considerations"/>
+<MSHelp:RLTitle Title="OTA Provisioning Considerations"/>
+<MSHelp:Keyword Index="A" Term="wce51conOTAProvisioningConsiderations"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Application"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbsmartphone"/>
+<MSHelp:Attr Name="Product" Value="kbPocketPC"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="Technology" Value="kbPocketPC"/>
+<MSHelp:Attr Name="Technology" Value="kbSmartphone"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="provisioning_mo.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="False"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_1077485">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Windows Mobile Version 5.0 SDK<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce51conotaprovisioningconsiderations"></A>OTA Provisioning Considerations</H1>
+<!--Feedback Link Top Start-->
+<P CLASS="feedback"><font size="1"><a href="mailto:medfdbk&#64;microsoft.com?subject=Product: Windows Mobile | Version: 5.0 | Release: SDK | Title: OTA Provisioning Considerations | Filename: wce51conotaprovisioningconsiderations.htm | Built on: Wednesday, September 14, 2005">Send Feedback</a> on this topic to the authors</font></p>
+<!--Feedback Link Top End-->
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>The following table shows considerations based on the conditions under which the device will accept OTA provisioning messages.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=42%>To accept OTA messages ... </TH>
+<TH width=58%>Consideration</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=42%>Only when the message content is trusted by a trusted WAP push gateway.</TD>
+<TD width=58%>Use the OTA Provisioning Policy (4111). It  indicates whether a WAP push message is accepted based on whether the role assigned to the message matches any of the roles specified in the policy setting.
+<P>Consider whether you want to allow a WAP push gateway trusted OTA message to have full control over device settings configurable through a WAP Push. If so, then you must also assign the PPG_Trusted role the Managers role. </P>
+
+<P>For more information, see <MSHelp:link keywords="wce51grfSecurityPolicySettings" TABINDEX="0">Security Policy Settings</MSHelp:link>.</P>
+</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=42%>Only when the message is from a Trusted Provisioning Server (TPS).</TD>
+<TD width=58%>You must know the URL of the Trusted Provisioning Server and bootstrap the device with this URL using the BOOTSTRAP Configuration Service Provider.. The device will look for this URL in the OTA message header. If there is a match  and the OTA message content is trusted by a trusted WAP push gateway, the TPS role will be assigned to the message. 
+<P>Consider whether you want to allow TPS full control over device settings configurable through a WAP Push. If so, then you must also assign the TPS role the Managers role. </P>
+</TD>
+</TR>
+</table></div>
+
+<H4 class="dtH4">What is the SMS address for the WAP push gateways? </H4>
+
+<P>A trusted WAP push gateway is required for continuous OTA provisioning and Service Loading (SL) messages. It can also be used for Service Indication messages. A WAP push gateway address is an SMS address.</P>
+
+<H4 class="dtH4">What is the Uniform Resource Locator (URL) for Trusted Provisioning Server and its role (if applicable)?</H4>
+
+<P>You should know the URL of the OMA Client provisioning server. The message that comes from this URL and that is trusted by a trusted WAP push gateway is given the TPS security role. By default, the TPS security role is granted Manager privilege. </P>
+
+<H4 class="dtH4">The device knows this URL by accepting an OMA Client Provisioning bootstrap XML that contains bootstrap information. When you bootstrap the TPS URL, you must also bootstrap the trusted WAP push gateway. What method of over-the-air (OTA) configuration and provisioning will you use?</H4>
+
+<P>The following policies are related to the Push Router:
+
+<UL type="disc">
+	<LI>WSP Push policy -- WSP push policy indicates whether WAP notifications from the WAP stack are routed. This policy applies to any WAP push message that is sent over WSP.</li>
+
+	<LI>Unauthenticated Message policy -- Unauthenticated message policy indicates whether to accept unsigned WAP messages based on their origin.  This policy applies to any unsigned WAP push messages.</li>
+
+	<LI>WAP Signed Message policy indicates whether a WAP signed message is excepted based on whether the role assigned to the message matches any of the roles specified in the policy setting.</li>
+
+	<LI>OTA Provisioning policy indicates whether a WAP push provisioning message is accepted by Configuration Manager based on whether the role assigned to the message matches any of the roles that are specified in the policy setting .</li>
+</UL>
+
+<P>For more information see <A HREF="conwappushmessageformat.htm">WAP Push Message Format</A>.  </P>
+
+<H4 class="dtH4">Do you want to the TPS role Manager privileges?</H4>
+
+<P>The mobile operator can provision the device with a OMA Client Provisioning Trusted Provisioning Server (TPS) and a trusted Push Proxy Gateway (PPG) used by the TPS for continuous provisioning. The XML example in this section can be used as a template. After the device is bootstrapped, the message coming from the TPS will be granted the Manager role, and WAP push will still be the mechanism for continuous provisioning.</P>
+
+<P>A mobile operator can also set other data connectivity information in the device's configurable settings in this bootstrap message.</P>
+
+<P>The trusted provisioning server (TPS) must send the OTA provisioning message through configured trusted Push Proxy Gateway (PPG), and the PPG must authenticate the TPS (push initiator) </P>
+
+<P>For more information, see <MSHelp:link keywords="wce51grfSecurityPolicySettings" TABINDEX="0">Security Policy Settings</MSHelp:link>.</P>
+
+<H4 class="dtH4">Will you use an OMA DM Server?</H4>
+
+<P>An OMA DM server can be used to remotely manage devices, and typically has full access to the device with the role of Manager.</P>
+
+<P>You must know the following information if you will use an OMA DM server:
+
+<UL type="disc">
+	<LI>The OMA device management server address, which is the URL for the HTTPS channel.</li>
+
+	<LI>Authentication information to authenticate the server using MD5 algorithm: Server ID; Server name; Server password; Server nonce.</li>
+
+	<LI>Authentication information to authenticate the device DM client: User name, Client password; Client nonce.</li>
+
+	<LI>The APN address of any GPRS connection that is used to connect to the DM server.</li>
+
+	<LI>The correct root certificate for the SSL connection.</li>
+</UL>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce51conprovisioningxmlconsiderations.htm">Provisioning XML Considerations</A> | <A HREF="wce51conomadmbootstrapping.htm">Bootstrapping To Use An OMA DM Server</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Feedback Link Bottom Start-->
+<p><font size="1"><a href="mailto:medfdbk&#64;microsoft.com?subject=Product: Windows Mobile | Version: 5.0 | Release: SDK | Title: OTA Provisioning Considerations | Filename: wce51conotaprovisioningconsiderations.htm | Built on: Wednesday, September 14, 2005">Send Feedback</a> on this topic to the authors</font></p>
+<!--Feedback Link Bottom End-->
+<!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="mob5conCopyrightInformationForMagneto" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link></font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

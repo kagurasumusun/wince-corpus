@@ -1,0 +1,277 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Display Driver Performance Profiling</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Display Driver Performance Profiling"/>
+<MSHelp:RLTitle Title="Display Driver Performance Profiling"/>
+<MSHelp:Keyword Index="A" Term="wce50conDisplayDriverPerformanceProfiling"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Driver"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="False"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="display_guide.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="True"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+<MSHelp:Attr Name="PBFeature" Value="DisplayDriver"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_3017895">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50condisplaydriverperformanceprofiling"></A>Display Driver Performance Profiling</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>You can use the DispPerf utility to profile the performance of your display driver. </P>
+
+<P>DispPerf builds a table that lists the following for each raster operation (ROP) code that is profiled: 
+
+<UL type="disc">
+	<LI>Frequency count </li>
+
+	<LI>Elapsed time in microseconds</li>
+
+	<LI>Average elapsed time in microseconds</li>
+</UL>
+
+<P>The table is specific to ROPs handled by the default GPE emulation, by the software emulation library, and by hardware accelerations. </P>
+
+<P>To measure times accurately, DispPerf can be used only on run-time images that support <MSHelp:link keywords="wce50lrfQueryPerformanceCounter" TABINDEX="0">QueryPerformanceCounter</MSHelp:link> and <MSHelp:link keywords="wce50lrfQueryPerformanceFrequency" TABINDEX="0">QueryPerformanceFrequency</MSHelp:link> with a recommended resolution of 1 microsecond. </P>
+
+<P>All drivers in the %_WINCEROOT%\Public\Common\OAK\Drivers\Display tree demonstrate how to use the profiler for measuring performance of blits and line drawing. You can extend the profiler to measure the performance of additional display functions. </P>
+
+<P>The following table shows where the source code exists for DispPerf and the ATI and Geode/MediaGx display drivers.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=22%>Driver or utility</TH>
+<TH width=78%>Directory</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=22%>DispPerf</TD>
+<TD width=78%>%_WINCEROOT%\Public\Common\OAK\Drivers\Display\DispPerf</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=22%>ATI</TD>
+<TD width=78%>%_WINCEROOT%\Public\Common\OAK\Drivers\Display\ATI</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=22%>Geode/MediaGx</TD>
+<TD width=78%>%_WINCEROOT%\Public\Common\OAK\CSP\i486\Geode\Gxvideo</TD>
+</TR>
+</table></div>
+
+<P>The driver starts profiling of blit operations during the call to the <B>BltPrepare</B> function when it calls the <B>DispPerfStart</B> function. </P>
+
+<P>The following code example shows how the ATI driver, which is used as the example driver throughout this section, initializes its display function pointer to use the default emulation that is provided by the GPE.</P>
+
+<PRE class="code">SCODE 
+ATI::BltPrepare(GPEBltParms *pBltParms)
+{
+DispPerfStart (pBltParms-&gt;rop4);
+pBltParms-&gt;pBlt = EmulatedBlt; // Catch all</PRE>
+
+<P>When the driver can handle the ROP with hardware acceleration or software emulation, it changes its display function pointer appropriately. The driver also calls the <B>DispPerfType</B> function to record which type of acceleration is used to handle the ROP. </P>
+
+<P>The following code example shows how the driver calls <B>DispPerfType</B> after the driver sets the display function pointer to a hardware accelerated function.</P>
+
+<PRE class="code">// Performance Logging Type
+if (pBltParms-&gt;pBlt != EmulatedBlt) {
+DispPerfType(DISPPERF_ACCEL_HARDWARE);
+}</PRE>
+
+<P>When the blit operation completes, the <B>BltComplete</B> function stops profiling with a call to the <B>DispPerfEnd</B> function.</P>
+
+<P>The DO_DISPPERF environment variable controls whether the code to support profiling is compiled into the display driver. </P>
+
+<P>To learn how the environment variable causes the correct compiler directives to be set, see the Sources file for the ATI driver.</P>
+
+<P>DispPerf can be invoked from the command prompt on a Windows CE&#0150;based platform, or it can be launched remotely from the Windows CE Debug Shell tool. </P>
+
+<P>The following code example shows the command syntax for DispPerf.</P>
+
+<PRE class="code">dispperf [-c[w*]] [-d [&gt; <I>file</I>]]</PRE>
+
+<P>The <code class="ce">-c</code> option clears the profiler buffer. If the letter <code class="ce">w</code> appears one or more times following the <code class="ce">-c</code> option, DispPerf calls the <MSHelp:link keywords="wce50lrfCreateWindow" TABINDEX="0">CreateWindow</MSHelp:link> function that number of times and profiles the resulting display driver operations. </P>
+
+<P>The <code class="ce">-d</code> option exports the profiler buffer output in tabular form. If the <code class="ce">-d</code> option is followed by <code class="ce">&gt;</code> and a file name, the output is written to the named file; otherwise, it appears on the console where the command was issued.</P>
+
+<P>The following code example shows how DispPerf clears its buffer of all profiling information.</P>
+
+<PRE class="code">Dispperf &#0150;cwwwwwd</PRE>
+
+<P>Dispperf calls the <B>CreateWindow</B> function five times, profiling the performance of the display functions. </P>
+
+<P>The following code example shows how DispPerf displays its table of profiling information to the console.</P>
+
+<PRE class="code">Dispperf &#0150;c
+Pword stat_rpt.pwd
+Dispperf &#0150;d &gt; results.txt</PRE>
+
+<P>In this example, DispPerf clears its buffer of all profiling information. Microsoft&reg; Word runs, and then opens the document Stat_rpt.pwd. DispPerf tracks the profiled display functions and writes its table of profiling information to the Results.txt file.</P>
+
+<H4 class="dtH4">DispPerf Results</H4>
+
+<P>The following table provides descriptions for the data shown in the main columns of DispPerf's output table. All sample display drivers included with Windows CE .NET 4.2 or later are instrumented to support these metrics. </P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=23%>Heading</TH>
+<TH width=77%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=23%>RopCode</TD>
+<TD width=77%>The raster operations called during the profiling run. 
+<P>The hexadecimal values in this column are related to the GDI ROP code values by the following formula, where <CODE>RopCode</CODE> is the value reported by DispPerf and <CODE>ROP3</CODE> is the value in hexadecimal column in <MSHelp:link keywords="wce50grfTernaryRasterOperations" TABINDEX="0">Ternary Raster Operations</MSHelp:link>.</P>
+
+<PRE class="code">RopCode = ((ROP3 &amp; 0x00ff0000 &gt;&gt; 16) | (ROP3 &amp; 0xff0000 &gt;&gt; 8))</PRE>
+</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=23%>cTotal</TD>
+<TD width=77%>The total number of times a ROP was called.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=23%>cGPE</TD>
+<TD width=77%>The number of times a ROP was called from a GPE function. 
+<P>For more information, see <A HREF="wce50congpebaseclasses.htm">GPE Base Classes</A>.</P>
+</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=23%>dwGPETime</TD>
+<TD width=77%>The total amount of time, in microseconds, spent in a ROP from GPE calls. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=23%>Avg.GPETime</TD>
+<TD width=77%>The average amount of time, in microseconds, for a ROP when called from GPE.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=23%>cEmul</TD>
+<TD width=77%>The number of times a ROP was called from a BitBlt emulation library function. 
+<P>For more information, see <A HREF="wce50lrfbitbltemulationlibraryfunctions.htm">BitBlT Emulation Library Functions</A>.</P>
+</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=23%>dwEmulTime</TD>
+<TD width=77%>The total amount of time, in microseconds, spent in a ROP from BitBlt emulation library function calls. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=23%>Avg.EmulTime</TD>
+<TD width=77%>The average amount of time, in microseconds, for a ROP when called from a BitBlt emulation library function.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=23%>cHardware</TD>
+<TD width=77%>The number of times a ROP was called from hardware.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=23%>dwHardwareTime</TD>
+<TD width=77%>The total amount of time, in microseconds, spent in a ROP from hardware calls. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=23%>Avg.HardwareTime</TD>
+<TD width=77%>The average amount of time, in microseconds, for a ROP when called from hardware.</TD>
+</TR>
+</table></div>
+
+<P>The following table shows the meanings of the additional column headings in DispPerf's output table. The sample display drivers that are included with Windows CE .NET 4.2 or later are not instrumented to support these metrics. </P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=23%>Heading</TH>
+<TH width=77%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=23%>WaitTime</TD>
+<TD width=77%>The time, in microseconds, spent in the function <B>WaitForNotBusy</B> during a ROP.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=23%>Color Lookup</TD>
+<TD width=77%>The number of blits that required a lookup from a color palette.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=23%>Color Convert</TD>
+<TD width=77%>The number of blits that required a color conversion. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=23%>Src In Video Mem</TD>
+<TD width=77%>The number of blits that had the source surface in video memory </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=23%>Dest In Video Mem</TD>
+<TD width=77%>The number of blits that had the destination surface in video memory.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=23%>Color Black</TD>
+<TD width=77%>This is the number of times a solid color of black was used. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=23%>Color White</TD>
+<TD width=77%>This is the number of times a solid color of white was used. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=23%>Stretch Blt</TD>
+<TD width=77%>The number of blits that required stretching or shrinking. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=23%>Transparent Blt</TD>
+<TD width=77%>The number of blits that had a transparent color. </TD>
+</TR>
+</table></div>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50conflatsampledisplaydriver.htm">FLAT Sample Display Driver</A> | <A HREF="wce50conatisampledisplaydriver.htm">ATI Sample Display Driver</A> | <A HREF="wce50conatisampledisplaydriveroptimization.htm">ATI Sample Display Driver Optimization</A> | <A HREF="wce50consampledrvescapefunction.htm">Sample DrvEscape Function</A> | <A HREF="wce50consampleblitacceleration.htm">Sample Blit Acceleration</A> | <A HREF="wce50condisplaydriverregistrysettings.htm">Display Driver Registry Settings</A> | <A HREF="wce50condisplaydriverarchitecture.htm">Display Driver Development Concepts</A> | <A HREF="wce50condisplaydriverextensions.htm">Display Driver Extensions</A> | <A HREF="wce50condisplaydriverrecommendations.htm">Display Driver Recommendations</A> | <MSHelp:link keywords="wce50conPlatformProfiling" TABINDEX="0">Kernel Profiler</MSHelp:link></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

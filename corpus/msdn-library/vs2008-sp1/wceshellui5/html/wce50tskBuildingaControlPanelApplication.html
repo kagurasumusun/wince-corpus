@@ -1,0 +1,136 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Building a Control Panel Application</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Building a Control Panel Application"/>
+<MSHelp:RLTitle Title="Building a Control Panel Application"/>
+<MSHelp:Keyword Index="A" Term="wce50tskBuildingaControlPanelApplication"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Feature"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbTask"/>
+<MSHelp:Attr Name="Filename" Value="howto_ControlPanelApp.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="True"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+<MSHelp:Attr Name="PBFeature" Value="UI"/>
+<MSHelp:Attr Name="PBOnly" Value="True"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_3011124">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50tskbuildingacontrolpanelapplication"></A>Building a Control Panel Application</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>For the OS to recognize a DLL as a Control Panel application, the file must be built for the correct hardware platform and be named with a Control Panel (.cpl) file extension. </P>
+
+<P>As described in <MSHelp:link keywords="wce50conControlPanel" TABINDEX="0">Control Panel</MSHelp:link>, the .cpl file must also reside in the \Windows directory on the device for the OS to recognize it, but this is the default build behavior so there is nothing to set.</P>
+
+<BLOCKQUOTE class="dtBlock">
+<b class="le">Note</b>&nbsp;&nbsp;&nbsp;The following steps describe how to make build settings conform to what should already be their default values. Nevertheless, because the context-sensitive nature of many controls allows you to set the same build parameter to different values for different projects, you should still complete all of the steps.</BLOCKQUOTE>
+
+<P class="labelproc"><B>To build your projects for your OS design</B>
+
+<OL type="1">
+	<LI>In the <B>Workspace</B> view, choose the <B>FileView</B> tab. 
+<P>This sets your application projects to be the build context for Platform Builder.
+</li>
+
+	<LI>From the <B>Build OS</B> menu, choose <B>Set Active Configuration</B>. 
+<P>The <B>Set Active Configuration</B> dialog box appears.
+</li>
+
+	<LI>In the <B>Set Active Configuration</B> dialog box, choose the release configuration.
+<P>HelloCPL becomes the active project.
+
+<P>Although you picked a configuration for only one project, your other projects are also set to that same configuration. You can verify this if you have the <B>Build</B> toolbar docked in your IDE. For more information, see <MSHelp:link keywords="wce50tskDisplayingorHidingToolbars" TABINDEX="0">Displaying or Hiding Toolbars</MSHelp:link>.
+</li>
+</OL>
+
+<P class="labelproc"><B>To change the file extension of your output file from dll to cpl</B>
+
+<OL type="1">
+	<LI>In the <B>Workspace</B> view, choose the <B>FileView</B> tab.</li>
+
+	<LI>Right-click the HelloCPL project and choose <B>Settings</B>.</li>
+
+	<LI>Choose the <B>General</B> tab in the dialog box that appears. In the <B>Custom Variables</B> field, click the <B>...</B> button to open the <B>Custom Variables</B> box.</li>
+
+	<LI>Click the <B>New</B> button. In the <B>Environment Variable</B> dialog box, type <B>CPL</B> in the <B>Variable name</B> text box, and <B>1</B> in the <B>Variable value</B> text box. To close the <B>Environment Variable</B> dialog box, choose <B>OK</B>, and to close the <B>Custom Variables</B> dialog box, choose <B>OK</B>.
+<P>This will force the HelloCPL application name to have a .cpl extension instead of the default .dll extension.
+</li>
+
+	<LI>Click the <B>C/C++</B> tab in the project settings dialog box. To include the appropriate header files, in the <B>Include Directories</B> field, type <B>$(_PROJECTROOT)\cesysgen\oak\inc</B> . 
+<P>Close the project settings dialog box by choosing <B>OK</B>.
+</li>
+
+	<LI>To open the file, expand the HelloCPL\Parameter files node and double-click HelloCPL.bib. Replace the code in this file with the following code
+<PRE class="code">MODULES
+HelloCPL.cpl $(_FLATRELEASEDIR)\HelloCPL.cpl           NK</PRE>
+</li>
+</OL>
+
+<P class="labelproc"><B>To verify that HelloCPL is set to export functions as a DLL</B>
+
+<OL type="1">
+	<LI>Right-click the HelloCPL project and choose <B>Settings</B>.</li>
+
+	<LI>Choose the <B>C\C++</B> tab.</li>
+
+	<LI>Verify that the <B>Additional MacroDefinitions</B> field is set to <CODE>$(CDEFINES) -DHelloCPL_EXPORTS.</CODE></li>
+
+	<LI>Set the <B>DLL Entry Point</B> field to <B>DLLMain</B>.</li>
+
+	<LI>To close the project settings dialog box, choose <B>OK</B>.</li>
+</OL>
+
+<P class="labelproc"><B>To build the HelloCPL application</B>
+
+<OL type="1">
+	<LI>From the <B>FileView</B> tab in the workspace, select the HelloCPL project.</li>
+
+	<LI>To build the HelloCPL project, from the <B>Build Project</B> menu, make sure that the following are selected:
+<OL type="a">
+	<LI><B>Clean Before Building</B></li>
+
+	<LI><B>Make Run-Time Image Before Build</B></li>
+
+	<LI><B>Build Current Project</B></li>
+</OL>
+</li>
+</OL>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50howhowtoimplementacontrolpanelapplication.htm">How to Implement a Control Panel Application</A> | <MSHelp:link keywords="wce50urfProjectSettingsDialogBox" TABINDEX="0">Project Settings Dialog Box</MSHelp:link> | <MSHelp:link keywords="wce50urfLinkTab" TABINDEX="0">Link Tab</MSHelp:link> | <MSHelp:link keywords="wce50urfCCTab" TABINDEX="0">C/C++ Tab</MSHelp:link></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

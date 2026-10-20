@@ -1,0 +1,147 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>IMAPIFolder::DeleteFolder</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="IMAPIFolder::DeleteFolder"/>
+<MSHelp:RLTitle Title="IMAPIFolder::DeleteFolder"/>
+<MSHelp:Keyword Index="K" Term="IMAPIFolder,DeleteFolder"/>
+<MSHelp:Keyword Index="A" Term="mob5lrfIMAPIFolderDeleteFolder"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Application"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbsmartphone"/>
+<MSHelp:Attr Name="Product" Value="kbPocketPC"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="Technology" Value="kbPocketPC"/>
+<MSHelp:Attr Name="Technology" Value="kbSmartphone"/>
+<MSHelp:Attr Name="TopicType" Value="apiref"/>
+<MSHelp:Attr Name="Filename" Value="CE_MAPI_iFace_magneto.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="False"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_1064701">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Windows Mobile Version 5.0 SDK<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="mob5lrfimapifolderdeletefolder"></A>IMAPIFolder::DeleteFolder</H1>
+<!--Feedback Link Top Start-->
+<P CLASS="feedback"><font size="1"><a href="mailto:medfdbk&#64;microsoft.com?subject=Product: Windows Mobile | Version: 5.0 | Release: SDK | Title: IMAPIFolder::DeleteFolder | Filename: mob5lrfimapifolderdeletefolder.htm | Built on: Wednesday, September 14, 2005">Send Feedback</a> on this topic to the authors</font></p>
+<!--Feedback Link Top End-->
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>The <B>DeleteFolder</B> method removes a subfolder from the current folder.</P>
+
+<H4 class="dtH4">Syntax</H4>
+
+<PRE class="syntax"><B>HRESULT DeleteFolder (</B>
+<B>  ULONG </B><I>cbEntryID</I><B>,</B>
+<B>  LPENTRYID </B><I>lpEntryID</I><B>,</B>
+<B>  ULONG </B><I>ulUIParam</I><B>,</B>
+<B>  LPMAPIPROGRESS </B><I>lpProgress</I><B>,</B>
+<B>  ULONG </B><I>ulFlags</I>
+<B>);</B></PRE>
+
+<H4 class="dtH4">Parameters</H4>
+
+<DL>
+<DT><I>cbEntryID</I></DT>
+
+<DD>[in] Count of bytes in the entry identifier pointed to by <I>lpEntryID</I>. </dd>
+
+<DT><I>lpEntryID</I></DT>
+
+<DD>[in] Reference to an <A HREF="mob5lrfentryid.htm">ENTRYID</A> structure that represents the entry identifier of the subfolder to delete; cannot be <B>NULL</B>.</dd>
+
+<DT><I>ulUIParam</I></DT>
+
+<DD>[in] Ignored.</dd>
+
+<DT><I>lpProgress</I></DT>
+
+<DD>[in] Ignored.</dd>
+
+<DT><I>ulFlags</I></DT>
+
+<DD>[in] Bitmask of flags that controls the deletion of the subfolder. The following flags can be set:
+
+<P><B>DEL_FOLDERS</B>
+
+
+<P>All subfolders of the subfolder pointed to by <I>lpEntryID</I> should be deleted. The method will fail if the subfolder being deleted contains subfolders and this flag is not set.
+
+
+<P><B>DEL_MESSAGES</B>
+
+
+<P>All messages in the subfolder pointed to by <I>lpEntryID</I> should be deleted. The method will fail if the subfolder being deleted contains messages and this flag is not set.
+</dd>
+</DL>
+
+<H4 class="dtH4">Return Values</H4>
+
+<P>This method returns the standard values <B>E_INVALIDARG</B>, <B>E_OUTOFMEMORY</B>, <B>E_UNEXPECTED</B>, and <B>E_FAIL</B>, as well as the following:
+
+<DL>
+<DT><B>S_OK</B></DT>
+
+<DD>Indicates success.</dd>
+
+<DT><B>MAPI_E_HAS_FOLDERS</B></DT>
+
+<DD>The subfolder being deleted contains subfolders, and the <B>DEL_FOLDERS</B> flag was not set. The subfolder was not deleted.</dd>
+
+<DT><B>MAPI_E_HAS_MESSAGES</B></DT>
+
+<DD>The subfolder being deleted contains messages, and the <B>DEL_MESSAGES</B> flag was not set. The subfolder was not deleted. However, if the <B>DEL_FOLDERS</B> flag was set, some empty subfolders (within the subfolder being deleted) may have been deleted.</dd>
+</DL>
+
+<H4 class="dtH4">Remarks</H4>
+
+<P>Folders to be deleted must be located in the folder designated as the special wastebasket folder, typically the <B>Deleted Items</B> folder in the interpersonal message (IPM) subtree. By default, <B>DeleteFolder</B> operates only on empty folders, but it can be used successfully on non-empty folders by setting two flags: <B>DEL_FOLDERS</B> and <B>DEL_MESSAGES</B>. Only empty folders or folders that set both the <B>DEL_FOLDERS</B> and <B>DEL_MESSAGES</B> flags on the <B>DeleteFolder</B> call can be deleted. <B>DEL_FOLDERS</B> enables all of the folder's subfolders to be removed; <B>DEL_MESSAGES</B> enables all of the folder's messages to be removed.</P>
+
+<P>When <B>DeleteFolder</B> is called on a folder that is not in the wastebasket, the method moves the folder to the wastebasket. In this case, the <I>ulFlags</I> value is ignored.</P>
+
+<P>When <B>DeleteFolder</B> is unable to complete, do not assume that no work was done. <B>DeleteFolder</B> might have been able to delete one or more of the messages and subfolders before encountering the error. </P>
+
+<H4 class="dtH4">Requirements </H4>
+
+<P><B>Pocket&nbsp;PC:</B> Pocket&nbsp;PC&nbsp;2002 and later<BR>
+<B>Smartphone:</B> Smartphone&nbsp;2002 and later<BR>
+<B>OS&nbsp;Versions:</B> Windows&nbsp;CE&nbsp;3.0 and later<BR>
+<B>Header:</B> mapidefs.h<BR>
+<B>Library:</B> cemapi.lib</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="mob5lrfimapifolder.htm">IMAPIFolder</A> | <A HREF="mob5orimessaging.htm">Messaging</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Feedback Link Bottom Start-->
+<p><font size="1"><a href="mailto:medfdbk&#64;microsoft.com?subject=Product: Windows Mobile | Version: 5.0 | Release: SDK | Title: IMAPIFolder::DeleteFolder | Filename: mob5lrfimapifolderdeletefolder.htm | Built on: Wednesday, September 14, 2005">Send Feedback</a> on this topic to the authors</font></p>
+<!--Feedback Link Bottom End-->
+<!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="mob5conCopyrightInformationForMagneto" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link></font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

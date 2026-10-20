@@ -1,0 +1,118 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>NDIS_SET_PACKET_CANCEL_ID</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="NDIS_SET_PACKET_CANCEL_ID"/>
+<MSHelp:RLTitle Title="NDIS_SET_PACKET_CANCEL_ID"/>
+<MSHelp:Keyword Index="K" Term="NDIS_SET_PACKET_CANCEL_ID"/>
+<MSHelp:Keyword Index="A" Term="wce50lrfNDISSETPACKETCANCELIDMacro"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Driver"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="False"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="apiref"/>
+<MSHelp:Attr Name="Filename" Value="ndis_macros.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="True"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+<MSHelp:Attr Name="APIName" Value="NDIS_SET_PACKET_CANCEL_ID"/>
+<MSHelp:Attr Name="PBFeature" Value="NetworkDriver"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_3018689">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50lrfndissetpacketcancelidmacro"></A>NDIS_SET_PACKET_CANCEL_ID</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>This macro marks a packet with a cancellation identifier that a driver can later use to cancel the pending transmission of the packet.</P>
+
+<PRE class="syntax"><B>ULONG_PTR NDIS_SET_PACKET_CANCEL_ID(</B>
+  <B>PNDIS_PACKET </B><I>_P</I><B>,</B>
+  <B>ULONG_PTR </B><I>_cId</I>
+<B>);</B></PRE>
+
+<H4 class="dtH4">Parameters</H4>
+
+<DL>
+<DT><I>_P</I></DT>
+
+<DD>Points to an <A HREF="wce50lrfndispacket.htm">NDIS_PACKET</A> structure that is the descriptor for a packet.</dd>
+
+<DT><I>_cId</I></DT>
+
+<DD>Cancellation identifier.</dd>
+</DL>
+
+<H4 class="dtH4">Return Values</H4>
+
+<P>The return value is the <I>_cId</I> identifier.</P>
+
+<H4 class="dtH4">Remarks</H4>
+
+<P>A protocol driver or intermediate driver can call the <B>NDIS_SET_PACKET_CANCEL_ID</B> function for each packet that it passes to lower-level drivers for transmission. The <B>NDIS_SET_PACKET_CANCEL_ID</B> function marks the specified packet with a cancellation identifier.</P>
+
+<P>To cancel the pending transmission of a marked packet, a protocol or intermediate driver passes the packet's cancellation identifier to <A HREF="wce50lrfndiscancelsendpackets.htm">NdisCancelSendPackets</A>. The caller of <B>NDIS_SET_PACKET_CANCEL_ID</B> should therefore store the assigned cancellation identifier internally so that it can pass it, as necessary, to <A HREF="wce50lrfndiscancelsendpackets.htm">NdisCancelSendPackets</A>. A driver can also obtain a packet's cancellation identifier by calling <A HREF="wce50lrfndisgetpacketcancelidmacro.htm">NDIS_GET_PACKET_CANCEL_ID</A>.</P>
+
+<P>An intermediate driver should not modify the cancellation identifier of packets that it passes to a lower-level driver. However, an intermediate driver can set a cancellation identifier for packets that it originates.</P>
+
+<P>Before assigning cancellation identifiers to packets, a driver should call <A HREF="wce50lrfndisgeneratepartialcancelid.htm">NdisGeneratePartialCancelId</A> to obtain the high-order byte of each cancellation identifier that it assigns. This ensures that the driver does not duplicate cancellation identifiers assigned by other drivers in the system. <B>NdisGeneratePartialCancelId</B> is typically called during <A HREF="wce50coninitializationofndisprotocoldrivers.htm">Initialization of NDIS Protocol Drivers</A>; however, a protocol or intermediate driver can obtain more than one partial cancellation identifier by calling <B>NdisGeneratePartialCancelId</B> more than once.</P>
+
+<P>A protocol driver or intermediate driver might assign cancellation identifiers to packets as follows:
+
+<UL type="disc">
+	<LI>The driver could mark all packets sent over a connection with the same cancellation identifier.</li>
+
+	<LI>The driver could mark each packet with a unique cancellation identifier.</li>
+
+	<LI>The driver could mark all packets within a subgroup of packets (for example, packets sent on behalf of a single client) with a unique identifier.</li>
+</UL>
+
+<P>If a driver marks all packets with the same cancellation identifier, it can cancel all pending packet transmissions from an adapter with a single call to <B>NdisCancelSendPackets</B>. If a driver marks each packet with a unique cancellation identifier, it can cancel the pending transmission of individual packets from an adapter by calling <B>NdisCancelSendPackets</B> once for each packet. If a driver marks all packets within a subgroup of packets with a unique identifier, it can cancel all pending transmissions of packets within that subgroup with a single call to <B>NdisCancelSendPackets</B>.</P>
+
+<P>After aborting the pending transmission of a packet, the underlying miniport calls the <A HREF="wce50lrfndismsendcomplete.htm">NdisMSendComplete</A> or <A HREF="wce50lrfndismwansendcomplete.htm">NdisMWanSendComplete</A> function to return the packet descriptor and a completion status of NDIS_STATUS_ABORTED to the protocol or intermediate driver that requested the transmission. NDIS, in turn, calls the protocol or intermediate driver's <A HREF="wce50lrfprotocolsendcomplete.htm">ProtocolSendComplete</A> function.</P>
+
+<P>In its <B>ProtocolSendComplete</B> function, a protocol driver can call <B>NDIS_SET_PACKET_CANCEL_ID</B> with <I>_cId </I>set to NULL. This prevents the packet from inadvertently being used again with a stale cancellation identifier.</P>
+
+<P>The <B>NDIS_SET_PACKET_CANCEL_ID</B> macro is defined as follows.</P>
+
+<PRE class="code">#define NDIS_SET_PACKET_CANCEL_ID(_P, _cId)  NDIS_PER_PACKET_INFO_FROM_PACKET(_P, PacketCancelId) = _cId</PRE>
+
+<H4 class="dtH4">Requirements</H4>
+
+<P><B>OS Versions:</B> Windows CE .NET 4.0 and later.<BR>
+<B>Header:</B> Ndis.h.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50coninitializationofndisprotocoldrivers.htm">Initialization of NDIS Protocol Drivers</A> | <A HREF="wce50lrfminiportcancelsendpackets.htm">MiniportCancelSendPackets</A> | <A HREF="wce50lrfndisgetpacketcancelidmacro.htm">NDIS_GET_PACKET_CANCEL_ID</A> | <A HREF="wce50lrfndispacket.htm">NDIS_PACKET</A> | <A HREF="wce50lrfndisallocatepacket.htm">NdisAllocatePacket</A> | <A HREF="wce50lrfndisallocatepacketpool.htm">NdisAllocatePacketPool</A> | <A HREF="wce50lrfndisallocatepacketpoolex.htm">NdisAllocatePacketPoolEx</A> | <A HREF="wce50lrfndiscancelsendpackets.htm">NdisCancelSendPackets</A> | <A HREF="wce50lrfndisgeneratepartialcancelid.htm">NdisGeneratePartialCancelId</A> | <A HREF="wce50lrfndismsendcomplete.htm">NdisMSendComplete</A> | <A HREF="wce50lrfndismwansendcomplete.htm">NdisMWanSendComplete</A> | <A HREF="wce50lrfprotocolsendcomplete.htm">ProtocolSendComplete</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

@@ -1,0 +1,125 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Modifying the .bib File to Produce a Downloadable Image</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Modifying the .bib File to Produce a Downloadable Image"/>
+<MSHelp:RLTitle Title="Modifying the .bib File to Produce a Downloadable Image"/>
+<MSHelp:Keyword Index="A" Term="wce50tskModifyingthebibFiletoProduceaDownloadableImage"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Hardware"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="True"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbTask"/>
+<MSHelp:Attr Name="Filename" Value="howto_developing_a_bootloader.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="True"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="AllowSearch" CONTENT="True">
+<META NAME="msdnID" CONTENT="_3010348">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50tskmodifyingthebibfiletoproduceadownloadableimage"></A>Modifying the .bib File to Produce a Downloadable Image</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>In the boot loader development process, you must create an Eboot.bin file that can be downloaded to flash memory by modifying the .bib file to produce an Eboot.bin file. You do this after you have created a test .bin file and verified that the download of the file works. </P>
+
+<P>For information about creating a test .bin file for download, see <A HREF="wce50tskcreatingatestbinfilefordownload.htm">Creating a Test .bin File for Download</A>. </P>
+
+<P>For information about verifying that the download of the file works, see <A HREF="wce50tskverifyingbinfiledownload.htm">Verifying .bin File Download</A>. </P>
+
+<P class="labelproc"><B>To modify the .bib file to produce an image that will download to flash memory</B>
+
+<OL type="1">
+	<LI>Create a backup copy of the .bib file.
+<BLOCKQUOTE class="dtBlock">
+<b class="le">Note</b>&nbsp;&nbsp;&nbsp;You can use the backup copy of the .bib file if you need to build an .nb0 image for flashing through JTAG.</BLOCKQUOTE>
+</li>
+
+	<LI>Modify the .bib file by adding the following code to the file.
+<PRE class="code">MEMORY
+    DRV_GLB  A0008000   00001000    RESERVED   ; Driver globals; 4 KB is sufficient.
+    EDBG     A0010000   00020000    RESERVED   ; EthDbg buffers
+
+    EBOOT    A0030000   00020000    RAMIMAGE   ; Set aside 128 KB for loader; finalize later.
+    RAM      A0050000   00010000    RAM        ; Free RAM; finalize later.
+
+    FCACHE   A0060000   01FA0000    RESERVED   ; Flash cache (used to store image before flashing).
+    
+CONFIG
+    COMPRESSION=OFF
+    PROFILE=OFF
+    KERNELFIXUPS=ON
+    
+    ;
+    ; Including a ROMOFFSET produces a .bin file suitable for download from 
+    ; Platform Builder to flash. ROMOFFSET must be large enough that the 
+    ; base address of Eboot wraps around to 0x00000000 (assuming your flash is 
+    ; mapped at this address, and the CPU fetches code from 0x00000000 
+    ; after reset).
+    ;
+    ; EBOOT      +  ROMOFFSET   = (address to download .bin to)
+    ;
+    ; 0xA0030000 +  0x5FFD0000  = 0x00000000 (download to flash)
+    ;
+    ; In other words, the run-time address will be in RAM at 0xA0010000, but the 
+    ; .bin header will cause the image to be downloaded to flash. Eboot must 
+    ; relocate itself from flash to RAM at reset.
+    ;
+    ; !!Comment the following command out to build a .nb0 raw image file (for JTAG-flashing)!!
+    ;
+;    ROMOFFSET=5FFD0000
+    
+    ;
+    ; These configuration options cause the JTAG-flashable .nb0 file to be generated.
+    ; Because Eboot is linked to execute from RAM, these must match the 
+    ; EBOOT RAMIMAGE section.
+    ;
+    ; !!These fields are mutually exclusive with ROMOFFSET!!
+    ; !!Comment the following commands out to build a .bin file (for download from PB)!!
+    ;
+    ROMSTART=A0030000
+    ROMWIDTH=32
+    ROMSIZE=40000
+
+MODULES
+;   Name            Path                                            Memory Type
+;   --------------  ----------------------------------------------  -----------
+    nk.exe          $(_TARGETPLATROOT)\target\$(_TGTCPU)\$(WINCEDEBUG)\Eboot.exe   EBOOT</PRE>
+</li>
+</OL>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50howhowtodevelopabootloader.htm">How to Develop a Boot Loader</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

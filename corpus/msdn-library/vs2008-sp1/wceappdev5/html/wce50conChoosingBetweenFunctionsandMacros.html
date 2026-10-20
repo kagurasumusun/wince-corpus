@@ -1,0 +1,114 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Choosing Between Functions and Macros</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Choosing Between Functions and Macros"/>
+<MSHelp:RLTitle Title="Choosing Between Functions and Macros"/>
+<MSHelp:Keyword Index="A" Term="wce50conChoosingBetweenFunctionsandMacros"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Application"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="False"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="Technology" Value="CRT"/>
+<MSHelp:Attr Name="TechnologyVers" Value="kbCRT"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="crt.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="True"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+<MSHelp:Attr Name="PBFeature" Value="SYSGEN_FULL_CRT"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_3026933">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50conchoosingbetweenfunctionsandmacros"></A>Choosing Between Functions and Macros</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>Most Microsoft run-time library routines are compiled or assembled functions, but some routines are implemented as macros. </P>
+
+<P>When a header file declares both a function and a macro version of a routine, the macro definition takes precedence because it appears after the function declaration. </P>
+
+<P>When you invoke a routine that is implemented as both a function and a macro, you can force the compiler to use the function version in two ways:
+
+<UL type="disc">
+	<LI>Enclose the routine name in parentheses:
+<PRE class="code">#include &lt;ctype.h&gt;
+a = toupper(a);    //use macro version of toupper
+a = (toupper)(a);  //force compiler to use function version of toupper</PRE>
+</li>
+
+	<LI>Use the <B>#undef</B> directive (to undefine the macro definition):
+<PRE class="code">#include &lt;ctype.h&gt;
+#undef toupper</PRE>
+</li>
+</UL>
+
+<P>When choosing between a function and a macro, consider the following trade-offs:
+
+<UL type="disc">
+	<LI>Speed versus size. The main benefit of using macros is faster execution time. 
+<P>During preprocessing, a macro is expanded (replaced by its definition) inline each time it is used. A function definition occurs only once, regardless of how many times it is called. 
+
+<P>Macros might increase code size but do not have the overhead associated with function calls.
+</li>
+
+	<LI>Function evaluation. A function evaluates to an address; a macro does not. Thus you cannot use a macro name in contexts requiring a pointer. 
+<P>For instance, you can declare a pointer to a function, but not a pointer to a macro.
+</li>
+
+	<LI>Macro side effects. A macro might treat arguments incorrectly when the macro evaluates its arguments more than once. 
+<P>For instance, the <A HREF="wce50lrftowupper.htm">towupper</A> macro is defined as this:
+
+<PRE class="code">#define toupper(c) ( (islower(c)) ? _toupper(c) :  (c) )</PRE>
+
+<P>In the following example, the <B>towupper</B> macro produces a side effect:
+
+<PRE class="code">#include &lt;ctype.h&gt;
+
+int a = 'm';
+a = toupper(a++);</PRE>
+
+<P>The example code increments a when passing it to <B>toupper</B>. 
+
+<P>The macro evaluates the argument a++ twice: once to check case and once for the result. 
+
+<P>This increases a by 2 instead of 1. As a result, the value operated on by <B>islower</B> differs from the value operated on by <B>toupper</B>.
+</li>
+
+	<LI>Type-checking. When you declare a function, the compiler can check argument types. Because you cannot declare a macro, the compiler cannot check macro argument types, but it can check the number of arguments you pass to a macro.</li>
+</UL>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50orimicrosoftcrun-timelibraryforwindowsce.htm">Microsoft C Run-time Library for Windows CE</A> | <A HREF="wce50contypechecking.htm">Type Checking</A> | <A HREF="wce50conrun-timeroutinesbycategory.htm">Run-time Routines by Category</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

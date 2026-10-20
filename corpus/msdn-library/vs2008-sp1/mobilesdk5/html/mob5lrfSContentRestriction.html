@@ -1,0 +1,150 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>SContentRestriction</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="SContentRestriction"/>
+<MSHelp:RLTitle Title="SContentRestriction"/>
+<MSHelp:Keyword Index="K" Term="SContentRestriction"/>
+<MSHelp:Keyword Index="A" Term="mob5lrfSContentRestriction"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Application"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbsmartphone"/>
+<MSHelp:Attr Name="Product" Value="kbPocketPC"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="Technology" Value="kbPocketPC"/>
+<MSHelp:Attr Name="Technology" Value="kbSmartphone"/>
+<MSHelp:Attr Name="TopicType" Value="apiref"/>
+<MSHelp:Attr Name="Filename" Value="CE_MAPI_FuncStrucEnum_magneto.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="False"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_1064594">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Windows Mobile Version 5.0 SDK<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="mob5lrfscontentrestriction"></A>SContentRestriction</H1>
+<!--Feedback Link Top Start-->
+<P CLASS="feedback"><font size="1"><a href="mailto:medfdbk&#64;microsoft.com?subject=Product: Windows Mobile | Version: 5.0 | Release: SDK | Title: SContentRestriction | Filename: mob5lrfscontentrestriction.htm | Built on: Wednesday, September 14, 2005">Send Feedback</a> on this topic to the authors</font></p>
+<!--Feedback Link Top End-->
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>The <B>SContentRestriction</B> structure describes a content restriction, which is used to limit a table view to only those rows that include a column with contents matching a search string. </P>
+
+<H4 class="dtH4">Syntax</H4>
+
+<PRE class="syntax"><B>struct { </B>
+  <B>ULONG </B><I>ulFuzzyLevel</I><B>;</B> 
+  <B>ULONG </B><I>ulPropTag</I><B>;</B> 
+  <B>LPSPropValue </B><I>lpProp</I><B>;</B> 
+<B>} SContentRestriction; </B></PRE>
+
+<H4 class="dtH4">Members </H4>
+
+<DL>
+<DT><B>ulFuzzyLevel</B></DT>
+
+<DD>Option settings defining the level of precision that the content restriction should enforce when checking for a match. 
+
+<P>The lower 16 bits of <B>ulFuzzyLevel</B> apply to properties of type <B>PT_BINARY</B> and <B>PT_STRING8</B> and must be set to one of the following values: 
+
+
+<P><B>FL_FULLSTRING</B>
+
+
+<P>To match, the <B>lpProp</B> search string must be completely contained in the property identified by <B>ulPropTag</B>.
+
+
+<P><B>FL_PREFIX</B>
+
+
+<P>To match, the <B>lpProp</B> search string must appear at the beginning of the property identified by <B>ulPropTag</B>. The two strings should be compared only up to the length of the search string indicated by <B>lpProp</B>. 
+
+
+<P><B>FL_SUBSTRING</B>
+
+
+<P>To match, the <B>lpProp</B> search string must be contained anywhere within the property identified by <B>ulPropTag</B>. 
+
+
+<P>The upper 16 bits of the <B>ulFuzzyLevel</B> member apply only to properties of type <B>PT_STRING8</B> and can be set to the following values in any combination:
+
+
+<P><B>FL_IGNORECASE</B>
+
+
+<P>The comparison should be made without considering case. 
+
+
+<P><B>FL_IGNORENONSPACE</B>
+
+
+<P>The comparison should ignore Unicode-defined nonspacing characters, such as diacritical marks. 
+
+
+<P><B>FL_LOOSE</B>
+
+
+<P>The comparison should result in a match whenever possible, ignoring case and nonspacing characters. 
+</dd>
+
+<DT><B>ulPropTag</B></DT>
+
+<DD>Property tag identifying the string property to be checked for occurrence of the search string. </dd>
+
+<DT><B>lpProp</B></DT>
+
+<DD>Pointer to a property value structure containing the string value to use as the search string.</dd>
+</DL>
+
+<H4 class="dtH4">Remarks </H4>
+
+<P>There are two property tags in an <B>SContentRestriction</B> structure: one in the <B>ulPropTag</B> member and the other in the <B>ulPropTag</B> member of the <A HREF="mob5lrfspropvalue.htm">SPropValue</A> structure pointed to by <B>lpProp</B>. In both tags, MAPI requires only the property type field and ignores the property identifier field. However, the two property types must match or else the error value <B>MAPI_E_TOO_COMPLEX</B> is returned when the restriction is used in a call to <A HREF="mob5lrfimapitablerestrict.htm">IMAPITable::Restrict.</A>.</P>
+
+<P>The values <B>FL_FULLSTRING</B>, <B>FL_PREFIX</B>, and <B>FL_SUBSTRING</B> are mutually exclusive. Only one of them can be set, and one of them must be set. Their meanings are fixed, and the provider must implement them exactly as defined. The provider should return <B>MAPI_E_TOO_COMPLEX</B> if it is unable to support these values. </P>
+
+<P>The values <B>FL_IGNORECASE</B>, <B>FL_IGNORENONSPACE</B>, and <B>FL_LOOSE</B> are independent. Anywhere from zero to all three of them can be set. Their definitions are provided as a guideline only, and the provider is free to implement its own specific meaning of each flag. The provider should not return any error indication if it has no implementation of a specified flag. </P>
+
+<P>The result of a content restriction imposed against a property is undefined when the property does not exist. When a client requires well-defined behavior for such a restriction and is not sure whether the property exists  for example, it is not a required column of a table  it should create an <B>AND</B> restriction to join the content restriction with an existence restriction. Use an <A HREF="mob5lrfsexistrestriction.htm">SExistRestriction</A> structure to define the existence restriction and an <A HREF="mob5lrfsandrestriction.htm">SAndRestriction</A> structure to define the <B>AND</B> restriction.</P>
+
+<H4 class="dtH4">Requirements</H4>
+
+<P><B>Pocket&nbsp;PC:</B> Pocket&nbsp;PC&nbsp;2002 and later<BR>
+<B>Smartphone:</B> Smartphone&nbsp;2002 and later<BR>
+<B>OS&nbsp;Versions:</B> Windows&nbsp;CE&nbsp;3.0 and later<BR>
+<B>Header:</B> mapidefs.h</P>
+
+<H4 class="dtH4">See Also </H4>
+
+<P><A HREF="mob5grfmapistructures.htm">MAPI Structures</A> | <A HREF="mob5orimessaging.htm">Messaging</A> | <A HREF="mob5lrfspropvalue.htm">SPropValue</A> | <A HREF="mob5lrfsrestriction.htm">SRestriction</A> </P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Feedback Link Bottom Start-->
+<p><font size="1"><a href="mailto:medfdbk&#64;microsoft.com?subject=Product: Windows Mobile | Version: 5.0 | Release: SDK | Title: SContentRestriction | Filename: mob5lrfscontentrestriction.htm | Built on: Wednesday, September 14, 2005">Send Feedback</a> on this topic to the authors</font></p>
+<!--Feedback Link Bottom End-->
+<!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="mob5conCopyrightInformationForMagneto" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link></font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

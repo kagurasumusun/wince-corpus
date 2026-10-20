@@ -1,0 +1,112 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>ReplFindNextChange</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="ReplFindNextChange"/>
+<MSHelp:RLTitle Title="ReplFindNextChange"/>
+<MSHelp:Keyword Index="K" Term="ReplFindNextChange"/>
+<MSHelp:Keyword Index="A" Term="wce50lrfReplFindNextChange"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Feature"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="apiref"/>
+<MSHelp:Attr Name="Filename" Value="repl_functions.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="False"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+<MSHelp:Attr Name="APIName" Value="ReplFindNextChange"/>
+<MSHelp:Attr Name="APIType" Value="LibDef"/>
+<MSHelp:Attr Name="APILocation" Value="Coredll.lib"/>
+<MSHelp:Attr Name="PBFeature" Value="FILEDATABASE"/>
+<MSHelp:Attr Name="PBOnly" Value="True"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_3009874">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50lrfreplfindnextchange"></A>ReplFindNextChange</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>This function is used by synchronization clients use to enumerate the changes made by other applications in the object store or database volume.</P>
+
+<PRE class="syntax"><B>BOOL ReplFindNextChange(</B>
+  <B>HREPL</B> <I>hRepl</I><B>,</B>
+  <B>REPLCHANGEINFO* </B><I>lpChangeInfo</I><B>,</B>
+  <B>BOOL</B> <I>fRestart</I>
+<B>);</B></PRE>
+
+<H4 class="dtH4">Parameters</H4>
+
+<DL>
+<DT><I>hRepl</I></DT>
+
+<DD>[in] Handle to an open synchronization session, obtained from a call to the <A HREF="wce50lrfreplopensync.htm">ReplOpenSync</A><B> </B>function.</dd>
+
+<DT><I>lpChangeInfo</I></DT>
+
+<DD>[out] Pointer to a <A HREF="wce50lrfreplchangeinfo.htm">REPLCHANGEINFO</A> structure that will receive information about one changed object inside the volume.</dd>
+
+<DT><I>fRestart</I></DT>
+
+<DD>[in] Flag that indicates whether to reset the iteration at the beginning of changes since the last checkpoint.</dd>
+</DL>
+
+<H4 class="dtH4">Return Values</H4>
+
+<P>Returns TRUE if information about a changed object successfully returns. Returns FALSE if an error occurs. For extended error information, see the <MSHelp:link keywords="wce50lrfGetLastError" TABINDEX="0">GetLastError</MSHelp:link> function. If no more changed items exist, the call returns FALSE and <B>GetLastError</B> returns ERROR_NO_MORE_ITEMS.</P>
+
+<H4 class="dtH4">Remarks</H4>
+
+<P>On the first call to <B>ReplFindNextChange</B> after the synchronization opens or following a checkpoint, the synchronization state receives a built list of changed items to enumerate. On each following call to <B>ReplFindNextChange</B>, the position in the list will be incremented and the next item returned. You can reset the position in the list with the <I>fRestart</I> parameter. Using the <I>fRestart</I> parameter will reset the enumeration of changed items following the synchronization session creation or since the last checkpoint. It does not back up past a previous checkpoint. To completely re-enumerate items in the volume, create a new synchronization session by calling <B>ReplOpenSync</B> without a state buffer.</P>
+
+<P>Performing a checkpoint will reset the enumeration state used by <B>ReplFindNextChange</B>. Following a checkpoint, <B>ReplFindNextChange</B> will return the changes made by other threads and applications since the previous checkpoint. Calling the <A HREF="wce50lrfreplcheckpoint.htm">ReplCheckpoint</A> function before all changes have been enumerated will discard the list of changes to be enumerated by <B>ReplFindNextChange</B> and could result in some data not being synchronized.</P>
+
+<P>The state of the enumeration is included in the state information obtained from the <A HREF="wce50lrfreplgetsyncstate.htm">ReplGetSyncState</A> function. If you pass the saved state buffer to <B>ReplOpenSync</B>, the enumeration can resume without loss after a call to the <A HREF="wce50lrfreplclosesync.htm">ReplCloseSync</A> function.</P>
+
+<P>With the exception of deletions, <B>ReplFindNextChange</B> does not return changes made by the present client to the present client. Due to the incomplete information that is stored about deleted items, <B>ReplFindNextChange</B> may report some deletions to the thread that performed them. In addition, a client may receive duplicate reports of some deletions, if an application deletes and does not reuse an OID. You should write clients so that unexpected deletion reports do not cause problems.</P>
+
+<P><B>ReplFindNextChange</B> only returns items that have been created, modified, or deleted before the last checkpoint. Items that were changed since the last checkpoint will not be reported until after the next checkpoint.</P>
+
+<P><B>ReplFindNextChange</B> will only return items that have status REPLSTATUS_MODIFIED or REPLSTATUS_DELETED. For more information about these status flags, see <B>REPLCHANGEINFO</B>.</P>
+
+<P>This API is part of the counter-based replication model and is not supported under the bit-based replication model.</P>
+
+<H4 class="dtH4">Requirements</H4>
+
+<P><B>OS Versions:</B> Windows CE .NET 4.0 and later.<BR>
+<B>Header:</B> Pwindbas.h.<BR>
+<B>Link Library:</B> Coredll.lib.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><MSHelp:link keywords="wce50conCounterBasedReplication" TABINDEX="0">Counter-Based Replication</MSHelp:link> | <A HREF="wce50lrfreplcheckpoint.htm">ReplCheckpoint</A> | <A HREF="wce50lrfreplclosesync.htm">ReplCloseSync</A> | <A HREF="wce50lrfreplgetoidstatus.htm">ReplGetOidStatus</A> | <A HREF="wce50lrfreplgetsyncstate.htm">ReplGetSyncState</A> | <A HREF="wce50lrfreplopensync.htm">ReplOpenSync</A> | <A HREF="wce50lrfreplchangeinfo.htm">REPLCHANGEINFO</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

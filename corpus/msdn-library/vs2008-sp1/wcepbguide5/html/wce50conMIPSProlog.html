@@ -1,0 +1,131 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>MIPS Prolog</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="MIPS Prolog"/>
+<MSHelp:RLTitle Title="MIPS Prolog"/>
+<MSHelp:Keyword Index="A" Term="wce50conMIPSProlog"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Guide"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="True"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="comp_mips_callspec.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="True"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_3023791">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50conmipsprolog"></A>MIPS Prolog</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>The MIPS prolog has several immediately contiguous parts, regardless of whether MIPS 16-bit mode, MIPS 32-bit mode, or MIPS 64-bit mode is in force. </P>
+
+<P>The following steps show the required elements of a MIPS prolog.</P>
+
+<P>The code examples shown apply to MIPSII. For MIPS IV, replace the <B>sw </B>instruction with <B>sd</B>, and replace the <B>lw</B> instruction with <B>ld.</B>
+
+<OL type="1">
+	<LI>Define the prolog and set up the entry.
+<PRE class="code"><code class="ce">.ent &lt;routine_name&gt;
+&lt;routine_name&gt;:</code></PRE>
+</li>
+
+	<LI>Reserve space for the stack frame.
+<PRE class="code">Addiu sp, -&lt;frame size&gt;</PRE>
+
+<P>An extended <B>addiu</B> instruction of four bytes is generated for frame sizes greater than 1024. You can accommodate frame sizes up to 32768 bytes using the <B>addiu</B> instruction. If the frame size exceeds 32768, update the stack pointer with a constant from the literal pool using the following sequence of instructions.
+
+<PRE class="code">hw  $3, &lt;frame size&gt; constant offset(pc)
+move  $2, $29
+subu  $2, $2, $3
+move  $29, $2</PRE>
+
+<P>The size of the stack frame must be a multiple of eight. This includes space for local variables and temporaries, saved registers, and a procedure call argument area for non-leaf routines. 
+
+<P>Any routine that uses registers <B>$16-$23</B>, or <B>$30</B>, or any floating-point register that the called function saves, must save these registers. 
+
+<P>The procedure call argument area is set up so that it contains the maximum number of bytes required for the arguments of any procedure called in a non-leaf routine. This number of required bytes includes those arguments that the function can pass in registers, unless the N32 calling convention is in use. 
+</li>
+
+	<LI>Set up a virtual frame pointer. The virtual frame pointer is the <B>sp($29)</B> added to the frame size.
+<PRE class="code"><code class="ce">.frame framereg (usually $29), framesize, returnreg (usually $31)</code></PRE>
+</li>
+
+	<LI>Set a bit in the bitmask for each general-purpose register saved. Set bits in little endian order. The frame offset is the offset, a negative number, from the virtual frame pointer where the register save area begins.
+<PRE class="code">.mask mask, &lt;frame offset&gt;</PRE>
+</li>
+
+	<LI>Store any registers that need to be saved.
+<P>For example, if the <B>Return Address (RA)</B>needs to be saved:
+
+<PRE class="code">sw ra, &lt;frame size&gt; + &lt;frame offset&gt;(sp)</PRE>
+
+<P>If subsequent lower number registers need to be saved, the offset depends on the MIPS mode. If the next register is a MIPS16 register,
+
+<PRE class="code">sw  $&lt;mips16 register&gt;, &lt;frame size&gt; + &lt;frame offset&gt; - n(sp)</PRE>
+
+<P>Otherwise
+
+<PRE class="code">move  $2, &lt;mipsii register&gt;
+sw  $2, &lt;frame size&gt; + &lt;frame offset&gt; - n(sp)</PRE>
+
+<P>Where N is four and is incremented by four for each subsequent lower number register to be saved.
+
+<P>If &lt;frame size&gt; + &lt;frame offset&gt; greater than 1020, an extended <B>sw</B> instruction is generated. If the &lt;frame size&gt; + &lt;frame offset&gt; is greater than 32767, then the following 3 instruction sequence is required before executing the register save loop:
+
+<PRE class="code">lw  $2, &lt;frame size&gt; + &lt;frame offset&gt;constant offset(pc)
+move  $2, $29
+addu  $3, $2, $3</PRE>
+
+<P>The <B>sw</B> instructions depend on the mode of the MIPS register. If the next register is a MIPS16 register:
+
+<PRE class="code">sw  $&lt;mips16 register&gt;, -n($3)</PRE>
+
+<P>Otherwise
+
+<PRE class="code">move  $2,$&lt;mipsii register&gt;
+sw  $2, -n($3)</PRE>
+</li>
+
+	<LI>Mark the end of the prolog.
+<PRE class="code">.prologue 0</PRE>
+</li>
+</OL>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50conmipsprologandepilog.htm">MIPS Prolog and Epilog</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

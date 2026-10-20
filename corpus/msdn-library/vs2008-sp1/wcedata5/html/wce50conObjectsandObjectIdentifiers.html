@@ -1,0 +1,120 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Objects and Object Identifiers</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Objects and Object Identifiers"/>
+<MSHelp:RLTitle Title="Objects and Object Identifiers"/>
+<MSHelp:Keyword Index="A" Term="wce50conObjectsandObjectIdentifiers"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Feature"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="object_store_overview.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="False"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+<MSHelp:Attr Name="PBOnly" Value="True"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_1055765">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50conobjectsandobjectidentifiers"></A>Objects and Object Identifiers</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>An object is defined as one of the following:
+
+<UL type="disc">
+	<LI>A registry key</li>
+
+	<LI>A registry value</li>
+
+	<LI>A file</li>
+
+	<LI>A 4-KB chunk of file data (that is, a 12-KB file will have one file object and three 4-KB chunks, which are also objects)</li>
+
+	<LI>A database record, which can hold up to 4 KB of data</li>
+
+	<LI>An extension of a database record, which can be an additional 4 KB of data</li>
+
+	<LI>A database</li>
+
+	<LI>A database volume</li>
+</UL>
+
+<P>Windows CE assigns each object in the object store a unique Windows CE object identifier (CEOID). The most common use for a CEOID is to access object data, such as a database record, and to obtain object data. </P>
+
+<P>Because a CEOID is guaranteed to be unique within a volume, but not across multiple volumes, Windows CE also gives each database volume a predefined Windows CE globally unique identifier (CEGUID). Use the CEGUID in conjunction with the CEOID as a unique reference for each object in the object store and in the database volumes. </P>
+
+<BLOCKQUOTE class="dtBlock">
+<b class="le">Note</b>&nbsp;&nbsp;&nbsp;Earlier versions of Windows CE assigned object identifiers to objects in other file systems, such as the FAT file system. Effective with version 2.1, only objects in the object store and database volumes have valid, unique object identifiers.</BLOCKQUOTE>
+
+<P>Obtaining the object identifier of an object is the first step in accessing or manipulating any information about that object. The following table shows where to obtain the Windows CE object identifier for the various types of objects in the object store.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=29%>Object type</TH>
+<TH width=71%>Location</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=29%>Directory or file</TD>
+<TD width=71%>In the <B>dwOID</B> member of the <A HREF="wce50lrfwin32finddata.htm">WIN32_FIND_DATA</A> structure, which is returned by the <A HREF="wce50lrffindfirstfile.htm">FindFirstFile</A> and <A HREF="wce50lrffindnextfile.htm">FindNextFile</A> functions. Also, in the <B>dwOID</B> member of the <A HREF="wce50lrfbyhandlefileinformation.htm">BY_HANDLE_FILE_INFORMATION</A> structure, which is returned by the <A HREF="wce50lrfgetfileinformationbyhandle.htm">GetFileInformationByHandle</A> function.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=29%>Database</TD>
+<TD width=71%>In the return value of the <A HREF="wce50lrfcecreatedatabaseex2.htm">CeCreateDatabaseEx2</A> or <A HREF="wce50lrfcefindnextdatabaseex.htm">CeFindNextDatabaseEx</A> function.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=29%>Database record</TD>
+<TD width=71%>In the return value of the <A HREF="wce50lrfceseekdatabaseex.htm">CeSeekDatabaseEx</A>, <A HREF="wce50lrfcereadrecordpropsex.htm">CeReadRecordPropsEx</A>, or <A HREF="wce50lrfcewriterecordprops.htm">CeWriteRecordProps</A> function.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=29%>Mounted database volume</TD>
+<TD width=71%>In the return value of the <A HREF="wce50lrfcemountdbvol.htm">CeMountDBVol</A> and <A HREF="wce50lrfceenumdbvolumes.htm">CeEnumDBVolumes</A> functions.</TD>
+</TR>
+</table></div>
+
+<P>Use the <A HREF="wce50lrfceoidgetinfoex.htm">CeOidGetInfoEx</A> function to return object data that is associated with the Windows CE object identifier. This function returns object data in a <A HREF="wce50lrfceoidinfo.htm">CEOIDINFO</A> structure. The <B>wObjType</B> member of <B>CEOIDINFO</B> contains a flag that indicates the object type, such as OBJTYPE_DATABASE for a database object, and identifies the object structure to use to access the data. <B>CEOIDINFO</B> also contains a member that returns data on a file, directory, database, or database record. These values correspond to the type of object that is indicated by the <B>wObjType</B> member. For example, using <A HREF="wce50lrfceoidgetinfoex.htm">CeOidGetInfoEx</A> on a database of a mounted database volume returns the database name, type identifier, number of records, database size, and sort order in a <A HREF="wce50lrfcedbaseinfo.htm">CEDBASEINFO</A> structure, as well as the OBJTYPE_DATABASE value.</P>
+
+<BLOCKQUOTE class="dtBlock">
+<b class="le">Note</b>&nbsp;&nbsp;&nbsp;If an object in the object store or a record in a database volume is saved to persistent storage and is then restored, the restored object or record is not guaranteed to have the same OID as the original. An application should not expect OIDs to be immutable during save and restore operations.</BLOCKQUOTE>
+
+<P>The number of objects that can exist in the object store has been increased to 2<SUP>22</SUP>, or more than four million, effective with version 3.0. Windows CE may reassign freed object identifiers to new objects. However, an object identifier will not be reused for at least 16 object allocations.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50conobjectstore.htm">Object Store</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

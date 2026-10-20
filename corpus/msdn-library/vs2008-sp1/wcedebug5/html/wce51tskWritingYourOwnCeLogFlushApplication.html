@@ -1,0 +1,96 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Writing Your Own CeLog Flush Application</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Writing Your Own CeLog Flush Application"/>
+<MSHelp:RLTitle Title="Writing Your Own CeLog Flush Application"/>
+<MSHelp:Keyword Index="A" Term="wce51tskWritingYourOwnCeLogFlushApplication"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Debugging"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="True"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbTask"/>
+<MSHelp:Attr Name="Filename" Value="celog_event_tracking_customization.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="True"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_1073132">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce51tskwritingyourowncelogflushapplication"></A>Writing Your Own CeLog Flush Application</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>You can modify the operation of CeLogFlush and OSCapture by changing their code to do what you want. You can find the code for these applications under <B>%_WINCEROOT%\public\common\sdk\samples\CeLog\flush</B>. For instructions on rebuilding this code, see <A HREF="wce51tskrebuildingcelogflushapplications.htm">Rebuilding the CeLog Flush Applications</A>.</P>
+
+<P>You can also create your own flush application. If you wish to use your flush application with the default event-tracking library CeLog.dll, your flush application must interact CeLog.dll through a RAM buffer. The RAM buffer is the interface between the event tracking library that places data into the buffer, and the flushing application, which removes it. To communicate properly, both sides must interpret the data in the same way and follow certain rules about adding and removing data from the buffer. For more information, see <A HREF="wce50concelogbufferingscheme.htm">CeLog Buffering Scheme</A>.</P>
+
+<P>CeLog.dll does not generate CELID_DATA_LOSS data loss events. Flush applications like CeLogFlush.exe are responsible for creating the data loss event and adding it to the event stream. This allows the flush application to ensure that the data loss events are not lost.</P>
+
+<P>CeLogFlush.exe logs a CELID_DATA_LOSS event after every flush. If no data is lost, it writes a zero. If data is lost, CeLogFlush writes a value for the amount of lost data. When you run a log-viewing tool like Readlog, that tool can use the data loss counters to determine what periods of time involved data loss. By examining the data loss counters, you can identify what periods of time might be suspicious, and what periods of time you can trust. Typically, if data is lost, then the data is lost from the period of time immediately before the non-zero counter. </P>
+
+<P>The following code sample shows how your flush application can record data loss events.</P>
+
+<PRE class="code">void WriteLossCounter(MAPHEADER* pHeader)
+{
+    static DWORD dwPrevCount = 0;
+    DWORD dwCurrentCount;
+
+    // Keep a local copy in case it changes asynchronously
+    dwCurrentCount = pHeader-&gt;dwLostBytes;
+
+    if (dwCurrentCount != dwPrevCount) {
+        // The data loss count has increased since last time this code executed.
+
+        // Convenient structure for logging the change in a CELID_DATA_LOSS event
+        struct {
+            CEL_HEADER header;
+            CEL_DATA_LOSS loss;
+        } MyDataLossEvent;
+        MyDataLossEvent.header.ID = CELID_DATA_LOSS;
+        MyDataLossEvent.header.Length = sizeof(MyDataLossEvent.loss);
+        MyDataLossEvent.header.fTimeStamp = FALSE;
+        MyDataLossEvent.loss.dwBytes = dwCurrentCount - dwPrevCount;
+
+        // Now write the MyDataLossEvent structure to the log file - not shown here.
+
+        // Remember the counter value for next time
+        dwPrevCount = dwCurrentCount;
+    }
+}
+</PRE>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce51oricelogtoolcustomization.htm">CeLog Tool Customization</A> | <A HREF="wce51conavoidingcelogdataloss.htm">Avoiding CeLog Data Loss</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

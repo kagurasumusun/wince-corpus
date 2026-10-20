@@ -1,0 +1,132 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>LDAP_REFERRAL_CALLBACK</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="LDAP_REFERRAL_CALLBACK"/>
+<MSHelp:RLTitle Title="LDAP_REFERRAL_CALLBACK"/>
+<MSHelp:Keyword Index="K" Term="LDAP_REFERRAL_CALLBACK"/>
+<MSHelp:Keyword Index="A" Term="wce50lrfLDAPREFERRALCALLBACK"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Feature"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="apiref"/>
+<MSHelp:Attr Name="Filename" Value="ldap_structures.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="False"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+<MSHelp:Attr Name="APIName" Value="LDAP_REFERRAL_CALLBACK"/>
+<MSHelp:Attr Name="PBFeature" Value="SYSGEN_LDAP"/>
+<MSHelp:Attr Name="PBOnly" Value="False"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_3002241">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50lrfldapreferralcallback"></A>LDAP_REFERRAL_CALLBACK</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>This structure is used to implement external caching of connections.</P>
+
+<PRE class="syntax"><B>typedef struct LdapReferralCallback {</B>
+  <B>ULONG</B> <I>SizeOfCallbacks</I><B>;</B>
+  <B>QUERYFORCONNECTION* </B><I>QueryForConnection</I><B>;</B>
+  <B>NOTIFYOFNEWCONNECTION* </B><I>NotifyRoutine</I><B>;</B>
+  <B>DEREFERENCECONNECTION* </B><I>DereferenceRoutine</I><B>;</B>
+<B>} LDAP</B>_<B>REFERRAL</B>_<B>CALLBACK</B>, <B>*PLDAP</B>_<B>REFERRAL</B>_<B>CALLBACK;</B></PRE>
+
+<H4 class="dtH4">Members</H4>
+
+<DL>
+<DT><B>SizeOfCallbacks</B></DT>
+
+<DD>Specifies the amount of memory needed for the callback mechanism. Set this field to <B>sizeof(LDAP_REFERRAL_CALLBACK)</B>.</dd>
+
+<DT><B>QueryForConnection</B></DT>
+
+<DD>Pointer to a callback function to determine whether there is a cached connection available.</dd>
+
+<DT><B>NotifyRoutine</B></DT>
+
+<DD>Pointer to a callback function that determines whether a newly created connection will be cached or destroyed after the operation has been completed. </dd>
+
+<DT><B>DereferenceRoutine</B></DT>
+
+<DD>Pointer to a callback function to dereference a connection that is not in use. </dd>
+</DL>
+
+<H4 class="dtH4">Remarks</H4>
+
+<P>Use this structure to implement a mechanism for caching connections. The following table shows possible callback functions for the structure that you can implement in your client code.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=47%>Callback function</TH>
+<TH width=53%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=47%><A HREF="wce50lrfdereferenceconnection.htm">DEREFERENCECONNECTION</A></TD>
+<TD width=53%>Called by the run time to dereference a connection that is no longer needed.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=47%><A HREF="wce50lrfqueryclientcert.htm">QUERYCLIENTCERT</A></TD>
+<TD width=53%>Allows the server to request a certificate when establishing a Secure Sockets Layer (SSL) connection.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=47%><A HREF="wce50lrfqueryforconnection.htm">QUERYFORCONNECTION</A></TD>
+<TD width=53%>Determines if there is a cached connection available for use.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=47%><A HREF="wce50lrfnotifyofnewconnection.htm">NOTIFYOFNEWCONNECTION</A></TD>
+<TD width=53%>Called by the run time if a new connection was created in the course of chasing a referral to a cached function.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=47%><A HREF="wce50lrfverifyservercert.htm">VERIFYSERVERCERT</A></TD>
+<TD width=53%>Passes a certificate from the server to the client.</TD>
+</TR>
+</table></div>
+
+<P>To configure a session to use callbacks to obtain a cached connection, call <A HREF="wce50lrfldapsetoption.htm">ldap_set_option</A> (conn, LDAP_OPT_REFERRAL_CALLBACK, &amp;referralRoutines), where <I>referralRoutines</I> is the address of the <B>LDAP_REFERRAL_CALLBACK</B> structure that contains your routines. The addresses may be NULL, in which case the LDAP run time will not make the calls.</P>
+
+<H4 class="dtH4">Requirements</H4>
+
+<P><B>OS Versions:</B> Windows CE .NET 4.0 and later.<BR>
+<B>Header:</B> Winldap.h.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50lrfldapsetoption.htm">ldap_set_option</A> | <A HREF="wce50lrfnotifyofnewconnection.htm">NOTIFYOFNEWCONNECTION</A> | <A HREF="wce50lrfqueryforconnection.htm">QUERYFORCONNECTION</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

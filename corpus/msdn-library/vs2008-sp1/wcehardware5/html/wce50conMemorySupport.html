@@ -1,0 +1,100 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Memory Library</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Memory Library"/>
+<MSHelp:RLTitle Title="Memory Library"/>
+<MSHelp:Keyword Index="A" Term="wce50conMemorySupport"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Hardware"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="True"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="PQOAL_concepts.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="False"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_1042608">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50conmemorysupport"></A>Memory Library</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>The memory library implements translation between the physical and virtual memory in the kernel space. For more information, see %_WINCEROOT%\Platform\Common\Src\Inc\Oal_memory.h.</P>
+
+<P>For MIPS and SHx hardware platforms, all functions are implemented as C/C++ macros. For x86 and ARM hardware platforms, the implementation uses <B>g_oalAddressTable</B> to implement <B>OALVAtoPA</B> and <B>OALPAtoVA</B> functions. Both routines traverse this table to perform the address conversion. The remaining functions are implemented as C/C++ macros.</P>
+
+<H2 class="dtH2">Kernel Interface</H2>
+
+<DL>
+<DT><code class="ce">extern OAL_ADDRESS_TABLE g_oalAddressTable[];</code></DT>
+
+<DD>The kernel uses this table to establish the virtual to physical address mapping. In addition, the <B>OALPAtoVA</B> and <B>OALVAtoPA</B> functions use this table to retrieve the virtual address for a corresponding physical address, and vice versa.
+
+<P>The <B>OAL_ADDRESS_TABLE</B> structure defines the mapping from the 4-GB physical address space to the kernel's 512-MB unmapped memory space. The kernel creates two ranges of virtual addresses from this table. The virtual address range 0x8000000 to 0x9FFFFFFF has caching and buffering enabled, but the virtual address range 0xA0000000 to 0xBFFFFFFF has the cache and buffering disabled. Each entry in the table consists of the cached virtual address (CA), the physical base address (PA) to map from, and the number of megabytes of memory to map.
+</dd>
+</DL>
+
+<H2 class="dtH2">OAL Interface</H2>
+
+<DL>
+<DT><code class="ce">VOID* OALPAtoCA(UINT32 pa)</code></DT>
+
+<DD>This function returns the cached virtual address for a specified physical address.</dd>
+
+<DT><code class="ce">VOID* OALPAtoUA(UINT32 pa)</code></DT>
+
+<DD>This function returns the uncached virtual address for a specified physical address.</dd>
+
+<DT><code class="ce">VOID* OALPAtoVA(UINT32 pa, BOOL cached)</code></DT>
+
+<DD>This function returns the cached or uncached virtual address for a specified physical address.</dd>
+
+<DT><code class="ce">UINT32 OALVAtoPA(VOID *va)</code></DT>
+
+<DD>This function returns the physical address for a specified virtual address.</dd>
+
+<DT><code class="ce">VOID* OALCAtoUA(VOID *ca)</code></DT>
+
+<DD>This function returns the uncached virtual address for a specified cached virtual address.</dd>
+
+<DT><code class="ce">VOID* OALUAtoCA(VOID *ua)</code></DT>
+
+<DD>This function returns the cached virtual address for a specified uncached virtual address.</dd>
+</DL>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50conproductionqualityoalcomponents.htm">Production-Quality OAL Components</A> </P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

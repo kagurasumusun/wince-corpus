@@ -1,0 +1,84 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Registering a CheckForHang Handler</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Registering a CheckForHang Handler"/>
+<MSHelp:RLTitle Title="Registering a CheckForHang Handler"/>
+<MSHelp:Keyword Index="A" Term="wce50conRegisteringaCheckForHangHandler"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Driver"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="False"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="ndis_guide1.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="False"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+<MSHelp:Attr Name="PBFeature" Value="NetworkDriver"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_3018306">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50conregisteringacheckforhanghandler"></A>Registering a CheckForHang Handler</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>A miniport can optionally supply a <A HREF="wce50lrfminiportcheckforhang.htm">MiniportCheckForHang</A> function when it calls the <A HREF="wce50lrfndismregisterminiport.htm">NdisMRegisterMiniport</A> function. If a miniport does not register such a handler, it relies on NDIS to detect whether its NIC has stopped responding.</P>
+
+<P>If a miniport supplies a <B>MiniportCheckForHang</B> function, NDIS calls this function every two seconds or at a driver-requested timeout interval. <B>MiniportCheckForHang</B> determines whether the NIC has stopped responding. <B>MiniportCheckForHang</B> returns TRUE if it detects that the NIC has stopped responding; otherwise, it returns FALSE.</P>
+
+<P>If a miniport does not register <B>MiniportCheckForHang</B>, NDIS concludes that a miniport has stopped responding if one of the following actions occurs: 
+
+<UL type="disc">
+	<LI>A send packet has been pending longer than twice the timeout period. For example, the miniport was passed a packet to send, it returned NDIS_STATUS_PENDING, and did not call <A HREF="wce50lrfndismsendcomplete.htm">NdisMSendComplete</A> for the pending packet in a period equal to twice the timeout period. This applies only to serialized miniports. </li>
+
+	<LI>A request sent to <A HREF="wce50lrfminiportqueryinformation.htm">MiniportQueryInformation</A> or <A HREF="wce50lrfminiportsetinformation.htm">MiniportSetInformation</A> has not completed in a period equal to twice the timeout period. </li>
+</UL>
+
+<P>A miniport can change timeout parameters by calling <A HREF="wce50lrfndismsetattributesex.htm">NdisMSetAttributesEx</A> rather than <A HREF="wce50lrfndismsetattributes.htm">NdisMSetAttributes</A> in its <A HREF="wce50lrfminiportinitialize.htm">MiniportInitialize</A> function. With <B>NdisMSetAttributesEx</B>, the miniport can perform the following functions: 
+
+<UL type="disc">
+	<LI>Change the default two-second timeout interval to a driver-specified interval. NDIS will call the miniport's <B>MiniportCheckForHang</B> function at this new interval. Miniports for slow NICs can specify a timeout interval that is appropriate for the NIC. </li>
+
+	<LI>Specify that NDIS ignore the packet timeout. </li>
+
+	<LI>Specify that NDIS ignore the request timeout. </li>
+</UL>
+
+<P>If the miniport specifies that NDIS should ignore packet timeout and request timeout, the miniport is responsible for detecting when a NIC is suspended.</P>
+
+<P>If <B>MiniportCheckForHang</B> returns TRUE, or if a send or a request has been pending for more than twice the timeout period, NDIS calls <A HREF="wce50lrfminiportreset.htm">MiniportReset</A>.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50conregisteringminiportxxxfunctions.htm">Registering MiniportXXX Functions</A> | <A HREF="wce50lrfminiportcheckforhang.htm">MiniportCheckForHang</A> | <A HREF="wce50lrfminiportinitialize.htm">MiniportInitialize</A> | <A HREF="wce50lrfminiportqueryinformation.htm">MiniportQueryInformation</A> | <A HREF="wce50lrfminiportreset.htm">MiniportReset</A> | <A HREF="wce50lrfminiportsetinformation.htm">MiniportSetInformation</A> | <A HREF="wce50lrfndismregisterminiport.htm">NdisMRegisterMiniport</A> | <A HREF="wce50lrfndismsendcomplete.htm">NdisMSendComplete</A> | <A HREF="wce50lrfndismsetattributes.htm">NdisMSetAttributes</A> | <A HREF="wce50lrfndismsetattributesex.htm">NdisMSetAttributesEx</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

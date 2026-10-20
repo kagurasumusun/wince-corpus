@@ -1,0 +1,134 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Updating Config.bib with a New RAM Mapping</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Updating Config.bib with a New RAM Mapping"/>
+<MSHelp:RLTitle Title="Updating Config.bib with a New RAM Mapping"/>
+<MSHelp:Keyword Index="A" Term="wce50tskUpdatingConfigbibwithaNewRAMMapping"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Hardware"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="True"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbTask"/>
+<MSHelp:Attr Name="Filename" Value="howto_increasing_available_memory.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="True"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_3010190">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50tskupdatingconfigbibwithanewrammapping"></A>Updating Config.bib with a New RAM Mapping</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>If you have updated the <A HREF="wce50conoemaddresstable.htm">OEMAddressTable</A> definition with a new RAM mapping, you must update the Config.bib file for your run-time image. For more information about Config.bib, see <MSHelp:link keywords="wce50conBinaryImageBuilderFile" TABINDEX="0">Binary Image Builder File</MSHelp:link>.</P>
+
+<P class="labelproc"><B>To update the Config.bib file with a new RAM mapping</B>
+
+<OL type="1">
+	<LI>In the Workspace window, on the <B>ParameterView</B> tab, expand the _WINCEROOT node.</li>
+
+	<LI>Expand the _TGTPLAT node, which is the string representing the BSP you chose in the New Platform Wizard.</li>
+
+	<LI>Expand the Hardware Specific Files node.</li>
+
+	<LI>Double-click the Config.bib file to open it for editing within Platform Builder.</li>
+
+	<LI>Find the RAM line to edit in Config.bib. 
+<P>You do not need to edit the RAMIMAGE line because <MSHelp:link keywords="wce50lrfAUTOSIZE100" TABINDEX="0">AUTOSIZE</MSHelp:link> adjusts the boundary between RAMIMAGE and RAM if your run-time image (Nk.bin) is too large for the amount specified by RAMIMAGE.
+
+<P>If you did not set IMGRAM16, IMGRAM32, or IMGRAM64, the following code example from Config.bib shows the RAM setting to edit
+
+<PRE class="code">IF IMGRAM16 !
+IF IMGRAM32 !
+IF IMGRAM64 !
+  NK   80220000  009E0000  RAMIMAGE ; Reserves 9.875 MB for nk.bin
+  RAM  80C00000  01000000  RAM      ; Reserves 16 MB for RAM
+ENDIF
+ENDIF
+ENDIF</PRE>
+
+<P>- or -
+
+<P>If you set IMGRAM16, the following code example from Config.bib shows the RAM setting to edit.
+
+<PRE class="code">IF IMGRAM16
+  NK   80220000  009E0000  RAMIMAGE
+  RAM  80C00000  00400000  RAM
+ENDIF</PRE>
+
+<P>- or -
+
+<P>If you set IMGRAM32, the following code example from Config.bib shows the RAM setting to edit.
+
+<PRE class="code">IF IMGRAM32
+  NK   80220000  009E0000  RAMIMAGE
+  RAM  80C00000  01400000  RAM
+ENDIF</PRE>
+
+<P>- or -
+
+<P>If you set IMGRAM64, the following code example from Config.bib shows the RAM setting to edit.
+
+<PRE class="code">IF IMGRAM64
+  NK   80220000  009E0000  RAMIMAGE
+  RAM  80C00000  03400000  RAM
+ENDIF</PRE>
+</li>
+
+	<LI>Copy the line containing the RAM setting you will edit, and paste the line directly above or below the line you copied.</li>
+
+	<LI>Place the ';' delimiter at the beginning of the original line of code.</li>
+
+	<LI>For the line of code you pasted, edit the RAM entry to take advantage of the new RAM mapping. 
+<P>The RAM size you choose must be 4 KB aligned.
+
+<P>The following code example shows the updated default RAM setting in the Config.bib file, which takes advantage of the new RAM mapping. If you set one of the IMGRAM16, IMGRAM32, or IMGRAM64 environment variables, update the appropriate section of the Config.bib file.
+
+<PRE class="code">IF IMGRAM16 !
+IF IMGRAM32 !
+IF IMGRAM64 !
+  NK   80220000  009E0000  RAMIMAGE ; Reserves 9.875 MB for nk.bin
+  RAM  80C00000  07400000  RAM      ; Reserves 116 MB for RAM
+ENDIF
+ENDIF
+ENDIF</PRE>
+</li>
+
+	<LI>Save the Config.bib file to save your new RAM mapping.</li>
+</OL>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><MSHelp:link keywords="wce50oriHowtoTopics" TABINDEX="0">How-to Topics</MSHelp:link> | <MSHelp:link keywords="wce50lrfAUTOSIZE100" TABINDEX="0">AUTOSIZE</MSHelp:link> | <MSHelp:link keywords="wce50conBinaryImageBuilderFile" TABINDEX="0">Binary Image Builder File</MSHelp:link></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

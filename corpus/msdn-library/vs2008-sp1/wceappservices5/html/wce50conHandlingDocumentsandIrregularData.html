@@ -1,0 +1,226 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Handling Documents and Irregular Data</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Handling Documents and Irregular Data"/>
+<MSHelp:RLTitle Title="Handling Documents and Irregular Data"/>
+<MSHelp:Keyword Index="A" Term="wce50conHandlingDocumentsandIrregularData"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Feature"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="XSLpg03.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="True"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+<MSHelp:Attr Name="PBFeature" Value="SYSGEN_MSXML"/>
+<MSHelp:Attr Name="PBOnly" Value="False"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_3024117">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50conhandlingdocumentsandirregulardata"></A>Handling Documents and Irregular Data</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>One of the benefits of using XML is the ability to model irregular data hierarchies, including data with the following characteristics:
+
+<UL type="disc">
+	<LI>Collections of heterogeneous elements</li>
+
+	<LI>Structures with many optional elements</li>
+
+	<LI>Structures where the order is important</li>
+
+	<LI>Recursive structures</li>
+
+	<LI>Structures with complex containment requirements</li>
+</UL>
+
+<P>This sounds complex, but most of these conditions are present in XML that represents documents. The following Pole example exhibits many of these characteristics.</P>
+
+<PRE class="code">&lt;?xml version="1.0"?&gt;
+&lt;?xml-stylesheet type="text/xsl" href="pole.xsl"?&gt;
+&lt;document&gt;
+  &lt;title&gt;To the Pole and Back&lt;/title&gt;
+  &lt;section&gt;
+    &lt;title&gt;The First Day&lt;/title&gt;
+    &lt;p&gt;It was the &lt;emph&gt;best&lt;/emph&gt; of days, it was the
+      &lt;emph&gt;worst&lt;/emph&gt; of days.&lt;/p&gt;
+    &lt;list&gt;
+      &lt;item&gt;&lt;emph&gt;best&lt;/emph&gt; in that the sun was out.&lt;/item&gt;
+      &lt;item&gt;&lt;emph&gt;worst&lt;/emph&gt; in that it was 39 degrees below zero.&lt;/item&gt;
+    &lt;/list&gt;
+    &lt;section&gt;
+      &lt;title&gt;Lunch Menu&lt;/title&gt;
+      &lt;list&gt;
+        &lt;item&gt;ice cream&lt;/item&gt;
+        &lt;item&gt;popsicles&lt;/item&gt;
+      &lt;/list&gt;
+    &lt;/section&gt;
+  &lt;/section&gt;
+  &lt;section&gt;
+    &lt;title&gt;The Second Day&lt;/title&gt;
+    &lt;p&gt;Ditto the first day.&lt;/p&gt;
+  &lt;/section&gt;
+&lt;/document&gt;</PRE>
+
+<P>Comparing this sample with the characteristics of irregular data, you can see that it contains heterogeneous collections of elements &#0151; a section can contain an arbitrary collection of &lt;title&gt; elements, &lt;p&gt; elements, &lt;list&gt; elements, and so on. Many elements are indeed optional &#0151; a section need not contain &lt;p&gt; or &lt;list&gt; elements, or other &lt;section&gt; elements. The order of most elements is important to preserve in the output &#0151; the first section comes before the second section. The structure is recursive because a &lt;section&gt; element can contain another section. The &lt;emph&gt; element is probably allowed anywhere &#0151; indicating a complex set of containment requirements.</P>
+
+<P>The ability to handle such irregular and recursive data makes XSLT useful for transforming documents into a display language such as HTML.</P>
+
+<P>The mechanism for handling data-driven transformations is similar to subroutines in programming languages. Template fragments, or subroutines, can be defined and called. Instead of calling the templates by name, however, the most appropriate fragment is chosen based on the type of element for which the template is designed.</P>
+
+<P>To manage this data, start by writing an output template for the HTML <I>wrapper</I>, which inserts the document title into the output in two places, and then asks XSLT to find the appropriate template for section elements. The following code example shows the HTML wrapper.</P>
+
+<PRE class="code">&lt;HTML&gt;
+  &lt;HEAD&gt;
+    &lt;TITLE&gt;&lt;xsl:value-of select="document/title"/&gt;&lt;/TITLE&gt;
+  &lt;/HEAD&gt;
+  &lt;BODY&gt;
+    &lt;H1&gt;&lt;xsl:value-of select="document/title"/&gt;&lt;/H1&gt;
+    &lt;xsl:apply-templates select="document/section"/&gt;
+  &lt;/BODY&gt;
+&lt;/HTML&gt;</PRE>
+
+<P>The &lt;xsl:apply-templates&gt; element selects the section children of the document (not all of them, just the top level) and asks XSLT to find and apply an appropriate template. Now it is necessary to write a template that is appropriate for section elements.</P>
+
+<PRE class="code">&lt;xsl:template match="section"&gt;
+  &lt;DIV&gt;
+    &lt;xsl:apply-templates /&gt;
+  &lt;/DIV&gt;
+&lt;/xsl:template&gt;</PRE>
+
+<P>The XSLT processor will output this template fragment for each of the section elements selected by the &lt;xsl:apply-templates&gt; element. The value of the match attribute indicates the kinds of nodes for which this template is appropriate. In this case, it indicates that this template is appropriate for section elements. The nodes selected by &lt;xsl:apply-templates&gt; are matched with the correct template.</P>
+
+<P>The template for sections itself contains an &lt;xsl:apply-templates&gt; element. Without a <B>select</B> attribute, all the children will be selected, and the XSLT processor will take each one in order (title, p, list, section) and look for an appropriate template. There already is a section template &#0151; this one &#0151; and the XSLT processor will recursively apply it, resulting in a nested structure of &lt;DIV&gt; elements that mirrors the nested structure of section elements in the source document.</P>
+
+<P>Now define some more templates to handle other element types.</P>
+
+<PRE class="code">&lt;xsl:template match="title"&gt;
+  &lt;H2&gt;&lt;xsl:apply-templates /&gt;&lt;/H2&gt;
+&lt;/xsl:template&gt;
+&lt;xsl:template match="p"&gt;
+  &lt;P&gt;&lt;xsl:apply-templates /&gt;&lt;/P&gt;
+&lt;/xsl:template&gt;
+&lt;xsl:template match="list"&gt;
+  &lt;UL&gt;
+    &lt;xsl:for-each select="item"&gt;
+      &lt;LI&gt;&lt;xsl:apply-templates /&gt;&lt;/LI&gt;
+    &lt;/xsl:for-each&gt;
+  &lt;/UL&gt;
+&lt;/xsl:template&gt;
+&lt;xsl:template match="emph"&gt;
+  &lt;I&gt;&lt;xsl:apply-templates /&gt;&lt;/I&gt;
+&lt;/xsl:template&gt;</PRE>
+
+<P>In each case, you can include &lt;xsl:apply-templates&gt; to continue selecting the children, whatever they may be, and finding the appropriate template.</P>
+
+<P>The &lt;xsl:apply-templates&gt; element is not limited to selecting element children, but can select other child nodes as well, including text. You can add a template to copy text children to the output.</P>
+
+<PRE class="code">&lt;xsl:template match="text()"&gt;&lt;xsl:value-of /&gt;&lt;/xsl:template&gt;</PRE>
+
+<P>When run against the Pole sample document, the preceding templates produce the following output.</P>
+
+<PRE class="code">&lt;HTML&gt;
+  &lt;HEAD&gt;
+    &lt;TITLE&gt;To the Pole and Back&lt;/TITLE&gt;
+  &lt;/HEAD&gt;
+  &lt;BODY&gt;
+    &lt;H1&gt;To the Pole and Back&lt;/H1&gt;
+    &lt;DIV&gt;
+      &lt;H2&gt;The First Day&lt;/H2&gt;
+      &lt;P&gt;It was the &lt;I&gt;best&lt;/I&gt; of days, it was the
+        &lt;I&gt;worst&lt;/I&gt; of days.&lt;/P&gt;
+      &lt;UL&gt;
+        &lt;LI&gt;&lt;I&gt;best&lt;/I&gt; in that the sun was out.&lt;/LI&gt;
+        &lt;LI&gt;&lt;I&gt;worst&lt;/I&gt; in that it was 39 degrees below zero.&lt;/LI&gt;
+      &lt;/UL&gt;
+      &lt;DIV&gt;
+        &lt;H2&gt;Lunch Menu&lt;/H2&gt;
+        &lt;UL&gt;
+          &lt;LI&gt;ice cream&lt;/LI&gt;
+          &lt;LI&gt;popsicles&lt;/LI&gt;
+        &lt;/list&gt;
+      &lt;/DIV&gt;
+    &lt;/DIV&gt;
+  &lt;/BODY&gt;
+&lt;/HTML&gt;</PRE>
+
+<P>By recursively processing the source document with &lt;xsl:apply-templates&gt;, this style sheet essentially converts the element types in the source XML to HTML element types. Even in this simple example, you can already see some additional structural modifications occurring, notably the creation of the &lt;HEAD&gt; element and the duplication of the document title in both the &lt;H1&gt; element and the &lt;TITLE&gt; element.</P>
+
+<P>This collection of templates can be packaged into a style sheet file by placing them within an &lt;xsl:stylesheet&gt; element. The XSLT namespace must be declared here.</P>
+
+<P>The top-level template, or root template, must be identified as such by placing it within a template and giving it the special pattern forward slash (/) to indicate that this is the template for the document root. Here is the final complete style sheet.</P>
+
+<PRE class="code">&lt;xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="1.0"&gt;
+  &lt;xsl:template match="/"&gt;
+    &lt;HTML&gt;
+      &lt;HEAD&gt;
+        &lt;TITLE&gt;&lt;xsl:value-of select="document/title"/&gt;&lt;/TITLE&gt;
+      &lt;/HEAD&gt;
+      &lt;BODY&gt;
+        &lt;H1&gt;&lt;xsl:value-of select="document/title"/&gt;&lt;/H1&gt;
+        &lt;xsl:apply-templates select="document/section"/&gt;
+      &lt;/BODY&gt;
+    &lt;/HTML&gt;
+  &lt;/xsl:template&gt;
+  &lt;xsl:template match="title"&gt;
+  &lt;/xsl:template&gt;
+  &lt;xsl:template match="section"&gt;
+    &lt;DIV&gt;
+      &lt;H2&gt;&lt;xsl:value-of select="title"/&gt;&lt;/H2&gt;
+      &lt;xsl:apply-templates /&gt;
+    &lt;/DIV&gt;
+  &lt;/xsl:template&gt;
+  &lt;xsl:template match="p"&gt;
+    &lt;P&gt;&lt;xsl:apply-templates /&gt;&lt;/P&gt;
+  &lt;/xsl:template&gt;
+  &lt;xsl:template match="list"&gt;
+    &lt;UL&gt;
+      &lt;xsl:for-each select="item"&gt;
+        &lt;LI&gt;&lt;xsl:apply-templates /&gt;&lt;/LI&gt;
+      &lt;/xsl:for-each&gt;
+    &lt;/UL&gt;
+  &lt;/xsl:template&gt;
+  &lt;xsl:template match="emph"&gt;
+    &lt;I&gt;&lt;xsl:apply-templates /&gt;&lt;/I&gt;
+  &lt;/xsl:template&gt;  
+
+&lt;/xsl:stylesheet&gt;</PRE>
+
+<P>This example illustrates the data-driven model of XSLT processing in which you can create isolated templates for the types of nodes you expect to see in the output without too much consideration of their structure. In places where the structure is locally known, you can use &lt;xsl:for-each&gt; and &lt;xsl:value-of&gt; to populate the template. For example, &lt;list&gt; and &lt;item&gt; elements appear in a regular and predictable structure. The ability to switch smoothly between data-driven and template-driven transformation is important XSLT functionality.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50conadvancedxsltfeatures.htm">Advanced XSLT Functionality</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

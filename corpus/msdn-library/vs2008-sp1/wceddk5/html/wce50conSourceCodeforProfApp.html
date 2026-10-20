@@ -1,0 +1,165 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Source Code for ProfApp</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Source Code for ProfApp"/>
+<MSHelp:RLTitle Title="Source Code for ProfApp"/>
+<MSHelp:Keyword Index="A" Term="wce50conSourceCodeforProfApp"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Driver"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="False"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="howto_optimizingdisplaydriver.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="True"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+<MSHelp:Attr Name="PBFeature" Value="DisplayDriver"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_3017600">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50consourcecodeforprofapp"></A>Source Code for ProfApp</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>The following code is for ProfApp, the target application used in <A HREF="wce50howhowtoprofileandoptimizeadisplaydriver.htm">How to Profile and Optimize a Display Driver</A>. ProfApp only exercises a portion of a display driver's capabilities; it is not a general application for display driver profiling. A driver that is designed to run well for the operations in ProfApp may not perform well for other operations.</P>
+
+<BLOCKQUOTE class="dtBlock">
+<b class="le">Note</b>&nbsp;&nbsp;&nbsp;To make the following code example easier to read, error checking is not included. This code example should not be used in a release configuration unless it has been modified to include secure error handling.</BLOCKQUOTE>
+
+<PRE class="code">// A sample application for display profiling.
+#include &lt;windows.h&gt;
+
+struct {
+   BITMAPINFOHEADER bmiHeader;
+   ULONG            bmiColors[4];
+} bmi;
+
+int WINAPI WinMain(HINSTANCE, HINSTANCE, LPWSTR,int)
+{
+   int i, j;
+   HDC Dc = GetDC(NULL);
+   RECT WorkArea;
+
+   SystemParametersInfo(SPI_GETWORKAREA, 0, &amp;WorkArea, 0);
+
+   int Width  = WorkArea.right - WorkArea.left;
+   int Height = WorkArea.bottom - WorkArea.top;
+
+   // Create a RGB555 DIB section and give it a green and blue pattern.
+   HDC DibDc = CreateCompatibleDC(Dc);
+
+   memset(&amp;bmi, 0, sizeof (bmi));
+   bmi.bmiHeader.biSize = sizeof (BITMAPINFOHEADER);
+   bmi.bmiHeader.biWidth = Width;
+   bmi.bmiHeader.biHeight = -Height;  // top-down bitmap
+   bmi.bmiHeader.biPlanes = 1;
+   bmi.bmiHeader.biBitCount = 16;
+   bmi.bmiHeader.biCompression = BI_BITFIELDS;
+
+   bmi.bmiColors[0] = 0x7C00;
+   bmi.bmiColors[1] = 0x03E0;
+   bmi.bmiColors[2] = 0x001F;
+   bmi.bmiColors[3] = 0;         // No alpha channel.
+
+   void * pBits = NULL;
+
+   HBITMAP Dib = CreateDIBSection(DibDc, (BITMAPINFO *)&amp;bmi,
+                                  DIB_RGB_COLORS, &amp;pBits, NULL, 0);
+   if (NULL == Dib)
+   {
+       // Failed to allocate DIB!
+       return -1;
+   }
+
+   HGDIOBJ OldDib = SelectObject(DibDc, Dib);
+   HBRUSH GreenBrush = CreateSolidBrush(RGB(0, 255, 0));
+   HBRUSH BlueBrush  = CreateSolidBrush(RGB(0, 0, 255));
+
+   bool Parity = false;
+
+   for (i = 0; i &lt; Height; i += 16)
+   {
+      bool LineParity = Parity;
+
+      for (j = 0; j &lt; Width; j += 16)
+      {
+         RECT Rect;
+         Rect.left   = j;
+         Rect.top    = i;
+         Rect.right  = j + 16;
+         Rect.bottom = i + 16;
+
+         FillRect(DibDc, &amp;Rect, (LineParity ? GreenBrush : BlueBrush));
+
+         LineParity = !LineParity;
+      }
+      Parity = !Parity;
+   }
+
+   DeleteObject(GreenBrush);
+   DeleteObject(BlueBrush);
+
+   // Randomly copy the offscreen bitmaps to the screen.
+
+   DWORD StartTime = GetTickCount();
+
+   for (i = 0; i &lt; 1000; i++)
+   {
+      int BltWidth  = rand() % Width;
+      int BltHeight = rand() % Height;
+      int XPos      = rand() % Width;
+      int YPos      = rand() % Height;
+
+      BitBlt(Dc, WorkArea.left + XPos, WorkArea.top + YPos,
+             BltWidth, BltHeight, DibDc, XPos, YPos, SRCCOPY);
+   }
+
+   DWORD StopTime = GetTickCount();
+
+   RETAILMSG(1, (L"ProfApp:  Took %d ms to perform blts.",
+                 StopTime - StartTime));
+
+   // Clean up.
+   SelectObject(DibDc, OldDib);
+   DeleteObject(OldDib);
+   DeleteObject(DibDc);
+   ReleaseDC(NULL, Dc);
+
+   return 0;
+}</PRE>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50howhowtoprofileandoptimizeadisplaydriver.htm">How to Profile and Optimize a Display Driver</A> | <A HREF="wce50tskcreatingatargetapplicationforprofilingtheflatdisplaydriver.htm">Creating a Target Application for Profiling the FLAT Display Driver</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

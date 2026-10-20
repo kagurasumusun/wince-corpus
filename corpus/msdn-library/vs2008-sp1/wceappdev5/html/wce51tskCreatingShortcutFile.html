@@ -1,0 +1,123 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Creating a Shortcut File</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Creating a Shortcut File"/>
+<MSHelp:RLTitle Title="Creating a Shortcut File"/>
+<MSHelp:Keyword Index="A" Term="wce51tskCreatingShortcutFile"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Application"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="False"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="Technology" Value="CRT"/>
+<MSHelp:Attr Name="TechnologyVers" Value="kbCRT"/>
+<MSHelp:Attr Name="TopicType" Value="kbTask"/>
+<MSHelp:Attr Name="Filename" Value="Developing_an_Application.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="True"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+<MSHelp:Attr Name="PBFeature" Value="SYSGEN_FULL_CRT"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_1061571">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce51tskcreatingshortcutfile"></A>Creating a Shortcut File</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>Shortcut or link (.lnk) files are very small files that provide a link to another file. </P>
+
+<P>You can use .lnk files to point to files located in the Windows directory. If you do not use .lnk files, you can only give a ROM file a presence in the file system outside of the Windows directory by making a full copy of the ROM file through a file system file. </P>
+
+<P>The following procedure shows how to create a desktop shortcut file. After you create the file, you must add it to your run-time image. Also, you must typically place a copy of the file in the file system outside the Windows directory. </P>
+
+<P class="labelproc"><B>To create a desktop shortcut file</B>
+
+<OL type="1">
+	<LI>From the <B>File</B> menu in Platform Builder, choose <B>New Project or File</B>.</li>
+
+	<LI>In the <B>New Project or File</B> dialog box, select the <B>Files</B> tab.</li>
+
+	<LI>Choose the <B>Text File</B> type.</li>
+
+	<LI>In the <B>File name</B> box, enter &lt;<I>File Name</I>&gt;<B>.lnk</B>.
+<P>A new file is created and opened.
+</li>
+
+	<LI>In &lt;<I>File Name</I>&gt;<B>.lnk</B>, enter the command for the link. 
+<P>A .lnk file is a text file that contains the command line for the linked target, which can be enclosed in double quotation marks, along with the length of that command line. 
+
+<P>You can also choose to pass parameters into the linked target. However, this is behavior that can be changed if the shortcut module is replaced in Coredll.dll.
+
+<P>By default, an .lnk file uses the following format. 
+
+<PRE class="code">[number of ASCII characters after pound sign allocated to 
+command-line arguments]#[command line] [optional parameters]</PRE>
+
+<P>For example, to start MyApp.exe and pass two optional parameters into the application, a sample MyApp.lnk file contains the following syntax. 
+
+<PRE class="code">40#\Windows\MyApp.exe parameter1 parameter2</PRE>
+</li>
+
+	<LI>From the <B>File</B> menu, choose <B>Save As</B>.</li>
+
+	<LI>Save the file in the OAK section of the board support package (BSP) so that it is built into the run-time image.
+<P>To do this, use the <B>Save As</B> dialog box to navigate to %_PROJECTOAKROOT%\Files and choose <B>Save</B>. For more information, see <MSHelp:link keywords="wce50conMiscellaneousEnvironmentVariables" TABINDEX="0">Miscellaneous Environment Variables</MSHelp:link>.
+</li>
+</OL>
+
+<P>You have created a shortcut file. You can now add the file to the OS by editing your Project.bib file, or by adding it to your OS design's Catalog item tree. For more information, see <MSHelp:link keywords="wce50conBinaryImageBuilderFile" TABINDEX="0">Binary Image Builder File</MSHelp:link>.</P>
+
+<P class="labelproc"><B>To add a desktop shortcut file to the OS </B>
+
+<UL type="disc">
+	<LI>Open Project.bib and add the following line of code in the FILES section:
+<PRE class="code">MyApp.LNK $(_FLATRELEASEDIR)\MyApp.LNK NK S</PRE>
+
+<P>In this example, MyApp.LNK is loaded into the NK memory region. The optional S parameter defines the file as a system file.
+</li>
+</UL>
+
+<P class="labelproc"><B>To add a desktop shortcut file to the Catalog item tree</B>
+
+<UL type="disc">
+	<LI>Follow the steps in <MSHelp:link keywords="wce50tskAddingaFiletoanOperatingSystem" TABINDEX="0">Adding a File to a Run-time Image</MSHelp:link>. </li>
+</UL>
+
+<P>For general information about how to place your shortcut into your run-time image's file system, see <MSHelp:link keywords="wce50conFileSystemFile" TABINDEX="0">File System File</MSHelp:link>. </P>
+
+<P>For a step-by-step example of how to perform this procedure, see <MSHelp:link keywords="wce50tskOrganizingFilesWithinanOS" TABINDEX="0">Organizing Files Within a Run-time Image</MSHelp:link>.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><MSHelp:link keywords="wce50conPlatformConfigurationFiles" TABINDEX="0">OS Design Configuration Files</MSHelp:link> | <MSHelp:link keywords="wce50conFileSystemFile" TABINDEX="0">File System File</MSHelp:link> | <MSHelp:link keywords="wce50tskAddingaFiletoanOperatingSystem" TABINDEX="0">Adding a File to a Run-time Image</MSHelp:link> | <MSHelp:link keywords="wce50tskOrganizingFilesWithinanOS" TABINDEX="0">Organizing Files Within a Run-time Image</MSHelp:link></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

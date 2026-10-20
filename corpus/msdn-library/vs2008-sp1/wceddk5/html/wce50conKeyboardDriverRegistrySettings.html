@@ -1,0 +1,161 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Keyboard Driver Registry Settings</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Keyboard Driver Registry Settings"/>
+<MSHelp:RLTitle Title="Keyboard Driver Registry Settings"/>
+<MSHelp:Keyword Index="A" Term="wce50conKeyboardDriverRegistrySettings"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Driver"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="False"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="keyboard_guide.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="True"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="True"/>
+<MSHelp:Attr Name="PBFeature" Value="KeyboardDriver"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_3018175">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50conkeyboarddriverregistrysettings"></A>Keyboard Driver Registry Settings</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>If your keyboard driver does not use the default name Kbdmouse.dll, in Platform.reg, define the keybd_driver symbol to be the name of your keyboard driver. The following example sample shows how to define the name for your keyboard driver.</P>
+
+<PRE class="code">#define keybd_driver  "<I>MyKeyboardDriver</I>.dll"</PRE>
+
+<P>The following registry key example shows the required settings for supporting the Remote Desktop Protocol (RDP), if your keyboard driver does not support Layout Manager interface.</P>
+
+<PRE class="code">[HKEY_LOCAL_MACHINE\HARDWARE\DEVICEMAP\KEYBD]
+    "Keyboard Type"=dword:&lt;type&gt;
+    "Keyboard SubType"=dword:&lt;subtype&gt;
+    "Keyboard Function Keys"=dword:&lt;function keys&gt;
+    "Keyboard Layout"="&lt;input locale&gt;"</PRE>
+
+<P>The following registry key examples show keyboard driver registry settings.</P>
+
+<PRE class="code">[HKEY_LOCAL_MACHINE\HARDWARE\DEVICEMAP\KEYBD]
+    "DriverName"="kbdmouse.dll"
+    "SysIntr"=dword:10
+    "IoBase"=dword:60
+    "IoLen"=dword:5
+    "BusNumber"=dword:0
+    "BusType"=dword:5
+    "EnableWake"=dword:1
+
+[HKEY_LOCAL_MACHINE\HARDWARE\DEVICEMAP\KEYBD]
+    "CalVKey"=dword:0
+    "ContLessVKey"=dword:0
+    "ContMoreVKey"=dword:0
+    "TaskManVKey"=dword:2E</PRE>
+
+<P>These registry key examples are located in %_WINCEROOT%\public\common\oak\drivers\keybd\ps2_8042\8042keybd.reg and %_WINCEROOT%\public\common\oak\drivers\keybd\keybd.reg, respectively. These files are included in many of the Platform.reg files. If necessary, some values might be deleted and overwritten in Platform.reg. </P>
+
+<P>The <B>DriverName</B> value specifies Kbdmouse.dll as the keyboard driver.</P>
+
+<P>The <B>Status</B> registry value is combined with the keyboard enabled bits to produce the value returned by <MSHelp:link keywords="wce50lrfGetKeyboardStatus" TABINDEX="0">GetKeyboardStatus</MSHelp:link>. The following registry key example shows the value to add to Project.reg globally to turn off the accelerator underscore (_) character in Platform Builder menus.</P>
+
+<PRE class="code">[HKEY_LOCAL_MACHINE\HARDWARE\DEVICEMAP\KEYBD]
+    "Status"=dword:0</PRE>
+
+<P>The following table shows the additional values that the <B>HKEY_LOCAL_MACHINE\HARDWARE\DEVICEMAP\KEYBD\Status</B> subkey can have.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=33%>Identifier</TH>
+<TH width=12%>Value</TH>
+<TH width=55%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%>KBDI_KEYBOARD_PRESENT</TD>
+<TD width=12%>0x0001</TD>
+<TD width=55%>Indicates whether or not the system has keyboard hardware.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%>KBDI_KEYBOARD_ENABLED</TD>
+<TD width=12%>0x0002</TD>
+<TD width=55%>Indicates whether or not the keyboard hardware is enabled.
+<P>This bit is assumed to be set but can be modified with <MSHelp:link keywords="wce50lrfEnableHardwareKeyboard" TABINDEX="0">EnableHardwareKeyboard</MSHelp:link>.</P>
+</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%>KBDI_KEYBOARD_ENTER_ESC</TD>
+<TD width=12%>0x0004</TD>
+<TD width=55%>Indicates whether or not the keyboard hardware has ENTER and ESC keys.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%>KBDI_KEYBOARD_ALPHA_NUM</TD>
+<TD width=12%>0x0008</TD>
+<TD width=55%>Indicates whether or not the keyboard hardware has alphanumeric keys.</TD>
+</TR>
+</table></div>
+
+<P>The following registry key example shows the key clicks on a keyboard.</P>
+
+<PRE class="code">[HKEY_CURRENT_USER\ControlPanel\Volume]
+    "Key"=dword:0</PRE>
+
+<P>The following table shows the possible settings for the <B>Key</B> registry value.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=15%>Setting</TH>
+<TH width=85%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=15%>0</TD>
+<TD width=85%>Disables key clicks</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=15%>1</TD>
+<TD width=85%>Enables quiet key clicks</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=15%>0x100002</TD>
+<TD width=85%>Enables loud key clicks</TD>
+</TR>
+</table></div>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50conkeyboarddriversamples.htm">Keyboard Driver Samples</A> | <A HREF="wce50conkeyboarddrivers.htm">Keyboard Drivers</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

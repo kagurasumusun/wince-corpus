@@ -1,0 +1,137 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Step 4: Enumerating a PCI Ethernet Controller Driver</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Step 4: Enumerating a PCI Ethernet Controller Driver"/>
+<MSHelp:RLTitle Title="Step 4: Enumerating a PCI Ethernet Controller Driver"/>
+<MSHelp:Keyword Index="A" Term="wce50conStep3PCIEthernetAdapterDriverLoading"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Driver"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="False"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="pci_guide.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="True"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="True"/>
+<MSHelp:Attr Name="PBFeature" Value="PCIBusDriver"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_3017989">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50constep3pciethernetadapterdriverloading"></A>Step 4: Enumerating a PCI Ethernet Controller Driver</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>In this step of the driver loading process example, the next device discovered by the PCI bus driver during the configuration phase is an Ethernet controller. The PCI bus driver searches the registry under the <B>Drivers\PCI</B> key for a key that contains device identifiers that match the PCI device. </P>
+
+<H2 class="dtH2">Ethernet Controller Subkey Initial State</H2>
+
+<P>The <B>Drivers\PCI</B> registry key has the <B>ConfigEntry</B> value defined, indicating that the device needs configuration in a device-specific way. In this case, NE2000cfg.dll is loaded because <B>ConfigDll</B> is defined. At various points during the configuration progress, the PCI bus driver calls<B> DeviceConfig</B>, defined by <B>ConfigEntry</B>. This driver configuration function provides information about resources required by a device that is not enumerated in the PCI configuration space. These resources must be known while the PCI bus is enumerated so that the resources are accounted for and configured within the PCI bus window and so the PCI-to-PCI bridges are set up properly. The PCI bus driver also performs any device-specific configuration actions at this time. </P>
+
+<P>Another use of the configuration entry point is to configure PCI bridges. Typically, no driver is required for a bridge, but a bridge might be set up with such information as bus latency and bus mastering schemes. You can provide a small configuration DLL to configure the bridge when the PCI bus driver detects the bridge. At that time, the PCI bus driver loads the configuration DLL, calls the <B>ConfigEntry</B> point to configure the bridge, and then unloads the configuration DLL.</P>
+
+<P>Once resources are assigned values, such as <B>MemBase</B> and <B>MemLen</B>, the PCI bus driver calls the <B>ConfigEntry</B> point again with the allocated resource information. The driver's configuration routine is responsible for programming the device to respond to the resources that are allocated.</P>
+
+<P>Once the PCI bus is configured, the PCI bus driver scans the bus again to match devices with registry keys. In this case, the best match is made with the <B>Drivers\PCI\Template\NE2000</B> key. This registry information is copied to <B>Drivers\PCI\Instance\NE20001</B> because this is the first instance of this driver found. The PCI bus driver writes resources such as <B>IoBase</B>, <B>IoLen</B>, <B>Irq</B> and <B>SysIntr</B> to the <B>Instance</B> key. If multiple memory or I/O base addresses are required for the device, the <B>MemBase</B>, <B>IoBase</B>, <B>MemLen</B>, and <B>IoLen</B> values are defined as a series of strings instead of as a <B>DWORD</B>.</P>
+
+<P>In the process of enumerating the PCI bus, a second, identical NE2000 device is found. The <B>Template</B> information is copied to <B>Drivers\PCI\Instance\NE20002</B>, and the same process of configuration and resource allocations occurs as it did for the first instance. </P>
+
+<P>In this example, NDIS is aware of the <B>MiniPort</B> value, which is used for indicating the location of a registry key under <B>Comm</B>. This key provides information on which miniport driver to load for the device.</P>
+
+<P>The following registry entry example shows the matching of the NE2000 <B>Template</B> registry key.</P>
+
+<PRE class="code">[HKEY_LOCAL_MACHINE\Drivers\PCI\Template\NE2000]
+    "Dll"="NDIS.dll"
+    "ConfigDll"="NE2000cfg.dll"
+    "ConfigEntry"="DeviceConfig"
+    "Class"=dword:02
+    "SubClass"=dword:00
+    "ProgIF"=dword:00
+    "MiniPort"="NE2000"</PRE>
+
+<H2 class="dtH2">Ethernet Controller Subkey Final State</H2>
+
+<P>After enumeration, the NE2000 <B>Instance</B> keys look like this:</P>
+
+<PRE class="code">[HKEY_LOCAL_MACHINE\Drivers\PCI\Instance\NE20001]
+    "InstanceIndex"=dword:1
+    "Dll"="NDIS.dll"
+    "ConfigDll"="NE2000cfg.dll"
+    "ConfigEntry"="DeviceConfig"
+    "Prefix"="COM"
+    "MiniPort"="NE2000"
+    "Class"=dword:2
+    "SubClass"=dword:0
+    "ProgIF"=dword:0
+    "VendorID"=dword:10EC
+    "DeviceID"=dword:8029
+    "RevisionID"=dword:0
+    "SubVendorID"=dword:10EC
+    "SubSystemID"=dword:8029
+    "InterfaceType"=dword:5
+    "BusNumber"=dword:2
+    "DeviceNumber"=dword:1
+    "FunctionNumber"=dword:0
+    "IoBase"=dword:D100
+    "IoLen"=dword:10
+    "Irq"=dword:A
+    "SysIntr"=dword:1A
+
+[HKEY_LOCAL_MACHINE\Drivers\PCI\Instance\NE20002]
+    "InstanceIndex"=dword:2
+    "Dll"="NDIS.dll"
+    "ConfigDll"="NE2000cfg.dll"
+    "ConfigEntry"="DeviceConfig"
+    "Prefix"="COM"
+    "MiniPort"="NE2000"
+    "Class"=dword:2
+    "SubClass"=dword:0
+    "ProgIF"=dword:0
+    "VendorID"=dword:10EC
+    "DeviceID"=dword:8029
+    "RevisionID"=dword:0
+    "SubVendorID"=dword:10EC
+    "SubSystemID"=dword:8029
+    "InterfaceType"=dword:5
+    "BusNumber"=dword:3
+    "DeviceNumber"=dword:1
+    "FunctionNumber"=dword:0
+    "IoBase"=dword:D200
+    "IoLen"=dword:10
+    "Irq"=dword:C
+    "SysIntr"=dword:1C</PRE>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50constep4registrystatusafterdriverloading.htm">Step 5: Loading Drivers on the PCI Bus</A> | <A HREF="wce50consampledriverloadingonpcibus.htm">Example: Loading Drivers on the PCI Bus</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

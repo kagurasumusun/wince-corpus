@@ -1,0 +1,106 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Configuring the Web Server Registry</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Configuring the Web Server Registry"/>
+<MSHelp:RLTitle Title="Configuring the Web Server Registry"/>
+<MSHelp:Keyword Index="A" Term="wce50tskConfiguringtheWebServerRegistry"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Feature"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbTask"/>
+<MSHelp:Attr Name="Filename" Value="webserver_configuration.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="True"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="True"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_3010316">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50tskconfiguringthewebserverregistry"></A>Configuring the Web Server Registry</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>After you have created an OS design for your Web Server device, you need to modify the registry to create virtual root directories and specify the access rights for your users. To gain access to a virtual path, a user must be authenticated using NTLM authentication or Basic authentication. Specify the authentication level by setting the "a" value for each virtual path. For more information, about authentication levels, see <MSHelp:link keywords="wce50conWebServerAuthentication" TABINDEX="0">Web Server Authentication</MSHelp:link>.</P>
+
+<BLOCKQUOTE class="dtBlock">
+<b class="le">Note</b>&nbsp;&nbsp;&nbsp;To configure user access rights for virtual roots using Basic and NTLM authentication, you must use Windows CE .NET 4.2 or later.</BLOCKQUOTE>
+
+<OL type="1">
+	<LI>On PBCLIENT, in Platform Builder, from the Workspace window, choose the <B>ParameterView</B> tab at the bottom of the window. In the project tree, expand the <B>Project Files</B> node, and double-click the project.reg file.</li>
+
+	<LI>Expand the nodes until you find the <B>CEPC</B> folder. </li>
+
+	<LI>Expand the <B>CEPC</B> folder, and then expand the<B> Project Specific Files</B> folder. </li>
+
+	<LI>To open the file, double-click <B>project.reg</B>. </li>
+
+	<LI>To create virtual roots, set up access rights for your users, and include the sample Web-based configuration page (httpadm.dll) in your OS design, add the following registry keys and values to <B>project.reg</B>:
+<PRE class="code">HKEY_LOCAL_MACHINE\COMM\HTTPD\VROOTS\/WebAdmin]
+@="\\windows\\httpdadm.dll"
+"a"=dword:0</PRE>
+
+<BLOCKQUOTE class="dtBlock">
+<b class="le">Note</b>&nbsp;&nbsp;&nbsp;Setting the "a" value to zero (0), enables anonymous users to have access to all files in the virtual directory. This completely opens the device up to hackers. Setting this value to zero (0) is permissible for internal development and testing purposes. However, you should never ship a Web Server device with the "a" value set to zero (0) for any configuration page.</BLOCKQUOTE>
+
+<PRE class="code">[HKEY_LOCAL_MACHINE\COMM\HTTPD\VROOTS\/BasicOnly]
+@="\\"
+"a"=dword:1
+"Basic"=dword:1
+"NTLM"=dword:0
+"dirbrowse"=dword:1
+[HKEY_LOCAL_MACHINE\COMM\HTTPD\VROOTS\/NTLMOnly]
+@="\\"
+"a"=dword:1
+"Basic"=dword:0
+"NTLM"=dword:1
+"dirbrowse"=dword:1
+[HKEY_LOCAL_MACHINE\COMM\HTTPD\VROOTS\/BothAuth]
+@="\\"
+"a"=dword:1
+"Basic"=dword:1
+"NTLM"=dword:1
+"dirbrowse"=dword:1</PRE>
+
+<P>Adding these values will create virtual root directories for the Basic and NTLM-based authentication methods.
+
+<BLOCKQUOTE class="dtBlock">
+<b class="le">Note</b>&nbsp;&nbsp;&nbsp;To set the password for the entire Web Server device for Basic authentication, you can create an application that runs on the device, and calls the <MSHelp:link keywords="wce50lrfSetPassword" TABINDEX="0">SetPassword</MSHelp:link> function. Setting the password programmatically through <B>SetPassword</B> is the equivalent of the password setting that you add in <B>Control Panel</B> on the target device. </BLOCKQUOTE>
+</li>
+
+	<LI>Save and then close project.reg.</li>
+</OL>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce51howwebserverconfiguration.htm">How to Configure the Web Server</A> | <A HREF="wce51conwebserverhttpdapplicationdevelopment.htm">Web Server (HTTPD) Application Development</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

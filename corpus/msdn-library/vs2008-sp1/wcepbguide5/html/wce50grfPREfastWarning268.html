@@ -1,0 +1,91 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>PREfast Warning 268</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="PREfast Warning 268"/>
+<MSHelp:RLTitle Title="PREfast Warning 268"/>
+<MSHelp:Keyword Index="A" Term="wce50grfPREfastWarning268"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Guide"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="True"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="prefast_warnings2.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="True"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_1053876">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50grfprefastwarning268"></A>PREfast Warning 268</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<PRE class="syntax">268 - Incorrect order of operations.
+Additional Information: (&lt;type1&gt;) (&lt;type2&gt;) x+y.
+Recommended Fix: Probable misparenthesization of (&lt;type1&gt;) ((&lt;type2&gt;) x+y).</PRE>
+
+<P>This warning indicates that a complex cast expression that may involve a precedence problem when performing pointer arithmetic. Because casts group more closely than binary operators, the result might not be what the programmer intended.</P>
+
+<P>In some cases, this defect can result in incorrect behavior or a program crash.</P>
+
+<P>In an expression such as:</P>
+
+<PRE class="code">(char *)p + offset</PRE>
+
+<P>the offset is interpreted as an offset in characters; however, an expression such as: </P>
+
+<PRE class="code">(int *)(char *)p + offset</PRE>
+
+<P>is equivalent to: </P>
+
+<PRE class="code">((int *)(char *)p) + offset</PRE>
+
+<P>and so the offset is interpreted as an offset in integers. In other words, it is equivalent to:</P>
+
+<PRE class="code">(int *)((char *)p + offset * sizeof(int))</PRE>
+
+<P>which is not likely to be what is intended.</P>
+
+<P>Depending on the relative sizes of the two types, this can lead to a buffer overrun. </P>
+
+<H4 class="dtH4">Example</H4>
+
+<P class="label"><B>Defective Source</B></P>
+
+<PRE class="code">int *ptr = (int *)(char *)p + offset_in_bytes;</PRE>
+
+<P class="label"><B>Corrected Source</B></P>
+
+<PRE class="code">int *ptr = (int *)((char *)p + offset_in_bytes);</PRE>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

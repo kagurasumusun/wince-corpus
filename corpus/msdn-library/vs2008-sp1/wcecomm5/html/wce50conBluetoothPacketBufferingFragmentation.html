@@ -1,0 +1,99 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Bluetooth Packet Buffering and Fragmentation</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Bluetooth Packet Buffering and Fragmentation"/>
+<MSHelp:RLTitle Title="Bluetooth Packet Buffering and Fragmentation"/>
+<MSHelp:Keyword Index="A" Term="wce50conBluetoothPacketBufferingFragmentation"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Feature"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="bluetooth_stack.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="True"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+<MSHelp:Attr Name="PBFeature" Value="SYSGEN_BTH"/>
+<MSHelp:Attr Name="PBOnly" Value="True"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_1044796">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50conbluetoothpacketbufferingfragmentation"></A>Bluetooth Packet Buffering and Fragmentation</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>Data packets are sent to the HCI layer by using the<A HREF="wce50conhcidatapacketdownin.htm"> HCI_DataPacketDown_In</A> interface and the <A HREF="wce50conhcidatapacketdownout.htm">HCI_DataPacketDown_Out</A> callback function.</P>
+
+<P>The following code shows the function pointer declarations for <B>HCI_DataPacketDown_In</B> and <B>HCI_DataPacketDown_Out</B>.</P>
+
+<PRE class="code">typedef int (*HCI_DataPacketDown_In) (
+  HANDLE         hDeviceContext,
+  void          *pCallContext,
+  unsigned short connection_handle,
+  BD_BUFFER     *pBuffer
+);
+typedef int (*HCI_DataPacketDown_Out) (
+  void    *pCallContext,
+  int      iError
+);</PRE>
+
+<P>Both data and command packets are placed in the HCI queue. The upper layers of the Bluetooth stack do not control data packet fragmentation, which occurs automatically.</P>
+
+<P>To reassemble data on the way up, it is required that the size of the total packet is known. If the protocol follows the L2CAP packet format ( the data is length-prefixed), then reassembly is handled by the HCI, and the packet is delivered. Reassembled data packets are notified by the HCI by using the <A HREF="wce50conhcidatapacketup.htm">HCI_DataPacketUp</A> event. </P>
+
+<P>The following code shows the function pointer declaration for <B>HCI_DataPacketUp</B>.</P>
+
+<PRE class="code">typedef int (*HCI_DataPacketUp) (
+  void             *pUserContext,
+  unsigned short    connection_handle,
+  BD_BUFFER        *pBuffer
+);</PRE>
+
+<P>To indicate pre-reassembly data packets, the HCI uses the <A HREF="wce50conhcidatapacketupaclunbuffered.htm">HCI_DataPacketUpAclUnbuffered</A> event. However, if upper interface exposes the <B>HCI_DataPacketUpAclUnbuffered</B>, it is expected to handle the buffering of incoming asynchronous connection-less (ACL) packets, which will be reported to it immediately. In this case, there are no restrictions on the packet format. </P>
+
+<P>The following code shows the function pointer declaration for <B>HCI_DataPacketUpAclUnbuffered</B>.</P>
+
+<PRE class="code">typedef int (*HCI_DataPacketUpAclUnbuffered) (
+  void             *pUserContext,
+  unsigned short    connection_handle,
+  unsigned char     boundary,
+  unsigned char     broadcast,
+  BD_BUFFER        *pBuffer
+);</PRE>
+
+<P>See Bt_ddi.h for complete specifications of the HCI interface.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50conhostcontrollerinterface.htm">Host Controller Interface</A> | <MSHelp:link keywords="wce50conBluetoothProtocolStack" TABINDEX="0">Bluetooth Protocol Stack</MSHelp:link></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

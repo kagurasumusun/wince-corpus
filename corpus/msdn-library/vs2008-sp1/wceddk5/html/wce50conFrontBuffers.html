@@ -1,0 +1,68 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Front Buffers</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Front Buffers"/>
+<MSHelp:RLTitle Title="Front Buffers"/>
+<MSHelp:Keyword Index="A" Term="wce50conFrontBuffers"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Driver"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="False"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="d3dm_ddk_concepts.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="False"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+<MSHelp:Attr Name="PBFeature" Value="Direct3DMobileDriver"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_1052719">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50confrontbuffers"></A>Front Buffers</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>A front buffer, also called a primary surface, represents the memory that is currently being displayed on screen. Microsoft&reg; Direct3D&reg; Mobile assumes that the front buffer has the same height and width as the display mode, and that it has a color format identified by a value from the <MSHelp:link keywords="wce50lrfD3DMFORMAT" TABINDEX="0">D3DMFORMAT</MSHelp:link> enumeration. When the driver receives a command from Direct3D Mobile middleware to create the front buffer, the driver should not allocate new memory. Instead, the driver should construct a wrapper around the current front buffer and return that to the middleware.</P>
+
+<P>The driver must support creating front buffers. The D3DMSURFCAPS_SYSFRONTBUFFER capability bit indicates that the driver supports front buffers in system memory, which is typical of a UMA or shared memory architecture. The D3DMSURFCAPS_VIDFRONTBUFFER capability bit indicates that the front buffer is in video memory. These two capability bits are mutually exclusive.</P>
+
+<P>The <A HREF="wce50lrfd3dmcreatesurface.htm">D3DM_CreateSurface</A> call for the front buffer sets the <B>SurfaceType</B> member of the <A HREF="wce50lrfd3dm_createsurface_data.htm">D3DM_CREATESURFACE_DATA</A> structure to D3DMRTYPE_SURFACE. The <I>D3DM_CREATESURFACE_DATA.SurfaceDesc</I> parameter contains a <MSHelp:link keywords="wce50lrfD3DMSURFACE_DESC" TABINDEX="0">D3DMSURFACE_DESC</MSHelp:link> structure to describe the specific information about the front buffer. The Direct3D Mobile middleware sets the <I>SurfaceDesc.Usage</I> and also provide a value for <I>SurfaceDesc.MultiSampleType</I>. The value that describes the multisampling type is a hint to the driver that it should use the closest value to <I>SurfaceDesc.MultiSampleType</I> that the underlying hardware can support.</P>
+
+<P>In addition to generating a wrapper and a unique surface handle for the wrapper, the driver must populate the <B>Height</B>, <B>Width</B>, <B>Format</B>, <B>Size</B>, and <B>Pool</B> members of the <B>D3DMSURFACE_DESC</B> structure.</P>
+
+<P>The driver controls the locking policy for the front buffer. Usually, it is best for the driver to not allow the front buffer to be locked. The graphics hardware must be flushed to maintain pixel coherency when the front buffer is locked; the graphics hardware flush is an expensive operation.  If the driver does allow the front buffer to be locked, the driver should set the D3DMSURFCAPS_LOCKFRONTBUFFER capability bit (see <MSHelp:link keywords="wce50lrfD3DMSURFCAPSValues" TABINDEX="0">D3DMSURFCAPS Values)</MSHelp:link>. </P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50conresourcesindirect3dmobiledrivers.htm">Resources in Direct3D Mobile Drivers</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

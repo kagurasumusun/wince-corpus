@@ -1,0 +1,166 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>CPUGetSysTimerCountElapsed Routine</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="CPUGetSysTimerCountElapsed Routine"/>
+<MSHelp:RLTitle Title="CPUGetSysTimerCountElapsed Routine"/>
+<MSHelp:Keyword Index="A" Term="wce50conCPUGetSysTimerCountElapsedRoutine"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Hardware"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="True"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="howto_developing_an_OAL.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="True"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_3010371">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50concpugetsystimercountelapsedroutine"></A>CPUGetSysTimerCountElapsed Routine</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P><A HREF="wce50lrfoemidle.htm">OEMIdle</A> calls <B>CPUGetSysTimerCountElapsed</B> to determine how much time has elapsed since the last timer tick. </P>
+
+<P>In some situations, <B>CPUGetSysTimerCountElapsed</B> is called with interrupts off, making it possible for a timer interrupt to be pending when it is called. This routine must compensate for the interrupt service routine (ISR), which will also update <B>CurMSec</B> when its interrupt is unmasked. </P>
+
+<P>Systems that use a PIT should note the return value from <B>CPUClearSysTimerIRQ</B> as it indicates whether the PIT interrupt was serviced in time to avoid losing timer information.</P>
+
+<P>This routine is prototyped as shown in the following code example.</P>
+
+<PRE class="code">DWORD CPUGetSysTimerCountElapsed(
+   DWORD dwTimerCountdownMSec,
+   volatile DWORD *pCurMSec,
+   DWORD *pPartialCurMSec,
+   volatile ULARGE_INTEGER *pCurTicks
+)</PRE>
+
+<P>The following table shows the parameters used in this routine:</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=24%>Parameter</TH>
+<TH width=76%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=24%><I>dwCountdownMSec</I></TD>
+<TD width=76%>The number of milliseconds that the system expected to sleep before the next timer interrupt.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=24%><I>pCurMSec</I></TD>
+<TD width=76%>Points to a millisecond counter, often but not always the global variable <A HREF="wce50lrfcurmsec.htm">CurMSec</A>.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=24%><I>pPartialCurMSec</I></TD>
+<TD width=76%>Some number of timer counts, not timer ticks, not accounted for in the current value of *<I>pCurMSec</I>.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=24%><I>pCurTicks</I></TD>
+<TD width=76%>Pointer to a 64-bit tick counter.</TD>
+</TR>
+</table></div>
+
+<P><B>CPUGetSysTimerCountElapsed</B> determines the number of counter increments or decrements that have elapsed and adds it to *<I>pPartialCurMSec</I>. It then calculates the number of whole milliseconds the sum represents and updates *<I>pCurMSec</I> with that value. Finally, it updates *<I>pPartialCurMSec</I> with any counts left over from this calculation.</P>
+
+<P><B>CPUGetSysTimerCountElapsed</B> treats *<I>pCurTicks </I>as a running number of timer counts, reflecting the number of times the counter has been incremented or decremented, not the number of interrupts it has generated or the number of milliseconds elapsed.</P>
+
+<P>The following code example shows an implementation of <B>CPUGetSysTimerCountElapsed</B> for an ARM-based hardware platform, using a PIT.</P>
+
+<PRE class="code">DWORD CPUGetSysTimerCountElapsed(
+   DWORD dwTimerCountdownMSec,
+   volatile DWORD *pCurMSec,
+   DWORD *pPartialCurMSec,
+   volatile ULARGE_INTEGER *pCurTicks
+)
+{
+    TimerStruct_t  *pTimer = gSysTimers[OS_TIMER].pt;
+    DWORD dwTick = dwTimerCountdownMSec * OEMCount1ms;
+    DWORD dwCount;
+
+    // If timer IRQ is pending, a full rescheduled period elapsed.
+    if (CPUClearSysTimerIRQ( )) {
+       *pCurMSec += dwTimerCountdownMSec;
+        pCurTicks-&gt;QuadPart += dwTick;
+        return dwTimerCountdownMSec;
+    }
+    // If no timer IRQ is pending, calculate how much time has elapsed.
+    dwCount = pTimer-&gt;TimerValue;
+    if (dwCount &gt; dwTick) {
+       // This is an error case. Recover gracefully.
+       dwCount = dwTick;
+    } 
+    else {
+       dwCount = dwTick - dwCount;
+    }
+    pCurTicks-&gt;QuadPart += dwCount;
+    dwCount += *pPartialCurMSec;
+    *pPartialCurMSec = dwCount % OEMCount1ms;
+    *pCurMSec += (dwCount /= OEMCount1ms);
+
+    return dwCount;
+}</PRE>
+
+<P>The following code example shows an implementation for the DDB5476 hardware platform using a free-running timer with value and compare registers.</P>
+
+<PRE class="code">DWORD CPUGetSysTimerCountElapsed(
+   DWORD dwTimerCountdownMSec,
+   volatile DWORD *pCurMSec,
+   DWORD *pPartialCurMSec,
+   volatile ULARGE_INTEGER *pCurTicks
+)
+{
+  DWORD dwTick = dwTimerCountdownMSec * OEMCount1ms;
+  DWORD dwCount = R4000Compare( ) - R4000Count( );
+
+  // Note: If dwCount is negative, the counter went past the compare 
+  // point. The math still works because it accounts 
+  // for the dwTick time plus the time past the compare point.
+  dwCount = dwTick - dwCount;
+  pCurTicks-&gt;QuadPart += dwCount;
+  dwCount += *pPartialCurMSec;
+  *pPartialCurMSec = dwCount % OEMCount1ms;
+  dwCount /= OEMCount1ms;
+  *pCurMSec += dwCount;
+
+  return dwCount;
+}</PRE>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50conboilerplateinterfaceroutines.htm">Boilerplate Interface Routines</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

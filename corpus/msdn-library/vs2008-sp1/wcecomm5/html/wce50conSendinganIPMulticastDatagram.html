@@ -1,0 +1,92 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Sending an IP Multicast Datagram</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Sending an IP Multicast Datagram"/>
+<MSHelp:RLTitle Title="Sending an IP Multicast Datagram"/>
+<MSHelp:Keyword Index="A" Term="wce50conSendinganIPMulticastDatagram"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Feature"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="winsock.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="True"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+<MSHelp:Attr Name="PBFeature" Value="SYSGEN_WINSOCK"/>
+<MSHelp:Attr Name="PBOnly" Value="False"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_3008445">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50consendinganipmulticastdatagram"></A>Sending an IP Multicast Datagram</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>To send a multicast datagram, specify an IP multicast address with a range from 224.0.0.0 through 239.255.255.255 as the destination address in a <A HREF="wce50lrfsendto.htm">sendto</A> function call.</P>
+
+<P>Use the <A HREF="wce50lrfsetsockoptwindowssockets.htm">setsockopt</A> function to set options for IP multicasting.</P>
+
+<P>By default, IP multicast datagrams are sent with a Time to Live (TTL) of 1, which prevents them from being forwarded beyond a single subnetwork. The following code example shows how to change this.</P>
+
+<PRE class="code">int ttl = 1 ; // Limits to subnet.
+setsockopt(
+   sock,
+   IPPROTO_IP,
+   IP_MULTICAST_TTL,
+   (char *)&amp;ttl, 
+   sizeof(ttl));</PRE>
+
+<P>Multicast datagrams with a TTL of 0 are not transmitted on any subnetwork. Multicast datagrams with a TTL of greater than 1 may be delivered to more than one subnetwork, if there are one or more multicast routers attached to the first subnetwork.</P>
+
+<P>A multicast router does not forward multicast datagrams with destination addresses from 224.0.0.0 through 224.0.0.255, inclusive, regardless of their TTL value. This address range is reserved for routing protocols and other low-level, topology discovery protocols, or maintenance protocols. These include gateway discovery protocols and group membership reporting protocols.</P>
+
+<P>Each multicast transmission is sent from a single network interface, even if the host has more than one multicasting-capable interface. The following code example shows how to use the <B>setsockopt</B> function to override the default for subsequent transmissions from a specified socket.</P>
+
+<PRE class="code">unsigned long addr = inet_addr("157.57.8.1");
+setsockopt(
+    sock,
+    IPPROTO_IP, 
+    IP_MULTICAST_IF,
+    (char *)&amp;addr, 
+    sizeof(addr));</PRE>
+
+<P>The<I> addr</I> parameter is the local IP address of the outgoing interface. An address of INADDR_ANY may be used to revert to the default interface. This address may be different from that which the socket is bound.</P>
+
+<P>By default, if a multicast datagram is sent to a group to which the sending host belongs, a copy of the datagram on the outgoing interface is looped back by the IP layer for local delivery. Any attempt to disable this multicast loop-back results in the call failing, with the error message WSAENOPROTOOPT.</P>
+
+<P>For an example of an application sending a multicast datagram, see <A HREF="wce50consendinganipmulticastdatagramsample.htm">Sending an IP Multicast Datagram Sample</A>.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50consendinganipmulticastdatagramsample.htm">Sending an IP Multicast Datagram Sample</A> | <A HREF="wce50concreatinganipmulticastapplication.htm">Creating an IP Multicast Application</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

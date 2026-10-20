@@ -1,0 +1,72 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Suspend and Resume Handling</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Suspend and Resume Handling"/>
+<MSHelp:RLTitle Title="Suspend and Resume Handling"/>
+<MSHelp:Keyword Index="A" Term="wce50conSuspendandResumeHandling"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Driver"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="False"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="powermgrdrv_guide.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="False"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="True"/>
+<MSHelp:Attr Name="PBFeature" Value="SYSGEN_PM"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_3019084">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50consuspendandresumehandling"></A>Suspend and Resume Handling</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>Power managed stream device drivers will continue to receive notifications of system suspend and resume states through their <A HREF="wce50lrfxxxpowerdown.htm">XXX_PowerDown (Device Manager)</A> and <A HREF="wce50lrfxxxpowerup.htm">XXX_PowerUp (Device Manager)</A>. These notifications are sent in an interrupt context just before the kernel calls <MSHelp:link keywords="wce50lrfOEMPowerOff" TABINDEX="0">OEMPowerOff</MSHelp:link>. The PowerDown/PowerUp callback mechanism is independent of the Power Manager and allows legacy device drivers to function under Microsoft&reg; Windows&reg; CE .NET 4.0 and later.</P>
+
+<P>Device driver developers need to be aware that during an OS suspend state, the microprocessor will no longer be active. In theory the Power Manager will put all devices into a device power state that is appropriate to an OS suspend state. However, it is possible that a suspend system power state configuration or an application device power requirement may not be appropriate for a particular device. For example, an audio device might be required to stay in state D0 by a multimedia application. If the audio chip requires frequent microprocessor servicing to set up DMA buffers, the device driver developer may decide that D0 is an inappropriate state for an OS suspend state and power the device off.</P>
+
+<P>Device driver developers must know what states are appropriate for their device during an OS suspend state and implement their driver accordingly. It is appropriate for driver developers to be conservative when making decisions about power management during an OS suspend state. However, not all devices should necessarily be forced off at an OS suspend state. For example, if the audio device had a line in jack and could play music independently of the microprocessor it would be appropriate for the device to remain powered during a suspend state.</P>
+
+<P>If a device driver developer alters the device power state during a suspend state, it should restore it during a resume state. Such drivers should try to keep their actual behavior during an OS suspend state as transparent to the Power Manager as possible.</P>
+
+<P>Power-manageable stream devices can automatically notify the Power Manager of their presence when they are loaded by <MSHelp:link keywords="wce50lrfActivateDeviceEx" TABINDEX="0">ActivateDeviceEx</MSHelp:link>. If the GUID <B>"{A32942B7-920C-486b-B0E6-92A702A99B35}"</B> is part of their <B>IClass</B> value, which is a <B>REG_MULTI_SZ</B>, the Power Manager will receive a device notification when the device is loaded. The Power Manager requests notifications for all classes listed in the <B>HKEY_LOCAL_MACHINE\CurrentControlSet\Control\Power\Interfaces</B> registry key.</P>
+
+<P>Devices can manage their own power by calling the <A HREF="wce50lrfdevicepowernotify.htm">DevicePowerNotify</A> function when they receive the <A HREF="wce50lrfioctlpowercapabilities.htm">IOCTL_POWER_CAPABILITIES</A> I/O control. The Power Manager will recognize requests issued while the device is processing the IOCTL.</P>
+
+<P>If an OEM chooses to implement a device API outside of the stream interface, the OEM needs to customize the Power Manager to communicate using the new mechanism.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50condevicepowermanagementguidelines.htm">Device Power Management Guidelines</A> | <A HREF="wce50lrfxxxpowerdown.htm">XXX_PowerDown (Device Manager)</A> | <A HREF="wce50lrfxxxpowerup.htm">XXX_PowerUp (Device Manager)</A> | <MSHelp:link keywords="wce50lrfOEMPowerOff" TABINDEX="0">OEMPowerOff</MSHelp:link> | <A HREF="wce50lrfactivatedeviceex.htm">ActivateDeviceEx</A> | <A HREF="wce50lrfdevicepowernotify.htm">DevicePowerNotify</A> | <A HREF="wce50lrfioctlpowercapabilities.htm">IOCTL_POWER_CAPABILITIES</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

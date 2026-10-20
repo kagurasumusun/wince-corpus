@@ -1,0 +1,131 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Opening Connections</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Opening Connections"/>
+<MSHelp:RLTitle Title="Opening Connections"/>
+<MSHelp:Keyword Index="A" Term="wce50conConnectionInitialization"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Driver"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="False"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="bluetooth_guide.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="True"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+<MSHelp:Attr Name="PBFeature" Value="BluetoothHCITransportDriver"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_1041730">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50conconnectioninitialization"></A>Opening Connections</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>When the Bluetooth stack initializes, it calls the <A HREF="wce50lrfhcisetcallback.htm">HCI_SetCallback</A> function of the HCI Transport interface. It passes a callback that is used by HCI transport layer to indicate insertion or removal of hardware.</P>
+
+<P>The stack can also call the <A HREF="wce50lrfhcistarthardware.htm">HCI_StartHardware</A> and <A HREF="wce50lrfhcistophardware.htm">HCI_StopHardware</A> functions to make the physical layer simulate an ejection or insertion of a controller, whether it is removable or not.</P>
+
+<P>The following code shows the function definitions from Bt_hcip.h. </P>
+
+<PRE class="code">enum HCI_EVENT {
+   DEVICE_UP,
+   DEVICE_DOWN,
+   DEVICE_ERROR
+};
+typedef int (*HCI_TransportCallback) (HCI_EVENT eEvent, void *pEvent);
+int HCI_SetCallback (HCI_TransportCallback pfCallback);
+int HCI_StartHardware (void);
+int HCI_StopHardware (void);</PRE>
+
+<P>When an insertion is signaled, the stack calls the <A HREF="wce50lrfhciopenconnection.htm">HCI_OpenConnection</A> function. If it returns TRUE, the transport is considered to be active.</P>
+
+<P>When <B>HCI_OpenConnection</B> returns TRUE, the Bluetooth stack calls the <A HREF="wce50lrfhcireadhciparameters.htm">HCI_ReadHciParameters</A> function.</P>
+
+<P>In the <A HREF="wce50lrfhciparameters.htm">HCI_PARAMETERS</A> structure passed as an argument, it fills out only the size and version field. The transport driver must ensure that the version of the stack matches the version of the transport driver exactly.</P>
+
+<P>The HCI transport is responsible for filling the <B>HCI_PARAMETERS</B> structure completely. Important members of this structure indicate minimum buffers required for incoming packets, and maximum buffers allowed for outgoing packets, as well as the version of the Bluetooth hardware.</P>
+
+<PRE class="code">#define HCI_INTERFACE_VERSION_1_0       0x00010000
+#define HCI_HARDWARE_VERSION_V_1_0_A    0
+#define HCI_HARDWARE_VERSION_V_1_0_B    1
+#define HCI_HARDWARE_VERSION_V_1_1      2
+#define HCI_DEFAULT_WRITE_TIMEOUT       15000
+#define HCI_FLAGS_NORESET               0x00000001
+#define HCI_FLAGS_NOLOCALNAME           0x00000002
+#define HCI_FLAGS_NOROLESWITCH          0x00000004
+//
+// Note:
+//   iMaxSize parameters MUST fit the biggest HCI command
+//     (HCI_RemoteNameRequest as of this writing is 257 bytes,
+//      see also bt_ddi.h::HCI_MAX_COMMAND_LENGTH)
+//   iReadBufferHeader and iWriteBufferHeader MUST be 4-bytes aligned
+//
+typedef struct __hci_parameters 
+{
+  unsigned int uiSize; // structure size
+  unsigned int fInterfaceVersion; // interface version
+  int iMaxSizeRead; // Max size of read packet (not including headers and 
+                    //trailers)
+  int iMaxSizeWrite; // Max size of write packet (not including headers 
+                     //and trailers)
+  int iReadBufferHeader; // Hint : read may contain up to as much 
+                         //transport header bytes
+  int iReadBufferTrailer; // Hint : read may contain up to as much 
+                          //transport trailer bytes
+  int iWriteBufferHeader; // Number of bytes to preallocate for transport 
+                          //header
+  int iWriteBufferTrailer; // Number of bytes to preallocate for transport 
+                           //trailer
+  int uiFlags; // Flags
+  int fHardwareVersion; // Bluetooth spec version of hardware
+  unsigned int uiResetDelay; // milliseconds : delay next command after 
+                             //reset by this much
+  unsigned int uiWriteTimeout; // milliseconds : abort if card does not 
+                           //respond in this time (use the default above)
+  unsigned int uiDriftFactor; // milliseconds : inquiry data is good for 
+                              //this long
+  int iScoWriteLowNumPackets; // Minimum number of outstanding SCO write 
+                             //packets in backlog (0 - use default)
+  int iScoWriteNumPackets; // Maximum number of outstanding SCO write 
+                           //packets in backlog (0 - use default)
+  int iScoWritePacketSize; // Size of each SCO packet (0 - use default, -1 
+                           //- SCO not supported)
+  int iScoSampleSize; // Sample size of SCO packet (8 or 16 bits)
+} HCI_PARAMETERS;
+int HCI_ReadHciParameters (HCI_PARAMETERS  *pParms);</PRE>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50conbluetoothhcitransportlayer.htm">Bluetooth HCI Transport Layer</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

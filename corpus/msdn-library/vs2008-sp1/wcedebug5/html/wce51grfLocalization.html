@@ -1,0 +1,100 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Localization</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Localization"/>
+<MSHelp:RLTitle Title="Localization"/>
+<MSHelp:Keyword Index="A" Term="wce51grfLocalization"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Debugging"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="True"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="DATK_Sync.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="True"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_1076620">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce51grflocalization"></A>Localization</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>Because products often ship in multiple languages, you often need to localize your test cases so that they can run on multiple languages. Most localized strings in the product are represented as resources in a string table and are specified by the module (dll, exe, mui) that holds the resource and the ID of the resource. The <B>MobilityToolKit</B>.<B>IdnString</B> object exists to encapsulate this data and decode it at runtime to get a properly localized string.</P>
+
+<P>Because text is very UI dependent, localized resources (in the form of IdnStrings) should be exposed in the UIAL. Each UIAL has an IdnHolders file which contains one <B>IdnHolder</B> class for each dialog in that UIAL. The <B>IdnHolder</B> class for a dialog should contain an IdnString for each localized string seen on that dialog. The IdnHolders file for a UIAL looks like this (but continues with more IdnStrings and more classes):</P>
+
+<PRE class="code">namespace Microsoft.MobileDevices.AbstractionLayer.Inbox.PocketPC
+{
+    /// &lt;summary&gt;
+    /// IdnHoder class holding all the Idn strings for the InboxMainWnd dialog.
+    /// &lt;/summary&gt;
+    public class InboxMainWndIdnHolder
+    {
+        /// &lt;summary&gt;
+        /// WWE="Delete"
+        /// &lt;/summary&gt;
+        public readonly Mtk.IdnString DeleteSK2 =
+            new Mtk.IdnString(Mtk.ModuleNames.outresDll, "MNU_22501_POPUP1_82");
+
+        /// &lt;summary&gt;
+        /// WWE="Reply"
+        /// &lt;/summary&gt;
+        public readonly Mtk.IdnString ReplySK2 =
+            new Mtk.IdnString(Mtk.ModuleNames.outresDll, "MNU_22501_POPUP1_251");
+    }
+
+    /// &lt;summary&gt;
+    /// IdnHolder class holding all the Idn strings for the ReadDialog dialog.
+    /// &lt;/summary&gt;
+    public class ReadDialogIdnHolder
+    {
+        /// &lt;summary&gt;
+        /// WWE="Delete" on SK2 in read note
+        /// &lt;/summary&gt;
+        public readonly Mtk.IdnString DeleteSK2 =
+            new Mtk.IdnString(Mtk.ModuleNames.outresDll, "MNU_32720_POPUP0_129");</PRE>
+
+<P>Because localized resources are product specific, they should be used primarily by the Area Library, not by tests. If a test accesses an IdnString from the UIAL directly, it is limiting itself to run only on the product that the UIAL is written for. This should only be done in the rare cases. Usually, UI actions or verifications that depend on localized text should be integrated into the methods in the area library that utilize them. These IdnString objects are accessed through the dialog class that contains them as in the following method:</P>
+
+<PRE class="code">/// &lt;summary&gt;
+/// Example: use an IdnString from UIAL
+/// &lt;/summary&gt;
+public void UsingLocalizedResources()
+{
+    // Reference localized string through the dialog in the application
+    GlobalLogger.AddComment("The localized resource is: {0}",
+InboxApp.ManageFoldersDialog.ManageFoldersDialogIdns.NewToolbar);
+}</PRE>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

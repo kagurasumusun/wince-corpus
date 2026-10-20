@@ -1,0 +1,95 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Slot Event Callback</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Slot Event Callback"/>
+<MSHelp:RLTitle Title="Slot Event Callback"/>
+<MSHelp:Keyword Index="A" Term="wce50conSlotEventCallback"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Driver"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="False"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="sd_guide.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="True"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+<MSHelp:Attr Name="PBFeature" Value="SecureDigitalCardDriver"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_1052871">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50consloteventcallback"></A>Slot Event Callback</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>A Secure Digital (SD) card client driver has the option to register a slot event callback. The callback provides asynchronous notification about changes in the slot state. The following code example shows a typical slot event callback.</P>
+
+<PRE class="code">VOID SlotEventCallBack(SD_DEVICE_HANDLE hDevice,
+  PVOID pContext,
+  SD_SLOT_EVENT_TYPE SlotEventType,
+  PVOID pData,
+  DWORD DataLength)
+{
+  PSD_MY_DEVICE_INSTANCE pDevice = (PSD_MEMCARD_INFO)pContext;
+  switch (SlotEventType) {
+    case SDCardEjected :
+    // mark that the card is being ejected
+    pDevice-&gt;CardEjected = TRUE;
+    break;
+    }
+}</PRE>
+
+<P>The client driver uses the registration information structure to provide a pointer to the function of the client. The following code example shows a typical registration information structure.</P>
+
+<PRE class="code">memset(&amp;ClientInfo, 0, sizeof(ClientInfo));
+// set client options and register as a client device
+_tcscpy(ClientInfo.ClientName, TEXT("MyDriver"));
+
+// set the callback, we want slot events
+ClientInfo.pSlotEventCallBack = SlotEventCallBack;
+
+// register the client
+Status = SDRegisterClient(hClientHandle, 
+  pDevice,
+  &amp;ClientInfo);</PRE>
+
+<P>The slot event type is passed as a parameter to the callback. The callback can be called in any thread context and the slot event type can restrict what can and cannot be done when the callback is invoked.</P>
+
+<P>The <B>SDCardEjected</B> notification is made when a card is removed from a slot. When this event type is indicated, the client driver should not submit any bus requests within the callback. </P>
+
+<P>The callback is invoked, with this event type, prior to calling the <A HREF="wce50lrfxxxdeinit14.htm">XXX_Deinit (Device Manager)</A><B> </B>entry point of the client driver. This gives the client driver an opportunity to set an internal device state prior to its final uninitialization. For example, the callback can set a flag that directs the client driver to reject future user application I/O requests.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50consecuredigitalcardclientdriver.htm">Secure Digital Card Client Driver</A> | <A HREF="wce50lrfxxxdeinit14.htm">XXX_Deinit (Device Manager)</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

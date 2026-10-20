@@ -1,0 +1,64 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Resource Management by Direct3D Mobile Drivers</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Resource Management by Direct3D Mobile Drivers"/>
+<MSHelp:RLTitle Title="Resource Management by Direct3D Mobile Drivers"/>
+<MSHelp:Keyword Index="A" Term="wce50conResourceManagementByDirect3DMobileDrivers"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Driver"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="False"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="d3dm_ddk_concepts.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="False"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+<MSHelp:Attr Name="PBFeature" Value="Direct3DMobileDriver"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_1037544">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50conresourcemanagementbydirect3dmobiledrivers"></A>Resource Management by Direct3D Mobile Drivers</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>When an application makes the call to create a resource, it passes passing a <MSHelp:link keywords="wce50lrfD3DMPOOL" TABINDEX="0">D3Dmpool</MSHelp:link> value to specify which memory pool that resource should be created from. When the application specifies D3DMPOOL_MANAGED, the Direct3D&reg; Mobile driver is responsible for managing how memory is allocated for resources. The driver controls whether resources are allocated from the system memory pool, the video memory pool, or a managed pool consisting of both system and video memory. For more information, see <MSHelp:link keywords="wce50conMemoryPoolsInDirect3DMobile" TABINDEX="0">Memory Pools in Direct3D Mobile</MSHelp:link>.</P>
+
+<P>A driver that supports a managed memory pool indicates its support for this type of pool by exposing the D3DMSURFCAPS_MANAGEDPOOL capability bit. To support a managed pool, the driver must implement the <A HREF="wce50lrfd3dmresourcemanager.htm">D3DM_ResourceManager</A> function. Even if the driver does not support the managed pool, it must load the pointer for this function in the <A HREF="wce50lrfd3dm_initialize_data.htm">D3DM_INITIALIZE_DATA</A> structure with a valid function pointer.</P>
+
+<P>When a texture or other resource is created in a managed pool, the driver allocates space in the system memory pool for the texture. When the texture is assigned to a texture stage, through a call to <MSHelp:link keywords="wce50lrfIDirect3DMobileDeviceSetTexture" TABINDEX="0">IDirect3DMobileDevice::SetTexture</MSHelp:link>, the texture driver uploads the texture into the video memory pool. The driver holds the texture in the video memory pool until it is the least recently used (LRU) item in video memory and until the space is needed for a different resource, at which time the texture is removed. When video memory needs room to upload a managed surface, and there are identical LRU counts, the driver should clear memory based on surface priority. </P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50conresourcesindirect3dmobiledrivers.htm">Resources in Direct3D Mobile Drivers</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

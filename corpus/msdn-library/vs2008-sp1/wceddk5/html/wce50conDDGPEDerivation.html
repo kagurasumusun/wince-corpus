@@ -1,0 +1,129 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>DDGPE Derivation</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="DDGPE Derivation"/>
+<MSHelp:RLTitle Title="DDGPE Derivation"/>
+<MSHelp:Keyword Index="A" Term="wce50conDDGPEDerivation"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Driver"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="False"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="ddraw_guide.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="True"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+<MSHelp:Attr Name="PBFeature" Value="DirectDrawDriver"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_3017632">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50conddgpederivation"></A>DDGPE Derivation</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>Making minor changes and additions to your DDGPE-based driver will add greater functionality and power to your implementation. These changes include functions you can override, member variables you can set, and functions you can call.</P>
+
+<H2 class="dtH2"><A NAME="wce50conddgpederivationanchor1"></A>Functions You Should Override</H2>
+
+<P>These are the DDGPE class functions your DDGPE-based display driver can override and implement to improve its DDGPE support:
+
+<UL type="disc">
+	<LI><B>AllocSurface</B>
+<P>The <A HREF="wce50lrfddgpeallocsurface.htm">AllocSurface</A> function allows the <A HREF="wce50lrfeddgpepixelformat.htm">EDDGPEPixelFormat</A> data type to be integrated into your driver. With the addition of this data type, your driver can begin to support a wide variety of surface types.
+
+<PRE class="code">virtual SCODE AllocSurface (
+DDGPESurf **ppSurf,
+int width,
+int height,
+EGPEFormat format,
+EDDGPEPixelFormat pixelFormat,
+int surfaceFlags
+);</PRE>
+</li>
+
+	<LI><B>GetModeInfoEx</B>
+<P>The <A HREF="wce50lrfddgpegetmodeinfoex.htm">GetModeInfoEx</A> function provides DDGPE with extended pixel format information that applies to a specific mode. This is useful to both DDGPE classes and the DDGPE DDHAL implementation. To override this function, you need to store detailed information about the different modes that are supported by your driver.
+</li>
+
+	<LI><B>SetVisibleSurface</B>
+<P>The <A HREF="wce50lrfddgpesetvisiblesurface.htm">SetVisibleSurface</A> function has been added by DDGPE. By default, the DDGPE implementation of this function does nothing. However, to support DirectDraw surface flips, you should implement this function. It should change the display to show the selected surface. The current GDI primary surface should not be changed.
+
+<PRE class="code">virtual void SetVisibleSurface (
+GPESurf *pSurf,
+BOOL bWaitForVBlank = FALSE
+);</PRE>
+</li>
+</UL>
+
+<H2 class="dtH2"><A NAME="wce50conddgpederivationanchor2"></A>Member Variables You Should Set</H2>
+
+<P>These are DDGPE member variables with explanations of when and why they should be updated:
+
+<UL type="disc">
+	<LI><B>m_pModeEx</B>
+<P>This member variable should always point to the extended mode information for GDI's current display mode. You should update it at initialization time and whenever the GDI primary surface's mode is changed. As a rule, the <I>m_pModeEx</I> member variable should be updated whenever the <B>GPE</B> member variable <I>m_pMode</I> is updated. 
+
+<BLOCKQUOTE class="dtBlock">
+<b class="le">Note</b>&nbsp;&nbsp;&nbsp;Because of the structure of <I>GPEModeEx</I>, <I>m_pModeEx</I> and <I>m_pMode</I> can point to the same block of memory.</BLOCKQUOTE>
+
+<P>To support this member variable, you will need to store extended information for all modes supported by your driver.
+
+<PRE class="code">GPEModeEx m_pModeEx;</PRE>
+</li>
+
+	<LI><B>m_dwPhysicalModeID</B>
+<P>The <I>m_dwPhysicalModeID</I> member variable indicates the index of the mode that is displayed on the screen. This does not necessarily correspond to the current mode of the GDI primary surface.
+
+<P>This value should be updated whenever the hardware's display mode changes regardless of whether or not the pixel format of the GDI primary surface has changed.
+
+<PRE class="code">DWORD m_dwPhysicalModeID;</PRE>
+</li>
+</UL>
+
+<H2 class="dtH2"><A NAME="wce50conddgpederivationanchor3"></A>Functions You Should Call</H2>
+
+<UL type="disc">
+	<LI><B>SetDriverGUID</B>
+<P>You should call the <B>SetDriverGUID</B> function to supply the DDGPE object with a unique way to identify your driver from other drivers. <B>DDGPESurf</B> objects that your driver creates should also be tagged with this GUID.
+
+<PRE class="code">virtual void SetDriverGUID (
+GUID guidDriverGUID
+);</PRE>
+</li>
+</UL>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50condriverextensionusingddgpe.htm">Driver Extension Using DDGPE</A> </P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

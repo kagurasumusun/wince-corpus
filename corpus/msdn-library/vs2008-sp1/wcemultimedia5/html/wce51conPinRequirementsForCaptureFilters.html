@@ -1,0 +1,119 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Pin Requirements for Capture Filters</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Pin Requirements for Capture Filters"/>
+<MSHelp:RLTitle Title="Pin Requirements for Capture Filters"/>
+<MSHelp:Keyword Index="A" Term="wce51conPinRequirementsForCaptureFilters"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Feature"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="directshow_concepts1.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="True"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+<MSHelp:Attr Name="PBFeature" Value="SYSGEN_DSHOW"/>
+<MSHelp:Attr Name="PBOnly" Value="False"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_1063669">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce51conpinrequirementsforcapturefilters"></A>Pin Requirements for Capture Filters</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P><B>Applies to:</B> Devices based on Windows Mobile Version 5.0 and later</P>
+
+<H2 class="dtH2">Pin Name</H2>
+
+<P>You can give a pin any name. If the pin name begins with the tilde (~) character, the Filter Graph Manager does not automatically render that pin when an application calls <A HREF="wce50lrfigraphbuilderrenderfile.htm">IGraphBuilder::RenderFile</A>. For example, if the filter has a capture pin and a preview pin, you might want them "~Capture" and "Preview," respectively. If an application renders that filter in a graph, the preview pin will connect to its default renderer, and nothing will connect to the capture pin, which is a reasonable default behavior. This can also apply to pins that deliver informational data that is not meant to be rendered, or pins that need custom properties set. Note that pins with the tilde (~) prefix can still be connected manually by the application.</P>
+
+<H2 class="dtH2">Pin Category</H2>
+
+<P>A capture filter always has a capture pin, and might have a preview pin. Some capture filters might have other output pins, to deliver other types of data, such as control information. Each output pin must expose the <MSHelp:link keywords="wce51lrfIKsPropertySet" TABINDEX="0">IKsPropertySet interface</MSHelp:link>. Applications use this interface to determine the pin category. The pin typically returns either PIN_CATEGORY_CAPTURE or PIN_CATEGORY_PREVIEW. For more information, see <A HREF="wce51conpinpropertyset.htm">Pin Property Set</A>. </P>
+
+<P>The following example shows how to implement <MSHelp:link keywords="wce51lrfIKsPropertySet" TABINDEX="0">IKsPropertySet</MSHelp:link> to return the pin category on a capture pin:</P>
+
+<PRE class="code">// Set: Cannot set any properties.
+HRESULT CMyCapturePin::Set(REFGUID guidPropSet, DWORD dwID,
+    void *pInstanceData, DWORD cbInstanceData, void *pPropData, 
+    DWORD cbPropData)
+{
+    return E_NOTIMPL;
+}
+
+// Get: Return the pin category (our only property). 
+HRESULT CMyCapturePin::Get(
+    REFGUID guidPropSet,   // Which property set.
+    DWORD dwPropID,        // Which property in that set.
+    void *pInstanceData,   // Instance data (ignore).
+    DWORD cbInstanceData,  // Size of the instance data (ignore).
+    void *pPropData,       // Buffer to receive the property data.
+    DWORD cbPropData,      // Size of the buffer.
+    DWORD *pcbReturned     // Return the size of the property.
+)
+{
+    if (guidPropSet != AMPROPSETID_Pin) 
+        return E_PROP_SET_UNSUPPORTED;
+    if (dwPropID != AMPROPERTY_PIN_CATEGORY)
+        return E_PROP_ID_UNSUPPORTED;
+    if (pPropData == NULL &amp;&amp; pcbReturned == NULL)
+        return E_POINTER;
+    if (pcbReturned)
+        *pcbReturned = sizeof(GUID);
+    if (pPropData == NULL)  // Caller just wants to know the size.
+        return S_OK;
+    if (cbPropData &lt; sizeof(GUID)) // The buffer is too small.
+        return E_UNEXPECTED;
+    *(GUID *)pPropData = PIN_CATEGORY_CAPTURE;
+    return S_OK;
+}
+
+// QuerySupported: Query whether the pin supports the specified property.
+HRESULT CMyCapturePin::QuerySupported(REFGUID guidPropSet, DWORD dwPropID,
+    DWORD *pTypeSupport)
+{
+    if (guidPropSet != AMPROPSETID_Pin)
+        return E_PROP_SET_UNSUPPORTED;
+    if (dwPropID != AMPROPERTY_PIN_CATEGORY)
+        return E_PROP_ID_UNSUPPORTED;
+    if (pTypeSupport)
+        // We support getting this property, but not setting it.
+        *pTypeSupport = KSPROPERTY_SUPPORT_GET; 
+    return S_OK;
+}</PRE>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce51conwritingcapturefilters.htm">Writing Capture Filters</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

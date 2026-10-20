@@ -1,0 +1,165 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>IMAPITable::SetColumns</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="IMAPITable::SetColumns"/>
+<MSHelp:RLTitle Title="IMAPITable::SetColumns"/>
+<MSHelp:Keyword Index="K" Term="IMAPITable,SetColumns"/>
+<MSHelp:Keyword Index="A" Term="mob5lrfIMAPITableSetColumns"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Application"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbsmartphone"/>
+<MSHelp:Attr Name="Product" Value="kbPocketPC"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="Technology" Value="kbPocketPC"/>
+<MSHelp:Attr Name="Technology" Value="kbSmartphone"/>
+<MSHelp:Attr Name="TopicType" Value="apiref"/>
+<MSHelp:Attr Name="Filename" Value="CE_MAPI_iFace_magneto.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="True"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_1064723">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Windows Mobile Version 5.0 SDK<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="mob5lrfimapitablesetcolumns"></A>IMAPITable::SetColumns</H1>
+<!--Feedback Link Top Start-->
+<P CLASS="feedback"><font size="1"><a href="mailto:medfdbk&#64;microsoft.com?subject=Product: Windows Mobile | Version: 5.0 | Release: SDK | Title: IMAPITable::SetColumns | Filename: mob5lrfimapitablesetcolumns.htm | Built on: Wednesday, September 14, 2005">Send Feedback</a> on this topic to the authors</font></p>
+<!--Feedback Link Top End-->
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>The <B>SetColumns</B> method defines the particular properties and their order of appearance as columns in the table.</P>
+
+<BLOCKQUOTE class="dtBlock">
+<b class="le">Note</b>&nbsp;&nbsp;&nbsp;This method is not supported on recipient tables.</BLOCKQUOTE>
+
+<H4 class="dtH4">Syntax</H4>
+
+<PRE class="syntax"><B>HRESULT SetColumns (</B>
+<B>  LPSPropTagArray </B><I>lpPropTagArray</I><B>,</B>
+<B>  ULONG </B><I>ulFlags</I>
+<B>);</B></PRE>
+
+<H4 class="dtH4">Parameters</H4>
+
+<DL>
+<DT><I>lpPropTagArray</I></DT>
+
+<DD>[in] Reference to an array of property tags identifying properties to be included as columns in the table. The property type portion of each tag can be set to a valid type or to <B>PR_NULL</B> to reserve space for subsequent additions. <I>lpPropTagArray</I> cannot be set to <B>NULL</B>; every table must have at least one column. </dd>
+
+<DT><I>ulFlags</I></DT>
+
+<DD>[in] Not used; must be zero.</dd>
+</DL>
+
+<H4 class="dtH4">Return Values</H4>
+
+<P>This method returns the standard values <B>E_INVALIDARG</B>, <B>E_OUTOFMEMORY</B>, <B>E_UNEXPECTED</B>, and <B>E_FAIL</B>, as well as the following:
+
+<DL>
+<DT><B>S_OK</B></DT>
+
+<DD>Indicates success.</dd>
+
+<DT><B>MAPI_E_BUSY</B></DT>
+
+<DD>Another operation is in progress that prevents the column setting operation from starting. Either the operation in progress should be allowed to complete or it should be stopped.</dd>
+</DL>
+
+<H4 class="dtH4">Remarks</H4>
+
+<P>The column set of a table is the group of properties that make up the columns for the rows in the table. There is a default column set for each type of table. The default column set is made up of the properties that the table implementer automatically includes. Table users can alter this default set by calling <B>SetColumns</B>. They can request that other columns be added to the default set (if the table implementer supports other columns), that columns be removed, or that the order of columns be changed. <B>SetColumns</B> specifies the columns that are returned with each row and the order of these columns within each row. </P>
+
+<P>The success of the <B>SetColumns</B> operation is apparent only after a subsequent call has been made to retrieve the data of the table. It is then that any errors are reported. </P>
+
+<P>When building the property tag array for the <I>lpPropTagArray</I> parameter, order the tags in the order that you want the columns to appear in the table view. </P>
+
+<P>You can include property tags set to <B>PR_NULL</B> in the property tag array to reserve space in the column set. Reserving space allows you to add to a column set without having to allocate a new property tag array. </P>
+
+<H4 class="dtH4">Code Example</H4>
+
+<P>The following code example demonstrates how to use <B>SetColumns</B>.</P>
+
+<BLOCKQUOTE class="dtBlock">
+<b class="le">Note</b>&nbsp;&nbsp;&nbsp;To make the following code example easier to read, security checking and error handling are not included. This code example should not be used in a release configuration unless it has been modified to include them.</BLOCKQUOTE>
+
+<PRE class="code">HRESULT SetColumnsExample(IMAPIFolder * pfldr) 
+{
+
+    HRESULT hr          = E_FAIL;   
+    IMAPITable * pTable = NULL;
+    ULONG rgTags[]      = {2, PR_MESSAGE_SIZE, PR_ENTRYID};
+    SRowSet * psrs      = NULL;
+    
+    // Get the messages in this folder.
+    hr = pfldr-&gt;GetContentsTable(NULL, &amp;pTable);
+    
+    // Set the columns you want to retrieve.
+    hr = pTable-&gt;SetColumns((LPSPropTagArray) rgTags, 0);
+
+    // Loop through the messages in this folder.
+    while (SUCCEEDED(pTable-&gt;QueryRows(1, 0, &amp;psrs)))
+    {
+        // Check for the end of the table.
+        if (psrs-&gt;cRows != 1)
+        {
+            break;
+        }
+        
+        // Check that the table contains the columns you want.
+        if (psrs-&gt;aRow[0].lpProps[0].ulPropTag == PR_MESSAGE_SIZE)
+        {
+            DEBUGMSG(TRUE, (L"PR_MESSAGE_SIZE: %d\r\n", psrs-&gt;aRow[0].lpProps[0].Value.ul));
+        }
+    }
+
+     //Clean up
+    FreeProws(psrs);
+
+    return hr;
+
+}</PRE>
+
+<H4 class="dtH4">Requirements</H4>
+
+<P><B>Pocket&nbsp;PC:</B> Pocket&nbsp;PC&nbsp;2002 and later<BR>
+<B>Smartphone:</B> Smartphone&nbsp;2002 and later<BR>
+<B>OS&nbsp;Versions:</B> Windows&nbsp;CE&nbsp;3.0 and later<BR>
+<B>Header:</B> mapidefs.h<BR>
+<B>Library:</B> cemapi.lib</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="mob5lrfimapitable.htm">IMAPITable</A> | <A HREF="mob5lrfimapitablequeryrows.htm">IMAPITable::QueryRows</A> | <A HREF="mob5lrfimapitablerestrict.htm">IMAPITable::Restrict</A> | <A HREF="mob5lrfimapitablesorttable.htm">IMAPITable::SortTable</A> | <A HREF="mob5orimessaging.htm">Messaging</A> | <A HREF="mob5lrfsproptagarray.htm">SPropTagArray</A> | <A HREF="mob5lrfspropvalue.htm">SPropValue</A> | <A HREF="mob5lrfsrowset.htm">SRowSet</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Feedback Link Bottom Start-->
+<p><font size="1"><a href="mailto:medfdbk&#64;microsoft.com?subject=Product: Windows Mobile | Version: 5.0 | Release: SDK | Title: IMAPITable::SetColumns | Filename: mob5lrfimapitablesetcolumns.htm | Built on: Wednesday, September 14, 2005">Send Feedback</a> on this topic to the authors</font></p>
+<!--Feedback Link Bottom End-->
+<!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="mob5conCopyrightInformationForMagneto" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link></font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

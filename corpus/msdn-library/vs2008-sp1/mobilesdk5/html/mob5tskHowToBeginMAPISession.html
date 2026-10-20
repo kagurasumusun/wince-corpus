@@ -1,0 +1,110 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>How to: Begin a MAPI Session</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="How to: Begin a MAPI Session"/>
+<MSHelp:RLTitle Title="How to: Begin a MAPI Session"/>
+<MSHelp:Keyword Index="A" Term="mob5tskHowToBeginMAPISession"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Application"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbsmartphone"/>
+<MSHelp:Attr Name="Product" Value="kbPocketPC"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="Technology" Value="kbPocketPC"/>
+<MSHelp:Attr Name="Technology" Value="kbSmartphone"/>
+<MSHelp:Attr Name="TopicType" Value="kbTask"/>
+<MSHelp:Attr Name="Filename" Value="Messaging_magneto.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="True"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_1063799">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Windows Mobile Version 5.0 SDK<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="mob5tskhowtobeginmapisession"></A>How to: Begin a MAPI Session</H1>
+<!--Feedback Link Top Start-->
+<P CLASS="feedback"><font size="1"><a href="mailto:medfdbk&#64;microsoft.com?subject=Product: Windows Mobile | Version: 5.0 | Release: SDK | Title: How to: Begin a MAPI Session | Filename: mob5tskhowtobeginmapisession.htm | Built on: Wednesday, September 14, 2005">Send Feedback</a> on this topic to the authors</font></p>
+<!--Feedback Link Top End-->
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>Before you can access a message store, you must initialize the MAPI subsystem and log onto a MAPI session. This gives you a referfence to an <A HREF="mob5lrfimapisession.htm">IMAPISession</A> interface object, which you can use to access the message store table, message stores, message folders, and messages.</P>
+
+<P class="labelproc"><B>To begin the MAPI session</B>
+
+<OL type="1">
+	<LI>Increment the MAPI subsystem reference count, and initialize global data for the MAPI DLL with the <A HREF="mob5lrfmapiinitialize.htm">MAPIInitialize</A> global MAPI function, as follows:
+<PRE class="code">hr = MAPIInitialize(NULL);</PRE>
+</li>
+
+	<LI>Log onto a MAPI session with the <A HREF="mob5lrfmapilogonex.htm">MAPILogonEx</A> global MAPI function, and get a reference to an <A HREF="mob5lrficemapisession.htm">ICEMAPISession</A> interface object:
+<PRE class="code">hr = MAPILogonEx(0, NULL, NULL, 0, <code><b class="cfe">(LPMAPISESSION *)&amp;pSession</b></code>);</PRE>
+</li>
+</OL>
+
+<H4 class="dtH4">Code Example</H4>
+
+<P>The following code example demonstrates how to begin a MAPI session.</P>
+
+<BLOCKQUOTE class="dtBlock">
+<b class="le">Note</b>&nbsp;&nbsp;&nbsp;To make the following code example easier to read, security checking and error handling are not included. This code example should not be used in a release configuration unless it has been modified to include them.</BLOCKQUOTE>
+
+<PRE class="code">HRESULT hr;
+// ICEMAPISession inherits IMAPISession, so we can use it in MAPILogonEx as long as we cast it to IMAPISession.
+// Since we are using the Windows Mobile version, rather than the desktop version of MAPI, we should use ICEMAPISession.
+ICEMAPISession * pSession = NULL;
+
+<code><b class="cfe">hr = MAPIInitialize(NULL);</b></code>
+if (hr != S_OK) {
+    // MAPIInitialize failed.
+    MessageBox(NULL, 
+               _T("MAPIInitialize failed."),
+               _T("Warning"), 
+               MB_OK);
+    exit(0);  // Replace with specific error handling.
+}
+
+<code><b class="cfe">hr = MAPILogonEx(0, NULL, NULL, 0, (LPMAPISESSION *)&amp;pSession);</b></code>
+if (hr != S_OK) {
+    // MAPILogonEx failed.
+    MessageBox(NULL, 
+               _T("MAPILogonEx failed."),
+               _T("Warning"), 
+               MB_OK);
+    exit(0);  // Replace with specific error handling.
+}</PRE>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="mohowhowtocreatemessagingapplication.htm">How to Create a Messaging Application</A> | <A HREF="mob5orimessagingoverview.htm">Messaging Application Development for Windows Mobile-based Devices</A> | <A HREF="mob5orimessaging.htm">Messaging</A> | <A HREF="mob5tskhowtoconnecttomessagestore.htm">How to: Connect to a Message Store</A> | <A HREF="mob5tskhowtocreatemessage.htm">How to: Create a Message</A> | <A HREF="mob5tskhowtosendmessage.htm">How to: Send a Message</A> | <A HREF="mob5tskhowtoendmapisession.htm">How to: End a MAPI Session</A> | <A HREF="mob5conmessagingsamplecode.htm">Messaging Sample Code</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Feedback Link Bottom Start-->
+<p><font size="1"><a href="mailto:medfdbk&#64;microsoft.com?subject=Product: Windows Mobile | Version: 5.0 | Release: SDK | Title: How to: Begin a MAPI Session | Filename: mob5tskhowtobeginmapisession.htm | Built on: Wednesday, September 14, 2005">Send Feedback</a> on this topic to the authors</font></p>
+<!--Feedback Link Bottom End-->
+<!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="mob5conCopyrightInformationForMagneto" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link></font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

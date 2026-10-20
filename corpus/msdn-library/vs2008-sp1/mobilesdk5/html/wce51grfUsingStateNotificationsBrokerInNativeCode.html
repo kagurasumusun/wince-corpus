@@ -1,0 +1,233 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Using the State and Notifications Broker in Native Code</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Using the State and Notifications Broker in Native Code"/>
+<MSHelp:RLTitle Title="Using the State and Notifications Broker in Native Code"/>
+<MSHelp:Keyword Index="A" Term="wce51grfUsingStateNotificationsBrokerInNativeCode"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Application"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbsmartphone"/>
+<MSHelp:Attr Name="Product" Value="kbPocketPC"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="Technology" Value="kbPocketPC"/>
+<MSHelp:Attr Name="Technology" Value="kbSmartphone"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="statstor_concepts_magneto.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="True"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="True"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_1076253">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Windows Mobile Version 5.0 SDK<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce51grfusingstatenotificationsbrokerinnativecode"></A>Using the State and Notifications Broker in Native Code</H1>
+<!--Feedback Link Top Start-->
+<P CLASS="feedback"><font size="1"><a href="mailto:medfdbk&#64;microsoft.com?subject=Product: Windows Mobile | Version: 5.0 | Release: SDK | Title: Using the State and Notifications Broker in Native Code | Filename: wce51grfusingstatenotificationsbrokerinnativecode.htm | Built on: Wednesday, September 14, 2005">Send Feedback</a> on this topic to the authors</font></p>
+<!--Feedback Link Top End-->
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>The header file snapi.h contains registry definitions for all the base notifications that are provided by the system. For each notification, snapi.h contains the registry root - either HKEY_CURRENT_USER or HKEY_LOCAL_MACHINE, the registry path under the root, and the registry value under the path that contains the value of the notification.</P>
+
+<P>For example the ActiveApplication notification, located at HKEY_CURRENT_USER\System\State\"Active Application" in the registry has the following definitions:</P>
+
+<PRE class="code">#define SN_ACTIVEAPPLICATION_ROOT HKEY_CURRENT_USER
+#define SN_ACTIVEAPPLICATION_PATH TEXT("System\\State\\Shell")
+#define SN_ACTIVEAPPLICATION_VALUE TEXT("Active Application")</PRE>
+
+<P>Some notifications also have a bitmask defined. For example the PhoneNoSim notification has the following definitions:</P>
+
+<PRE class="code">#define SN_PHONENOSIM_ROOT HKEY_LOCAL_MACHINE
+#define SN_PHONENOSIM_PATH TEXT("System\\State\\Phone")
+#define SN_PHONENOSIM_VALUE TEXT("Status")
+#define SN_PHONENOSIM_BITMASK 2</PRE>
+
+<P>The bitmask indicates which bit or bits contain the state value of the notification. When registering the notification, it is important to set the bitmask in the <A HREF="wce50lrfnotificationcondition.htm">NOTIFICATIONCONDITION</A> structure. When receiving the notification, this bitmask is used again to look at only the bits containing the value that has changed.</P>
+
+<H4 class="dtH4">Code Example</H4>
+
+<P>The following code example demonstrates how to use bitmasks when registering a notification and when receiving the notification event.</P>
+
+<BLOCKQUOTE class="dtBlock">
+<b class="le">Note</b>&nbsp;&nbsp;&nbsp;To make the following code example easier to read, security checking and error handling are not included. This code example should not be used in a release configuration unless it has been modified to include them.</BLOCKQUOTE>
+
+<PRE class="code">#include &lt;regext.h&gt;
+#include &lt;snapi.h&gt;
+
+// Register the window notification
+HRESULT RegisterWindows()
+{
+  HRESULT hr;
+  NOTIFICATIONCONDITION nc;
+
+  // Register the phone call calling notification.
+  // By setting dwMask = SN_PHONECALLCALLING_BITMASK, we will get a notification only when there is a 
+  // change in the bit indicating whether the phone is currently attempting to connect an outgoing call.
+
+  nc.ctComparisonType = REG_CT_ANYCHANGE;
+  nc.dwMask           = SN_PHONECALLCALLING_BITMASK;
+  nc.TargetValue.dw   = 0;
+
+  hr = RegistryNotifyCallback(
+                SN_PHONECALLCALLING_ROOT,     // registry root to monitor
+                SN_PHONECALLCALLING_PATH,     // registry path to monitor
+                SN_PHONECALLCALLING_VALUE,    // registry value to monitor
+                PhoneCallCallingCallback,     // callback to be called when bit changes
+                0,       
+                &amp;nc,
+                &amp;g_NotifyPhoneCallCalling
+                );
+
+  return hr;
+}
+
+
+// Callback function that is called when the bit indicating a call is being made changes
+void PhoneCallCallingCallback(HREGNOTIFY hNotify, DWORD dwUserData, const PBYTE pData, const UINT cbData)
+{
+  DWORD PhoneCallCallingStatus;
+  PDWORD pdwData;
+  TCHAR PhoneCallCallingStr[STATUS_STRING_LEN];
+
+  StringCchCopy(PhoneCallCallingStr, STATUS_STRING_LEN, L"");
+
+  // get the changed value
+  pdwData = (DWORD *)pData;
+  PhoneCallCallingStatus = *pdwData;
+
+  // only look at the value of the bit we are interested in
+  if (PhoneCallCallingStatus &amp; SN_PHONECALLCALLING_BITMASK)
+  {
+    StringCchCopy(PhoneCallCallingStr, STATUS_STRING_LEN, L"Attempting to connect an outgoing call");
+  }
+  else 
+  {
+    StringCchCopy(PhoneCallCallingStr, STATUS_STRING_LEN, L"Not connecting");
+  }
+
+  // TODO: use PhoneCallCallingStr as needed
+
+}</PRE>
+
+<P>The battery state and battery strength notifications use the high word and low word of the registry setting to determine their values. See the <A HREF="wce51samstatenotificationbrokersample.htm">State and Notifications Broker Sample</A> for an example on how to use these bitmasks. The table below outlines how to interpret these values.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=25%>Notification</TH>
+<TH width=25%>Description</TH>
+<TH width=25%>Bitmask</TH>
+<TH width=25%>Value</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=25%>PowerBatteryBackupState</TD>
+<TD width=25%>Current backup battery state (for example, it is low, and charging). This enumeration allows a bitwise combination of its member values. The actual combinations returned depend on the battery driver implementation.</TD>
+<TD width=25%>
+<DL>
+<DT>0x0000FFFF</DT>
+</DL>
+</TD>
+<TD width=25%>0 Normal 
+<P>1 NotPresent </P>
+
+<P>2 Charging </P>
+
+<P>4 Low </P>
+
+<P>8 Critical </P>
+</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=25%>PowerBatteryBackupStrength</TD>
+<TD width=25%>Remaining backup battery power level.</TD>
+<TD width=25%>
+<DL>
+<DT>0xFFFF0000</DT>
+</DL>
+</TD>
+<TD width=25%>0 VeryLow 
+<P>21 Low </P>
+
+<P>41 Medium </P>
+
+<P>61 High</P>
+
+<P>81 VeryHigh </P>
+</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=25%>PowerBatteryState</TD>
+<TD width=25%>Current battery state (for example, it is low, and charging). This enumeration allows a bitwise combination of its member values. The actual combinations returned depend on the battery driver implementation.</TD>
+<TD width=25%>
+<DL>
+<DT>0x0000FFFF</DT>
+</DL>
+</TD>
+<TD width=25%>0 Normal 
+<P>1 NotPresent </P>
+
+<P>2 Charging </P>
+
+<P>4 Low </P>
+
+<P>8 Critical </P>
+</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=25%>PowerBatteryStrength</TD>
+<TD width=25%>Remaining battery power level.</TD>
+<TD width=25%>
+<DL>
+<DT>0xFFFF0000</DT>
+</DL>
+</TD>
+<TD width=25%>0 VeryLow 
+<P>21 Low </P>
+
+<P>41 Medium </P>
+
+<P>61 High</P>
+
+<P>81 VeryHigh </P>
+</TD>
+</TR>
+</table></div>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50constatenotificationsbroker.htm">State and Notifications Broker</A> | <A HREF="wce50grfstatemanagementnotificationsreference.htm">State and Notifications Broker Reference</A> | <A HREF="wce50constatstorbaseproperties.htm">State and Notifications Broker Base Properties</A> | <A HREF="wce51samstatenotificationbrokersample.htm">State and Notifications Broker Sample</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Feedback Link Bottom Start-->
+<p><font size="1"><a href="mailto:medfdbk&#64;microsoft.com?subject=Product: Windows Mobile | Version: 5.0 | Release: SDK | Title: Using the State and Notifications Broker in Native Code | Filename: wce51grfusingstatenotificationsbrokerinnativecode.htm | Built on: Wednesday, September 14, 2005">Send Feedback</a> on this topic to the authors</font></p>
+<!--Feedback Link Bottom End-->
+<!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="mob5conCopyrightInformationForMagneto" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link></font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

@@ -1,0 +1,124 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Implementing an Image Decoder Object</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Implementing an Image Decoder Object"/>
+<MSHelp:RLTitle Title="Implementing an Image Decoder Object"/>
+<MSHelp:Keyword Index="A" Term="wce51conImplementingImageDecoderObject"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Feature"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="imaging_concepts.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="False"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+<MSHelp:Attr Name="PBFeature" Value="SYSGEN_IMAGING"/>
+<MSHelp:Attr Name="PBOnly" Value="False"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_1075665">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce51conimplementingimagedecoderobject"></A>Implementing an Image Decoder Object</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>The Imaging API is used to standardize and facilitate the communication between an image source and an image sink. The image source can encode or decode image data into a format used by the image sink. </P>
+
+<P>An image decoder object takes in encoded image data and produces, as output, image data decoded to a raw graphic format. This data can then be pushed from the image source to the image sink. </P>
+
+<P>An image sink is sometimes said to consume the decoded image data produced by the source.</P>
+
+<P>Use the following instructions to implement an image decoder object for transferring image data from an image source object to an image sink.</P>
+
+<P class="labelproc"><B>To implement an image decoder object</B>
+
+<OL type="1">
+	<LI>Create an image source and provide it with image data to decode.</li>
+
+	<LI>Be sure your source obtains a pointer to an <A HREF="wce50lrfiimagesink.htm">IImageSink</A> interface to receive the decoded image data.  
+<P>The sink can be designed to accept several pixel formats, but at a minimum it must accept the default format PixelFormat32bppARGB. For more information, see <A HREF="wce50lrfpixelformatvalues.htm">PixelFormat Values</A>.  
+
+<P>All encoders and <A HREF="wce50lrfibitmapimage.htm">IBitmapImage</A> interfaces can accept the format PixelFormat32bppARGB. 
+</li>
+
+	<LI>Be sure your source calls its decoder's <A HREF="wce50lrfiimagedecoderbegindecode.htm">IImageDecoder::BeginDecode</A> method.  
+<P>This allows the source to take a reference to the sink, but it does not yet allow the source to decode or transfer data. Internally, the source should also initialize all variables and prepare files required for the decode operation. 
+</li>
+
+	<LI>Be sure your source calls its decoder's <A HREF="wce50lrfiimagedecoderdecode.htm">IImageDecoder::Decode</A> method.  
+<P>This causes the source to send data to the sink as necessary.
+</li>
+</OL>
+
+<P>The following steps take place within the call to <B>IImageDecoder::Decode</B>.
+
+<OL type="1">
+	<LI>If your decoder supports property items, it should send those items to the sink, using the following process.
+<OL type="a">
+	<LI>Call <A HREF="wce50lrfiimagesinkgetpropertybuffer.htm">IImageSink::GetPropertyBuffer</A> with the correct size for holding all image properties and their data.</li>
+
+	<LI>Call <A HREF="wce50lrfiimagedecodergetallpropertyitems.htm">IImageDecoder::GetAllPropertyItems</A> to fill the property buffer.</li>
+
+	<LI>Call <A HREF="wce50lrfiimagesinkpushpropertyitems.htm">IImageSink::PushPropertyItems</A> with the property buffer to send the property items to the sink.</li>
+
+	<LI>Allow the sink to automatically handle deallocating the buffer on its own.</li>
+</OL>
+</li>
+
+	<LI>Your decoder must prepare an <A HREF="wce50lrfimageinfo2.htm">ImageInfo (Imaging API)</A> structure to describe its preferred parameters for the connection between the source and the sink; then it must call <A HREF="wce50lrfiimagesinkbeginsink.htm">IImageSink::BeginSink</A> to begin negotiating the connection parameters between source and sink.</li>
+
+	<LI>When the call to <B>IImageSink::BeginSink</B> returns to the decoder, the data in the <B>ImageInfo</B> structure is modified to describe the parameter settings the sink can use.</li>
+
+	<LI>Your decoder can begin decoding the image by calling <A HREF="wce50lrfiimagesinkgetpixeldatabuffer.htm">IImageSink::GetPixelDataBuffer</A> and <A HREF="wce50lrfiimagesinkreleasepixeldatabuffer.htm">IImageSink::ReleasePixelDataBuffer</A>, or by calling <A HREF="wce50lrfiimagesinkpushpixeldata.htm">IImageSink::PushPixelData</A>.  The decoder must use either the <A HREF="wce50lrfpixelformat.htm">PixelFormat</A> value returned by the sink from the call to <B>IImageSink::BeginSink</B>, or the value PixelFormat32bppARGB. </li>
+
+	<LI>When finished, your decoder must call <A HREF="wce50lrfiimagesinkendsink.htm">IImageSink::EndSink</A>.</li>
+
+	<LI>The decoder can now return from the call to <B>IImageDecoder::Decode</B>.</li>
+</OL>
+
+<P>The following step takes place in the source.  
+
+<OL type="1">
+	<LI>After returning from the decoding function, your source should call <A HREF="wce50lrfiimagedecoderenddecode.htm">IImageDecoder::EndDecode</A> to complete and clean up the decoding process.</li>
+</OL>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50conimagingapplicationdevelopment.htm">Imaging Application Development</A></P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50conimagingapplicationdevelopment.htm">Imaging Application Development</A></P>
+
+<P><A HREF="wce51conimplementingimageencoderobject.htm">Implementing an Image Encoder Object</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

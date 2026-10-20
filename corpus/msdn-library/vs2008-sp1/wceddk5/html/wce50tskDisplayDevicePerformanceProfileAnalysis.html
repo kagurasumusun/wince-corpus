@@ -1,0 +1,348 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Display Device Performance Profile Analysis</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Display Device Performance Profile Analysis"/>
+<MSHelp:RLTitle Title="Display Device Performance Profile Analysis"/>
+<MSHelp:Keyword Index="A" Term="wce50tskDisplayDevicePerformanceProfileAnalysis"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Driver"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="False"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbTask"/>
+<MSHelp:Attr Name="Filename" Value="howto_optimizingdisplaydriver.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="True"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+<MSHelp:Attr Name="PBFeature" Value="DisplayDriver"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_3017608">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50tskdisplaydeviceperformanceprofileanalysis"></A>Display Device Performance Profile Analysis</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>The following topic examines the data obtained from initial profiling run in <A HREF="wce50howhowtoprofileandoptimizeadisplaydriver.htm">How to Profile and Optimize a Display Driver</A>.</P>
+
+<H2 class="dtH2">Monte Carlo Profiling Data</H2>
+
+<P>After performing the steps in <A HREF="wce50tskobtainingaperformanceprofileforadisplaydriver.htm">Obtaining a Performance Profile for a Display Driver</A>, the data in your Debug window should resemble the following output.</P>
+
+<BLOCKQUOTE class="dtBlock">
+<b class="le">Note</b>&nbsp;&nbsp;&nbsp;For clarity, the tick count, process IDs, and thread IDs have been removed from the following output. Also, the specific timer values vary from run to run because of the manual process of controlling the profiling process. </BLOCKQUOTE>
+
+<PRE class="code">Kernel Profiler: Gathering MonteCarlo data in buffered mode
+ProfileStart() : Allocated 13960 kB for Profiler Buffer (0x48000000)
+Starting profile timer at 200 uS rate
+ProfApp:  Took 34297 ms to perform blts. 
+Kernel Profiler: Looking up symbols for 503297 hits.
+.
+.
+<I>(Additional lines omitted for clarity.)</I>
+.
+.
+Total samples recorded = 503297
+Module        Hits        Percent
+------------  ----------  -------
+nk.exe            332367     66.0
+ddi_flat.dll      170117     33.8
+gwes.exe             662      0.1
+coredll.dll          108      0.0
+ProfApp.exe           25      0.0
+relfsd.dll             3      0.0
+filesys.exe            2      0.0
+shell.exe              2      0.0
+explorer.exe           2      0.0
+pm.dll                 1      0.0
+UNKNOWN                8      0.0
+
+Hits       Percent Address  Module       Routine
+---------- ------- -------- ------------:---------------------
+    328544    65.2 802351c2 nk.exe      :_IDLE_STATE
+    101277    20.1 03db634d ddi_flat.dll:?EmulatedBlt_Internal
+     64291    12.7 03db7c7f ddi_flat.dll:?MaskedSrcToMaskedDst
+      3864     0.7 03db2068 ddi_flat.dll:?CursorOn
+      1351     0.2 8025a52f nk.exe      :_NE2000_WRITE_PORT_UCHAR
+      1181     0.2 8025a53b nk.exe      :_NE2000_READ_PORT_UCHAR
+       345     0.0 03db2268 ddi_flat.dll:?CursorOff
+       162     0.0 80229a7f nk.exe      :_PerfCountSinceTick
+       153     0.0 8025a54b nk.exe      :_NE2000_READ_PORT_USHORT
+       150     0.0 0003d906 gwes.exe    :?dwRealizeColor
+        98     0.0 8025ad06 nk.exe      :_HandleReceive
+
+<I>(Additional lines omitted for clarity.)</I>
+
+         1     0.0 0001f663 explorer.exe:?ItemCount
+         1     0.0 00029696 explorer.exe:_GetSysColorBrush
+        33     0.0                      :&lt;UNACCOUNTED FOR&gt;</PRE>
+
+<H2 class="dtH2">DispPerf.exe Data</H2>
+
+<P>The following tables show the single set of data from running ProfApp.exe in <A HREF="wce50tskobtainingaperformanceprofileforadisplaydriver.htm">Obtaining a Performance Profile for a Display Driver</A> displayed in several smaller tables. </P>
+
+<P>The following table shows the overall summary of the number of times each raster operation was called. </P>
+
+<P>For information about converting the ROP codes reported by DispPerf to the ROP codes listed in <MSHelp:link keywords="wce50grfTernaryRasterOperations" TABINDEX="0">Ternary Raster Operations</MSHelp:link>, see <A HREF="wce50condisplaydriverperformanceprofiling.htm">Display Driver Performance Profiling</A>.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=50%>RopCode</TH>
+<TH width=50%>cTotal</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>0x0000CCCC</TD>
+<TD width=50%>1063</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>0x0000F0F0</TD>
+<TD width=50%>6222</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>0x00008888</TD>
+<TD width=50%>59</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>0x00006666</TD>
+<TD width=50%>52</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>0x0000AAF0</TD>
+<TD width=50%>4537</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>0x0000EEEE</TD>
+<TD width=50%>7</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>0xFEFEFFF1</TD>
+<TD width=50%>49</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>0x0000E2E2</TD>
+<TD width=50%>1</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>0x00005555</TD>
+<TD width=50%>378</TD>
+</TR>
+</table></div>
+
+<P>The following table shows the profiling results from all the ROPs performed by GPE functions.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=25%>RopCode</TH>
+<TH width=25%>cGPE</TH>
+<TH width=25%>dwGPETime</TH>
+<TH width=25%>Avg.GPETime</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=25%>0x0000CCCC</TD>
+<TD width=25%>1045</TD>
+<TD width=25%>40923908</TD>
+<TD width=25%>39161</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=25%>0x0000F0F0</TD>
+<TD width=25%>668</TD>
+<TD width=25%>21737</TD>
+<TD width=25%>32</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=25%>0x00008888</TD>
+<TD width=25%>59</TD>
+<TD width=25%>41647</TD>
+<TD width=25%>705</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=25%>0x00006666</TD>
+<TD width=25%>52</TD>
+<TD width=25%>28160</TD>
+<TD width=25%>541</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=25%>0x0000AAF0</TD>
+<TD width=25%>3957</TD>
+<TD width=25%>80123</TD>
+<TD width=25%>20</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=25%>0x0000EEEE</TD>
+<TD width=25%>0</TD>
+<TD width=25%>0</TD>
+<TD width=25%>0</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=25%>0xFEFEFFF1</TD>
+<TD width=25%>49</TD>
+<TD width=25%>133721</TD>
+<TD width=25%>2729</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=25%>0x0000E2E2</TD>
+<TD width=25%>1</TD>
+<TD width=25%>355</TD>
+<TD width=25%>355</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=25%>0x00005555</TD>
+<TD width=25%>0</TD>
+<TD width=25%>0</TD>
+<TD width=25%>0</TD>
+</TR>
+</table></div>
+
+<P>The following table shows the profiling results from all the ROPs performed emulation functions. For more information, see <A HREF="wce50lrfbitbltemulationlibraryfunctions.htm">BitBlT Emulation Library Functions</A>.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=25%>RopCode</TH>
+<TH width=25%>cEmul</TH>
+<TH width=25%>dwEmulTime</TH>
+<TH width=25%>Avg.EmulTime</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=25%>0x0000CCCC</TD>
+<TD width=25%>18</TD>
+<TD width=25%>94149</TD>
+<TD width=25%>5230</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=25%>0x0000F0F0</TD>
+<TD width=25%>5554</TD>
+<TD width=25%>486315</TD>
+<TD width=25%>87</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=25%>0x00008888</TD>
+<TD width=25%>0</TD>
+<TD width=25%>0</TD>
+<TD width=25%>0</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=25%>0x00006666</TD>
+<TD width=25%>0</TD>
+<TD width=25%>0</TD>
+<TD width=25%>0</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=25%>0x0000AAF0</TD>
+<TD width=25%>580</TD>
+<TD width=25%>63332</TD>
+<TD width=25%>109</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=25%>0x0000EEEE</TD>
+<TD width=25%>7</TD>
+<TD width=25%>13033</TD>
+<TD width=25%>1861</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=25%>0xFEFEFFF1</TD>
+<TD width=25%>0</TD>
+<TD width=25%>0</TD>
+<TD width=25%>0</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=25%>0x0000E2E2</TD>
+<TD width=25%>0</TD>
+<TD width=25%>0</TD>
+<TD width=25%>0</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=25%>0x00005555</TD>
+<TD width=25%>378</TD>
+<TD width=25%>42907</TD>
+<TD width=25%>113</TD>
+</TR>
+</table></div>
+
+<P>The DispPerf results do not show profiling results for hardware calls because the settings in <A HREF="wce50howhowtoprofileandoptimizeadisplaydriver.htm">How to Profile and Optimize a Display Driver</A> are based on the FLAT driver, which is a general purpose driver that does not make use of advanced hardware capabilities.</P>
+
+<H2 class="dtH2">Analysis of the Profiling Results</H2>
+
+<P>The Monte Carlo profiling results reveal the functions in which the most time was spent during the profiling period. </P>
+
+<P>Specifically, these results show that the system spent the most time in the idle state, most likely waiting for the manual interaction required to start and stop the profiler. </P>
+
+<P>Idle time is both expected and unavoidable with this method, so this result is neither surprising nor interesting for optimizing the display driver.</P>
+
+<P>The second and third lines are more significant for optimization. </P>
+
+<P>The second line shows that a very large percentage of time &#0151; well over 50 percent of the total when the idle time is factored out &#0151; is spent in the driver function <B>EmulatedBlt_Internal</B>. </P>
+
+<P>The next most time-consuming function is <B>MaskedSrcToMaskedDst</B>, taking up nearly 40 percent of the execution time once the idle time is factored out.</P>
+
+<P>The DispPerf.exe results show that the driver spent two orders of magnitude more time performing the 0x0000CCCC (SRCCOPY) raster operation in GPE than during any other operation. This highlights it as a prime candidate for optimization.</P>
+
+<P>A search through the source code shows that the two functions are defined in files located in %_WINCEROOT%\Public\Common\OAK\Drivers\Display\GPE. <B>EmulatedBlt_Internal</B> is defined in Swblt.cpp and <B>MaskedSrcToMaskedDst</B> is defined in Swconvert.cpp. </P>
+
+<P>Examining this code to see how the specific ROP is processed reveals that both of these functions are involved in converting color from the RGB555 format used in the application to the RGB565 format used by the display hardware. <B>EmulatedBlt_Internal</B> is a GPE function called for the blit operation. </P>
+
+<P>It then calls <B>MaskedSrcToMaskedDst</B> for the format conversion. </P>
+
+<P>The function <B>EmulatedBlt_Internal</B> is of particular concern because it is a standard GPE function. </P>
+
+<P>This indicates that not only is there no hardware support for this conversion in the graphics device, there also is no emulation library function for the conversion either.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50howhowtoprofileandoptimizeadisplaydriver.htm">How to Profile and Optimize a Display Driver</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

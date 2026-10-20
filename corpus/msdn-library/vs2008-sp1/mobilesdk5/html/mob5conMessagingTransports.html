@@ -1,0 +1,108 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Messaging Transports</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Messaging Transports"/>
+<MSHelp:RLTitle Title="Messaging Transports"/>
+<MSHelp:Keyword Index="A" Term="mob5conMessagingTransports"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Application"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbsmartphone"/>
+<MSHelp:Attr Name="Product" Value="kbPocketPC"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="Technology" Value="kbPocketPC"/>
+<MSHelp:Attr Name="Technology" Value="kbSmartphone"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="Messaging_magneto.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="False"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="True"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_1063795">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Windows Mobile Version 5.0 SDK<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="mob5conmessagingtransports"></A>Messaging Transports</H1>
+<!--Feedback Link Top Start-->
+<P CLASS="feedback"><font size="1"><a href="mailto:medfdbk&#64;microsoft.com?subject=Product: Windows Mobile | Version: 5.0 | Release: SDK | Title: Messaging Transports | Filename: mob5conmessagingtransports.htm | Built on: Wednesday, September 14, 2005">Send Feedback</a> on this topic to the authors</font></p>
+<!--Feedback Link Top End-->
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>A <I>message transport</I> is a networking protocol that facilitates the transfer of messages between a messaging client application and a messaging host server.</P>
+
+<P>MAPI supports messaging transports by providing functions that allow them to communicate directly with the message stores.
+
+<UL type="disc">
+	<LI>The Messaging application communicates with the message transport by using methods on the <A HREF="mob5lrfimailsynchandler.htm">IMailSyncHandler</A> interface.</li>
+
+	<LI>The message transport communicates with the Messaging application by using methods on the <A HREF="mob5lrfimailsynccallback.htm">IMailSyncCallBack</A> interface.</li>
+</UL>
+
+<P>Mobile devices running Windows Mobile software use Microsoft ActiveSync as the message transport for transferring e-mail and Microsoft Outlook PIM items between the mobile device and the desktop host computer. In addition to ActiveSync, Windows Mobile-based devices support Post Office Protocol 3 (POP3) and Internet Message Access Protocol 4 (IMAP4) for wirelessly transferring e-mail-based message items between the mobile device and Internet e-mail servers. Windows Mobile-based devices also support Short Message Service (SMS) for sending and receiving cellular telephone-based text message items between the mobile device and a Mobile Operator's Short Message Service (SMS) server.</P>
+
+<P>Creating a custom message transport for Pocket PC 2000 involved 40 separate Windows CE MsgStore APIs. This has been simplified in Windows Mobile 2002 software and later with the more streamlined <A HREF="mob5lrfimailsynchandler.htm">IMailSyncHandler</A> interface.</P>
+
+<BLOCKQUOTE class="dtBlock">
+<B><b class="le">Note</b>&nbsp;&nbsp;&nbsp;IMailSyncHandler</B> does not provide backward compatibility for Pocket PC 2000.</BLOCKQUOTE>
+
+<P>A custom messaging transport is a DLL that contains the transport protocols, exports the <A HREF="mob5lrfonestopfactory.htm">OneStopFactory</A> function, and supports the <A HREF="mob5lrfimailsynchandler.htm">IMailSyncHandler</A> interface. </P>
+
+<P>To become active, the custom messaging transport must be registered with Windows CE. The entry specifies the name for the new message transport, along with the name of the DLL that contains it, under the following registry key: <B>HKEY_LOCAL_MACHINE\Software\Microsoft\Inbox\Transports\TransportName</B>.</P>
+
+<BLOCKQUOTE class="dtBlock">
+<b class="le">Note</b>&nbsp;&nbsp;&nbsp;To respond to changes in the registry, the Messaging application must be restarted after the registry has been updated.</BLOCKQUOTE>
+
+<P>Customized messaging transports are usually used in conjunction with customized forms and are used to provide new capabilities such as Enhanced Messaging Service (EMS) and Multimedia Messaging Service (MMS).</P>
+
+<P>When a message is sent on a custom message transport, the following occurs:
+
+<OL type="1">
+	<LI>The Messaging application searches the Windows CE registry for the required message transport entries.</li>
+
+	<LI>The Messaging application activates the message transport's DLL.</li>
+
+	<LI>The Messaging application calls the <A HREF="mob5lrfonestopfactory.htm">OneStopFactory</A> function within the DLL. This is the DLL's entry point.</li>
+
+	<LI>The DLL returns its <A HREF="mob5lrfimailsynchandler.htm">IMailSyncHandler</A> interface, which serves as the connection between the Messaging application and the message transport.</li>
+
+	<LI>The Messaging application initializes the message transport by calling <A HREF="mob5lrfimailsynchandlerinitialize.htm">IMailSyncHandler::Initialize</A>.</li>
+
+	<LI>The Messaging application uses the methods on the <B>IMailSyncHandler</B> interface to process the message, to connect and disconnect from the network, and then to end the session with the transport by calling the <A HREF="mob5lrfimailsynchandlershutdown.htm">IMailSyncHandler::ShutDown</A> method.</li>
+</OL>
+
+<P>For more information, see <A HREF="mob5tskhowtoregistercustomizedmessagingtransports.htm">How to: Register Customized Messaging Transports</A>.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="mob5orimessaging.htm">Messaging</A> | <A HREF="mob5conmessagingforms.htm">Messaging Forms</A> | <A HREF="mob5concustomizedmessagingrulesclients.htm">Customized Messaging Rules Clients</A> | <A HREF="mob5conmessagestores.htm">Message Stores</A> | <A HREF="mob5tskhowtoregistercustomizedmessagingtransports.htm">How to: Register Customized Messaging Transports</A> | <A HREF="mob5conmessagingsamplecode.htm">Messaging Sample Code</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Feedback Link Bottom Start-->
+<p><font size="1"><a href="mailto:medfdbk&#64;microsoft.com?subject=Product: Windows Mobile | Version: 5.0 | Release: SDK | Title: Messaging Transports | Filename: mob5conmessagingtransports.htm | Built on: Wednesday, September 14, 2005">Send Feedback</a> on this topic to the authors</font></p>
+<!--Feedback Link Bottom End-->
+<!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="mob5conCopyrightInformationForMagneto" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link></font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

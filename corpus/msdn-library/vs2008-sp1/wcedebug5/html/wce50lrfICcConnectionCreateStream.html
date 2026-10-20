@@ -1,0 +1,187 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>ICcConnection::CreateStream</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="ICcConnection::CreateStream"/>
+<MSHelp:RLTitle Title="ICcConnection::CreateStream"/>
+<MSHelp:Keyword Index="K" Term="ICcConnection, CreateStream"/>
+<MSHelp:Keyword Index="A" Term="wce50lrfICcConnectionCreateStream"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Debugging"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="True"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="apiref"/>
+<MSHelp:Attr Name="Filename" Value="corecon_ccconnection_interface.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="True"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+<MSHelp:Attr Name="APIName" Value="ICcConnection.CreateStream"/>
+<MSHelp:Attr Name="APIType" Value="IDLDef"/>
+<MSHelp:Attr Name="APILocation" Value="none"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_1050535">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50lrficcconnectioncreatestream"></A>ICcConnection::CreateStream</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>This method creates a byte stream based on a specified stream ID for transferring data to and from a device. </P>
+
+<PRE class="syntax"><B>HRESULT CreateStream(</B>
+<B>  BSTR </B><I>bstrStreamId</I><B>,</B>
+<B>  DWORD</B> <I>dwTimeout</I><B>,</B>
+<B>  ICcServiceCB*</B> <I>piCallback</I><B>,</B>
+  <B>DWORD*</B> <I>pdwCookieId</I><B>,</B>
+  <B>ICcTransportStream**</B> <I>piStream</I>
+<B>);</B></PRE>
+
+<H4 class="dtH4">Parameters</H4>
+
+<DL>
+<DT><I>bstrStreamId</I></DT>
+
+<DD>[in] Input stream identifier used for this stream.</dd>
+
+<DT><I>dwTimeout</I></DT>
+
+<DD>[in] Timeout in milliseconds for connect to complete. 
+
+<P>If <I>piCallback</I> value is set to NULL and if the stream is not created within the specified timeout, then this API returns failure. 
+
+
+<P>If <I>piCallback</I> value is set to non-NULL, this parameter is ignored.
+
+
+<P>Reserved for future use. Any value returned in this parameter is ignored.
+</dd>
+
+<DT><I>piCallback</I></DT>
+
+<DD>[in] Pointer to the callback interface passed in by the client. 
+
+<P>If this is a valid pointer, then the API returns immediately and the ICcServiceCB interface sends notification to the caller is informed when the stream is created. 
+
+
+<P>If this is NULL, then the API blocks for <I>dwTimeout</I> while waiting for the stream to be created.
+
+
+<P>Reserved for future use. Any value returned in this parameter is ignored. 
+</dd>
+
+<DT><I>pdwCookieId</I></DT>
+
+<DD>[out] A valid cookie that identifies the call, if the API is called in an asynchronous mode (<I>piCallback</I> != NULL).
+
+<P>Callers can use this cookie in calls to Abort().
+
+
+<P>Reserved for future use. Any value returned in this parameter is ignored.
+</dd>
+
+<DT><I>piStream</I></DT>
+
+<DD>[out, retval] Pointer to the outgoing stream object. 
+
+<P>The stream object can be used to send raw bytes and to receive a byte stream from the device.
+
+
+<P>If the method fails or if the call is an asynchronous call, <I>piStream</I> is NULL.
+</dd>
+</DL>
+
+<H4 class="dtH4">Return Values</H4>
+
+<P>If the method fails, it returns an HRESULT error code. If the method succeeds, it returns one of the following:</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=25%>Value</TH>
+<TH width=75%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=25%>S_OK</TD>
+<TD width=75%>Indicates the method call was successful.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=25%>E_INVALIDARG</TD>
+<TD width=75%>Indicates an invalid stream id.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=25%>E_PENDING</TD>
+<TD width=75%>Indicates that the stream could not be created within the given timeout. Users can try again with the same or a different timeout value. In this case, piStream is not pointing to any valid object.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=25%>E_DUPLICATE</TD>
+<TD width=75%>Indicates that a connection stream object already exists for this device with the given stream ID.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=25%>E_OUTOFMEMORY</TD>
+<TD width=75%>Indicates that the stream could not be created. <BR>
+Users might be able to free memory and retry the operation.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=25%>E_FAIL</TD>
+<TD width=75%>Return value for any other failure</TD>
+</TR>
+</table></div>
+
+<H4 class="dtH4">Remarks</H4>
+
+<P><I>bstrStreamId</I> must match the stream ID values of a corresponding <A HREF="wce50grficctransport.htm">ICcTransport</A> object created on the device. </P>
+
+<P>If a stream by this ID already exists, the method returns E_DUPLICATE.</P>
+
+<P>The format of <I>bstrStreamId </I>is a string containing one or more name-value pairs separated by spaces, as shown in the following example:</P>
+
+<PRE class="code"><I>name1=value1[ name2=value2...]</I></PRE>
+
+<P>The underlying transport registered with the transport loader on the device determines the precise format of <I>bstrStreamId.</I></P>
+
+<P>The HLAPI calls <MSHelp:link keywords="wce50lrfIUnknownAddRef" TABINDEX="0">IUnknown::AddRef</MSHelp:link> on the <A HREF="wce50grficctransportstream.htm">ICcTransportStream</A> interface returned by <B>ICcConnection::CreateStream</B>. The application must call <A HREF="wce50lrficcservicedisconnect.htm">ICcService::Disconnect</A> and <MSHelp:link keywords="wce50lrfIUnknownRelease" TABINDEX="0">IUnknown::Release</MSHelp:link> to free any resources associated with the transport stream.</P>
+
+<H4 class="dtH4">Requirements</H4>
+
+<P><B>OS Version: </B>Windows 2000, Windows XP Home, Windows XP Pro, Windows Server 2003, and Windows Server 2003 Service Pack 1.<BR>
+<B>Header:</B> CcConnection.h.<BR>
+<B>Link Library:</B> none.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50grfcoreconinterfaces.htm">Core Connectivity Interfaces</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

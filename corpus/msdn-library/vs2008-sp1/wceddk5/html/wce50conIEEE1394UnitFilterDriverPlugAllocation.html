@@ -1,0 +1,123 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>IEEE 1394 Unit Filter Driver Plug Allocation</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="IEEE 1394 Unit Filter Driver Plug Allocation"/>
+<MSHelp:RLTitle Title="IEEE 1394 Unit Filter Driver Plug Allocation"/>
+<MSHelp:Keyword Index="A" Term="wce50conIEEE1394UnitFilterDriverPlugAllocation"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Driver"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="False"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="1394_ufd.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="True"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="True"/>
+<MSHelp:Attr Name="PBFeature" Value="1394Driver"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_3016975">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50conieee1394unitfilterdriverplugallocation"></A>IEEE 1394 Unit Filter Driver Plug Allocation</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>A virtual subunit may need to permanently allocate serial bus plugs and have those plugs associated with a particular subunit plug. Many clients do not dynamically query for plugs; they query once when they identify the subunit, or they use hard-coded plug numbers, or depend on broadcast. To accommodate these older clients, newer clients should use an AV/C plug management API dynamically; a virtual subunit must have default plugs allocated and externally visible before or while receiving an IRP_MN_START_DEVICE request. </P>
+
+<P>To facilitate allocating default plugs for virtual subunits, the unit filter driver provides the <A HREF="wce50lrfioctlunitprocessregistryplugs.htm">IOCTL_UNIT_PROCESS_REGISTRY_PLUGS</A> command, which accepts a registry handle as an argument, and processes the values and keys underneath in a known format. The unit filter driver uses this information to allocate the local plugs by issuing callbacks into the subunit's registration callbacks. The unit filter driver uses <A HREF="wce50lrfunitallocatelocalplugcb.htm">UNIT_AllocateLocalPlugCB</A> to issue the callbacks.</P>
+
+<P>The registry key passed is an <B>HKEY</B> to a known location. This location is preferably the virtual subunit driver's registry key that you can obtain from <B>IoOpenDeviceRegistryKey</B> with PLUGPLAY_REGKEY_DRIVER.</P>
+
+<P>The following example shows the defined registry format.</P>
+
+<P><B>Plugs\</B>&lt;<B><I>Incremental plug definition index</I></B>&gt;<B>\</B>&lt;<B><I>Values</I></B>&gt;</P>
+
+<P><B><I>Incremental plug definition index</I></B> refers to an incrementing, unique number for each plug to be defined. For example, 0 for the first plug, 1 for the next, and so on.</P>
+
+<P>The following table shows the registry type <B><I>Values</I></B>.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=29%>Name</TH>
+<TH width=13%>Type</TH>
+<TH width=58%>Purpose</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=29%><B>MediaType</B></TD>
+<TD width=13%><B>DWORD</B></TD>
+<TD width=58%>This must be one of the values defined by the Avc_stream.h <A HREF="wce50lrfstreammediatype.htm">STREAM_MediaType</A> enumeration. This is the media type that this plug expects to stream.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=29%><B>Direction</B></TD>
+<TD width=13%><B>DWORD</B></TD>
+<TD width=58%>Set to 1 to represent an input plug, which receives streams, or set to 2 to represent an output plug, which transmits streams.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=29%><B>SubunitPlugID</B></TD>
+<TD width=13%><B>DWORD</B></TD>
+<TD width=58%>This identifies which subunit plug is represented by the serial bus plug that these registry entries define. 
+<P>The subunit plug identifier is entirely relative to the subunit, and is defined at the discretion of the developer.</P>
+</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=29%><B>MaximumThroughput</B></TD>
+<TD width=13%><B>DWORD</B></TD>
+<TD width=58%>This is a requirement only for output plugs, and represents the maximum number of bits per second that this plug will ever stream. </TD>
+</TR>
+</table></div>
+
+<P>The definitions for type <B>DWORD</B> in the registry are in hexadecimal. The numerical values in the table above are in decimal. An example of the following registry definition can be found in Common.reg.</P>
+
+<PRE class="code">; Define the default plugs that the Virtual VCR subunit should create on startup:
+[HKEY_LOCAL_MACHINE\WDMDrivers\{A7F514FB-8FF1-442f-9547-5CCDA55EAE0}\0000\Plugs\0]
+; MPEG, Output Plug, 26Mpbs peak
+    "MediaType"=dword:0
+    "Direction"=dword:2
+    "SubunitPlugID"=dword:0
+    "MaximumThroughput"=dword:18cba80
+[HKEY_LOCAL_MACHINE\WDMDrivers\{A7F514FB-8FF1-442f-9547-5CCDA55EAE0}\0000\Plugs\1]
+; MPEG, Input Plug
+    "MediaType"=dword:0
+    "SubunitPlugID"=dword:0
+    "Direction"=dword:1</PRE>
+
+<P>Having plugs automatically allocated only indirectly makes the plugs known to the virtual subunit driver. This is indirect because the <A HREF="wce50lrfunitallocatelocalplugcb.htm">UNIT_AllocateLocalPlugCB</A> function exposes the plugs to the virtual subunit driver. </P>
+
+<P>At any time, the virtual subunit driver can issue an <A HREF="wce50lrfioctlunitquerylocalplugs.htm">IOCTL_UNIT_QUERY_LOCAL_PLUGS</A> command to the unit driver. This command permits the virtual subunit to receive updates on whether the state of any plug has changed. For example, if an external node connects to a local plug associated with the subunit, an IOCTL_UNIT_QUERY_LOCAL_PLUGS command that is pending at the time will receive a response describing the new connection state. </P>
+
+<P>A virtual subunit may need to be notified when at least one connection to a plug is made or when all connections to a plug are broken. This information may need to be used as an indicator on whether the virtual subunit should start or stop streaming data at that time. Usually, streaming is started or stopped due to other indicators, such as the pressing of a Play or Stop button on a VCR.</P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

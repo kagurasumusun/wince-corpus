@@ -1,0 +1,120 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Customizing Non-UI IP Phone Functionality</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Customizing Non-UI IP Phone Functionality"/>
+<MSHelp:RLTitle Title="Customizing Non-UI IP Phone Functionality"/>
+<MSHelp:Keyword Index="A" Term="wce50conCustomizingNon-UIIPPhoneFunctionality"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Target"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="True"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="voip_customizing.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="False"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+<MSHelp:Attr Name="DesignTemplate" Value="IPPhone"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_1038890">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50concustomizingnon-uiipphonefunctionality"></A>Customizing Non-UI IP Phone Functionality</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>This topic outlines the non-UI customization options provided by the IP phone functionality in Windows CE. For detailed information about these options, see <A HREF="wce50conoptionsforcustomizingvoipphone.htm">Common IP Phone Customization Tasks</A>, <MSHelp:link keywords="wce50oriVoiceOverIPPhoneVoIP" TABINDEX="0">VoIP Application Interface Layer (VAIL)</MSHelp:link>, <MSHelp:link keywords="wce50oriPCAuthentication" TABINDEX="0">PC Authentication</MSHelp:link>, and <MSHelp:link keywords="wce50conExchangeClient" TABINDEX="0">Exchange Client</MSHelp:link>.</P>
+
+<P>The non-UI IP phone functionality included with Windows CE implements the underlying functionality used by the TUI, and in doing so, provides most of the VoIP functionality.</P>
+
+<P>The following table shows the major pieces of non-UI functionality included with Windows CE and the directory that contains the source code for the component. The Real-time Communications (RTC) Client API does not ship in source code form and is not included in this table. For more information about customizing the RTC Client API, see <A HREF="wce50concustomizingrtc.htm">Customizing RTC</A>.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=56%>Functionality</TH>
+<TH width=44%>Directory Location</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=56%>VAIL, which includes signaling (call control), media transport, and call and caller information databases.</TD>
+<TD width=44%>%_WINCEROOT%\Public\VoIP\Oak\Phone\VAIL</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=56%>PC Authentication, which implements lock and unlock functionality.</TD>
+<TD width=44%>%_WINCEROOT%\Public\VoIP\Oak\Phone\LAP</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=56%>Exchange Client.</TD>
+<TD width=44%>%_WINCEROOT%\Public\VoIP\Oak\Phone\OWAExchangeClient</TD>
+</TR>
+</table></div>
+
+<P>Because VAIL, Exchange Client, and PC Authentication are provided in source code form, you can customize their functionality. However, you will probably want to keep the APIs they provide constant, so that you do not need to customize the code that uses the APIs (like the TUI or another UI). More frequently, you will want to customize the implementation of the API to change how the components operate.</P>
+
+<P>You can customize the Exchange Client and PC Authentication features by directly changing the source. You can customize the VAIL by changing the source and also by providing new COM components that implement specific COM interfaces. </P>
+
+<P><B>Implementing COM interfaces to customize the VAIL </B></P>
+
+<P>VAIL is designed so that the implementation of much of its functionality is provided using defined COM interfaces. This is the case for the following features and COM interfaces:
+
+<UL type="disc">
+	<LI><MSHelp:link keywords="wce50lrfIVoIPMediaMgrIUnknown" TABINDEX="0">IVoIPMediaMgr.</MSHelp:link> Controls how VAIL transmits media information (but not signaling information). 
+<P>Windows CE ships with an implementation that transmits audio data using the media transport functionality provided by the RTC Client API Catalog item (which in turn uses RTP over UDP). 
+
+<P>You can plug in your own implementation of the <B>IVoIPMediaMgr</B> interface that uses another stack or other networking code to transmit audio (or video, or other) media.
+</li>
+
+	<LI><MSHelp:link keywords="wce50lrfIVoIPCallLogDBIUnknown" TABINDEX="0">IVoIPCallLogDB</MSHelp:link> and <MSHelp:link keywords="wce50lrfIVoIPCallerInfoDBIUnknown" TABINDEX="0">IVoIPCallerInfoDB.</MSHelp:link> Controls how the VAIL stores and retrieves call log and caller information data. 
+<P>Windows CE ships with implementations for these interfaces that use native Windows CE databases as the backing store. You can provide your own implementations that store this information in any location.
+</li>
+</UL>
+
+<P>The TUI and other UIs can implement <MSHelp:link keywords="wce50lrfIVoIPUIIUnknown" TABINDEX="0">IVoIPUI</MSHelp:link>. VAIL calls methods of this interface to communicate telephony status to an application.</P>
+
+<H4 class="dtH4">Directly replacing code to customize the VAIL</H4>
+
+<P>Other parts of the VAIL can be modified by directly changing or replacing VAIL code. </P>
+
+<P>A common example of a VAIL modification that requires changing code is replacing the SIP stack that VAIL uses for signaling. </P>
+
+<P>By default, the VAIL implements signaling using the SIP stack included in the RTC Client API Catalog item, with code in the files in %_WINCEROOT%\Public\VoIP\Oak\Phone\VAIL\voipmanager. </P>
+
+<P>To change the SIP stack that the VAIL uses, examine the code in these files and replace references to the RTC Client API functions with code that calls your own SIP stack.</P>
+
+<P>If you change the VAIL so it uses another SIP stack for signaling, by default the TUI still uses RTC for presence and instant message functionality. For more information, see <A HREF="wce50concustomizingrtc.htm">Customizing RTC</A>. </P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50oricustomizingipphonefunctionality.htm">Customizing IP Phone Functionality</A> | <A HREF="wce50conaddingorchangingsipheadersverbs.htm">Adding or Changing SIP Headers and Verbs</A> | <A HREF="wce50consupportingvideoconferencing.htm">Supporting Video Conferencing</A> | <A HREF="wce50conusingtuivailwithdifferentcallcontrolsipstack.htm">Using TUI and VAIL with a Custom SIP Stack</A> | <A HREF="wce50conusingonesipstackforcallcontrolanotherforotherfunctions.htm">Using Multiple SIP Stacks</A> | <A HREF="wce50conusingexchangeintegrationfromdifferentcode.htm">Using Exchange Integration</A> | <A HREF="wce50conchangingmediatransportimplementation.htm">Changing the Media Transport Implementation</A> | <A HREF="wce50conchanginghowcalllogcallerinformationisstored.htm">Changing How Call Log and Caller Information is Stored</A> </P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, July 13, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

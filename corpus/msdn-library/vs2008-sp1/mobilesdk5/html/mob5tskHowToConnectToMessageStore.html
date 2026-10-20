@@ -1,0 +1,158 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>How to: Connect to a Message Store</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="How to: Connect to a Message Store"/>
+<MSHelp:RLTitle Title="How to: Connect to a Message Store"/>
+<MSHelp:Keyword Index="A" Term="mob5tskHowToConnectToMessageStore"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Application"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbsmartphone"/>
+<MSHelp:Attr Name="Product" Value="kbPocketPC"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="Technology" Value="kbPocketPC"/>
+<MSHelp:Attr Name="Technology" Value="kbSmartphone"/>
+<MSHelp:Attr Name="TopicType" Value="kbTask"/>
+<MSHelp:Attr Name="Filename" Value="Messaging_magneto.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="True"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_1063801">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Windows Mobile Version 5.0 SDK<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="mob5tskhowtoconnecttomessagestore"></A>How to: Connect to a Message Store</H1>
+<!--Feedback Link Top Start-->
+<P CLASS="feedback"><font size="1"><a href="mailto:medfdbk&#64;microsoft.com?subject=Product: Windows Mobile | Version: 5.0 | Release: SDK | Title: How to: Connect to a Message Store | Filename: mob5tskhowtoconnecttomessagestore.htm | Built on: Wednesday, September 14, 2005">Send Feedback</a> on this topic to the authors</font></p>
+<!--Feedback Link Top End-->
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>Before you can create and manipulate message folders and message items, you must establish a connection to a message store.</P>
+
+<P class="labelproc"><B>To open a connection to a message store</B>
+
+<OL type="1">
+	<LI>Initialize the MAPI subsystem, and log onto a MAPI session. For more information, see <A HREF="mob5tskhowtobeginmapisession.htm">How to: Begin a MAPI Session</A>.</li>
+
+	<LI>Declare a <B>NULL</B> <A HREF="mob5lrfimapitable.htm">IMAPITable</A> interface object, and get the message stores table by using <A HREF="mob5lrfimapisessiongetmsgstorestable.htm">IMAPISession::GetMsgStoresTable</A>, as follows:
+<PRE class="code">hr = pSession-&gt;GetMsgStoresTable(0, <code><b class="cfe">&amp;pTable</b></code>);</PRE>
+</li>
+
+	<LI>Declare a <B>NULL</B> <A HREF="mob5lrfsrowset.htm">SRowSet</A> structure, and populate it with property values from one of the message stores by using <A HREF="mob5lrfimapitablequeryrows.htm">IMAPITable::QueryRows</A>. The following code retrieves the first (default) message store:
+<PRE class="code">hr = pTable-&gt;QueryRows(1, 0, <code><b class="cfe">&amp;pSRowSet</b></code>);</PRE>
+</li>
+
+	<LI>Declare a <B>NULL</B> <A HREF="mob5lrfimsgstore.htm">IMsgStore</A> interface object, and open the message store by using <A HREF="mob5lrfimapisessionopenmsgstore.htm">IMAPISession::OpenMsgStore</A> &#0151; making use of the <A HREF="mob5lrfsrowset.htm">SRowSet</A> structure:
+<PRE class="code">hr = pSession-&gt;OpenMsgStore(0, 
+               <code><b class="cfe">pSRowSet-&gt;aRow[0].lpProps[0].Value.bin.cb</b></code>, 
+               <code><b class="cfe">(ENTRYID *)pSRowSet-&gt;aRow[0].lpProps[0].Value.bin.lpb</b></code>, 
+               NULL, 
+               0, 
+               <code><b class="cfe">&amp;pStore</b></code>);</PRE>
+</li>
+
+	<LI>If no longer needed, release the message stores table by calling <A HREF="mob5lrfiunknownrelease.htm">IUnknown::Release</A> on the table object, and free the memory allocated for the row set structure by calling <A HREF="mob5lrffreeprows.htm">FreeProws</A>:
+<PRE class="code">pTable-&gt;Release();
+FreeProws(pSRowSet);</PRE>
+</li>
+</OL>
+
+<H4 class="dtH4">Code Example</H4>
+
+<P>The following code example demonstrates how to connect to a message store.</P>
+
+<BLOCKQUOTE class="dtBlock">
+<b class="le">Note</b>&nbsp;&nbsp;&nbsp;To make the following code example easier to read, security checking and error handling are not included. This code example should not be used in a release configuration unless it has been modified to include them.</BLOCKQUOTE>
+
+<PRE class="code">HRESULT hr;
+ICEMAPISession * pSession = NULL;
+IMAPITable * pTable = NULL;
+SRowSet * pSRowSet = NULL;
+IMsgStore * pStore = NULL;
+
+// See the code example in "How to: Begin a MAPI Session" for 
+// information on obtaining pSession.
+<code><b class="cfe">hr = pSession-&gt;GetMsgStoresTable(0, &amp;pTable);</b></code>
+if (hr != S_OK) {
+    // GetMsgStoresTable failed.
+    MessageBox(NULL, 
+               _T("GetMsgStoresTable failed."),
+               _T("Warning"), 
+               MB_OK);
+    exit(0);  // Replace with specific error handling.
+}
+
+BOOL QRError = FALSE;
+<code><b class="cfe">hr = pTable-&gt;QueryRows(1, 0, &amp;pSRowSet);</b></code>
+if (hr != S_OK) {
+    QRError = TRUE;
+} else if (pSRowSet-&gt;cRows != 1) {
+    QRError = TRUE;
+} else if ((pSRowSet-&gt;aRow[0].cValues &lt; 1) 
+          || (pSRowSet-&gt;aRow[0].lpProps[0].ulPropTag != PR_ENTRYID)) {
+    QRError = TRUE;
+}
+if (QRError) {
+    // QueryRows failed.
+    MessageBox(NULL, 
+               _T("QueryRows failed."),
+               _T("Warning"), 
+               MB_OK);
+    exit(0);  // Replace with specific error handling.
+}
+
+<code><b class="cfe">hr = pSession-&gt;OpenMsgStore(0, </b></code>
+<code><b class="cfe">               pSRowSet-&gt;aRow[0].lpProps[0].Value.bin.cb, </b></code>
+<code><b class="cfe">               (ENTRYID *)pSRowSet-&gt;aRow[0].lpProps[0].Value.bin.lpb, </b></code>
+<code><b class="cfe">               NULL, </b></code>
+<code><b class="cfe">               0, </b></code>
+<code><b class="cfe">               &amp;pStore);</b></code>
+if (hr != S_OK) {
+    // OpenMsgStore failed.
+    MessageBox(NULL, 
+               _T("OpenMsgStore failed."),
+               _T("Warning"), 
+               MB_OK);
+    exit(0);  // Replace with specific error handling.
+}
+
+<code><b class="cfe">pTable-&gt;Release();</b></code>
+<code><b class="cfe">FreeProws(pSRowSet);</b></code>
+pTable = NULL;
+pSRowSet = NULL;</PRE>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="mohowhowtocreatemessagingapplication.htm">How to Create a Messaging Application</A> | <A HREF="mob5orimessagingoverview.htm">Messaging Application Development for Windows Mobile-based Devices</A> | <A HREF="mob5orimessaging.htm">Messaging</A> | <A HREF="mob5tskhowtobeginmapisession.htm">How to: Begin a MAPI Session</A> | <A HREF="mob5tskhowtocreatemessage.htm">How to: Create a Message</A> | <A HREF="mob5tskhowtosendmessage.htm">How to: Send a Message</A> | <A HREF="mob5tskhowtoendmapisession.htm">How to: End a MAPI Session</A> | <A HREF="mob5conmessagingsamplecode.htm">Messaging Sample Code</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Feedback Link Bottom Start-->
+<p><font size="1"><a href="mailto:medfdbk&#64;microsoft.com?subject=Product: Windows Mobile | Version: 5.0 | Release: SDK | Title: How to: Connect to a Message Store | Filename: mob5tskhowtoconnecttomessagestore.htm | Built on: Wednesday, September 14, 2005">Send Feedback</a> on this topic to the authors</font></p>
+<!--Feedback Link Bottom End-->
+<!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="mob5conCopyrightInformationForMagneto" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link></font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

@@ -1,0 +1,146 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Control Panel Engine Processing Example (SP Only)</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Control Panel Engine Processing Example (SP Only)"/>
+<MSHelp:RLTitle Title="Control Panel Engine Processing Example (SP Only)"/>
+<MSHelp:Keyword Index="A" Term="conSmartphoneControlPanelEngineProcessingExample"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Application"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbsmartphone"/>
+<MSHelp:Attr Name="Product" Value="kbPocketPC"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="Technology" Value="kbPocketPC"/>
+<MSHelp:Attr Name="Technology" Value="kbSmartphone"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="device_mgmt_mo.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="True"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_1060534">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Windows Mobile Version 5.0 SDK<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="consmartphonecontrolpanelengineprocessingexample"></A>Control Panel Engine Processing Example (SP Only)</H1>
+<!--Feedback Link Top Start-->
+<P CLASS="feedback"><font size="1"><a href="mailto:medfdbk&#64;microsoft.com?subject=Product: Windows Mobile | Version: 5.0 | Release: SDK | Title: Control Panel Engine Processing Example (SP Only) | Filename: consmartphonecontrolpanelengineprocessingexample.htm | Built on: Wednesday, September 14, 2005">Send Feedback</a> on this topic to the authors</font></p>
+<!--Feedback Link Top End-->
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>The Control Panel Engine in Windows Mobile Software for Smartphones provides a quick and easy way for the user to access and change device settings. Control Panel Engine and Configuration Manager interact whenever the user wants to determine the current value of configuration settings or wants to change those settings. </P>
+
+<P>The following steps describe the process of using the Windows Mobile-based Smartphone UI to change device settings. Understanding this process is helpful if you customize the Control Panel, such as adding an example to it.
+
+<OL type="1">
+	<LI><B>User input</B>
+<P>Using the Windows Mobile-based Smartphone UI, a user navigates through the Settings control panels and locates Regional Settings to specify the number of decimal places. 
+</li>
+
+	<LI><B>Initial query</B>
+<P>Control Panel Engine generates an XML query, which requests the values for the setting that indicates the number of decimal places. The XML query document is sent to Configuration Manager from Control Panel Engine. The following is an XML code example:
+
+<PRE class="code">&lt;wap-provisioningdoc&gt;
+   &lt;characteristic type="Locale"&gt;
+      &lt;parm-query name="LOCALE_IDIGITS"/&gt;
+   &lt;/characteristic&gt;
+&lt;/wap-provisioningdoc&gt;</PRE>
+</li>
+
+	<LI><B>Configuration Service Provider query</B>
+<P>Configuration Manager parses and splits the query document into sections. In this case, there is only one section because only one setting is being handled. Then, Configuration Manager sends the query request to the appropriate Configuration Service Provider. In this particular example, the appropriate Configuration Service Provider is the Locale Configuration Service Provider. The following is an XML code example:
+
+<PRE class="code">&lt;characteristic type="Locale"&gt;
+   &lt;parm-query name="LOCALE_IDIGITS"/&gt;
+&lt;/characteristic&gt;</PRE>
+</li>
+
+	<LI><B>Query result document</B>
+<P>The Locale Configuration Service Provider populates the values of the settings and any relevant metadata used for building and displaying the UI and sends the document back to Configuration Manager. The following is an XML code example:
+
+<PRE class="code">&lt;characteristic type="Locale"&gt;
+   &lt;parm name="LOCALE_IDIGITS" label="Number of decimal places" 
+   value="2" datatype="Integer" minvalue="0" maxvalue="9"/&gt;
+&lt;/characteristic&gt;</PRE>
+</li>
+
+	<LI><B>Configuration Manager response</B>
+<P>Configuration Manager takes the node returned by the Configuration Service Provider and passes the modified document back to Control Panel Engine.
+
+<P>The following XML code example includes information for the UI of the Settings control panel. This response is supported only for local queries; it is not supported over the air. 
+
+<PRE class="code">&lt;wap-provisioningdoc&gt;
+   &lt;characteristic type="Locale"&gt;
+      &lt;parm name="LOCALE_IDIGITS" label="Number of decimal places" 
+      value="2" datatype="Integer" minvalue="0" maxvalue="9"/&gt;
+   &lt;/characteristic&gt;
+&lt;/wap-provisioningdoc&gt; </PRE>
+
+<P>For simplification, steps such as querying the metadata database (metabase) to populate metadata are not included in the Configuration Service Provider's response; transactioning is also omitted.
+</li>
+
+	<LI><B>UI display</B>
+<P>Control Panel Engine builds the UI with the aid of the metadata included by the Configuration Service Provider and displays the values to the user in the Settings control panel. 
+</li>
+
+	<LI><B>Setting change</B>
+<P>The user observes that two decimal places are currently displayed. The user decides to change the number of decimal places to three. The user makes appropriate changes by using the UI. These changes are handled through Control Panel Engine.
+</li>
+
+	<LI><B>Modified XML</B>
+<P>The modified XML document is sent back to Configuration Manager. The following XML code example includes the setting change:
+
+<PRE class="code">&lt;wap-provisioningdoc&gt;
+   &lt;characteristic type="Locale"&gt;
+      &lt;parm name="LOCALE_IDIGITS" value="3"/&gt;
+   &lt;/characteristic&gt;
+&lt;/wap-provisioningdoc&gt;</PRE>
+</li>
+
+	<LI><B>Locale Configuration Service Provider setting change</B>
+<P>The setting change document is parsed and sent from Configuration Manager to the Locale Configuration Service Provider. The following is an XML code example:
+
+<PRE class="code">&lt;characteristic type="Locale"&gt;
+   &lt;parm name="LOCALE_IDIGITS" value="3"/&gt;
+&lt;/characteristic&gt;</PRE>
+</li>
+
+	<LI><B>Transaction committed</B>
+<P>The Locale Configuration Service Provider enforces the change and sends a response that indicates the success or failure of the transaction. In this example, the transaction is successful, a response is sent to Control Panel Engine, and the transaction is committed. The user finds that the setting value is changed to 3.
+</li>
+</OL>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="conconfigurationmanager.htm">Configuration Manager</A> | <A HREF="wce51grflocalecsp.htm">Locale Configuration Service Provider</A> | <A HREF="wce51samlocalecspexample.htm">Locale Configuration Service Provider Example</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Feedback Link Bottom Start-->
+<p><font size="1"><a href="mailto:medfdbk&#64;microsoft.com?subject=Product: Windows Mobile | Version: 5.0 | Release: SDK | Title: Control Panel Engine Processing Example (SP Only) | Filename: consmartphonecontrolpanelengineprocessingexample.htm | Built on: Wednesday, September 14, 2005">Send Feedback</a> on this topic to the authors</font></p>
+<!--Feedback Link Bottom End-->
+<!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="mob5conCopyrightInformationForMagneto" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link></font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

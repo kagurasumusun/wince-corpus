@@ -1,0 +1,83 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>PREfast Warning 207</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="PREfast Warning 207"/>
+<MSHelp:RLTitle Title="PREfast Warning 207"/>
+<MSHelp:Keyword Index="A" Term="wce50grfPREfastWarning207"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Guide"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="True"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="prefast_warnings.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="True"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_1053516">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50grfprefastwarning207"></A>PREfast Warning 207</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<PRE class="syntax">207 - Buffer overrun in call to evil function <I>&lt;function&gt;</I>.</PRE>
+
+<P>This warning indicates that a buffer is being passed into a function that provides no way of controlling how many bytes are copied into a buffer (such as <B>gets</B> or <B>_getws</B>). </P>
+
+<P>This defect can result in a memory corruption or program crash, although in some cases it can result in an exploitable security hole.</P>
+
+<P>When making changes, be sure the code behaves correctly in the case of very long data. </P>
+
+<P>It is possible to fix the buffer overrun and stop the PREfast warning but have code that still behaves incorrectly. </P>
+
+<P>A useful technique for helping to address the problem is to use a function that includes the buffer size (such as <B>fgets</B> or <B>_fgetws</B>) instead. Handle the case where the length of the data exceeds the buffer size. In some cases, more significant changes are required.</P>
+
+<P>If PREfast can determine that the buffer being passed in is a stack buffer (in which case it is more likely to result in an exploitable security hole), warning 205 is reported instead.</P>
+
+<H4 class="dtH4">Example</H4>
+
+<P class="label"><B>Defective Source</B></P>
+
+<PRE class="code">static char buff[_MAX_PATH];
+
+if (! gets(buff))    // Does not account for if something longer than
+{;}                  // MAX_PATH is provided as input.</PRE>
+
+<P class="label"><B>Corrected Source</B></P>
+
+<PRE class="code">static char buff[_MAX_PATH];
+
+if (! fgets(buff, sizeof buff, stdin))
+{;}</PRE>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

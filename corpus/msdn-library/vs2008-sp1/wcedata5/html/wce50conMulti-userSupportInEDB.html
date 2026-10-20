@@ -1,0 +1,173 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Multi-User Support in EDB</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Multi-User Support in EDB"/>
+<MSHelp:RLTitle Title="Multi-User Support in EDB"/>
+<MSHelp:Keyword Index="A" Term="wce50conMulti-userSupportInEDB"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Feature"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="edb_concepts.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="False"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_1044858">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50conmulti-usersupportinedb"></A>Multi-User Support in EDB</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>EDB provides the ability for multiple threads, across multiple processes, to access the same database concurrently. Each thread that accesses the database is considered a user. Because EDB supports multiuser access, it must support transactions and locking to prevent data corruption and collisions.</P>
+
+<BLOCKQUOTE class="dtBlock">
+<b class="le">Note</b>&nbsp;&nbsp;&nbsp;Only EDB supports transactions. CEDB does not support transactions or locking. All operations with CEDB are atomic.</BLOCKQUOTE>
+
+<H2 class="dtH2">Understanding EDB Transactions</H2>
+
+<P>Transactions are used to group a set of database operations into a single atomic operation, thereby dramatically improving the reliability of an application. An atomic operation is one in which all operations in the group either succeed (commit) or fail (roll back). Without transactions, each application must handle data conflicts and undo logic internally, which can be complex and prone to errors.</P>
+
+<P>For example, suppose you have developed an e-mail application. When a user marks an e-mail message as read, your application must update two databases: the database that stores the e-mail message (called DB1) and the database that tracks the read and unread messages within the e-mail folder (called DB2). Likewise, marking a message as unread also requires updating both databases. </P>
+
+<P>If DB1 updates successfully, but the update to DB2 fails, your application must resolve the difference. It must either undo the change it made to DB1, or retry the update to DB2. But what if either of those operations fails? </P>
+
+<P>Even in this simple scenario, handling errors can become very complex very quickly. However, transactions make it quite simple. The same scenario, using transactions, follows these steps:
+
+<OL type="1">
+	<LI>Begin a transaction on the volume.</li>
+
+	<LI>Modify the "Read" property on DB1.</li>
+
+	<LI>Modify the "Read" count on DB2.</li>
+
+	<LI>Commit and end the transaction.</li>
+</OL>
+
+<P>In EDB, the commit is atomic, which means that the operations performed inside the transaction are either fully committed, or not committed at all. In the steps above, if either step 2 or step 3 fails, the transaction is not committed, and changes do not occur to either database.</P>
+
+<P>While the process of marking an e-mail message as read requires two physical operations, it is one logical operation. When determining where to use transactions, look for logical operations that you can group together inside a single transaction.</P>
+
+<BLOCKQUOTE class="dtBlock">
+<b class="le">Note</b>&nbsp;&nbsp;&nbsp;Transactions can be extremely useful, but it is important to realize that if you lock an object in a transaction, it remains locked until the transaction is ended. This may block other users from accessing data in the database.</BLOCKQUOTE>
+
+<H2 class="dtH2">Using Transactions with EDB</H2>
+
+<P>In EDB, everything happens inside of a transaction, whether you explicitly start a transaction or a transaction is implicitly started internally by EDB when a function such as <A HREF="wce50lrfcedeleterecordedb.htm">CeDeleteRecord</A> is called. </P>
+
+<BLOCKQUOTE class="dtBlock">
+<b class="le">Note</b>&nbsp;&nbsp;&nbsp;If a transaction is explicit, it can contain many changes; if a transaction is implicit, it contains only one change.</BLOCKQUOTE>
+
+<P>To use transactions, each database involved in the transaction must be participating in the same session. To do this, you first create a session handle by calling the <A HREF="wce50lrfcecreatesessionedb.htm">CeCreateSession</A> function, and then pass in this resulting session handle when you open each database. You can also call the <A HREF="wce50lrfcegetdatabasesessionedb.htm">CeGetDatabaseSession</A> function to obtain the session handle for a previously opened database. This is useful when performing a transaction between two databases.</P>
+
+<P>Once you have one or more databases in a session, you begin a transaction by calling the <A HREF="wce50lrfcebegintransactionedb.htm">CeBeginTransaction</A> function. After you start the transaction, all of the changes made to the databases are queued until you end the transaction. You end the transaction by calling the <A HREF="wce50lrfceendtransactionedb.htm">CeEndTransaction</A> function. The <B>CeEndTransaction</B> function allows you to either commit or revert all of the changes in the queue.</P>
+
+<P>When using transactions, consider the following rules:
+
+<UL type="disc">
+	<LI>Transactions cannot be nested. In other words, <B>CeBeginTransaction</B> can't be called if another <B>CeBeginTransaction</B> is currently being used in the session.</li>
+
+	<LI>All operations based on data (for example, reading, writing, inserting, or updating data) are affected by the scope of the begin/end transaction statements.</li>
+
+	<LI>All operations that affect the schema of a database (such as adding properties to the database or creating sort orders) are unaffected by the scope of the transaction. Schema changes are committed even if the transaction is reverted.</li>
+</UL>
+
+<H2 class="dtH2">Committing a Transaction</H2>
+
+<P>When you call the <B>CeEndTransaction</B> function and commit the changes made in the transaction, the changes are not immediately saved to disk. As with all data written to the database, the committed changes are cached until one of the following occurs:
+
+<UL type="disc">
+	<LI>The volume is explicitly flushed. For more information about explicitly flushing a volume, see <A HREF="wce50lrfceflushdbvoledb.htm">CeFlushDbVol</A>.</li>
+
+	<LI>The FlushInterval setting for the volume is reached.</li>
+
+	<LI>The volume is unmounted.</li>
+</UL>
+
+<H2 class="dtH2">EDB Locking</H2>
+
+<P>EDB uses locking to help implement transactions. If a change is made to a row during a transaction, the row is locked until the end of the transaction. Any relevant sort order page is also locked. While the row or page is locked, any other transaction that tries to update the row or page will fail with a sharing violation. The transaction that receives the sharing violation can retry the operation again on the assumption that the row or page has been unlocked, or can fail and display an error to the user.</P>
+
+<BLOCKQUOTE class="dtBlock">
+<b class="le">Important</b>&nbsp;&nbsp;&nbsp;Even if a transaction is committed, some locks may still be held in the database. To ensure that all locks are released, you must close the handle to the database.</BLOCKQUOTE>
+
+<P>It is important to understand that, outside of transactions, EDB does not hold a lock on any data in the database. When designing client applications that use EDB, you must be aware of the ramifications of this. For example, suppose you have a thread that reads a row and then updates it. Between the time you read the row and send your update, another thread updates the row. Your update will overwrite the other thread's changes, resulting in unexpected data. Also, if your application is positioned on a row, another thread can delete that row, changing your row position. To prevent these possible problems, you should use transactions.</P>
+
+<H2 class="dtH2"><A NAME="wce50conmulti-usersupportinedbanchor1"></A>EDB Isolation Levels</H2>
+
+<P>Although transactions are useful when changing data in a database, you do not need to use them when reading data. EDB includes a versioning mechanism to ensure that the latest committed version is always read by a thread. However, if you need to ensure that a row that is read early in a transaction is not modified by another transaction, you must protect that row. To protect the row, EDB supports transaction isolation levels. Depending on the isolation level you use, the row may be locked as soon as data is read, thus blocking other transactions from performing certain operations.</P>
+
+<BLOCKQUOTE class="dtBlock">
+<b class="le">Note</b>&nbsp;&nbsp;&nbsp;A row is protected only if you explicitly seek to it or if an implicit AUTOINCREMENT seek occurs.</BLOCKQUOTE>
+
+<P>The following table shows the three isolation levels supported by EDB:</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=47%>Isolation level</TH>
+<TH width=26%>Supports a repeatable read</TH>
+<TH width=27%>Phantom rows can be introduced</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=47%>SQLCEDB_ISOLEVEL_READCOMMITTED or SQLCEDB_ISOLEVEL_DEFAULT</TD>
+<TD width=26%>No</TD>
+<TD width=27%>Yes</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=47%>SQLCEDB_ISOLEVEL_REPEATABLEREAD</TD>
+<TD width=26%>Yes</TD>
+<TD width=27%>Yes</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=47%>SQLCEDB_ISOLEVEL_SERIALIZABLE</TD>
+<TD width=26%>Yes</TD>
+<TD width=27%>No</TD>
+</TR>
+</table></div>
+
+<BLOCKQUOTE class="dtBlock">
+<b class="le">Note</b>&nbsp;&nbsp;&nbsp;A phantom row occurs when a row is added to the database after you have read the rows. When you use the SQLCEDB_ISOLEVEL_SERIALIZABLE isolation level, no other thread can add a row, thus preventing the introduction of phantom rows.</BLOCKQUOTE>
+
+<P>To minimize the overhead of locking, EDB occasionally reduces a large number of row-level locks to a single lock on the entire database. This may adversely affect concurrency. To reduce the likelihood of this occurring, construct transactions that operate on small sets of data and ensure that they are committed or reverted as quickly as possible.</P>
+
+<BLOCKQUOTE class="dtBlock">
+<b class="le">Note</b>&nbsp;&nbsp;&nbsp;Versioning does not apply to the <B>CEVT_STREAM</B> data type.</BLOCKQUOTE>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50lrfcecreatesessionedb.htm">CeCreateSession</A> | <A HREF="wce50lrfcegetdatabasesessionedb.htm">CeGetDatabaseSession</A> | <A HREF="wce50lrfcebegintransactionedb.htm">CeBeginTransaction</A> | <A HREF="wce50lrfceendtransactionedb.htm">CeEndTransaction</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

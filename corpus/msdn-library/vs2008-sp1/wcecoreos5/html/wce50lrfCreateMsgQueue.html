@@ -1,0 +1,109 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>CreateMsgQueue</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="CreateMsgQueue"/>
+<MSHelp:RLTitle Title="CreateMsgQueue"/>
+<MSHelp:Keyword Index="K" Term="CreateMsgQueue"/>
+<MSHelp:Keyword Index="A" Term="wce50lrfCreateMsgQueue"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Feature"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="apiref"/>
+<MSHelp:Attr Name="Filename" Value="MessQue-P-P_reference.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="False"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+<MSHelp:Attr Name="APIName" Value="CreateMsgQueue"/>
+<MSHelp:Attr Name="APIType" Value="LibDef"/>
+<MSHelp:Attr Name="APILocation" Value="Coredll.lib"/>
+<MSHelp:Attr Name="PBFeature" Value="CORE"/>
+<MSHelp:Attr Name="PBOnly" Value="False"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_3002561">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50lrfcreatemsgqueue"></A>CreateMsgQueue</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>This function creates or opens a user-defined message queue.</P>
+
+<PRE class="syntax"><B>HANDLE CreateMsgQueue(</B>
+  <B>LPCWSTR</B> <I>lpszName</I><B>,</B>
+  <B>LPMSGQUEUEOPTIONS </B><I>lpOptions</I>
+<B>);</B></PRE>
+
+<H4 class="dtH4">Parameters</H4>
+
+<DL>
+<DT><I>lpszName</I></DT>
+
+<DD>[in] Name of the message queue. You can also set this parameter to NULL or you must set it no larger than the MAX_PATH characters including the NULL character.</dd>
+
+<DT><I>lpOptions</I></DT>
+
+<DD>[in] Pointer to an <A HREF="wce50lrfmsgqueueoptions.htm">MSGQUEUEOPTIONS</A> structure that sets the properties of the message queue.</dd>
+</DL>
+
+<H4 class="dtH4">Return Values</H4>
+
+<P>If the function succeeds, the return value is a read-only or write-only handle to the specified queue. If a read-only handle is returned, the queue signals when data is put into the queue. The signal is reset in the <A HREF="wce50lrfreadmsgqueue.htm">ReadMsgQueue</A> function.</P>
+
+<P>If a write-only handle is returned, the queue signals when the queue is no longer full.</P>
+
+<P>If the specified queue exists before the function call, a new handle will be created that points to the same queue. The queue already exists if a call to the <A HREF="wce50lrfgetlasterror.htm">GetLastError</A> function returns ERROR_ALREADY_EXISTS, even though the function has succeeded. If the message queue does not exist before the call, <B>GetLastError</B> returns ERROR_SUCCESS. </P>
+
+<P>If the function fails, the return value is NULL. To obtain extended error information, call the <B>GetLastError</B> function.</P>
+
+<H4 class="dtH4">Remarks</H4>
+
+<P>If you set the <I>lpszName</I> parameter to NULL, the <B>CreateMsgQueue</B> function creates a new unnamed queue. In the <A HREF="wce50lrfopenmsgqueue.htm">OpenMsgQueue</A> function, you can use the handle returned by the <B>CreateMsgQueue</B> function to obtain additional handles.</P>
+
+<P>If you call the <B>CreateMsgQueue</B> function with a name that already exists, the function uses only the <B>dwSize</B> and <B>bReadAccess</B> values in the structure pointed to by the <I>lpOptions</I> parameter.</P>
+
+<P>You can only create a queue for either read or write access by specifying bReadAccess in the <B>MSGQUEUEOPTIONS</B> structure. You can call <B>CreateMsgQueue</B> twice to obtain a read-only and write-only handle. Use the <B>CloseMsgQueue</B> function to close an object handle returned by <B>CreateMsgQueue</B>.</P>
+
+<P>You can use the handles returned from <B>CreateMsqQueue</B> in calls to the <A HREF="wce50lrfwaitforsingleobject.htm">WaitForSingleObject</A> or <A HREF="wce50lrfwaitformultipleobjects.htm">WaitForMultipleObjects</A> functions. Returned handles can indicate a time-out or that the status of the queue has changed. </P>
+
+<P>Writable queue handles are signaled whenever the queue is not full, and readable queue handles are signaled if the queue is not empty. For example, a writer can <B>WaitForSingleObject(hQ, INFINITE)</B> to know that a queue is not full and that it's safe to write and a reader can <B>WaitForSingleObject(hQ, INFINITE)</B> no matter how many messages are in the queue.</P>
+
+<H4 class="dtH4">Requirements</H4>
+
+<P><B>OS Versions:</B> Windows CE .NET 4.0 and later.<BR>
+<B>Header:</B> Msgqueue.h.<BR>
+<B>Link Library:</B> Coredll.lib.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50conmessagequeuepointtopoint.htm">Message Queue Point-to-Point</A> | <A HREF="wce50lrfclosemsgqueue.htm">CloseMsgQueue</A> | <A HREF="wce50lrfgetmsgqueueinfo.htm">GetMsgQueueInfo</A> | <A HREF="wce50lrfmsgqueueinfo.htm">MSGQUEUEINFO</A> | <A HREF="wce50lrfmsgqueueoptions.htm">MSGQUEUEOPTIONS</A> | <A HREF="wce50lrfopenmsgqueue.htm">OpenMsgQueue</A> | <A HREF="wce50lrfreadmsgqueue.htm">ReadMsgQueue</A> | <A HREF="wce50lrfwaitformultipleobjects.htm">WaitForMultipleObjects</A> | <A HREF="wce50lrfwaitforsingleobject.htm">WaitForSingleObject</A> | <A HREF="wce50lrfwritemsgqueue.htm">WriteMsgQueue</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

@@ -1,0 +1,144 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Working with Packing Structures</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Working with Packing Structures"/>
+<MSHelp:RLTitle Title="Working with Packing Structures"/>
+<MSHelp:Keyword Index="A" Term="wce50conWorkingWithPackingStructures"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Guide"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="True"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="comp_data_alignment.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="True"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_1043649">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50conworkingwithpackingstructures"></A>Working with Packing Structures</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>Problems can occur when a structure requires more bytes than the programmer intended, especially when space requirements are paramount. </P>
+
+<H3 class="dtH3">Structure Packing and Alignment</H3>
+
+<P>Structure packing interacts with compiler alignment behavior as follows.
+
+<UL type="disc">
+	<LI>If the packsize is set equal to or greater than the default alignment, the packsize is ignored.</li>
+
+	<LI>If the packsize is set smaller than the default alignment, the compiler aligns according to the packsize value. </li>
+</UL>
+
+<P>Thus, if the packsize is set to four, data types having a size of four, eight, or 16 bytes are aligned on addresses that are multiples of four. However, there is no guarantee that data types eight bytes in size (64 bits) are aligned on addresses that are a multiple of eight. The packsize has no effect on data types outside of a structure.</P>
+
+<P>In addition, packing affects the alignment of the entire packed structure. For example, in a structure declared under <B>#pragma pack(1)</B>, the alignment of all members are forced to one, regardless of whether they would have been naturally aligned even without packing. </P>
+
+<P>The following techniques set a packsize, in bytes: 
+
+<UL type="disc">
+	<LI>The command-line option <B>/Zp - Pack Structure Members</B> sets the packsize to <I>n</I>, in which <I>n</I> can be 1, 2, 4, 8, or 16, and in which 8 is the default.</li>
+
+	<LI>The compiler directive <B>#pragma pack</B>([<I>n</I>]) sets the packsize to <I>n</I>, in which <I>n</I> can be 1, 2, 4, 8, or 16. If <I>n</I> is not specified, <B>#pragma pack</B> resets the packsize to its value at the beginning of compilation: either the value specified by <B>/Zp - Pack Structure Members</B>, or the default, which is 8 on most platforms. 
+<P>The pragma applies only from the point at which it occurs in the source. For example, the <B>/Zp1</B>option sets the packsize to 1, which causes the compiler to use no padding within structures. To avoid this problem, turn off structure packing or use the <A HREF="wce50con__unalignedkeyword.htm">__unaligned</A> keyword when accessing unaligned members of such structures through pointers.
+</li>
+</UL>
+
+<H3 class="dtH3">Guidelines for packing structures</H3>
+
+<P>The following list shows possible solutions to the structure issue.
+
+<UL type="disc">
+	<LI>Reordering structure members
+<P>If space requirements are critical, reorder the members of the structure so the same-sized elements are next to each other and pack tightly. Usually, you start with the largest members and work your way down to the smallest ones. 
+
+<BLOCKQUOTE class="dtBlock">
+<b class="le">Note:</b> Reordering a structure assumes that the user has full control of the data structure, but the user might not have the freedom to rearrange the members. For example, the data structure might represent the layout of fields in a file on disk. </BLOCKQUOTE>
+
+<P>Consider the following code example:
+
+<PRE class="code">struct x_
+{
+   char a;     // 1 byte
+   int b;      // 4 bytes
+   short c;    // 2 bytes
+   char d;     // 1 byte
+} MyStruct;</PRE>
+
+<P>If you reorganize the members of this structure, as shown in the following code example, the reorganized structure aligns all members on natural boundaries, and the size of the structure is eight bytes instead of 12.
+
+<PRE class="code">struct x_
+{
+   int b;     // 4 bytes
+   short c;   // 2 bytes
+   char d;    // 1 byte
+   char a;    // 1 byte
+} MyStruct;</PRE>
+</li>
+
+	<LI>Padding the structure
+<P>A different kind of problem can arise when the structure size requires padding to make sure array elements have the same alignment, but the user needs to ensure that there is no padding between the array elements. For example, the user might need to restrict memory usage or read data from a fixed-format source. 
+
+<P>If the structure requires padding, you can use the compiler directive <B>#pragma pack</B>. However, <B>#pragma pack</B> causes elements of the structures to be unaligned, and it requires the use of the <A HREF="wce50con__unalignedkeyword.htm">__unaligned</A> qualifier to generate the code needed to access this data without causing alignment faults. 
+
+<P>The following example code uses <B>#pragma pack</B> to tell the compiler that the pointer px points to data that is not naturally aligned, and tells the compiler to generate the appropriate sequence of load, merge, and store operations to do the assignment efficiently.
+
+<PRE class="code"># pragma pack (1)
+struct x_
+{
+   char a;    // 1 byte
+   int b;     // 4 bytes
+   short c;   // 2 bytes
+} MyStruct;
+# pragma pack ()
+ 
+void bar()
+{
+  struct x_ __unaligned *px = &amp;MyStruct;
+   . . . .
+   px-&gt;b = 5;
+}</PRE>
+
+<P>The <B>__unaligned </B>qualifier should only be used as a last resort, because the generated code is less efficient than accessing naturally aligned data. However, _<B>_unaligned </B>is clearly preferable to alignment faults.
+
+<P>If at all possible, arrange the members of a data structure to preserve alignment and minimize space at the same time.
+</li>
+</UL>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50con__unalignedkeyword.htm">__unaligned Keyword</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

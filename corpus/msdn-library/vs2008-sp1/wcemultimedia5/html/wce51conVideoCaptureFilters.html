@@ -1,0 +1,86 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Video Capture Filters</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Video Capture Filters"/>
+<MSHelp:RLTitle Title="Video Capture Filters"/>
+<MSHelp:Keyword Index="A" Term="wce51conVideoCaptureFilters"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Feature"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="directshow_concepts1.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="False"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+<MSHelp:Attr Name="PBFeature" Value="SYSGEN_DSHOW"/>
+<MSHelp:Attr Name="PBOnly" Value="False"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_1066806">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce51convideocapturefilters"></A>Video Capture Filters</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P><B>Applies to:</B> Devices based on Windows Mobile Version 5.0 and later</P>
+
+<P>Capture filters in DirectShow have some features that distinguish them from other kinds of filters. Although the <A HREF="wce51concapturegraphbuilder.htm">Capture Graph Builder</A> hides many of the details, it is a good idea to read this section to get a general understanding of DirectShow capture graphs.</P>
+
+<H2 class="dtH2">Pin Categories</H2>
+
+<P>A capture filter often has two or more output pins that deliver the same kind of data &#0151; for example, a preview pin and a capture pin. Therefore, media types are not a good way to distinguish the pins. Instead, the pins are distinguished by their functionality, which is identified using a GUID, called the pin category. </P>
+
+<P>For a discussion of how to query pins for their category, see <A HREF="wce51conworkingwithpincategories.htm">Working with Pin Categories</A>. For most applications, however, you will not have to query pins directly. Instead, various <MSHelp:link keywords="wce51lrfICaptureGraphBuilder2Interface" TABINDEX="0">ICaptureGraphBuilder2</MSHelp:link> methods take parameters that specify the pin category on which to operate. The Capture Graph Builder automatically locates the correct pin.</P>
+
+<H2 class="dtH2">Preview Pins and Capture Pins</H2>
+
+<P>Some video capture devices have separate output pins for preview and capture. The preview pin is used to render video to the screen, while the capture pin is used to write video to a file. </P>
+
+<P>A preview pin and a capture pin have the following differences: 
+
+<UL type="disc">
+	<LI>A preview pin drops frames as needed to maintain throughput on the capture pin. </li>
+
+	<LI>Each frame from a capture pin is time-stamped with the stream time when the frame was captured. A preview pin does not time stamp the samples it delivers.&nbsp; </li>
+</UL>
+
+<P>The reason that preview frames do not have time stamps is that the filter graph introduces a small amount of latency into the stream. If the capture time is used as the presentation time, the video renderer treats every sample as being slightly late. This can cause the video renderer to drop frames while it tries to catch up. Removing the time stamps ensures that the renderer presents each sample when it arrives, without dropping frames.</P>
+
+<P>The pin category for preview pins is PIN_CATEGORY_PREVIEW (see <A HREF="wce51conpinpropertyset.htm">Pin Property Set</A>). The category for capture pins is PIN_CATEGORY_CAPTURE.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce51convideocapture.htm">Video Capture</A> | <A HREF="wce51conwritingcapturefilters.htm">Writing Capture Filters</A></P>
+
+<P></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

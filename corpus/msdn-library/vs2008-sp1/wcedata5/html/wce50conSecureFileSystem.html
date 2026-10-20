@@ -1,0 +1,123 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>File Systems and Data Store Security</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="File Systems and Data Store Security"/>
+<MSHelp:RLTitle Title="File Systems and Data Store Security"/>
+<MSHelp:Keyword Index="A" Term="wce50conSecureFileSystem"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Feature"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="filesys_and_data_store_overview.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="False"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+<MSHelp:Attr Name="PBOnly" Value="False"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_1055773">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50consecurefilesystem"></A>File Systems and Data Store Security</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>The file system and data store for Microsoft&reg; Windows&reg; CE provides persistent storage for applications and their related data even when the main power supply is lost. However, there are potential security risks to consider when developing the file system and data store for your Windows CE-based device. Use the following best practices to enhance the security and reliability of the file system and data store.</P>
+
+<H2 class="dtH2">Best Practices</H2>
+
+<P><b class="le">Mark databases that contain a system database as a system database</b></P>
+
+<P>If a database volume contains a database that is marked as a system database, mark the containing database volume as a system database. Do this by adding the CEDB_SYSTEMDB flag to the <I>dwFlags</I> parameter for <A HREF="wce50lrfcecreatedatabaseex.htm">CeCreateDatabaseEx (CEDB)</A> or <A HREF="wce50lrfcecreatedatabaseex2.htm">CeCreateDatabaseEx2 (CEDB)</A>.</P>
+
+<P><b class="le">Do not place critical system files on a storage device that can be accessed by a means other than the Windows CE OS</b></P>
+
+<P>Critical system files include the registry hive and the root file system. For example, do not place critical system files on removable storage media or on storage media that is exposed using USB mass storage function.</P>
+
+<P><b class="le">Be cautious when exposing removable media</b></P>
+
+<P>Because device enumeration is nondeterministic, be cautious when exposing removable media. This could lead to devices having incorrect names. </P>
+
+<P><b class="le">Verify that removable media controller drivers are loaded after non-removable media drivers</b></P>
+
+<P>Because device enumeration is nondeterministic, verify that removable media controller drivers are loaded after non-removable media drivers. </P>
+
+<P><b class="le">Verify that the load order for your Windows CE-based device is fixed</b></P>
+
+<P>Exposure of storage devices through USB mass storage function is dependent upon enumeration order. To ensure that you expose the proper storage device, verify that the load order for your Windows CE-based device is fixed.</P>
+
+<P><b class="le">Mark each DLL file in the Windows root direcroty as system</b></P>
+
+<P>To prevent the malicious replacement of a DLL file in the Windows root directory, mark each DLL file in the Windows root directory as a system DLL.</P>
+
+<P><b class="le">Set the MountSystem registry flag value in the Storage Manager profile, as appropriate</b></P>
+
+<P>If you want the entire contents of a volume to be inaccessable to untrusted applications, set the MountSystem registry flag value in the Storage Manager profile for that volume.</P>
+
+<P><b class="le">Verify that EvGen runs early enough in the file system load order</b></P>
+
+<P>If the file system load order at boot time is configurable through a setting and that setting is configurable by an attacker, then an attacker can force EvGen to load later in the file system load order. Until EvGen initializes successfully, all other modules are implicitly loaded as trusted.</P>
+
+<H2 class="dtH2">Other Security-related Considerations</H2>
+
+<P>In addition to the best practices listed above, the following information is related to security and should be taken into consideration to enhance the security and reliability of the file system and data store:
+
+<UL type="disc">
+	<LI>The operating system (OS) protects files and directories that have the FILE_ATTRIBUTE_SYSTEM attribute from being manipulated by an untrusted application. This prevents an untrusted application from executing the following APIs on a system file:
+<UL type="disc">
+	<LI><A HREF="wce50lrfcreatefile.htm">CreateFile</A></li>
+
+	<LI><A HREF="wce50lrfdeletefile.htm">DeleteFile</A></li>
+
+	<LI><A HREF="wce50lrfsetfileattributes.htm">SetFileAttributes</A></li>
+
+	<LI><A HREF="wce50lrfmovefile.htm">MoveFile</A></li>
+
+	<LI><A HREF="wce50lrfdeleteandrenamefile.htm">DeleteAndRenameFile</A></li>
+
+	<LI><A HREF="wce50lrfcopyfile.htm">CopyFile</A></li>
+
+	<LI><A HREF="wce50lrfremovedirectory.htm">RemoveDirectory</A></li>
+</UL>
+
+<P>In addition, an untrusted application cannot replace a system file in the RAM file system or in ROM with a file of the same name.
+
+<P>An untrusted application also cannot set the FILE_ATTRIBUTE_SYSTEM attribute on a file or directory.
+</li>
+</UL>
+
+<P>For more information about Windows CE security services, see <MSHelp:link keywords="wce50conCreatingaSecureDevice" TABINDEX="0">Enhancing the Security of a Device</MSHelp:link>.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50orifilesystemsdatastore.htm">File Systems and Data Store</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

@@ -1,0 +1,121 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>How to: Program Applications to Turn the Smartphone Backlight Off and On</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="How to: Program Applications to Turn the Smartphone Backlight Off and On"/>
+<MSHelp:RLTitle Title="How to: Program Applications to Turn the Smartphone Backlight Off and On"/>
+<MSHelp:Keyword Index="A" Term="mob5tskHowToProgramApplicationsToTurnSmartphoneBacklightOffOn"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Application"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbsmartphone"/>
+<MSHelp:Attr Name="Product" Value="kbPocketPC"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="Technology" Value="kbPocketPC"/>
+<MSHelp:Attr Name="Technology" Value="kbSmartphone"/>
+<MSHelp:Attr Name="TopicType" Value="kbTask"/>
+<MSHelp:Attr Name="Filename" Value="Memory_and_Power_Management_magneto.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="True"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="True"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_1063785">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Windows Mobile Version 5.0 SDK<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="mob5tskhowtoprogramapplicationstoturnsmartphonebacklightoffon"></A>How to: Program Applications to Turn the Smartphone Backlight Off and On</H1>
+<!--Feedback Link Top Start-->
+<P CLASS="feedback"><font size="1"><a href="mailto:medfdbk&#64;microsoft.com?subject=Product: Windows Mobile | Version: 5.0 | Release: SDK | Title: How to: Program Applications to Turn the Smartphone Backlight Off and On | Filename: mob5tskhowtoprogramapplicationstoturnsmartphonebacklightoffon.htm | Built on: Wednesday, September 14, 2005">Send Feedback</a> on this topic to the authors</font></p>
+<!--Feedback Link Top End-->
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>You can programmatically turn the mobile device's backlight on and off by calling a pair of <MSHelp:link keywords="wce50grfPowerManagementFunctions" TABINDEX="0">Power Management Functions</MSHelp:link> to direct the <MSHelp:link keywords="wce50conPowerManagementArchitecture" TABINDEX="0">Power Manager</MSHelp:link> to accommodate your application's specific and immediate device power requirement. You use <MSHelp:link keywords="wce50lrfSetPowerRequirement" TABINDEX="0">SetPowerRequirement</MSHelp:link> to control the power state of the backlight (to turn it on and off), and you use <MSHelp:link keywords="wce50lrfReleasePowerRequirement" TABINDEX="0">ReleasePowerRequirement</MSHelp:link> to release this power state control.</P>
+
+<BLOCKQUOTE class="dtBlock">
+<b class="le">Note</b>&nbsp;&nbsp;&nbsp;In the context of Power Management, the term "device" refers to a mobile device subsystem, and not a mobile device per se. Examples of devices are Back Light (BKL1), Notification LED (NLD1), Infrared Communications Port (COM3),  Camera (CAM1), Subscriber Identity Module (SIM1), BlueTooth (BTL1), and Storage Card (DSK1). For information on the available devices, see the system registry under the key <code class="ce">\HKEY_LOCAL_MACHINE\Drivers\</code>.</BLOCKQUOTE>
+
+<H4 class="dtH4">Code Example</H4>
+
+<P>The following code example demonstrates how to programmatically set and release the device power requirement to keep the backlight at full power (a <MSHelp:link keywords="wce50lrfCEDEVICEPOWERSTATE" TABINDEX="0">CEDEVICE_POWER_STATE</MSHelp:link> of D0).</P>
+
+<BLOCKQUOTE class="dtBlock">
+<b class="le">Note</b>&nbsp;&nbsp;&nbsp;To make the following code example easier to read, security checking and error handling are not included. This code example should not be used in a release configuration unless it has been modified to include them.</BLOCKQUOTE>
+
+<PRE class="code">//  IN BOOL fBacklightOn - TRUE to keep the backlight on.
+void SetBacklightRequirement(BOOL fBacklightOn)
+{
+    // The name of the backlight device.
+    TCHAR tszBacklightName[] = TEXT("BKL1:"); 
+
+    static HANDLE s_hBacklightReq = NULL;
+    
+    if (fBacklightOn) 
+    {
+        if (NULL == s_hBacklightReq) 
+        {
+            // Turn the backlight on by setting the requirement that the backlight device 
+            // must remain in device state D0 (full power). Replace D0 with D4 (zero power) to 
+            // turn the backlight off.
+<code><b class="cfe">            s_hBacklightReq = SetPowerRequirement(tszBacklightName, D0, POWER_NAME, NULL, 0);</b></code>
+
+            if (!s_hBacklightReq)
+                RETAILMSG(1, (L"SetPowerRequirement failed: %X\n", GetLastError()));
+        }
+    } 
+    else 
+    {
+        if (s_hBacklightReq) 
+        {
+<code><b class="cfe">            if (ERROR_SUCCESS != ReleasePowerRequirement(s_hBacklightReq))</b></code>
+                RETAILMSG(1, (L"ReleasePowerRequirement failed: %X\n", GetLastError()));
+
+            s_hBacklightReq = NULL;
+        }
+    }
+}</PRE>
+
+<H4 class="dtH4">Remarks</H4>
+
+<P>Your application should turn the backlight off as soon as it no longer needs it on.</P>
+
+<P>The Windows Mobile Version 5.0 Pocket PC and Smartphone SDKs ship with a sample application called <MSHelp:link keywords="mob5samPowerManager" TABINDEX="0">Power Manager</MSHelp:link> that demonstrates how to programmatically change the state of the backlight. For more information, see <MSHelp:link keywords="mob5oriCodeSamples" TABINDEX="0">Code Samples</MSHelp:link>.</P>
+
+<H4 class="dtH4">Requirements</H4>
+
+<P><B>OS&nbsp;Versions:</B> Windows&nbsp;CE&nbsp;.NET&nbsp;4.0&nbsp;and&nbsp;later<BR>
+<B>Header:</B> Pm.h<BR>
+<B>Library:</B> Coredll.lib</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><MSHelp:link keywords="wce50conPowerManagement" TABINDEX="0">Power Management</MSHelp:link> | <MSHelp:link keywords="mob5samPowerManager" TABINDEX="0">Power Manager Code Sample</MSHelp:link> | <A HREF="mob5tskhowtodeterminebatterystatus.htm">How to: Determine Battery Status</A> | <A HREF="mohowpreventingautomaticpowerdown.htm">Preventing Automatic Power Down</A> | <A HREF="mob5tskhowtosuspenddevice.htm">How to: Suspend the Device</A> | <A HREF="mob5orimemorypowermanagement.htm">Memory and Power Management</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Feedback Link Bottom Start-->
+<p><font size="1"><a href="mailto:medfdbk&#64;microsoft.com?subject=Product: Windows Mobile | Version: 5.0 | Release: SDK | Title: How to: Program Applications to Turn the Smartphone Backlight Off and On | Filename: mob5tskhowtoprogramapplicationstoturnsmartphonebacklightoffon.htm | Built on: Wednesday, September 14, 2005">Send Feedback</a> on this topic to the authors</font></p>
+<!--Feedback Link Bottom End-->
+<!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="mob5conCopyrightInformationForMagneto" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link></font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

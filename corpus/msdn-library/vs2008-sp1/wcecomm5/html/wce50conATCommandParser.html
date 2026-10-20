@@ -1,0 +1,100 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Audio Gateway Core Component</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Audio Gateway Core Component"/>
+<MSHelp:RLTitle Title="Audio Gateway Core Component"/>
+<MSHelp:Keyword Index="A" Term="wce50conATCommandParser"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Feature"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="bluetooth_profiles.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="False"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+<MSHelp:Attr Name="PBFeature" Value="SYSGEN_BTH"/>
+<MSHelp:Attr Name="PBOnly" Value="True"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_1038801">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50conatcommandparser"></A>Audio Gateway Core Component</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>The Audio Gateway (AG) core component provides the main functionality of the Audio AG Service. This component contains a parser and a core engine, which perform the following tasks:
+
+<UL type="disc">
+	<LI>Registers the Service Discovery Protocol (SDP) records of the headset or the hands-free device when the AG service is started. The AG core component then listens for incoming service level connections that are initiated by a user action on the headset or on the hands-free device, or an internal event, and initializes the <A HREF="wce50grfnetworkmodulefunctions.htm">Network component</A>. </li>
+
+	<LI>Receives AT commands from the headset or the hands-free device, parses the commands, and sends the commands to the core engine of the AG Service.
+<P>For a list of AT commands supported by Windows CE, see <A HREF="wce50conheadsetprofile.htm">Headset Profile</A> and <A HREF="wce50conhands-freeprofile.htm">Hands-Free Profile</A>.
+</li>
+
+	<LI>Synchronizes the parsed AT commands and the event notifications from the Network component. The core engine communicates with the in response to events and headset or the hands-free device in response to AT commands.
+<P>For example, when the network component receives an incoming call, it raises the NETWORK_EVENT_CALL_IN event. The engine responds to this event by establishing a connection with the headset. The Network component then raises a NETWORK_EVENT_RING event with the engine, which responds by sending an unsolicited RING result code to the headset. If the user chooses to receive the call on the headset by performing a user-initiated action such as pressing a button on the headset, then the headset sends the AT+CKPD command to the AG. This AT command is parsed and sent to the engine, which responds by establishing a synchronous connection oriented (SCO) link with the headset if it is not already established.
+
+<BLOCKQUOTE class="dtBlock">
+<b class="le">Note&nbsp;&nbsp;&nbsp;</b>A SCO link must be established to support a full duplex audio connection.</BLOCKQUOTE>
+
+<P>The engine sends result codes to peer Bluetooth devices through the Bluetooth stack by using Winsock. The engine declares a <A HREF="wce50lrfbthagonnetworkevent.htm">BthAGOnNetworkEvent</A> function that is used by the Network component.
+</li>
+</UL>
+
+<P>The following list shows the AG core component IOCTLs.
+
+<UL type="disc">
+	<LI><A HREF="wce50lrfioctl_ag_close_audio.htm">IOCTL_AG_CLOSE_AUDIO</A></li>
+
+	<LI><A HREF="wce50lrfioctl_ag_close_control.htm">IOCTL_AG_CLOSE_CONTROL</A></li>
+
+	<LI><A HREF="wce50lrfioctl_ag_get_mic_vol.htm">IOCTL_AG_GET_MIC_VOL</A></li>
+
+	<LI><A HREF="wce50lrfioctl_ag_get_speaker_vol.htm">IOCTL_AG_GET_SPEAKER_VOL</A></li>
+
+	<LI><A HREF="wce50lrfioctl_ag_open_audio.htm">IOCTL_AG_OPEN_AUDIO</A></li>
+
+	<LI><A HREF="wce50lrfioctl_ag_open_control.htm">IOCTL_AG_OPEN_CONTROL</A></li>
+
+	<LI><A HREF="wce50lrfioctl_ag_set_mic_vol.htm">IOCTL_AG_SET_MIC_VOL</A></li>
+
+	<LI><A HREF="wce50lrfioctl_ag_set_speaker_vol.htm">IOCTL_AG_SET_SPEAKER_VOL</A></li>
+</UL>
+
+<BLOCKQUOTE class="dtBlock">
+<b class="le">Note</b>&nbsp;&nbsp;&nbsp;The AG service can be controlled by external modules through IOCTLs provided by <A HREF="wce50conservicesexe.htm">Services.exe</A>.To start and stop the AG service, use the standard Services.exe IOCTLs, <A HREF="wce50lrfioctlservicestart.htm">IOCTL_SERVICE_START</A> and <A HREF="wce50lrfioctlservicestop.htm">IOCTL_SERVICE_STOP</A> respectively. To refresh the configuration parameters of the service, use <A HREF="wce50lrfioctlservicerefresh.htm">IOCTL_SERVICE_REFRESH</A>.</BLOCKQUOTE>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50oriaudiogatewayservice.htm">Audio Gateway Service</A> | <A HREF="wce50conbluetoothprofiles.htm">Bluetooth Profiles</A> | <MSHelp:link keywords="wce50conBluetoothStackArchitecure" TABINDEX="0">Bluetooth Stack Architecture</MSHelp:link></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

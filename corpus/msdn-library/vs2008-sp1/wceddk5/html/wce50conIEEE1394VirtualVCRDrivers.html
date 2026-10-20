@@ -1,0 +1,88 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>IEEE 1394 Virtual VCR Driver Development Concepts</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="IEEE 1394 Virtual VCR Driver Development Concepts"/>
+<MSHelp:RLTitle Title="IEEE 1394 Virtual VCR Driver Development Concepts"/>
+<MSHelp:Keyword Index="A" Term="wce50conIEEE1394VirtualVCRDrivers"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Driver"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="False"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="1394_vvcr.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="False"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+<MSHelp:Attr Name="PBFeature" Value="1394Driver"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_3017001">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50conieee1394virtualvcrdrivers"></A>IEEE 1394 Virtual VCR Driver Development Concepts</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>The virtual VCR subunit is an example of how a virtual subunit might be written. It is only one form of implementation, favoring a certain type of design. It is not intended to be a pure tutorial or a completed module suitable for release in a commercial product. </P>
+
+<P>The following table compares the two possible implementations of the virtual VCR driver: two components and one component. The Microsoft virtual VCR driver uses two components. Consider your needs before deciding on an implementation strategy. </P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=18%>Implementation</TH>
+<TH width=45%>Description</TH>
+<TH width=37%>Considerations</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=18%>Two components</TD>
+<TD width=45%>The first component is the Windows Driver Model (WDM)-based virtual subunit driver, AVC_VVCR. This component handles the underlying protocols. The underlying protocols manage virtual subunits and virtual VCR subunits. This component does not carry out any tasks related to streaming media or emulating a VCR. 
+<P>The second component, the virtual VCR application, handles media, streaming, emulating a tape mechanism, Stop, Rewind, Fast Forward, Play, and so on. The application depends on the AVC_VVCR driver, or the underlying AVC_STREAM driver, to carry out the details in the application's high-level tasks. Specifically, part of the processing is done inside a WDM driver and part is done inside of an application.</P>
+</TD>
+<TD width=37%>More convenient for application developers who want to limit their understanding of the internals of IEEE 1394. This implementation does not hard-code a particular virtual VCR mechanism emulation or implementation, and extends actual control of the virtual VCR mechanism directly to the application. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=18%>One component</TD>
+<TD width=45%>All of the functionality of the virtual VCR is encapsulated in the virtual VCR driver. No application is involved and all of the processing is done within a WDM driver.</TD>
+<TD width=37%>Simpler because it is a single component. Design issues can result from breaking asynchronous events and tasks between WDM and applications. For example, applications can exist without completing all pending AV/C requests. Also, a significant amount of the code may not be directly related to the functionality of the virtual VCR driver.</TD>
+</TR>
+</table></div>
+
+<H2 class="dtH2">IEEE 1394 Virtual VCR Driver API Definition</H2>
+
+<P>The API set for the virtual VCR driver is primarily the APIs defined by <A HREF="wce50conieee1394streamingfilterdrivers.htm">IEEE 1394 Streaming Filter Driver Development Concepts</A> and IOCTLs related to control of the virtual VCR. Because many asynchronous operations can be occurring at once, Microsoft recommends that consumers of the virtual VCR driver make use of overlapped I/O, a feature typically invalid for Windows CE, but supported by WDM and all of the associated IEEE 1394 device drivers. </P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50conieee1394virtualvcrdriverarchitecture.htm">IEEE 1394 Virtual VCR Driver Architecture</A> | <A HREF="wce50conieee1394virtualvcrapplication.htm">IEEE 1394 Virtual VCR Application</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

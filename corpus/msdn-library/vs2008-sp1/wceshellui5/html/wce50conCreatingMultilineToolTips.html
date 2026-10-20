@@ -1,0 +1,85 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Creating Multiline ToolTips</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Creating Multiline ToolTips"/>
+<MSHelp:RLTitle Title="Creating Multiline ToolTips"/>
+<MSHelp:Keyword Index="A" Term="wce50conCreatingMultilineToolTips"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Feature"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="commctrl.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="True"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+<MSHelp:Attr Name="PBFeature" Value="UI"/>
+<MSHelp:Attr Name="PBOnly" Value="False"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_3021669">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50concreatingmultilinetooltips"></A>Creating Multiline ToolTips</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>Multiline ToolTip support allows you to display more than one line of ToolTip text. This option is useful if your message is too long for a user to read easily as a single line of text.</P>
+
+<P>You create a multiline ToolTip when you respond to the <A HREF="wce50lrfttngetdispinfo.htm">TTN_GETDISPINFO</A> notification. To force the ToolTip control to use multiple lines, send a <A HREF="wce50lrfttmsetmaxtipwidth.htm">TTM_SETMAXTIPWIDTH</A> message that specifies the width of the display rectangle. Text that exceeds this width wraps to the next line instead of widening the display region. The rectangle height increases as needed to accommodate the additional lines. The ToolTip control wraps the lines automatically. You can also use a carriage return/line feed combination (\r\n) to force line breaks at particular locations.</P>
+
+<P>The text buffer in the <A HREF="wce50lrfnmttdispinfo.htm">NMTTDISPINFO</A> structure accommodates only 80 characters. If you need a longer string, set the <B>lpszText</B> member of the <B>NMTTDISPINFO</B> structure to point to a buffer that contains the text that you want to use.</P>
+
+<P>The following code example shows a simple TTN_GETDISPINFO notification handler. The code example creates a multiline ToolTip by setting the display rectangle to 300 pixels and by setting the <B>lpszText</B> member of the <B>NMTTDISPINFO</B> structure to point to a buffer with the text to use.</P>
+
+<PRE class="code">char szLongMessage[] =
+"This message is a long message for the ToolTip that wraps automatically "
+"when the length of the message exceeds the maximum tip width. "
+"Alternatively, you can use a\r\n"
+"carriage return/line feed combination\r\n"
+"to force line breaks at specific\r\n"
+"locations.";
+
+switch (lpnmhdr-&gt;code) {
+  case TTN_GETDISPINFO:
+    lpttd = (LPNMTTDISPINFO)lpnmhdr;
+    SendMessage(lpnmhdr-&gt;hwndFrom, TTM_SETMAXTIPWIDTH, 0, 300);
+    lpttd-&gt;lpszText = szLongMessage;
+    return 0;
+
+
+// Include other notification handlers, as needed.
+}</PRE>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50concreatingatooltipcontrol.htm">Creating a ToolTip Control</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

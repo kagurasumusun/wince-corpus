@@ -1,0 +1,112 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>DPI Aware Text and Fonts</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="DPI Aware Text and Fonts"/>
+<MSHelp:RLTitle Title="DPI Aware Text and Fonts"/>
+<MSHelp:Keyword Index="A" Term="wce51conDPIAwareTextandFonts"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Application"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbsmartphone"/>
+<MSHelp:Attr Name="Product" Value="kbPocketPC"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="Technology" Value="kbPocketPC"/>
+<MSHelp:Attr Name="Technology" Value="kbSmartphone"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="display_concepts_magneto.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="True"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_4000762">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Windows Mobile Version 5.0 SDK<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce51condpiawaretextandfonts"></A>DPI Aware Text and Fonts</H1>
+<!--Feedback Link Top Start-->
+<P CLASS="feedback"><font size="1"><a href="mailto:medfdbk&#64;microsoft.com?subject=Product: Windows Mobile | Version: 5.0 | Release: SDK | Title: DPI Aware Text and Fonts | Filename: wce51condpiawaretextandfonts.htm | Built on: Wednesday, September 14, 2005">Send Feedback</a> on this topic to the authors</font></p>
+<!--Feedback Link Top End-->
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>While TrueType fonts scale well, they do not scale linearly. That is, increasing the DPI by 10 percent does not generally increase a string's length by exactly 10 percent. The cumulative effect, especially in longer strings, might cause text in different resolutions to be relatively shorter or to be clipped or to wrap unexpectedly. Therefore, it is important to use the <B>GetTextExtent</B> function instead of making assumptions about how much space a string will take up. For static layouts like dialog boxes, you should allocate some extra width for text elements to fit properly in any DPI.</P>
+
+<P>In addition, different fonts exhibit different non-linear scaling effects, which means that the use of multiple fonts on a screen may cause some to appear disproportionate to others in different resolutions.</P>
+
+<H2 class="dtH2">Creating DPI Aware Fonts</H2>
+
+<P>When you create fonts for Windows Mobile-based Smartphone and Pocket PC, you should use points to specify the font size. A point refers to a logical size (1/72 of a logical inch), not a pixel height, so when used correctly it is inherently DPI aware. The following code example shows how to create a DPI-aware font using point size.</P>
+
+<PRE class="code">LOGFONT lf;
+memset(&amp;lf, 0, sizeof(lf));
+// Set other LOGFONT values as appropriate.
+lf.lfHeight = -((<B>iPointSize</B> * GetDeviceCaps(hdc, LOGPIXELSY)) / 72;
+HFONT font = CreateFontIndirect(&amp;lf);</PRE>
+
+<P>Because <B>lf.lfHeight</B> is an integer pixel height, it is subject to rounding differences that are introduced through the <B>MulDiv</B> call in different resolutions. The size of the resulting font might not be linearly scaled from 96 DPI, but it will be the correct approximation of the desired point size. This is the recommended method for creating fonts. </P>
+
+<P>If you need a more exact linear scaling of your font pixel size, you can create a temporary font for 96 DPI, scale its <B>tmHeight </B>text metric, and create the new font based on the resulting value, as shown in the following example. Linearly, the resulting font will be exactly scaled in height according to <B>CDC::GetTextExtent</B>, but it may not be linearly scaled in width and may also be visually taller or shorter.</P>
+
+<BLOCKQUOTE class="dtBlock">
+<b class="le">Note</b>&nbsp;&nbsp;&nbsp;Even when you use this method to more precisely scale fonts, you should make no assumptions about how much space a string will occupy.</BLOCKQUOTE>
+
+<PRE class="code">// Create font for 96 DPI.
+LOGFONT lf;
+memset(&amp;lf, 0, sizeof(lf)); 
+// Set other LOGFONT values as appropriate.
+lf.lfHeight = -MulDiv(<code><b class="cfe">iPointSize</b></code>, 96, 72);
+HFONT hfont = CreateFontIndirect(&amp;lf); 
+  // Scale the tmHeight; create target font.
+  TEXTMETRIC tm;
+HDC hdc = GetDC(target);
+HFONT hfontOld = (HFONT)SelectObject(hdc, hfont);
+GetTextMetrics(hdc, &amp;tm);
+SelectObject(hdc, hfontOld);
+DeleteObject(hfont);
+ReleaseDC(target, hdc);
+lf.lfHeight = SCALEY(tm.tmHeight);
+hfont = CreateFontIndirect(&amp;lf);</PRE>
+
+<H2 class="dtH2">Getting the User Font Size</H2>
+
+<P>Windows Mobile-based Pocket PCs have a new Control Panel item (<B>Settings</B>/<B>Screen</B>/<B>Text</B> <B>Size</B>) with which the user can choose the font size that looks best on the device screen. New applications written for Windows Mobile-based Pocket PCs should be aware of this and should use the user-selected font size for their primary UI text whenever possible. To retrieve this value, use the <B>SHGetUIMetric</B> function provided with the CrosswordSample code.</P>
+
+<PRE class="code">LONG  dwFontSize = 12;
+SHGetUIMetrics(SHUIM_FONTSIZE_PIXEL, &amp;dwFontSize, sizeof(dwFontSize), NULL);
+lf.lfHeight = -dwFontSize;</PRE>
+
+<P>Your application should also be aware when the user font size changes. To receive this notification, your application should call <MSHelp:link keywords="wce50lrfRegisterWindowMessage" TABINDEX="0">RegisterWindowMessage</MSHelp:link> for the SH_UIMETRIC_CHANGE message. When your application receives this message, it should query SHGetUIMetric to find the new font size and then repaint itself.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce51condevelopingdpiawareapplications.htm">Developing DPI Aware Applications</A> | <A HREF="wce51conhighdpidisplay.htm">High DPI Display</A> </P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Feedback Link Bottom Start-->
+<p><font size="1"><a href="mailto:medfdbk&#64;microsoft.com?subject=Product: Windows Mobile | Version: 5.0 | Release: SDK | Title: DPI Aware Text and Fonts | Filename: wce51condpiawaretextandfonts.htm | Built on: Wednesday, September 14, 2005">Send Feedback</a> on this topic to the authors</font></p>
+<!--Feedback Link Bottom End-->
+<!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="mob5conCopyrightInformationForMagneto" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link></font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

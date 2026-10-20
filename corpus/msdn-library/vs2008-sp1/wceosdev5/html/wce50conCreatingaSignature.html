@@ -1,0 +1,127 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Signature Creation</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Signature Creation"/>
+<MSHelp:RLTitle Title="Signature Creation"/>
+<MSHelp:Keyword Index="A" Term="wce50conCreatingaSignature"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="OS"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="True"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="os_secur.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="True"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+<MSHelp:Attr Name="Technology" Value="Security"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_3011066">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50concreatingasignature"></A>Signature Creation</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>A digital signature is used for verification of the origination of an electronic document and for nonrepudiation. The use of a digital signature does not change the data in the file. Instead, a hash of the document is generated that can either be bundled with the document or transmitted separately. Digital signatures use a public-key algorithm.</P>
+
+<P>To create a digital signature from a file, run the file through a hash function, and then sign the resulting hash with a private key. An easy way to create a digital signature from a file is to use <A HREF="wce50consignfileexe.htm">Signfile.exe</A>, which is included in Microsoft Platform Builder. Signfile.exe is a tool for signing an executable file with a private key supplied by a cryptographic service provider (CSP).</P>
+
+<P>Signfile.exe uses the Secure Hashing Algorithm (SHA) to compute the cryptographic hash. SHA generates a 20-byte hash from an arbitrarily sized byte string. Signfile.exe pads the hash as specified by Public-Key Cryptography Standards #1 (PKCS1) and encrypts it by using the RSA public key algorithm. The key modulus length can be from 512 through 1,024 bits. The resulting signature is the same size as the modulus. For example, the signature for a 1,024 bit key is 128 bytes. Signfile.exe then uses the <B>ImageAddCertificate</B> and <B>ImageGetDigestStream</B> Microsoft&reg; Windows NT&reg; functions to embed the signature in a portable executable (PE) file. </P>
+
+<P>The following list shows the contents of the PE file memory:
+
+<UL type="disc">
+	<LI>MS-DOS header</li>
+
+	<LI>Offset of PE header (offset 0x3c)</li>
+
+	<LI>PE header</li>
+
+	<LI>Section headers</li>
+
+	<LI>Section</li>
+
+	<LI>Debug information and certificates (if any)</li>
+</UL>
+
+<P>The PE header begins with a 4-byte sequence, "PE\0\0", that identifies the MS-DOS&reg; header. The MS-DOS header is followed by a standard Common Object File Format (COFF) header. This COFF header is followed by an optional header that is always present on Windows .exe and .dll files. The last field in a PE header is an optional data directory table. The following table shows the size of the PE header elements.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=53%>PE header element</TH>
+<TH width=47%>Size</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=53%>"PE\0\0"</TD>
+<TD width=47%>4 bytes</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=53%>COFF header</TD>
+<TD width=47%>20 bytes</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=53%>Optional header; standard for Windows files</TD>
+<TD width=47%>96 bytes</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=53%>Optional header; data directory table</TD>
+<TD width=47%>Size varies</TD>
+</TR>
+</table></div>
+
+<P>Each entry in the data directory table consists of an <MSHelp:link keywords="wce50lrfIMAGEDATADIRECTORY" TABINDEX="0">IMAGE_DATA_DIRECTORY</MSHelp:link> structure. The fifth structure in the data directory table contains certificate table information. This is stored in an array of <MSHelp:link keywords="wce50lrfWINCERTIFICATE" TABINDEX="0">WIN_CERTIFICATE</MSHelp:link> structures. A certificate is a digitally signed statement that contains information about an entity and that entity's public key. Certificates are not loaded into memory as part of the PE file.</P>
+
+<P>The following code example shows the format of a <B>WIN_CERTIFICATE</B> structure that is needed to support the PKCS1 standard. </P>
+
+<PRE class="code">typedef struct {
+     // Standard WIN_CERTIFICATE fields (8 bytes)
+     DWORD dwLength;
+     WORD wRevision;
+     WORD wCertificateType;    // = WIN_CERT_TYPE_PKCS1_SIGN
+     // WIN_CERT_TYPE_PKCS1_SIGN fields follow
+     DWORD cbSignedData;
+     // optional signed attributes
+     BYTE bSignedData[MAX_WIN_CERT_SIGN_DATA_LEN];
+     BYTE bSign[MAX_RSA_KEY_BITS/8]; // PKCS1 signature
+} PKCS1_MODULE_SIGN ;</PRE>
+
+<P>Signfile.exe appends the <B>WIN_CERTIFICATE</B> structure to the end of the file and updates the file header accordingly. For sample Signfile.exe code, see %_WINCEROOT%\Public\Common\Oak\Tools\Signfile.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50concreateatrustedenvironment.htm">Trusted Environment Creation</A> | <MSHelp:link keywords="wce50conCreatingDigitalSignatures" TABINDEX="0">Creating Digital Signatures</MSHelp:link> | <MSHelp:link keywords="wce50oriCertificates" TABINDEX="0">Certificates</MSHelp:link></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

@@ -1,0 +1,277 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>NDIS_WAN_INFO</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="NDIS_WAN_INFO"/>
+<MSHelp:RLTitle Title="NDIS_WAN_INFO"/>
+<MSHelp:Keyword Index="K" Term="NDIS_WAN_INFO"/>
+<MSHelp:Keyword Index="A" Term="wce50lrfNDISWANINFO"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Driver"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="False"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="apiref"/>
+<MSHelp:Attr Name="Filename" Value="ndis_structures2.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="False"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+<MSHelp:Attr Name="APIName" Value="NDIS_WAN_INFO"/>
+<MSHelp:Attr Name="PBFeature" Value="NetworkDriver"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_3018931">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50lrfndiswaninfo"></A>NDIS_WAN_INFO</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>The <B>NDIS_WAN_INFO</B> structure formats information for <A HREF="wce50lrfoidwangetinfo.htm">OID_WAN_GET_INFO</A>. This object identifier requests the miniport driver to return information about its own capabilities or those of the NIC. </P>
+
+<P>The following syntax defines the <B>NDIS_WAN_INFO</B> structure.</P>
+
+<PRE class="syntax"><B>typedef struct _NDIS_WAN_INFO {</B>
+<B>  ULONG</B> <I>MaxFrameSize</I><B>;</B> 
+<B>  ULONG</B> <I>MaxTransmit</I><B>;</B> 
+<B>  ULONG</B> <I>HeaderPadding</I><B>;</B> 
+  <B>ULONG</B> <I>TailPadding</I><B>;</B> 
+  <B>ULONG</B> <I>Endpoints</I><B>;</B> 
+<B>  UINT</B> <I>MemoryFlags</I><B>;</B> 
+  <B>NDIS_PHYSICAL_ADDRESS</B> <I>HighestAcceptableAddress</I><B>;</B> 
+  <B>ULONG</B> <I>FramingBits</I><B>;</B> 
+  <B>ULONG</B> <I>DesiredACCM</I><B>;</B> 
+<B>} NDIS_WAN_INFO, *PNDIS_WAN_INFO;</B><I> </I></PRE>
+
+<H4 class="dtH4">Members</H4>
+
+<DL>
+<DT><B>MaxFrameSize </B></DT>
+
+<DD>[out] Specifies the maximum frame size for any net packet that the NIC driver can send and receive. This value should exclude the driver's own framing overhead and/or the PPP HDLC overhead. Typically, this value is around 1500. 
+
+<BLOCKQUOTE class="dtBlock">
+<b class="le">Note</b>&nbsp;&nbsp;&nbsp;All WAN miniport drivers should use a <B>MaxFrameSize</B> that is 32 bytes larger than the value returned for this object identifier. For example, a WAN miniport driver that returns 1500 for this object identifier should internally accept and send up to 1532. Such a miniport driver can readily support future bridging and additional protocols. </BLOCKQUOTE>
+</dd>
+
+<DT><B>MaxTransmit </B></DT>
+
+<DD>[out] Specifies the maximum number of outstanding frames that a link on the WAN miniport driver can handle. This member must be set to at least one. 
+
+<P>The WAN protocol driver uses the value of this member as a default throttle on how many send requests it submits to the driver's MiniportWanSend function before the WAN protocol driver holds incoming sends. These sends are queued until the miniport driver completes an outstanding send. A miniport driver can adjust this value dynamically and on a per-link basis using the SendWindow member in the <A HREF="wce50lrfndismaclineup.htm">NDIS_MAC_LINE_UP</A> structure that the driver passes to <A HREF="wce50lrfndismindicatestatus.htm">NdisMIndicateStatus</A>. The WAN protocol driver uses the current line-up <I>SendWindow</I> value as its throttle on outstanding sends. If the miniport driver sets <I>SendWindow</I> to zero for the initial line-up indication, the WAN protocol driver uses the driver-set <I>MaxTransmit</I> value. 
+
+
+<P>Because a WAN NIC miniport driver must queue packets internally, the value of <I>MaxTransmit</I> is theoretically max<B>(</B>ULONG<B>)</B>. However, this driver-determined value should reflect the link speed or hardware capabilities of the NIC. For example, if its NIC always has room for at least four frames, a miniport driver sets <I>MaxTransmit</I> to four so that any incoming packet to MiniportWanSend can be placed on the hardware immediately. 
+</dd>
+
+<DT><B>HeaderPadding </B></DT>
+
+<DD>[out] Specifies the amount of buffer space, in bytes, required at the beginning of each net packet, considering the current defaults, such as a <I>MaxFrameSize</I> of 1500. 
+
+<P>For example, if its NIC requires just a flag byte preceding the frame, the miniport driver would set this member to one. 
+</dd>
+
+<DT><B>TailPadding </B></DT>
+
+<DD>[out] Specifies the amount of buffer space, in bytes, required at the end of each net packet, considering the current defaults, such as a <I>MaxFrameSize</I> of 1500. 
+
+<P>For example, if its NIC requires three bytes at the end of each net packet for the Frame Checksum Sequence (CRC check) and the flag byte, a miniport driver would set this member to three. 
+</dd>
+
+<DT><B>Endpoints </B></DT>
+
+<DD>[out] Specifies the maximum number of links (sometimes called <I>ports</I>, or <I>point-to-point connections</I>) that the NIC can support at any given time. 
+
+<P>For example, a miniport driver would set this member to two for an ISDN card with two channels. It would set this member to ten for an X.25 card that can accept up to ten virtual circuits. 
+</dd>
+
+<DT><B>MemoryFlags </B></DT>
+
+<DD>[out] If the NIC is not a DMA device, set this member to zero. 
+
+<P>Otherwise, set this to the type of memory to be allocated for the NIC, that is, NDIS_MEMORY_NONCACHED or NDIS_MEMORY_CONTIGUOUS. Subsequently, memory of the specified type will be allocated for all packets to be transmitted by the WAN adapter. 
+
+
+<P>Note that these flags should be used with caution because they force the WAN protocol driver to allocate memory resources statically during miniport initialization. 
+</dd>
+
+<DT><B>HighestAcceptableAddress </B></DT>
+
+<DD>[out] If the NIC is not a DMA device, set this member with the macro NDIS_PHYSICAL_ADDRESS_CONST(-1,-1). 
+
+<P>Otherwise, if the NIC can use 24-bit addresses, set this value to NDIS_PHYSICAL_ADDRESS_CONST (0x1000000, 0). Subsequently, memory within the specified range will be allocated for all packets to be transmitted by the NIC. Thus, memory can sent directly to the NIC through DMA rather than having to be double-buffered through a CPU-memory copy. 
+</dd>
+
+<DT><B>FramingBits </B></DT>
+
+<DD>[out] Set any bits (ORed) supported by the driver. The following table shows the settings for framing bits.
+
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=50%>Framing Bit Setting</TH>
+<TH width=50%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>RAS_FRAMING </TD>
+<TD width=50%>Set only if the driver can detect older RAS framing. Only legacy drivers that supported earlier RAS framing set this flag. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>RAS_COMPRESSION </TD>
+<TD width=50%>Set only if the driver supports the older RAS compression scheme. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>PPP_FRAMING </TD>
+<TD width=50%>Should always be set. Indicates the driver can detect and support PPP framing for its medium type. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>PPP_COMPRESS_ADDRESS_CONTROL </TD>
+<TD width=50%>Set if the driver supports PPP address and control-field compression. <BR>
+The WAN protocol driver will remove the address and control field if this LCP option is negotiated. Some WAN medium types, such as X.25, do not support this option. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>PPP_COMPRESS_PROTOCOL_FIELD </TD>
+<TD width=50%>Set if the driver supports PPP protocol field compression. <BR>
+The WAN protocol driver will remove one byte from the protocol field when applicable if this LCP option is negotiated. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>PPP_ACCM_SUPPORTED </TD>
+<TD width=50%>Set if the driver supports Asynchronous Control Character Mapping. This bit is only valid for asynchronous media, such as modems. If this bit is set, the DesiredACCM member should be valid. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>PPP_MULTILINK_FRAMING </TD>
+<TD width=50%>Set if the driver supports multilink framing as specified in IETF RFC 1717. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>PPP_SHORT_SEQUENCE_HDR_FORMAT </TD>
+<TD width=50%>Set if the driver supports header format for multilink framing as specified in IETF RFC 1717. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>SLIP_FRAMING </TD>
+<TD width=50%>Set if the driver can detect and support SLIP framing (asynchronous drivers only). </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>SLIP_VJ_COMPRESSION </TD>
+<TD width=50%>Set if the driver can support Van Jacobsen TCP/IP header compression for SLIP. The WAN protocol driver supports SLIP_VJ_COMPRESSION (with 16 slots). Asynchronous media (serial drivers) that support SLIP framing should set this bit. <BR>
+Asynchronous media need not write any code to support VJ header compression. The WAN protocol driver will take care of it. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>SLIP_VJ_AUTODETECT </TD>
+<TD width=50%>Set if the driver can auto-detect Van Jacobsen TCP/IP header compression for SLIP. The WAN protocol driver will auto-detect VJ header compression. Asynchronous media (serial drivers) should set this bit if they support SLIP framing. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>TAPI_PROVIDER </TD>
+<TD width=50%>Set if the driver supports the TAPI Service Provider object identifiers. Unless this bit is set, TAPI object identifier calls will not be made to the driver. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>MEDIA_NRZ_ENCODING </TD>
+<TD width=50%>Set if the driver supports NRZ encoding, the PPP default for some media types such as ISDN. This value is reserved for future use. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>MEDIA_NRZI_ENCODING </TD>
+<TD width=50%>Set if the driver supports NRZI encoding. This value is reserved for future use. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>MEDIA_NLPID </TD>
+<TD width=50%>Set if the driver has and can set the NLPID in its frame. This value is reserved for future use. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>RFC_1356_FRAMING </TD>
+<TD width=50%>Set if the driver supports IETF RFC 1356 X.25 and ISDN framing. This value is reserved for future use. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>RFC_1483_FRAMING </TD>
+<TD width=50%>Set if the driver supports IETF RFC 1483 ATM adaptation layer-5 encapsulation. This value is reserved for future use. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>RFC_1490_FRAMING </TD>
+<TD width=50%>Set if the driver supports IETF RFC 1490 Frame Relay framing. This value is reserved for future use. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>NBF_PRESERVE_MAC_ADDRESS </TD>
+<TD width=50%>Set if the driver supports IETF framing as specified in the draft The PPP NETBIOS Frames Control Protocol (NBFCP). </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>SHIVA_FRAMING </TD>
+<TD width=50%>Superseded by NBF_PRESERVE_MAC_ADDRESS. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>PASS_THROUGH_MODE </TD>
+<TD width=50%>Set if the driver does its own framing. If this flag is set, The WAN protocol driver passes frames, uninterpreted and unmodified. </TD>
+</TR>
+</table></div>
+
+</dd>
+
+<DT><B>DesiredACCM </B></DT>
+
+<DD>[out] The Asynchronous Control Character Map is negotiated. This member is relevant only for asynchronous media types. </dd>
+</DL>
+
+<H4 class="dtH4">Remarks</H4>
+
+<P>NIC drivers must be in the default PPP framing mode until each driver receives an <A HREF="wce50lrfndiswansetlinkinfo.htm">NDIS_WAN_SET_LINK_INFO</A> call. The NIC driver must auto-detect any framing that it claims to support. </P>
+
+<P>If a driver detects a framing scheme other than the default, that driver should <I>automatically</I> switch its framing into the newly detected framing. </P>
+
+<P>A subsequent query with <A HREF="wce50lrfoidwangetlinkinfo.htm">OID_WAN_GET_LINK_INFO</A> should indicate the detected framing. If no framing is yet detected, the <B>FramingBits</B> member should be zero in the returned <A HREF="wce50lrfndiswangetlinkinfo.htm">NDIS_WAN_GET_LINK_INFO</A> information. </P>
+
+<P>If the WAN miniport driver is called subsequently with <A HREF="wce50lrfoidwansetlinkinfo.htm">OID_WAN_SET_LINK_INFO</A> in which the <B>FramingBits</B> member is zero, the driver should attempt to auto-detect the framing upon reception of each frame. </P>
+
+<H4 class="dtH4">Requirements</H4>
+
+<P><B>OS Versions:</B> Windows CE .NET 4.0 and later.<BR>
+<B>Header:</B> Ndis.h.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50lrfndismaclineup.htm">NDIS_MAC_LINE_UP</A> | <A HREF="wce50lrfndismindicatestatus.htm">NdisMIndicateStatus</A> | <A HREF="wce50lrfndiswangetlinkinfo.htm">NDIS_WAN_GET_LINK_INFO</A> | <A HREF="wce50lrfndiswansetlinkinfo.htm">NDIS_WAN_SET_LINK_INFO</A> | <A HREF="wce50lrfoidwangetinfo.htm">OID_WAN_GET_INFO</A> | <A HREF="wce50lrfoidwangetlinkinfo.htm">OID_WAN_GET_LINK_INFO</A> | <A HREF="wce50lrfoidwansetlinkinfo.htm">OID_WAN_SET_LINK_INFO</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

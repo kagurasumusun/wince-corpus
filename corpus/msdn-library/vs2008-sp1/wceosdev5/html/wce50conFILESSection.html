@@ -1,0 +1,137 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>FILES Section</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="FILES Section"/>
+<MSHelp:RLTitle Title="FILES Section"/>
+<MSHelp:Keyword Index="A" Term="wce50conFILESSection"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="OS"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="True"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="configuration_file_types.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="True"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_3012316">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50confilessection"></A>FILES Section</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>The FILES section specifies how Windows CE-based files are loaded into the memory table as established in the MEMORY section of the Config.bib file. This section can contain up to 2,000 files. </P>
+
+<P>In these respects, this section is similar to the MODULES section. However, Romimage.exe compresses all FILES section entries by default. </P>
+
+<P>Files found in this section typically include data files that are loaded into application processes, such as waveform audio (.wav) files and bitmap (.bmp) files. For more information about compression, see <A HREF="wce50lrfcompression.htm">COMPRESSION</A>.</P>
+
+<P>The major difference between the FILES section and the MODULES section is this: If a dynamic-link library (.dll) file is placed in the FILES section, as opposed to the MODULES section, it is loaded into every slot location instead of process slot 1 only, which decreases the virtual address space available to any one process. </P>
+
+<P>Process slot 1 is a 32 MB address space set aside specifically for these modules. For more information, see <MSHelp:link keywords="wce50conMemoryArchitecture" TABINDEX="0">Memory Architecture</MSHelp:link>.</P>
+
+<P>The following code example shows the columnar format used in a FILES section entry.</P>
+
+<PRE class="syntax"><I>Name        Path        Memory block        Section override        Type</I></PRE>
+
+<H4 class="dtH4">Parameters</H4>
+
+<DL>
+<DT><I>Name </I></DT>
+
+<DD>This parameter specifies the name of the FILES section entry as it appears in the memory table. Usually, the <I>Name</I> entry is the same as the name of the file referenced by <I>Path</I>.</dd>
+
+<DT><I>Path</I></DT>
+
+<DD>This parameter specifies the full path to the FILES file that Romimage.exe incorporates into the run-time image. Usually, the <I>Path</I> file name is the same as the <I>Name</I> file section entry.</dd>
+
+<DT><I>Memory block</I></DT>
+
+<DD>This parameter specifies the MEMORY region into which Romimage.exe loads the FILES entry. 
+
+<P>Romimage.exe places the files in the specified memory area in the order in which they appear in the MEMORY section. This MEMORY region corresponds to the MEMORY section defined in the Config.bib file. 
+
+
+<P>There is only one RAMIMAGE per run-time image, and the name used to specify the MEMORY section must be the same as the name specified in the Config.bib file.
+</dd>
+
+<DT><I>Section override</I></DT>
+
+<DD>This parameter specifies what type of section entry Romimage.exe treats the entry as, and can be set using the following flags: 
+
+<UL type="disc">
+	<LI>MODULE to define it as a MODULES section entry</li>
+
+	<LI>FILE to define it as a FILES section entry</li>
+</UL>
+
+
+<P>When this is added to an entry, Romimage.exe ignores the section that the entry resides in, and treats the entry as a member of the specified section. This is optional. 
+</dd>
+
+<DT><I>Type</I></DT>
+
+<DD>This parameter specifies the file type and can be a combination of the following:
+
+<UL type="disc">
+	<LI>S to define it as a system file. It is part of the OS or is used exclusively by the OS.</li>
+
+	<LI>H to define it as a hidden file. It is not included in an ordinary directory listing.</li>
+
+	<LI>U to define it as an uncompressed file. All data in the file is uncompressed. This changes the default setting where all files are compressed.</li>
+
+	<LI>N to define a module that is not trusted.</li>
+
+	<LI>D to define a module that cannot be debugged by the system.</li>
+</UL>
+</dd>
+</DL>
+
+<H4 class="dtH4">Example</H4>
+
+<PRE class="code">FILES 
+  INITOBJ.DAT %_WINCEROOT%\RELEASE\INITOBJ.DAT  NK  SH </PRE>
+
+<P>Romimage.exe creates the Initobj.dat file and loads it into the NK memory block. The file system file is a system file (S), a hidden file (H), and, by default, a compressed file.</P>
+
+<H4 class="dtH4">Remarks</H4>
+
+<P>By default, all files are compressed because they are read into the applications. However, the type of file should dictate whether to compress a file. </P>
+
+<P>TrueType font (.ttf) files are usually uncompressed because they are used constantly in the OS. Waveform audio (.wav) files are not used as frequently; therefore, they are usually compressed.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50conmodulessection.htm">MODULES Section</A> | <A HREF="wce50conbinaryimagebuilderfile.htm">Binary Image Builder File</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

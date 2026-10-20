@@ -1,0 +1,106 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Tux.Net Best Practices</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Tux.Net Best Practices"/>
+<MSHelp:RLTitle Title="Tux.Net Best Practices"/>
+<MSHelp:Keyword Index="A" Term="wce51grfTuxNetBestPractices"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Debugging"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="True"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="TuxNet.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="True"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_1076549">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce51grftuxnetbestpractices"></A>Tux.Net Best Practices</H1>
+
+<H1 class="dtH1">Independent Test Cases</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>Having test cases that depend on each other can make your test suites inflexible and difficult to debug. For instance, if one test case depends on a previous test case to put the device in a certain state, that forces a dependency on the order of those test cases and means the latter test case cannot be considered valid if the former fails.The test cases should instead be independent of one another.</P>
+
+<P>Test case independence offers a number of distinct advantages:
+
+<UL type="disc">
+	<LI>A test case can be executed by itself for debugging purposes, such as reproducing a failure. A simple command-line option can be used for that.</li>
+
+	<LI>Independent test cases can be leveraged for stress, by executing them in random orders or repeating them randomly.</li>
+
+	<LI>Independent test cases are easier to maintain; fixes or changes to one test case don't break another test case. The contract for a test case is much simpler when it is independent of other test cases.</li>
+
+	<LI>Test failures are easier to debug when its success isn't linked to a trail of other test cases which must also succeed.</li>
+
+	<LI>By being able to execute test cases independently, they can be distributed across multiple devices for higher throughput of test case execution.</li>
+</UL>
+
+<P>When your test case fails, you will want to be confident that it failed because of a product bug or a bug in your own code. Debugging test failures becomes very difficult if you have to investigate the interaction of multiple test cases. If one test case fails it should not affect any of the other test cases in the test suite, and clean up code is a great way to ensure this (see the Test Case Cleanup section). Make sure your test case leaves the device in the same state that it started in.</P>
+
+<P>The Begin and End methods provide setup and cleanup for entire suites (classes), not individual tests (methods). If you need to put the device into a particular state before running your test suite, you can use the Begin method. Simply override the Begin method in your test suite and have it do whatever configuration is necessary. This method will be run before any of the tests in your suite. Similarly, you can override the End method in your test suite to do any suite level cleanup. This method will run after all the tests in your suite have been run. The following is an example of overriding the Begin and End methods in your test suite:</P>
+
+<PRE class="code">/// &lt;summary&gt;
+/// Summary description for BeginEndExample.
+/// &lt;/summary&gt;
+public class BeginEndExample : TestSuite
+{
+      /// &lt;summary&gt;
+      /// This will be run before any of the
+      /// tests (methods) in this suite (class).
+      /// &lt;/summary&gt;
+      public override void Begin()
+      {
+            base.Begin ();
+
+            // Put any suite level setup code here.
+      }
+
+      /// &lt;summary&gt;
+      /// This will run after all the tests (methods)
+      /// in this suite (class) that will be run
+      /// have been run.
+      /// &lt;/summary&gt;
+      public override void End()
+      {
+            base.End ();
+
+            // Put any suite level cleanup code here.
+      }
+}</PRE>
+
+<P>For added flexibility, use the test case Initialization and CleanUp attributes discussed above. These can manage initialization and clean-up activities on a per-test case basis.</P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

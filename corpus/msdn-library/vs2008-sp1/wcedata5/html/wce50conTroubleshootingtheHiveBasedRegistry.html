@@ -1,0 +1,107 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Troubleshooting the Hive-Based Registry</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Troubleshooting the Hive-Based Registry"/>
+<MSHelp:RLTitle Title="Troubleshooting the Hive-Based Registry"/>
+<MSHelp:Keyword Index="A" Term="wce50conTroubleshootingtheHiveBasedRegistry"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Feature"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="registry_overview.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="True"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="True"/>
+<MSHelp:Attr Name="PBFeature" Value="REGISTRY"/>
+<MSHelp:Attr Name="PBOnly" Value="True"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_1055678">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50controubleshootingthehivebasedregistry"></A>Troubleshooting the Hive-Based Registry</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>Possible problems include the following:
+
+<UL type="disc">
+	<LI>The build reports that any or all of these files are missing: Default.fdf, Default.hv, Boot.hv, or User.hv. 
+<P>A clean rebuild is necessary.
+</li>
+
+	<LI>The build succeeds but it hangs soon after boot. The following list shows possible causes and solutions:
+<UL type="disc">
+	<LI>The Device Manager never started. 
+<P>Set <B>Flags</B> = 1. For more information, see <A HREF="wce50tskhive-basedregistrysetup.htm">Hive-based Registry Setup</A>.
+</li>
+
+	<LI>The Device Manager started but the necessary file system did not. 
+<P>Be sure all registry entries for that file system, block driver, and so on are in the boot registry. See driver registry settings described in the setup instructions. Also, be sure the file system driver has the flag set to load it in the first boot phase.
+</li>
+
+	<LI>The necessary file system started but did not register as a file system containing the registry. 
+<P>See the file system driver registry settings in the setup instructions.
+</li>
+
+	<LI>The run-time image originally did not include the hive-based registry, and a full clean build did not complete. 
+<P>Be sure you complete a clean build after including the Hive-based Registry Catalog item in your OS design.
+</li>
+
+	<LI>Some block drivers and file system drivers will poll during their initialization, using <MSHelp:link keywords="wce50lrfIsAPIReady" TABINDEX="0">IsAPIReady</MSHelp:link>, waiting for the windowing system to be available. Because the windowing system is not started until after the registry has been fully initialized, the block driver or file system can cause a deadlock.</li>
+
+	<LI>Do not let these drivers wait for the windowing system until after their initialization is complete.</li>
+</UL>
+</li>
+
+	<LI>Drivers are starting twice. 
+<P>Be sure the minimum necessary drivers are listed in the boot registry, and that the drivers which should not be started twice have the proper <B>Flags</B> settings stating they should be started in the first boot phase only. See the driver registry settings described in the setup instructions.
+</li>
+
+	<LI>The target device boots but occasionally registry data is lost when the target device is powered off. 
+<P>This can happen if changes are not flushed out to the persistent file. See the description of registry flushing in the setup instructions.
+</li>
+
+	<LI>On debug builds, for target devices that enable the KITL transport, a registry setting on the desktop that is connected to the target device can be used to turn on additional debug information. 
+<P>To enable this, set the following value in the registry of the desktop computer that is running Platform Builder.
+
+<PRE class="code">[HKEY_CURRENT_USER\Pegasus\Zones]
+    "FileSys" = dword:20</PRE>
+
+<P>This debug zone indicates that information about the file system boot sequence should be added to the debug output collected by Platform Builder. This information is useful especially when debugging the causes of hangs during boot.
+</li>
+</UL>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50conhivebasedregistry.htm">Hive-Based Registry</A> | <A HREF="wce50conusingthehivebasedregistry.htm">Using the Hive-Based Registry</A> | <A HREF="wce50conpersistingdatawiththehivebasedregistry.htm">Persisting Data with the Hive-Based Registry</A> | <A HREF="wce50conupgradingthehivebasedregistry.htm">Hive-Based Registry Data</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

@@ -1,0 +1,303 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Debug/Auxiliary</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Debug/Auxiliary"/>
+<MSHelp:RLTitle Title="Debug/Auxiliary"/>
+<MSHelp:Keyword Index="A" Term="wce50conDebugAuxiliary"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Driver"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="False"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="bluetooth_guide.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="True"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+<MSHelp:Attr Name="PBFeature" Value="BluetoothHCITransportDriver"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_3017379">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50condebugauxiliary"></A>Debug/Auxiliary</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>The Bluetooth stack layer has unified console/debug output stubs used throughout the stack. Console is a thread that only runs in the debug version of the stack. It provides a command-line monitor to access stack information. The format of a command is as follows.</P>
+
+<PRE class="code">&lt;layer name&gt; &lt;layer-specific commands&gt;</PRE>
+
+<P>The thread extracts the layer name then dispatches the rest of the command to the appropriate layer. Each layer exports one function that parses the rest of the command and responds appropriately. The following function is exported by every layer.</P>
+
+<PRE class="code">int layer_ProcessConsoleCommand (WCHAR *pString);</PRE>
+
+<P>Each layer must understand command help and print out a list of available commands.</P>
+
+<PRE class="code">void DumpBuff (unsigned int cMask, unsigned char *lpBuffer, unsigned int cBuffer);
+void DebugOut (unsigned int cMask, WCHAR *lpszFormat, ...);
+void DebugInitialize (void);</PRE>
+
+<P>Debugger facilities center around a debug mask that is initialized in the following manner.</P>
+
+<PRE class="code">[Software\Microsoft\Bluetooth\Debug]
+    "mask" = dword:0
+    "console"=dword:0</PRE>
+
+<P>The following table shows the available debug layers. The <B>mask</B> registry value is a union of these.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=43%>Element</TH>
+<TH width=57%>Hex code</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=43%>DEBUG_ERROR</TD>
+<TD width=57%>0x00000001</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=43%>DEBUG_WARN</TD>
+<TD width=57%>0x00000002</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=43%>DEBUG_OUTPUT</TD>
+<TD width=57%>0x00000004</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=43%>DEBUG_SHELL_ALL</TD>
+<TD width=57%>0x00000030</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=43%>DEBUG_SHELL_INIT</TD>
+<TD width=57%>0x00000010</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=43%>DEBUG_SHELL_TRACE</TD>
+<TD width=57%>0x00000020</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=43%>DEBUG_HCI_ALL</TD>
+<TD width=57%>0x00003f00</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=43%>DEBUG_HCI_INIT</TD>
+<TD width=57%>0x00000100</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=43%>DEBUG_HCI_TRACE</TD>
+<TD width=57%>0x00000200</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=43%>DEBUG_HCI_DUMP</TD>
+<TD width=57%>0x00000400</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=43%>DEBUG_HCI_PACKETS</TD>
+<TD width=57%>0x00000800</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=43%>DEBUG_HCI_CALLBACK</TD>
+<TD width=57%>0x00001000</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=43%>DEBUG_HCI_TRANSPORT</TD>
+<TD width=57%>0x00002000</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=43%>DEBUG_L2CAP_ALL</TD>
+<TD width=57%>0x000f0000</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=43%>DEBUG_L2CAP_INIT</TD>
+<TD width=57%>0x00010000</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=43%>DEBUG_L2CAP_TRACE</TD>
+<TD width=57%>0x00020000</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=43%>DEBUG_L2CAP_PACKETS</TD>
+<TD width=57%>0x00040000</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=43%>DEBUG_L2CAP_CALLBACK</TD>
+<TD width=57%>0x00080000</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=43%>DEBUG_PAN_ALL </TD>
+<TD width=57%>0x0000f000</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=43%>DEBUG_PAN_INIT </TD>
+<TD width=57%>0x00001000</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=43%>DEBUG_PAN_TRACE </TD>
+<TD width=57%>0x00002000</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=43%>DEBUG_PAN_PACKETS </TD>
+<TD width=57%>0x00004000</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=43%>DEBUG_PAN_CALLBACK </TD>
+<TD width=57%>0x00008000</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=43%>DEBUG_RFCOMM_ALL</TD>
+<TD width=57%>0x00f00000</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=43%>DEBUG_RFCOMM_INIT</TD>
+<TD width=57%>0x00100000</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=43%>DEBUG_RFCOMM_TRACE</TD>
+<TD width=57%>0x00200000</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=43%>DEBUG_RFCOMM_PACKETS</TD>
+<TD width=57%>0x00400000</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=43%>DEBUG_RFCOMM_CALLBACK</TD>
+<TD width=57%>0x00800000</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=43%>DEBUG_SDP_ALL</TD>
+<TD width=57%>0x0f000000</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=43%>DEBUG_SDP_INIT</TD>
+<TD width=57%>0x01000000</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=43%>DEBUG_SDP_TRACE</TD>
+<TD width=57%>0x02000000</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=43%>DEBUG_SDP_PACKETS</TD>
+<TD width=57%>0x04000000</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=43%>DEBUG_SDP_CALLBACK</TD>
+<TD width=57%>0x08000000</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=43%>DEBUG_TDI_ALL</TD>
+<TD width=57%>0xf0000000</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=43%>DEBUG_TDI_INIT</TD>
+<TD width=57%>0x10000000</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=43%>DEBUG_TDI_TRACE</TD>
+<TD width=57%>0x20000000</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=43%>DEBUG_TDI_PACKETS</TD>
+<TD width=57%>0x40000000</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=43%>DEBUG_TDI_CALLBACK</TD>
+<TD width=57%>0x80000000</TD>
+</TR>
+</table></div>
+
+<P>The message is printed if <I>cMask,</I> provided in <B>DebugOut</B> or <B>DebugDump</B>, intersects with the mask in the registry key.</P>
+
+<P>The following table shows the available output modes. The <B>console</B> registry value is a union of these.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=43%>Element</TH>
+<TH width=57%>Hex code</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=43%>OUTPUT_MODE_DEBUG</TD>
+<TD width=57%>0</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=43%>OUTPUT_MODE_CONSOLE</TD>
+<TD width=57%>1</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=43%>OUTPUT_MODE_FILE</TD>
+<TD width=57%>2</TD>
+</TR>
+</table></div>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50concommonlayercharacteristics.htm">Common Layer Characteristics</A> | <A HREF="wce50conbluetoothprotocolstack.htm">Bluetooth Protocol Stack</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

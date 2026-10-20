@@ -1,0 +1,143 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Step 2: Creating the MyContent Class</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Step 2: Creating the MyContent Class"/>
+<MSHelp:RLTitle Title="Step 2: Creating the MyContent Class"/>
+<MSHelp:Keyword Index="A" Term="wce50tskStep2CreatingtheMyContentClass"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Feature"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbTask"/>
+<MSHelp:Attr Name="Filename" Value="SAX2_QuickStart.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="True"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+<MSHelp:Attr Name="PBFeature" Value="SYSGEN_MSXML"/>
+<MSHelp:Attr Name="PBOnly" Value="False"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_3026485">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50tskstep2creatingthemycontentclass"></A>Step 2: Creating the MyContent Class</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>After you create the MyContent.h file, the next step is to implement the ContentHandler class, named MyContent. The following code example shows how to implement ContentHandler.</P>
+
+<BLOCKQUOTE class="dtBlock">
+<b class="le">Note</b>&nbsp;&nbsp;&nbsp;To make the following code example easier to read, error checking is not included. This code example should not be used in a release configuration unless it has been modified to include secure error handling.</BLOCKQUOTE>
+
+<PRE class="code">#include "stdafx.h"
+#include "MyContent.h"
+
+//////////////////////////////////////////////////////////////////////
+// Construction/Destruction
+//////////////////////////////////////////////////////////////////////
+
+MyContent::MyContent()
+{
+   idnt = 0;
+}
+
+MyContent::~MyContent()
+{
+
+}
+
+HRESULT STDMETHODCALLTYPE MyContent::startElement( 
+            /* [in] */ wchar_t __RPC_FAR *pwchNamespaceUri,
+            /* [in] */ int cchNamespaceUri,
+            /* [in] */ wchar_t __RPC_FAR *pwchLocalName,
+            /* [in] */ int cchLocalName,
+            /* [in] */ wchar_t __RPC_FAR *pwchQName,
+            /* [in] */ int cchQName,
+            /* [in] */ ISAXAttributes __RPC_FAR *pAttributes)
+{
+   HRESULT hr = S_OK;
+   int l;
+   printf("\n%*s",3 * idnt++, "");
+    prt(L"&lt;%s",pwchLocalName,cchLocalName);
+   pAttributes-&gt;getLength(&amp;l);
+   for ( int i=0; i&lt;l; i++ ) {
+      wchar_t * ln, * vl; int lnl, vll;
+      pAttributes-&gt;getLocalName(i,&amp;ln,&amp;lnl); 
+      prt(L" %s=", ln, lnl);
+      pAttributes-&gt;getValue(i,&amp;vl,&amp;vll);
+      prt(L"\"%s\"", vl, vll);
+   }
+   printf("&gt;");
+
+   // A little example, how to abort parse
+   if ( wcsncmp(pwchLocalName,L"qu",2) == 0 ) {
+      printf("\n&lt;qu&gt; tag encountered, parsing aborted.");
+      hr = E_FAIL;
+   }
+
+    return hr;
+}
+        
+       
+HRESULT STDMETHODCALLTYPE MyContent::endElement( 
+            /* [in] */ wchar_t __RPC_FAR *pwchNamespaceUri,
+            /* [in] */ int cchNamespaceUri,
+            /* [in] */ wchar_t __RPC_FAR *pwchLocalName,
+            /* [in] */ int cchLocalName,
+            /* [in] */ wchar_t __RPC_FAR *pwchQName,
+            /* [in] */ int cchQName)
+{
+   printf("\n%*s",3 * --idnt, "");
+    prt(L"&lt;/%s&gt;",pwchLocalName,cchLocalName);
+    return S_OK;
+}
+
+HRESULT STDMETHODCALLTYPE MyContent::startDocument()
+{
+    printf("&lt;?xml version=\"1.0\" ?&gt;");
+    return S_OK;
+}
+        
+void MyContent::prt(
+            /* [in] */ const wchar_t * pwchFmt,
+            /* [in] */ const wchar_t __RPC_FAR *pwchVal,
+            /* [in] */ int cchVal)
+{
+    static wchar_t val[1000];
+    cchVal = cchVal&gt;999 ? 999 : cchVal;
+    wcsncpy( val, pwchVal, cchVal ); val[cchVal] = 0;
+    wprintf(pwchFmt,val);
+}</PRE>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50tskstep1creatingtheheaderfile.htm">Step 1: Creating the Header File</A> | <A HREF="wce50tskstep3creatingthemainprogram.htm">Step 3: Creating the Main Program</A> | <A HREF="wce50tsktutorialjumpstartforcreatingasax2applicationwithc.htm">Tutorial: JumpStart for Creating a SAX2 Application with C++</A> | <A HREF="wce50congettingstartedwithsax2.htm">Getting Started with SAX2</A> | <A HREF="wce50consax2developerguide.htm">SAX2 Developer Guide</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

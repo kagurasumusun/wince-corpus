@@ -1,0 +1,164 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>SSL Client Authentication</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="SSL Client Authentication"/>
+<MSHelp:RLTitle Title="SSL Client Authentication"/>
+<MSHelp:Keyword Index="A" Term="wce50conSSLClientAuthentication"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Feature"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="webserver_app_development.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="True"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="True"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_3006082">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50consslclientauthentication"></A>SSL Client Authentication</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>Client certificates contain information that identifies the user, as well as information about the organization that issued the certificate. For example, a standard X.509 certificate contains at least the following: 
+
+<UL type="disc">
+	<LI>Version </li>
+
+	<LI>Serial number </li>
+
+	<LI>Signature algorithm ID </li>
+
+	<LI>Issuer name </li>
+
+	<LI>Validity period </li>
+
+	<LI>Subject (user) name </li>
+
+	<LI>Subject public key information </li>
+
+	<LI>Signature on the fields just listed</li>
+</UL>
+
+<BLOCKQUOTE class="dtBlock">
+<b class="le">Note&nbsp;&nbsp;&nbsp;</b>SSL client certificates are only supported in Windows CE .NET 4.1 and later.</BLOCKQUOTE>
+
+<P class="label"><B>Virtual Root Configuration</B></P>
+
+<P>It is possible to require or allow a client to provide a certificate during SSL negotiations. Whether to require (or allow) a client certificate is set on a per-virtual-root basis. The Web Server will request the Web client to send a client certificate, if it has one, if either of the following flags are set as the <B>P</B> parameter of the requested virtual root. For more information, see <A HREF="wce51convirtualpathregistrysettings.htm">Virtual Path Registry Settings</A>.</P>
+
+<P>The following code example shows how to set the flags to require or allow SSL client certificates.</P>
+
+<PRE class="code">HSE_URL_FLAGS_REQUIRE_CERT (0x00000040) Requires SSL client certificates.
+HSE_URL_FLAGS_NEGO_CERT (0x00000020)  Allows SSL client certificates.</PRE>
+
+<P>If the client does not provide a certificate to the Web Server and <code class="ce">HSE_URL_FLAGS_REQUIRE_CERT</code> was set, the request will terminate and an error will be returned to the client. If the <code class="ce">HSE_URL_FLAGS_NEGO_CERT </code>but not the <code class="ce">HSE_URL_FLAGS_REQUIRE_CERT</code> was set, then the request will continue.</P>
+
+<P>There are two primary ways to use client certificates on the server. One is to write an ISAPI extension that uses information in the client certificate to determine information such as what operations on the extension the user is allowed to perform. In this case, the ISAPI extension maps the user name and permissions allowed for itself. The other way is to use the Web Server to map client certificates before processing the request further.</P>
+
+<P class="label"><B>Mapping Client Certificate Information to a Web Server User</B></P>
+
+<P>If the following flag is set in the <B>P</B> value of the virtual root the Web Server will attempt to match the information in the certificate to a user name upon successfully receiving the SSL client certificate.</P>
+
+<PRE class="code">HSE_URL_FLAGS_MAP_CERT   0x00000080  // Map SSL cert to user account</PRE>
+
+<P>With IIS, the <CODE>HSE_URL_FLAGS_MAP_CERT</CODE> flag will map the certificate information to an NT user account. Since Windows CE does not have user accounts, this flag will instead map to a Web Server pseudo-user. This user is then checked against the <B>UserList</B> registry setting for the virtual root that is being accessed, as described in <A HREF="wce50conwebserveraccessrights.htm">Web Server Access Rights</A>. For information about <B>UserList</B>, see <A HREF="wce51convirtualpathregistrysettings.htm">Virtual Path Registry Settings</A>.</P>
+
+<P>Client certificates are mapped to users based on the <B>IssuerCN</B> and/or the certificate's serial number. Web Server pseudo users are enumerated in the registry and specified under the Web site's <B>SSL\Users</B> key. The name of each registry key under the <B>SSL\Users</B> key specifies the pseudo user's name. The values <B>IssuerCN</B> and <B>SerialNumber</B> under each user name registry entry specify the <B>IssuerCN</B> and <B>SerialNumber</B> of the certificate that must be provided in order to map the user. <B>IssuerCN</B> is a REG_SZ. <B>SerialNumber</B> is a binary entry.</P>
+
+<P class="label"><B>Example of Mapping Client Certificate Information to a Web Server User</B></P>
+
+<P>The following example shows how to setup a Web Server registry to require SSL client certificates for a restricted virtual root, create a list of users, and map the certificates to the user name. In this scenario, we want to limit access to the virtual root <B>/Accounts</B> to the users Alice, Bob, and Carol.</P>
+
+<P>First we setup the Web Server to use SSL. The certificate name <B>CE Server Certificate</B> must already be installed in the Web Server's certificate store. This is the server certificate that the Web Server sends on all SSL negotiations, not to be confused with the client certificate. It is also assumed that the issuer of the client certificates will have already been setup as a trusted authority in the Windows CE trusted security store.</P>
+
+<PRE class="code">[HKEY_LOCAL_MACHINE\HTTPD\SSL]
+    "IsEnabled"=dword:1
+    "CertificateSubject"= "CE Server Certificate"</PRE>
+
+<P>Next we setup the virtual root <B>/Accounts</B>. <code class="ce">A=1</code> signifies that a user must be authenticated to gain access to resources under this virtual root. <code class="ce">P= HSE_URL_FLAGS_EXECUTE | HSE_URL_FLAGS_REQUIRE_CERT | HSE_URL_FLAGS_MAP_CERT | HSE_URL_FLAGS_SSL128</code>. This allows the virtual root resources to be executed &#0151; that is, to run the ISAPI extension), requires the client to send SSL certificates, maps the certificate to a user account, and requires 128 bit encryption. The <B>UserList</B> specifies the users who will be allowed to access this page.</P>
+
+<PRE class="code">[HKEY_LOCAL_MACHINE\HTTPD\VROOTS\/Accounting/]
+    ; ISAPI extension that we're placing restricitons on.
+    @="\windows\accounting.dll" 
+    "A"=dword:1
+    "P"=dword: 0x000001C4
+    "UserList"="alice;bob;carol"</PRE>
+
+<P>Now we list our three users and the SSL client certificates that will map to them. Alice and Bob were issued their certificate from <B>CompanyIssuer</B>, which is the certificate server for their company. Since we do not want to allow access to anyone that has a certificate issued from <B>CompanyIssuer</B>, we further restrict access based on the serial number of the certificate. In Carol's case, <B>AccountingIssuer</B> is more restrictive about to whom certificates will be issued in the first place. So as not to need to enter a different serial number for each user that has a certificate from <B>AccountingIssuer</B>, we do not include the serial number in this case.</P>
+
+<PRE class="code">[HKEY_LOCAL_MACHINE\HTTPD\SSL\USERS\Alice]
+    "IssuerCN"="CompanyIssuer"
+    "SerialNumber"=hex: 01,02,03,04,00,00,00,00,00,05
+[HKEY_LOCAL_MACHINE\HTTPD\SSL\USERS\Bob]
+    "IssuerCN"="CompanyIssuer"
+    "SerialNumber"=hex: 01,02,03,04,00,00,00,00,00,06
+[HKEY_LOCAL_MACHINE\HTTPD\SSL\USERS\Carol]
+    "IssuerCN"="AccountingIssuer"</PRE>
+
+<P>That is all that is needed for the registry. </P>
+
+<P>When a request comes in over SSL to the virtual root <B>/Accounting</B>, the Web Server will request a client certificate and fail if one is not provided (due to <CODE>HSE_URL_FLAGS_REQUIRE_CERT</CODE> being set.) </P>
+
+<P>If the certificate is provided, the Web Server will run through each of the users and try to match the provided <B>IssuerCN</B> and <B>SerialNumber</B>. </P>
+
+<P>Before accessing accounting.dll, the Web Server will verify that the user mapped by the client cert is specified is present in the <B>UserList</B>. If this is not the case, the Web Server will return an error, but will not try to perform Basic or NTLM authentication on this virtual root, even if Basic and/or NTLM are supported by the Web Server. If a client certificate is requested for a given virtual root, no other form of authentication will be supported other than mapping that client certificate to the user name as described above.</P>
+
+<P class="label"><B>Allowing Certificates that Would Otherwise Be Rejected</B></P>
+
+<P>Before retrieving any information from the client certificate, the Web Server will first verify that the certificate is valid. To be valid the certificate must have a valid date, be issued from a trusted authority, among other requirements. The Web Server makes a call to <B>CertGetCertificateChain</B> to make this determination. If there is an error, <B>CertGetCertificateChain</B> will specify an error of the form <B>CERT_TRUST_xxx</B> (<B>CERT_TRUST</B> flags are defined in Wincrypt.h). If the value specified is anything other than <B>CERT_TRUST_NO_ERROR</B>, by default the Web Server will terminate the request and return an error to the client.</P>
+
+<P>It is possible to override the Web Server's default rejection of invalid certificates. To enable this, in the base SSL registry key for the Web site set the registry value <B>CertTrustOverride</B> to be a <B>DWORD</B> of the <B>CERT_TRUST_</B> error flags that you are willing to have the Web Server ignore. The Web Server will ignore these (and only these) error codes.</P>
+
+<P>For instance, to have the default Web site accept a certificate authority that <B>CertGetCertificateChain</B> brings up errors on, set (<CODE>CERT_TRUST_IS_PARTIAL_CHAIN | CERT_TRUST_IS_UNTRUSTED_ROOT</CODE>) in <B>CertTrustOverride</B>, as follows.</P>
+
+<PRE class="code">[HKEY_LOCAL_MACHINE\COMM\HTTPD\SSL]
+    CertTrustOverride=dword: 0x00010020</PRE>
+
+<BLOCKQUOTE class="dtBlock">
+<b class="le">Security Note</b>&nbsp;&nbsp;&nbsp;It is highly recommended that <B>CertTrustOverride</B> not be modified from the default value, due to security concerns. This functionality is provided as a last ditch resort for scenarios where proper certificates cannot be issued.</BLOCKQUOTE>
+
+<P class="label"><B>Notice About Posting Large Amounts of Data When Using Client Certificates</B></P>
+
+<P>Due to the way the SSL protocol works, along with the security policy of the Web Server, there may be some difficulty posting extremely large amounts of data to the Web Server if SSL client certificates are being used in the same request. </P>
+
+<P>The way the Web Server typically handles large POST requests (even when doing SSL with no client certificates) is to read the first <B>PostReadSize</B> size of bytes into a buffer and stop reading. It is the responsibility of the ISAPI extension to continue to receive more data at this point by making repeated calls to <B>ReadClient</B>. The Web Server does this to make sure that it never tries to allocate a buffer that is too large and to guard against malicious users sending enormous amounts of data to the device to exhausts its resources.</P>
+
+<P>When a request comes into a virtual root using a client certificate, the Web Server is unaware that it will need a client certificate until after the initial SSL handshake because it will not know what virtual root is being requested until after the handshake is complete. When it sees it needs a client certificate, the Web Server will request one in the middle of the request. It is possible that the Web client will send its client certificate after it has sent greater than <B>PostReadSize</B> amount of bytes. If the Web Server has not received the SSL client cert before reading <B>PostReadSize</B> bytes, it will terminate the request.</P>
+
+<P>To work around this, either increase the size of <B>PostReadSize</B> to be the maximum size of the buffer you are willing to accept. As an alternative, you can create a connection to the virtual root that requires client certificates that does not POST data and that does a keep-alive. On this connection the client certificate can be obtained by the Web Server without having to deal with this issue. On the next request (as long as keep-alives are used), there will be no need for the client to resend its certificate and the previous scenario will not be an issue.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50conwebserverpermissions.htm">Web Server Permissions</A> | <A HREF="wce50tskconfiguringwebservertousessl.htm">Configuring a Web Server to use SSL</A> | <A HREF="wce51convirtualpathregistrysettings.htm">Virtual Path Registry Settings</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

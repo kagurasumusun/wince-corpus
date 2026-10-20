@@ -1,0 +1,120 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>SCRIPT_ANALYSIS</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="SCRIPT_ANALYSIS"/>
+<MSHelp:RLTitle Title="SCRIPT_ANALYSIS"/>
+<MSHelp:Keyword Index="K" Term="SCRIPT_ANALYSIS"/>
+<MSHelp:Keyword Index="A" Term="wce50lrfSCRIPT_ANALYSIS"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Feature"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="apiref"/>
+<MSHelp:Attr Name="Filename" Value="Uniscribe_structures.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="False"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+<MSHelp:Attr Name="APIName" Value="SCRIPT_ANALYSIS"/>
+<MSHelp:Attr Name="PBFeature" Value="SYSGEN_UNISCRIBE"/>
+<MSHelp:Attr Name="PBOnly" Value="False"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_1038786">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50lrfscript_analysis"></A>SCRIPT_ANALYSIS</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>This structure describes an item, that is, a portion of a Unicode string. This structure is filled by <A HREF="wce50lrfscriptitemize.htm">ScriptItemize</A>, which breaks a Unicode string into individually shapeable items. The structure also includes a copy of the Unicode algorithm state (<A HREF="wce50lrfscript_state.htm">SCRIPT_STATE</A>). </P>
+
+<PRE class="syntax"><B>typedef struct tag_SCRIPT_ANALYSIS {</B>
+<B>  WORD </B><I>eScript</I><B>; </B>
+<B>  WORD </B><I>fRTL</I><B>; </B>
+<B>  WORD </B><I>fLayoutRTL</I><B>; </B>
+<B>  WORD </B><I>fLinkBefore</I><B>; </B>
+<B>  WORD </B><I>fLinkAfter</I><B>; </B>
+<B>  WORD </B><I>fLogicalOrder</I><B>; </B>
+<B>  WORD </B><I>fNoGlyphIndex</I><B>; </B>
+<B>  SCRIPT_STATE </B><I>s</I><B>; </B>
+<B>} SCRIPT_ANALYSIS;</B></PRE>
+
+<H4 class="dtH4">Members</H4>
+
+<DL>
+<DT><B>eScript</B></DT>
+
+<DD>Opaque value identifying which engine Uniscribe will use when calling the <A HREF="wce50lrfscriptshape.htm">ScriptShape</A>, <A HREF="wce50lrfscriptplace.htm">ScriptPlace</A>, and <A HREF="wce50lrfscripttextout.htm">ScriptTextOut</A> functions for this item. The value of <B>eScript</B> is undefined and will change in future releases, but attributes of <B>eScript</B> may be obtained by calling <A HREF="wce50lrfscriptgetproperties.htm">ScriptGetProperties</A>. 
+
+<P>To disable shaping, set this parameter to SCRIPT_UNDEFINED. 
+</dd>
+
+<DT><B>fRTL</B></DT>
+
+<DD>Rendering direction. </dd>
+
+<DT><B>fLayoutRTL</B></DT>
+
+<DD>Logical direction, whether left-to-right or right-to-left. Although this is usually the same as <B>fRTL</B>, for a number in a RTL run, <B>fRTL</B> is False (because digits are always displayed LTR), but <B>fLayoutRTL</B> is True (because the number is read as part of the RTL sequence). </dd>
+
+<DT><B>fLinkBefore</B></DT>
+
+<DD>If set, the shaping engine will shape the first character of this item as if it were joining with a previous character. Set by <A HREF="wce50lrfscriptitemize.htm">ScriptItemize</A>, it may be overridden before calling <B>ScriptShape</B>. </dd>
+
+<DT><B>fLinkAfter</B></DT>
+
+<DD>If set, the shaping engine will shape the last character of this item as if it were joining with a subsequent character. Set by <B>ScriptItemize</B>, it may be overridden before calling <B>ScriptShape</B>. </dd>
+
+<DT><B>fLogicalOrder</B></DT>
+
+<DD>If set, the shaping engine will generate all glyph-related arrays in logical order. By default, glyph-related arrays are in visual order, the first array entry corresponding to the left-most glyph. Set to FALSE by <B>ScriptItemize</B>, it may be overridden before calling <B>ScriptShape</B>. </dd>
+
+<DT><B>fNoGlyphIndex</B></DT>
+
+<DD>Typically FALSE. Set to TRUE for bitmap, vector, and device fonts; and for Asian scripts. It may be set to TRUE on input to <B>ScriptShape</B> to disable use of glyphs for this item. Additionally, <B>ScriptShape</B> will set it to TRUE for an <I>hdc</I> containing symbolic, unrecognized, and device fonts. 
+
+<P>Disabling glyphing disables complex script shaping. When set, shaping and placing for this item is implemented directly by calls to <MSHelp:link keywords="wce50lrfGetTextExtentExPoint" TABINDEX="0">GetTextExtentExPoint</MSHelp:link> and <MSHelp:link keywords="wce50lrfExtTextOut" TABINDEX="0">ExtTextOut</MSHelp:link>. 
+</dd>
+
+<DT><B>s</B></DT>
+
+<DD>A <B>SCRIPT_STATE</B> structure. </dd>
+</DL>
+
+<H4 class="dtH4">Requirements</H4>
+
+<P><B>OS Versions:</B> Windows CE 5.0 and later.<BR>
+<B>Header:</B> Usp10.h.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50lrfscriptgetproperties.htm">ScriptGetProperties</A> | <A HREF="wce50lrfscriptitemize.htm">ScriptItemize</A> | <A HREF="wce50lrfscriptplace.htm">ScriptPlace</A> | <A HREF="wce50lrfscriptshape.htm">ScriptShape</A> | <A HREF="wce50lrfscripttextout.htm">ScriptTextOut</A> | <A HREF="wce50lrfscript_state.htm">SCRIPT_STATE</A> | <MSHelp:link keywords="wce50lrfGetTextExtentExPoint" TABINDEX="0">GetTextExtentExPoint</MSHelp:link> | <MSHelp:link keywords="wce50lrfExtTextOut" TABINDEX="0">ExtTextOut</MSHelp:link></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

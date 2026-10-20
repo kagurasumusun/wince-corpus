@@ -1,0 +1,157 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Implementing the OEMLaunch Function</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Implementing the OEMLaunch Function"/>
+<MSHelp:RLTitle Title="Implementing the OEMLaunch Function"/>
+<MSHelp:Keyword Index="A" Term="wce50tskImplementingtheOEMLaunchFunction"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Hardware"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="True"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbTask"/>
+<MSHelp:Attr Name="Filename" Value="howto_developing_a_bootloader.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="True"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_3010323">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50tskimplementingtheoemlaunchfunction"></A>Implementing the OEMLaunch Function</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>The <A HREF="wce50lrfoemlaunch.htm">OEMLaunch</A> function collects post-download connection information from Platform Builder and jumps to the newly downloaded boot loader image.</P>
+
+<P>The following list shows the tasks that the <B>OEMLaunch</B> function needs to perform:
+
+<UL type="disc">
+	<LI>Wait for Platform Builder to send information about what services to start and from which ports to start the services. <B>OEMLaunch</B> can use the <B>EbootWaitForHostConnect</B> function, which is defined in Eboot.lib. You can copy the implementation of <B>EbootWaitForHostConnect</B> from an existing hardware platform.</li>
+
+	<LI>Check the arguments returned from <B>EbootWaitForHostConnect</B> and then save the port or IP information in the <I>DriverGlobals</I> parameter, which the OAL uses later.</li>
+
+	<LI>Jump to the first instruction specified by the <I>dwLaunchAddr</I> parameter, which is the boot loader image <B>StartUp</B> function.</li>
+</UL>
+
+<P>After implementing <B>OEMLaunch</B>, the boot loader is essentially complete.</P>
+
+<P>For more information about the Eboot.lib support library, see <A HREF="wce50conebootcodelibrary.htm">Eboot Code Library</A>.</P>
+
+<P class="labelproc"><B>To implement the OEMLaunch function</B>
+
+<UL type="disc">
+	<LI>Edit the file Main.c by adding the code necessary to fully implement the <B>OEMLaunch</B> function.
+<P>The following code example shows the implementation of the <B>OEMLaunch</B> function for the hardware platform used in this boot loader example.
+
+<PRE class="code">void OEMLaunch(DWORD dwImageStart, DWORD dwImageLength, DWORD dwLaunchAddr, const ROMHDR *pRomHdr)
+{
+    DWORD dwPhysLaunchAddr;
+    EDBG_OS_CONFIG_DATA *pCfgData;    
+    EDBG_ADDR EshellHostAddr;
+    EBOOT_CFG EbootCfg;
+
+    memset(&amp;EshellHostAddr, 0, sizeof(EDBG_ADDR));
+    memset(&amp;EbootCfg, 0, sizeof(EBOOT_CFG));
+
+    // Get Eboot configuration settings from flash.
+    //
+    ReadEbootConfig(&amp;EbootCfg);
+
+    // Wait for Platform Builder to connect after the download and send IP and port settings for service
+    // connections, as well as KITL flags. This information is used later by the OS (KITL).
+    //
+    if (g_bWaitForConnect)
+    {
+        if (!(pCfgData = EbootWaitForHostConnect(&amp;pDriverGlobals-&gt;eth.TargetAddr, &amp;EshellHostAddr)))
+        {
+            EdbgOutputDebugString("ERROR: OEMLaunch: EbootWaitForHostConenct failed.\r\n");
+            SpinForever();
+        }
+
+        // Update service information.
+        if (pCfgData-&gt;Flags &amp; EDBG_FL_DBGMSG)
+        {
+            EdbgOutputDebugString("INFO: Enabling debug messages over Ethernet (IP:%s  port:%u)\r\n", inet_ntoa(pCfgData-&gt;DbgMsgIPAddr),ntohs(pCfgData-&gt;DbgMsgPort));
+    
+            memcpy(&amp;pDriverGlobals-&gt;eth.DbgHostAddr.wMAC,&amp; EshellHostAddr.wMAC, 6);
+            pDriverGlobals-&gt;eth.DbgHostAddr.dwIP  = pCfgData-&gt;DbgMsgIPAddr;
+            pDriverGlobals-&gt;eth.DbgHostAddr.wPort = pCfgData-&gt;DbgMsgPort;
+        }
+        if (pCfgData-&gt;Flags &amp; EDBG_FL_PPSH)
+        {
+            EdbgOutputDebugString("INFO: Enabling Target Control over Ethernet           (IP: %s  port:%u)\r\n", inet_ntoa(pCfgData-&gt;PpshIPAddr),ntohs(pCfgData-&gt;PpshPort));
+    
+            memcpy(&amp;pDriverGlobals-&gt;eth.PpshHostAddr.wMAC, &amp;EshellHostAddr.wMAC, 6);
+            pDriverGlobals-&gt;eth.PpshHostAddr.dwIP  = pCfgData-&gt;PpshIPAddr;
+            pDriverGlobals-&gt;eth.PpshHostAddr.wPort = pCfgData-&gt;PpshPort;
+        }
+        if (pCfgData-&gt;Flags &amp; EDBG_FL_KDBG)
+        {
+            EdbgOutputDebugString("INFO: Enabling KDBG over Ethernet           (IP: %s  port:%u)\r\n", inet_ntoa(pCfgData-&gt;KdbgIPAddr),ntohs(pCfgData-&gt;KdbgPort));
+        
+            memcpy(&amp;pDriverGlobals-&gt;eth.KdbgHostAddr.wMAC, &amp;EshellHostAddr.wMAC, 6);
+            pDriverGlobals-&gt;eth.KdbgHostAddr.dwIP  = pCfgData-&gt;KdbgIPAddr;
+            pDriverGlobals-&gt;eth.KdbgHostAddr.wPort = pCfgData-&gt;KdbgPort;
+        }
+
+       memcpy(&amp;pDriverGlobals-&gt;eth.DownloadHostAddr, &amp;EshellHostAddr, sizeof(EDBG_ADDR));
+         pDriverGlobals-&gt;eth.etherFlags    = pCfgData-&gt;Flags;
+         pDriverGlobals-&gt;eth.KitlTransport = pCfgData-&gt;KitlTransport;
+    }
+
+    // Remember kernel launch address or recall stored address if this download did not provide one (that is, the kernel region was not downloaded).
+    //
+    if (dwLaunchAddr &amp;&amp; (EbootCfg.NKRegion.LaunchAddress != dwLaunchAddr))
+    {
+        EbootCfg.NKRegion.LaunchAddress = dwLaunchAddr;
+        WriteEbootConfig(&amp;EbootCfg); 
+    }
+    else
+    {
+        dwLaunchAddr= EbootCfg.NKRegion.LaunchAddress;
+    }
+
+    // Jump to downloaded image (physical address).
+    Launch(dwPhysLaunchAddr);
+
+    // Should never return.
+    //
+    SpinForever();
+}</PRE>
+</li>
+</UL>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50howhowtodevelopabootloader.htm">How to Develop a Boot Loader</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

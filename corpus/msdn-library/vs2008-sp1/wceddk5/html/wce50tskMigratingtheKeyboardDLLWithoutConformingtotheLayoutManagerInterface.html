@@ -1,0 +1,112 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Migrating the Keyboard DLL Without Conforming to the Layout Manager Interface</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Migrating the Keyboard DLL Without Conforming to the Layout Manager Interface"/>
+<MSHelp:RLTitle Title="Migrating the Keyboard DLL Without Conforming to the Layout Manager Interface"/>
+<MSHelp:Keyword Index="A" Term="wce50tskMigratingtheKeyboardDLLWithoutConformingtotheLayoutManagerInterface"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Driver"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="False"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbTask"/>
+<MSHelp:Attr Name="Filename" Value="howto_migkbddrvrnolayoutmgr.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="False"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+<MSHelp:Attr Name="PBFeature" Value="KeyboardDriver"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="AllowSearch" CONTENT="True">
+<META NAME="msdnID" CONTENT="_3017598">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50tskmigratingthekeyboarddllwithoutconformingtothelayoutmanagerinterface"></A>Migrating the Keyboard DLL Without Conforming to the Layout Manager Interface</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>In the process of migrating a keyboard driver without conforming to the Layout Manager Interface, migrate the entire dynamic-link library (DLL) after you migrate the keyboard PDD. The sources files responsible for building the keyboard DLLs typically reside in %_WINCEROOT%\Platform\%_TGTPLAT%\Drivers\Kbdmouse\DLL.</P>
+
+<P class="labelproc"><B>To migrate the keyboard DLL without conforming to the Layout Manager Interface</B>
+
+<OL type="1">
+	<LI>From your Windows CE .NET 4.1 or earlier source tree, copy %_WINCEROOT%\Public\Common\OAK\Inc\Kbdmouse.def to the Inc directory you created previously.</li>
+
+	<LI>In the subdirectories of the DLL directory, which is immediately subordinate to the keyboard driver directory, update the sources files to use the .def file that now resides in your keyboard driver's Inc directory. 
+<P>These sources files build your keyboard driver DLLs. For example, the Emulator DLL directory is %_WINCEROOT%\Platform\Emulator\Drivers\Kbdmouse\DLL. For information about configuring this sources file, see <MSHelp:link keywords="wce50conSourcesFile" TABINDEX="0">Sources File</MSHelp:link> and <MSHelp:link keywords="wce50conDEFFILE" TABINDEX="0">DEFFILE</MSHelp:link>. 
+</li>
+
+	<LI>From the keyboard driver directory for your hardware platform, build the keyboard driver DLLs. 
+<P>An example of a hardware platform's keyboard driver directory is %_WINCEROOT%\Platform\Emulator\Drivers\Kbdmouse.
+
+<P>For information about building the keyboard driver, see <MSHelp:link keywords="wce50conBuildTool" TABINDEX="0">Build Tool</MSHelp:link>.
+</li>
+
+	<LI>View the keyboard driver DLLs build errors.
+<P>The build errors expose the Windows CE .NET 4.1 or earlier library (.lib) files to copy and build in your Windows CE .NET 4.2 or later keyboard driver.
+</li>
+
+	<LI>Depending on the .lib file errors in the keyboard driver DLLs build log, you might have to copy one or more directories from the Windows CE .NET 4.1 or earlier source tree to your Windows CE .NET 4.2 or later keyboard driver directory.
+<P>For example, if you receive an error stating that Kbdist.lib cannot be found, copy %_WINCEROOT%\Public\Common\OAK\Drivers\Keybd\IST from Windows CE .NET 4.1 or earlier to Windows CE .NET 4.2 or later. You might have to copy one or more of the following directories from the Windows CE .NET 4.1 or earlier source tree to your Windows CE .NET 4.2 or later keyboard driver directory:
+
+<UL type="disc">
+	<LI>%_WINCEROOT%\Public\Common\OAK\Drivers\Keybd\IST</li>
+
+	<LI>%_WINCEROOT%\Public\Common\OAK\Drivers\Keybd\ScanVK</li>
+
+	<LI>%_WINCEROOT%\Public\Common\OAK\Drivers\Keybd\VKChar</li>
+
+	<LI>%_WINCEROOT%\Public\Common\OAK\Drivers\Keybd\VKRemap</li>
+</UL>
+</li>
+
+	<LI>After copying the IST, ScanVK, VKChar, or VKRemap directories to your Windows CE .NET 4.2 or later keyboard driver directory, add these directories to the keyboard driver dirs file and list the DLL directory last in the dirs file.
+<P>For information about Dirs files, see <MSHelp:link keywords="wce50conDirsFile" TABINDEX="0">Dirs File</MSHelp:link>.
+</li>
+
+	<LI>For any sources files that you copied from the Windows CE .NET 4.1 or earlier source tree to the Windows CE .NET 4.2 or later %_WINCEROOT%\Platform\Emulator\Drivers\Kbdmouse directory, add the Inc directory to the list of directories specified by the INCLUDES macro definition.
+<P>You might have to add new INCLUDES macro definitions to the sources files. For information about the INCLUDES macro definition, see <MSHelp:link keywords="wce50conINCLUDES" TABINDEX="0">INCLUDES</MSHelp:link>.
+
+<BLOCKQUOTE class="dtBlock">
+<b class="le">Note</b>&nbsp;&nbsp;&nbsp;For the Windows CE .NET 4.1 or earlier keyboard driver, the .lib files reside in a subdirectory of _COMMONOAKROOT. However, after copying the directories from Windows CE .NET 4.1 or earlier and executing Build.exe, the .lib files might reside in a different location.</BLOCKQUOTE>
+</li>
+
+	<LI>For the directories you copied from the Windows CE .NET 4.1 or earlier source tree, in the keyboard driver DLL sources files, update the SOURCELIBS paths to specify a subdirectory of _PROJECTOAKROOT, instead of _COMMONOAKROOT.
+<P>For example, if you copied the ScanVK directory from Windows CE .NET 4.1 or earlier, in the %_WINCEROOT%\Platform\Emulator\Drivers\Kbdmouse\DLL\KBDEMULXTMSENGUS1 sources file, change the location of the ScVkXTMsEngUs1.lib file from _COMMONOAKROOT to _PROJECTOAKROOT. _COMMONOAKROOT specifies the directory where the .lib files built from the Public branch of the source tree are stored. _PROJECTOAKROOT specifies the directory where the .lib files built for your hardware platform are stored.
+
+<P>For information about sources files and the SOURCELIBS macro definition, see <MSHelp:link keywords="wce50conSourcesFile" TABINDEX="0">Sources File</MSHelp:link> and <MSHelp:link keywords="wce50conSOURCELIBS" TABINDEX="0">SOURCELIBS</MSHelp:link>.
+</li>
+</OL>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><MSHelp:link keywords="wce50oriHowtoTopics" TABINDEX="0">How-to Topics</MSHelp:link> | <A HREF="wce50conlayoutmanager.htm">Layout Manager</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

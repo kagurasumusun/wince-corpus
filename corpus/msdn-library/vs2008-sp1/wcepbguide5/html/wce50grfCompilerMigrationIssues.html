@@ -1,0 +1,110 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Compiler Migration Issues</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Compiler Migration Issues"/>
+<MSHelp:RLTitle Title="Compiler Migration Issues"/>
+<MSHelp:Keyword Index="A" Term="wce50grfCompilerMigrationIssues"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Guide"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="True"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="comp_overview.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="True"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_1050511">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50grfcompilermigrationissues"></A>Compiler Migration Issues</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>The following list describes how to work with some issues that may arise in migrating from previous versions of Windows CE compilers to Windows CE 5.0 compilers. 
+
+<OL type="1">
+	<LI>The new compiler includes the <B>_FUNCTION_</B> predefined macro. For backward compatible code, add the following definition:
+<PRE class="code">
+#if _MSC_VER &lt; 1300
+
+#define __FUNCTION__ ""
+
+#endif
+</PRE>
+
+<P>If not defined as above you will get the following error:
+
+<PRE class="code">error C4117: macro name '__FUNCTION__' is reserved, '#define' ignored</PRE>
+
+<P>For more information, see <A HREF="wce50grfpredefinedmacros.htm">Predefined Macros</A>.
+</li>
+
+	<LI>Template function resolution is different than before. In most cases, this change does not affect existing code because the affected code would not have compiled before. However, the implementation of <B>HashKey</B> has changed.
+<P>The following example shows the way this difference can impact existing code.
+
+<PRE class="code">template&lt;class T&gt;
+DWORD HashKey(const T &amp;t)
+{
+            // General implementation of HashKey for all types
+}
+ 
+DWORD HashKey(const MyType &amp;t)
+{
+            // Specialized implementation of HashKey for MyType
+} </PRE>
+
+<P>In earlier compilers, the specialized implementation of <B>HashKey</B> will be used as expected. 
+
+<P>In 7.1 or later compilers, template and nontemplate functions are in separate namespaces, so <B>HashKey</B>(<B>const</B> MyType &amp;) is not considered a specialization of <B>template&lt;class T&gt; HashKey(const T&amp;)</B>. 
+
+<P>Instead, the new compilers use the general implementation of <B>HashKey</B>. 
+
+<P>To fix this, define a template specialization, as shown in this example code:
+
+<PRE class="code">template&lt;&gt;
+DWORD HashKey(const MyType &amp;t)
+{
+            // Specialized implementation of HashKey for MyType
+}</PRE>
+</li>
+
+	<LI>For compilers earlier than 7.1, a common method of hiding function calls with empty statements was with <B>#define function 0.</B> The new versions of the compiler, _MSC_VER==1310, do not accept because it is not c++ conformant.
+<P>Use the <B>__noop</B> keyword, introduced where _MSC_VER==1201 instead.
+</li>
+</OL>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50conaboutsupportedmicroprocessors.htm">About Supported Microprocessors</A> | <A HREF="wce50conarmguide.htm">ARM Technology Guide</A> | <A HREF="wce50conhitachiguide.htm">Renesas Technology Guide</A> | <A HREF="wce50conmipsguide.htm">MIPS Technology Guide</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

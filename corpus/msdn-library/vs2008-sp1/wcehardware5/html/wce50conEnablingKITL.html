@@ -1,0 +1,175 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Enabling KITL</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Enabling KITL"/>
+<MSHelp:RLTitle Title="Enabling KITL"/>
+<MSHelp:Keyword Index="A" Term="wce50conEnablingKITL"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Hardware"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="True"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="howto_developing_an_OAL.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="True"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_3010410">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50conenablingkitl"></A>Enabling KITL</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>The KITL version of the run-time image is placed in the release directory when the IMGNOKITL flag is not set, and the non-KITL image is released when IMGNOKITL is set to 1. </P>
+
+<P>KITL functionality can be included in both debug and release configurations, depending on your needs. It can also be configured to start on boot, called active KITL, or to start the first time a service on the device registers with KITL, called passive KITL. </P>
+
+<P>Passive KITL works with KITL in an inactive state until it is required. Passive KITL does not affect the overall performance of the device. For more information, see <A HREF="wce50conactiveandpassivekitl.htm">Active and Passive KITL</A>.</P>
+
+<P>The <A HREF="wce50lrfkitltransport.htm">KITLTRANSPORT</A> structure defines a KITL transport, which provides all the KITL functionality. KITL needs to communicate with the underlining hardware including the ability to encode and decode a packet, send and receive a frame or packet, enable and disable the transport interrupt, and get and set configuration information. </P>
+
+<P>The following table shows the functions you need to implement to support this functionality.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=26%>Function</TH>
+<TH width=74%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=26%><A HREF="wce50lrftransportencode.htm">TransportEncode</A></TD>
+<TD width=74%>Makes a transport ready packet that KITL can later send from the transport through <B>TransportSend</B>. 
+<P>The implementation frames the data with transport specific and checksum information. </P>
+
+<P>Using an Ethernet transport, <B>TransportEncode</B> frames the packet with a User Datagram Protocol (UDP) header.</P>
+</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=26%><A HREF="wce50lrftransportdecode.htm">TransportDecode</A></TD>
+<TD width=74%>Called when KITL receives a raw packet from the transport through<B> TransportRecv</B> to extract the data field of the packet. 
+<P>Using an Ethernet transport, <B>TransportDecode </B>will validate the packet, checksum, and return the pointer immediately after the UDP header.</P>
+</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=26%><A HREF="wce50lrftransportsend.htm">TransportSend</A></TD>
+<TD width=74%>Called to send a raw packet, framed by <B>TransportEncode</B>, from the transport. 
+<P>KITL guarantees exclusive access to the transport when <B>TransportSend</B> is called. </P>
+
+<P>Using an Ethernet transport, <B>TransportSend</B> will program the hardware and place the packet on the Ethernet.</P>
+</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=26%><A HREF="wce50lrftransportrecv.htm">TransportRecv</A></TD>
+<TD width=74%>Called to receive a raw packet from the transport. KITL guarantees exclusive access to the transport when <B>TransportRecv</B> is called. 
+<P>Using an Ethernet transport <B>TransportRecv</B> will read from the Ethernet hardware.</P>
+</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=26%><A HREF="wce50lrftransportenableint.htm">TransportEnableInt</A></TD>
+<TD width=74%>Called to enable or disable transport interrupt.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=26%><A HREF="wce50lrftransportgetdevcfg.htm">TransportGetDevCfg</A></TD>
+<TD width=74%>Called to provide device information to the debug host with the transport defining how the data appears. 
+<P>KITL handles the data as an opaque entity and sends it to the debug host. <B>TransportGetDevCfg</B> is only called at the initial handshake with the debug host. </P>
+
+<P>Using an Ethernet transport, the information usually includes IP address, MAC address, and port number.</P>
+</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=26%><A HREF="wce50lrftransportsethostcfg.htm">TransportSetHostCfg</A></TD>
+<TD width=74%>Called when KITL receives the transport information of the debug host with the transport defining how the data appears. 
+<P>KITL handles the data as an opaque entity and <B>TransportSetHostCfg</B> can use the information to setup the transport. </P>
+
+<P><B>TransportSetHostCfg</B> is only called at the initial handshake with the debug host.</P>
+</TD>
+</TR>
+</table></div>
+
+<P>KITL is initialized by calling <A HREF="wce50lrfkitlinit.htm">KitlInit</A> typically during the <A HREF="wce50lrfoeminit.htm">OEMInit</A> phase of the boot process. <B>KitlInit</B> must be called before any debug services can be started. As part of the <B>KitlInit</B> processing, the kernel calls the <A HREF="wce50lrfoemkitlinit.htm">OEMKitlInit</A> function to perform hardware initialization.</P>
+
+<P><B>KitlInit </B>may be called any time after the <B>KernelStart</B> function has been called, typically as part of <A HREF="wce50lrfoeminitdebugserial.htm">OEMInitDebugSerial</A> or <B>OEMInit</B> processing. <B>KitlInit</B> should also be called in the resume from suspend processing in <A HREF="wce50lrfoempoweroff.htm">OEMPowerOff</A>. </P>
+
+<P>The parameter <I>fStartKitl</I> tells the kernel if it should start the interrupt service thread (IST) at the time of call. If <I>fStartKitl</I> is FALSE, KITL behaves in a passive mode, waiting dormant until <MSHelp:link keywords="wce50lrfKITLRegisterClient" TABINDEX="0">KITLRegisterClient</MSHelp:link> is called. </P>
+
+<P>This technique is used on test devices that require the use of just-in-time (JIT) debugging. If <I>fStartKitl</I> is TRUE, KITL will start communicating with the desktop and will block until a connection is made. </P>
+
+<P>Also, when <I>fStartKitl</I> is set to TRUE the default services PPSH, DBGMSG, and KDBG are started based on the configuration settings from the desktop. </P>
+
+<P>Because KITL is used to attach all full-function debugging tools, if an error occurs during KITL initialization, use <A HREF="wce50lrfkitloutputdebugstring.htm">KITLOutputDebugString</A> to output debug messages. <B>KITLOutputDebugString</B> eventually uses an OEM supplied function in the OAL for debug messages. The kernel then calls the OEM's routine.</P>
+
+<P>Once KITL is up and running, it is in a waiting state, waiting for data to be received by the transport and waiting for device side services to send data out. The typical call sequence is shown in the following code example.</P>
+
+<PRE class="code">RecvData ()
+{
+   LockTransport ();
+   Result = KITL. TransportRecv (pData, pcbShort);
+   UnlockTransport ();
+   If (Result) {
+pData = KITL.TransportDecode (pData, pcbShort);
+   }
+}</PRE>
+
+<P class="fig"><IMG SRC="kitl.gif" ALT="" BORDER=0></P>
+
+<P>When the KITL protocol has data to send, it passes a buffer to the <B>TransportEncode</B> function that has space allocated for the header and trailer. <B>TransportEncode</B> adds the header and trailer to the frame and passes the encapsulated data back to the kernel. </P>
+
+<P>The kernel then calls <B>TransportSend</B> to send out the data to the desktop side, as shown in the following code sample.</P>
+
+<PRE class="code">SendData (...)
+{
+   if (KITL.TransportEncode (pData, cbShort)) {
+   // pData has room for Hdr/Tlr allocated
+      LockTransport ();
+      KITL.TransportSend (pData, cbShort + KITL.FrmHdrSize + KITL.FrmTlrSize);
+      UnlockTransport ();
+      }
+}</PRE>
+
+<P>If your KITL transport requires a timer, the KITL protocol supports a 1 second resolution timer. The timer requires a call to <A HREF="wce50lrfkitlsettimercallback.htm">KitlSetTimerCallback</A>. </P>
+
+<P>The timer is a not a periodic timer and is only called once every <I>nSecs</I> seconds. If you need the timer to be called periodically, you can call <B>KitlSetTimerCallback</B> again when the timer expires. You can also request more than one timer. </P>
+
+<P>When the timer is no longer needed, call <A HREF="wce50lrfkitlstoptimercallback.htm">KitlStopTimerCallback</A> to stop the timer.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50howhowtodevelopanoemadaptationlayer.htm">How to Develop an OEM Adaptation Layer</A> | <A HREF="wce50tskaddingkitlinitializationcode.htm">Adding KITL Initialization Code</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

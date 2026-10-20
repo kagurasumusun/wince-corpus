@@ -1,0 +1,87 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Best Practices for the OAL Cache Test</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Best Practices for the OAL Cache Test"/>
+<MSHelp:RLTitle Title="Best Practices for the OAL Cache Test"/>
+<MSHelp:Keyword Index="A" Term="wce50conTechniquesForOALCacheTest"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Debugging"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="True"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="oalcachetest.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="False"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_1054877">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50contechniquesforoalcachetest"></A>Best Practices for the OAL Cache Test</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>When you use the OAL Cache Test to assess the cache and memory subsystem of a Windows CE&#0150;based device, consider the following best practices:
+
+<UL type="disc">
+	<LI>Run the Print Cache Info test case and verify that the return value of the <MSHelp:link keywords="wce50lrfCeGetCacheInfo" TABINDEX="0">CeGetCacheInfo</MSHelp:link> function is valid and expected. 
+<P>Compare the return value of the <B>CeGetCacheInfo</B> function to the hardware specifications.
+</li>
+
+	<LI>Run the OAL Cache Test on more than one target device. 
+<P>Testing multiple target devices can help you to identify random flaws in memory chips and other hardware problems. Even if you can reproduce a problem on multiple target devices, the source of the problem might be hardware.
+
+<P>Each test case walks memory in a deterministic way. If a test case is faulty, it most likely fails at the same array index during each subsequent run, unless a stray pointer incorrectly changes memory values. The existence of a stray pointer is unlikely because the OAL Cache Test does not use pointers extensively. If a problem occurs at different array indexes during subsequent runs, most likely the test is working correctly and there is something wrong with the target device.
+</li>
+
+	<LI>Observe the physical address values displayed in the debug output to determine in which memory blocks faults occur. 
+<P>If the same memory block consistently causes a fault, most likely the cache incorrectly stores data for the block or there is something physically wrong with the memory at that location.
+</li>
+
+	<LI>Use a hash function that is less complex, if you cannot discern a pattern in the output of the test. 
+<P>A complex hash function can hide patterns in the output of the test. For more information, see the CacheTest.cpp file in the %_WINCEROOT%\Private\Test\Pqoal\Caches directory. For more information about CETK source code, see <A HREF="wce50concetksourcecode.htm">Source Code for CETK Tests</A>. The OAL Cache Test does not use less complex hash functions by default because a less complex hash function is less likely to find an error.
+</li>
+
+	<LI>If a test case fails because it cannot allocate memory, reduce the array length or free memory on the target device. 
+<P>Each test case allocates a contiguous chunk of memory and fails if a contiguous chunk of memory is not allocated.
+</li>
+
+	<LI>On an SHx CPU or MIPS CPU, you can achieve full testing coverage by running a subset of test cases for the OAL Cache Test. 
+<P>On an SHx CPU, the behavior of a test case with no caching is identical to the behavior of the same test case in write-through cache mode and write-back cache mode. On a MIPS CPU, the behavior of a test case in write-through cache mode is identical to the behavior of the same test case in write-back cache mode.
+</li>
+</UL>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50conoalcachetest.htm">OAL Cache Test</A> | <A HREF="wce50contestcasesforoalcachetest.htm">Test Cases for the OAL Cache Test</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

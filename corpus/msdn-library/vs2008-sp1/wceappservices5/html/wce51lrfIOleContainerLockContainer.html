@@ -1,0 +1,121 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>IOleContainer::LockContainer</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="IOleContainer::LockContainer"/>
+<MSHelp:RLTitle Title="IOleContainer::LockContainer"/>
+<MSHelp:Keyword Index="K" Term="IOleContainer::LockContainer"/>
+<MSHelp:Keyword Index="A" Term="wce51lrfIOleContainerLockContainer"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Feature"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="apiref"/>
+<MSHelp:Attr Name="Filename" Value="com_interfaces5.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="False"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+<MSHelp:Attr Name="APIName" Value="IOleContainer.LockContainer"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_1077101">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce51lrfiolecontainerlockcontainer"></A>IOleContainer::LockContainer</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>Keeps an embedded object's container running.</P>
+
+<PRE class="syntax"><B>HRESULT LockContainer( 
+  BOOL</B> <I>fLock</I>  //Value indicating lock or unlock
+<B>);</B></PRE>
+
+<H4 class="dtH4">Parameters</H4>
+
+<DL>
+<DT><I>fLock</I> </DT>
+
+<DD>[in] Value that specifies whether to lock (TRUE) or unlock (FALSE) a container. </dd>
+</DL>
+
+<H4 class="dtH4">Return Values</H4>
+
+<P>This method supports the following return values: </P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=50%>Value</TH>
+<TH width=50%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>S_OK</TD>
+<TD width=50%>The container was locked successfully. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>E_OUTOFMEMORY</TD>
+<TD width=50%>The call can not be completed because the program has run out of memory.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>E_FAIL </TD>
+<TD width=50%>The call to the method failed.</TD>
+</TR>
+</table></div>
+
+<H4 class="dtH4">Remarks</H4>
+
+<P>An embedded object calls <B>IOleContainer::LockContainer</B> to keep its container running when the object has link clients that require an update. If an end user selects File Close from the container's menu, however, the container ignores all outstanding <B>LockContainer</B> locks and closes the document anyway.</P>
+
+<H4 class="dtH4">Notes to Callers</H4>
+
+<P>When an embedded object changes from the loaded to the running state, it should call <B>IOleContainer::LockContainer</B> with the fLock parameter set to TRUE. When the embedded object shuts down (transitions from running to loaded), it should call <B>IOleContainer::LockContainer</B> with the fLock parameter set to FALSE. </P>
+
+<P>Each call to <B>LockContainer</B> with fLock set to TRUE must be balanced by a call to <B>LockContainer</B> with fLock set to FALSE. Object applications typically need not call <B>LockContainer</B>; the default handler makes these calls automatically for object applications implemented as .EXEs as the object makes the transition to and from the running state. Object applications not using the default handler, such as DLL object applications, must make the calls directly.</P>
+
+<P>An object should have no strong locks on it when it registers in the Running Object Table, but it should be locked as soon as the first external client connects to it. Therefore, following registration of the object in the Running Object Table, object handlers and DLL object applications, as part of their implementation of <A HREF="wce50lrfirunnableobjectrun.htm">IRunnableObject::Run</A>, should call <B>IOleContainer::LockContainer</B>(TRUE) to lock the object.</P>
+
+<H4 class="dtH4">Notes to Implementers</H4>
+
+<P>The container must keep track of whether and how many calls to <B>LockContainer</B>(TRUE) have been made. To increment or decrement the reference count, <B>IOleContainer::LockContainer</B> calls <A HREF="wce50lrfcolockobjectexternal.htm">CoLockObjectExternal</A> with a flag set to match fLock.</P>
+
+<H4 class="dtH4">Requirements</H4>
+
+<P><B>OS Versions:</B> Windows CE 4.0 and later.<BR>
+<B>Header:</B> oleidl.h.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50lrfcolockobjectexternal.htm">CoLockObjectExternal</A></P>
+
+<P><A HREF="wce51lrfiolecontaineriunknown.htm">IOleContainer</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

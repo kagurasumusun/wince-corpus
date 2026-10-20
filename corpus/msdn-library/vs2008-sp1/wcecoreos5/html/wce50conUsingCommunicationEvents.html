@@ -1,0 +1,170 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Using Communication Events</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Using Communication Events"/>
+<MSHelp:RLTitle Title="Using Communication Events"/>
+<MSHelp:Keyword Index="A" Term="wce50conUsingCommunicationEvents"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Feature"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="serial_concepts.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="True"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+<MSHelp:Attr Name="PBFeature" Value="CORE"/>
+<MSHelp:Attr Name="PBOnly" Value="False"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_3005342">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50conusingcommunicationevents"></A>Using Communication Events</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>A <I>communication event</I> is a notification sent by Windows CE to an application when a significant incident occurs. </P>
+
+<P>Using the <A HREF="wce50lrfwaitcommevent.htm">WaitCommEvent</A> function, an application can block a thread until a specific event occurs. </P>
+
+<P>A call to the <A HREF="wce50lrfsetcommmask.htm">SetCommMask</A> function specifies which event or events must occur before processing can continue. </P>
+
+<P>When more than one event is specified, any single specified event that occurs causes <B>WaitCommEvent</B> to return.</P>
+
+<P>For example, this mechanism enables an application to find out when data arrives at the serial port. By waiting for a communication event that indicates data is present, an application avoids forestalling the serial port with a call to the <MSHelp:link keywords="wce50lrfReadFile" TABINDEX="0">ReadFile</MSHelp:link> function that waits for data to arrive. <B>ReadFile</B> is called only when there is data to read.</P>
+
+<P>The following are communication events an application can use with the <B>WaitCommEvent</B> function.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=19%>Event</TH>
+<TH width=81%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=19%>EV_BREAK</TD>
+<TD width=81%>A break occurred on input.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=19%>EV_CTS</TD>
+<TD width=81%>The CTS signal changed state.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=19%>EV_DSR</TD>
+<TD width=81%>The DSR signal changed state.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=19%>EV_ERR</TD>
+<TD width=81%>A line-status error occurred. Line-status errors are CE_FRAME, CE_OVERRUN, and CE_RXPARITY.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=19%>EV_RING</TD>
+<TD width=81%>A ring indicator was detected.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=19%>EV_RLSD</TD>
+<TD width=81%>The receive-line-signal-detect signal changed state.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=19%>EV_RXCHAR</TD>
+<TD width=81%>A character was received and placed in the input buffer.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=19%>EV_RXFLAG</TD>
+<TD width=81%>The event character was received and placed in the input buffer.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=19%>EV_TXEMPTY</TD>
+<TD width=81%>The last character in the output buffer was sent.</TD>
+</TR>
+</table></div>
+
+<P class="labelproc"><B>To use communication events</B>
+
+<OL type="1">
+	<LI>Specify events to look for with a call to the <B>SetCommMask</B> function.</li>
+
+	<LI>Call the <B>WaitCommEvent</B> function. 
+<P>When an application specifies more than one event, the <I>lpEvtMask</I> parameter points to a variable that identifies the event that caused <B>WaitCommEvent</B> to return.
+</li>
+
+	<LI>Call <B>SetCommMask</B> again to specify which events to look for.</li>
+</OL>
+
+<P><B>SetCommMask</B> is the first call in a loop that applications generally use to monitor a serial port and read data. </P>
+
+<P>The following code example shows how to use communication events for this purpose.</P>
+
+<BLOCKQUOTE class="dtBlock">
+<b class="le">Note&nbsp;&nbsp;&nbsp;</b>The following code assumes that timeouts are set to something fairly short. If timeouts are not set, the code sample blocks on ReadFile forever. </BLOCKQUOTE>
+
+<PRE class="code">BYTE Byte;
+DWORD dwBytesTransferred;
+
+// Specify a set of events to be monitored for the port.
+SetCommMask (hPort, EV_RXCHAR | EV_CTS | EV_DSR | EV_RLSD | EV_RING);
+
+while (hPort != INVALID_HANDLE_VALUE) 
+{
+  // Wait for an event to occur for the port.
+  WaitCommEvent (hPort, &amp;dwCommModemStatus, 0);
+
+  // Re-specify the set of events to be monitored for the port.
+  SetCommMask (hPort, EV_RXCHAR | EV_CTS | EV_DSR | EV_RING);
+
+  if (dwCommModemStatus &amp; EV_RXCHAR) 
+  {
+    // Loop for waiting for the data.
+    do 
+    {
+      // Read the data from the serial port.
+      ReadFile (hPort, &amp;Byte, 1, &amp;dwBytesTransferred, 0);
+
+      // Display the data read.
+      if (dwBytesTransferred == 1)
+        ProcessChar (Byte);
+
+    } while (dwBytesTransferred == 1);
+  }</PRE>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50conprogrammingserialconnections.htm">Programming Serial Connections</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

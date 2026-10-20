@@ -1,0 +1,91 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Memory Addressing</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Memory Addressing"/>
+<MSHelp:RLTitle Title="Memory Addressing"/>
+<MSHelp:Keyword Index="A" Term="wce50conMemoryAddressing"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Hardware"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="True"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="howto_developing_an_OAL.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="False"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_3010374">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50conmemoryaddressing"></A>Memory Addressing</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>There are two kinds of addresses in Windows CE: physical addresses and mapped virtual addresses.
+
+<UL type="disc">
+	<LI>Physical addresses can be actual RAM or device memory that needs to be accessed by the OS. It is defined by the physical address space from a CPU perspective. The CPU cannot access this directly once the MMU is enabled. 
+<P>The kernel can only manage 512 MB of physical memory. 
+
+<P>On some CPUs, like MIPS and SHx, the kernel can only directly manipulate the first 1 GB of memory defined by the processors, 512 MB cached and 512 MB uncached but aliased to the same 512 MB of physical memory. 
+
+<P>On x86 and ARM processors, you can divide this physical range by using <A HREF="wce50conoemaddresstable.htm">OEMAddressTable</A>. 
+</li>
+
+	<LI>Mapped virtual addresses define a mapping between the virtual and physical that can be used by user-mode and kernel applications. 
+<P>There are two types of mapped virtual addresses: static and dynamic. 
+
+<UL type="disc">
+	<LI>Static virtual addresses provide a mapping table for the kernel that covers what virtual address range maps to a physical address range. This mapping does not change over time and is created at boot time. <B>OEMAddressTable</B> defines this static virtual to physical mapping on the x86 and ARM processors. On MIPS and SHx, the CPU and kernel define this mapping. The static mapping can also be extended after boot time by calling <MSHelp:link keywords="wce50lrfCreateStaticMapping" TABINDEX="0">CreateStaticMapping</MSHelp:link> or <A HREF="wce50lrfnkcreatestaticmapping.htm">NKCreateStaticMapping</A>. Mappings created with <B>CreateStaticMapping</B> and <B>NKCreateStaticMapping</B> are accessible only by the kernel.</li>
+
+	<LI>A dynamically mapped virtual address is one that creates a virtual-to-physical mapping that can be defined and then released when not in use. This type of mapping is accessible to user-mode applications and is created by calling <MSHelp:link keywords="wce50lrfVirtualCopy" TABINDEX="0">VirtualCopy</MSHelp:link>.</li>
+</UL>
+</li>
+</UL>
+
+<P>Using <B>VirtualCopy</B> with the PAGE_PHYSICAL flag, an application can map a physical address to a process-specific static virtual address. </P>
+
+<P>The process starts by calling <MSHelp:link keywords="wce50lrfVirtualAlloc" TABINDEX="0">VirtualAlloc</MSHelp:link><B> </B>to allocate a virtual address range in your process to map the physical address. </P>
+
+<P>This is followed by a call to <B>VirtualCopy</B> to complete the mapping process and make the physical memory available in the process. </P>
+
+<P>A driver typically uses <B>VirtualCopy</B> to map device-specific memory into its user-mode process space. The same region can be mapped by more than one process.</P>
+
+<P><B>CreateStaticMapping</B> is like <B>VirtualCopy</B> in that it creates a mapping between physical memory and static virtual memory. The main difference is that the static virtual address is mapped in the kernel address space. This makes the static address accessible only by the kernel. </P>
+
+<P><B>CreateStaticMapping</B> is typically used to map some device-specific memory into the kernel so that an interrupt service routine (ISR) can access it. The same physical address can also be mapped by using <B>VirtualCopy</B>.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50concustomizingmemory.htm">Customizing Memory</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

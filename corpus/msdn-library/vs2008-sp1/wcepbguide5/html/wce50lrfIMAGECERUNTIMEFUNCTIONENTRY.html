@@ -1,0 +1,143 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>_IMAGE_CE_RUNTIME_FUNCTION_ENTRY</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="_IMAGE_CE_RUNTIME_FUNCTION_ENTRY"/>
+<MSHelp:RLTitle Title="_IMAGE_CE_RUNTIME_FUNCTION_ENTRY"/>
+<MSHelp:Keyword Index="K" Term="_IMAGE_CE_RUNTIME_FUNCTION_ENTRY [Devices]"/>
+<MSHelp:Keyword Index="A" Term="wce50lrfIMAGECERUNTIMEFUNCTIONENTRY"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Guide"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="True"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="apiref"/>
+<MSHelp:Attr Name="Filename" Value="comp_eh.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="False"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+<MSHelp:Attr Name="APIName" Value="_IMAGE_CE_RUNTIME_FUNCTION_ENTRY"/>
+<MSHelp:Attr Name="APIType" Value="HeaderDef"/>
+<MSHelp:Attr Name="APILocation" Value="Implemented in winnt.h"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_3023771">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50lrfimageceruntimefunctionentry"></A>_IMAGE_CE_RUNTIME_FUNCTION_ENTRY</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>This structure contains detailed information about runtime exception processing. </P>
+
+<P><B>_IMAGE_CE_RUNTIME_FUNCTION_ENTRY</B> is used only by ARM and Renesas microprocessor families. It does not apply to MIPS microprocessors.</P>
+
+<PRE class="syntax"><B>typedef struct _IMAGE_CE_RUNTIME_FUNCTION_ENTRY {</B>
+<B>  unsigned int </B><I>FuncStart</I> : <B>32</B>;
+<B>  unsigned int </B><I>PrologLen </I>:<B> 8</B>;
+<B>  unsigned int </B><I>FuncLen</I> : <B>22</B>;
+<B>  unsigned int </B><I>ThirtyTwoBit</I><B> : 1;</B>
+<B>  unsigned int </B><I>ExceptionFlag</I> :<B> 1;</B>
+<B>} IMAGE_CE_RUNTIME_FUNCTION_ENTRY,</B>
+<B>*PIMAGE_CE_RUNTIME_FUNCTION_ENTRY;</B></PRE>
+
+<H4 class="dtH4">Members</H4>
+
+<DL>
+<DT><B>FuncStart</B> </DT>
+
+<DD>Address of the first instruction in the function. 
+
+<P>It is the function's entry address.
+</dd>
+
+<DT><B>PrologLen</B> </DT>
+
+<DD>Length of the prolog in instructions, based on the instruction size indicated in the <I>ThirtyTwoBit</I> flag. 
+
+<P>The following table shows the possible values for the <I>ThirtyTwoBit</I> flag.
+
+
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=16%>Flag Value</TH>
+<TH width=84%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=16%>1</TD>
+<TD width=84%>Represents ARM functions, each of which consists of 32-bit instructions, or 4 bytes. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=16%>0</TD>
+<TD width=84%>Represents THUMB functions, each of which consists of 16-bit instructions, or 2 bytes. </TD>
+</TR>
+</table></div>
+
+
+
+<P><B>PrologLen</B> is set to 1 for ARM functions, and to 0 for THUMB and SH-4 functions. Hence, a prolog with 10 ARM instructions would have a <B>PrologLen</B> of 10, indicating 40 bytes. A prolog with 10 THUMB instructions would also have a <B>PrologLen</B> of 10, meaning 20 bytes.
+</dd>
+
+<DT><B>FuncLen</B> </DT>
+
+<DD>Total function length in instructions; see <B>PrologLen</B>, above. A function with 200 ARM instructions would have a <B>FuncLen</B> of 200 (meaning 800 bytes).</dd>
+
+<DT><B>ThirtyTwoBit</B></DT>
+
+<DD>Size of instructions in a function. This value is 1 for 32-bit instructions and 0 for 16-bit instructions. The <B>FunLen</B> and <B>PrologLen</B> fields use this value to computer the size of a function and prolog. </dd>
+
+<DT><B>ExceptionFlag</B><I> </I></DT>
+
+<DD>Associated exception handler or handler data. When its value is 1, the <A HREF="wce50lrfpdataeh.htm">PDATA_EH</A> is present in the <B>.text</B> section. When the <B>ExceptionFlag</B> is 0, no <B>PDATA_EH</B> is present.</dd>
+</DL>
+
+<H4 class="dtH4">Remarks</H4>
+
+<P>The <B>IMAGE_CE_RUNTIME_FUNCTION_ENTRY</B> data structure is also called as <B>PDATA</B>. A table containing these records is stored in a section called .pdata. The .pdata section aids in debugging and exception processing.</P>
+
+<P>If the <B>ExceptionFlag</B> is set, or if the <B>FuncLen</B> is set to 0, an additional <B>PDATA_EH</B> structure exists that precedes the function in the <B>.text</B> section. </P>
+
+<P>The data record containing this information appears in the <B>.text</B> section, immediately preceding the function, if and only if the <B>ExceptionFlag</B> bit is set. </P>
+
+<P>This record is used when the function has an associated exception handler or handler data. </P>
+
+<H4 class="dtH4">Requirements</H4>
+
+<P><B>OS Versions:</B> Windows CE .NET 4.0 and later.<BR>
+<B>Header:</B> winnt.h.<BR>
+<B>Link Library:</B> Implemented in winnt.h.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50conpdatastructures.htm">PDATA Structures</A> | <A HREF="wce50lrfpdataeh.htm">PDATA_EH</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

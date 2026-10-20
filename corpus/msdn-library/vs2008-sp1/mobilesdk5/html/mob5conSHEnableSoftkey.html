@@ -1,0 +1,181 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>SHEnableSoftkey</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="SHEnableSoftkey"/>
+<MSHelp:RLTitle Title="SHEnableSoftkey"/>
+<MSHelp:Keyword Index="K" Term="SHEnableSoftkey"/>
+<MSHelp:Keyword Index="A" Term="mob5conSHEnableSoftkey"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Application"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbsmartphone"/>
+<MSHelp:Attr Name="Product" Value="kbPocketPC"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="Technology" Value="kbPocketPC"/>
+<MSHelp:Attr Name="Technology" Value="kbSmartphone"/>
+<MSHelp:Attr Name="TopicType" Value="apiref"/>
+<MSHelp:Attr Name="Filename" Value="shell_reference_magneto.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="True"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_1072774">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Windows Mobile Version 5.0 SDK<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="mob5conshenablesoftkey"></A>SHEnableSoftkey</H1>
+<!--Feedback Link Top Start-->
+<P CLASS="feedback"><font size="1"><a href="mailto:medfdbk&#64;microsoft.com?subject=Product: Windows Mobile | Version: 5.0 | Release: SDK | Title: SHEnableSoftkey | Filename: mob5conshenablesoftkey.htm | Built on: Wednesday, September 14, 2005">Send Feedback</a> on this topic to the authors</font></p>
+<!--Feedback Link Top End-->
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>This function enables or disables individual soft keys by command identifier or index.</P>
+
+<PRE class="syntax"><B>HRESULT SHEnableSoftkey(
+  HWND </B><I>hwndMenuBar</I><B>,</B>
+<B>  UINT </B><I>uid</I><B>,</B>
+<B>  BOOL </B><I>bByIndex</I><B>,</B>
+<B>  BOOL </B><I>bEnable</I>
+<B>);</B></PRE>
+
+<H4 class="dtH4">Parameters</H4>
+
+<DL>
+<DT><I>hwndMenuBar</I></DT>
+
+<DD>[in] Handle to the soft key bar as returned from <B>SHCreateMenuBar</B> or <B>SHFindMenuBar</B>.</dd>
+
+<DT><I>uid</I></DT>
+
+<DD>The command identifier of the soft key or the index (0 or 1). </dd>
+
+<DT><I>bByIndex</I></DT>
+
+<DD>Set to TRUE if the <I>uid</I> parameter is an index, FALSE if it is a command identifier.</dd>
+
+<DT><I>bEnable</I></DT>
+
+<DD>Set to TRUE to enable the soft key, FALSE to disable it.</dd>
+</DL>
+
+<H4 class="dtH4">Return Values</H4>
+
+<P><B>S_OK</B> indicates success; otherwise, returns a failure code.</P>
+
+<H4 class="dtH4">Code Example</H4>
+
+<P>The following code example demonstrates how to use <B>SHEnableSoftkey</B>.</P>
+
+<BLOCKQUOTE class="dtBlock">
+<b class="le">Note</b>&nbsp;&nbsp;&nbsp;To make the following code example easier to read, security checking and error handling are not included. This code example should not be used in a release configuration unless it has been modified to include them.</BLOCKQUOTE>
+
+<PRE class="code">#include &lt;aygshell.h&gt;
+
+extern HINSTANCE g_hInstance;
+HWND g_hwndMb;
+HMENU g_hMenu;
+#define IDM_HELLO_MENU 100
+ 
+LRESULT CALLBACK SHCreateMenuBarWndProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
+{
+    static fDisableSK = FALSE;
+    
+    switch(message)
+    {
+        case WM_CREATE:
+            {                
+                SHMENUBARINFO mbi;
+                ZeroMemory(&amp;mbi, sizeof(SHMENUBARINFO));
+                mbi.cbSize = sizeof(SHMENUBARINFO);
+                mbi.hwndParent = hwnd;
+                mbi.nToolBarId = IDM_HELLO_MENU;
+                mbi.hInstRes = g_hInstance;
+                mbi.dwFlags |= SHCMBF_HMENU;
+                if(SHCreateMenuBar(&amp;mbi))
+                {
+                    g_hwndMb = mbi.hwndMB;
+                    
+                    TBBUTTONINFO tbbi = {0};
+                    tbbi.cbSize = sizeof(tbbi);
+                    tbbi.dwMask = TBIF_LPARAM | TBIF_BYINDEX;
+                    
+                    SendMessage(g_hwndMb, TB_GETBUTTONINFO,0, (LPARAM)&amp;tbbi);
+                    
+                    g_hMenu = (HMENU)tbbi.lParam;
+                }                    
+                else
+                {
+                    DestroyWindow(hwnd);
+                    PostQuitMessage(1);
+                    return(-1);
+                }
+                break;
+            }
+        
+        case WM_KEYDOWN:
+            {                
+                // When the user presses the space key, toggle between full screen and normal mode.
+                if (VK_SPACE == wParam)
+                {
+                    if(fDisableSK)
+                    {
+<code><b class="cfe">                        SHEnableSoftkey(g_hwndMb, /*uid*, 0 for SK1, 1 for SK2*/1, /*bByIndex*/TRUE, TRUE);</b></code>
+                    }
+                    else
+                    {
+<code><b class="cfe">                        SHEnableSoftkey(g_hwndMb, /*uid*, 0 for SK1, 1 for SK2*/1, /*bByIndex*/TRUE, FALSE);</b></code>
+                    }
+                }
+                break;
+            }
+        
+    }
+        
+    return DefWindowProc(hwnd, message, wParam, lParam);</PRE>
+
+<P><CODE>}</CODE></P>
+
+<PRE class="code"></PRE>
+
+<H4 class="dtH4">Requirements</H4>
+
+<P><B>Pocket&nbsp;PC:</B> Windows Mobile&nbsp;2003 Second Edition and later.<BR>
+<B>Smartphone:</B> Smartphone 2002 and later.<BR>
+<B>OS&nbsp;Versions:</B> Windows&nbsp;CE&nbsp;3.0 and later.<BR>
+<B>Header:</B> Aygshell.h<BR>
+<B>Library:</B> Aygshell.lib.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><MSHelp:link keywords="mob5conSoftKeyMenuGuidelines" TABINDEX="0">Soft Key and Menu Guidelines</MSHelp:link></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Feedback Link Bottom Start-->
+<p><font size="1"><a href="mailto:medfdbk&#64;microsoft.com?subject=Product: Windows Mobile | Version: 5.0 | Release: SDK | Title: SHEnableSoftkey | Filename: mob5conshenablesoftkey.htm | Built on: Wednesday, September 14, 2005">Send Feedback</a> on this topic to the authors</font></p>
+<!--Feedback Link Bottom End-->
+<!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="mob5conCopyrightInformationForMagneto" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link></font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

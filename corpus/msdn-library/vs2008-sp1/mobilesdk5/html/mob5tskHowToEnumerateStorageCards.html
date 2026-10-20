@@ -1,0 +1,127 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>How to: Enumerate Storage Cards</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="How to: Enumerate Storage Cards"/>
+<MSHelp:RLTitle Title="How to: Enumerate Storage Cards"/>
+<MSHelp:Keyword Index="A" Term="mob5tskHowToEnumerateStorageCards"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Application"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbsmartphone"/>
+<MSHelp:Attr Name="Product" Value="kbPocketPC"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="Technology" Value="kbPocketPC"/>
+<MSHelp:Attr Name="Technology" Value="kbSmartphone"/>
+<MSHelp:Attr Name="TopicType" Value="kbTask"/>
+<MSHelp:Attr Name="Filename" Value="File_and_Application_Management_on_Storage_Cards_magneto.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="True"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_1063756">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Windows Mobile Version 5.0 SDK<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="mob5tskhowtoenumeratestoragecards"></A>How to: Enumerate Storage Cards</H1>
+<!--Feedback Link Top Start-->
+<P CLASS="feedback"><font size="1"><a href="mailto:medfdbk&#64;microsoft.com?subject=Product: Windows Mobile | Version: 5.0 | Release: SDK | Title: How to: Enumerate Storage Cards | Filename: mob5tskhowtoenumeratestoragecards.htm | Built on: Wednesday, September 14, 2005">Send Feedback</a> on this topic to the authors</font></p>
+<!--Feedback Link Top End-->
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>Windows Mobile software for Pocket PCs provides the <A HREF="mob5lrffindfirstflashcard.htm">FindFirstFlashCard</A> and <A HREF="mob5lrffindnextflashcard.htm">FindNextFlashCard</A> functions to allow programmatic enumeration of storage cards. <B>FindFirstFlashCard</B> returns a search handle that <B>FindNextFlashCard</B> uses. It also returns a pointer to the first storage card, if any. <B>FindNextFlashCard</B> returns a pointer to the next storage card and a <B>BOOL</B> value indicating whether the search was successful. The following code example shows how to use <B>FindFirstFlashCard</B> and <B>FindNextFlashCard</B> to locate storage cards on a Windows Mobile-based Pocket PC device.</P>
+
+<BLOCKQUOTE class="dtBlock">
+<b class="le">Note</b>&nbsp;&nbsp;&nbsp;Because a device can have multiple storage cards with various names, your application cannot make any assumptions about the naming of or path to a particular card.</BLOCKQUOTE>
+
+<H4 class="dtH4">Example</H4>
+
+<PRE class="code">int index;
+// Total number of storage cards found. 
+int iNumOfFlashCard = 0;     
+// Maximum number of storage cards to find.
+int iMaxCards = 10;
+// Whether to continue searching after finding a card.
+BOOL bContinue = TRUE;       
+// Search handle for storage cards. 
+HANDLE hFlashCard;         
+// Structure for storing card information.
+WIN32_FIND_DATA *lpwfdFlashCard;  
+// Structure for storing card information temporarily.
+WIN32_FIND_DATA *lpwfdFlashCardTmp; 
+lpwfdFlashCardTmp = (WIN32_FIND_DATA *) LocalAlloc 
+                    (LPTR, iMaxCards * sizeof (WIN32_FIND_DATA));
+// Test for failed memory allocation.
+if (lpwfdFlashCardTmp == NULL)
+   return;
+hFlashCard = <code><b class="cfe">FindFirstFlashCard</b></code> (&amp;lpwfdFlashCardTmp [0]);
+if (hFlashCard == INVALID_HANDLE_VALUE)
+{
+// Free the memory.
+   LocalFree (lpwfdFlashCardTmp);  
+   return;
+}
+while (bContinue) 
+{
+   iNumOfFlashCard += 1;
+   // Search for the next storage card.
+   bContinue = <code><b class="cfe">FindNextFlashCard</b></code> (hFlashCard, 
+               &amp;lpwfdFlashCardTmp [iNumOfFlashCard]);
+}
+// Close the search handle.
+FindClose (hFlashCard);          
+if (iNumOfFlashCard &gt; 0)
+{
+   // Allocate memory for lpwfdFlashCard.
+   lpwfdFlashCard = (WIN32_FIND_DATA *) LocalAlloc 
+                    (LPTR, iNumOfFlashCard * sizeof (WIN32_FIND_DATA)); 
+   // Test for failed memory allocation.
+   if (lpwfdFlashCard == NULL)  
+   {
+   // Free the temp card memory.
+      LocalFree (lpwfdFlashCardTmp);  
+      return;
+   }
+   // Assign lpwfdFlashCardTmp to lpwfdFlashCard.
+   for (index=0; index &lt; iNumOfFlashCard; ++index)
+   {
+    lpwfdFlashCard [index] = lpwfdFlashCardTmp [index];
+   }
+// Free the memory.
+   LocalFree (lpwfdFlashCard);  
+}
+LocalFree (lpwfdFlashCardTmp);  </PRE>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="mob5grffilemanagementfunctions.htm">File Management Functions</A> | <A HREF="mob5tskhowtolistlocatestoragecardfiles.htm">How to: List and Locate Storage Card Files</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Feedback Link Bottom Start-->
+<p><font size="1"><a href="mailto:medfdbk&#64;microsoft.com?subject=Product: Windows Mobile | Version: 5.0 | Release: SDK | Title: How to: Enumerate Storage Cards | Filename: mob5tskhowtoenumeratestoragecards.htm | Built on: Wednesday, September 14, 2005">Send Feedback</a> on this topic to the authors</font></p>
+<!--Feedback Link Bottom End-->
+<!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="mob5conCopyrightInformationForMagneto" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link></font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

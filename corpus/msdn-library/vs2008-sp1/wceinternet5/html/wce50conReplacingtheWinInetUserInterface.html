@@ -1,0 +1,136 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Replacement of the WinInet User Interface</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Replacement of the WinInet User Interface"/>
+<MSHelp:RLTitle Title="Replacement of the WinInet User Interface"/>
+<MSHelp:Keyword Index="A" Term="wce50conReplacingtheWinInetUserInterface"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Feature"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="wininet_os_development.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="True"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+<MSHelp:Attr Name="PBFeature" Value="SYSGEN_WININET"/>
+<MSHelp:Attr Name="PBOnly" Value="True"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_3006264">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50conreplacingthewininetuserinterface"></A>Replacement of the WinInet User Interface</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>The Resources and Resource Editors are used to make simple changes to the text strings in Windows CE dialog and message boxes and to create new dialog boxes.</P>
+
+<P>However, there may be situations where you need to change not only the content of a system message, but the actions taken in response to a message. For example, instead of presenting a dialog box that requires a user to choose an action, you may want the system to take a predetermined action and provide a message to the user. The replaceable user interface component of WinInet enables you to write code that intercepts WinInet messages and handles them appropriately for a particular user scenario. You do this by modifying and recompiling the dynamic link library file, wininetui.lib. Source code for the wininetui library is located in the Public\IE\Oak\Wininetui folder. Source code for a sample custom user interface is located in %_WINCEROOT%\Public\IE\Oak folder.</P>
+
+<P>Your custom error- and message-handling code is implemented through the <A HREF="wce50lrfisdialogboxhandledcallbackfunctionwininet.htm">IsDialogBoxHandled Callback Function (WinInet)</A> and the <A HREF="wce50lrfismessageboxhandledcallbackfunction.htm">IsMessageBoxHandled Callback Function</A>. Before WinInet opens a message or dialog box, it calls the appropriate callback function with a handle to the parent window for the message or error. If the function returns ERROR_CALL_NOT_IMPLEMENTED, WinInet proceeds with its own message or dialog box.</P>
+
+<P class="labelproc"><B>To implement IsDialogBoxHandled for handling errors related to the security certificate</B>
+
+<OL type="1">
+	<LI>Determine the size of the buffer that will store the security flag that is returned by the <A HREF="wce50lrfinternetqueryoption.htm">InternetQueryOption</A> function.
+<OL type="a">
+	<LI>Declare a DWORD variable to hold the buffer size and initialize the DWORD variable to zero.
+<PRE class="code">DWORD dwBufferLength=0;</PRE>
+</li>
+
+	<LI>Call <B>InternetQueryOption</B> and pass NULL for the address of the buffer.
+<PRE class="code">InternetQueryOption (NULL,INTERNET_OPTION_SECURITY_FLAGS,NULL,&amp;dwBufferLength);</PRE>
+</li>
+</OL>
+</li>
+
+	<LI>Allocate memory for the buffer.
+<PRE class="code">lpBuffer=new char[dwBufferLength];</PRE>
+</li>
+
+	<LI>Call <B>InternetQueryOption</B> again by passing INTERNET_OPTION_SECURITY_FLAGS in <I>dwOption</I> and receive the security flag in <I>lpBuffer</I>.
+<PRE class="code">InternetQueryOption (NULL,INTERNET_OPTION_SECURITY_FLAGS,(LPVOID)lpBuffer,&amp;dwBufferLength);</PRE>
+</li>
+
+	<LI>If the user wants to continue,
+<OL type="a">
+	<LI>Call the <A HREF="wce50lrfinternetsetoption.htm">InternetSetOption</A> function and pass the security flag received in <I>lpBuffer</I> parameter of <B>InternetQueryOption</B>.
+<P>For example, if DLG_FLAGS_INVALID_CA is returned, then call <B>InternetSetOption</B> and pass DLG_FLAGS_IGNORE_INVALID_CA.
+
+<PRE class="code">DLG_FLAGS_IGNORE_INVALID_CA dwFlag;
+InternetSetOption(NULL, INTERNET_OPTION_SECURITY_FLAGS, (LPVOID)dwFlag, sizeof(dwFlag));</PRE>
+</li>
+
+	<LI>Return ERROR_SUCCESS.
+<BLOCKQUOTE class="dtBlock">
+<b class="le">Note</b>&nbsp;&nbsp;&nbsp;If the user wants to cancel, return ERROR_CANCELLED.</BLOCKQUOTE>
+</li>
+</OL>
+
+<P>The following list shows the possible security flags returned by <B>InternetQueryOption</B>:
+
+<UL type="disc">
+	<LI>DLG_FLAGS_INVALID_CA (0x01000000)</li>
+
+	<LI>DLG_FLAGS_SEC_CERT_CN_INVALID (0x02000000)</li>
+
+	<LI>DLG_FLAGS_SEC_CERT_DATE_INVALID (0x04000000)</li>
+
+	<LI>DLG_FLAGS_SEC_CERT_REV_FAILED (0x00800000)</li>
+</UL>
+
+<P>The following list shows the values to pass in the <I>dwFlag</I> parameter of <B>InternetSetOption</B> 
+
+<UL type="disc">
+	<LI>INTERNET_FLAG_IGNORE_CERT_CN_INVALID</li>
+
+	<LI>INTERNET_FLAG_IGNORE_CERT_DATE_INVALID</li>
+
+	<LI>INTERNET_FLAG_IGNORE_REDIRECT_TO_HTTPS</li>
+
+	<LI>INTERNET_FLAG_IGNORE_REDIRECT_TO_HTTP</li>
+
+	<LI>SECURITY_FLAG_IGNORE_UNKNOWN_CA</li>
+
+	<LI>SECURITY_FLAG_IGNORE_REVOCATION</li>
+</UL>
+
+<P>For more information about INTERNET_FLAG_IGNORE_XXX flags, see <A HREF="wce50lrfapiflags.htm">API Flags</A>. 
+
+<P>For more infomation about SECURITY_FLAG_IGNORE_XXX flags, see <A HREF="wce50lrfoptionflags.htm">Option Flags</A>.
+</li>
+</OL>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50oriwininetosdesigndevelopment.htm">WinInet OS Design Development</A> | <MSHelp:link keywords="wce50conResourcesandResourceEditors" TABINDEX="0">Resources and Resource Editors</MSHelp:link> | <A HREF="wce50conwindowsinternetservicesoverview.htm">WinInet Overview</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

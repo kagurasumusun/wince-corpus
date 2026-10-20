@@ -1,0 +1,101 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Placing a List of Items into a Grid</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Placing a List of Items into a Grid"/>
+<MSHelp:RLTitle Title="Placing a List of Items into a Grid"/>
+<MSHelp:Keyword Index="A" Term="wce50conPlacingaListofItemsintoaGrid"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Feature"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="XSLpg02.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="True"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+<MSHelp:Attr Name="PBFeature" Value="SYSGEN_MSXML"/>
+<MSHelp:Attr Name="PBOnly" Value="False"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_3024114">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50conplacingalistofitemsintoagrid"></A>Placing a List of Items into a Grid</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>Placing a list of items into a grid or table is a frequently requested transformation. Given a list of product names, you might want to present them two across in a table, as follows.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TD width=21%>product 1</TD>
+<TD width=79%>product 2</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=21%>product 3</TD>
+<TD width=79%>product 4</TD>
+</TR>
+</table></div>
+
+<P>Items must be grouped in pairs into table rows. XSLT currently does not have a built-in mechanism to handle arbitrary grouping. A combination of the &lt;xsl:if&gt; element with the <B>test</B> attribute and the <B>following-sibling</B> axis can be used to approximate this behavior. The following template turns a list of product elements into a two-column table.</P>
+
+<PRE class="code">&lt;TABLE BORDER="1"&gt;
+  &lt;xsl:for-each select="products/product"&gt;
+    &lt;xsl:if test="(position() mod 2) = 1"&gt;
+      &lt;TR&gt;
+        &lt;TD&gt;&lt;xsl:value-of select="."/&gt;&lt;/TD&gt;
+        &lt;TD&gt;&lt;xsl:value-of select="following-sibling::product[position()=1]"/&gt;&lt;/TD&gt;
+      &lt;/TR&gt;
+    &lt;/xsl:if&gt;
+  &lt;/xsl:for-each&gt;
+&lt;/TABLE&gt;</PRE>
+
+<P>First, you iterate through each product element but use an &lt;xsl:if&gt; with the expression <CODE>position() mod 2 = 1</CODE> to isolate only those products that should start a new row (every other product). The name of this product also is placed in the first cell in the row. Then you make another cell and place within it the next child &#0151; the one filtered out using the &lt;xsl:if&gt;. The query to select the next element navigates to the parent and obtains a set of following siblings.</P>
+
+<P>Three-column tables can be created by adding another cell to the row to obtain another sibling element, and adjusting the expression to allow only every third element to create a new row. You can extrapolate this mechanism to create tables with even more columns.</P>
+
+<PRE class="code">&lt;TABLE BORDER="1"&gt;
+  &lt;xsl:for-each select="products/product"&gt;
+    &lt;xsl:if test="(position() mod 3) = 1"&gt;
+      &lt;TR&gt;
+        &lt;TD&gt;&lt;xsl:value-of select="."/&gt;&lt;/TD&gt;
+        &lt;TD&gt;&lt;xsl:value-of select="following-sibling::product[position()=1]"/&gt;&lt;/TD&gt;
+        &lt;TD&gt;&lt;xsl:value-of select="following-sibling::product[position()=2]"/&gt;&lt;/TD&gt;
+      &lt;/TR&gt;
+    &lt;/xsl:if&gt;
+  &lt;/xsl:for-each&gt;
+&lt;/TABLE&gt;</PRE>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50conxpath.htm">XPath</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

@@ -1,0 +1,103 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Handling an Interrupt</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Handling an Interrupt"/>
+<MSHelp:RLTitle Title="Handling an Interrupt"/>
+<MSHelp:Keyword Index="A" Term="wce50tskHandlinganInterrupt"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Hardware"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="True"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbTask"/>
+<MSHelp:Attr Name="Filename" Value="howto_developing_an_OAL.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="True"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_3010406">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50tskhandlinganinterrupt"></A>Handling an Interrupt</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>The main technique for handling an interrupt is to associate an event to a specified interrupt service routine (ISR). Windows CE then schedules your interrupt service thread (IST) when the event is triggered. </P>
+
+<P>A typical interrupt handling sequence includes the following steps:
+
+<OL type="1">
+	<LI>The hardware raises an interrupt.</li>
+
+	<LI>The kernel looks up the interrupt request (IRQ) of the interrupt, calls the registered ISR, and disables all lower-priority interrupts.</li>
+
+	<LI>The ISR performs any necessary handling, and then returns an interrupt identifier. </li>
+
+	<LI>If the interrupt identifier value returned by the ISR is SYSINTR_NOP, the kernel completes processing without setting an event &#0151; all interrupts are enabled &#0151; and continues performing any tasks in process before the interrupt occurred. 
+<P>Otherwise, the kernel sets the event you have associated with the interrupt identifier. When the ISR returns, the kernel enables all other interrupts except the one that is being processed.
+</li>
+
+	<LI>The kernel schedules the IST indicated by the interrupt identifier to run. 
+<P>The IST can use driver resources to get or send data and control codes to the hardware and to acknowledge the hardware interrupt.
+</li>
+
+	<LI>After completely servicing the interrupt, the IST calls the <MSHelp:link keywords="wce50lrfInterruptDone" TABINDEX="0">InterruptDone</MSHelp:link> function. In turn, <B>InterruptDone</B> calls the <A HREF="wce50lrfoeminterruptdone.htm">OEMInterruptDone</A> OAL interface function to perform any hardware actions necessary to enable the next interrupt of the target device. </li>
+</OL>
+
+<P>The following code example shows the functions that an IST typically calls.</P>
+
+<PRE class="code">// CreateThread can supply one 32-bit parameter, so pass the event handle.
+// Associate this thread with the registered event. 
+MyISTRoutine(HANDLE hEvent) {
+  InterruptDone(InterruptId);
+  while (1) {
+    WaitForSingleObject(hEvent, INFINITE); 
+   // Check for thread exit signal and exit if set
+    // Interrupt processing here.
+    // On completion, call InterruptDone.
+    InterruptDone(InterruptId);
+    // Loop and wait for the kernel to set the event.
+  }
+}</PRE>
+
+<P>If you initialize and enable the interrupt before fully creating the IST thread, be aware that if the device does interrupt after the point that you have enabled it (before the IST thread has been created), then the IST will miss the event that occurs when the interrupt fired. </P>
+
+<P>Therefore, you will never see an interrupt again and it will appear that the device is gone. In the above code example, the <B>InterruptDone</B> function clears any interrupts that may have fired.</P>
+
+<P>The disadvantage to including the <B>InterruptDone</B> function is that this does not actually record the interrupt data. So, even though including the <B>InterruptDone</B> function does not hang the device, it loses the data related to the interrupt. If this is a critical interrupt, the data is lost.</P>
+
+<P>Be aware that there can be a disconnect between the initialization of the interrupt and the actual handling of the interrupt in the IST. If an interrupt fires between these two processes, you may lose the interrupt data. <B>InterruptDone</B> clears the interrupt state, but you may lose the data during boot time.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50howhowtodevelopanoemadaptationlayer.htm">How to Develop an OEM Adaptation Layer</A> | <A HREF="wce50conimplementinganisr.htm">Implementing an ISR</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

@@ -1,0 +1,101 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>MUI Font Linking</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="MUI Font Linking"/>
+<MSHelp:RLTitle Title="MUI Font Linking"/>
+<MSHelp:Keyword Index="A" Term="wce50conMUIFontLinking"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Feature"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="MUI_os_development.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="True"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="True"/>
+<MSHelp:Attr Name="PBFeature" Value="SYSGEN_MULTIUI"/>
+<MSHelp:Attr Name="PBOnly" Value="True"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_1039717">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50conmuifontlinking"></A>MUI Font Linking</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>Fonts affect the way the UI is displayed on an MUI-enabled run-time image. . Therefore, working with languages that may use different fonts requires special considerations. Font linking solves nearly all of the potential problems that may arise. Other issues can be handled with appropriate registry settings.</P>
+
+<P>To enable the UI to appear correctly for all of the supported languages, you must include the appropriate fonts in the run-time image. For more information about including fonts in your run-time image, see <MSHelp:link keywords="wce50oriFontsOSDesignDevelopment" TABINDEX="0">Fonts OS Design Development</MSHelp:link>.</P>
+
+<P>In an MUI-enabled run-time image, font linking checks for the current user UI language registry value, and then associates it with code page data in the font file to ensure the correct font is linked for the target.</P>
+
+<P>When the run-time image boots, the Graphics, Windowing, and Events Subsystem (GWES) checks if a value for the UI language has been set for the <B>HKEY_CURRENT_USER\MUI\CurLang</B> registry key. If a value has been set for this key, GWES will check the LCID that is specified under this key against a list that includes all the locales that are supported in Windows CE and match the locale with the associated code page. GWES will use the data in the font code page to determine which font should be considered as the default link font. </P>
+
+<P>When a user changes the default UI language, thereby initiating a call to <A HREF="wce50lrfsetuserdefaultuilanguage.htm">SetUserDefaultUILanguage</A>, and then resets the device, GWES will read the new LCID value and check for the font that has the matching code page to use as a default link font.</P>
+
+<P>Font linking data is stored in the registry under the <B>HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\FontLink\SystemLink</B> registry key. </P>
+
+<P>If your run-time image includes more than one East Asian locale, you must modify the values under the <B>SystemLink</B> registry key in common.reg to include the font files for all of your targeted locales. You must list all of the font files by using a semi-colon separator as shown in the following example:</P>
+
+<PRE class="code">[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\FontLink\SystemLink]
+   "Arial"="\\Windows\\simsun.ttc,NSimSun;\\Windows\\msgothic.ttc,MS UI Gothic"
+  "Times New Roman"="\\Windows\\simsun.ttc,NSimSun;\\Windows\\msgothic.ttc,MS UI Gothic"
+  "Tahoma"="\\Windows\\simsun.ttc,NSimSun;\\Windows\\msgothic.ttc,MS UI Gothic"
+  "Courier New"="\\Windows\\simsun.ttc,NSimSun;\\Windows\\msgothic.ttc,MS UI Gothic"
+  "Symbol"="\\Windows\\simsun.ttc,NSimSun;\\Windows\\msgothic.ttc,&#x201A;c&#x201A;e"&#x00C1;'&#x00BE;&#x0192;S&#x0192;V&#x0192;b&#x0192;N'&#x00CC;"</PRE>
+
+<BLOCKQUOTE class="dtBlock">
+<B>Note</B>&nbsp;&nbsp;&nbsp;To avoid conversion problems, Microsoft recommends that you do not use localized font names when you list East Asian font files in common.reg.</BLOCKQUOTE>
+
+<BLOCKQUOTE class="dtBlock">
+<B>Note</B>&nbsp;&nbsp;&nbsp;When adding the font names to common.reg, you need to make sure that each font is listed with its English name.</BLOCKQUOTE>
+
+<P>After you have listed the fonts for all of your East Asian locales under the default <B>SystemLink</B> key, you must delete any other instances of the <B>HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\FontLink\SystemLink</B> registry key that may be present in common.reg.</P>
+
+<P>MUI font linking also supports the concept of skipped characters. These allow you to define one or more Unicode characters that should be obtained from the linked font, even if they are present in the base font. Data for skipped characters is stored under the <B>HKEY_LOCAL_MACHINE\Software\Microsoft\FontLink\SkipTable</B> registry key. </P>
+
+<P>The default skip table requires no locale identifier to be set. Therefore, the content of the default skip table may be shared between different locales. For locales that use a skip table with different characters than the ones in the default skip table, the skip table must be preceeded by the LCID in the registry. </P>
+
+<P>The following example shows a skip table that may be shared among Japanese, Simplified Chinese, and Traditional Chinese. Because the skip table used for Korean differs from the default skip table, the Korean LCID (0412) has been added after the default skip table, and separated with a semi-colon. The content of the Korean skip table has been added after the LCID. </P>
+
+<PRE class="code">Tahoma"="005c,00a5,007e,0391-03c9,2026,2116,221a,25a0-25ff;<B>0412</B>:005c"</PRE>
+
+<P>As with the <B>SystemLink</B> registry key, after you have specified the skip table under the <B>HKEY_LOCAL_MACHINE\Software\Microsoft\FontLink\SkipTable</B> registry key, you must delete any other instances of the <B>HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\FontLink\SkipTable</B> registry key that are present in common.reg.</P>
+
+<P>After you have specified the font linking and skip table information, you must save common.reg and rebuild your run-time image. </P>
+
+<P>For more information about font linking or skip tables, see <MSHelp:link keywords="wce50grfEnablingLinkedFonts" TABINDEX="0">Enabling Linked Fonts</MSHelp:link>.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50orimultilingualuserinterfaceosdesign.htm">Multilingual User Interface (MUI) OS Design Development</A> | <A HREF="wce50conworkingwithfontsinthemui.htm">Working with Fonts in the MUI</A> | <MSHelp:link keywords="wce50oriFonts121" TABINDEX="0">Fonts</MSHelp:link></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

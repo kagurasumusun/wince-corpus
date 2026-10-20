@@ -1,0 +1,179 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>RAS Client Test Module</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="RAS Client Test Module"/>
+<MSHelp:RLTitle Title="RAS Client Test Module"/>
+<MSHelp:Keyword Index="A" Term="wce50conRASClientTestModule"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Debugging"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="True"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="oemstresstest.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="True"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="AllowSearch" CONTENT="True">
+<META NAME="msdnID" CONTENT="_3013031">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50conrasclienttestmodule"></A>RAS Client Test Module</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>The RAS Client test module, RasCliSrv.dll, exercises the Remote Access Service (RAS) client for Windows CE. The test assesses the following two scenarios:
+
+<UL type="disc">
+	<LI>RAS connection and disconnection</li>
+
+	<LI>Data transfer while connected over the RAS connection</li>
+</UL>
+
+<P>The default behavior of the test is connection and disconnection only. You can turn on data transfer with the <code class="ce">-d</code> command-line option. Data transfer requires an external server module running on the RAS server to handle incoming data from the client. If you run the server module on the RAS server, you can include data transfer in the test module.</P>
+
+<P>The following table shows RAS connection types that you can assess with this test module.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=35%>Connection type</TH>
+<TH width=65%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=35%>Point-to-Point Protocol (PPP) over direct serial cable</TD>
+<TD width=65%>Requires that the client and the server be connected over COM ports by a null modem cable.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=35%>PPP over modem</TD>
+<TD width=65%>Requires special hardware. The client requires a modem and the phone number of the server. The server must accept incoming client requests over a modem.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=35%>PPP over Ethernet (PPPoE)</TD>
+<TD width=65%>Requires that the client be on the same subnet as the server. A common setup is to connect the client and server to the same private hub with Ethernet cables.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=35%>Virtual private network (VPN) over Layer Two Tunneling Protocol (L2TP)</TD>
+<TD width=65%>Might require you to customize the setup. For example, you might need certificates on the client and server in order to successfully connect.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=35%>VPN over Point-to-Point Tunneling Protocol (PPTP)</TD>
+<TD width=65%>Default setting for the client.</TD>
+</TR>
+</table></div>
+
+<P>The RAS server should be a desktop computer running, for example, a Windows&#0150;based server OS. You should enable and start RAS services on the server. If you need help setting up the RAS server, refer to the documentation for the OS on the server.</P>
+
+<P>Windows CE provides the OEMRASServer.exe server module as an additional command-line executable. The server module is required only if you include data transfer in the stress module by specifying the <code class="ce">-d</code> command-line option. The server module spawns two threads &#0151; one TCP data server and one UDP data server &#0151; that handle all incoming data from the RAS client. If the server module is not running on the server, but the client includes data transfer, then the data transfer must fail gracefully on the client. OEMRASServer.exe does not accept any command-line options.</P>
+
+<P>The default command line for this test is <code class="ce">rasclisrv -t PPTP &#0150;d off</code>. The following table shows the command-line options for the RasCliSrv.dll test module.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=30%>Command-line option</TH>
+<TH width=70%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=30%>
+<PRE class="code">-t &lt;<I>RAS type</I>&gt;</PRE>
+</TD>
+<TD width=70%>Connection type. You can specify one of the following values:
+<UL type="disc">
+	<LI><code class="ce">NULL</code>, for PPP over a direct serial cable connection</li>
+
+	<LI><code class="ce">Modem</code>, for PPP over a modem connection</li>
+
+	<LI><code class="ce">PPPoE</code></li>
+
+	<LI><code class="ce">L2TP</code>, for VPN over an L2TP-based connection</li>
+
+	<LI><code class="ce">PPTP</code>, for VPN over a PPTP-based connection.</li>
+</UL>
+
+<P>The default value is <code class="ce">PPTP</code>.</P>
+</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=30%>
+<PRE class="code">-b &lt;<I>Baud rate</I>&gt;</PRE>
+</TD>
+<TD width=70%>Baud rate for a modem or a null modem cable.
+<P>The default value is <code class="ce">57600</code>.</P>
+</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=30%>
+<PRE class="code">-d &lt;<I>Data transfer</I>&gt;</PRE>
+</TD>
+<TD width=70%>A value of <code class="ce">"on"</code> specifies that you want to support data transfer.
+<P>The default value is <code class="ce">"off"</code>.</P>
+</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=30%>
+<PRE class="code">-p &lt;<I>Packet size</I>&gt;</PRE>
+</TD>
+<TD width=70%>Size of packet, in bytes, to be sent. This value is ignored if the <code class="ce">-d</code> option is set to <code class="ce">"off"</code>.
+<P>The default value is <code class="ce">1024</code>.</P>
+</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=30%>
+<PRE class="code">-n &lt;<I>Number of sends</I>&gt;</PRE>
+</TD>
+<TD width=70%>Number of packets sent per test iteration. This value is ignored if the <code class="ce">-d</code> option is set to <code class="ce">"off"</code>.
+<P>The default value is <code class="ce">100</code>.</P>
+</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=30%>
+<PRE class="code">-s &lt;<I>Server address</I>&gt;</PRE>
+</TD>
+<TD width=70%>Server with which to establish the RAS connection. For VPN tests, specify the server name or address. For modem tests, specify the telephone number.</TD>
+</TR>
+</table></div>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50conmodularstresstestmodules.htm">Test Modules for the Windows CE Stress Tool</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

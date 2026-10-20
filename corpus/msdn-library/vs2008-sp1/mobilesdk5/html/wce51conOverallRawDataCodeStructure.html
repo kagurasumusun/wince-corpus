@@ -1,0 +1,89 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Overall Raw Data Code Structure</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Overall Raw Data Code Structure"/>
+<MSHelp:RLTitle Title="Overall Raw Data Code Structure"/>
+<MSHelp:Keyword Index="A" Term="wce51conOverallRawDataCodeStructure"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Application"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbsmartphone"/>
+<MSHelp:Attr Name="Product" Value="kbPocketPC"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="Technology" Value="kbPocketPC"/>
+<MSHelp:Attr Name="Technology" Value="kbSmartphone"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="gpsid_appdev_bowmore.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="False"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_1062660">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Windows Mobile Version 5.0 SDK<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce51conoverallrawdatacodestructure"></A>Overall Raw Data Code Structure</H1>
+<!--Feedback Link Top Start-->
+<P CLASS="feedback"><font size="1"><a href="mailto:medfdbk&#64;microsoft.com?subject=Product: Windows Mobile | Version: 5.0 | Release: SDK | Title: Overall Raw Data Code Structure | Filename: wce51conoverallrawdatacodestructure.htm | Built on: Wednesday, September 14, 2005">Send Feedback</a> on this topic to the authors</font></p>
+<!--Feedback Link Top End-->
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>Code that uses the GPS Intermediate Driver raw interface often has a common overall structure, with the following steps:
+
+<OL type="1">
+	<LI>Open a connection to the GPS Intermediate Driver multiplexer, by calling <B>CreateFile</B>. 
+<P>The first parameter to <B>CreateFile</B> contains the name of the object to open. When interacting with a GPS device, without the GPS Intermediate Driver, the first parameter is often something like "COM4:". 
+
+<P>With the GPS Intermediate Driver, this first parameter is the value of the <B>DriverInterface</B> registry entry. For more information about the <B>DriverInterface</B> registry key, see <A HREF="wce51conconfiguringgpsintermediatedriver.htm">Configuring the GPS Intermediate Driver</A> and <A HREF="wce51congpsintermediatedrivermultiplexerregistrysettings.htm">GPS Intermediate Driver Multiplexer Registry Settings</A>. For example, this value might be "GPD1:". 
+
+<P>It is important to note that the parameter is not "GPD0." You only use GPD0 to control the execution of the GPS Intermediate Driver, not to retrieve data from the GPS Intermediate Driver. For more information about controlling GPS Intermediate Driver execution using GPD0, see <A HREF="wce51concontrollinggpsintermediatedriverexecution.htm">Controlling GPS Intermediate Driver Execution</A>.
+
+<P>As always, if you use a "COM" prefix and a number greater than nine, you must prepend the string "$device\" to the name passed to <B>CreateFile</B>. For example, to open the GPS Intermediate Driver using COM123, use the string "$device\COM123:".
+</li>
+
+	<LI>Read information from the GPS Intermediate Driver multiplexer, by calling <B>ReadFile</B>. This information will generally be in the form of strings that conform to the standards published by the NMEA. For more information, see <A HREF="http://go.microsoft.com/fwlink/?linkid=35077">this NMEA Web site</A>.</li>
+
+	<LI>Parse the NMEA strings into location information. The GPS Intermediate Driver does not expose its NMEA parsing functionality to external callers, so you need to write this parsing code yourself. Alternatively, you can use the parsed API, which parses NMEA strings into the <A HREF="wce51lrfgps_location.htm">GPS_POSITION</A> structure, as explained in more detail in <A HREF="wce51conaccessingparsedgpsdata.htm">Accessing Parsed GPS Data</A>. </li>
+
+	<LI>Repeat steps 2 and 3 until you don't need additional GPS information.</li>
+
+	<LI>Close the connection to the GPS Intermediate Driver multiplexer, by calling <MSHelp:link keywords="wce50lrfCloseHandle" TABINDEX="0">CloseHandle</MSHelp:link>. 
+<BLOCKQUOTE class="dtBlock">
+<b class="le">Warning</b>&nbsp;&nbsp;&nbsp;GPS hardware consumes relatively large amounts of power. Therefore, it is very important that you call <B>GPSCloseDevice</B> as soon as possible when you no longer need information from the GPS hardware. For more information about the implications of not closing the connection, see <A HREF="wce51congpsintermediatedriverpowermanagement.htm">GPS Intermediate Driver Power Management</A>. </BLOCKQUOTE>
+</li>
+</OL>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce51conaccessingrawgpsdata.htm">Accessing Raw GPS Data</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Feedback Link Bottom Start-->
+<p><font size="1"><a href="mailto:medfdbk&#64;microsoft.com?subject=Product: Windows Mobile | Version: 5.0 | Release: SDK | Title: Overall Raw Data Code Structure | Filename: wce51conoverallrawdatacodestructure.htm | Built on: Wednesday, September 14, 2005">Send Feedback</a> on this topic to the authors</font></p>
+<!--Feedback Link Bottom End-->
+<!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="mob5conCopyrightInformationForMagneto" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link></font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

@@ -1,0 +1,128 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>UNIT_ConnectToRemotePlugCB</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="UNIT_ConnectToRemotePlugCB"/>
+<MSHelp:RLTitle Title="UNIT_ConnectToRemotePlugCB"/>
+<MSHelp:Keyword Index="K" Term="UNIT_ConnectToRemotePlugCB"/>
+<MSHelp:Keyword Index="A" Term="wce50lrfUNITConnectToRemotePlugCB"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Driver"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="False"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="apiref"/>
+<MSHelp:Attr Name="Filename" Value="1394_ufd_reference.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="False"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+<MSHelp:Attr Name="APIName" Value="UNIT_ConnectToRemotePlugCB"/>
+<MSHelp:Attr Name="APIType" Value="LibDef"/>
+<MSHelp:Attr Name="APILocation" Value="Avc_unit.lib"/>
+<MSHelp:Attr Name="PBFeature" Value="1394Driver"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_3016954">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50lrfunitconnecttoremoteplugcb"></A>UNIT_ConnectToRemotePlugCB</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>This function is called when a request has arrived for your subunit to initiate a connection to a serial bus plug on a particular node.</P>
+
+<PRE class="syntax"><B>NTSTATUS (*UNIT_ConnectToRemotePlugCB)(</B>
+  <B>PVOID </B><I>Context</I><B>, </B>
+  <B>HANDLE </B><I>Plug</I><B>,</B>
+  <B>ULONG </B><I>Direction</I><B>,</B>
+  <B>UNIT_MediaType </B><I>MediaType</I><B>,</B>
+  <B>PVOID </B><I>Request</I>
+<B>);</B></PRE>
+
+<H4 class="dtH4">Parameters</H4>
+
+<DL>
+<DT><I>Context</I></DT>
+
+<DD>[in] Opaque value that the subunit driver provided when utilizing the UNIT_CMD_REGISTER_SUBUNIT command that can be used however the subunit desires.</dd>
+
+<DT><I>Plug</I></DT>
+
+<DD>[in] <B>HANDLE</B> value of the remote plug to connect to.</dd>
+
+<DT><I>Direction</I></DT>
+
+<DD>[in] Defines whether the subunit intends to utilize the provided plug as an input plug UNIT_PLUG_Direction_Input, or an output plug, UNIT_PLUG_Direction_Output. 
+
+<P>If the provided plug is an output plug, it is implied that you want to receive a connection to it. 
+
+
+<P>If the provided plug is an input plug, that implies that you want to start a transmit connection to it. The provided plug is a remote rather than local plug, and the I/O definitions are from the perspective of that remote node.
+</dd>
+
+<DT><I>MediaType</I></DT>
+
+<DD>[in] Defines the digital media type that the subunit can receive, for an input plug, or transmit, for an output plug. Must be from the <A HREF="wce50lrfstreammediatype.htm">STREAM_MediaType</A> enumeration. </dd>
+
+<DT><I>Request</I></DT>
+
+<DD>[in] Opaque value that the virtual subunit should save, to be passed into <A HREF="wce50lrfioctlunitconnectionrequestprocessed.htm">IOCTL_UNIT_CONNECTION_REQUEST_PROCESSED</A>, if this callback request is not completed immediately.</dd>
+</DL>
+
+<H4 class="dtH4">Return Values</H4>
+
+<P>If the operation was successful, the subunit should return STATUS_SUCCESS. </P>
+
+<P>If the virtual subunit could not complete processing on this request immediately, it can return STATUS_PENDING, in which case it must send down an IOCTL_UNIT_CONNECTION_REQUEST_PROCESSED later to permit the unit driver to complete the overall AV/C request. </P>
+
+<P>Otherwise, an appropriate error code should be returned. Any error code will cause the request from the external device to be rejected.</P>
+
+<H4 class="dtH4">Remarks</H4>
+
+<P>The <I>Connection And Compatibility Management Specification</I>, from the IEEE 1394 Trade Association, requires that any virtual subunit driver be able to be notified to initiate a connection to a particular plug on a particular node. This is inverted from the typical connectivity for a virtual subunit, where other nodes connect to its plugs. </P>
+
+<P>When the request arrives at the unit driver, the appropriate virtual subunit is identified and this callback is made. That subunit does not have to complete the request at this time. </P>
+
+<P>If the virtual subunit returns a value of STATUS_PENDING, the unit driver will respond to the AV/C request with an interim response. </P>
+
+<P>If STATUS_PENDING is used, the virtual subunit must later utilize IOCTL_UNIT_CONNECTION_REQUEST_PROCESSED to permit the unit driver to properly respond and complete the AV/C request.</P>
+
+<P>The plug handle provided by the unit driver to the virtual subunit deals with referring to a plug of an arbitrary node. When the subunit driver has no need for the plug any longer, that is, either has disconnected any associated connections, chosen not to attempt any connections, or failed at an attempt to establish a connection, it must send an <A HREF="wce50lrfioctlunitdereferenceconnectionplug.htm">IOCTL_UNIT_DEREFERENCE_CONNECTION_PLUG</A> request down, permitting the unit driver to properly free the associated resources.</P>
+
+<H4 class="dtH4">Requirements</H4>
+
+<P><B>OS Versions:</B> Windows CE .NET 4.0 and later.<BR>
+<B>Header:</B> Avc_unit.h.<BR>
+<B>Link Library:</B> Avc_unit.lib.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50lrfioctlunitconnectionrequestprocessed.htm">IOCTL_UNIT_CONNECTION_REQUEST_PROCESSED</A> | <A HREF="wce50lrfioctlunitdereferenceconnectionplug.htm">IOCTL_UNIT_DEREFERENCE_CONNECTION_PLUG</A> | <A HREF="wce50lrfstreammediatype.htm">STREAM_MediaType</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

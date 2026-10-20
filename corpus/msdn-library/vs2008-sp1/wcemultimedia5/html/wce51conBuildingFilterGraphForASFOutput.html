@@ -1,0 +1,209 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Building a Filter Graph for ASF Output</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Building a Filter Graph for ASF Output"/>
+<MSHelp:RLTitle Title="Building a Filter Graph for ASF Output"/>
+<MSHelp:Keyword Index="A" Term="wce51conBuildingFilterGraphForASFOutput"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Feature"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="directshow_concepts1.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="True"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+<MSHelp:Attr Name="PBFeature" Value="SYSGEN_DSHOW"/>
+<MSHelp:Attr Name="PBOnly" Value="False"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_1066839">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce51conbuildingfiltergraphforasfoutput"></A>Building a Filter Graph for ASF Output</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P><B>Applies to:</B> Devices based on Windows Mobile Version 5.0 and later</P>
+
+<P>You can use the Windows Media encoder DMO to write your captured data to an Advanced Systems Format (ASF) file.</P>
+
+<P class="labelproc"><B>Step 1</B></P>
+
+<P>The first step in the process is to do some general setup by declaring variables, instantiating objects, and obtaining interface pointers.</P>
+
+<PRE class="code">// Declare pointers to DirectShow interfaces
+CComPtr&lt;ICaptureGraphBuilder2&gt;  pCaptureGraphBuilder;
+CComPtr&lt;IBaseFilter&gt;            pVideoCap, pAsfWriter,
+                                pVideoEncoder, pAudioEncoder;
+CComPtr&lt;IBaseFilter&gt;            pAudioCaptureFilter;
+CComPtr&lt;IDMOWrapperFilter&gt;      pVideoWrapperFilter, pAudioWrapperFilter;
+CComPtr&lt;IPersistPropertyBag&gt;    pPropertyBag;
+CComPtr&lt;IGraphBuilder&gt;          pGraph;
+CComPtr&lt;IMediaControl&gt;          pMediaControl;
+CComPtr&lt;IMediaEvent&gt;            pMediaEvent;
+CComPtr&lt;IMediaSeeking&gt;          pMediaSeeking;
+CComPtr&lt;IFileSinkFilter&gt;        pFileSink;
+
+// Create the graph builder and the filtergraph
+pCaptureGraphBuilder.CoCreateInstance( CLSID_CaptureGraphBuilder );
+pGraph.CoCreateInstance( CLSID_FilterGraph );
+pCaptureGraphBuilder-&gt;SetFiltergraph( pGraph );
+
+// Query all the interfaces needed later
+pGraph.QueryInterface( &amp;pMediaControl );
+pGraph.QueryInterface( &amp;pMediaEvent );
+pGraph.QueryInterface( &amp;pMediaSeeking );</PRE>
+
+<P class="labelproc"><B>Step 2</B></P>
+
+<P>To initialize the video capture filter, you must determine the name of the capture device and then pass that device name to the capture filter.  In the code below, the name of the capture device is hard coded with a specific device name.  This approach works in certain tightly controlled scenarios, but a better general approach would be to determine the capture device's name by enumerating all the capture devices using <MSHelp:link keywords="wce50lrfFindFirstDevice" TABINDEX="0">FindFirstDevice</MSHelp:link> and <MSHelp:link keywords="wce50lrfFindNextDevice" TABINDEX="0">FindNextDevice</MSHelp:link>.  For more information, see <A HREF="wce51concapturedeviceselection.htm">Capture Device Selection</A>.</P>
+
+<P>In the following code, PropBag is an object that implements an <MSHelp:link keywords="wce50lrfIPropertyBagIUnknown" TABINDEX="0">IPropertyBag</MSHelp:link> interface that is used to pass information to the capture filter.</P>
+
+<PRE class="code">// Initialize the video capture filter
+pVideoCap.CoCreateInstance( CLSID_VideoCapture )); 
+pVideoCap.QueryInterface( &amp;pPropertyBag ));
+varCamName = L"CAM1:";
+if(( varCamName.vt == VT_BSTR ) == NULL ) {
+  return E_OUTOFMEMORY;
+}
+PropBag.Write( L"VCapName", &amp;varCamName );   
+pPropertyBag-&gt;Load( &amp;PropBag, NULL );
+pPropertyBag.Release();
+pGraph-&gt;AddFilter( pVideoCap, L"Video capture source" );</PRE>
+
+<P class="labelproc"><B>Step 3</B></P>
+
+<P>Once the capture filter knows what capture device to use, you can begin to initialize the audio and video filters.  In the following code, video is encoded with the Windows Media Video 9 DMO by using the <A HREF="wce50lrfdmowrapperfilter.htm">DMO Wrapper Filter</A>.</P>
+
+<PRE class="code">// Initialize the audio capture filter
+pAudioCaptureFilter.CoCreateInstance( CLSID_AudioCapture );
+pAudioCaptureFilter.QueryInterface( &amp;pPropertyBag );
+pPropertyBag-&gt;Load( NULL, NULL );
+pGraph-&gt;AddFilter( pAudioCaptureFilter, L"Audio Capture Filter" );
+
+// Initialize the Video DMO Wrapper
+pVideoEncoder.CoCreateInstance( CLSID_DMOWrapperFilter );
+pVideoEncoder.QueryInterface( &amp;pVideoWrapperFilter );
+
+// Load the WMV9 encoder in the DMO Wrapper. 
+// To encode in MPEG, replace CLSID_CWMV9EncMediaObject with the 
+// CLSID of your DMO
+pVideoWrapperFilter-&gt;Init( CLSID_CWMV9EncMediaObject,
+                           DMOCATEGORY_VIDEO_ENCODER );
+pGraph-&gt;AddFilter( pVideoEncoder, L"WMV9 DMO Encoder" );
+
+// Load ASF multiplexer. 
+// To create a MPEG file, change the CLSID_ASFWriter into the GUID
+// of your multiplexer
+pAsfWriter.CoCreateInstance( CLSID_ASFWriter );
+pAsfWriter-&gt;QueryInterface( IID_IFileSinkFilter, (void**) &amp;pFileSink );
+pFileSink-&gt;SetFileName( L"\\My Documents\\test0.asf", NULL );</PRE>
+
+<P class="labelproc"><B>Step 4</B></P>
+
+<P>Once the individual filters are initialized, you can connect their pins together, using the <MSHelp:link keywords="wce51lrfICaptureGraphBuilder2Interface" TABINDEX="0">ICaptureGraphBuilder2 interface</MSHelp:link>, pCaptureGraphBuilder.</P>
+
+<PRE class="code">// Connect the preview pin to the video renderer
+pCaptureGraphBuilder-&gt;RenderStream( &amp;PIN_CATEGORY_PREVIEW,
+                                    &amp;MEDIATYPE_Video, pVideoCap,
+                                    NULL, NULL );
+
+// Connect the video capture pin to the multiplexer through the
+// video renderer. 
+pCaptureGraphBuilder-&gt;RenderStream( &amp;PIN_CATEGORY_CAPTURE,
+                                    &amp;MEDIATYPE_Video, pVideoCap,
+                                    pVideoEncoder, pAsfWriter );
+
+// Connect the audio capture pin to the multiplexer through the
+// audio renderer. 
+pCaptureGraphBuilder-&gt;RenderStream( &amp;PIN_CATEGORY_CAPTURE,
+                                    &amp;MEDIATYPE_Audio, pAudioCaptureFilter,
+                                    pAudioEncoder, pAsfWriter );</PRE>
+
+<P class="labelproc"><B>Step 5</B></P>
+
+<P>With all the filters initialized and all of their pins connected together into a capture graph, you can now being to capture data.  The code below first blocks the capture graph and then lets it run for a short period of time prior to actually capturing any data.  This give the filter graph time to make sure that all of its buffers are allocated and all processes are synchronized.</P>
+
+<PRE class="code">// Block the capture.
+pCaptureGraphBuilder-&gt;ControlStream( &amp;PIN_CATEGORY_CAPTURE,
+                                     &amp;MEDIATYPE_Video, pVideoCap,
+                                     0, 0 ,0,0 );
+pCaptureGraphBuilder-&gt;ControlStream( &amp;PIN_CATEGORY_CAPTURE,
+                                    &amp;MEDIATYPE_Audio, pAudioCaptureFilter,
+                                     0, 0, 0, 0 );
+
+// Let's run the graph and wait one second before capturing. 
+pMediaControl-&gt;Run();
+Sleep( 1000 );
+
+// Let's capture 5 seconds of data in a file
+ dwEnd=MAXLONGLONG;
+OutputDebugString( L"Starting to capture the first file" );
+pCaptureGraphBuilder-&gt;ControlStream( &amp;PIN_CATEGORY_CAPTURE,
+                                     &amp;MEDIATYPE_Video, pVideoCap,
+                                     &amp;dwStart, &amp;dwEnd, 0, 0 );
+pCaptureGraphBuilder-&gt;ControlStream( &amp;PIN_CATEGORY_CAPTURE,
+                                    &amp;MEDIATYPE_Audio, pAudioCaptureFilter,
+                                     &amp;dwStart, &amp;dwEnd, 0, 0 ));
+
+// Wait 5 seconds. 
+Sleep( 5000 );
+
+OutputDebugString( L"Stopping the capture" );
+pMediaSeeking-&gt;GetCurrentPosition( &amp;dwEnd );
+pCaptureGraphBuilder-&gt;ControlStream( &amp;PIN_CATEGORY_CAPTURE,
+                                     &amp;MEDIATYPE_Video, pVideoCap,
+                                     &amp;dwStart, &amp;dwEnd, 1, 2 );
+pCaptureGraphBuilder-&gt;ControlStream( &amp;PIN_CATEGORY_CAPTURE,
+                                    &amp;MEDIATYPE_Audio, pAudioCaptureFilter,
+                                     &amp;dwStart, &amp;dwEnd, 1, 2 );
+
+// Wait for the ControlStream event. 
+OutputDebugString( L"Wating for the control stream events" );
+do
+{
+    pMediaEvent-&gt;GetEvent( &amp;lEventCode, &amp;lParam1, &amp;lParam2, INFINITE );
+    pMediaEvent-&gt;FreeEventParams( lEventCode, lParam1, lParam2 );
+
+    if( lEventCode == EC_STREAM_CONTROL_STOPPED ) {
+        OutputDebugString( L"Received a control stream stop event" );
+        count++;
+    }
+} while( count &lt; 2);
+
+OutputDebugString( L"The file has been captured" );</PRE>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce51conwindowsmediaapplications.htm">Windows Media Applications</A> | <A HREF="wce50condirectxmediaobjects.htm">DirectX Media Objects</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

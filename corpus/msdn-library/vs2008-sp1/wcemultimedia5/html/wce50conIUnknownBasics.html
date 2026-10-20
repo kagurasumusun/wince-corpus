@@ -1,0 +1,111 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>IUnknown Basics</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="IUnknown Basics"/>
+<MSHelp:RLTitle Title="IUnknown Basics"/>
+<MSHelp:Keyword Index="A" Term="wce50conIUnknownBasics"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Feature"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="directshow_concepts1.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="True"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+<MSHelp:Attr Name="PBFeature" Value="SYSGEN_DSHOW"/>
+<MSHelp:Attr Name="PBOnly" Value="False"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_1050150">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50coniunknownbasics"></A>IUnknown Basics</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>The methods in <B>IUnknown</B> enable an application to manage the component's reference count and query for interfaces on the component. For this to work properly with aggregated COM components, the <B>IUnknown</B> interface must be delegated to the outer component in the aggregation. </P>
+
+<H2 class="dtH2">Reference Count</H2>
+
+<P>The reference count is an internal variable, incremented in the <MSHelp:link keywords="wce50lrfIUnknownAddRef" TABINDEX="0">IUnknown::AddRef</MSHelp:link> method and decremented in the <MSHelp:link keywords="wce50lrfIUnknownRelease" TABINDEX="0">IUnknown::Release</MSHelp:link> method. The base classes manage the reference count and synchronize access to the reference count among multiple threads. </P>
+
+<H2 class="dtH2">Interface Queries</H2>
+
+<P>Querying for an interface is also straightforward. The caller passes two parameters: an interface identifier (IID), and the address of a pointer. If the component supports the requested interface, it sets the pointer to the interface, increments its own reference count, and returns S_OK. Otherwise, it sets the pointer to NULL and returns E_NOINTERFACE. The following example shows the general outline of the <MSHelp:link keywords="wce50lrfIUnknownQueryInterface" TABINDEX="0">IUnknown::QueryInterface</MSHelp:link> method. Component aggregation, described in the next section, introduces some additional complexity.</P>
+
+<PRE class="code">if (IID == IID_IUnknown)
+    set pointer to (IUnknown *)this
+    AddRef
+    return S_OK
+
+else if (IID == IID_ISomeInterface)
+    set pointer to (ISomeInterface *)this
+    AddRef
+    return S_OK
+
+else if ... 
+
+else
+    set pointer to NULL
+    return E_NOINTERFACE</PRE>
+
+<P>The only difference between the <B>QueryInterface</B> method of one component and the <B>QueryInterface</B> method of another is the list of IIDs that each component tests. For every interface that the component supports, the component must test for the IID of that interface.</P>
+
+<H2 class="dtH2">Aggregation and Delegation</H2>
+
+<P>Component aggregation must be transparent to the caller. Therefore, the aggregate must expose a single <MSHelp:link keywords="wce50lrfIUnknown" TABINDEX="0">IUnknown</MSHelp:link> interface, with the aggregated component deferring to the outer component's implementation. Otherwise, the caller would see two different <B>IUnknown</B> interfaces in the same aggregate. If the component is not aggregated, it uses its own implementation. </P>
+
+<P>To support this behavior, the component must add a level of indirection. A <I>delegating IUnknown</I> delegates the work to the appropriate place: to the outer component, if there is one, or to the component's internal version. A <I>nondelegating IUnknown</I> does the work, as described in the previous section.</P>
+
+<P>The delegating version is public and keeps the name <B>IUnknown</B>. The nondelegating version is renamed <A HREF="wce50lrfinondelegatingunknowninterface.htm">INonDelegatingUnknown</A>. This name is not part of the COM specification, because it is not a public interface. </P>
+
+<P>When the client creates an instance of the component, it calls the <MSHelp:link keywords="wce50lrfIClassFactoryCreateInstance" TABINDEX="0">IClassFactory::CreateInstance</MSHelp:link> method. One parameter is a pointer to the aggregating component's <B>IUnknown</B> interface, or is NULL if the new instance is not aggregated. In its constructor method, the component uses this parameter to store a member variable that indicates which <B>IUnknown</B> interface to use, as shown in the following example.</P>
+
+<PRE class="code">CMyComponent::CMyComponent(IUnknown *pOuterUnknown)
+{
+    if (pOuterUnknown == NULL)
+        m_pUnknown = (IUnknown *)(INonDelegatingUnknown *)this;
+    else
+        m_pUnknown = pOuterUnknown;
+
+    [ ... more constructor code ... ]
+}</PRE>
+
+<P>Each method in the delegating <B>IUnknown</B> calls its nondelegating counterpart, as shown in the following example.</P>
+
+<PRE class="code">HRESULT QueryInterface(REFIID iid, void **ppv) 
+{
+    return m_pUnknown-&gt;QueryInterface(iid, ppv);
+}</PRE>
+
+<P>By the nature of delegation, the delegating methods look identical in every component. Only the nondelegating versions change.</P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

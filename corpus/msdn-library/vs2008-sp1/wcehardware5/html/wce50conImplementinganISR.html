@@ -1,0 +1,182 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Implementing an ISR</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Implementing an ISR"/>
+<MSHelp:RLTitle Title="Implementing an ISR"/>
+<MSHelp:Keyword Index="A" Term="wce50conImplementinganISR"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Hardware"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="True"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="howto_developing_an_OAL.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="True"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_3010402">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50conimplementinganisr"></A>Implementing an ISR</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>An interrupt service routine (ISR) is code that handles interrupt requests (IRQs) on your target device. The ISR is the core of the OAL and is responsible for locating an interrupt source, masking it, and returning a unique identifier to the Windows CE kernel to indicate which driver needs to be used to handle the event.</P>
+
+<P>The ISR only needs to focus on the tick timer interrupt until other user peripherals such as keyboard, mouse, PCMCIA, and USB, are added. </P>
+
+<P>When support for other interrupt sources are added to the ISR, there are other interrupt support routines which will need to be implemented for mapping hardware interrupts to unique identifiers &#0151; IRQ-&gt;SYSINTR mappings, enabling and disabling interrupts, and so on.</P>
+
+<P>Using your OAL code, Windows CE associates each IRQ with an ISR. When an interrupt occurs, the kernel's exception handler calls the registered ISR for that interrupt. </P>
+
+<P>Microsoft has optimized the kernel for each microprocessor and defines constants that specify the number of IRQ lines available for each microprocessor. </P>
+
+<P>Using the <MSHelp:link keywords="wce50lrfHookInterrupt" TABINDEX="0">HookInterrupt</MSHelp:link> function in the OAL, you can register only one ISR for each IRQ line. However, you can associate an ISR with one or more interrupt identifiers. In addition, each ISR has the following characteristics:
+
+<UL type="disc">
+	<LI>Performs minimal interrupt processing that is enough to verify and acknowledge the hardware that is asserting the interrupt, leaving most of the processing to be performed by the interrupt service thread (IST).</li>
+
+	<LI>Returns an interrupt identifier to the kernel when finished. This causes the kernel to schedule the appropriate IST later.
+<BLOCKQUOTE class="dtBlock">
+<b class="le">Note</b>&nbsp;&nbsp;&nbsp;The Windows CE exception handler only saves and restores a few registers depending on the microprocessor being used. The following table shows the registers you can use.</BLOCKQUOTE>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=38%>Microprocessor</TH>
+<TH width=62%>Registers</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=38%>ARM</TD>
+<TD width=62%>All registers are available for use.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=38%>MIPS</TD>
+<TD width=62%>Registers v0, v1, AT, t0 through t7, and a0 through a3 are available for use.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=38%>SHx</TD>
+<TD width=62%>Registers r0 through r7 are available for use.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=38%>x86</TD>
+<TD width=62%>All registers are available for use.</TD>
+</TR>
+</table></div>
+</li>
+</UL>
+
+<P>A device driver or the OAL can associate the interrupt identifier with an event by creating an IST and calling the <MSHelp:link keywords="wce50lrfInterruptInitialize" TABINDEX="0">InterruptInitialize</MSHelp:link> function. The IST then waits for the event. </P>
+
+<P>When the ISR returns to the kernel, the kernel examines the returned interrupt identifier and sets the associated event. The interrupt service handler of the kernel schedules execution of the IST that the driver or OAL created. </P>
+
+<P>The IST calls functions in the hardware platform-dependent driver layer to read from and write to the target device.</P>
+
+<P>To manage ISRs, you must implement the ISR management functions that allow the kernel to begin, service, and complete interrupt processing. </P>
+
+<P>The following table shows the functions you must implement to support ISR management.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=28%>Function</TH>
+<TH width=72%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=28%><A HREF="wce50lrfoeminterruptdisable.htm">OEMInterruptDisable</A></TD>
+<TD width=72%>Disables a specified hardware interrupt.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=28%><A HREF="wce50lrfoeminterruptdone.htm">OEMInterruptDone</A></TD>
+<TD width=72%>Signals completion of interrupt processing.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=28%><A HREF="wce50lrfoeminterruptenable.htm">OEMInterruptEnable</A></TD>
+<TD width=72%>Performs hardware operations necessary to enable a specified hardware interrupt.</TD>
+</TR>
+</table></div>
+
+<P>A device driver calls the <MSHelp:link keywords="wce50lrfInterruptInitialize" TABINDEX="0">InterruptInitialize</MSHelp:link>, <MSHelp:link keywords="wce50lrfInterruptDisable" TABINDEX="0">InterruptDisable</MSHelp:link>, and <MSHelp:link keywords="wce50lrfInterruptDone" TABINDEX="0">InterruptDone</MSHelp:link> functions to enable or disable interrupts or to signal the kernel that processing is complete for an interrupt. </P>
+
+<P>The kernel translates these calls into the <B>OEMInterruptEnable</B>, <B>OEMInterruptDisable</B>, and <B>OEMInterruptDone</B> functions, respectively. </P>
+
+<P>You can use the information that the kernel passes to <B>OEMInterruptEnable</B> to initialize an interrupt or to allocate scratch space for the vendor-defined firmware ISR. </P>
+
+<P>When a driver calls <B>InterruptInitialize</B>, the kernel will then call <B>OEMInterruptEnable</B>.</P>
+
+<P>ISR management functions typically use switch statements to decode the interrupt identifier and act on the associated hardware interrupt. The following code example shows how <B>OEMInterruptEnable</B> checks for each of the supported interrupt identifiers.</P>
+
+<PRE class="code">BOOL OEMInterruptEnable (DWORD idInt, LPVOID pvData, DWORD cbData)
+{
+  BOOL bRet = TRUE;    // Assume successful return value.
+
+switch (idInt) {
+  case SYSINTR_TOUCH:    
+    // Enable touch screen analog-to-digital. converter (ADC) interrupt
+    break;
+  ...
+  case SYSINTR_PCMCIA_EDGE:
+    // Enable pcmcia edge interrupt and clear it, if one is pending
+    break;
+  ...
+  default:
+    bRet = FALSE;      // Return FALSE for an invalid interrupt. 
+  }
+return bRet;
+}</PRE>
+
+<P>For more information about interrupts, see the following topics:
+
+<UL type="disc">
+	<LI><A HREF="wce50condefininganinterruptidentifier.htm">Defining an Interrupt Identifier</A></li>
+
+	<LI><A HREF="wce50concreatinganinterruptidentifier.htm">Creating an Interrupt Identifier</A></li>
+
+	<LI><A HREF="wce50coninitializinganinterrupt.htm">Initializing an Interrupt</A></li>
+
+	<LI><A HREF="wce50tskhandlinganinterrupt.htm">Handling an Interrupt</A></li>
+
+	<LI><A HREF="wce50condisablinganinterrupt.htm">Disabling an Interrupt</A></li>
+
+	<LI><A HREF="wce50conpassingdatabetweenanisrandanist.htm">Passing Data between an ISR and an IST</A></li>
+</UL>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50howhowtodevelopanoemadaptationlayer.htm">How to Develop an OEM Adaptation Layer</A> | <MSHelp:link keywords="wce50oriDevelopingDeviceDriver" TABINDEX="0">Developing a Device Driver</MSHelp:link></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

@@ -1,0 +1,155 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>IO Control and Other Common Stack Functions</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="IO Control and Other Common Stack Functions"/>
+<MSHelp:RLTitle Title="IO Control and Other Common Stack Functions"/>
+<MSHelp:Keyword Index="A" Term="wce50conIOControlandOtherSharedFunctions"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Driver"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="False"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="bluetooth_guide.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="True"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+<MSHelp:Attr Name="PBFeature" Value="BluetoothHCITransportDriver"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_3017377">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50coniocontrolandothersharedfunctions"></A>IO Control and Other Common Stack Functions</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>All Bluetooth stack layers have certain common stack management functions.</P>
+
+<PRE class="code">typedef int (*BT_LAYER_IO_CONTROL) (
+   HANDLE    hDeviceContext,
+   int       fSelector,
+   int       cInBuffer,
+   char      *pInBuffer,
+   int       cOutBuffer,
+   char      *pOutBuffer,
+   int       *pcDataReturned
+);</PRE>
+
+<P>The above function is used to pass control information down the stack.</P>
+
+<P>The Bluetooth stack event is used to notify upper layers of a condition such as shutdown.</P>
+
+<PRE class="code">typedef int (*BT_LAYER_STACK_EVENT_IND) (
+   void    *pUserContext,
+   int     iEvent,
+   void    *pEventContext
+);</PRE>
+
+<P>The Bluetooth stack event can carry the following information up to the layer's clients.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=36%>Event</TH>
+<TH width=64%>Code</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=36%>BTH_STACK_NONE</TD>
+<TD width=64%>0</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=36%>BTH_STACK_RESET</TD>
+<TD width=64%>1</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=36%>BTH_STACK_DOWN</TD>
+<TD width=64%>2</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=36%>BTH_STACK_UP</TD>
+<TD width=64%>3</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=36%>BTH_STACK_DISCONNECT</TD>
+<TD width=64%>4</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=36%>BTH_STACK_FLOW_ON </TD>
+<TD width=64%>5</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=36%>BTH_STACK_FLOW_OFF</TD>
+<TD width=64%>6</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=36%>BTH_STACK_HOST_BUFFER</TD>
+<TD width=64%>7</TD>
+</TR>
+</table></div>
+
+<P>Stack layers should propagate relevant events up to their own clients. They do not have to propagate every event. For example, L2CAP does not support host buffer flow. It puts itself in a disconnected state when BTH_STACK_FLOW_ON is received, and turns itself back on at BTH_STACK_FLOW_OFF. Clients are notified using STACK_DOWN and STACK_UP states.</P>
+
+<P>A BTH_STACK_RESET event is issued when the card resets. On receiving this event, the stack layers must assume the card has reinitialized and its state was lost. All connections must be closed and the card reconfigured appropriately.</P>
+
+<P>BTH_STACK_DOWN means the hardware was removed. Connections and other state information must be destroyed.</P>
+
+<P>BTH_STACK_UP is sent when the card is inserted.</P>
+
+<P>BTH_STACK_DISCONNECT is sent on final shutdown, when the stack is about to be unloaded. This event should be treated as a PROCESS_DETACH event in DllMain, although it is not sent in that context. All state information must be destroyed at that point, not just adapter state or active connections.</P>
+
+<BLOCKQUOTE class="dtBlock">
+<b class="le">Note&nbsp;&nbsp;&nbsp;</b>The L2CAP currently does not support host flow control and will disconnect if it receives flow-control related events from the HCI.</BLOCKQUOTE>
+
+<P>The following call is used to abort a currently executing call.</P>
+
+<PRE class="code">typedef int (*BT_LAYER_ABORT_CALL) (
+   HANDLE   hDeviceContext,
+   void    *pCallContext
+);</PRE>
+
+<P>There are no guarantees that the abort will complete because the call may have already executed &#0150; depending on whether the call has executed, this will put you in a very typical race condition.</P>
+
+<P>The following callback notifies the user that a lower level could not complete the call because of an error condition.</P>
+
+<PRE class="code">typedef int (*BT_LAYER_CALL_ABORTED) (void *pCallContext, int iError);</PRE>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50concommonlayercharacteristics.htm">Common Layer Characteristics</A> | <A HREF="wce50conbluetoothprotocolstack.htm">Bluetooth Protocol Stack</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

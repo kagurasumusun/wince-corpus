@@ -1,0 +1,2059 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Sync Configuration Service Provider</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Sync Configuration Service Provider"/>
+<MSHelp:RLTitle Title="Sync Configuration Service Provider"/>
+<MSHelp:Keyword Index="A" Term="wce51grfSyncCSP"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Application"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbsmartphone"/>
+<MSHelp:Attr Name="Product" Value="kbPocketPC"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="Technology" Value="kbPocketPC"/>
+<MSHelp:Attr Name="Technology" Value="kbSmartphone"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="csp_sync.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="False"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_1060418">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Windows Mobile Version 5.0 SDK<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce51grfsynccsp"></A>Sync Configuration Service Provider</H1>
+<!--Feedback Link Top Start-->
+<P CLASS="feedback"><font size="1"><a href="mailto:medfdbk&#64;microsoft.com?subject=Product: Windows Mobile | Version: 5.0 | Release: SDK | Title: Sync Configuration Service Provider | Filename: wce51grfsynccsp.htm | Built on: Wednesday, September 14, 2005">Send Feedback</a> on this topic to the authors</font></p>
+<!--Feedback Link Top End-->
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>Use the <B>Sync</B> Configuration Service Provider to configure synchronization settings on the device. You can synchronize with a server and two separate desktops. </P>
+
+<BLOCKQUOTE class="dtBlock">
+<b class="le">Note</b>&nbsp;&nbsp;&nbsp;The <B>Sync</B> Configuration Service Provider is supported for synchronizing with a single source. For information about synchronizing with multiple sources, see <A HREF="wce51orisyncconfigurationserviceproviderexamplesforomadm.htm">Sync Configuration Service Provider Examples for OMA DM</A>. </BLOCKQUOTE>
+
+<BLOCKQUOTE class="dtBlock">
+<b class="le">Note</b>&nbsp;&nbsp;&nbsp;This Configuration Service Provider can be managed over both the OMA Client Provisioning (formerly WAP) and the OMA DM protocol.</BLOCKQUOTE>
+
+<BLOCKQUOTE class="dtBlock">
+<b class="le">Note</b>&nbsp;&nbsp;&nbsp;Access to this Configuration Service Provider is determined by Security roles. Because OEMs and Mobile Operators can selectively disallow access, ask them about the availability of this Configuration Service Provider. For more information about roles, see <MSHelp:link keywords="wce51conSecurityRoles" TABINDEX="0">Security Roles</MSHelp:link> and <A HREF="wce51grfdefaultrolesforconfigurationserviceproviders.htm">Default Roles for Configuration Service Providers</A>.</BLOCKQUOTE>
+
+<P>The following table shows the default settings for the root node of this Configuration Service Provider. The default security role maps to each subnode unless specific permission is granted to the subnode.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TD width=50%><B>Permissions</B></TD>
+<TD width=50%>Read/write</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><B>Roles allowed to query and update setting</B></TD>
+<TD width=50%>Manager
+<P>AuthenticatedUser</P>
+</TD>
+</TR>
+</table></div>
+
+<P>The following images show in two parts the management object used by OMA DM.</P>
+
+<P class="fig"><IMG SRC="sync_oma_dm_settings_tree.gif" ALT="" BORDER=0></P>
+
+<P class="fig"><IMG SRC="sync_oma_dm_tree.gif" ALT="" BORDER=0></P>
+
+<P>The following images show in two parts the Configuration Service Provider in tree format as used by OMA Client Provisioning.</P>
+
+<P class="fig"><IMG SRC="sync_configuration_service_provider_settings_tree.gif" ALT="" BORDER=0></P>
+
+<P class="fig"><IMG SRC="sync_configuration_service_provider_tree.gif" ALT="" BORDER=0></P>
+
+<H2 class="dtH2">Characteristics</H2>
+
+<DL>
+<DT><B>Calendar</B></DT>
+
+<DD>Calendar synchronization settings.</dd>
+
+<DT><B>Connection</B></DT>
+
+<DD>The name, location, and connection information for the synchronization operation.</dd>
+
+<DT><B>Contacts</B></DT>
+
+<DD>Contacts synchronization settings.</dd>
+
+<DT><B>FolderHierarchy</B></DT>
+
+<DD>The beginning of the folder hierarchy section.
+
+<BLOCKQUOTE class="dtBlock">
+<b class="le">Note</b>&nbsp;&nbsp;&nbsp;The folder hierarchy settings need to be sent to the device after the initial sync has already been performed, otherwise the folder hierarchy is not yet on the device and the provisioning XML will not do anything.<code class="ce"> </code></BLOCKQUOTE>
+</dd>
+
+<DT><B>Mail</B></DT>
+
+<DD>Mail synchronization settings.</dd>
+
+<DT><B>PeakDays</B></DT>
+
+<DD>This characteristic is used by the Settings characteristic to set the peak days of service. </dd>
+
+<DT><B>Providers</B></DT>
+
+<DD>GUID that identifes the Sync Service Provider for each of the following:
+
+<UL type="disc">
+	<LI>Calendar</li>
+
+	<LI>Contacts</li>
+
+	<LI>E-Mail</li>
+
+	<LI>Tasks</li>
+</UL>
+</dd>
+
+<DT><B>Settings</B></DT>
+
+<DD>Sets scheduled synchronization times and item conflict resolution settings.</dd>
+</DL>
+
+<H2 class="dtH2">Parameters</H2>
+
+<DL>
+<DT><B>AllowSSLOption</B></DT>
+
+<DD>This parm is used in the <B>Connection</B> and <B>Settings</B> characteristic to allow the user to have the option of selecting a non-SSL server address when connecting to an ActiveSync server. Enabling <B>AllowSSLOption</B> allows the user the choice of using SSL on the device and on the desktop computer. 
+
+<P><B>AllowSSLOption</B> sets a registry key that disables the user interface (UI) option and forces the use of SSL. Only the administrator should modify this setting
+
+
+<P>The following table shows the default settings.
+
+
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TD width=50%><B>Permissions</B></TD>
+<TD width=50%>Read/write</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><B>Data type</B></TD>
+<TD width=50%>Boolean</TD>
+</TR>
+</table></div>
+
+</dd>
+
+<DT><B>AutoSync</B></DT>
+
+<DD>This parameter is no longer used, but may appear in a return to a Query. </dd>
+
+<DT><B>AutoSyncWhenCradled</B></DT>
+
+<DD>This parameter is no longer used, but may appear in a return to a Query. </dd>
+
+<DT><B>BodyTruncation</B></DT>
+
+<DD>This parameter is used in the <B>Settings</B> characteristic to identify the maximum body size for the notes fields in contacts and the calendar. The following table lists the possible values.
+
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=50%>Value</TH>
+<TH width=50%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>512</TD>
+<TD width=50%>.5k</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>1024</TD>
+<TD width=50%>1K</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>5120</TD>
+<TD width=50%>5K</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>-1</TD>
+<TD width=50%>All</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>0</TD>
+<TD width=50%>Header Only</TD>
+</TR>
+</table></div>
+
+
+
+<P>The following table shows the default settings.
+
+
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TD width=50%><B>Permissions</B></TD>
+<TD width=50%>Read/write</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><B>Data type</B></TD>
+<TD width=50%>Integer</TD>
+</TR>
+</table></div>
+
+</dd>
+
+<DT><B>CalendarAgeFilter</B></DT>
+
+<DD>This parameter is used in the <B>Calendar</B> and <B>Settings</B> characteristic as an age filter for the calendar. The filter only filters out expired calendar entries; all future appointments are synced to the device. This parameter also determines how long expired calendar entries can remain on the device. The following table lists the possible values.
+
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=50%>Value</TH>
+<TH width=50%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>0</TD>
+<TD width=50%>All</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>4</TD>
+<TD width=50%>2 Weeks</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>5</TD>
+<TD width=50%>1 Month</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>6</TD>
+<TD width=50%>3 Months</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>7</TD>
+<TD width=50%>6 Months</TD>
+</TR>
+</table></div>
+
+
+
+<P>The following table shows the default settings.
+
+
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TD width=50%><B>Permissions</B></TD>
+<TD width=50%>Read/write</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><B>Data type</B></TD>
+<TD width=50%>Integer</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><B>Label</B></TD>
+<TD width=50%>Include past</TD>
+</TR>
+</table></div>
+</dd>
+
+<DT><B>Device</B></DT>
+
+<DD>This parameter is used in the <B>Connections</B> and <B>Settings</B> characteristics. This is a read-only parameter containing a string that identifies the type of device. For Windows Mobile-based Pocket PCs, this parameter contains the string "Pocket PC"; for Windows Mobile-based Smartphones, this parameter contains the string "Smartphone".
+
+<P>The following table shows the default settings.
+
+
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TD width=50%><B>Permissions</B></TD>
+<TD width=50%>Read-only (Settings)
+<P>Read/write (Connections)</P>
+</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><B>Data type</B></TD>
+<TD width=50%>String</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><B>Roles allowed to query and update setting</B></TD>
+<TD width=50%>Manager
+<P>AuthenticatedUser</P>
+</TD>
+</TR>
+</table></div>
+
+
+
+<P>This parameter is used in the Sync Configuration Service Provider under Connection\.
+</dd>
+
+<DT><B>DeviceAddressingMethod</B></DT>
+
+<DD>This parameter is used in the <B>Settings</B> characteristic to specify how to address your device to synchronize new items as they arrive on devices that support notification based synchronization. The following table lists the possible values.
+
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=50%>Value</TH>
+<TH width=50%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>1</TD>
+<TD width=50%>Device SMS address, SMTP.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>2</TD>
+<TD width=50%>Corporate Service Provider, using the phone number for the device address.</TD>
+</TR>
+</table></div>
+
+
+
+<P>The following table shows the default settings.
+
+
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TD width=50%><B>Permissions</B></TD>
+<TD width=50%>Read/write</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><B>Data type</B></TD>
+<TD width=50%>Integer</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><B>Label</B></TD>
+<TD width=50%>Device Address</TD>
+</TR>
+</table></div>
+
+</dd>
+
+<DT><B>DeviceID</B></DT>
+
+<DD>This parameter is used in the <B>Connections</B> and <B>Settings</B> characteristics as a unique identifier for the device. The device automatically generates the value of this parameter.
+
+<P>The following table shows the default settings.
+
+
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TD width=50%><B>Permissions</B></TD>
+<TD width=50%>Read-only</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><B>Data type</B></TD>
+<TD width=50%>String</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><B>Label</B></TD>
+<TD width=50%>Device ID</TD>
+</TR>
+</table></div>
+
+
+
+<P>This parameter is used in the Sync Configuration Service Provider under Connection\.
+</dd>
+
+<DT><B>DevicePhoneReadOnly</B></DT>
+
+<DD>This parameter is used in the <B>Settings</B> characteristic to set the Device Phone Number to read-only. It is an integer value that is set to 1 when the Device Phone Number is loaded by default on the device. The following table lists the possible values.
+
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=50%>Value</TH>
+<TH width=50%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>0</TD>
+<TD width=50%>The Device Phone Number may be edited.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>1</TD>
+<TD width=50%>The Device Phone Number cannot be changed in the edit box. It is read-only.</TD>
+</TR>
+</table></div>
+
+
+
+<P>The following table shows the default settings.
+
+
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TD width=50%><B>Permissions</B></TD>
+<TD width=50%>Read/write</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><B>Data type</B></TD>
+<TD width=50%>Integer</TD>
+</TR>
+</table></div>
+
+</dd>
+
+<DT><B>Domain</B></DT>
+
+<DD>This parameter is used in the <B>Connection</B> characteristic to identify the network domain for the Server ActiveSync server.
+
+<P>Send the Domain value with the settings update only when necessary, for example, when the domain has changed. The string compare logic in the Sync Configuration Service Provider is case sensitive. If the new domain value does not equal the current domain value, the Sync Configuration Service Provider logic treats the transaction as a new domain. 
+
+
+<P>The following table shows the default settings.
+
+
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TD width=50%><B>Permissions</B></TD>
+<TD width=50%>Read/write</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><B>Data type</B></TD>
+<TD width=50%>String</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><B>Label</B></TD>
+<TD width=50%>Domain</TD>
+</TR>
+</table></div>
+
+</dd>
+
+<DT><B>EmailAgeFilter</B></DT>
+
+<DD>This parameter is used in the <B>Mail</B> and <B>Settings</B> characteristic as an age filter for e-mail. The filter only filters out expired items; all unexpired e-mail messages are synced to the device. This parameter also determines how long expired e-mail messages can remain on the device. The following table lists the possible values.
+
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=50%>Value</TH>
+<TH width=50%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>1</TD>
+<TD width=50%>1 Day</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>2</TD>
+<TD width=50%>3 Days</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>3</TD>
+<TD width=50%>1 Week</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>4</TD>
+<TD width=50%>2 Weeks</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>5</TD>
+<TD width=50%>1 Month</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>0</TD>
+<TD width=50%>All</TD>
+</TR>
+</table></div>
+
+
+
+<P>The following table shows the default settings.
+
+
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TD width=50%><B>Permissions</B></TD>
+<TD width=50%>Read/write</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><B>Data type</B></TD>
+<TD width=50%>Integer</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><B>Label</B></TD>
+<TD width=50%>Include past</TD>
+</TR>
+</table></div>
+
+</dd>
+
+<DT><B>Enabled</B></DT>
+
+<DD>This parameter is used in the <B>Mail</B> characteristic to identify whether or not mail is synchronized using Server ActiveSync.
+
+<P>The following table shows the default settings.
+
+
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TD width=50%><B>Permissions</B></TD>
+<TD width=50%>Read/write</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><B>Data type</B></TD>
+<TD width=50%>Boolean</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><B>Label</B></TD>
+<TD width=50%>Synchronize Inbox</TD>
+</TR>
+</table></div>
+
+</dd>
+
+<DT><B>Enabled</B></DT>
+
+<DD>This parameter is used in the <B>Calendar</B> characteristic to enable the calendar application for Server ActiveSync.
+
+<P>The following table shows the default settings.
+
+
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TD width=50%><B>Permissions</B></TD>
+<TD width=50%>Read/write</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><B>Data type</B></TD>
+<TD width=50%>Boolean</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><B>Label</B></TD>
+<TD width=50%>Synchronize Calendar</TD>
+</TR>
+</table></div>
+
+</dd>
+
+<DT><B>Enabled</B></DT>
+
+<DD>This parameter is used in the <B>Contacts</B> characteristic to enable the contacts (address book) application to use Server ActiveSync.
+
+<P>The following table shows the default settings.
+
+
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TD width=50%><B>Permissions</B></TD>
+<TD width=50%>Read/write</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><B>Data type</B></TD>
+<TD width=50%>Boolean</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><B>Label</B></TD>
+<TD width=50%>Synchronize Contacts</TD>
+</TR>
+</table></div>
+
+</dd>
+
+<DT><B>EnableNonLocalCrossPollination</B></DT>
+
+<DD>This parameter is used in the <B>Settings</B> characteristic to allow or disallow backend cross pollination. The following list shows the possible values:
+
+<UL type="disc">
+	<LI>0 = Disallow backend cross pollination</li>
+
+	<LI>1 = Allows backend cross pollination&lt;CR&gt;&lt;LF&gt;</li>
+</UL>
+
+
+<P>The following table shows the default settings.
+
+
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TD width=50%><B>Permissions</B></TD>
+<TD width=50%>Read/write</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><B>Data type</B></TD>
+<TD width=50%>Boolean</TD>
+</TR>
+</table></div>
+
+</dd>
+
+<DT><B>FolderType</B></DT>
+
+<DD>This parameter is used in the <B>FolderHierarchy</B> characteristic to identify an e-mail folder type and cannot be changed. The following table lists the possible values.
+
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=21%>Value</TH>
+<TH width=79%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=21%>0</TD>
+<TD width=79%>Invalid folder</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=21%>1</TD>
+<TD width=79%>User created folder (root)</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=21%>2</TD>
+<TD width=79%>Inbox folder</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=21%>3</TD>
+<TD width=79%>Drafts folder</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=21%>4</TD>
+<TD width=79%>Deleted Items folder</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=21%>5</TD>
+<TD width=79%>Sent Items folder</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=21%>6</TD>
+<TD width=79%>Outbox folder</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=21%>7</TD>
+<TD width=79%>Tasks folder</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=21%>8</TD>
+<TD width=79%>Calendar folder</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=21%>9</TD>
+<TD width=79%>Contacts folder</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=21%>10</TD>
+<TD width=79%>Notes folder</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=21%>11</TD>
+<TD width=79%>Journal folder</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=21%>12</TD>
+<TD width=79%>User created Mail folder</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=21%>13</TD>
+<TD width=79%>User created Calendar folder</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=21%>14</TD>
+<TD width=79%>User created Contacts folder</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=21%>15</TD>
+<TD width=79%>User created Tasks folder</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=21%>16</TD>
+<TD width=79%>User created Journal folder</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=21%>17</TD>
+<TD width=79%>User created Notes folder</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=21%>18</TD>
+<TD width=79%>Invalid folder</TD>
+</TR>
+</table></div>
+
+
+
+<P>The following table shows the default settings.
+
+
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TD width=50%><B>Permissions</B></TD>
+<TD width=50%>Read-only</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><B>Data type</B></TD>
+<TD width=50%>Integer</TD>
+</TR>
+</table></div>
+
+</dd>
+
+<DT></DT>
+
+<DT><B>MailBodyTruncation</B></DT>
+
+<DD>This parameter is used in the <B>Mail</B> and <B>Settings</B> characteristic to identify the amount of e-mail message body to fetch during a Server ActiveSync. The following table lists the possible values.
+
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=50%>Value</TH>
+<TH width=50%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>512</TD>
+<TD width=50%>.5k</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>1024</TD>
+<TD width=50%>1K</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>5120</TD>
+<TD width=50%>5K</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>-1</TD>
+<TD width=50%>All</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>0</TD>
+<TD width=50%>Header Only</TD>
+</TR>
+</table></div>
+
+
+
+<P>The following table shows the default settings.
+
+
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TD width=50%><B>Permissions</B></TD>
+<TD width=50%>Read/write</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><B>Data type</B></TD>
+<TD width=50%>Integer</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><B>Label</B></TD>
+<TD width=50%>Limit e-mail size to</TD>
+</TR>
+</table></div>
+
+</dd>
+
+<DT><B>MailFileAttachments</B></DT>
+
+<DD>This parameter is used in the <B>Mail</B> and <B>Settings</B> characteristic to specify the maximum size (in bytes) an attachment can be to automatically download. For instance if this parameter is set to 2048, any message with an attachment smaller than 2k in size would have that attachment automatically downloaded during sync.
+
+<P>The following table shows the default settings.
+
+
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TD width=50%><B>Permissions</B></TD>
+<TD width=50%>Read/write</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><B>Data type</B></TD>
+<TD width=50%>Integer</TD>
+</TR>
+</table></div>
+
+</dd>
+
+<DT><B>MIMETruncation</B></DT>
+
+<DD>This parameter is used in the <B>Settings</B> characteristic to identify the amount of email message body to fetch during a Server ActiveSync when using MIME.
+
+<P>The following table shows the default settings.
+
+
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TD width=50%><B>Permissions</B></TD>
+<TD width=50%>Read/write</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><B>Data type</B></TD>
+<TD width=50%>Integer</TD>
+</TR>
+</table></div>
+
+</dd>
+
+<DT><B>Name</B></DT>
+
+<DD>This parameter is used in the Connection characteristic to identify the name of the sync source. You can synchronize with a server and with two separate desktop PCs. Each is referred to as a Source, has a unique GUID, and has a name labeling it in the User Interface (UI). The GUID for the sync source is the first one in the path for each setting. The GUID that identifies the Engine type (server or desktop PC) is the .
+
+<P>The following table shows the default settings.
+
+
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TD width=50%><B>Permissions</B></TD>
+<TD width=50%>Read/write</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><B>Data type</B></TD>
+<TD width=50%>String</TD>
+</TR>
+</table></div>
+
+</dd>
+
+<DT><B>OffPeakFrequency</B></DT>
+
+<DD>This parameter is used in the <B>Settings</B> characteristic. This parameter determines how frequently scheduled synchronization will be performed during off-peak hours. Switching from peak to off-peak is based on the device's clock. The following table lists the possible values.
+
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=50%>Value</TH>
+<TH width=50%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>0</TD>
+<TD width=50%>Off, no scheduled synchronization during peak hours.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>5</TD>
+<TD width=50%>5 minutes between synchronizations during peak times.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>10</TD>
+<TD width=50%>10 minutes between synchronizations during peak times.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>15</TD>
+<TD width=50%>15 minutes between synchronizations during peak times.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>30</TD>
+<TD width=50%>30 minutes between synchronizations during peak times.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>60</TD>
+<TD width=50%>60 minutes between synchronizations during peak times.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>120</TD>
+<TD width=50%>120 minutes between synchronizations during peak times.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>240</TD>
+<TD width=50%>240 minutes between synchronizations during peak times.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>&gt;-1</TD>
+<TD width=50%>Synchronize as new items arrive. This will not appear unless the device has synchronized with a server that supports notifications.</TD>
+</TR>
+</table></div>
+
+
+
+<P>The following table shows the default settings.
+
+
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TD width=50%><B>Permissions</B></TD>
+<TD width=50%>Read/write</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><B>Data type</B></TD>
+<TD width=50%>Integer</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><B>Label</B></TD>
+<TD width=50%>During off-peak times, Sync</TD>
+</TR>
+</table></div>
+
+</dd>
+
+<DT><B>OutboundMailDelay</B></DT>
+
+<DD>This parameter is used in the <B>Settings</B> characteristic to set the time delay for sending mail. The latency used for synchronizing after an outgoing item is sent is a value read from the registry. The default latency is 5 seconds. 
+
+<P>When synchronizing on a mobile schedule or by using notifications, there is the possibility that a significant amount of time can lapse between synchronizations. To keep data always-up-to date outbound as well as inbound between synchronizations based mobile schedules or the next notification, this parameter allows you to schedule an additional synchronization to push outbound items. 
+
+
+<P>Since real-time response works by registering a schedule synchronization, which is considered a background synchronization, no UI interrupts the user.
+
+
+<P>The following table shows the default settings.
+
+
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TD width=50%><B>Permissions</B></TD>
+<TD width=50%>Read/write</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><B>Data type</B></TD>
+<TD width=50%>Integer</TD>
+</TR>
+</table></div>
+
+</dd>
+
+<DT><B>PeakDaysLink</B></DT>
+
+<DD>This parameter is used to identify the current days the user has selected as peak days to the desktop user interface. The formatting is proprietary.
+
+<P>The following table shows the default settings.
+
+
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TD width=50%><B>Permissions</B></TD>
+<TD width=50%>Read-only</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><B>Data type</B></TD>
+<TD width=50%>String</TD>
+</TR>
+</table></div>
+
+</dd>
+
+<DT><B>PeakEndTime</B></DT>
+
+<DD>This parameter is used in the <B>Settings</B> characteristic as a time control that allows setting any valid hour and minute combination in 24-hour format. The control sets the end of the peak service period for Peak Days.
+
+<P>The following table shows the default settings.
+
+
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TD width=50%><B>Permissions</B></TD>
+<TD width=50%>Read/write</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><B>Data type</B></TD>
+<TD width=50%>Time</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><B>Label</B></TD>
+<TD width=50%>Peak End Time</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><B>Roles allowed to query and update setting</B></TD>
+<TD width=50%>Manager
+<P>AuthenticatedUser</P>
+</TD>
+</TR>
+</table></div>
+
+</dd>
+
+<DT><B>PeakEndTimeUI</B></DT>
+
+<DD>The end time of peak work hours. This setting will stop the sync app syncing at the peak work hours interval. This setting is for the Smartphone UI.
+
+<P>The following table shows the default settings.
+
+
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TD width=50%><B>Permissions</B></TD>
+<TD width=50%>Read/write</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><B>Data type</B></TD>
+<TD width=50%>String</TD>
+</TR>
+</table></div>
+
+</dd>
+
+<DT><B>PeakFrequency</B></DT>
+
+<DD>This parameter is used in the <B>Settings</B> characteristic to determine how frequently scheduled synchronization will be performed during peak hours. Switching from peak to off-peak is based on the device's clock. The following table lists the possible values.
+
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=50%>Value</TH>
+<TH width=50%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>0</TD>
+<TD width=50%>Off, no scheduled synchronization during peak hours.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>5</TD>
+<TD width=50%>5 minutes between synchronizations during peak times.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>10</TD>
+<TD width=50%>10 minutes between synchronizations during peak times.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>15</TD>
+<TD width=50%>15 minutes between synchronizations during peak times.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>30</TD>
+<TD width=50%>30 minutes between synchronizations during peak times.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>60</TD>
+<TD width=50%>60 minutes between synchronizations during peak times.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>120</TD>
+<TD width=50%>120 minutes between synchronizations during peak times.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>240</TD>
+<TD width=50%>240 minutes between synchronizations during peak times.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>&gt;-1</TD>
+<TD width=50%>Synchronize as new items arrive. This will not appear unless the device has synchronized with a server that supports notifications.</TD>
+</TR>
+</table></div>
+
+
+
+<P>The following table shows the default settings.
+
+
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TD width=50%><B>Permissions</B></TD>
+<TD width=50%>Read/write</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><B>Data type</B></TD>
+<TD width=50%>Integer</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><B>Label</B></TD>
+<TD width=50%>During peak times, Sync</TD>
+</TR>
+</table></div>
+
+</dd>
+
+<DT><B>PeakStartTime</B></DT>
+
+<DD>This parameter is used in the <B>Settings</B> characteristic as a time control that allows setting any valid hour and minute combination in 24-hour format. The control sets the beginning Peak service period for Peak Days.
+
+<P>The following table shows the default settings.
+
+
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TD width=50%><B>Permissions</B></TD>
+<TD width=50%>Read/write</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><B>Data type</B></TD>
+<TD width=50%>Time</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><B>Label</B></TD>
+<TD width=50%>Peak Start Time</TD>
+</TR>
+</table></div>
+
+</dd>
+
+<DT><B>PeakStartTimeUI</B></DT>
+
+<DD>This parameter identifies the current time that peak time starts and stops. The formatting is proprietary.
+
+<P>The following table shows the default settings.
+
+
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TD width=50%><B>Permissions</B></TD>
+<TD width=50%>Read/write</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><B>Data type</B></TD>
+<TD width=50%>String</TD>
+</TR>
+</table></div>
+
+</dd>
+
+<DT><B>RadioEnabledDevice</B></DT>
+
+<DD>This parameter is used in the <B>Settings</B> characteristic to determine if the device is radio enabled. The following table lists the possible values.
+
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=50%>Value</TH>
+<TH width=50%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>0</TD>
+<TD width=50%>No radio on device.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>1</TD>
+<TD width=50%>Radio on device.</TD>
+</TR>
+</table></div>
+
+
+
+<P>The following table shows the default settings.
+
+
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TD width=50%><B>Permissions</B></TD>
+<TD width=50%>Read</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><B>Data type</B></TD>
+<TD width=50%>Integer</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><B>Label</B></TD>
+<TD width=50%>Radio</TD>
+</TR>
+</table></div>
+
+</dd>
+
+<DT><B>ReadOnly</B></DT>
+
+<DD>The data type is read only, meaning that the values were pushed from desktop and cannot be modified on the device.
+
+<P>The following table shows the default settings.
+
+
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TD width=50%><B>Permissions</B></TD>
+<TD width=50%>Read/write</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><B>Data type</B></TD>
+<TD width=50%>String</TD>
+</TR>
+</table></div>
+
+</dd>
+
+<DT><B>Sun</B></DT>
+
+<DD>This parameter is used in the <B>Settings\PeakDays</B> characteristic to specify whether Sunday is a peak service day, one of the days when the most e-mail is received. The following table lists the possible values.
+
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=50%>Value</TH>
+<TH width=50%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>0</TD>
+<TD width=50%>Disabled, not a peak day.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>1</TD>
+<TD width=50%>Enabled, is a peak day.</TD>
+</TR>
+</table></div>
+
+
+
+<P>The following table shows the default settings.
+
+
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TD width=50%><B>Permissions</B></TD>
+<TD width=50%>Read/write</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><B>Data type</B></TD>
+<TD width=50%>Integer</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><B>Label</B></TD>
+<TD width=50%>Peak Days</TD>
+</TR>
+</table></div>
+
+</dd>
+
+<DT><B>Mon</B></DT>
+
+<DD>This parameter is used in the <B>Settings\PeakDays</B> characteristic to specify whether Monday is a peak service day, one of the days when the most e-mail is received. The following table lists the possible values.
+
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=50%>Value</TH>
+<TH width=50%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>0</TD>
+<TD width=50%>Disabled, not a peak day.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>1</TD>
+<TD width=50%>Enabled, is a peak day.</TD>
+</TR>
+</table></div>
+
+
+
+<P>The following table shows the default settings.
+
+
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TD width=50%><B>Permissions</B></TD>
+<TD width=50%>Read/write</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><B>Data type</B></TD>
+<TD width=50%>Integer</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><B>Label</B></TD>
+<TD width=50%>Peak Days</TD>
+</TR>
+</table></div>
+
+</dd>
+
+<DT><B>Tue</B></DT>
+
+<DD>This parameter is used in the <B>Settings\PeakDays</B> characteristic to specify whether Tuesday is a peak service day, one of the days when the most e-mail is received. The following table lists the possible values.
+
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=50%>Value</TH>
+<TH width=50%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>0</TD>
+<TD width=50%>Disabled, not a peak day.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>1</TD>
+<TD width=50%>Enabled, is a peak day.</TD>
+</TR>
+</table></div>
+
+
+
+<P>The following table shows the default settings.
+
+
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TD width=50%><B>Permissions</B></TD>
+<TD width=50%>Read/write</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><B>Data type</B></TD>
+<TD width=50%>Integer</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><B>Label</B></TD>
+<TD width=50%>Peak Days</TD>
+</TR>
+</table></div>
+
+</dd>
+
+<DT><B>Wed</B></DT>
+
+<DD>This parameter is used in the <B>Settings\PeakDays</B> characteristic to specify whether Wednesday is a peak service day, one of the days when the most e-mail is received. The following table lists the possible values.
+
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=50%>Value</TH>
+<TH width=50%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>0</TD>
+<TD width=50%>Disabled, not a peak day.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>1</TD>
+<TD width=50%>Enabled, is a peak day.</TD>
+</TR>
+</table></div>
+
+
+
+<P>The following table shows the default settings.
+
+
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TD width=50%><B>Permissions</B></TD>
+<TD width=50%>Read/write</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><B>Data type</B></TD>
+<TD width=50%>Integer</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><B>Label</B></TD>
+<TD width=50%>Peak Days</TD>
+</TR>
+</table></div>
+
+</dd>
+
+<DT><B>Thr</B></DT>
+
+<DD>This parameter is used in the <B>Settings\PeakDays</B> characteristic to specify whether Thursday is a peak service day, one of the days when the most e-mail is received. The following table lists the possible values.
+
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=50%>Value</TH>
+<TH width=50%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>0</TD>
+<TD width=50%>Disabled, not a peak day.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>1</TD>
+<TD width=50%>Enabled, is a peak day.</TD>
+</TR>
+</table></div>
+
+
+
+<P>The following table shows the default settings.
+
+
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TD width=50%><B>Permissions</B></TD>
+<TD width=50%>Read/write</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><B>Data type</B></TD>
+<TD width=50%>Integer</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><B>Label</B></TD>
+<TD width=50%>Peak Days</TD>
+</TR>
+</table></div>
+
+</dd>
+
+<DT><B>Fri</B></DT>
+
+<DD>This parameter is used in the <B>Settings\PeakDays</B> characteristic to specify whether Friday is a peak service day, one of the days when the most e-mail is received. The following table lists the possible values.
+
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=50%>Value</TH>
+<TH width=50%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>0</TD>
+<TD width=50%>Disabled, not a peak day.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>1</TD>
+<TD width=50%>Enabled, is a peak day.</TD>
+</TR>
+</table></div>
+
+
+
+<P>The following table shows the default settings.
+
+
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TD width=50%><B>Permissions</B></TD>
+<TD width=50%>Read/write</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><B>Data type</B></TD>
+<TD width=50%>Integer</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><B>Label</B></TD>
+<TD width=50%>Peak Days</TD>
+</TR>
+</table></div>
+
+</dd>
+
+<DT><B>Sat</B></DT>
+
+<DD>This parameter is used in the <B>Settings\PeakDays</B> characteristic to specify whether Saturday is a peak service day, one of the days when the most e-mail is received. The following table lists the possible values.
+
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=50%>Value</TH>
+<TH width=50%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>0</TD>
+<TD width=50%>Disabled, not a peak day.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>1</TD>
+<TD width=50%>Enabled, is a peak day.</TD>
+</TR>
+</table></div>
+
+
+
+<P>The following table shows the default settings.
+
+
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TD width=50%><B>Permissions</B></TD>
+<TD width=50%>Read/write</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><B>Data type</B></TD>
+<TD width=50%>Integer</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><B>Label</B></TD>
+<TD width=50%>Peak Days</TD>
+</TR>
+</table></div>
+
+</dd>
+
+<DT><B>SaveSentItems</B></DT>
+
+<DD>This read-only parameter is used in the <B>Mail</B> and <B>Settings</B> characteristic to identify whether or not sent items are saved in the Sent Items folder on the server.
+
+<P>The following table shows the default settings.
+
+
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TD width=50%><B>Permissions</B></TD>
+<TD width=50%>Read-only</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><B>Data type</B></TD>
+<TD width=50%>Boolean</TD>
+</TR>
+</table></div>
+
+</dd>
+
+<DT><B>SendMailItemsImmediately</B></DT>
+
+<DD>This parameter is used in the <B>Settings</B> characteristic to enable sending mail with no delay. Use SendMailItemsImmediately in conjunction with OutboundMailDelay. The following table lists the possible values for SendMailItemsImmediately.
+
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=50%>Value</TH>
+<TH width=50%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>0</TD>
+<TD width=50%>Disabled.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>1</TD>
+<TD width=50%>Enabled. Send mail after the delay specified by the <B>OutboundMailDelay</B> parameter.</TD>
+</TR>
+</table></div>
+
+
+
+<P>The following table shows the default settings.
+
+
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TD width=50%><B>Permissions</B></TD>
+<TD width=50%>Read/write</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><B>Data type</B></TD>
+<TD width=50%>Integer</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><B>Label</B></TD>
+<TD width=50%>Sync outgoing items as they are sent</TD>
+</TR>
+</table></div>
+
+</dd>
+
+<DT><B>Server</B></DT>
+
+<DD>This parameter is used in the <B>Connection</B> characteristic to identify the name of the Server ActiveSync server.
+
+<P>The following table shows the default settings.
+
+
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TD width=50%><B>Permissions</B></TD>
+<TD width=50%>Read/write</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><B>Data type</B></TD>
+<TD width=50%>String</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><B>Label</B></TD>
+<TD width=50%>Server name</TD>
+</TR>
+</table></div>
+
+</dd>
+
+<DT></DT>
+
+<DT><B>SyncAfterCount</B></DT>
+
+<DD>This parameter is used in the <B>Settings</B> characteristic to identify the number of item notifications required to start an automatic sync. 
+
+<P>The following table shows the default settings.
+
+
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TD width=50%><B>Permissions</B></TD>
+<TD width=50%>Read/write</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><B>Data type</B></TD>
+<TD width=50%>Integer</TD>
+</TR>
+</table></div>
+
+</dd>
+
+<DT><B>SyncAfterTime</B></DT>
+
+<DD>This parameter is no longer used, but may appear in a return to a Query. </dd>
+
+<DT><B>SyncAfterTimeWhenCradled</B></DT>
+
+<DD>This parameter exists, but the device ignores the value and always syncs at the 5 minute interval.
+
+<P>The following table shows the default settings.
+
+
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TD width=50%><B>Permissions</B></TD>
+<TD width=50%>Read/write</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><B>Data type</B></TD>
+<TD width=50%>Integer</TD>
+</TR>
+</table></div>
+</dd>
+
+<DT><B>SyncEnabled</B></DT>
+
+<DD>This parameter is used in the <B>FolderHierarchy</B> characteristic to identify whether or not sync is enabled for a specific folder. Not all folders can have sync enabled; for example, Drafts and Outbox cannot have sync enabled. The following table lists the possible values.
+
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=50%>Value</TH>
+<TH width=50%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>0</TD>
+<TD width=50%>Sync disabled</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>1</TD>
+<TD width=50%>Sync enabled</TD>
+</TR>
+</table></div>
+
+
+
+<P>The following table shows the default settings.
+
+
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TD width=50%><B>Permissions</B></TD>
+<TD width=50%>Read/write</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><B>Data type</B></TD>
+<TD width=50%>Boolean</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><B>Label</B></TD>
+<TD width=50%>Enable sync</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><B>Roles allowed to query and update setting</B></TD>
+<TD width=50%>Manager
+<P>AuthenticatedUser</P>
+</TD>
+</TR>
+</table></div>
+
+</dd>
+
+<DT><B>SyncSwitchPurge</B></DT>
+
+<DD>This parameter is used in the <B>Mail</B> characteristic to identify whether or not to keep the existing mail data on the device when switching from Desktop ActiveSync to Server ActiveSync, or when changing server or <B>UserID</B> information. The recommended value of this parameter is 3. 
+
+<P>The following table shows the possible values.
+
+
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=50%>Value</TH>
+<TH width=50%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>0</TD>
+<TD width=50%>Keep if changed</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>1</TD>
+<TD width=50%>Purge always</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>2</TD>
+<TD width=50%>Keep always</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>3</TD>
+<TD width=50%>Purge if changed</TD>
+</TR>
+</table></div>
+
+
+
+<BLOCKQUOTE class="dtBlock">
+<b class="le">Note</b>&nbsp;&nbsp;&nbsp;The device does not store a value for the <B>SyncSwitchPurge</B> parameter. The parameter is intended to be used more as a command than as a stored setting. A query for the parameter value will always return a value of 0. </BLOCKQUOTE>
+
+
+<P>The following table shows the default settings for this parameter in the Sync Configuration Service Provider.
+
+
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TD width=50%><B>Permissions</B></TD>
+<TD width=50%>Read/Write</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><B>Data type</B></TD>
+<TD width=50%>Integer</TD>
+</TR>
+</table></div>
+
+</dd>
+
+<DT><B>SyncWhenRoaming</B></DT>
+
+<DD>This parameter is used in the <B>Settings</B> characteristic to to allow synchronization when roaming. The following table lists the possible values.
+
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=50%>Value</TH>
+<TH width=50%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>0</TD>
+<TD width=50%>Manually synchronize</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>1</TD>
+<TD width=50%>Use mobile settings</TD>
+</TR>
+</table></div>
+
+
+
+<P>The following table shows the default settings.
+
+
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TD width=50%><B>Permissions</B></TD>
+<TD width=50%>Read/write</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><B>Data type</B></TD>
+<TD width=50%>Integer</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><B>Label</B></TD>
+<TD width=50%>When roaming, sync</TD>
+</TR>
+</table></div>
+
+</dd>
+
+<DT><B>User</B></DT>
+
+<DD>This parameter is used in the <B>Connection</B> characteristic to identify the Server ActiveSync Username. 
+
+<P>Send the username value with the settings update only when necessary, for example when the username has changed. The string compare logic in the Sync Configuration Service Provider is case sensitive. If the new username value does not equal the current username value, the Sync Configuration Service Provider logic treats the transaction as a new username.
+
+
+<P>The following table shows the default settings.
+
+
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TD width=50%><B>Permissions</B></TD>
+<TD width=50%>Read/write</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><B>Data type</B></TD>
+<TD width=50%>String</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><B>Label</B></TD>
+<TD width=50%>Username</TD>
+</TR>
+</table></div>
+
+</dd>
+
+<DT><B>VersionMajor</B></DT>
+
+<DD>This read-only parameter is used in the <B>Settings</B> characteristic to identify the major version number for the Sync Configuration Service Provider. If the value is less than 1, Server ActiveSync is not supported on the device
+
+<P>The following table shows the default settings.
+
+
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TD width=50%><B>Permissions</B></TD>
+<TD width=50%>Read-only</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><B>Data type</B></TD>
+<TD width=50%>Integer</TD>
+</TR>
+</table></div>
+
+</dd>
+
+<DT><B>VersionMinor</B></DT>
+
+<DD>This read-only parameter is used in the <B>Settings</B> characteristic to identify the minor version number for the Sync Configuration Service Provider. 
+
+<P>The following table shows the default settings.
+
+
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TD width=50%><B>Permissions</B></TD>
+<TD width=50%>Read-only</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><B>Data type</B></TD>
+<TD width=50%>Integer</TD>
+</TR>
+</table></div>
+
+</dd>
+</DL>
+
+<H2 class="dtH2">Microsoft Custom Elements</H2>
+
+<P>The following table shows the Microsoft custom elements that this Configuration Service Provider supports for OMA Client Provisioning. </P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=50%>Elements</TH>
+<TH width=50%>Available</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>parm-query</TD>
+<TD width=50%>Yes</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>noparm</TD>
+<TD width=50%>No</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>nocharacteristic</TD>
+<TD width=50%>No</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>characteristic-query</TD>
+<TD width=50%>Yes<BR>
+recursive: No<BR>
+root level of the Configuration Service Provider: Yes</TD>
+</TR>
+</table></div>
+
+<P>Use these elements to build standard OMA Client Provisioning (formerly WAP) configuration XML. For information about specific elements, see <A HREF="wce51grfmsprovdtdelements.htm">MSPROV DTD Elements</A>. For examples of how to generally use the Microsoft custom elements, see <A HREF="wce51conusingmsprovdtd.htm">Provisioning XML File Examples</A>.</P>
+
+<P>For information about OMA Client Provisioning, see <A HREF="wce51conprovisioningstructureforsmartphonepocketpc.htm">OMA Client Provisioning Files</A>.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce51conconfigurationserviceproviderreferenceforwindowsmobiledevices.htm">Configuration Service Provider Reference for Windows Mobile-Based Devices</A> | <A HREF="wce51samsynccspexamples.htm">Sync Configuration Service Provider Examples for OMA Client Provisioning</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Feedback Link Bottom Start-->
+<p><font size="1"><a href="mailto:medfdbk&#64;microsoft.com?subject=Product: Windows Mobile | Version: 5.0 | Release: SDK | Title: Sync Configuration Service Provider | Filename: wce51grfsynccsp.htm | Built on: Wednesday, September 14, 2005">Send Feedback</a> on this topic to the authors</font></p>
+<!--Feedback Link Bottom End-->
+<!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="mob5conCopyrightInformationForMagneto" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link></font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

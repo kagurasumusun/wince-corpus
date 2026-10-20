@@ -1,0 +1,86 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Protocol Driver Packet Management</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Protocol Driver Packet Management"/>
+<MSHelp:RLTitle Title="Protocol Driver Packet Management"/>
+<MSHelp:Keyword Index="A" Term="wce50conProtocolDriverPacketManagement"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Driver"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="False"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="ndis_guide2.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="False"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+<MSHelp:Attr Name="PBFeature" Value="NetworkDriver"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_3018324">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50conprotocoldriverpacketmanagement"></A>Protocol Driver Packet Management</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>A protocol driver receives one or more buffers of data from a client to transmit over the network. A protocol driver must, at minimum, allocate and initialize a packet descriptor to which the client's data buffers are chained. The following steps show how to allocate packet descriptors from a packet pool: 
+
+<OL type="1">
+	<LI>Call <A HREF="wce50lrfndisallocatepacketpool.htm">NdisAllocatePacketPool</A> or <A HREF="wce50lrfndisallocatepacketpoolex.htm">NdisAllocatePacketPoolEx</A> to allocate and initialize a block of nonpaged pool for a caller-specified number of fixed-size packet descriptors during driver initialization or when each binding is first established. </li>
+
+	<LI>Call <A HREF="wce50lrfndisallocatepacket.htm">NdisAllocatePacket</A> to allocate a packet descriptor from the pool allocated by <B>NdisAllocatePacketPool</B>. </li>
+</OL>
+
+<P>Buffer descriptors mapping such buffers are chained to a packet descriptor by calling <A HREF="wce50lrfndischainbufferatback.htm">NdisChainBufferAtBack</A> or <A HREF="wce50lrfndischainbufferatfront.htm">NdisChainBufferAtFront</A>. If a protocol driver receives a data buffer from a client that must be sent in several smaller buffers, the protocol driver can copy the data into protocol-allocated buffers, map its buffers with previously allocated buffer descriptors, and then chain these buffer descriptors to protocol-allocated packet descriptors. Such buffers can be allocated by calling a kernel-mode support routine, <A HREF="wce50lrfndisallocatememory.htm">NdisAllocateMemory</A>, or <A HREF="wce50lrfndisallocatememorywithtag.htm">NdisAllocateMemoryWithTag</A> and can be mapped with protocol-allocated buffer descriptors. The following steps show how to map protocol-allocated buffer descriptors: 
+
+<OL type="1">
+	<LI>Call <A HREF="wce50lrfndisallocatebufferpool.htm">NdisAllocateBufferPool</A> to obtain a handle with which to allocate buffer descriptors during driver initialization or when each binding is first established. </li>
+
+	<LI>Call <B>NdisAllocateMemory(WithTag)</B> to allocate a buffer to chain to a packet descriptor allocated by calling <B>NdisAllocatePacket</B>. </li>
+
+	<LI>Call <B>NdisAllocateBuffer</B> to allocate and set up a buffer descriptor that maps the buffer allocated by calling <B>NdisAllocateMemory(WithTag)</B>. </li>
+</OL>
+
+<P>The base virtual address and the length returned by <B>NdisAllocateMemory(WithTag)</B> are passed in the call to <A HREF="wce50lrfndisallocatebuffer.htm">NdisAllocateBuffer</A> to initialize a buffer descriptor. </P>
+
+<P>Packet descriptors to meet typical transmit needs can be allocated as needed, when the driver initializes, or at binding time. A protocol driver developer can allocate a number of packet descriptors with chained buffer descriptors at initialization time to hold receives that can occur as soon as the protocol binds itself to an underlying NIC driver. Then <A HREF="wce50lrfprotocolreceive.htm">ProtocolReceive</A> can return control to the underlying driver as quickly as possible. Otherwise, subsequently received data can be lost. As described later, a protocol driver can either receive incoming data from an underlying NIC driver at its <A HREF="wce50lrfprotocolreceivepacket.htm">ProtocolReceivePacket</A> function as a packet descriptor specifying a full network packet or have data indicated to its <B>ProtocolReceive</B> function, which must copy the indicated data into a protocol-supplied buffer chained to a protocol-allocated packet descriptor.</P>
+
+<P>Every protocol driver must provide a <B>ProtocolReceive</B> function. When this function is called, the protocol driver must copy the indicated lookahead data into a protocol-allocated buffer chained to a pre-allocated packet descriptor, which it must pass to <A HREF="wce50lrfndistransferdata.htm">NdisTransferData</A>. This call passes the packet descriptor to the underlying NIC driver to be filled if there is additional data received beyond the indicated lookahead data. </P>
+
+<P>If a protocol driver binds itself only to underlying NDIS drivers that indicate arrays of packets with <A HREF="wce50lrfndismindicatereceivepacket.htm">NdisMIndicateReceivePacket</A>, <B>ProtocolReceivePacket</B> need not provide packet descriptors, buffers, and buffer descriptors for incoming data. When <B>ProtocolReceivePacket</B> function receives indication of a full network packet, it can give clients direct read-only access to the buffered data described by an input packet descriptor until the data is consumed and the clients release the packet descriptor and all the resources it specifies. When the protocol driver takes ownership of such packet resources, it has no need to copy data into a pre-allocated packet and call <B>NdisTransferData</B> to obtain the remaining packet data.</P>
+
+<P>If a protocol driver supplies a packet descriptor with more than one chained buffer to <B>NdisTransferData</B>, <A HREF="wce50lrfndissend.htm">NdisSend</A>, or <A HREF="wce50lrfndissendpackets.htm">NdisSendPackets</A>, and if the length of actual data in the last buffer is less than the allocated length of its buffer, the protocol driver should call <A HREF="wce50lrfndisadjustbufferlength.htm">NdisAdjustBufferLength</A> to set the actual length of the data in the buffer descriptor. When the packet descriptor is returned to the protocol driver, the driver should re-adjust the buffer descriptor's specified length to the full length of the buffer.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50conprotocoldrivers.htm">Protocol Drivers</A> | <A HREF="wce50lrfndisadjustbufferlength.htm">NdisAdjustBufferLength</A> | <A HREF="wce50lrfndisallocatebuffer.htm">NdisAllocateBuffer</A> | <A HREF="wce50lrfndisallocatebufferpool.htm">NdisAllocateBufferPool</A> | <A HREF="wce50lrfndisallocatememory.htm">NdisAllocateMemory</A> | <A HREF="wce50lrfndisallocatememorywithtag.htm">NdisAllocateMemoryWithTag</A> | <A HREF="wce50lrfndisallocatepacketpool.htm">NdisAllocatePacketPool</A> | <A HREF="wce50lrfndisallocatepacketpoolex.htm">NdisAllocatePacketPoolEx</A> | <A HREF="wce50lrfndischainbufferatback.htm">NdisChainBufferAtBack</A> | <A HREF="wce50lrfndischainbufferatfront.htm">NdisChainBufferAtFront</A> | <A HREF="wce50lrfndismindicatereceivepacket.htm">NdisMIndicateReceivePacket</A> | <A HREF="wce50lrfndissend.htm">NdisSend</A> | <A HREF="wce50lrfndissendpackets.htm">NdisSendPackets</A> | <A HREF="wce50lrfndistransferdata.htm">NdisTransferData</A> | <A HREF="wce50conimplementingaprotocolreceivehandler.htm">Implementing a ProtocolReceive Handler</A> | <A HREF="wce50conimplementingaprotocolreceivepackethandler.htm">Implementing a ProtocolReceivePacket Handler</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

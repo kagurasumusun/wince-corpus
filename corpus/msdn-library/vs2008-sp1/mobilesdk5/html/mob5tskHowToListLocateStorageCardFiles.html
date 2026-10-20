@@ -1,0 +1,173 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>How to: List and Locate Storage Card Files</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="How to: List and Locate Storage Card Files"/>
+<MSHelp:RLTitle Title="How to: List and Locate Storage Card Files"/>
+<MSHelp:Keyword Index="A" Term="mob5tskHowToListLocateStorageCardFiles"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Application"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbsmartphone"/>
+<MSHelp:Attr Name="Product" Value="kbPocketPC"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="Technology" Value="kbPocketPC"/>
+<MSHelp:Attr Name="Technology" Value="kbSmartphone"/>
+<MSHelp:Attr Name="TopicType" Value="kbTask"/>
+<MSHelp:Attr Name="Filename" Value="File_and_Application_Management_on_Storage_Cards_magneto.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="True"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_1063757">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Windows Mobile Version 5.0 SDK<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="mob5tskhowtolistlocatestoragecardfiles"></A>How to: List and Locate Storage Card Files</H1>
+<!--Feedback Link Top Start-->
+<P CLASS="feedback"><font size="1"><a href="mailto:medfdbk&#64;microsoft.com?subject=Product: Windows Mobile | Version: 5.0 | Release: SDK | Title: How to: List and Locate Storage Card Files | Filename: mob5tskhowtolistlocatestoragecardfiles.htm | Built on: Wednesday, September 14, 2005">Send Feedback</a> on this topic to the authors</font></p>
+<!--Feedback Link Top End-->
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>The examples in this topic demonstrate how to list and locate storage card files.</P>
+
+<P>The <MSHelp:link keywords="wce50lrfSHGetDocumentsFolder" TABINDEX="0">SHGetDocumentsFolder</MSHelp:link> function works with storage cards that do not have a My Documents folder as well as with older storage cards that do. You should use <B>SHGetDocumentsFolder</B> when accessing all documents on the device, whether they are in main memory or on a storage card. </P>
+
+<H4 class="dtH4">Example</H4>
+
+<PRE class="code">#include &lt;shlobj.h&gt;
+#pragma comment(lib, "ceshell.lib")
+
+TCHAR szPath[MAX_PATH];
+if (!SHGetDocumentsFolder(L"\\", szPath))
+    MessageBox(NULL, L"Invalid Path", L"Call Failed", MB_OK);
+else
+    MessageBox(NULL, szPath, L"My Docs Path", MB_OK);</PRE>
+
+<P>You can also use the <A HREF="mob5lrfenumprojectsex.htm">EnumProjectsEx</A> and <A HREF="mob5lrfenumprojectsfilesex.htm">EnumProjectsFilesEx</A> functions to list all folders and files on your storage cards and then use <A HREF="mob5lrffindfirstprojectfile.htm">FindFirstProjectFile</A> and <A HREF="mob5lrffindnextprojectfile.htm">FindNextProjectFile</A> to locate particular files, as shown in the following example. </P>
+
+<H4 class="dtH4">Example</H4>
+
+<PRE class="code">int index;
+int iNumFolders;
+TCHAR szName[1000];
+TCHAR cFileName[1000];
+int iNumOfFlashCard = 1;
+
+for (index = 0; index &lt; iNumOfFlashCard; ++index)
+{
+    // Store the directory name in szName.
+    wsprintf(szName, lpwfdFlashCard[index].cFileName); 
+    iNumFolders = EnumProjects (EnumProjProc, lpwfdFlashCard[index].dwOID,
+                                PRJ_ENUM_FLASH, 0);
+}</PRE>
+
+<P><CODE>&nbsp;&nbsp;&nbsp;&nbsp;// Note&nbsp;&nbsp;&nbsp;In the preceding code,</CODE><B> </B><CODE>EnumProjProc is a user-defined </CODE></P>
+
+<P><CODE>&nbsp;&nbsp;&nbsp;&nbsp;// callback function that is used to perform operations within each </CODE></P>
+
+<P><CODE>&nbsp;&nbsp;&nbsp;&nbsp;// directory that EnumProjects encounters. </CODE></P>
+
+<P><CODE>&nbsp;&nbsp;&nbsp;&nbsp;// The following code shows how to use EnumProjProc to find </CODE></P>
+
+<P><CODE>&nbsp;&nbsp;&nbsp;&nbsp;// directories and files on storage cards.</CODE></P>
+
+<PRE class="code">BOOL CALLBACK EnumProjProc (DWORD dwOID, LPARAM lParam)
+{
+    // Search handle for files under each directory. 
+    HANDLE hSearch;    
+    // Structure for storing the storage card information 
+    // retrieved by CeOidGetInfo.
+    CEOIDINFO OidInfo; 
+    // Structure for storing file information.
+    WIN32_FIND_DATA fd; 
+    // String for storing the file or directory 
+    // name on every storage card.
+    TCHAR szName[1000]; 
+    // String for storing the error message.
+    TCHAR szErrorMsg[1000];    
+    // Wildcard file names with full paths for searching these 
+    // types of files.
+    TCHAR szFilePath[MAX_PATH]; 
+    // Whether the search for files is finished.
+    BOOLEAN bFinished = FALSE; 
+
+    // Get storage card information by using its object identifier.
+    if (!CeOidGetInfo (dwOID, &amp;OidInfo)) 
+    {
+        return FALSE; // Stop enumeration.
+    }
+    // Store the directory name in szName.
+    wsprintf(szName, OidInfo.infDirectory.szDirName); 
+    // Construct the wildcard file name with the full path for searching 
+    // that type of file.
+    wcscpy (szFilePath, OidInfo.infDirectory.szDirName);
+    wcscat (szFilePath, TEXT("\\*.*"));
+    // Search for the first file under the current directory. An 
+    // alternative way to do this is to use FindFirstProjectFile.
+    hSearch = FindFirstFile( szFilePath, &amp;fd);
+    if (hSearch == INVALID_HANDLE_VALUE) 
+    { 
+        wsprintf(szErrorMsg, TEXT("No files found.")); 
+        bFinished = TRUE;      
+    } 
+    // Find all of the files and retrieve the file names.
+    while (!bFinished) 
+    { 
+        // Store the file name in szName.
+        wsprintf(szName, fd.cFileName); 
+        if (!FindNextProjectFile(hSearch, &amp;fd)) 
+        {
+        // Finished.
+            bFinished = TRUE;
+            if (GetLastError() == ERROR_NO_MORE_FILES) 
+            { 
+                wsprintf(szErrorMsg, TEXT("Found all of the files.")); 
+            } 
+            else 
+            { 
+                wsprintf(szErrorMsg, TEXT("Couldn't find next file.")); 
+            } 
+        }
+    } 
+    // Close the search handle. 
+    if (!FindClose(hSearch)) 
+    { 
+        wsprintf(szErrorMsg, TEXT("Couldn't close search handle.")); 
+    } 
+    return TRUE;
+}</PRE>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="mob5grffilemanagementfunctions.htm">File Management Functions</A> | <A HREF="mob5tskhowtoenumeratestoragecards.htm">How to: Enumerate Storage Cards</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Feedback Link Bottom Start-->
+<p><font size="1"><a href="mailto:medfdbk&#64;microsoft.com?subject=Product: Windows Mobile | Version: 5.0 | Release: SDK | Title: How to: List and Locate Storage Card Files | Filename: mob5tskhowtolistlocatestoragecardfiles.htm | Built on: Wednesday, September 14, 2005">Send Feedback</a> on this topic to the authors</font></p>
+<!--Feedback Link Bottom End-->
+<!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="mob5conCopyrightInformationForMagneto" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link></font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

@@ -1,0 +1,157 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Avoiding Alignment Errors</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Avoiding Alignment Errors"/>
+<MSHelp:RLTitle Title="Avoiding Alignment Errors"/>
+<MSHelp:Keyword Index="A" Term="wce50conAvoidingAlignmentErrors"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Guide"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="True"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="comp_data_alignment.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="True"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_1043648">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50conavoidingalignmenterrors"></A>Avoiding Alignment Errors</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>All data types are either primitive types, or complex types that consist of arrays, structures, or unions of simpler types. </P>
+
+<H3 class="dtH3">Alignment of primitive types</H3>
+
+<P>In general, alignment errors can be avoided by following these rules: 
+
+<UL type="disc">
+	<LI>Do not enable structure packing. </li>
+
+	<LI>Do not access a small-aligned address by using a recast pointer of larger alignment. </li>
+</UL>
+
+<P>For example, treating the address of a <B>char</B> data type as a pointer to a <B>long</B> can cause an alignment error because this might mean executing a four-byte move from an address that is not a multiple of four. </P>
+
+<P>The following example illustrates this style of coding: </P>
+
+<PRE class="code">char a[10];
+char *p = &amp;a[1];
+long l = *(long *)p;   // ERROR!; Attempt to move a long from
+                       // the address of a char.</PRE>
+
+<P>Accessing a large-aligned address with a recast pointer of smaller alignment is safe. For example, you could use a <B>char *</B> cast to access the first byte, or any byte, of a long variable.</P>
+
+<P>If you need to pack structures or move data to unaligned addresses, use the <A HREF="wce50con__unalignedkeyword.htm">__unaligned</A> keyword. </P>
+
+<P>This keyword cannot resolve alignment problems of pre-existing classes such as in inherited code, or in the Microsoft Foundation Class Library. </P>
+
+<P>You might need to use structure packing in programs that use large arrays of structures, or to read a pre-existing data format. </P>
+
+<P>In such cases, you can still use packed structures if you also carefully unpack members of a packed structure before using data in the program. This technique might involve copying the data in a structure member-by-member, or element-by-element, or field-by-field, into a temporary location that is correctly aligned.</P>
+
+<P>Syntactically, _<B>_unaligned</B> is a type qualifier like <B>const</B> and <B>volatile</B>; it controls the meaning of what the pointer points to. _<B>_unaligned </B>has meaning only when used in a pointer declaration. </P>
+
+<P>The following code example shows the use of _<B>_unaligned</B> pointer declarations:</P>
+
+<PRE class="code">int __unaligned *p1;             // p1 is a pointer to unaligned int
+struct {int i;} __unaligned *p2; // p2 is a pointer to unaligned struct
+</PRE>
+
+<P>The following code example illustrates the correct and incorrect use of _<B>_unaligned</B> and <B>#pragma pack</B> in conjunction with integer operations. In the first section, a fault is generated because the _<B>_unaligned </B>qualifier is not used, whereas in the second section, the _<B>_unaligned</B> qualifier is used correctly.</P>
+
+<PRE class="code">#pragma pack (1)
+struct s {
+   char c;            // offset 0
+   int i;             // offset 1!
+} ss;
+#pragma pack ()
+ 
+void f_improper(int *p)
+{
+   *p = 23;        // generates a fault
+}
+ 
+void g_proper(int __unaligned *p)   // OK
+{
+   *p = 42;
+}
+ 
+void main ()
+{
+   f_improper(&amp;ss.i);
+   g_proper(&amp;ss.i);
+}</PRE>
+
+<P>The output from this example appears in the following machine code example. In the output, function <B>f_improper</B> shows the code generated by the improper handling of unaligned data, and function <B>g_proper</B> shows the extra code generated when _<B>_unaligned </B>is used.</P>
+
+<P>In function <B>g_proper</B>, more than double the number of instructions are generated to handle the unaligned data, but an alignment fault cannot occur.</P>
+
+<PRE class="code">f_improper::
+   mov r3, #0x17
+   str r0, [r0]      // This instruction gets an alignment fault.
+   mov pc, lr
+ 
+g_proper::
+   mov r3, #0x2A
+   strb r3, [r0]     // Four individual bytes are stored,
+   mov r3, #0        // avoiding an alignment fault.
+   strb r3, [r0, #1]    
+   strb r3, [r0, #2]    
+   strb r3, [r0, #2]  
+   mov  pc, lr</PRE>
+
+<P>Because there is a performance penalty for accessing data through an unaligned<B> </B>pointer, use the _<B>_unaligned </B>keyword only when needed. </P>
+
+<P>To guarantee that there are no alignment errors, the compiler must access the de-referenced data as a series of smaller pieces. </P>
+
+<P>If the data is already aligned, this technique for accessing data is not necessary. </P>
+
+<H3 class="dtH3">Alignment of Complex Types</H3>
+
+<P>The following list summarizes the rules for alignment of complex types: 
+
+<UL type="disc">
+	<LI>The alignment of an array is the same as the alignment of the base type.</li>
+
+	<LI>The alignment of a structure or object is the maximum of the alignment factors of all members of the structure. Further, as long as structure packing is turned off, the compiler pads the structure so each member is placed at the next available properly aligned address for that member.</li>
+</UL>
+
+<P>The alignment of a union is also the maximum of the alignment factors of all members. Each member's address is that of the union itself, so there is no padding. </P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50conworkingwithpackingstructures.htm">Working with Packing Structures</A> | <A HREF="wce50con__unalignedkeyword.htm">__unaligned Keyword</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

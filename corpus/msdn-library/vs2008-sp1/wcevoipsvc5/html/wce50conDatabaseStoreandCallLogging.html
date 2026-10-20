@@ -1,0 +1,90 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Database Store and Call Logging</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Database Store and Call Logging"/>
+<MSHelp:RLTitle Title="Database Store and Call Logging"/>
+<MSHelp:Keyword Index="A" Term="wce50conDatabaseStoreandCallLogging"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Feature"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="vail_appdev.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="False"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="True"/>
+<MSHelp:Attr Name="PBFeature" Value="SYSGEN_VOIPPHONE_MGR"/>
+<MSHelp:Attr Name="PBOnly" Value="False"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_3011568">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50condatabasestoreandcalllogging"></A>Database Store and Call Logging</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>The VAIL uses the following interfaces for persistent database storage:
+
+<UL type="disc">
+	<LI><A HREF="wce50lrfivoipcalllogdbiunknown.htm">IVoIPCallLogDB</A> stores call log records. These records indicate the type, start time, end time, and duration of the call, and the name and URI of the other party. </li>
+
+	<LI><A HREF="wce50lrfivoipcallerinfodbiunknown.htm">IVoIPCallerInfoDB</A> stores caller-specific information, such as friendly name, speed dial index, specialized ringtone, blocked status, and forwarding URI.</li>
+</UL>
+
+<P>These interfaces are pluggable and have implementations that can be replaced by an OEM. </P>
+
+<P>The supplied implementations use Windows CE databases and store information locally on the device. An OEM can replace either database implementation by replacing the CLSID in the registry with the CLSID of the new implementation. </P>
+
+<P>To replace the implementations, change the CLSID in the CallLogDB or CallerInfoDB registry entry in this location: HKEY_CLASSES_ROOT\CLSID\254D6845-7CF1-4B90-A658-E4C430C3A7BE\Plugins.</P>
+
+<P>The VoIP manager initializes each database by performing the following steps:
+
+<OL type="1">
+	<LI>Calls <MSHelp:link keywords="wce50lrfCoCreateInstance" TABINDEX="0">CoCreateInstance</MSHelp:link> using the CLSID retrieved from the registry.</li>
+
+	<LI>Calls <B>QueryInterface</B> for IID_IVoIPCallLogDB or IID_IVoIPCallerInfoDB. </li>
+
+	<LI>Calls <A HREF="wce50lrfivoipcalllogdbinit.htm">IVoIPCallLogDB::Init</A> or <A HREF="wce50lrfivoipcallerinfodbinit.htm">IVoIPCallerInfoDB::Init</A> with the URI of the phone used in provisioning.</li>
+</OL>
+
+<P>If initialization fails, <A HREF="wce50lrfivoipmgrinitialize.htm">IVoIPMgr::Initialize</A> still succeeds. The phone is functional; however, calls are not logged by the VoIP manager. In addition, the database flag is missing from the current state variable of the VoIP manager. For more information, see <A HREF="wce50lrfivoipmgrstate.htm">IVoIPMgr::State</A>. </P>
+
+<P>If an application attempts to access a database through the VoIP manager after initialization fails, the API returns the error <A HREF="wce50lrfvoipe.htm">VOIP_E_NODB</A>.</P>
+
+<P>The databases are associated with the phone URI. In the default implementation, if a phone is provisioned with one URI and reprovisioned with another URI, the database used by the VoIP manager changes. Therefore, if the user has a dataset stored in a database using one URI, and the URI changes, the data in the database appears to be missing. </P>
+
+<P>After a call is terminated, the VoIP manager logs the call to the appropriate database. If this database does not exist, logging does not take place but the phone is functional.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50convailobjectsinterfaces.htm">VAIL Objects and Interfaces</A> | <A HREF="wce50grfvoipapplicationinterfacelayerreference.htm">VAIL Reference</A> </P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, July 13, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

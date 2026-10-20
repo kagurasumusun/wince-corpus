@@ -1,0 +1,98 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Eventing in the UPnP AV Framework</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Eventing in the UPnP AV Framework"/>
+<MSHelp:RLTitle Title="Eventing in the UPnP AV Framework"/>
+<MSHelp:Keyword Index="A" Term="wce50conEventingInUPnPAVFramework"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Feature"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="upnpav_appdev.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="False"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+<MSHelp:Attr Name="PBFeature" Value="UPNP"/>
+<MSHelp:Attr Name="PBOnly" Value="False"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_1053048">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50coneventinginupnpavframework"></A>Eventing in the UPnP AV Framework</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>In general, UPnP AV devices and control points use UPnP eventing like all UPnP devices: control points subscribe to receive events for state variable changes, and devices send events to subscribers.</P>
+
+<P>The UPnP AV Framework provides a mechanism that abstracts the details of event notifications from control points and devices. This functionality makes subscribing to, sending, and receiving events appear like calling and implementing methods on a C++ object.</P>
+
+<P>For sample code that demonstrates how to receive and send events using the UPnP AV Framework, see <A HREF="wce50lrfupnpavcontrolpointsample.htm">UPnP AV Control Point Sample</A> (for receiving events) and <A HREF="wce50lrfupnpavrenderersample.htm">UPnP AV Renderer Sample</A> (for sending events).</P>
+
+<P>For more information about eventing details in the UPnP AV DCP, see <A HREF="wce50conupnpavdcpdocumentation.htm">UPnP AV DCP Documentation</A>.</P>
+
+<H4 class="dtH4">Receiving Events in Control Points</H4>
+
+<P>To receive events, a control point creates a class that derives from <A HREF="wce50lrfieventsink.htm">IEventSink</A> and implements <A HREF="wce50lrfieventsinkonstatechanged.htm">IEventSink::OnStateChanged</A> so that it contains code to be executed when an event is received. </P>
+
+<P>After this instance is registered with the service(s) raising events, any event that a service raises ultimately results in the execution of the code in the provided <B>OnStateChanged </B>method. </P>
+
+<P>The connection between the control point and devices is provided by a control point proxy class included with the UPnP AV Framework. The control point proxy class receives events transmitted using UPnP eventing and transforms them into calls to <B>OnStateChanged</B>.</P>
+
+<P>To register the <B>IEventSink</B> implementation with a device, the control point calls the <A HREF="wce50lrfieventsourceadvise.htm">IEventSource::Advise</A> method on the service that raises the events in which it is interested. For example, to subscribe to events from the AVTransport service, a control passes an <B>IEventSink</B> implementation to <B>IAVTransport::Advise</B>.</P>
+
+<P>To unsubscribe from events, the control point calls <A HREF="wce50lrfieventsourceunadvise.htm">IEventSource::Unadvise</A> and passes the original <B>IEventSink</B> pointer.</P>
+
+<H4 class="dtH4">Raising Events in Devices</H4>
+
+<P>To raise events, a device creates a class that derives from <B>IEventSource</B> and implements <B>Advise </B>and <B>Unadvise </B>to accept subscribe and unsubscribe requests. </P>
+
+<P>The <B>Advise </B>implementation stores the passed <B>IEventSink</B> pointer. The service then uses the saved pointer to raise events by calling <B>OnStateChanged</B> whenever an evented state variable changes. </P>
+
+<P>The UPnP AV Framework handles any necessary event moderation transparently on the device. If a device calls <B>OnStateChanged</B> multiple times before the moderation time interval has passed, the UPnP AV Framework only events a single value. The particular value that is sent is not specified, and the point at which the value is sent is also not specified. The events are sent in accordance with the UPnP specifications.</P>
+
+<P>The connection between the device and the control point is provided by a device proxy class included with the UPnP AV Framework. This proxy class packages calls to <B>OnStateChanged</B> into events transmitted using UPnP eventing.</P>
+
+<H4 class="dtH4">Events from Virtual Services</H4>
+
+<P>A single AVTransport and RenderingControl service can support multiple virtual instances, one for each transport or rendering device. </P>
+
+<P>At the level of the UPnP messages sent over the network, the particular virtual service is identified by an instance ID value that each AVTransport and RenderingControl action accepts. Eventing for AVTransport and RenderingControl services is accomplished through a LastChange state variable that contains instance IDs and the changes associated with each instance ID.</P>
+
+<P>The UPnP AV Framework hides these details using the <B>IEventSink</B>, <B>IEventSource</B>, <A HREF="wce50lrfiavtransport.htm">IAVTransport</A> and <A HREF="wce50lrfirenderingcontrol.htm">IRenderingControl</A> classes. From the perspective of control point or device implementation code, each <B>IAVTransport</B> or <B>IRenderingControl</B> instance is a separate instance. </P>
+
+<P>Because of this, code using the UPnP AV Framework does not need to manage instance IDs or use the LastChange state variable. Instead, it calls or implements <B>OnStateChanged</B> and lets the UPnP AV Framework generate or receive the correct UPnP messages at the correct times.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50oriusingupnpavframework.htm">Using the UPnP AV Framework</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

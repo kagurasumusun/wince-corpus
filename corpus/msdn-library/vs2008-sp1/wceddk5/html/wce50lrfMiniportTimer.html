@@ -1,0 +1,108 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>MiniportTimer</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="MiniportTimer"/>
+<MSHelp:RLTitle Title="MiniportTimer"/>
+<MSHelp:Keyword Index="K" Term="MiniportTimer"/>
+<MSHelp:Keyword Index="A" Term="wce50lrfMiniportTimer"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Driver"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="False"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="apiref"/>
+<MSHelp:Attr Name="Filename" Value="ndis_upper_edge_functions.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="False"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+<MSHelp:Attr Name="APIName" Value="MiniportTimer"/>
+<MSHelp:Attr Name="PBFeature" Value="NetworkDriver"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_3018969">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50lrfminiporttimer"></A>MiniportTimer</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P><B>MiniportTimer</B> is a required function if a driver's NIC does not generate interrupts. Otherwise, one or more <B>MiniportTimer</B> functions are optional. </P>
+
+<PRE class="syntax"><B>VOID MiniportTimer(</B>
+<B>  PVOID</B> <I>SystemSpecific1</I><B>,</B>
+  <B>PVOID</B> <I>FunctionContext</I><B>,</B>
+  <B>PVOID</B> <I>SystemSpecific2</I><B>,</B>
+  <B>PVOID</B> <I>SystemSpecific3</I>
+<B>);</B></PRE>
+
+<H4 class="dtH4">Parameters</H4>
+
+<DL>
+<DT><I>SystemSpecific1</I></DT>
+
+<DD>[in] Points to a system-specific variable, which is opaque to <B>MiniportTimer</B> and reserved for system use.</dd>
+
+<DT><I>FunctionContext</I></DT>
+
+<DD>[in] Specifies the context pointer passed to <A HREF="wce50lrfndisminitializetimer.htm">NdisMInitializeTimer</A> when <A HREF="wce50lrfminiportinitialize.htm">MiniportInitialize</A> set up the associated timer object. </dd>
+
+<DT><I>SystemSpecific2</I></DT>
+
+<DD>[in] Points to a system-specific value that is reserved for system use. </dd>
+
+<DT><I>SystemSpecific3</I></DT>
+
+<DD>[in] Points to a system-specific value that is reserved for system use. </dd>
+</DL>
+
+<H4 class="dtH4">Remarks</H4>
+
+<P>The driver of a NIC that does not generate interrupts must have a <B>MiniportTimer</B> function to poll the state of the NIC. After such a driver's <B>MiniportInitialize</B> function sets up the driver-allocated timer object with <B>NdisMInitializeTimer</B>, a call to <A HREF="wce50lrfndismsetperiodictimer.htm">NdisMSetPeriodicTimer</A> causes the <B>MiniportTimer</B> function associated with the timer object to be run repeatedly and automatically at the interval specified by <I>MillisecondsPeriod</I>. Such a polling <B>MiniportTimer</B> function monitors the state of the NIC to determine when to make indications, when to complete pending sends, and so forth. In effect, such a polling <B>MiniportTimer</B> function has the same functionality as the <A HREF="wce50lrfminiporthandleinterrupt.htm">MiniportHandleInterrupt</A> function in the driver of a NIC that does generate interrupts.</P>
+
+<P>By contrast, calling <A HREF="wce50lrfndismsettimer.htm">NdisMSetTimer</A> causes the <B>MiniportTimer</B> function associated with the timer object to be run once when the given <I>MillisecondsToDelay</I> expires. Such a <B>MiniportTimer</B> function usually performs some driver-determined action if a particular operation times out. </P>
+
+<P>If either type of <B>MiniportTimer</B> function shares resources with other driver functions, the driver should synchronize access to those resources with a spin lock.</P>
+
+<P>Any NIC driver or intermediate driver can have more than one <B>MiniportTimer</B> function at the discretion of the driver writer. Each such <B>MiniportTimer</B> function must be associated with a driver-allocated and initialized timer object. </P>
+
+<P>A call to <A HREF="wce50lrfndismcanceltimer.htm">NdisMCancelTimer</A> cancels execution of non-polling <B>MiniportTimer</B> function, if the interval passed in the immediately preceding call to <B>NdisMSetTimer</B> has not yet expired. After a call to <B>NdisMSetPeriodicTimer</B>, a call to <B>NdisMSetTimer</B> or <B>NdisMCancelTimer</B> with the same timer object disables a polling <B>MiniportTimer</B> function: either the MiniportTimer function runs once, or it is canceled. </P>
+
+<P>The <A HREF="wce50lrfminiporthalt.htm">MiniportHalt</A> function of any driver with a <B>MiniportTimer</B> function should call <B>NdisMCancelTimer</B> to ensure that the <B>MiniportTimer</B> function does not attempt to access resources that <B>MiniportHalt</B> has already released. </P>
+
+<H4 class="dtH4">Requirements</H4>
+
+<P><B>OS Versions:</B> Windows CE .NET 4.0 and later.<BR>
+<B>Header:</B> Externs.h.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50lrfminiporthalt.htm">MiniportHalt</A> | <A HREF="wce50lrfminiportinitialize.htm">MiniportInitialize</A> | <A HREF="wce50lrfndisacquirespinlock.htm">NdisAcquireSpinLock</A> | <A HREF="wce50lrfndisallocatespinlock.htm">NdisAllocateSpinLock</A> | <A HREF="wce50lrfndisdpracquirespinlock.htm">NdisDprAcquireSpinLock</A> | <A HREF="wce50lrfndismcanceltimer.htm">NdisMCancelTimer</A> | <A HREF="wce50lrfndisminitializetimer.htm">NdisMInitializeTimer</A> | <A HREF="wce50lrfndismsetperiodictimer.htm">NdisMSetPeriodicTimer</A> | <A HREF="wce50lrfndismsettimer.htm">NdisMSetTimer</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

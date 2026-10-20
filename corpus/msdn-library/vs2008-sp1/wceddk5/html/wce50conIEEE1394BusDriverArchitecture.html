@@ -1,0 +1,134 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>IEEE 1394 Bus Driver Development Concepts</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="IEEE 1394 Bus Driver Development Concepts"/>
+<MSHelp:RLTitle Title="IEEE 1394 Bus Driver Development Concepts"/>
+<MSHelp:Keyword Index="A" Term="wce50conIEEE1394BusDriverArchitecture"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Driver"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="False"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="1394bus_guide.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="False"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+<MSHelp:Attr Name="PBFeature" Value="1394Driver"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_3016917">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50conieee1394busdriverarchitecture"></A>IEEE 1394 Bus Driver Development Concepts</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>The IEEE 1394 bus driver provides a hardware-independent interface to the IEEE 1394 bus. The bus driver handles some I/O request packets (IRPs), and forwards some IRPs to the port driver for the host controller on the motherboard. A bus driver services a bus controller. There is one bus driver for each type of bus on a machine. Microsoft provides a standard port driver for host controllers that satisfy the Open Host Controller Interface (OHCI) specification. </P>
+
+<P>The following table shows how the 64-bit address space for the IEEE 1394 bus driver breaks up.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=31%>Bit region</TH>
+<TH width=69%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=31%>10 bits</TD>
+<TD width=69%>Bus number.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=31%>6 bits</TD>
+<TD width=69%>Node number.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=31%>48 bits</TD>
+<TD width=69%>Address offset within a node.</TD>
+</TR>
+</table></div>
+
+<P>The initial node space for configuration ROM and IEEE 1212 Control and Status Registers (CSRs) is in the top 256 MB of the node's address space.</P>
+
+<P>The cable itself supplies power. The cable contains two power conductors, and two twisted pairs for data signaling. Each signal pair is shielded and the entire cable is shielded. </P>
+
+<P>Cable power is specified to be from 8 Vdc to 40 Vdc at up to 1.5 amps and is used to maintain a device's physical layer continuity when the device is powered down or malfunctioned. This is important for a serial topology, and also to provide power for devices connected to the bus. This does not apply to the 4-pin cables because they do not have any pins for peripheral power.</P>
+
+<P>The following table shows the three IEEE 1394 protocol layers.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=31%>Layer</TH>
+<TH width=69%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=31%>Physical layer</TD>
+<TD width=69%>The physical layer connects to the IEEE 1394 connector and the other layers connect to the application. It provides the electrical and mechanical connection between the IEEE 1394 device and the IEEE 1394 cable. It also provides arbitration to ensure all devices have fair access to the bus.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=31%>Link layer</TD>
+<TD width=69%>The link layer provides data packet delivery service for asynchronous and isochronous packet delivery. Asynchronous is the conventional transmit-acknowledgment protocol. Isochronous is a real-time guaranteed-bandwidth protocol for just-in-time delivery of information.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=31%>Transaction layer</TD>
+<TD width=69%>The transaction layer supports the asynchronous protocol write, read, and lock commands described in the following list:
+<UL type="disc">
+	<LI>A write command sends data from the originator to the receiver.</li>
+
+	<LI>A read command returns the data to the originator.</li>
+
+	<LI>A lock command combines the function of the write and read commands by producing a round trip routing of data between sender and receiver including processing by the receiver.</li>
+</UL>
+</TD>
+</TR>
+</table></div>
+
+<P>The following list shows what serial bus management provides:
+
+<UL type="disc">
+	<LI>Connects to all three protocol layers.</li>
+
+	<LI>Provides the overall configuration control of the serial bus in the form of optimizing arbitration timing.</li>
+
+	<LI>Guarantees adequate electrical power for all devices on the bus.</li>
+
+	<LI>Assigns which IEEE 1394 device is the cycle master, assigns the isochronous channel identifier, and controls basic notification of errors.</li>
+</UL>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50conieee1394driverthreadpriorities.htm">IEEE 1394 Driver Thread Priorities</A> | <A HREF="wce50conieee1394datatransfers.htm">IEEE 1394 Data Transfers</A> | <A HREF="wce50conieee1394samplecommunication.htm">IEEE 1394 Sample Communication</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

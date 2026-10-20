@@ -1,0 +1,76 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>XIP Chain</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="XIP Chain"/>
+<MSHelp:RLTitle Title="XIP Chain"/>
+<MSHelp:Keyword Index="A" Term="wce50conXIPChain"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Feature"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="kernel_overview.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="True"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+<MSHelp:Attr Name="PBFeature" Value="CORE"/>
+<MSHelp:Attr Name="PBOnly" Value="True"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_3009760">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50conxipchain"></A>XIP Chain</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>The XIP chain is simply a list of XIP regions that reside in flash memory or RAM and is accessible from the OAL by the OEM. More specifically, the first <B>DWORD</B> at ROM_CHAIN_OFFSET in the chain region is the number of XIP regions and the rest of the chain is an array of <A HREF="wce50lrfxipchainentry.htm">XIPCHAIN_ENTRY</A> structures, one per XIP region. The <B>XIPCHAIN_ENTRY</B> structure is defined in %_WINCEROOT%\Public\Common\Oak\Inc\Romldr.h. The most important member of this structure is <B>pvAddr</B>, which is the starting memory address of the XIP region.</P>
+
+<P>The XIP chain itself is flashed into memory by the boot loader, if the boot loader is capable of one of the download methods of loading the image into ROM. </P>
+
+<P>The location of the XIP chain is defined in Config.bib and passed into the OAL through a fixup variable. A fixup variable is a functionality of ROMIMAGE that allows you to initialize a global variable in the Nk.exe at MAKEIMG time. The initialization value is obtained from Config.bib. The following code example shows how the sample lines from Config.bib define the chain location, pass it in through a fixup variable, and reserve a memory area for the chain.</P>
+
+<PRE class="code">MEMORY
+...    
+    #define XIPLOC_PHYSICAL 802C0000    ; Location of the chain
+    RESERVE  $(XIPLOC_PHYSICAL)    00002000  ; CHAIN
+    pdwXIPLoc 00000000 $(XIPLOC_PHYSICAL) FIXUPVAR
+...
+CONFIG
+...
+    XIPSCHAIN= $(XIPLOC_PHYSICAL)</PRE>
+
+<P>You can define a <B>DWORD</B> pointer called <I>pdwXIPLoc</I> in the OAL. This pointer is defined at MAKEIMG time to the value 0x802C0000. <MSHelp:link keywords="wce50lrfOEMInit" TABINDEX="0">OEMInit</MSHelp:link> uses the pointer to access the chain and walks through each entry in the chain to get the location of the XIP region's table of contents. It then adds the location of that table of contents to <MSHelp:link keywords="wce50lrfOEMRomChain" TABINDEX="0">OEMRomChain</MSHelp:link>. Once this process is complete, the kernel module and file boot loader are able to see all of the XIP regions.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50conbootinganimagewithmultiplexipregions.htm">Booting an Image with Multiple XIP Regions</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

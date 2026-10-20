@@ -1,0 +1,77 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Stack</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Stack"/>
+<MSHelp:RLTitle Title="Stack"/>
+<MSHelp:Keyword Index="A" Term="wce50conStack"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Feature"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="kernel_memory_architecture.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="True"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+<MSHelp:Attr Name="PBFeature" Value="CORE"/>
+<MSHelp:Attr Name="PBOnly" Value="True"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_3009658">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50constack"></A>Stack</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>The stack is the storage area for variables referenced in a function. Windows CE manages a separate stack for every thread in the system. The architecture of the stack depends on the microprocessor, but typically, the default stack limit is 64 KB, with 2 KB reserved for overflow error control. You can override the stack limit at compile time with the linker option /STACK. </P>
+
+<BLOCKQUOTE class="dtBlock">
+<b class="le">Note</b>&nbsp;&nbsp;&nbsp;Exceeding the stack limit causes a system-access violation that shuts down your application. In addition, stack frames can be no larger than one page each or structured exception handling fails.</BLOCKQUOTE>
+
+<P>When the system creates a new thread, the kernel reserves memory for the stack. The amount of memory that the system reserves for the stack is determined by the /STACK parameter passed to the linker when the module is built. You can also change the stack size on a per-thread basis using the STACK_SIZE_PARAM_IS_A_RESERVATION flag.</P>
+
+<P>When the system schedules a thread for the first time, the thread's stack memory is committed; it is committed one page at a time and committed only when needed. To prevent the initial commitment of stack memory from affecting performance, ensure that your thread is scheduled at least once before performing real-time processing. In the case of an IST, allocation of stack memory generally occurs because the thread performs several actions before settling down into a <A HREF="wce50lrfwaitforsingleobject.htm">WaitForSingleObject</A> loop. You can avoid allocating more stack memory, if your thread requires no more than the initial stack allocation. Because memory is typically limited in a Windows CE environment, at times the kernel will take back stack memory from threads that are no longer needed.</P>
+
+<P>Reclaiming unused stack memory is controlled by the OEM and the parameters passed to the <MSHelp:link keywords="wce50lrfSetOOMEvent" TABINDEX="0">SetOOMEvent</MSHelp:link> function. If the values passed to <B>SetOOMEvent</B> cause the system to search for stack memory, the kernel suspends each thread that has a free stack while memory from the stack is removed. To avoid this situation, carefully set the memory usage parameters for <B>SetOOMEvent</B>.</P>
+
+<P>You can set an OAL variable that tells the kernel at what priority to recover stack space when memory is low.</P>
+
+<P>Make the following declaration in your OAL:</P>
+
+<PRE class="code">extern DWORD dwNKMaxPrioNoScav;</PRE>
+
+<P>The value of <MSHelp:link keywords="wce50lrfdwNKMaxPrioNoScav" TABINDEX="0">dwNKMaxPrioNoScav</MSHelp:link> defines the highest priority for a thread that should not incur stack space recovery. Any thread with a priority lower than <I>dwNKMaxPrioNoScav</I> can have its stack space recovered by the kernel. The default setup by the kernel is 247, which is the value you see in <I>dwNKMaxPrioNoScav</I>. Use this variable in combination with the <B>SetOOMEvent</B> function to control when stack recovery is run. If stack recovery is run, <I>dwNKMaxPrioNoScav</I>, in combination with <B>SetOOMEvent</B>, determines which priority stack recovery should be applied.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50conmemoryarchitecture.htm">Memory Architecture</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

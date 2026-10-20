@@ -1,0 +1,141 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Using IPV6_PROTECTION_LEVEL</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Using IPV6_PROTECTION_LEVEL"/>
+<MSHelp:RLTitle Title="Using IPV6_PROTECTION_LEVEL"/>
+<MSHelp:Keyword Index="A" Term="wce50conUsingIPV6_PROTECTION_LEVEL"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Feature"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="winsock2_refnode.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="True"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+<MSHelp:Attr Name="PBFeature" Value="SYSGEN_WINSOCK"/>
+<MSHelp:Attr Name="PBOnly" Value="False"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_1049647">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50conusingipv6_protection_level"></A>Using IPV6_PROTECTION_LEVEL</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>The IPV6_PROTECTION_LEVEL socket option enables developers to place access restrictions on IPv6 sockets. Such restrictions enable an application running on a private LAN to simply and robustly harden itself against external attacks. The IPV6_PROTECTION_LEVEL socket option widens or narrows the scope of a listening socket, enabling unrestricted access from public and private users when appropriate, or restricting access only to the same site, as required.</P>
+
+<P>IPV6_PROTECTION_LEVEL currently has three defined protection levels:</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=50%>Protection level </TH>
+<TH width=50%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>PROTECTION_LEVEL_RESTRICTED</TD>
+<TD width=50%>Used by intranet applications that do not implement Internet scenarios. These applications are generally not tested or hardened against Internet-style attacks. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>PROTECTION_LEVEL_DEFAULT</TD>
+<TD width=50%>The default socket protection level.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>PROTECTION_LEVEL_UNRESTRICTED</TD>
+<TD width=50%>Used by applications designed to operate across the Internet, including applications taking advantage of IPv6 NAT traversal capabilities built into Windows. These applications may bypass IPv4 firewalls, so applications must be hardened against Internet attacks directed at the opened port.</TD>
+</TR>
+</table></div>
+
+<P>The following code example provides the defined values for each:</P>
+
+<PRE class="code">#define PROTECTION_LEVEL_RESTRICTED    10  /* for Intranet apps      /*
+#define PROTECTION_LEVEL_DEFAULT       20  /* default level          /*
+#define PROTECTION_LEVEL_UNRESTRICTED  30  /* for peer-to-peer apps  /*</PRE>
+
+<P>These values are mutually exclusive, and cannot be combined in a single <B>setsockopt</B> function call. Other values for this socket option are reserved. These protection levels apply only to incoming connections; setting this socket option has no affect on outbound packets or connections. </P>
+
+<BLOCKQUOTE class="dtBlock">
+<b class="le">Note</b>&nbsp;&nbsp;&nbsp;IPV6_PROTECTION_LEVEL socket option should be set before the socket is bound. Otherwise, packets received between bind and <B>setsockopt</B> calls will conform to PROTECTION_LEVEL_DEFAULT, and may be delivered to the application.</BLOCKQUOTE>
+
+<P>The following table describes the effect of applying each protection level to a listening socket: </P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH colspan=4 width=100%>Incoming traffic permitted</TH>
+</TR>
+
+<TR VALIGN="top">
+<TH width=25%>Protection level</TH>
+<TH width=25%>Same site</TH>
+<TH width=25%>External </TH>
+<TH width=25%>NAT traversal (Teredo) </TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=25%>PROTECTION_LEVEL_RESTRICTED</TD>
+<TD width=25%>Yes </TD>
+<TD width=25%>No </TD>
+<TD width=25%>No</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=25%>PROTECTION_LEVEL_DEFAULT</TD>
+<TD width=25%>Yes </TD>
+<TD width=25%>Yes </TD>
+<TD width=25%>No</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=25%>PROTECTION_LEVEL_UNRESTRICTED</TD>
+<TD width=25%>Yes </TD>
+<TD width=25%>Yes </TD>
+<TD width=25%>OK</TD>
+</TR>
+</table></div>
+
+<P>In the table above, the Same site column is a combination of the following:
+
+<UL type="disc">
+	<LI>Link local addresses </li>
+
+	<LI>Global addresses known to belong to the same site (matching the site prefix table) </li>
+</UL>
+
+<P>When incoming packets or connections are refused due to the set protection level, rejection is handled as if no application was listening on that socket.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50conipproto_ipv6.htm">IPPROTO_IPV6</A> | <A HREF="wce50orisocketoptions.htm">Socket Options</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

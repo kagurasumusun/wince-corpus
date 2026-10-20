@@ -1,0 +1,76 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>RAM-based Registry Initialization</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="RAM-based Registry Initialization"/>
+<MSHelp:RLTitle Title="RAM-based Registry Initialization"/>
+<MSHelp:Keyword Index="A" Term="wce50tskInitializingtheObjectStorebasedRegistry"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Feature"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="filesys_overview.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="False"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+<MSHelp:Attr Name="PBFeature" Value="FILESYSTEM"/>
+<MSHelp:Attr Name="PBOnly" Value="True"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_1055730">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50tskinitializingtheobjectstorebasedregistry"></A>RAM-based Registry Initialization</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>The following steps show the process that Filesys.exe uses to initialize the RAM-based registry.
+
+<OL type="1">
+	<LI>Filesys.exe calls <MSHelp:link keywords="wce50lrfOEMIoControl" TABINDEX="0">OEMIoControl</MSHelp:link> with <MSHelp:link keywords="wce50lrfIOCTLHALGETREGSECUREKEYS" TABINDEX="0">IOCTL_HAL_GETREGSECUREKEYS</MSHelp:link> two times. The first call is a query to find out the required data buffer size. The second call is a query to get the buffer of secure key data. For more information, see <A HREF="wce50conrequestingadditionalsecureregistrykeys.htm">Requesting Additional Secure Registry Keys</A>.</li>
+
+	<LI>If the boot process is a cold boot, Filesys.exe performs the following steps:
+<OL type="a">
+	<LI>Filesys.exe loads the registry data stored in the Default.fdf file from ROM.</li>
+
+	<LI>If <MSHelp:link keywords="wce50lrfpReadRegistryFromOEM" TABINDEX="0">pReadRegistryFromOEM</MSHelp:link> is implemented in the OAL and registry data is available, Filesys.exe deletes the registry data that was restored from Default.fdf. Filesys.exe calls <B>pReadRegistryFromOEM</B> in a loop until all of the data is returned. If the data retrieval fails, Filesys.exe cleans the registry and restores Default.fdf.</li>
+</OL>
+</li>
+
+	<LI>If a backup copy of the registry was restored on a previous boot by calling <A HREF="wce50lrfregrestorefile.htm">RegRestoreFile</A>, Filesys.exe delestes any existing registry data from Default.fdf or <B>pReadRegistryFromOEM</B>, and restores the registry with the contents of the backup file. If the restoration fails, Filesys.exe cleans the registry and retries restoration from Default.fdf and <B>pReadRegistryFromOEM</B>.</li>
+
+	<LI>Filesys.exe calls <B>OEMIoControl</B> with the IOCTL <MSHelp:link keywords="wce50lrfIOCTLHALINITREGISTRY" TABINDEX="0">IOCTL_HAL_INITREGISTRY</MSHelp:link> to give the OAL a chance to add data to the registry early in the boot process.</li>
+</OL>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50confilesysexebootprocess.htm">Filesys.exe Boot Process</A> | <A HREF="wce50tskinitializingthefilebasedregistry.htm">Hive-based Registry Initialization</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

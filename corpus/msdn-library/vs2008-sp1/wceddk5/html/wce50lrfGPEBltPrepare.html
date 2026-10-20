@@ -1,0 +1,117 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>GPE::BltPrepare</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="GPE::BltPrepare"/>
+<MSHelp:RLTitle Title="GPE::BltPrepare"/>
+<MSHelp:Keyword Index="K" Term="GPE, BltPrepare"/>
+<MSHelp:Keyword Index="A" Term="wce50lrfGPEBltPrepare"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Driver"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="False"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="apiref"/>
+<MSHelp:Attr Name="Filename" Value="display_reference.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="True"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+<MSHelp:Attr Name="APIName" Value="GPE.BltPrepare"/>
+<MSHelp:Attr Name="APIType" Value="LibDef"/>
+<MSHelp:Attr Name="APILocation" Value="Gpe_lib.lib"/>
+<MSHelp:Attr Name="PBFeature" Value="DisplayDriver"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_3017910">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50lrfgpebltprepare"></A>GPE::BltPrepare</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>This method identifies the appropriate functions needed to perform individual blits. This function executes before a sequence of clipped blit operations.</P>
+
+<PRE class="syntax"><B>SCODE GPE::BltPrepare(</B>
+  <B>GPEBltParms* </B><I>pBltParms</I> 
+<B>);</B></PRE>
+
+<H4 class="dtH4">Parameters</H4>
+
+<DL>
+<DT><I>pBltParms</I></DT>
+
+<DD>[in] Pointer to a <A HREF="wce50lrfgpebltparms.htm">GPEBltParms</A> structure containing parameters for the blit operation.</dd>
+</DL>
+
+<H4 class="dtH4">Return Values</H4>
+
+<P>S_OK indicates success.</P>
+
+<H4 class="dtH4">Remarks</H4>
+
+<P>Two blit-related pure virtual GPE functions must be implemented for concrete classes derived from GPE: <B>GPE::BltPrepare</B> and <A HREF="wce50lrfgpebltcomplete.htm">GPE::BltComplete</A>.</P>
+
+<P>The following code example shows the simplest acceptable implementation for <B>GPE::BltPrepare</B>. </P>
+
+<PRE class="code">pBltParms-&gt;pBlt = EmulatedBlt;
+return S_OK;</PRE>
+
+<P>This action causes the emulated blit function provided with GPE to be used for blit operations.</P>
+
+<P>For improved performance, the <B>BltPrepare</B> method can examine the characteristics of the blit and the associated surfaces defined in <B>GPEBltParms</B> to determine whether an accelerated form of the blit is used. The following code example shows how to determine the operations that are likely to be implemented in hardware.</P>
+
+<PRE class="code">if( pBltParms-&gt;pDst-&gt;InVideoMemory() &amp;&amp; pBltParms-&gt;rop4 == 0x0000 )
+  // This is a fill of BLACKNESS in video memory.
+if( pBltParms-&gt;pDst-&gt;InVideoMemory() &amp;&amp; pBltParms-&gt;rop4 == 0xFFFF )
+  // This is a fill of WHITENESS in video memory.
+if( pBltParms-&gt;pDst-&gt;InVideoMemory()
+&amp;&amp; pBltParms-&gt;rop4 == 0xF0F0
+&amp;&amp; pBltParms-&gt;solidColor != 0xFFFFFFFF )
+  // This is a fill of a solid color in video memory.
+if( pBltParms-&gt;pDst-&gt;InVideoMemory()
+&amp;&amp; pBltParms-&gt;pSrc-&gt;InVideoMemory()
+&amp;&amp; pBltParms-&gt;rop4 == 0xCCCC
+&amp;&amp; !pBltParms-&gt;pLookup
+&amp;&amp; !pBltParms-&gt;pConvert )
+  // This is a source copy (SRCCOPY) between two surfaces, both in
+  // video memory, with no color translation.</PRE>
+
+<P>To accelerate these types of blit, <B>BltPrepare</B> places the address of the accelerated function in the <B>pBlt</B> member of the <B>GPEBltParms</B> structure, instead of the pointer to the <B>EmulatedBlt</B> function. For operations such as solid color fills, the driver can prepare the hardware. For example, the driver can place a solid color into the appropriate register of the hardware. This eliminates the need to repeat the same action in every call to the accelerated blit handler.</P>
+
+<H4 class="dtH4">Requirements</H4>
+
+<P><B>OS Versions:</B> Windows CE 1.0 and later.<BR>
+<B>Header:</B> Gpe.h.<BR>
+<B>Link Library:</B> Gpe_lib.lib.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50condisplaydrivers.htm">Display Drivers</A> | <A HREF="wce50lrfgpebltcomplete.htm">GPE::BltComplete</A> | <A HREF="wce50lrfgpebltparms.htm">GPEBltParms</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

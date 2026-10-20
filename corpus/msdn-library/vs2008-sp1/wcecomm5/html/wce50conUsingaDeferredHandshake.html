@@ -1,0 +1,94 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Using a Deferred Handshake</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Using a Deferred Handshake"/>
+<MSHelp:RLTitle Title="Using a Deferred Handshake"/>
+<MSHelp:Keyword Index="A" Term="wce50conUsingaDeferredHandshake"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Feature"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="winsock.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="False"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+<MSHelp:Attr Name="PBFeature" Value="SYSGEN_WINSOCK"/>
+<MSHelp:Attr Name="PBOnly" Value="False"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_3008453">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50conusingadeferredhandshake"></A>Using a Deferred Handshake</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>A deferred handshake enables an application to create an unsecured connection and then later convert it to a connection with a security infrastructure.</P>
+
+<P class="labelproc"><B>To implement secure sockets with a deferred handshake</B>
+
+<OL type="1">
+	<LI>Create a socket with the <A HREF="wce50lrfsocketwindowssockets.htm">socket</A> function.</li>
+
+	<LI>Set the socket in secure mode with <A HREF="wce50lrfsetsockoptwindowssockets.htm">setsockopt</A>.</li>
+
+	<LI>Set <I>level</I> to SO_SOCKET, set <I>optname</I> to SO_SECURE, and set <I>optval</I> to a <B>DWORD</B> set to SO_SEC_SSL.</li>
+
+	<LI>Specify the certificate validation callback function by calling <A HREF="wce50lrfwsaioctl.htm">WSAIoctl</A> with the SO_SSL_SET_VALIDATE_CERT_HOOK control code.</li>
+
+	<LI>To verify the server's identity during the handshake, call <B>WSAIoctl</B> with the SO_SSL_SET_PEERNAME control code.
+<P>The server name is verified against the server certificate after a successful SSL handshake. The verification results are then indicated in the certificate validation callback. If the specified server name does not match the one indicated in the certificate chain of the SSL Handshake, SSL_CERT_FLAG_ISSUER_UNKNOWN is set in the dwFlags parameter of SslValidateCertHook.
+
+<P>If you do not perform this step, no verification is performed.
+</li>
+
+	<LI>Set the socket in deferred handshake mode with <B>WSAIoctl</B>. The control code should be set to SO_SSL_SET_FLAGS and the flag set to SSL_FLAG_DEFER_HANDSHAKE.</li>
+
+	<LI>Establish a nonsecure connection with the remote party using <A HREF="wce50lrfconnectwindowssockets.htm">connect</A>.</li>
+
+	<LI>Transmit and receive unencoded data.</li>
+
+	<LI>To switch to secure mode, call <B>WSAIoctl</B> with the SO_SSL_PERFORM_HANDSHAKE control code passing in the target server name.</li>
+
+	<LI>The certificate callback function is automatically called. The handshake is successful only if the callback function verifies the acceptability of the certificate by returning SSL_ERR_OKAY.</li>
+
+	<LI>Transmit and receive.</li>
+
+	<LI>The <A HREF="wce50lrfsend.htm">send</A> and <A HREF="wce50lrfrecv.htm">recv</A> functions encode and decode the data automatically.</li>
+
+	<LI>When you are finished, close the socket with <A HREF="wce50lrfclosesocket.htm">closesocket</A>.</li>
+</OL>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50conwinsocksecuresockets.htm">Winsock Secure Sockets</A> | <A HREF="wce50conwinsockcontrolcodes.htm">Secure Socket Control Codes</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

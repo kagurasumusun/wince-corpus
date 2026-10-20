@@ -1,0 +1,152 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Command-Line Driver Dependencies</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Command-Line Driver Dependencies"/>
+<MSHelp:RLTitle Title="Command-Line Driver Dependencies"/>
+<MSHelp:Keyword Index="A" Term="wce50conCommandLineDriverDependencies"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="OS"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="True"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="build_system.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="True"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_3012212">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50concommandlinedriverdependencies"></A>Command-Line Driver Dependencies</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>The command-line driver dependency model is the foundation that the integrated development environment (IDE) driver dependency model is based on. </P>
+
+<P>To include or exclude a specific driver in your OS design, you must understand the dependencies for that driver. To do that, you must know which Sysgen and board support package (BSP) variables you must set or clear to include or exclude the driver. </P>
+
+<P>Often, performing a search of Platform.bib is the best place to begin. Platform.bib contains information about the Catalog items that depend on the driver. In addition, Platform.bib defines the hardware modules and driver files for a target device.</P>
+
+<P>The following code example shows how a company called MyCompany could use the FILES section of Platform.bib to specify driver files for a product model called the EON that uses an SHx family processor. </P>
+
+<BLOCKQUOTE class="dtBlock">
+<b class="le">Note:</b> Platform Builder does not parse environment variables set to string values. Thus, to specify the EON product model, this example creates a variable called MYCOMPANYS_MODEL_EON and sets that variable to a numeric value.</BLOCKQUOTE>
+
+<BLOCKQUOTE class="dtBlock">
+</BLOCKQUOTE>
+
+<PRE class="code">FILES
+;  Name            Path                        Memory Type
+;  --------------  ------------------------  -----------
+; @CESYSGEN IF CE_MODULES_DEVICE
+; @CESYSGEN ENDIF CE_MODULES_DEVICE
+
+;*** MyCompany Additions ***
+#include "$(_FLATRELEASEDIR)\mycompany_base.bib"
+
+IF MYCOMPANYS_MODEL_EON == "1"
+   ddi_gx.dll      $(_FLATRELEASEDIR)\ddi_gx.dll     NK  SH
+   e100ce.dll      $(_FLATRELEASEDIR)\e100ce.dll     NK  SH
+   wavedev.dll     $(_FLATRELEASEDIR)\wavedev.dll     NK  SH
+   com16550.dll    $(_FLATRELEASEDIR)\com16550.dll     NK  SH
+   isr16550.dll    $(_FLATRELEASEDIR)\isr16550.dll     NK  SH
+   parallel.dll    $(_FLATRELEASEDIR)\parallel.dll     NK  SH
+#include "$(_FLATRELEASEDIR)\MyOther.bib"
+ENDIF</PRE>
+
+<P>Cesysgen.bat contains information about the Sysgen variables that set these Catalog items. The default BSP environment variable values are specified in the BSP's batch file, such as Cepc.bat, but you can override them.</P>
+
+<P>The following code example, from %_WINCEROOT%\PBWorkspaces\<I>&lt;MyOSDesign&gt;</I>\CEPC\Files\Platform.bib, shows the nested conditionals around a USB driver, Uhci.dll, that govern its inclusion in a CEPC-based workspace. </P>
+
+<PRE class="code">; @CESYSGEN IF CE_MODULES_DEVICE
+...
+; @CESYSGEN IF CE_MODULES_USBD
+; USB drivers
+IF BSP_NOUSB !
+IF IMG_NOUSB !
+IF BSP_USB_UHCI
+   uhci.dll       $(_FLATRELEASEDIR)\uhci.dll                   NK  SH
+ENDIF
+...
+; @CESYSGEN ENDIF CE_MODULES_USBD
+...
+; @CESYSGEN ENDIF CE_MODULES_DEVICE</PRE>
+
+<P>The first two lines specify that the variable CE_MODULES contains "device" and "usbd." Cesysgen.bat, which governs these lines, contains the Sysgen variables that govern the contents of CE_MODULES. </P>
+
+<P>The following code example shows an excerpt from a Cesysgen.bat file. In this example, Cesysgen.bat contains lines to specify that CE_MODULES always contains "device" and that when SYSGEN_USB is set, CE_MODULES also contains "usbd." This means that the driver is not included unless SYSGEN_USB is set.</P>
+
+<PRE class="code">set CE_MODULES=%CE_MODULES% nk filesys device ...
+if "%SYSGEN_USB%"=="1"           set CE_MODULES=%CE_MODULES% usbhost usbd</PRE>
+
+<P>Finally, the following code example shows the innermost nested conditionals from the preceding Platform.bib example. These ensure that the driver is only included if the variables BSP_NOUSB and IMG_NOUSB are not set, and BSP_USB_UHCI is set.</P>
+
+<PRE class="code">IF BSP_NOUSB !
+IF IMG_NOUSB !
+IF BSP_USB_UHCI</PRE>
+
+<P>In summary, four variables must be set or cleared for a CEPC-based workspace to include the Uhci.dll driver. The following table shows these settings.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=50%>Variable</TH>
+<TH width=50%>Value</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>SYSGEN_USB</TD>
+<TD width=50%>Set</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>BSP_NOUSB</TD>
+<TD width=50%>Not set</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>IMG_NOUSB</TD>
+<TD width=50%>Not set</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>BSP_USB_UHCI</TD>
+<TD width=50%>Set</TD>
+</TR>
+</table></div>
+
+<P>For more information about Cesysgen conditional statements, see <MSHelp:link keywords="wce50conPreprocessingUsingCesysgenConditionals" TABINDEX="0">Preprocessing Using Cesysgen Conditionals</MSHelp:link>.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50condriverdependencies.htm">Driver Dependencies</A> | <A HREF="wce50confeaturemanagement.htm">Catalog Item Management</A> | <A HREF="wce50conidedriverdependencies.htm">IDE Driver Dependencies</A> | <A HREF="wce50conbuildsystem.htm">Build System</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

@@ -1,0 +1,132 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Implementing the Ethernet Controller-Related Functions</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Implementing the Ethernet Controller-Related Functions"/>
+<MSHelp:RLTitle Title="Implementing the Ethernet Controller-Related Functions"/>
+<MSHelp:Keyword Index="A" Term="wce50tskImplementingtheEthernetControllerRelatedFunctions"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Hardware"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="True"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbTask"/>
+<MSHelp:Attr Name="Filename" Value="howto_developing_a_bootloader.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="True"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_3010337">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50tskimplementingtheethernetcontrollerrelatedfunctions"></A>Implementing the Ethernet Controller-Related Functions</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>The BLCOMMON library and the Eboot.lib support library, which assists with DHCP, UDP, and TFTP services, call Ethernet controller-related functions. These functions are typically wrappers for the access primitive routines exposed in the Ethernet debug libraries. For more information, see <A HREF="wce50conblcommoncodelibrary.htm">BLCOMMON Code Library</A> and <A HREF="wce50conebootcodelibrary.htm">Eboot Code Library</A>.</P>
+
+<P>The following table shows the Ethernet controller-related functions that you need to implement.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=24%>Function</TH>
+<TH width=76%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=24%><A HREF="wce50lrfoemreaddata.htm">OEMReadData</A></TD>
+<TD width=76%>Called by the BLCOMMON framework and reads data from the transport during the download process. This function typically turns around and calls <B>EbootEtherReadData</B> in Eboot.lib, which in turn calls <B>OEMEthGetFrame</B>.
+<P>This function can be copied from an existing hardware platform.</P>
+</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=24%><A HREF="wce50lrfoemethgetframe.htm">OEMEthGetFrame</A></TD>
+<TD width=76%>Reads data directly from a NIC through the <B>pfnEDbgGetFrame</B> pointer.
+<P>This function can be copied from an existing hardware platform.</P>
+</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=24%><A HREF="wce50lrfoemethsendframe.htm">OEMEthSendFrame</A></TD>
+<TD width=76%>Writes data directly to the NIC through the <B>pfnEDbgSendFrame</B> pointer.
+<P>This function can be copied from an existing hardware platform.</P>
+</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=24%><A HREF="wce50lrfoemethgetsecs.htm">OEMEthGetSecs</A></TD>
+<TD width=76%>Returns the number of seconds that have passed since a certain fixed time. The absolute value is not important, but relative count should be per-second accurate.</TD>
+</TR>
+</table></div>
+
+<P class="labelproc"><B>To implement Ethernet controller-related functions</B>
+
+<UL type="disc">
+	<LI>Edit the file Main.c by adding the code necessary to fully implement the Ethernet controller-related functions.
+<P>The following code example shows the implementation of the Ethernet controller-related functions for the hardware platform used in this boot loader example.
+
+<PRE class="code">BOOL OEMReadData(DWORD dwData, PUCHAR pData)
+{
+    return(EbootEtherReadData(dwData, pData));
+}
+
+BOOL OEMEthGetFrame(PUCHAR pData, PUSHORT pwLength)
+{
+    return pfnEDbgGetFrame(pData, pwLength);
+}
+
+BOOL OEMEthSendFrame(PUCHAR pData, DWORD dwLength)
+{
+    BYTE Retries = 0;
+
+    while(Retries++ &lt; 4)
+    {
+        if (!pfnEDbgSendFrame(pData, dwLength))
+                return(TRUE);
+
+        EdbgOutputDebugString("INFO: OEMEthSendFrame: retrying send (%u)\r\n", Retries);
+    }
+
+    return(FALSE);
+}
+
+DWORD OEMEthGetSecs(void)
+{
+    return( (*(volatile DWORD *)RTC_RDCR) &amp; RTC_SECONDS_MASK );
+}</PRE>
+</li>
+</UL>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50howhowtodevelopabootloader.htm">How to Develop a Boot Loader</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

@@ -1,0 +1,151 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>SF_REQ_TYPE</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="SF_REQ_TYPE"/>
+<MSHelp:RLTitle Title="SF_REQ_TYPE"/>
+<MSHelp:Keyword Index="K" Term="SF_REQ_TYPE"/>
+<MSHelp:Keyword Index="A" Term="wce51lrfSF_REQ_TYPE"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Feature"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="apiref"/>
+<MSHelp:Attr Name="Filename" Value="webserver_functions.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="False"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+<MSHelp:Attr Name="APIName" Value="SF_REQ_TYPE"/>
+<MSHelp:Attr Name="APIType" Value="IDLDef"/>
+<MSHelp:Attr Name="APILocation" Value="Not applicable"/>
+<MSHelp:Attr Name="PBFeature" Value="SYSGEN_HTTPD"/>
+<MSHelp:Attr Name="PBOnly" Value="False"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_1071418">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce51lrfsf_req_type"></A>SF_REQ_TYPE</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>This enumeration defines the request types to use with the <A HREF="wce50lrfserversupportfunctionisapifilters.htm">ServerSupportFunction (ISAPI Filters)</A>.</P>
+
+<BLOCKQUOTE class="dtBlock">
+<b class="le">Note</b>&nbsp;&nbsp;&nbsp;The only request types currently supported are SF_REQ_ADD_HEADERS_ON_DENIAL, SF_REQ_DISABLE_NOTIFICATIONS, and SF_REQ_SEND_RESPONSE_HEADER.</BLOCKQUOTE>
+
+<PRE class="syntax"><B>enum SF_REQ_TYPE{
+</B>   SF_REQ_SEND_RESPONSE_HEADER,
+   SF_REQ_ADD_HEADERS_ON_DENIAL,
+   SF_REQ_SET_NEXT_READ_SIZE,
+   SF_REQ_SET_PROXY_INFO,
+   SF_REQ_GET_CONNID,
+   SF_REQ_SET_CERTIFICATE_INFO,
+   SF_REQ_GET_PROPERTY,
+   SF_REQ_NORMALIZE_URL,
+   SF_REQ_DISABLE_NOTIFICATIONS
+<B>} ;</B></PRE>
+
+<H4 class="dtH4">Elements</H4>
+
+<DL>
+<DT>SF_REQ_SEND_RESPONSE_HEADER</DT>
+
+<DD>Allows your ISAPI filter to request the Web Server to send a complete HTTP server response header to the client browser, including the status, server version, message time, and MIME version. Server filters should append other information at the end, such as Content-type, Content-length, etc., followed by an extra "\r\n". 
+
+<P>The filter should set the <I>pData</I> parameter of <B>ServerSupportFunction</B> to a pointer to an optional zero-terminated status string, for example, "401 Access Denied", or NULL for the default response of "200 OK". The <I>ul1</I> parameter of <B>ServerSupportFunction</B> should be set to optional data to be appended to and sent with the header. If this parameter is set to NULL, the header will be terminated with an empty line.
+</dd>
+
+<DT>SF_REQ_ADD_HEADERS_ON_DENIAL</DT>
+
+<DD>Allows your ISAPI filter to add specified headers to the server error response, in the event that the server denies the HTTP request. This allows an authentication filter to advertise its services without filtering every request.
+
+<P><b class="le">Note</b>&nbsp;&nbsp;&nbsp;This request type will not work properly if passed to <B>ServerSupportFunction</B> during the processing of a SF_NOTIFY_SEND_RAW_DATA notification.
+
+
+<P>The filter should set the <I>pData</I> parameter of <B>ServerSupportFunction</B> to a pointer to a zero-terminated string indicating one or more header lines with terminating "\r\n".
+</dd>
+
+<DT>SF_REQ_SET_NEXT_READ_SIZE</DT>
+
+<DD>Allows your ISAPI filter to set the size of the next read. This request type is only used by raw data filters that return SF_STATUS_READ_NEXT. 
+
+<P>A filter should set the <I>ul1</I> parameter of <B>ServerSupportFunction</B> to the size, in bytes, for the next read.
+</dd>
+
+<DT>SF_REQ_SET_PROXY_INFO</DT>
+
+<DD>Allows your ISAPI filter to indicate an HTTP proxy request. A filter should set the <I>ul1</I> parameter of <B>ServerSupportFunction</B> to the proxy flags to set.</dd>
+
+<DT>SF_REQ_GET_CONNID</DT>
+
+<DD>Allows your ISAPI filter to retrieve the connection identifier contained in the <B>ConnID</B> field of an ISAPI application's extension control block. The filter can use this identifier as a key to coordinate data that it shares with an application. The filter should set the <I>pData</I> parameter of <B>ServerSupportFunction</B> to a pointer to receive the connection identifier.</dd>
+
+<DT>SF_REQ_SET_CERTIFICATE_INFO</DT>
+
+<DD>Allows your ISAPI filter to set an SSPI security context plus impersonation token derived from a client certificate. 
+
+<P>The filter should set the <I>pData</I> parameter of <B>ServerSupportFunction</B> to a pointer to an HTTP_FILTER_CERTIFICATE_INFO structure containing certificate information. The filter should set the <I>ul1</I> parameter of <B>ServerSupportFunction</B> to the context handle, and the <I>ul2</I> parameter to the impersonation handle.
+</dd>
+
+<DT>SF_REQ_GET_PROPERTY</DT>
+
+<DD>Allows your ISAPI filter to retrieve an IIS property, as defined in SF_PROPERTY_IIS. 
+
+<P>The filter should set the <I>ul1</I> parameter of <B>ServerSupportFunction</B> to the property identifier.
+</dd>
+
+<DT>SF_REQ_NORMALIZE_URL</DT>
+
+<DD>Allows your ISAPI filter to normalize a URL.
+
+<P>The filter should set the <I>pData</I> parameter of <B>ServerSupportFunction</B> to a pointer to the URL.
+</dd>
+
+<DT>SF_REQ_DISABLE_NOTIFICATIONS</DT>
+
+<DD>Allows your ISAPI filter to disable specific notification types for the remaining lifetime of the request. If a particular notification event is disabled for your filter, the Web Server will not call the filter when that notification event occurs.
+
+<P>The filter should set the <I>ul1</I> parameter of <B>ServerSupportFunction</B> to the notifications to disable. 
+</dd>
+</DL>
+
+<H4 class="dtH4">Requirements</H4>
+
+<P><B>Pocket PC:</B> Pocket PC 2000 and later.<BR>
+<B>Smartphone:</B> Smartphone 2002 and later.<BR>
+<B>OS Versions:</B> Windows CE 3.0 and later.<BR>
+<B>Header:</B> Httpfilt.h.<BR>
+<B>Link Library:</B> Not applicable.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50lrfserversupportfunctionisapifilters.htm">ServerSupportFunction (ISAPI Filters)</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

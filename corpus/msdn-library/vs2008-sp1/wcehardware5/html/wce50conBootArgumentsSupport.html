@@ -1,0 +1,107 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Boot Arguments Library</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Boot Arguments Library"/>
+<MSHelp:RLTitle Title="Boot Arguments Library"/>
+<MSHelp:Keyword Index="A" Term="wce50conBootArgumentsSupport"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Hardware"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="True"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="PQOAL_concepts.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="False"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_1042618">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50conbootargumentssupport"></A>Boot Arguments Library</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>The boot arguments library passes parameters from the boot loader to the kernel in a uniform way on devices that use a boot loader. It does not export any function or variable to the kernel. The boot arguments library uses encapsulated data types for each component being initialized. This enables you to maintain component separation and still be able to add components in the future without affecting existing components. For more information, see %_WINCEROOT%\Platform\Common\Src\Inc\Oal_args.h.</P>
+
+<P>The boot arguments library relies on image configuration parameters to locate the shared data area. If a component has specified a configuration data type, this data type might be simply included in the NKARGS type and then configured by the boot loader.</P>
+
+<P>The NKARGS type is partitioned into the OAL and the OEM sections. The OAL section contains component data for OAL components. The OEM section should only contain OEM components. NKARGS relies on a standard header, located at the top of the shared NK/BOOTLOADER memory region to validate the data. In <A HREF="wce50lrfoeminit.htm">OEMInit</A>, the signature is validated. If the signature is invalid, it might be assumed that the NKARGS parameters are not initialized. The memory region is located by constants defined in the Image_cfg.h file.</P>
+
+<H2 class="dtH2">Internal APIs</H2>
+
+<H3 class="dtH3">Constants</H3>
+
+<P>The following constants are used to identify or verify the argument structure and its version in memory:</P>
+
+<P><code class="ce">#define OAL_ARGS_SIGNATURE     'SGRA'</code></P>
+
+<P><code class="ce">#define OAL_ARGS_VERSION        1</code></P>
+
+<P>The following constants are used to identify argument items in the structure. Values smaller than 64 are reserved for the OAL library. The hardware platform implementation can use values beginning with BSP_ARGS_QUERY.</P>
+
+<P><code class="ce">#define OAL_ARGS_QUERY_DEVID        1</code></P>
+
+<P><code class="ce">#define OAL_ARGS_QUERY_KITL         2</code></P>
+
+<P><code class="ce">#define OAL_ARGS_QUERY_UUID         3</code></P>
+
+<P><code class="ce">#define OAL_ARGS_QUERY_RTC          4</code></P>
+
+<P><code class="ce">#define OAL_ARGS_QUERY_UPDATEMODE   5</code></P>
+
+<P><code class="ce">#define BSP_ARGS_QUERY              64</code></P>
+
+<H3 class="dtH3">Structure</H3>
+
+<DL>
+<DT><code class="ce">typedef struct {</code><BR>
+<code class="ce">    UINT32  signature;</code><BR>
+<code class="ce">    UINT16  oalVersion;</code><BR>
+<code class="ce">    UINT16  bspVersion;</code><BR>
+<code class="ce">} OAL_ARGS_HEADER;</code></DT>
+
+<DD>This structure defines the arguments header. Use <B>OAL_ARGS_HEADER</B> to identify and verify the version of the arguments header.</dd>
+</DL>
+
+<H3 class="dtH3">Function</H3>
+
+<DL>
+<DT><code class="ce">VOID* OALArgsQuery(UINT32 type);</code></DT>
+
+<DD>This function obtains the values from the arguments structure. It is called by other OAL modules. This function should return NULL when the specified argument type is not found. <B>OALArgsQuery</B> should also solve issues related to different argument structure versions.</dd>
+</DL>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50conproductionqualityoalcomponents.htm">Production-Quality OAL Components</A> </P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

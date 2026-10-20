@@ -1,0 +1,128 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Viewing Boot Events With Readlog</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Viewing Boot Events With Readlog"/>
+<MSHelp:RLTitle Title="Viewing Boot Events With Readlog"/>
+<MSHelp:Keyword Index="A" Term="wce51tskViewingBootEventsWithReadlog"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Debugging"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="True"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbTask"/>
+<MSHelp:Attr Name="Filename" Value="celog_event_tracking_tools.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="True"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="True"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_1073095">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce51tskviewingbooteventswithreadlog"></A>Viewing Boot Events With Readlog</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>CeLog logs events pertaining to device boot if you enable the collection zone CELZONE_BOOT_TIME. For example, CeLog will capture events that indicate when various drivers and processes load and initialize. When you have enabled this zone and collected data during boot, the boot events will be saved in the log file. Remote Kernel Tracker does not display these events, so you must use the Readlog viewing tool to see them.</P>
+
+<P>For more information, see <A HREF="wce51tskenablingcelogzonesduringboot.htm">Enabling CeLog Zones During Boot</A> and <A HREF="wce51tskcapturingcelogdataduringboot.htm">Capturing CeLog Data During Boot</A>.</P>
+
+<P class="labelproc"><B>To view boot events </B>
+
+<OL type="1">
+	<LI>From a command window, navigate to the flat release directory.</li>
+
+	<LI>At the command prompt, type
+<PRE class="code">Readlog celog.clg output.txt</PRE>
+
+<P>This causes Readlog to convert the binary log file celog.clg to a text file called output.txt.
+</li>
+
+	<LI>From a text editor such as Notepad or Wordpad, open output.txt. 
+<P>If the output file is very large, you may want to use a text editor that processes large files faster.
+</li>
+
+	<LI>To find the boot events, search for the strings "nk.exe:", "filesys.exe:", and "device.exe:".</li>
+</OL>
+
+<H4 class="dtH4">Remarks</H4>
+
+<P>Two important processes log events during boot: device.exe and filesys.exe.</P>
+
+<P>Device.exe logs events as it synchronously calls into the driver initialization routines.</P>
+
+<P>Filesys.exe logs events as it synchronously or asynchronously launches the processes that are listed in the device registry under <B>HKEY_LOCAL_MACHINE\init</B>. Filesys.exe may or may not wait for each application to call <MSHelp:link keywords="wce50lrfSignalStarted" TABINDEX="0">SignalStarted</MSHelp:link><B>,</B> based on whether any other applications set the <I>Depends </I>value to indicate that they depend on previous applications. For more information, see <MSHelp:link keywords="wce50conConfiguringtheProcessBootPhase" TABINDEX="0">Configuring the Process Boot Phase</MSHelp:link>.</P>
+
+<P>The following example shows the contents of an output text file from a log that was recorded during boot with only CELZONE_BOOT_TIME was enabled:</P>
+
+<PRE class="code"> 0:00:15.015.193 : nk.exe: Launching filesys.exe
+ 0:00:15.106.055 : filesys.exe: Object store initalized
+ 0:00:16.525.745 : filesys.exe: Registry initialized
+ 0:00:16.636.559 : filesys.exe: Files initialized
+ 0:00:16.699.603 : filesys.exe: Database initialized
+ 0:00:16.699.839 : filesys.exe: File system initialized
+ 0:00:16.727.518 : filesys.exe: Launching CeLogFlush.exe
+ 0:00:16.779.136 : filesys.exe: Launching shell.exe
+ 0:00:17.091.626 : filesys.exe: Launching device.exe
+ 0:00:18.038.225 : device.exe: Activating Drivers\BuiltIn
+ 0:00:18.126.507 : device.exe: Activating Drivers\BuiltIn\notify
+ 0:00:18.187.368 : device.exe: Activating Drivers\BuiltIn\WaveDev
+ 0:00:18.321.403 : device.exe: Activating Drivers\BuiltIn\Serial
+ 0:00:18.379.351 : device.exe: Activating Drivers\BuiltIn\NLed
+ 0:00:18.389.546 : device.exe: Activating Drivers\BuiltIn\DMA4
+ 0:00:18.406.115 : device.exe: Activating Drivers\BuiltIn\DMA5
+ 0:00:18.414.685 : device.exe: Activating Drivers\BuiltIn\DMA6
+ 0:00:18.423.285 : device.exe: Activating Drivers\BuiltIn\DMA7
+ 0:00:18.433.297 : device.exe: Activating Drivers\BuiltIn\EMS
+ 0:00:18.447.427 : device.exe: Activating Drivers\BuiltIn\NDIS
+ 0:00:18.899.361 : device.exe: Activating Drivers\BuiltIn\TAPI
+ 0:00:18.931.035 : device.exe: Activating Drivers\BuiltIn\WAPIMAN
+ 0:00:19.286.392 : device.exe: Activating TCPIP\IPDevice
+ 0:00:19.294.154 : device.exe: Activating TCPIP\TCPDevice
+ 0:00:19.960.906 : device.exe: Activating Drivers\BuiltIn\NDISUIO
+ 0:00:19.986.069 : device.exe: Activating Drivers\BuiltIn\autoras
+ 0:00:19.998.966 : device.exe: Activating Drivers\BuiltIn\NdisPower
+ 0:00:20.011.025 : device.exe: Activating Drivers\BuiltIn\Ethman
+ 0:00:20.021.475 : device.exe: Activating Drivers\BuiltIn\credsvc
+ 0:00:20.076.284 : device.exe: Activating Drivers\BuiltIn\TIMESVC
+ 0:00:20.115.738 : device.exe: Finished initializing
+ 0:00:20.316.650 : filesys.exe: Launching gwes.exe
+ 0:00:20.342.957 : filesys.exe: Launching ceemulsrv.exe
+ 0:00:21.562.620 : filesys.exe: Launching explorer.exe
+ 0:00:21.731.785 : filesys.exe: PSLs notified of system started</PRE>
+
+<BLOCKQUOTE class="dtBlock">
+<b class="le">Note: </b>When you are capturing data during boot, you are likely to encounter data loss, especially if you have not increased the RAM buffer size, reduced the collection zones you use, or taken any other steps to prevent it. If your log has lost data, Readlog.exe prints a warning. To analyze the lost data, it is also important to determine what span of time was lost. </BLOCKQUOTE>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><MSHelp:link keywords="wce50grfCeLogZones" TABINDEX="0">CeLog Zones</MSHelp:link> | <A HREF="wce51conavoidingcelogdataloss.htm">Avoiding CeLog Data Loss</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

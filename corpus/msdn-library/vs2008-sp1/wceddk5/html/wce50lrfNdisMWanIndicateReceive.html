@@ -1,0 +1,130 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>NdisMWanIndicateReceive</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="NdisMWanIndicateReceive"/>
+<MSHelp:RLTitle Title="NdisMWanIndicateReceive"/>
+<MSHelp:Keyword Index="K" Term="NdisMWanIndicateReceive"/>
+<MSHelp:Keyword Index="A" Term="wce50lrfNdisMWanIndicateReceive"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Driver"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="False"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="apiref"/>
+<MSHelp:Attr Name="Filename" Value="ndis_library_functions2.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="False"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+<MSHelp:Attr Name="APIName" Value="NdisMWanIndicateReceive"/>
+<MSHelp:Attr Name="APIType" Value="DLLExport"/>
+<MSHelp:Attr Name="APILocation" Value="Ndis.dll"/>
+<MSHelp:Attr Name="PBFeature" Value="NetworkDriver"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_3018561">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50lrfndismwanindicatereceive"></A>NdisMWanIndicateReceive</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>This function notifies NDISWAN that a packet has been received for an established link to be forwarded to the appropriate bound protocol driver.</P>
+
+<PRE class="syntax"><B>VOID NdisMWanIndicateReceive(</B>
+<B>  PNDIS_STATUS</B> <I>Status</I><B>,</B>
+<B>  NDIS_HANDLE</B> <I>MiniportAdapterHandle</I><B>,</B>
+<B>  NDIS_HANDLE</B> <I>NdisLinkContext</I><B>,</B>
+<B>  PUCHAR</B> <I>PacketBuffer</I><B>,</B>
+<B>  UINT</B> <I>PacketSize</I>
+<B>);</B></PRE>
+
+<H4 class="dtH4">Parameters</H4>
+
+<DL>
+<DT><I>Status</I></DT>
+
+<DD>[out] Points to a caller-supplied variable in which this function returns the status of the indication, which can be one of the following:
+
+<UL type="disc">
+	<LI>NDIS_STATUS_SUCCESS
+<P>NDISWAN recognized and accepted the packet.
+</li>
+
+	<LI>NDIS_STATUS_NOT_ACCEPTED
+<P>NDISWAN did not recognize the frame.
+</li>
+</UL>
+
+
+<P>Any other status indicates that NDISWAN recognized the frame, but for some reason was unable to accept it.
+</dd>
+
+<DT><I>MiniportAdapterHandle</I></DT>
+
+<DD>[in] Specifies the handle originally input to <A HREF="wce50lrfminiportinitialize.htm">MiniportInitialize</A>.</dd>
+
+<DT><I>NdisLinkContext</I></DT>
+
+<DD>[in] Specifies the handle supplied by NDISWAN in the <A HREF="wce50lrfndismaclineup.htm">NDIS_MAC_LINE_UP</A> structure at the miniport's initial call to <A HREF="wce50lrfndismindicatestatus.htm">NdisMIndicateStatus</A> for this link.</dd>
+
+<DT><I>PacketBuffer</I></DT>
+
+<DD>[in] Specifies the base virtual address of the buffer containing the received packet.</dd>
+
+<DT><I>PacketSize</I></DT>
+
+<DD>[in] Specifies the size in bytes of the received packet data.</dd>
+</DL>
+
+<H4 class="dtH4">Return Values</H4>
+
+<P>None.</P>
+
+<H4 class="dtH4">Remarks</H4>
+
+<P>When a miniport calls <B>NdisMWanIndicateReceive</B>, NDISWAN indicates the packet by calling the <B>ProtocolReceive</B> functions of bound protocol drivers. The entire packet is available for inspection by protocols, because WAN miniports never indicate partial packets with only a lookahead portion of the packet data.</P>
+
+<P>Consequently, such a protocol will never call <A HREF="wce50lrfndistransferdata.htm">NdisTransferData</A> so the underlying miniport driver needs no <B>MiniportTransferData</B> function. The miniport always passes up an entire packet due to compression and encryption that might be applied to the packet from the transmitting node. Also, because the link is point-to-point, at least one higher-level protocol accepts each received packet.</P>
+
+<P>For any protocol that receives an indication through <B>NdisMWanIndicateReceive</B>, the buffer at <I>PacketBuffer</I> is valid only during the current call to its <A HREF="wce50lrfprotocolreceive.htm">ProtocolReceive</A> function. Because the packet might be compressed, the entire packet must be available when this call is made. This buffer should contain the same data and size as the buffer sent by the driver on the remote node.</P>
+
+<P>The data contained in the header is the same as that received on the NIC. A WAN miniport need not remove any headers or trailers from the data its NIC receives. The transmitting driver does not add padding to the packet.</P>
+
+<H4 class="dtH4">Requirements</H4>
+
+<P><B>OS Versions:</B> Windows CE .NET 4.0 and later.<BR>
+<B>Header:</B> Ndis.h.<BR>
+<B>Link Library:</B> Ndis.dll.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50lrfminiportinitialize.htm">MiniportInitialize</A> | <A HREF="wce50lrfminiporttransferdata.htm">MiniportTransferData</A> | <A HREF="wce50lrfndismaclineup.htm">NDIS_MAC_LINE_UP</A> | <A HREF="wce50lrfminiportsetinformation.htm">MiniportSetInformation</A> | <A HREF="wce50lrfndistransferdata.htm">NdisTransferData</A> | <A HREF="wce50lrfprotocolreceive.htm">ProtocolReceive</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

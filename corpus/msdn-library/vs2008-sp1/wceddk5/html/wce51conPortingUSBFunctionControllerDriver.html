@@ -1,0 +1,80 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Porting a USB Function Controller Driver</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Porting a USB Function Controller Driver"/>
+<MSHelp:RLTitle Title="Porting a USB Function Controller Driver"/>
+<MSHelp:Keyword Index="A" Term="wce51conPortingUSBFunctionControllerDriver"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Driver"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="False"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="usbfunction_guide.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="False"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="True"/>
+<MSHelp:Attr Name="PBFeature" Value="USBFunctionDriver"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_1062730">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce51conportingusbfunctioncontrollerdriver"></A>Porting a USB Function Controller Driver</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>To port a USB function controller driver, select a driver for a USB function controller that is most similar to your function controller. The USB function controller drivers utilize the bus agnostic driver framework to retrieve information from the registry. For more information, see <A HREF="wce50conbusagnosticdrivers.htm">Bus Agnostic Drivers</A>.</P>
+
+<H2 class="dtH2">Porting the Net2280 USB Function Controller Driver PDD</H2>
+
+<P>The Net2280 USB function controller driver is in %_WINCEROOT%\Public\Common\OAK\Drivers\USBFN. Its registry keys are in %_WINCEROOT%\Public\Common\OAK\Files\Common.reg, under the <B>HKEY_LOCAL_MACHINE\Drivers\BuiltIn\PCI\Template\NET2280</B> registry key.</P>
+
+<P>This is the most fully featured USB function controller driver, and it is hardware platform independent. This driver takes advantage of the bus agnostic driver framework, and by default, runs on the PCI bus. The driver uses the bus agnostic driver framework to retrieve resource information from the registry. The driver retrieves this registry information through the PCI bus driver. Because this driver takes advantage of the bus agnostic driver framework, porting may be simpler because the driver does not contain any code that is specific to a hardware platform or system bus. Investigate porting this driver to your USB function controller. For information about the bus agnostic driver framework, see <A HREF="wce50conbusagnosticdrivers.htm">Bus Agnostic Drivers</A>. Porting this driver to your USB function controller is similar to porting any other PCI device driver. For information about PCI bus drivers, see <A HREF="wce50conpcibusdriver.htm">PCI Bus Driver</A> and <A HREF="wce50conpcibusdriverregistrysettings.htm">PCI Bus Driver Registry Settings</A>.</P>
+
+<H2 class="dtH2">Porting the PXA27X USB Function Controller Driver PDD</H2>
+
+<P>The PXA27X USB function controller driver is in %_WINCEROOT%\Public\Common\OAK\CSP\ARM\Intel\PXA27X\USBFN. The driver is implemented as a base class. To port this driver to a specific hardware platform, inherit data and functions from the base class and use the inherited data and functions to implement functionality that is specific to your hardware platform. The Intel Mainstone II development platform inherits from the PXA27X USB function controller driver and then implements any hardware platform specific functionality. The Intel Mainstone II USB function controller driver is in %_WINCEROOT%\Platform\Mainstoneii\Src\Drivers\USBFN. Any hardware platform can inherit from the PXA27X USB function controller driver base class.</P>
+
+<P>This driver uses the bus agnostic driver framework to retrieve information from the registry. For an example of hardware platform specific registry keys, see %_WINCEROOT%\Platform\Mainstoneii\Files\Platform.reg. For more information, see <A HREF="wce50conbusagnosticdrivers.htm">Bus Agnostic Drivers</A>.</P>
+
+<H2 class="dtH2">Porting the PXA25X USB Function Controller Driver PDD</H2>
+
+<P>The PXA25X USB function controller driver is in %_WINCEROOT%\Public\Common\OAK\CSP\ARM\Intel\PXA25X\USB\Function\PDD. This driver's implementation is similar to the PXA27X USB function controller driver's implementation because there is a PDD that implements the functionality of the PXA27X USB function controller that is not specific to a hardware platform. This PDD calls out to a library for functionality that is specific to a hardware platform. A sample stub library is in %_WINCEROOT%\Public\Common\OAK\CSP\ARM\Intel\PXA25X\USB\Function\Lib. The header file for the library is %_WINCEROOT%\Public\Common\OAK\CSP\ARM\Intel\PXA25X\Inc\_pxa255_ufnlib.h.</P>
+
+<H2 class="dtH2">Porting the S3C2410 USB Function Controller Driver PDD</H2>
+
+<P>The S3C2410 USB function controller driver PDD is in %_WINCEROOT%\Public\Common\OAK\Drivers\CSP\ARM\Samsung\S3C2410X\USB\Function. The registry settings are in %_WINCEROOT%\Platform\SMDK2410\Files\Platform.reg, under the <B>HKEY_LOCAL_MACHINE\Drivers\BuiltIn\SC2410USBFN</B> registry key. This USB function controller has very little hardware platform specific functionality. The registry stores the hardware platform specific information.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce51conoptimizingusbfunctiondriverstack.htm">Optimizing a USB Function Driver Stack</A> | <A HREF="wce50oriusbfunctionclassdrivers.htm">USB Function Client Drivers</A> | <A HREF="wce50conpcibusdriver.htm">PCI Bus Driver</A> | <A HREF="wce50conpcibusdriverregistrysettings.htm">PCI Bus Driver Registry Settings</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

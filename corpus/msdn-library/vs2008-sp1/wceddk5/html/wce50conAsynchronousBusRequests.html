@@ -1,0 +1,88 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Asynchronous Bus Requests</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Asynchronous Bus Requests"/>
+<MSHelp:RLTitle Title="Asynchronous Bus Requests"/>
+<MSHelp:Keyword Index="A" Term="wce50conAsynchronousBusRequests"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Driver"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="False"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="sd_guide.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="False"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+<MSHelp:Attr Name="PBFeature" Value="SecureDigitalCardDriver"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_1052874">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50conasynchronousbusrequests"></A>Asynchronous Bus Requests</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>By using asynchronous bus requests, a client driver can issue multiple bus requests without the need to wait for previous requests to complete. The bus requests are internally queued within the bus driver, and sequentially issued to the Secure Digital (SD) device when the SD bus is available.</P>
+
+<P>By making use of asynchronous requests, a client driver can maximize use of the available SD bus bandwidth. For example, while a SD I/O (SDIO) network adapter is busy transmitting a packet, the client driver can be formatting the next packet to be sent.</P>
+
+<P>As each request completes, the bus driver invokes a callback routine by using the client driver. This callback routine can then inform the main client driver thread that the request has completed. With a sequence of requests, the callback routine should keep track of the outstanding requests and signal the main client driver thread when all outstanding requests are complete.</P>
+
+<H2 class="dtH2">SDBusRequest</H2>
+
+<P>An asynchronous bus request is issued by calling the <A HREF="wce50lrfsdbusrequest.htm">SDBusRequest</A> function. The <I>pCallback</I><B> </B>parameter is a pointer to a callback routine that will be called by the completion thread of the bus driver when the bus request is complete. The <I>RequestParam</I><B> </B>parameter is optional and is passed to the callback routine for the bus request.</P>
+
+<P>The <I>ppRequest</I><B> </B>parameter is used to obtain a pointer to a newly created bus request structure. Usually, the client driver should store this pointer to enable request cancellation and deletion. This is not mandatory, since the pointer is also passed to the callback function upon completion of the request.</P>
+
+<H2 class="dtH2">SDFreeBusRequest</H2>
+
+<P>The client driver is responsible for freeing the memory allocated for this new bus request. This can be done with a call to the <A HREF="wce50lrfsdfreebusrequest.htm">SDFreeBusRequest</A> function within the callback when a request is completed. The callback is invoked whenever a request is completed. A request can be completed on success, error, or cancellation.</P>
+
+<P>Since the callback will run in the completion thread of the bus driver, the callback should do as little as possible. Most importantly, it must not make any blocking function calls. Several blocking or potentially blocking function calls are:
+
+<UL type="disc">
+	<LI><A HREF="wce50lrfsdsynchronousbusrequest.htm">SDSynchronousBusRequest</A></li>
+
+	<LI><A HREF="wce50lrfsdsetcardfeature.htm">SDSetCardFeature</A></li>
+
+	<LI><A HREF="wce50lrfsdcardinfoquery.htm">SDCardInfoQuery</A></li>
+</UL>
+
+<H2 class="dtH2">SDCancelBusRequest</H2>
+
+<P>The client driver is able to cancel any outstanding bus request by calling the <A HREF="wce50lrfsdcancelbusrequest.htm">SDCancelBusRequest</A> function. If the bus request has yet to be sent, it will be removed from the queue of requests, and the completion callback will be called. The callback routine must free the bus request as normal. The request status of SD_API_STATUS_CANCELED<B> </B>indicates the request was cancelled. In all cases, the client driver should wait until all requests have been completed.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50conclientdriverbusrequests.htm">Client Driver Bus Requests</A> | <A HREF="wce50consynchronousbusrequests.htm">Synchronous Bus Requests</A> | <A HREF="wce50lrfsdbusrequest.htm">SDBusRequest</A> | <A HREF="wce50lrfsdfreebusrequest.htm">SDFreeBusRequest</A> | <A HREF="wce50lrfsdsynchronousbusrequest.htm">SDSynchronousBusRequest</A> | <A HREF="wce50lrfsdsetcardfeature.htm">SDSetCardFeature</A> | <A HREF="wce50lrfsdcardinfoquery.htm">SDCardInfoQuery</A> | <A HREF="wce50lrfsdcancelbusrequest.htm">SDCancelBusRequest</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

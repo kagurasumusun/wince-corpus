@@ -1,0 +1,171 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Logging Call Stacks with CeLog</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Logging Call Stacks with CeLog"/>
+<MSHelp:RLTitle Title="Logging Call Stacks with CeLog"/>
+<MSHelp:Keyword Index="A" Term="wce51tskLoggingCallStacksWithCeLog"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Debugging"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="True"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbTask"/>
+<MSHelp:Attr Name="Filename" Value="celog_event_tracking_customization.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="True"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_1073141">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce51tskloggingcallstackswithcelog"></A>Logging Call Stacks with CeLog</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>You can use the CeLog API together with kernel functions to log call stack information for any thread. </P>
+
+<P class="labelproc"><B>To log a call stack</B>
+
+<UL type="disc">
+	<LI>Turn on CELZONE_PROCESS and CELZONE_MODULE to make sure that CeLog records the memory locations for processes and DLLs. 
+<P>If CELZONE_PROCESS and CELZONE_MODULE are turned off, CeLog does not record the process and module addresses. As a result, the CeLog tools cannot map process and module addresses to symbol addresses. In order to look up the symbols that make sense of the callstack data, these zones must be enabled. 
+</li>
+</UL>
+
+<OL type="1">
+	<LI>Retrieve the call stack of the desired thread using <MSHelp:link keywords="wce50lrfGetThreadCallStack" TABINDEX="0">GetThreadCallStack</MSHelp:link>. </li>
+
+	<LI>Call <MSHelp:link keywords="wce50lrfCeLogData" TABINDEX="0">CeLogData</MSHelp:link> to log the call stack information gathered in step 2, using the event ID CELID_CALLSTACK.</li>
+</OL>
+
+<P>The following list provides additional suggestions:
+
+<UL type="disc">
+	<LI>To minimize the performance degradation that querying the stack might cause, consider logging only after verifying that CeLog is loaded, using <MSHelp:link keywords="wce50lrfIsCeLogStatus" TABINDEX="0">IsCeLogStatus</MSHelp:link>. If CeLog is not loaded, the code takes no action. 
+<P>- or -
+
+<P>Log only after determining that a specific zone such as CELZONE_MISC is enabled, using <MSHelp:link keywords="wce50lrfIsCeLogZoneEnabled" TABINDEX="0">IsCeLogZoneEnabled</MSHelp:link>(CELZONE_xxx). If the specified zone is not enabled, the code takes no action. 
+</li>
+
+	<LI>To guard against modifications that <MSHelp:link keywords="wce50lrfGetThreadCallStack" TABINDEX="0">GetThreadCallStack</MSHelp:link> might make, preserve the <I>LastError</I> value. Call <MSHelp:link keywords="wce50lrfGetLastError" TABINDEX="0">GetLastError</MSHelp:link> to get the value before calling <B>GetThreadCallStack</B>, and <MSHelp:link keywords="wce50lrfSetLastError" TABINDEX="0">SetLastError</MSHelp:link> to restore the value after you are done.</li>
+</UL>
+
+<P>Remote Kernel Tracker does not store call stack events. If you are logging call stack events, you should use CeLogFlush.exe or OSCapture.exe to flush the data.</P>
+
+<H4 class="dtH4">Example</H4>
+
+<P>The following example uses <B>CeLogData</B> and kernel functions to retrieve stack frame information for a particular thread, and logs the information to the CeLog buffer.</P>
+
+<PRE class="code">#include "pkfuncs.h"
+#include "celog.h"
+__inline static void
+MyLogStackFunc(
+{
+    \\ Check to see if CeLog is enabled. If not, stop now
+    if (IsCeLogStatus(CELZONE_ENABLED_ANY)) {
+
+        \\ Set up the structure that holds the stack.
+        \\ This example uses 20 frames to keep stack usage low.
+        #define MY_STACK_BUFFER_LEN 20
+        CallSnapshot cs[MY_STACK_BUFFER_LEN];
+
+        \\## IMPORTANT ## Preserve lasterr value while capturing callstack
+        DWORD dwLastError = GetLastError();
+        DWORD dwNumFrames, dwFramesLogged;
+        dwFramesLogged = 0;
+        do {
+            \\ Get the stack for the current thread
+            dwNumFrames = GetThreadCallStack(
+                (HANDLE) GetCurrentThreadId(),
+                MY_STACK_BUFFER_LEN, cs, 0, dwFramesLogged);
+
+            if (dwNumFrames) {
+                \\ Log the stack information as a CeLog event
+                CeLogData(TRUE, CELID_CALLSTACK, (PVOID) cs,
+                    (WORD)(dwNumFrames * sizeof(CallSnapshot)),
+                    0, CELZONE_ALWAYSON, 0, FALSE);
+                dwFramesLogged += dwNumFrames;
+            }
+
+            // Keep looping if there are more than 20 stack frames,
+            // logging a callstack event for every 20 frames.
+        } while (dwNumFrames == MY_STACK_BUFFER_LEN);
+
+        SetLastError(dwLastError);
+    }
+}</PRE>
+
+<H4 class="dtH4">Output</H4>
+
+<P>To resolve symbols and have Readlog show the functions that correspond to each address in the call stack, use Readlog with the <code class="ce">-v </code>command-line parameter. For more information, see <A HREF="wce51grfreadlogcommand-lineoptions.htm">Readlog Command-Line Options</A>.</P>
+
+<P>The following example shows Readlog output from MyLogStackFunc. Callstack events are displayed following a header line that contains the words </P>
+
+<PRE class="code">&nbsp;&nbsp;&nbsp;&nbsp;<code class="ce">Callstack (from previous event)</code>.</PRE>
+
+<P>Because the call stack for this module was larger than the 20-frame limit set in MyLogStackFunc, the stack is logged as two events. </P>
+
+<PRE class="code">0:23:51.823.311 : Callstack (from previous event):
+     0x03F6B658 coredll.dll!xxx_GetThreadCallStack
+     0x09A05530 afd.dll!MyLogStackFunc
+     0x09A05370 afd.dll!DeleteSocket
+     0x09A054BC afd.dll!SockDeref
+     0x09A06C4C afd.dll!AfdClose
+     0x8014B18C NK.EXE!DoCloseAPIHandle
+     0x03061834 wspm.dll!WSPCloseSocket
+     0x03AE8338 dtpt_lsp.dll!?WSPCloseSocket@DPROVIDER
+     0x03AE4934 dtpt_lsp.dll!?WSPCloseSocket@CLSPSocketPassthrough
+     0x03AE2284 dtpt_lsp.dll!?WSPCloseSocket
+     0x03857428 autobind_lsp.dll!?WSPCloseSocket
+     0x03857CD4 autobind_lsp.dll!?WSPCloseSocket@CLSPSocketPassthrough
+     0x03852344 autobind_lsp.dll!?WSPCloseSocket
+     0x03304048 ssllsp.dll!?WSPCloseSocket
+     0x03301DFC ssllsp.dll!?WSPCloseSocket
+     0x02E02410 ws2.dll!closesocket
+     0x02E07460 ws2.dll!IsIp6Running
+     0x02E07CB8 ws2.dll!getaddrinfo
+     0x03472C4C ipv6hlp.dll!GetAddrInfoW
+     0x03473CAC ipv6hlp.dll!SetIsatapRouterAddress
+ 0:23:51.825.524 : Callstack (from previous event):
+     0x03474E0C ipv6hlp.dll!Add6to4Address
+     0x03475430 ipv6hlp.dll!ProcessInterfaceStateChange
+     0x03475778 ipv6hlp.dll!OnChangeInterfaceInfo
+     0x03471DCC ipv6hlp.dll!WaitForSingleObjectThread
+     0x03F6CD14 coredll.dll!ThreadBaseFunc
+ </PRE>
+
+<P>Remote Kernel Tracker does not display callstack events. To view callstack events, you must use Readlog. </P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><MSHelp:link keywords="wce50lrfCallSnapshot" TABINDEX="0">CallSnapshot</MSHelp:link> | <MSHelp:link keywords="wce50lrfGetLastError" TABINDEX="0">GetLastError</MSHelp:link> | <MSHelp:link keywords="wce50lrfGetThreadCallStack" TABINDEX="0">GetThreadCallStack</MSHelp:link> | <MSHelp:link keywords="wce50lrfGetCurrentThreadId" TABINDEX="0">GetCurrentThreadID</MSHelp:link> | <MSHelp:link keywords="wce50lrfCeLogData" TABINDEX="0">CeLogData</MSHelp:link> | <MSHelp:link keywords="wce50grfCeLogEventIdentifiers" TABINDEX="0">CeLog Event Identifiers</MSHelp:link> | <MSHelp:link keywords="wce50grfCeLogZones" TABINDEX="0">CeLog Zones</MSHelp:link></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

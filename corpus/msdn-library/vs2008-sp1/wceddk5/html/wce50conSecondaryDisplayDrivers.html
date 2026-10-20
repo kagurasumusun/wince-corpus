@@ -1,0 +1,156 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Secondary Display Drivers</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Secondary Display Drivers"/>
+<MSHelp:RLTitle Title="Secondary Display Drivers"/>
+<MSHelp:Keyword Index="A" Term="wce50conSecondaryDisplayDrivers"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Driver"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="False"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="display_guide.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="True"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="True"/>
+<MSHelp:Attr Name="PBFeature" Value="DisplayDriver"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_3017861">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50consecondarydisplaydrivers"></A>Secondary Display Drivers</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>In addition to the primary display, Windows CE&#0150;based platforms can support additional display devices. </P>
+
+<P>These additional display devices might be used, for example, to support Video Graphics Adapter (VGA) output to a CRT screen. </P>
+
+<P>Drivers for such additional display devices are called secondary display drivers. </P>
+
+<H2 class="dtH2">Secondary Display Driver Hardware</H2>
+
+<P>Hardware platforms might have a secondary display controller. Use a secondary display driver to manage the secondary display controller.</P>
+
+<P>You can have two different display cards in the system at once. GWES enables the first card in the <B>HKEY_LOCAL_MACHINE\System\GDI\DisplayCandidates</B> registry key as the primary. </P>
+
+<P>This registry key is usually set up in Platform.reg. If there are no display driver registry settings in the <B>DisplayCandidates </B>subkey, GWES enables the first one in the <B>HKEY_LOCAL_MACHINE\System\GDI\Drivers </B>registry key.</P>
+
+<P>If the display controller resides on a removable medium, such as a PC card, the secondary display driver can be implemented as one or two DLLs. </P>
+
+<P>In practice, you typically implement two separate DLLs: 
+
+<UL type="disc">
+	<LI>A secondary display driver that exposes the built-in display DDI</li>
+
+	<LI>A driver that exposes the stream interface</li>
+</UL>
+
+<P>The following code shows example registry entries for setting up multiple display driver candidates on a PCI bus.</P>
+
+<PRE class="code">[HKEY_LOCAL_MACHINE\System\GDI\DisplayCandidates]
+   "Candidate1"="Drivers\\BuiltIn\\PCI\\Instance\\Primary"
+   "Candidate2"="Drivers\\BuiltIn\\PCI\\Instance\\Secondary"
+
+[$(PCI_BUS_ROOT)\Template\Primary]
+   "DisplayDll"="ddi_primary.dll"
+   &lt;other PCI info here&gt;
+
+[$(PCI_BUS_ROOT)\Template\Secondary]
+   "DisplayDll"="ddi_secondary.dll"
+   &lt;other PCI info here&gt;</PRE>
+
+<P>The following code shows example registry entries for setting up multiple display driver candidates on a bus other than a PCI bus.</P>
+
+<PRE class="code"> [HKEY_LOCAL_MACHINE\System\GDI\DisplayCandidates]
+   "Candidate1"="Drivers\\Display\\Primary"
+   "Candidate2"="Drivers\\Display\\Secondary"
+
+[HKEY_LOCAL_MACHINE\Drivers\Display\Primary]
+   "DisplayDll"="ddi_primary.dll"
+   &lt;other display specific info here&gt;
+
+[HKEY_LOCAL_MACHINE\Drivers\Display\Secondary]
+   "DisplayDll"="ddi_secondary.dll"
+   &lt;other display specific info here&gt;</PRE>
+
+<P>In both examples above, GDI would first search for the Candidate1 display driver, then the Candidate2 driver, and if there were additional candidates it would go on to search those in succession as well.  Once GDI successfully finds the DLL associated with a candidate, that candidate becomes the primary display and it ignores all subsequent candidates.</P>
+
+<H2 class="dtH2">Loading Secondary Display Drivers</H2>
+
+<P>Load your secondary display driver by calling <MSHelp:link keywords="wce50lrfCreateDC" TABINDEX="0">CreateDC</MSHelp:link>. <B>CreateDC</B> returns a handle to a device context that is associated with the secondary display driver.  This is something that you must do explicitly.  GDI does not search through the list of display candidates to automatically load a secondary display.</P>
+
+<P>If you have your secondary display driver entered in the list of display candidates and GDI somehow fails to load the primary display driver, then GDI will load the secondary display driver as the primary because it is next in the list of candidates.</P>
+
+<P>An application can use the device context returned by <B>CreateDC</B> similarly to a device context associated with the primary display driver: the text and graphics APIs work with the device context. </P>
+
+<P>However, applications cannot use Window Manager functions with the device context because the Window Manager was not involved in creating it. Thus, applications are responsible for rendering the entire display on the secondary display device. </P>
+
+<P>The secondary display driver must create registry entries that enable the device to be detected. </P>
+
+<P>If you want to create the appearance of windows, menus, dialog boxes, and scroll bars on the secondary display, your application must draw those items itself, using the text and graphics APIs. </P>
+
+<P>The only way to copy from the primary to the secondary is through a device independent bitmap, which must be selected into a primary compatible DC; then it must have the primary copied onto it; and finally it must be selected into a secondary compatible DC and copied to the secondary. </P>
+
+<P>Copying from one device to the other without doing this will result in an exception because one display driver will attempt to access the other display driver's surfaces. </P>
+
+<P>The secondary display driver is unloaded when there are no remaining device contexts associated with it. When multiple display devices are being used, the GDI ensures that all drawing calls are routed to the appropriate display driver.</P>
+
+<P>The Device Manager loads the stream interface driver when a user connects the display adapter to the system and registers the driver's special device file name (for example, <B>VGA1:</B>). The secondary display driver gets a handle to the stream interface driver by calling the <MSHelp:link keywords="wce50lrfCreateFile" TABINDEX="0">CreateFile</MSHelp:link> function on the <B>VGA1:</B> device file name. </P>
+
+<H2 class="dtH2">Secondary Display Driver Implementation</H2>
+
+<P>You can create a single DLL that behaves as both a secondary display driver and a stream driver. </P>
+
+<P>In this case, the Device Manager loads this combined driver in its own process space to serve as an ordinary stream interface driver, whereas GWES would load the same driver in its process space to act as the secondary display driver. </P>
+
+<P>Implement the secondary display driver as an ordinary Windows CE&#0150;based display driver, and expose the same display DDI as other display drivers. </P>
+
+<P>The ATI display driver can have multiple instances of itself on a PCI bus. </P>
+
+<P>If you implement a combined driver, be aware that because the driver DLL is loaded in separate process spaces, it cannot share global data without using shared memory or a memory-mapped file. Further, having the driver loaded twice wastes system resources.</P>
+
+<P>Display device drivers do not use many stream interface functions because display devices are not oriented to work with streams of data. Display drivers only need stubs for those functions. For these interfaces, the driver should handle the call and return. </P>
+
+<P>The driver's <A HREF="wce50lrfxxxinit15.htm">XXX_Init (Device Manager)</A> and <A HREF="wce50lrfxxxdeinit14.htm">XXX_Deinit (Device Manager)</A> functions are exceptions. The driver should handle calls to these functions correctly. </P>
+
+<P>When the display adapter is connected to the system, the Device Manager calls <B><I>XXX</I>_Init</B>. </P>
+
+<P>When the adapter is disconnected, the Device Manager calls <B><I>XXX</I>_Deinit</B>. The <B><I>XXX</I>_Deinit</B> function deletes data structures and registry entries that were created by the driver's <B><I>XXX</I>_Init</B> function.</P>
+
+<P>The secondary display driver handles the graphics processing. When the secondary display driver needs to communicate with the display controller, it uses the stream interface's <A HREF="wce50lrfxxxiocontrol16.htm">XXX_IOControl (Device Manager)</A> function.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><MSHelp:link keywords="wce50conRealTimePerformance" TABINDEX="0">Real-Time Performance</MSHelp:link> | <A HREF="wce50oristreaminterfacedrivers.htm">Stream Interface Drivers</A> | <A HREF="wce50condisplaydrivers.htm">Display Drivers</A> | <A HREF="wce50condisplaydriverextensions.htm">Display Driver Extensions</A> | <A HREF="wce50condisplaydriversamples.htm">Display Driver Samples</A> | <A HREF="wce50conprimarydisplaydrivers.htm">Primary Display Drivers</A> | <A HREF="wce50conddifunctions.htm">DDI Functions</A> | <A HREF="wce50lrfbitbltemulationlibraryfunctions.htm">BitBlT Emulation Library Functions</A> | <A HREF="wce50congpebaseclasses.htm">GPE Base Classes</A> | <A HREF="wce50congdisupportservices.htm">GDI Support Services</A> | <A HREF="wce50condisplaybufferformats.htm">Display Buffer Formats</A> | <A HREF="wce50conlinedrawing.htm">Line Drawing</A> | <A HREF="wce50condisplaydriverescapecodes.htm">Display Driver Escape Codes</A> | <A HREF="wce50condisplaydriversandtheosimage.htm">Display Drivers and the Run-Time Image</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

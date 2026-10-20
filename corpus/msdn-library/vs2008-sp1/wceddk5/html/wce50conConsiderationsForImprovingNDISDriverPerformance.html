@@ -1,0 +1,199 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Considerations For Improving NDIS Driver Performance</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Considerations For Improving NDIS Driver Performance"/>
+<MSHelp:RLTitle Title="Considerations For Improving NDIS Driver Performance"/>
+<MSHelp:Keyword Index="A" Term="wce50conConsiderationsForImprovingNDISDriverPerformance"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Driver"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="False"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="ndisminiportdriveroptimization.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="True"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="True"/>
+<MSHelp:Attr Name="PBFeature" Value="NetworkDriver"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_1034158">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50conconsiderationsforimprovingndisdriverperformance"></A>Considerations For Improving NDIS Driver Performance</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>Optimizing NDIS driver performance varies from device to device. Not all of the optimization techniques presented here will improve your driver performance issues. However, each of these techniques has improved performance in some scenarios. </P>
+
+<P>Whenever you change your driver, re-evaluate driver performance. Although a driver change might not affect performance of the base driver, the change might result in other system changes that impair driver performance by creating new bottlenecks.</P>
+
+<H3 class="dtH3">General Optimization Techniques</H3>
+
+<P>The following list shows general techniques for improving driver performance:
+
+<UL type="disc">
+	<LI>Avoid copying memory. </li>
+
+	<LI>For incoming packets, use <A HREF="wce50lrfndismindicatereceivepacket.htm">NdisMIndicateReceivePacket</A> to indicate multiple packets received by the miniport. 
+<BLOCKQUOTE class="dtBlock">
+<b class="le">Note</b>&nbsp;&nbsp;&nbsp;Do not set the status of the indicated packets to NDIS_STATUS_RESOURCES. </BLOCKQUOTE>
+
+<BLOCKQUOTE class="dtBlock">
+The miniport should always pass ownership of the packets to NDIS. The miniport driver should lass the ownership of the packets to NDIS, which improves performance. </BLOCKQUOTE>
+
+<BLOCKQUOTE class="dtBlock">
+Set the NDIS_ATTRIBUTE_ALWAYS_GIVES_RX_PACKET_OWNERSHIP attribute when calling <A HREF="wce50lrfndismsetattributesex.htm">NdisMSetAttributesEx</A> to inform NDIS that NDIS_STATUS_RESOURCES are not indicated.</BLOCKQUOTE>
+</li>
+
+	<LI>Implement <A HREF="wce50lrfminiportsendpackets.htm">MiniportSendPackets</A> instead of <A HREF="wce50lrfminiportsend.htm">MiniportSend</A>. 
+<P>This allows protocol layers to interact in batch mode.
+
+<P>Register the <B>MiniportSendPackets</B> handler through <A HREF="wce50lrfndisregisterprotocol.htm">NdisRegisterProtocol</A>.
+</li>
+
+	<LI>Create a local function to perform cache flushes. 
+<P>This alleviates kernel calls for frequent cache flushes. 
+</li>
+
+	<LI>Microsoft suggests that you review all instances of <A HREF="wce50lrfndismsleep.htm">NdisMSleep</A> or <A HREF="wce50lrfndisstallexecution.htm">NdisStallExecution</A>.
+<P>These functions are used to block processing in the current thread for a specified interval. Using them might have adverse effects on system performance. <B>NdisMSleep</B> has millisecond granularity and allows other threads in the system to run. <B>NdisStallExecution</B> allows microsecond granularity, but spins the CPU while stalling and should therefore be used only where very short delays are required. Do not use <B>NdisStallExecution</B> to stall in excess of 50 milliseconds.
+</li>
+
+	<LI>Process all available data when your <B>MiniportInterruptHandler</B> is called.</li>
+
+	<LI>Execute low-priority tasks as work items instead of as timer events</li>
+
+	<LI>Consider reducing the maximum number of packets processed for each interrupt, if your system has multiple miniports and seems to be suffering from high packet latency or miniport buffer overflow errors. 
+<P>High packet latency can be identified by high round-trip time (RTT) in a UDP multi-packet, ping-pong test.
+</li>
+
+	<LI>Be aware of protocols that place a miniport in promiscuous mode. 
+<P>If two protocols are bound to a miniport in promiscuous mode, all packets sent on one protocol must be looped back to the other protocol. This will degrade performance. To determine whether a protocol has placed a miniport in promiscuous mode, send OID_GEN_CURRENT_PACKET_FILTER to all miniports. If NDIS_PACKET_TYPE_PROMISCOUS returns, the miniport is in promiscuous mode.
+</li>
+
+	<LI>Register a dedicated interrupt, if all adapters have dedicated interrupts.
+<P>Doing so will improve performance. To register a dedicated interrupt, remove the implementation of <B>MiniportInterruptEnableHandler</B>, and then call <A HREF="wce50lrfndismregisterinterrupt.htm">NdisMRegisterInterrupt</A> with both <B>RequestISR</B> and <B>SharedInterrupt</B> set to FALSE. Disable the CPU interrupt in the interrupt service routine (ISR) for the hardware abstraction layer (HAL). Disable the adapter interrupt in the <B>MiniportInterruptDisableHandler</B>, and enable it at the end of <B>MiniportInterruptHandler</B> processing.
+</li>
+
+	<LI>Register a ReceivePacketHandler with NDIS by using the <A HREF="wce50lrfndisregisterprotocol.htm">NdisRegisterProtocol</A> function.</li>
+
+	<LI>Set the IMGNOSHAREETH environment variable to remove VMINI support from your image. 
+<P>VMINI support can improve or degrade performance in actual network driver performance testing. Microsoft recommends that you not run performance tests over a VMINI network.
+</li>
+
+	<LI>Set the IMGLOADNETHIGH environment variable. 
+<P>For more information, see <A HREF="wce50conkernelmemoryallocatedforusebynetworkingstack.htm">Kernel Memory Allocated for Use by the Networking Stack</A>.
+</li>
+
+	<LI>If you are running a closed system, such as a gateway, consider running your run-time image in kernel mode. To understand the implications of this change and how to implement it, see <MSHelp:link keywords="wce50conFullKernelMode" TABINDEX="0">Full-Kernel Mode</MSHelp:link>.
+<BLOCKQUOTE class="dtBlock">
+For information about enabling and disabling full-kernel mode programmatically, see <A HREF="wce50conmemoryaccess.htm">Memory Access Permissions</A>.</BLOCKQUOTE>
+</li>
+
+	<LI>Use shared IST when your hardware platform has multiple miniports. 
+<P>Shared IST is transparent to the miniport driver, and is controlled by the HAL. 
+</li>
+
+	<LI>Set the following registry entries manually, as applicable:
+<P>The following registry entry causes NDIS to skip checking for packet loop back whenever a packet is sent.
+
+<PRE class="code">[HKEY_LOCAL_MACHINE\Comm\NDIS\Parms]
+    "NeverLoopbackPackets"=dword:1</PRE>
+
+<P>The following registry entry should be set to optimize return packet handling, if all miniports calling <B>NdisMIndicateReceivePacket </B>are deserialized.
+
+<PRE class="code">[HKEY_LOCAL_MACHINE\Comm\NDIS\Parms]
+    "AllMiniportsDeserialized"=dword:1</PRE>
+
+<P>The following registry entry can be set to enable receive path optimizations. This value is enabled by default, but it can be disabled by setting it to 0. This value is intended for devices that are not dynamically bound and unbound. If your driver is unbound from your adapter, it might result in a system crash.
+
+<PRE class="code">[HKEY_LOCAL_MACHINE\Comm\NDIS\Parms]
+    "OptimizeReceiveHandling"=dword:1</PRE>
+
+<P>In order for the <CODE>OptimizeReceiveHandling</CODE> key to take effect, the following conditions must be met:
+
+<UL type="disc">
+	<LI>The miniport adapter medium type must be 802_3.</li>
+
+	<LI>The miniport must be bound to a single driver protocol, such as TCP/IP. If it is bound to two or more protocols, such as TCP/IP and TCP/IP 6, then this key is disabled.</li>
+
+	<LI>The protocol driver must have a <A HREF="wce50lrfprotocolreceivepacket.htm">ProtocolReceivePacket</A> handler.</li>
+
+	<LI>The miniport driver must have the NDIS_ATTRIBUTE_ALWAYS_GIVE_RX_PACKET_OWNERSHIP flag set when it calls <A HREF="wce50lrfndismsetattributesex.htm">NdisMSetAttributesEx</A>. By setting this flag, the miniport driver will never set the packet status to STATUS_RESOURCES when it indicates packets have been received.</li>
+
+	<LI>The miniport must be deserialized.</li>
+</UL>
+</li>
+</UL>
+
+<P>Awareness of these optimization concepts can help you improve network driver performance:
+
+<UL type="disc">
+	<LI>A high hit rate in INTERRUPTS_ENABLE in a Monte Carlo profiling log often indicates that the miniport driver is set to work in a shared interrupt environment. If interrupts are shared, a high hit rate is expected. If interrupts are not shared, then register your interrupt as dedicated. </li>
+
+	<LI>In a gateway scenario with the shared interrupt service thread (IST) enabled, all routing work is done by one thread. Kernel Tracker is a graphical tool that provides a visual representation of a remote Windows CE system on a development workstation. CELog is the Windows CE event tracking engine. These tools can help you analyze driver performance. Specifically, while you use Kernel Tracker to view CELog data, if excessive thread switches are seen when data is being routed, it is important to understand why these excessive switches are occurring. The reason will vary from implementation to implementation.</li>
+
+	<LI>All <B>MiniportInterruptHandlers</B> and <B>NdisMTimer</B> events run on the same thread. <B>MiniportSendPackets</B> might also run on this thread. As a result, if the CPU stalls during any one of these events, this thread could stall, which would prevent other interrupts from being serviced or data to be sent. </li>
+</UL>
+
+<H3 class="dtH3">Advanced Optimization Techniques</H3>
+
+<P>The following list shows optimization techniques that you can use in addition to the general optimization techniques listed earlier:
+
+<UL type="disc">
+	<LI>Group data structures into the same page of memory to reduce translation look-aside buffer (TLB) misses</li>
+
+	<LI>If the number of instructions that are executed in a loop exceeds <B>ICacheSize </B>divided by the number of bytes per instruction, then spread the execution into smaller loops. 
+<P>For example, if the <B>ICacheSize</B> is 8 KB and the number of bytes per instruction is 4, then the number of instructions executed in a loop should not be more than 2 KB. 
+</li>
+
+	<LI><A HREF="wce50lrfndismstartbufferphysicalmapping.htm">NdisMStartBufferPhysicalMapping</A> is fairly time consuming because it uses <MSHelp:link keywords="wce50lrfLockPages" TABINDEX="0">LockPages</MSHelp:link>. If you have a multiple miniport system, consider making all miniports aware of each other's physical-to-virtual address mappings. These mappings are established when the miniport calls <A HREF="wce50lrfndismallocatesharedmemory.htm">NdisMAllocateSharedMemory</A>. The physical-to-virtual address mappings can be used to indicate whether a cache flush for a given buffer is necessary.</li>
+
+	<LI>If your Windows CE-based device experiences excessive TLB misses and has software TLB miss handling, for example MIPS and SH, you might be able to reduce the number of misses by loading OS components into kernel memory. CELog (CELZONE_TLB, 0x8) can present an indication of high TLB misses. 
+<P>For Windows CE-based devices that do not have software for handling TLB misses, check with the chip manufacturer about whether the microprocessor supports on-board measurement of TLB misses. If so, the manufacturer might have tools for viewing that data. For more information on how this data is gathered, see <MSHelp:link keywords="wce50conEventTracking" TABINDEX="0">Event Tracking</MSHelp:link>. For information about viewing the data, see <MSHelp:link keywords="wce50conRemoteKernelTracker" TABINDEX="0">Remote Kernel Tracker</MSHelp:link>.
+</li>
+
+	<LI>An x86 hardware platform takes care of cache coherence for you. You do not need to explicitly flush cached memory. For potential performance improvement, consider caching the DMA buffer. Measure performance on all scenarios before and after making this change, because it could either improve or degrade performance. The result will depend on the scenario.</li>
+
+	<LI>Decide whether it is optimal to flush the cached buffer or copy the cached buffer to an uncached memory region for a DMA transfer. The best approach varies from system to system and depends on the size of the buffer and the cost of accessing uncached memory versus the cost of flushing the cache buffer. Try both methods to measure, which is optimal for your system. Independent hardware vendors (IHVs) writing drivers that could be used on different hardware platforms should make this option one that can be configured.
+<P>If you decide to implement cached buffer access with flushing, ensure that your Windows CE-based device has an efficient cache-flushing capability that allows only the specific range to be flushed.
+</li>
+
+	<LI>To examine the amount of CPU time spent in program, driver, OS, or network code, use CELog to stamp entry and exit events.</li>
+
+	<LI>When a target device has a small data cache, it might be efficient to use uncached memory addresses for buffers that are attached to a packet descriptor. The method for obtaining an uncached address for a cached address depends on your hardware. If a device is used for packet routing or bridging, code that sends the packet should check whether the address of the buffer is from an uncached memory region. If it is, you do not need to perform a cache flush.</li>
+</UL>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50conoptimizationofndisminiportdriverperformance.htm">Improving Performance of an NDIS Miniport Driver</A> | <A HREF="wce50conperformanceimprovementsforanndisminiportdriver.htm">Performance Improvements for an NDIS Miniport Driver</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

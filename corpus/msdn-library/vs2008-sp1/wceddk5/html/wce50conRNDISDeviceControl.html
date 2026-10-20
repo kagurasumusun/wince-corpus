@@ -1,0 +1,114 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>RNDIS Device Control</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="RNDIS Device Control"/>
+<MSHelp:RLTitle Title="RNDIS Device Control"/>
+<MSHelp:Keyword Index="A" Term="wce50conRNDISDeviceControl"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Driver"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="False"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="ndis_guide3.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="False"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+<MSHelp:Attr Name="PBFeature" Value="NetworkDriver"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_3018343">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50conrndisdevicecontrol"></A>RNDIS Device Control</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>Although most RNDIS devices will function well without the need to configure parameters on the host, there may be cases where proper network operation requires some configuration on the host. If the device supports configurable parameters, then it should include the following optional object identifier in the list of supported object identifiers it reports in response to a query for <A HREF="wce50lrfoidgensupportedlist.htm">OID_GEN_SUPPORTED_LIST</A>.</P>
+
+<P><code class="ce">#define OID_GEN_RNDIS_CONFIG_PARAMETER    0x0001021B</code></P>
+
+<P>If the device supports <B>OID_GEN_RNDIS_CONFIG_PARAMETER</B>, the host uses it to set device-specific parameters, soon after the device enters the rndis_initialized state from the rndis_uninitialized state. The host will send zero or more <A HREF="wce50lrfremotendissetmsg.htm">REMOTE_NDIS_SET_MSG</A> messages to the device, with <B>OID_GEN_RNDIS_CONFIG_PARAMETER</B> as the object value to set. Each such <B>REMOTE_NDIS_SET_MSG</B> corresponds to one device-specific parameter that is configured on the host. For additional information about <B>OID_GEN_RNDIS_CONFIG_PARAMETER</B>, see <A HREF="wce50conrndisgeneralobjects.htm">RNDIS General Objects</A>.</P>
+
+<P>The <I>InformationBuffer</I> associated with each such <B>REMOTE_NDIS_SET_MSG</B> has the following format. Note that the <I>Offset</I> values are relative to the beginning of the information buffer.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=25%>Offset</TH>
+<TH width=18%>Size</TH>
+<TH width=32%>Field</TH>
+<TH width=25%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=25%>0</TD>
+<TD width=18%>4</TD>
+<TD width=32%>ParameterNameOffset</TD>
+<TD width=25%>Specifies the byte offset from the beginning of the ParameterNameOffset field at which a Unicode character string representing the parameter name is located. The string does not include a NULL terminator.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=25%>4</TD>
+<TD width=18%>4</TD>
+<TD width=32%>ParameterNameLength</TD>
+<TD width=25%>Specifies the byte length of the parameter name string.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=25%>8</TD>
+<TD width=18%>4</TD>
+<TD width=32%>ParameterType</TD>
+<TD width=25%>Specifies the data type of the parameter value. This is one of the following: 0 &#0150; numeric value; 2 &#0150; string value.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=25%>12</TD>
+<TD width=18%>4</TD>
+<TD width=32%>ParameterValueOffset</TD>
+<TD width=25%>Specifies the byte offset from the beginning of the ParameterNameOffset field at which the parameter value is located.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=25%>16</TD>
+<TD width=18%>4</TD>
+<TD width=32%>ParameterValueLength</TD>
+<TD width=25%>Specifies the byte length of the parameter value.</TD>
+</TR>
+</table></div>
+
+<P>The device sends a <A HREF="wce50lrfremotendissetcmplt.htm">REMOTE_NDIS_SET_CMPLT</A> in response to each <B>REMOTE_NDIS_SET_MSG</B>, after applying the parameter value. If the parameter setting is acceptable, it returns a status of RNDIS_STATUS_SUCCESS in the response. If the parameter setting is not acceptable, and the device cannot apply a useful default value for this parameter, then the device returns an appropriate error status value (see section on status values). If an error status is returned, then the host will initiate a halt process for the device.</P>
+
+<P>The Windows CE OS expects device-specific parameters to be configured in the Windows registry. The keys that define parameter values are typically created in the registry during the process of device installation. The list of keys, type information, default values and optional range of valid values are specified in the INF file for the device.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50lrfoidgensupportedlist.htm">OID_GEN_SUPPORTED_LIST</A> | <A HREF="wce50lrfremotendissetmsg.htm">REMOTE_NDIS_SET_MSG</A> | <A HREF="wce50lrfremotendissetcmplt.htm">REMOTE_NDIS_SET_CMPLT</A> | <A HREF="wce50conrndisgeneralobjects.htm">RNDIS General Objects</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

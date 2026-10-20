@@ -1,0 +1,124 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>USB Function Mass Storage Client Driver Execution Sequence</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="USB Function Mass Storage Client Driver Execution Sequence"/>
+<MSHelp:RLTitle Title="USB Function Mass Storage Client Driver Execution Sequence"/>
+<MSHelp:Keyword Index="A" Term="wce50conUSBMassStorageClassDriverExecutionSequence"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Driver"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="False"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="usbfunction_guide.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="False"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+<MSHelp:Attr Name="PBFeature" Value="USBFunctionDriver"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_1034136">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50conusbmassstorageclassdriverexecutionsequence"></A>USB Function Mass Storage Client Driver Execution Sequence</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>The following list shows the execution sequence of a USB mass storage class request through the USB mass storage class driver:
+
+<OL type="1">
+	<LI>The USB function controller driver notifies the transport of the arrival of a setup token packet.</li>
+
+	<LI>The transport reads the setup token packet to determine that the host has sent a USB mass storage class request.
+<P>It does this through the USB function controller driver.
+</li>
+
+	<LI>The transport collects the command. It does this through subsequent DATA_IN transfers. The transport uses <A HREF="wce50lrfstore_iscommandsupported.htm">STORE_IsCommandSupported</A> to determine if the SCSI-2 direct-access device emulator supports the command.
+<OL type="a">
+	<LI>If the emulator does not support the command, then the transport fails the command during the status stage of the command transport or control transfer.</li>
+
+	<LI>If the emulator does support the command, and the command represents the delivery of data to the device, then the transport receives the data associated with the command, and then executes the command. The transport does this through subsequent DATA_OUT transfers of the data transport. </li>
+
+	<LI>If the emulator does support the command, and the command represents the delivery of data to the host, then the transport executes the command and sends the data associated with the command to the host. The transport does this through subsequent IN transfers of the data transport</li>
+</OL>
+</li>
+
+	<LI>The proxy instructs the SCSI-2 direct-access device emulator to execute a command. 
+<OL type="a">
+	<LI>If the emulator does not support the command, it returns FALSE. </li>
+
+	<LI>If the emulator does support the command, the SCSI-2 direct-access device emulator translates the command as necessary, and executes or emulates the command. </li>
+
+	<LI>If the command fails to execute, then the proxy returns FALSE.</li>
+</OL>
+</li>
+</OL>
+
+<P>The following table shows the results of command execution paths.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=26%>Command support</TH>
+<TH width=24%>Execution result</TH>
+<TH width=50%>Function and return value</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=26%>Supported</TD>
+<TD width=24%>Success</TD>
+<TD width=50%><B>STORE_IsCommandSupported</B> returns TRUE.
+<P><A HREF="wce50lrfstore_executecommand.htm">STORE_ExecuteCommand</A> returns TRUE.</P>
+</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=26%>Supported</TD>
+<TD width=24%>Failure</TD>
+<TD width=50%><B>STORE_IsCommandSupported</B> returns TRUE.
+<P><B>STORE_ExecuteCommand</B> returns FALSE.</P>
+</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=26%>Unsupported</TD>
+<TD width=24%>Failure</TD>
+<TD width=50%><B>STORE_IsCommandSupported</B> returns FALSE.
+<P><B>STORE_ExecuteCommand</B> returns FALSE.</P>
+</TD>
+</TR>
+</table></div>
+
+<P>After the data transport stage, the host requests that the USB mass storage class driver return the status of the request in a status transport. The transport replies appropriately.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50conusbmassstorageclassdriver.htm">USB Function Mass Storage Client Driver</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

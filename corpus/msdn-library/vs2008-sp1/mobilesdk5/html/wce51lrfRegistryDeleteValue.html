@@ -1,0 +1,165 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>RegistryDeleteValue</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="RegistryDeleteValue"/>
+<MSHelp:RLTitle Title="RegistryDeleteValue"/>
+<MSHelp:Keyword Index="K" Term="RegistryDeleteValue"/>
+<MSHelp:Keyword Index="A" Term="wce51lrfRegistryDeleteValue"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Application"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbsmartphone"/>
+<MSHelp:Attr Name="Product" Value="kbPocketPC"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="Technology" Value="kbPocketPC"/>
+<MSHelp:Attr Name="Technology" Value="kbSmartphone"/>
+<MSHelp:Attr Name="TopicType" Value="apiref"/>
+<MSHelp:Attr Name="Filename" Value="statstor_functions_magneto.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="True"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="True"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="Author" CONTENT="a-jobrow">
+<META NAME="msdnID" CONTENT="_1071090">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Windows Mobile Version 5.0 SDK<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce51lrfregistrydeletevalue"></A>RegistryDeleteValue</H1>
+<!--Feedback Link Top Start-->
+<P CLASS="feedback"><font size="1"><a href="mailto:medfdbk&#64;microsoft.com?subject=Product: Windows Mobile | Version: 5.0 | Release: SDK | Title: RegistryDeleteValue | Filename: wce51lrfregistrydeletevalue.htm | Built on: Wednesday, September 14, 2005">Send Feedback</a> on this topic to the authors</font></p>
+<!--Feedback Link Top End-->
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>This function deletes a specified registry value.</P>
+
+<PRE class="syntax"><B>HRESULT WINAPI RegistryDeleteValue( </B>
+  <B>HKEY</B> <I>hKey</I>
+  <B>LPCTSTR</B> <I>pszSubKey</I>,
+  <B>LPCTSTR</B> <I>pszValueName</I>
+<B>);</B></PRE>
+
+<H4 class="dtH4">Parameters</H4>
+
+<DL>
+<DT><I>hKey</I></DT>
+
+<DD>Handle to a currently open key, or a predefined root value.</dd>
+
+<DT><I>pszSubKey</I></DT>
+
+<DD>The key under which the value is stored (if this value is NULL, <I>pszValueName</I> is assumed to be under <I>hKey</I>).</dd>
+
+<DT><I>pszValueName</I></DT>
+
+<DD>The name of the value to delete (if this parameter is NULL, the default value is deleted).</dd>
+</DL>
+
+<H4 class="dtH4">Return Values</H4>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=32%>Value</TH>
+<TH width=68%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=32%>S_OK</TD>
+<TD width=68%>The value was deleted successfully<I>.</I></TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=32%>S_FALSE</TD>
+<TD width=68%>The key or value does not exist.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=32%>E_INVALIDARG</TD>
+<TD width=68%>Invalid <I>hKey</I>. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=32%>An error value returned.</TD>
+<TD width=68%>Error value wrapped as a FACILITY_WIN32 HRESULT.</TD>
+</TR>
+</table></div>
+
+<H4 class="dtH4">Remarks</H4>
+
+<P>The value under the <I>hKey</I>+<I>pszSubKey</I> will be deleted if it exists, if the value does not exist, there is no change and this method will succeed.</P>
+
+<P>If the key pointed to by <I>hKey</I>+<I>pszSubKey</I> does not exist, <B>RegistryDeleteValue</B> will fail since it uses <B>RegOpenKey</B> to access the key.</P>
+
+<H4 class="dtH4">Code Example</H4>
+
+<P>The following code example demonstrates how to use <B>RegistryDeleteValue</B>.</P>
+
+<BLOCKQUOTE class="dtBlock">
+<b class="le">Note</b>&nbsp;&nbsp;&nbsp;To make the following code example easier to read, security checking and error handling are not included. This code example should not be used in a release configuration unless it has been modified to include them.</BLOCKQUOTE>
+
+<PRE class="code">void ClearRegistrySettings()
+{
+
+    HKEY hkey;
+
+    // Clear one value from HKEY_LOCAL_MACHINE.
+    RegistryDeleteValue(HKEY_LOCAL_MACHINE, 
+                        TEXT("Software\\MyApplication"), 
+                        TEXT("SystemValue"));
+
+    // Re-use the HKEY_CURRENT_USER handle.
+<code><b class="cfe">    RegOpenKeyEx(HKEY_CURRENT_USER,</b></code> 
+<code><b class="cfe">                 TEXT("Software\\MyApplication"), </b></code>
+                 0, 
+                 0, 
+                 &amp;hkey);
+
+    RegistryDeleteValue(hkey, NULL, TEXT("UserValue1"));
+    RegistryDeleteValue(hkey, NULL, TEXT("UserValue2"));
+
+    // Clean up
+    RegCloseKey(hkey);
+
+}</PRE>
+
+<H4 class="dtH4">Requirements</H4>
+
+<P><B>PocketPC Platforms:</B> Windows Mobile 5.0 and later.<BR>
+<B>Smartphone Platforms:</B> Windows Mobile 5.0 and later.<BR>
+<B>OS Versions:</B> Windows CE 5.01 and later.<BR>
+<B>Header:</B> Regext.h<BR>
+<B>Link Library</B>: Aygshell.lib</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50lrfstatemanagementnotificationsfunctions.htm">State and Notifications Broker Functions</A> | <A HREF="wce50grfstatemanagementnotificationsreference.htm">State and Notifications Broker Reference</A> | <A HREF="wce50constatenotificationsbroker.htm">State and Notifications Broker</A> </P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Feedback Link Bottom Start-->
+<p><font size="1"><a href="mailto:medfdbk&#64;microsoft.com?subject=Product: Windows Mobile | Version: 5.0 | Release: SDK | Title: RegistryDeleteValue | Filename: wce51lrfregistrydeletevalue.htm | Built on: Wednesday, September 14, 2005">Send Feedback</a> on this topic to the authors</font></p>
+<!--Feedback Link Bottom End-->
+<!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="mob5conCopyrightInformationForMagneto" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link></font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

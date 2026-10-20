@@ -1,0 +1,150 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>WAP Wakeup</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="WAP Wakeup"/>
+<MSHelp:RLTitle Title="WAP Wakeup"/>
+<MSHelp:Keyword Index="A" Term="mob5conWAPWakeup"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Application"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbsmartphone"/>
+<MSHelp:Attr Name="Product" Value="kbPocketPC"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="Technology" Value="kbPocketPC"/>
+<MSHelp:Attr Name="Technology" Value="kbSmartphone"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="WAP_API_magneto.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="True"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_1064832">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Windows Mobile Version 5.0 SDK<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="mob5conwapwakeup"></A>WAP Wakeup</H1>
+<!--Feedback Link Top Start-->
+<P CLASS="feedback"><font size="1"><a href="mailto:medfdbk&#64;microsoft.com?subject=Product: Windows Mobile | Version: 5.0 | Release: SDK | Title: WAP Wakeup | Filename: mob5conwapwakeup.htm | Built on: Wednesday, September 14, 2005">Send Feedback</a> on this topic to the authors</font></p>
+<!--Feedback Link Top End-->
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>Wireless Application Protocol (WAP) Wakeup is a feature that provides the benefit of conserving application memory. Usually, an application is able to receive WAP datagrams only while it is running and resident in memory. In terms of resources, this is impractical for asynchronous applications, which perform work only when processing incoming messages (which arrive at any time &#0151; sometimes infrequently). While waiting, this type of application does nothing. Except for the fact that the application still consumes resources (valuable application memory), it is as if it were hibernating. An example is a chess program that processes chess moves sent to it as Wireless Datagram Protocol (WDP) binary datagrams over the Short Message Service (SMS).</P>
+
+<P>Using the WAP Wakeup feature, an asynchronous application can be available to process incoming messages, yet be neither running nor loaded in memory. When a WDP port receives a WDP Short Message Service (SMS) message, and the port has not been "opened" by an application (that is, registered with the WDP layer), the WDP provider searches the registry for the WAP Wakeup registered application associated with that port and automatically starts it. The application opens an Application Listener Window Class, which receives a message from the WDP provider (the DWORD value "WDP Port. Interpreting this message as a signal that a WDP message is waiting for it on the port, the application opens that port on the WDP layer. The application then receives and processes the WDP Short Message Service (SMS) message.</P>
+
+<P>To use WAP Wakeup with your application, you need to add a key like the following one to the system registry:</P>
+
+<PRE class="code">HKLM\Software\Microsoft\Shell\Event\Network\WDP\<I>WDPportX</I>\<I>appName</I></PRE>
+
+<P>For a complete example, see "Example: Registering a Chess Application" later in this topic.</P>
+
+<H4 class="dtH4">Remarks</H4>
+
+<P>WDP provides port-based addressing. The port number is used by the wakeup mechanism to route datagrams to the correct higher-layer entity (such as a protocol or application) above the WDP layer. The wakeup mechanism allows applications to register for messages on a particular port by including the port number in the event name. You must provide a unique key for each WDP port you want to register with your application. The key must contain four values, which are detailed in the following table.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=21%>Key name</TH>
+<TH width=20%>Key value</TH>
+<TH width=12%>Value type</TH>
+<TH width=47%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=21%>"Class"</TD>
+<TD width=20%><I>class string</I></TD>
+<TD width=12%>String</TD>
+<TD width=47%>The destination window for the WDP/Short Message Service (SMS) message (Application Listener Window Class).</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=21%>"Command"</TD>
+<TD width=20%><I>WDP Client Application Path</I></TD>
+<TD width=12%>String</TD>
+<TD width=47%>The application's fully qualified path name.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=21%>"NotifyOnLaunch"</TD>
+<TD width=20%>1</TD>
+<TD width=12%>DWORD</TD>
+<TD width=47%>A flag that indicates that messages associated with the WDP port are to be posted to the Application Listener Window Class.
+<BLOCKQUOTE class="dtBlock">
+<b class="le">Note</b>&nbsp;&nbsp;&nbsp;Without this key, the application is still started, but no messages are posted to the Application Listener Window Class.</BLOCKQUOTE>
+</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=21%><I>WDP Port</I></TD>
+<TD width=20%><I>Value of the message posted to the window</I></TD>
+<TD width=12%>DWORD</TD>
+<TD width=47%>A registry port/window message pair.
+<P>The name of the registry key represents the WDP port. The DWORD value represents the window message that will be posted to the Application Listener Window Class.</P>
+
+<BLOCKQUOTE class="dtBlock">
+<b class="le">Note</b>&nbsp;&nbsp;&nbsp;You must ensure that messages are mapped to the WDP port.</BLOCKQUOTE>
+</TD>
+</TR>
+</table></div>
+
+<P>The wakeup mechanism is for WAP datagrams over Short Message Service (SMS) only. Only applications can be triggered by the Wakeup feature (for example, you cannot use the feature as a paging mechanism).</P>
+
+<P>You cannot register your application for a WDP port range; you must register for each port individually. To avoid collisions, you must ensure that multiple applications do not register for the same port. When you register a port for you application, you must determine whether another application already "owns" the port. When choosing a WDP port number, be sure to keep the number of ports to a minimum, and follow the guidelines on WDP port usage. For more information, see "Wireless Datagram Protocol (WDP) Specification" at <A href="http://go.microsoft.com/fwlink/?LinkId=31849" TARGET="_blank"><U>this OMA website/</U></A>.</P>
+
+<P class="label"><B>Example: Registering a Chess Application</B></P>
+
+<P>The following example demonstrates how to register a chess application for wakeup notification when chess moves (WDP messages) arrive on WDPport1 or WDPport2.</P>
+
+<PRE class="code">HKLM\Software\Microsoft\Shell\Event\Network\WDP\WDPport1\chess
+    "Class" = <I>REG_SZ:</I> ListenerWnd
+    "Command" = <I>REG_SZ:</I> chess.exe
+    "NotifyOnLaunch" = <I>REG_DWORD:</I> 1
+<I>    </I>WDPport1<I> </I>= <I>REG_DWORD: application message, such as the value of WM_APP+Num1.</I></PRE>
+
+<PRE class="code">HKLM\Software\Microsoft\Shell\Event\Network\WDP\WDPport2\chess
+    "Class" = <I>REG_SZ:</I> ListenerWnd
+    "Command" = <I>REG_SZ:</I> chess.exe
+    "NotifyOnLaunch" = <I>REG_DWORD:</I> 1
+<I>    </I>WDPport2 =<I> REG_DWORD: application message, such as the value of WM_APP+Num2.</I></PRE>
+
+<H4 class="dtH4">Requirements </H4>
+
+<P><B>Pocket&nbsp;PC:</B> Windows&nbsp;Mobile&nbsp;2003 and later<BR>
+<B>Smartphone:</B> Windows&nbsp;Mobile&nbsp;2003 and later<BR>
+<B>OS&nbsp;Versions:</B> Windows&nbsp;CE&nbsp;.NET 4.2 and later<BR>
+<B>Header:</B> None (registry based)</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="mob5conshortmessageservicesmsapi.htm">Short Message Service</A> | <A HREF="mob5conwirelessapplicationprotocolwapapi.htm">Wireless Application Protocol</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Feedback Link Bottom Start-->
+<p><font size="1"><a href="mailto:medfdbk&#64;microsoft.com?subject=Product: Windows Mobile | Version: 5.0 | Release: SDK | Title: WAP Wakeup | Filename: mob5conwapwakeup.htm | Built on: Wednesday, September 14, 2005">Send Feedback</a> on this topic to the authors</font></p>
+<!--Feedback Link Bottom End-->
+<!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="mob5conCopyrightInformationForMagneto" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link></font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

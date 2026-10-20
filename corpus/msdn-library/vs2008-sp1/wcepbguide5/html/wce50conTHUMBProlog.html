@@ -1,0 +1,110 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>THUMB Prolog</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="THUMB Prolog"/>
+<MSHelp:RLTitle Title="THUMB Prolog"/>
+<MSHelp:Keyword Index="A" Term="wce50conTHUMBProlog"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Guide"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="True"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="comp_arm_callspec.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="True"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_3023291">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50conthumbprolog"></A>THUMB Prolog</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>A THUMB prolog has the following specific parts. All parts are immediately contiguous with no intervening instructions.
+
+<UL type="disc">
+	<LI>A sequence of zero or one instructions that push the incoming argument values in <B>R0</B>, <B>R1</B>, <B>R2</B>, and <B>R3</B> to the argument home locations, and updates <B>R13</B> to the new stack top.
+<P>If the function does not use high registers such as <B>R8</B>, <B>R9</B>, <B>R10</B>, and <B>R11</B>, a sequence of instructions pushes <B>R4-R7</B> or the link register <B>R14</B> to the stack. 
+
+<P>The function does not push the link register if the routine is a leaf with no high registers saved.
+</li>
+
+	<LI>A sequence of zero or more instructions that allocate the remaining stack frame space for local variables, compiler-generated temporaries, and the argument build area by subtracting an aligned offset from <B>R13</B>. </li>
+
+	<LI>A single instruction that sets the frame pointer if one is to be established. 
+<P>Immediately after it links the stack, the function copies the value of the stack pointer in <B>R13</B> to <B>R7</B>.
+</li>
+</UL>
+
+<H4 class="dtH4">Example</H4>
+
+<P>The following examples show a variety of THUMB prologs.
+
+<UL type="disc">
+	<LI>THUMB Prolog with no frame.
+<PRE class="code">PUSH    {r0-r3}    ; As needed
+PUSH    {r4-r7, LR}  ; As needed
+SUB    SP, SP, #4  ; Stack link (as needed)</PRE>
+</li>
+
+	<LI>THUMB Prolog with frame in R7.
+<PRE class="code">PUSH    {r0-r3}      ; As needed
+PUSH    {r4-r7, LR}    ; As needed
+SUB    SP, SP, #4    ; Stack link (as needed)
+MOV    r7, SP      ; Set frame</PRE>
+</li>
+
+	<LI>THUMB Prolog with interworking return.
+<PRE class="code">PUSH    {r4-r7, LR}</PRE>
+</li>
+
+	<LI>THUMB Prolog saving high registers.
+<PRE class="code">PUSH    {r0-r3}      ; Save r0-r3 as needed
+PUSH    {LR}
+BL    __savegpr_9    ; Routine for saving {r4-r11}
+SUB    SP, SP, #4    ; Stack link (as needed)</PRE>
+</li>
+
+	<LI>THUMB Prolog with a large stack frame.
+<PRE class="code">PUSH    {r7}  
+LDR    r7, [PC, #20]
+NEG    r7, r7
+ADD    SP, r7</PRE>
+</li>
+</UL>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50consehinriscenvironments.htm">SEH in RISC Environments</A> | <A HREF="wce50conthumbepilog.htm">THUMB Epilog</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

@@ -1,0 +1,108 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>NdisMSendResourcesAvailable</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="NdisMSendResourcesAvailable"/>
+<MSHelp:RLTitle Title="NdisMSendResourcesAvailable"/>
+<MSHelp:Keyword Index="K" Term="NdisMSendResourcesAvailable"/>
+<MSHelp:Keyword Index="A" Term="wce50lrfNdisMSendResourcesAvailable"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Driver"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="False"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="apiref"/>
+<MSHelp:Attr Name="Filename" Value="ndis_library_functions2.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="False"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+<MSHelp:Attr Name="APIName" Value="NdisMSendResourcesAvailable"/>
+<MSHelp:Attr Name="APIType" Value="DLLExport"/>
+<MSHelp:Attr Name="APILocation" Value="Ndis.dll"/>
+<MSHelp:Attr Name="PBFeature" Value="NetworkDriver"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_3018535">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50lrfndismsendresourcesavailable"></A>NdisMSendResourcesAvailable</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>This function notifies NDIS that a miniport has sufficient internal resources to accept another send request, even though one or more outstanding send packets are pending within the miniport.</P>
+
+<PRE class="syntax"><B>VOID NdisMSendResourcesAvailable(</B>
+  <B>NDIS_HANDLE </B><I>MiniportAdapterHandle</I>
+<B>);</B></PRE>
+
+<H4 class="dtH4">Parameters</H4>
+
+<DL>
+<DT><I>MiniportAdapterHandle</I></DT>
+
+<DD>[in] Handle originally input to the <A HREF="wce50lrfminiportinitialize.htm">MiniportInitialize</A> function.</dd>
+</DL>
+
+<H4 class="dtH4">Return Values</H4>
+
+<P>None.</P>
+
+<H4 class="dtH4">Remarks</H4>
+
+<P>The NDIS library queues send requests for miniports so that each NIC driver can deal with one device transmit operation at a time, although a miniport can transmit several packets per operation, depending on the capabilities of its NIC. NDIS serializes the submission of incoming packet arrays to each miniport's <A HREF="wce50lrfminiportsendpackets.htm">MiniportSendPackets</A> function, and it serializes the submission of packets to each miniport's <A HREF="wce50lrfminiportsend.htm">MiniportSend</A> function. NDIS queues incoming send requests in first-in, first-out (FIFO) order.</P>
+
+<P>Any miniport retains ownership of such a send packet in one of the following ways:
+
+<UL type="disc">
+	<LI>Its <B>MiniportSendPackets</B> function sets the <B>Status</B> member in the out-of-band data block for a packet to NDIS_STATUS_PENDING with NDIS_SET_PACKET_STATUS.</li>
+
+	<LI>Its <B>MiniportSend</B> function returns NDIS_STATUS_PENDING.</li>
+</UL>
+
+<P>In either of these circumstances, the NIC driver eventually must call <A HREF="wce50lrfndismsendcomplete.htm">NdisMSendComplete</A> or <A HREF="wce50lrfndismwansendcomplete.htm">NdisMWanSendComplete</A> to indicate that it has released ownership of the packet and that the driver has sufficient resources available to accept the next transmit request.</P>
+
+<P>However, before a miniport calls <B>NdisMSendComplete</B> for a pending packet, it can call this function if the driver and its NIC are capable of accepting another send request immediately, provided NDIS has one in its queue to submit to that driver. Such a call allows the driver of a high-capacity NIC to optimize transmissions over the network by sending more data at a time.</P>
+
+<P>This function can be called only between the return of NDIS_STATUS_PENDING for a specified packet and the miniport's call to <B>NdisMSendComplete</B> with that packet.</P>
+
+<P>If a miniport returns any value except NDIS_STATUS_PENDING for a particular packet from <B>MiniportSendPackets</B> or from <B>MiniportSend</B>, it should call neither this function nor <B>NdisMSendComplete</B>. That miniport on return from its MiniportSendPackets or MiniportSend function should consider any send packet for which an NIC driver returns something other than NDIS_STATUS_PENDING inaccessible.</P>
+
+<P>A WAN miniport cannot call this function.</P>
+
+<H4 class="dtH4">Requirements</H4>
+
+<P><B>OS Versions:</B> Windows CE .NET 4.0 and later.<BR>
+<B>Header:</B> Ndis.h.<BR>
+<B>Link Library:</B> Ndis.dll.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50lrfminiportinitialize.htm">MiniportInitialize</A> | <A HREF="wce50lrfminiportsend.htm">MiniportSend</A> | <A HREF="wce50lrfminiportsendpackets.htm">MiniportSendPackets</A> | <A HREF="wce50lrfndismsendcomplete.htm">NdisMSendComplete</A> | <A HREF="wce50lrfndismwansendcomplete.htm">NdisMWanSendComplete</A> | <A HREF="wce50lrfndissend.htm">NdisSend</A> | <A HREF="wce50lrfoidgenmediainuse.htm">OID_GEN_MEDIA_IN_USE</A> | <A HREF="wce50lrfoidgenmediasupported.htm">OID_GEN_MEDIA_SUPPORTED</A> | <A HREF="wce50lrfprotocolsendcomplete.htm">ProtocolSendComplete</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

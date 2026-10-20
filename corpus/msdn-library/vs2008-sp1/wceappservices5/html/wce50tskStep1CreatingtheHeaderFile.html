@@ -1,0 +1,119 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Step 1: Creating the Header File</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Step 1: Creating the Header File"/>
+<MSHelp:RLTitle Title="Step 1: Creating the Header File"/>
+<MSHelp:Keyword Index="A" Term="wce50tskStep1CreatingtheHeaderFile"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Feature"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbTask"/>
+<MSHelp:Attr Name="Filename" Value="SAX2_QuickStart.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="True"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+<MSHelp:Attr Name="PBFeature" Value="SYSGEN_MSXML"/>
+<MSHelp:Attr Name="PBOnly" Value="False"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_3026484">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50tskstep1creatingtheheaderfile"></A>Step 1: Creating the Header File</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>The first step of creating a SAX2 application is to implement handler classes. When you use SAX2, the most useful handler class is ContentHandler. You derive this class from the <B>ISAXContentHandler</B> interface.</P>
+
+<P>To use the SAX2 interfaces that come with MSXML, you need to declare them using the following code example.</P>
+
+<PRE class="code">#include &lt;msxml2.h&gt;</PRE>
+
+<BLOCKQUOTE class="dtBlock">
+<b class="le">Note</b>&nbsp;&nbsp;&nbsp;For the JumpStart application, declare the interfaces in the StdAfx.h file.</BLOCKQUOTE>
+
+<P>The following code example shows how to create the header file, named MyContent.h. This file is required to implement the ContentHandler.</P>
+
+<PRE class="code">#include "SAXContentHandlerImpl.h"
+
+class MyContent : public SAXContentHandlerImpl  
+{
+public:
+    MyContent();
+    virtual ~MyContent();
+        
+        virtual HRESULT STDMETHODCALLTYPE startElement( 
+        // Receives notification of the beginning of an element. 
+        // The reader invokes the startElement method at the beginning of every element in the XML document.
+
+            wchar_t __RPC_FAR *pwchNamespaceUri, //in, the namespace URI
+            int cchNamespaceUri,                 //in, the length of the namespace URI
+            wchar_t __RPC_FAR *pwchLocalName,    //in, the local name string.
+            int cchLocalName,                   //in, the length of the local name string
+            wchar_t __RPC_FAR *pwchQName,       //in, the XML 1.0 qualified name (QName), with prefix, 
+                                                //or, an empty string (if QNames are not available).
+            int cchQName,                       //in, the length of the QName
+            ISAXAttributes __RPC_FAR *pAttributes); //in, the attributes attached to the element
+        
+        virtual HRESULT STDMETHODCALLTYPE endElement( 
+        // Receives notification of the end of an element. 
+        // The reader invokes this method at the end of every element in the XML document.
+
+            wchar_t __RPC_FAR *pwchNamespaceUri, //in, the namespace URI
+            int cchNamespaceUri,                 //in, the length of the namespace URI
+            wchar_t __RPC_FAR *pwchLocalName,    //in, the local name string.
+            int cchLocalName,                   //in, the length of the local name string
+            wchar_t __RPC_FAR *pwchQName,       //in, the XML 1.0 qualified name (QName), with prefix, 
+                                                //or, an empty string (if QNames are not available).
+            int cchQName);                      //in, the length of the QName
+
+        virtual HRESULT STDMETHODCALLTYPE startDocument();
+        // Receives notification of the beginning of a document. 
+        // The reader invokes the startDocument method only once.
+
+
+private:
+        void prt(
+        // conversion method for output
+        // converts element specified by pwchVal to the format specified by pwchFmt
+            const wchar_t * pwchFmt,          //in, format for output
+            const wchar_t __RPC_FAR *pwchVal, // in, element to be converted
+            int cchVal);                      // in, length of element to be converted
+      int idnt; // current depth in document tree, that is, number of unclosed elements encountered
+};
+
+#endif // !defined(AFX_MYCONTENT_H__E1B3AF99_0FA6_44CD_82E3_55719F9E3806__INCLUDED_)</PRE>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50tskstep2creatingthemycontentclass.htm">Step 2: Creating the MyContent Class</A> | <A HREF="wce50tsktutorialjumpstartforcreatingasax2applicationwithc.htm">Tutorial: JumpStart for Creating a SAX2 Application with C++</A> | <A HREF="wce50congettingstartedwithsax2.htm">Getting Started with SAX2</A> | <A HREF="wce50consax2developerguide.htm">SAX2 Developer Guide</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

@@ -1,0 +1,78 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Device Power Self-Management</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Device Power Self-Management"/>
+<MSHelp:RLTitle Title="Device Power Self-Management"/>
+<MSHelp:Keyword Index="A" Term="wce50conDevicePowerSelfManagement"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Driver"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="False"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="powermgrdrv_guide.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="False"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+<MSHelp:Attr Name="PBFeature" Value="SYSGEN_PM"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_3019085">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50condevicepowerselfmanagement"></A>Device Power Self-Management</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>Some devices can be sophisticated in how they manage their own power. Device driver developers for these devices will typically want to reduce their power consumption during periods of inactivity. Reducing power consumption will generally also reduce the performance of the device, so these devices also typically want to raise their performance levels when they are being actively used. Increasing performance level generally increases the power consumed.</P>
+
+<P>These devices will tend to dynamically raise and lower their device power states according to how often a device is used. The actual algorithm for this self-management of power is device specific.</P>
+
+<P>The Power Manager's <A HREF="wce50lrfdevicepowernotify.htm">DevicePowerNotify</A> API allows driver developers to request that the Power Manager adjust their device's power state. The Power Manager will permit power to be adjusted, provided that the requested device power state falls between the maximum and minimum values. The maximum value is mandated by the system power state and the minimum value is determined by application calls to <A HREF="wce50lrfsetpowerrequirement.htm">SetPowerRequirement</A>.</P>
+
+<P>When the Power Manager decides to accept a device's requested power state adjustment, it will update the device's power state using the device API, typically using <A HREF="wce50lrfioctlpowerset.htm">IOCTL_POWER_SET</A>. Driver implementers should observe the following guidelines when calling <B>DevicePowerNotify</B>:
+
+<UL type="disc">
+	<LI>The device should not update its power state if the <B>DevicePowerNotify</B> call succeeds, only when it receives an IOCTL_POWER_SET.</li>
+
+	<LI>The driver developer should not assume that a successful return code from <B>DevicePowerNotify</B> implies that the Power Manager will issue an IOCTL_POWER_SET.</li>
+
+	<LI>The driver developer should not assume that an IOCTL_POWER_SET immediately following a <B>DevicePowerNotify</B> was issued as a result of the call.</li>
+
+	<LI>Devices that are capable of waking the system when they are put into D3 should not request D3 using <B>DevicePowerNotify</B>.</li>
+</UL>
+
+<P>Some devices are capable of supporting more than levels of power than are represented by the D0 through D4 device power states. If desired, driver developers for such devices can map multiple power levels actually supported by the device into each of the device power states understood by the Power Manager. The device is free to self-manage power within each device power state group independently of the Power Manager. However, it should still use the <B>DevicePowerNotify</B> to transition between groups.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50condevicepowermanagementguidelines.htm">Device Power Management Guidelines</A> | <A HREF="wce50conselfmanagementexample.htm">Self-Management Example</A> | <A HREF="wce50lrfdevicepowernotify.htm">DevicePowerNotify</A> | <A HREF="wce50lrfsetpowerrequirement.htm">SetPowerRequirement</A> | <A HREF="wce50lrfioctlpowerset.htm">IOCTL_POWER_SET</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

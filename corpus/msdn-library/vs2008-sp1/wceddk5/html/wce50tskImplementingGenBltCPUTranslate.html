@@ -1,0 +1,68 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Implementing the Translation Function</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Implementing the Translation Function"/>
+<MSHelp:RLTitle Title="Implementing the Translation Function"/>
+<MSHelp:Keyword Index="A" Term="wce50tskImplementingGenBltCPUTranslate"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Driver"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="False"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbTask"/>
+<MSHelp:Attr Name="Filename" Value="display_guide.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="True"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+<MSHelp:Attr Name="PBFeature" Value="DisplayDriver"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_1057368">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50tskimplementinggenbltcputranslate"></A>Implementing the Translation Function</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>The translation function translates p-codes to machine codes, and executes once for every generated function. The following code example shows the definition for the translation function.</P>
+
+<PRE class="code">typedef PFN_BltFunction (*PFN_PCodeToCpuCode)(int FnIndex, DWORD * pPCode, GenBltSignature * pBltSig, void * pBltFn);</PRE>
+
+<P>To create a translation function that targets a specific microprocessor, use the p-code virtual machine and the existing i486 microprocessor and ARMV4 microprocessor translation functions as a starting point. The translation function returns a pointer to the first instruction of the machine code. The first machine code instruction does not have to be <B>pMCode</B>.</P>
+
+<P>The p-code passed into the translation function must be valid. In addition, the first p-code instruction must be PCODE_OPCODE_SIG and the last instruction of the function to generate must be PCODE_OPCODE_EOF. These functions most likely correspond to machine code sequences for function entry and exit.</P>
+
+<P>All conditional constructs, such as <code class="ce">if_andi</code>, <code class="ce">else</code>, and <code class="ce">endif</code>, have a unique identifier embedded in the operation code that facilitates matching the <code class="ce">if_andi</code>, <code class="ce">else</code>, and <code class="ce">endif</code> instructions. Looping constructs, such as <code class="ce">loop</code>, <code class="ce">break</code>, <code class="ce">endloop</code>, also have a unique identifier. To retrieve the value of the identifier, use the GET_OPCODE_SIG macro after <B>InstructionFetchAndDecode</B> executes on the p-code instruction.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50tskimplementinggenbltcpuinitialize.htm">Implementing the GenBltCpuInitialize Function</A> | <A HREF="wce50tskimplementinggenbltcpuoptimize.htm">Implementing the Optimization Function</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

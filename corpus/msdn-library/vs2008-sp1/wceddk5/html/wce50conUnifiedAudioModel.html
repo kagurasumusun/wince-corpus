@@ -1,0 +1,82 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Unified Audio Model</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Unified Audio Model"/>
+<MSHelp:RLTitle Title="Unified Audio Model"/>
+<MSHelp:Keyword Index="A" Term="wce50conUnifiedAudioModel"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Driver"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="False"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="audio_guide.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="False"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+<MSHelp:Attr Name="PBFeature" Value="AudioDriver"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_3017196">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50conunifiedaudiomodel"></A>Unified Audio Model</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>The unified audio model (UAM) implements direct support for the standard wave driver interfaces. The other audio driver model available consists of the model device driver (MDD) and platform-dependent driver (PDD) modules. The MDD module implements the hardware-independent part of the driver and exports the driver interfaces to the middleware. The PDD module provides the hardware-dependent implementation of the driver.</P>
+
+<P>The MDD and PDD audio model makes certain assumptions about the way the hardware works and what types of features are supported.  As a result it is generally the easier model to use when creating a device driver, especially if the audio hardware supports common features and if your driver design requirements are straightforward.  The following list shows some limitations of the MDD and PDD model.
+
+<UL type="disc">
+	<LI>Only supports one device (<MSHelp:link keywords="wce50lrfwaveOutGetNumDevs" TABINDEX="0">waveOutGetNumDevs</MSHelp:link> always returns 1)</li>
+
+	<LI>Only supports one stream per device</li>
+
+	<LI>No reliable support for looping</li>
+
+	<LI>Poor support for streaming</li>
+</UL>
+
+<P>You can work around these limitations by modifying the MDD or by writing your own complete driver that exports the proper interfaces to the middleware.  This latter approach is the UAM.</P>
+
+<P>The following diagram shows the interaction of the UAM with the audio driver.</P>
+
+<P class="fig"><IMG SRC="audio_uam.gif" ALT="" BORDER=0></P>
+
+<P>The UAM is more flexible than the MDD/PDD model in that it gives you more control over exactly how the driver interacts with the waveform audio middleware.  This means also means that it usually involves a larger development effort because it does not make use of the common elements of the MDD.  The benefit of the UAM model is that it necessarily gives you complete access to all of the waveform audio capabilities that Windows CE supports.</P>
+
+<P>You can compare the two audio driver models by looking at the driver code in %_WINCEROOT\PUBLIC\COMMON\OAK\DRIVERS\WAVEDEV.  There you will find both PDD driver code and UAM driver code for the same audio hardware.  This code will illustrate how the UAM version can take advantage of the fact that the hardware can mix two streams, while the MDD/PDD version relies on the kernel mixer to handle all the streams.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50oriaudiodriverdevelopmentconcepts.htm">Audio Driver Development Concepts</A> | <A HREF="wce50conwaviocontrolmessagesandparameterstructures.htm">WAV_IOControl Messages and Parameter Structures</A> | <A HREF="wce50conaudiomixer.htm">Audio Mixer</A> | <A HREF="wce50conwaveformaudiodriver.htm">Waveform Audio Driver</A> | <A HREF="wce50conaudiomddandpdd.htm">Audio MDD and PDD</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

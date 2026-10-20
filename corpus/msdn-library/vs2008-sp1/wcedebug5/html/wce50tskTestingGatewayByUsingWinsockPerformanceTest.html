@@ -1,0 +1,134 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Testing a Gateway by Using the Winsock Performance Test</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Testing a Gateway by Using the Winsock Performance Test"/>
+<MSHelp:RLTitle Title="Testing a Gateway by Using the Winsock Performance Test"/>
+<MSHelp:Keyword Index="A" Term="wce50tskTestingGatewayByUsingWinsockPerformanceTest"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Debugging"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="True"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbTask"/>
+<MSHelp:Attr Name="Filename" Value="winsock_perf_test.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="True"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="True"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_1054517">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50tsktestinggatewaybyusingwinsockperformancetest"></A>Testing a Gateway by Using the Winsock Performance Test</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>The following table shows the hardware requirements for using the Winsock Performance Test to test the throughput of a Windows CE&#0150;based gateway.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=50%>Requirements</TH>
+<TH width=50%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>Windows CE&#0150;based gateway with two network cards</TD>
+<TD width=50%>A Windows CE-based gateway with two network interfaces installed.
+<P>One network interface connects to a private LAN, and the other network interface to a public WAN.</P>
+
+<P>You can optionally install a third network interface over which the Windows CE&#0150;based device communicates with the development workstation running Microsoft Platform Builder and the CETK.</P>
+</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>Two supporting desktop computers, each with one network card</TD>
+<TD width=50%>Two Windows&#0150;based desktop computers, each of which functions as a supporting desktop computer. On each supporting desktop computer, install an Ethernet network interface that communicates with a network interface on the Windows CE&#0150;based gateway.
+<P>Connect one Ethernet network interface on the Windows CE&#0150;based gateway to a switch to which you also connect the Ethernet network interface for one supporting desktop computer. Connect the second Ethernet network interface on the Windows CE&#0150;based gateway to a second switch to which you also connect the second supporting desktop computer. If the tested interface is a 100-megabits per second (Mbps) adapter, use a 100-Mbps switch and use a 100-Mbps adapter on the supporting desktop computer.</P>
+
+<P>Alternatively, use an Ethernet crossover cable to connect each Ethernet interface on the Windows CE&#0150;based device to the Ethernet interface for the supporting desktop computer. </P>
+
+<P>You can use the development workstation on which Platform Builder is installed as a supporting desktop computer. Install two network interfaces on the development workstation. One network interface is the supporting network interface that communicates with the Windows CE&#0150;based device. The second network interface is the interface over which Platform Builder and the CETK communicate with the Windows CE&#0150;based device.</P>
+</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>Two Ethernet hubs or switches, or two Ethernet crossover cables</TD>
+<TD width=50%>If you use a hub or switch, connect to the hub or switch only the target device being tested, the supporting desktop computer, and any other device required by the test. Test results can be significantly affected by sharing the network connection with devices other than those devices used in the test.</TD>
+</TR>
+</table></div>
+
+<P>Before running the test, verify the stability of the hardware link and the network miniport driver. Microsoft recommends that you use a physical network interface to evaluate the performance of the network driver and the gateway. Do not use the VMini virtual network adapter with the Winsock Performance Test because the results generally do not represent the maximum possible throughput for the gateway.</P>
+
+<P>Verify that the supporting desktop computers can exchange data at a rate that is at least as high as the maximum rate at which gateway can route packets. It is best if the desktop computers can exchange data at the maximum rate supported by the network infrastructure when connected with no gateway through a hub, switch, or with an Ethernet crossover cable.</P>
+
+<P class="labelproc"><B>To test a gateway by using the Winsock Performance Test</B>
+
+<OL type="1">
+	<LI>Copy the Perf_winsockd2.exe file from &lt;<I>Platform Builder installation path</I>&gt;\Cepb\Wcetk\Ddtk\Desktop to the supporting desktop computer on the WAN side of the gateway, which functions as a server.
+<P>Typically, you put the server on the WAN side of the gateway so that the client can make the initial connection to the server and initialize the network address translation (NAT) mappings that are required for the server to reply to the client and run the test. If you put the client on the WAN side, the client cannot establish the initial connection unless, on the gateway, you configure NAT with a demilitarized zone (DMZ), disable the firewall, and so on.
+</li>
+
+	<LI>From &lt;<I>Platform Builder installation path</I>&gt;\Cepb\Wcetk\Ddtk\Desktop, copy the following files to the supporting desktop computer on the LAN side of the gateway, which functions as a client:
+<UL type="disc">
+	<LI>Tux.exe</li>
+
+	<LI>Kato.dll</li>
+
+	<LI>Tooltalk.dll</li>
+
+	<LI>Perflog.dll</li>
+
+	<LI>Perf_winsock2.dll</li>
+</UL>
+</li>
+
+	<LI>To ensure that TCP throughput is not capped by TCP window size, use the following registry setting to adjust the TCP window size to 64 kilobits (Kb) on both supporting desktop computers:
+<PRE class="code">[HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\Tcpip\Parameters]
+  "TcpWindowSize"=REG_DWORD:0xFFFF</PRE>
+
+<P>TCP window size differs for the Windows CE OS and a Windows&#0150;based desktop OS. TCP window size also differs for some Windows&#0150;based desktop OS versions. TCP window size restricts the amount of data that a sender can send to a receiver at one time without waiting for a delayed acknowledgment (ACK). TCP window size that is not sufficiently large for a network path limits the rate at which data can move between peers. The presence of a gateway in the path that connects two peers might introduce sufficient latency for TCP throughput to be capped by the TCP window size rather than the routing speed of the gateway.
+</li>
+
+	<LI>On the desktop computer on the WAN side of the gateway, run the following command:
+<PRE class="code">perf_winsockd2 -debug</PRE>
+</li>
+
+	<LI>On the desktop computer on the LAN side of the gateway, run the following command:
+<PRE class="code">tux -o -d perf_winsock2 -x &lt;test case&gt; -c"-s &lt;server_ip&gt; -i &lt;ip_version&gt;"</PRE>
+
+<P>For information about the test cases for the Winsock Performance Test, see <A HREF="wce50conwinsockperformancetestcases.htm">Winsock Performance Test Cases</A>.
+</li>
+</OL>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50conwinsockperformancetest.htm">Winsock Performance Test</A> | <MSHelp:link keywords="wce50oriDevelopingGateway" TABINDEX="0">Developing a Gateway</MSHelp:link> | <A HREF="wce50tskviewingtestresultsforwinsockperformancetest.htm">Viewing Test Results for the Winsock Performance Test</A> | <A HREF="wce50concommand-lineparametersforwinsockperformancetest.htm">Command-Line Parameters for the Winsock Performance Test</A> | <A HREF="wce50tsktestingnetworkinterfacebyusingwinsockperformancetest.htm">Testing a Network Interface by Using the Winsock Performance Test</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

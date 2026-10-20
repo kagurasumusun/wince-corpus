@@ -1,0 +1,265 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>WSAStartup</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="WSAStartup"/>
+<MSHelp:RLTitle Title="WSAStartup"/>
+<MSHelp:Keyword Index="K" Term="WSAStartup"/>
+<MSHelp:Keyword Index="A" Term="wce50lrfWSAStartup"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Feature"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="apiref"/>
+<MSHelp:Attr Name="Filename" Value="winsock2_functions.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="True"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+<MSHelp:Attr Name="APIName" Value="WSAStartup"/>
+<MSHelp:Attr Name="APIType" Value="LibDef"/>
+<MSHelp:Attr Name="APILocation" Value="Ws2.lib"/>
+<MSHelp:Attr Name="PBFeature" Value="SYSGEN_WINSOCK"/>
+<MSHelp:Attr Name="PBOnly" Value="False"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_3008372">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50lrfwsastartup"></A>WSAStartup</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>This function initiates use of ws2.dll by a process.</P>
+
+<PRE class="syntax"><B>int</B> <B>WSAStartup(</B>
+  <B>WORD</B> <I>wVersionRequested</I><B>,</B>
+  <B>LPWSADATA</B> <I>lpWSAData</I>
+<B>);</B></PRE>
+
+<H4 class="dtH4">Parameters</H4>
+
+<DL>
+<DT><I>wVersionRequested</I></DT>
+
+<DD>[in] Highest version of Windows Sockets support that the caller can use. The high-order byte specifies the minor version (revision) number; the low-order byte specifies the major version number. </dd>
+
+<DT><I>lpWSAData</I></DT>
+
+<DD>[out] Pointer to the <A HREF="wce50lrfwsadata.htm">WSADATA</A> structure that is to receive details of the Windows Sockets implementation.</dd>
+</DL>
+
+<H4 class="dtH4">Return Values</H4>
+
+<P>If no error occurs, this function returns zero. If an error occurs, it returns one of the error codes listed in the following table.</P>
+
+<P>An application cannot call <A HREF="wce50lrfwsagetlasterror.htm">WSAGetLastError</A> to determine the error code as is typically done in Windows Sockets if <B>WSAStartup</B> fails. ws2.dll will not have been loaded in the case of a failure so the client data area where the last error information is stored could not be established. </P>
+
+<P>The following table shows a list of possible error codes.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=35%>Error code </TH>
+<TH width=65%>Description </TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=35%>WSASYSNOTREADY </TD>
+<TD width=65%>Indicates that the underlying network subsystem is not ready for network communication. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=35%>WSAVERNOTSUPPORTED </TD>
+<TD width=65%>The version of Windows Sockets support requested is not provided by this particular Windows Sockets implementation. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=35%>WSAEPROCLIM </TD>
+<TD width=65%>A limit on the number of tasks supported by the Windows Sockets implementation has been reached. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=35%>WSAEFAULT </TD>
+<TD width=65%>The <I>lpWSAData</I> parameter is not a valid pointer. </TD>
+</TR>
+</table></div>
+
+<H4 class="dtH4">Remarks</H4>
+
+<P>This function must be the first Windows Sockets function called by an application or DLL. It allows an application or DLL to specify the version of Windows Sockets required and retrieve details of the specific Windows Sockets implementation. The application or DLL can only issue further Windows Sockets functions after successfully calling <B>WSAStartup</B>.</P>
+
+<P>To support future Windows Sockets implementations and applications that can have functionality differences from the current version of Windows Sockets, a negotiation takes place in <B>WSAStartup</B>. The caller of <B>WSAStartup</B> and ws2.dll indicate to each other the highest version that they can support, and each confirms that the other's highest version is acceptable. On entry to <B>WSAStartup</B>, ws2.dll examines the version requested by the application. If this version is equal to or higher than the lowest version supported by the DLL, the call succeeds and the DLL returns in <I>wHighVersion</I> the highest version it supports and in <I>wVersion</I> the minimum of its high version and <I>wVersionRequested</I>. ws2.dll then assumes that the application will use <I>wVersion</I>. If the <I>wVersion</I> parameter of the <A HREF="wce50lrfwsadata.htm">WSADATA</A> structure is unacceptable to the caller, it should call <A HREF="wce50lrfwsacleanup.htm">WSACleanup</A> and either search for another ws2.dll or fail to initialize.</P>
+
+<P>It is legal and possible for an application written to this version of the specification to successfully negotiate a higher version number version. In that case, the application is only guaranteed access to higher version functionality that fits within the syntax defined in this version, such as new <I>Ioctl</I> codes and new behavior of existing functions. New functions may be inaccessible. To get full access to the new syntax of a future version, the application must fully conform to that future version, such as compiling against a new header file, linking to a new library, or other special cases.</P>
+
+<P>This negotiation allows both ws2.dll and a Windows Sockets application to support a range of Windows Sockets versions. An application can use ws2.dll if there is any overlap in the version ranges. The following table shows how <B>WSAStartup</B> works with different applications and ws2.dll versions.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=16%>Application version </TH>
+<TH width=16%>DLL version </TH>
+<TH width=16%><I>wVersion</I> requested </TH>
+<TH width=17%><I>wVersion </I></TH>
+<TH width=15%><I>wHigh</I> version </TH>
+<TH width=20%>Result </TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=16%>1.1 </TD>
+<TD width=16%>1.1 </TD>
+<TD width=16%>1.1 </TD>
+<TD width=17%>1.1 </TD>
+<TD width=15%>1.1 </TD>
+<TD width=20%>use 1.1 </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=16%>1.0 1.1 </TD>
+<TD width=16%>1.0 </TD>
+<TD width=16%>1.1 </TD>
+<TD width=17%>1.0 </TD>
+<TD width=15%>1.0 </TD>
+<TD width=20%>use 1.0 </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=16%>1.0 </TD>
+<TD width=16%>1.0 1.1 </TD>
+<TD width=16%>1.0 </TD>
+<TD width=17%>1.0 </TD>
+<TD width=15%>1.1 </TD>
+<TD width=20%>use 1.0 </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=16%>1.1 </TD>
+<TD width=16%>1.0 1.1</TD>
+<TD width=16%>1.1 </TD>
+<TD width=17%>1.1 </TD>
+<TD width=15%>1.1 </TD>
+<TD width=20%>use 1.1 </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=16%>1.1 </TD>
+<TD width=16%>1.0 </TD>
+<TD width=16%>1.1 </TD>
+<TD width=17%>1.0 </TD>
+<TD width=15%>1.0 </TD>
+<TD width=20%>Application fails </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=16%>1.0 </TD>
+<TD width=16%>1.1 </TD>
+<TD width=16%>1.0 </TD>
+<TD width=17%>--- </TD>
+<TD width=15%>--- </TD>
+<TD width=20%>WSAVERNOT SUPPORTED </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=16%>1.0 1.1 </TD>
+<TD width=16%>1.0 1.1 </TD>
+<TD width=16%>1.1 </TD>
+<TD width=17%>1.1 </TD>
+<TD width=15%>1.1 </TD>
+<TD width=20%>use 1.1 </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=16%>1.1 2.2 </TD>
+<TD width=16%>1.1 </TD>
+<TD width=16%>2.2 </TD>
+<TD width=17%>1.1 </TD>
+<TD width=15%>1.1 </TD>
+<TD width=20%>use 1.1 </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=16%>2.2 </TD>
+<TD width=16%>2.2 </TD>
+<TD width=16%>2.2 </TD>
+<TD width=17%>2.2 </TD>
+<TD width=15%>2.2 </TD>
+<TD width=20%>use 2.2 </TD>
+</TR>
+</table></div>
+
+<H4 class="dtH4">Example</H4>
+
+<P>The following code sample demonstrates how an application that supports only Winsock 2.2 makes a <B>WSAStartup</B> call.</P>
+
+<PRE class="code">WORD wVersionRequested;
+WSADATA wsaData;
+int err;
+ 
+wVersionRequested = MAKEWORD( 2, 2 );
+ 
+err = WSAStartup( wVersionRequested, &amp;wsaData );
+if ( err != 0 ) {
+    /* Tell the user that we could not find a usable */
+    /* WinSock DLL.                                  */
+    return;
+}
+ 
+/* Confirm that the WinSock DLL supports 2.2.*/
+/* Note that if the DLL supports versions later    */
+/* than 2.2 in addition to 2.2, it will still return */
+/* 2.2 in wVersion since that is the version we      */
+/* requested.                                        */
+ 
+if ( LOBYTE( wsaData.wVersion ) != 2 ||
+        HIBYTE( wsaData.wVersion ) != 2 ) {
+    /* Tell the user that we could not find a usable */
+    /* WinSock DLL.                                  */
+    WSACleanup( );
+    return; 
+}
+ 
+/* The WinSock DLL is acceptable. Proceed. */</PRE>
+
+<P>Once an application or DLL has made a successful <B>WSAStartup</B> call, it can proceed to make other Windows Sockets calls as needed. When it has finished using the services of ws2.dll, the application or DLL must call <B>WSACleanup</B> to allow ws2.dll to free any resources for the application.</P>
+
+<P>Details of the actual Windows Sockets implementation are described in the <B>WSADATA</B> structure.</P>
+
+<P>An application or DLL can call <B>WSAStartup</B> more than once if it needs to obtain the <A HREF="wce50lrfwsadata.htm">WSADATA</A> structure information more than once. On each such call the application can specify any version number supported by the DLL.</P>
+
+<P>An application must make one <B>WSACleanup</B> call for every successful <B>WSAStartup</B> call to allow third-party DLLs to make use of ws2.dll on behalf of an application. This means, for example, that if an application calls <B>WSAStartup</B> three times, it must call <B>WSACleanup</B> three times. The first two calls to <B>WSACleanup</B> do nothing except decrement an internal counter; the final <B>WSACleanup</B> call for the task does all necessary resource de-allocation for the task.</P>
+
+<H4 class="dtH4">Requirements</H4>
+
+<P><B>OS Versions:</B> Windows CE 1.0 and later.<BR>
+<B>Header:</B> Winsock2.h.<BR>
+<B>Link Library:</B> Ws2.lib.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50lrfsend.htm">send</A> | <A HREF="wce50lrfsendto.htm">sendto</A> | <A HREF="wce50lrfwsacleanup.htm">WSACleanup</A> | <A HREF="wce50lrfwsagetlasterror.htm">WSAGetLastError</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

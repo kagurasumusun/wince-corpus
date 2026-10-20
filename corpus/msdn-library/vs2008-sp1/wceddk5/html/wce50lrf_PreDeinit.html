@@ -1,0 +1,90 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>XXX_PreDeinit (Device Manager)</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="XXX_PreDeinit (Device Manager)"/>
+<MSHelp:RLTitle Title="XXX_PreDeinit (Device Manager)"/>
+<MSHelp:Keyword Index="K" Term="XXX_PreDeinit (Device Manager)"/>
+<MSHelp:Keyword Index="A" Term="wce50lrf_PreDeinit"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Driver"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="False"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="apiref"/>
+<MSHelp:Attr Name="Filename" Value="stream_reference.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="False"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+<MSHelp:Attr Name="APIName" Value="XXX_PreDeinit"/>
+<MSHelp:Attr Name="PBFeature" Value="StreamDriver"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_1039840">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50lrf_predeinit"></A>XXX_PreDeinit (Device Manager)</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>The function notifies the driver to mark the device instance as invalid and wake sleeping threads.</P>
+
+<PRE class="syntax"><B>BOOL</B> <B><I>XXX</I>_PreDeinit(</B>
+  <B>DWORD </B><I>hDeviceContext</I> 
+<B>);</B></PRE>
+
+<H4 class="dtH4">Parameters</H4>
+
+<DL>
+<DT><I>hDeviceContext</I> </DT>
+
+<DD>[in] Handle to the device context. The <A HREF="wce50lrfxxxinit15.htm">XXX_Init (Device Manager)</A> function creates and returns this identifier.</dd>
+</DL>
+
+<H4 class="dtH4">Remarks</H4>
+
+<P>If <A HREF="wce50lrf_preclose.htm">XXX_PreClose (Device Manager)</A> is present, <B>XXX_PreDeinit</B> must also be present or the driver will not load.</P>
+
+<P>Device Manager uses the <B><I>XXX</I></B> prefix. When implementing the stream interface, replace <B><I>XXX</I></B> with a prefix appropriate for your specific implementation or use undecorated entry point names in conjunction with DEVFLAGS_NAKEDENTRIES. For more information about other valid <B>Flags</B> values, see <A HREF="wce50lrfactivatedeviceex.htm">ActivateDeviceEx</A>.</P>
+
+<P>Threads might block in a driver, and these blocked threads might not be able to release resources associated with the handle or device instance. The following list shows race conditions related to blocked threads not being able to release resources:
+
+<UL type="disc">
+	<LI>A race condition can occur if Device Manager attempts to unload a device when the device driver's <A HREF="wce50lrfxxxdeinit14.htm">XXX_Deinit (Device Manager)</A> function executes in one thread, while another thread attempts to open a handle. In these cases, from the driver's perspective, <B>XXX_Deinit</B> is called before <A HREF="wce50lrfxxxopen17.htm">XXX_Open (Device Manager)</A>. This might happen during prolonged and heavy CPU loading when drivers are unloading and reloading frequently. When Device Manager calls the <B>XXX_Deinit</B> entry point, drivers should wake threads that are blocked on I/O and free resources associated with the handle or device instance. If Device Manager calls <B>XXX_Open</B> after calling <B>XXX_Deinit</B>, some drivers might crash.</li>
+
+	<LI>A similar race condition can occur between I/O operations on one thread and another thread calling <MSHelp:link keywords="wce50lrfCloseHandle" TABINDEX="0">CloseHandle</MSHelp:link>. When Device Manager calls the <A HREF="wce50lrfxxxclose13.htm">XXX_Close (Device Manager)</A> entry point, drivers should wake threads blocked on that handle and free resources associated with that handle. If Device Manager calls an I/O entry point, such as <A HREF="wce50lrfxxxiocontrol16.htm">XXX_IOControl (Device Manager)</A> after calling <B>XXX_Close</B>, some drivers might crash.</li>
+</UL>
+
+<P>To address these race conditions, Device Manager checks for two optional driver entry points, <B>XXX_PreClose</B> and <B>XXX_PreDeinit</B>. These have the same signatures as the <B>XXX_Close</B> and <B>XXX_Deinit</B> entry points. Device Manager first calls <B>XXX_PreClose</B> and waits to call <B>XXX_Close</B> until no external threads are executing in the driver's DLL using the closing handle. Similarly, Device Manager calls <B>XXX_PreDeinit</B> to tell the driver to mark the device instance as invalid and wake sleeping threads. Device Manager calls <B>XXX_Deinit</B> when no external threads are executing in the driver DLL using the handle. Thus, the <B>XXX_PreClose</B> and <B>XXX_PreDeinit </B>entry points allow the driver to separately invalidate handles and wake threads before <B>XXX_Close</B> and <B>XXX_Deinit</B> are called.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50condevicemanager.htm">Device Manager</A> | <A HREF="wce50lrfactivatedeviceex.htm">ActivateDeviceEx</A> | <MSHelp:link keywords="wce50lrfCloseHandle" TABINDEX="0">CloseHandle</MSHelp:link> | <A HREF="wce50lrfxxxclose13.htm">XXX_Close (Device Manager)</A> | <A HREF="wce50lrfxxxdeinit14.htm">XXX_Deinit (Device Manager)</A> | <A HREF="wce50lrfxxxinit15.htm">XXX_Init (Device Manager)</A> | <A HREF="wce50lrfxxxiocontrol16.htm">XXX_IOControl (Device Manager)</A> | <A HREF="wce50lrfxxxopen17.htm">XXX_Open (Device Manager)</A> | <A HREF="wce50lrf_preclose.htm">XXX_PreClose (Device Manager)</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

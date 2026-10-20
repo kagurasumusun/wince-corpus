@@ -1,0 +1,94 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Debugging a Linker Build Error</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Debugging a Linker Build Error"/>
+<MSHelp:RLTitle Title="Debugging a Linker Build Error"/>
+<MSHelp:Keyword Index="A" Term="wce50tskDebuggingaLinkerBuildError"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="OS"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="True"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbTask"/>
+<MSHelp:Attr Name="Filename" Value="build_system.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="True"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="AllowSearch" CONTENT="True">
+<META NAME="msdnID" CONTENT="_3012217">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50tskdebuggingalinkerbuilderror"></A>Debugging a Linker Build Error</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>The following procedure shows how to debug a linker build error, which is one of the most common build error types in Platform Builder.</P>
+
+<P class="labelproc"><B>To debug a linker build error</B>
+
+<OL type="1">
+	<LI>In one of the public unfiltered module definition (.def) files, find the missing symbol. 
+<P>The missing symbol is often in %_WINCEROOT%\Public\Common\Oak\Lib\%_TGTCPU%\&lt;<I>debuglevel&gt;</I>\Coredll.def. 
+
+<P>Do not examine .def files in cesysgen directories because these have already been filtered, based on your selected configuration.
+</li>
+
+	<LI>In the .def file, look for nested CESYSGEN filter directives. 
+<P>For example, the following code example is found in Coredll.def and shows that the function printf is included in your OS design if the environment variable COREDLL_COMPONENTS contains <I>coresioa</I>.
+
+<PRE class="code">; @CESYSGEN IF COREDLL_CORESIOA
+...
+printf @1102
+...
+; @CESYSGEN ENDIF</PRE>
+</li>
+
+	<LI>Examine the Cesysgen.bat file for your operating system (OS) design to determine which Sysgen variable causes the appropriate environment variable to be set. 
+<P>The following code example shows that if the STDIOA Sysgen variable is set, it brings in <I>coresioa</I>.
+
+<PRE class="code">if "%SYSGEN_STDIOA%"=="1" set COREDLL_COMPONENTS=%COREDLL_COMPONENTS% coresioa</PRE>
+</li>
+
+	<LI>Find the Catalog item that sets the Sysgen variable and then include it in your workspace.
+<P>If you are using the IDE, perform a search of your Catalog item (.cec) files to determine which Catalog item is associated with the Sysgen variable and then add the Catalog item to your OS design. For more information, see <A HREF="wce50tskaddingafeaturefromthecatalog.htm">Adding an Item from the Catalog</A>. 
+
+<P>If you are using a command-line build window, set the Sysgen variable directly in the Cesysgen.bat file.
+</li>
+</OL>
+
+<P>You have successfully debugged a linker build error in your OS design. You can continue the run-time image building process.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50conbuilderrordebuggingprocess.htm">Build Error Debugging Process</A> | <A HREF="wce50conplatformbuilding.htm">Run-Time Image Build Process</A> | <MSHelp:link keywords="wce50conCatalogFeatureFiles" TABINDEX="0">Catalog Item Files</MSHelp:link> | <A HREF="wce50conbuildsystem.htm">Build System</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

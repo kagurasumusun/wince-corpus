@@ -1,0 +1,117 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Using the Japanese Pocket IME UI</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Using the Japanese Pocket IME UI"/>
+<MSHelp:RLTitle Title="Using the Japanese Pocket IME UI"/>
+<MSHelp:Keyword Index="A" Term="wce50conUsingtheJapanesePocketIMEUI"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Feature"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="pocketime.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="True"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+<MSHelp:Attr Name="PBFeature" Value="SYSGEN_IMEJPN"/>
+<MSHelp:Attr Name="PBOnly" Value="False"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_3009851">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50conusingthejapanesepocketimeui"></A>Using the Japanese Pocket IME UI</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>By default, the Pocket IME UI displays the candidate list window under the composition window. If there is a software input panel under the composition window, the software input panel overlaps the candidate window. This is not a problem if you can move the software input panel. If the software input panel is docked, as on a small screen, problems occur when you attempt to select the candidate window. If you plan to make the software input panel docked, you can modify Pocket IME UI source code to move the IME candidate window and avoid overlapping the IM window. </P>
+
+<P>The following example modifies Cand100.cpp, the source code file that creates a candidate window. The example uses <MSHelp:link keywords="wce50lrfSipGetInfo" TABINDEX="0">SipGetInfo</MSHelp:link> to retrieve the IM window position, and to check whether the IME candidate window overlaps with it. </P>
+
+<BLOCKQUOTE class="dtBlock">
+<b class="le">Note</b>&nbsp;&nbsp;&nbsp;The code modifications are noted by comment. If you want to implement this modification, insert the new code in Cand100.cpp.</BLOCKQUOTE>
+
+<BLOCKQUOTE class="dtBlock">
+<B>Note</B>&nbsp;&nbsp;&nbsp;To make the following code example easier to read, error checking is not included. This code example should not be used in a release configuration unless it has been modified to include secure error handling.</BLOCKQUOTE>
+
+<PRE class="code">%_WINCEROOT%\public\common\oak\drivers\imejpp\imeui\cand100.cpp
+........
+//
+// First include the SIPAPI before AdjustCandPos
+//
+#include "sipapi.h"
+     
+ void     AdjustCandPos(POINT *pt, SIZE sizeCandWnd)
+     
+          int          nScreenSize;
+          int          nHideSize;
+     
+          if(pt-&gt;x &lt; 0)
+               pt-&gt;x = 0;
+     
+          if(pt-&gt;y &lt; 0)
+               pt-&gt;y = 0;
+     
+          nScreenSize = GetSystemMetrics(SM_CXSCREEN);
+          if(pt-&gt;x + sizeCandWnd.cy &gt; nScreenSize) {
+               nHideSize = pt-&gt;x + sizeCandWnd.cx - nScreenSize;
+               pt-&gt;x -= nHideSize;
+          }
+     
+          nScreenSize = GetSystemMetrics(SM_CYSCREEN);
+          if(pt-&gt;y + sizeCandWnd.cy &gt; nScreenSize) {
+               pt-&gt;y -= sizeCandWnd.cy + sizeT.cy + 2;
+          }
+//
+// Insert modification here
+//
+// The new code checks to see if the IM window position overlaps, and moves the IME candidate if necessary
+//
+          else {
+               SIPINFO     SipInfo;
+               SipInfo.cbSize = sizeof(SIPINFO);
+               SipInfo.dwImDataSize = 0;
+               if (SipGetInfo(&amp;SipInfo)) {
+                    if ((SipInfo.rcSipRect.top &lt; pt-&gt;y + sizeCandWnd.cy)
+                    &amp;&amp; (SipInfo.rcSipRect.bottom &gt;= pt-&gt;y)
+                    &amp;&amp; (SipInfo.rcSipRect.left &lt; pt-&gt;x + sizeCandWnd.cx)
+                    &amp;&amp; (SipInfo.rcSipRect.right &gt;= pt-&gt;x)
+                    &amp;&amp; (pt-&gt;y - (sizeCandWnd.cy + sizeT.cy + 2) &gt;= 0)) {
+                    pt-&gt;y -= sizeCandWnd.cy + sizeT.cy + 2;
+                    }
+               }
+          }
+     }</PRE>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50conjapanesepocketimeuicode.htm">Japanese Pocket IME UI Code</A> | <MSHelp:link keywords="wce50conProgrammingaSoftwareBasedInputPanel" TABINDEX="0">Programming a Software-Based Input Panel</MSHelp:link> | <MSHelp:link keywords="wce50lrfSipGetInfo" TABINDEX="0">SipGetInfo</MSHelp:link></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

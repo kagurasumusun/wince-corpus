@@ -1,0 +1,109 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>selectany</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="selectany"/>
+<MSHelp:RLTitle Title="selectany"/>
+<MSHelp:Keyword Index="A" Term="wce50conSelectany"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Guide"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="True"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="comp_modifiers.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="True"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_1042678">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50conselectany"></A>selectany</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P><B>The __declspec( selectany ) </B>extended storage-class modifier tells the compiler that the declared global data item (variable or object) is a pick-any COMDAT item. </P>
+
+<PRE class="syntax"><B>__declspec( selectany )</B> <I>declarator</I></PRE>
+
+<P>At link time, if multiple definitions of a COMDAT are seen, the linker picks one and discards the rest. </P>
+
+<P>If the linker option <A HREF="wce50grfoptoptimizations.htm">/OPT</A><B>:REF</B> (Optimizations) is selected, COMDAT elimination occurs to remove all unreferenced data items in the linker output.</P>
+
+<P>For dynamically-initialized, global objects, <B>selectany</B> discards an unreferenced object's initialization code.</P>
+
+<P>A global data item can normally be initialized only once in an EXE or DLL project. </P>
+
+<P><B>selectany</B> can be used in initializing global data defined by headers, when the same header appears in more than one source file. </P>
+
+<P><B>selectany</B> is available in both the C and C++ compilers.</P>
+
+<BLOCKQUOTE class="dtBlock">
+<b class="le">Note</b>&nbsp;&nbsp;&nbsp;<B>selectany </B>can only be applied to the initialization of global data items that are externally visible.</BLOCKQUOTE>
+
+<P class="label"><B>Example</B></P>
+
+<P>The following code example shows how to use the <B>selectany</B> attribute:</P>
+
+<PRE class="code">//Correct - x1 is initialized and externally visible 
+__declspec(selectany) int x1=1;
+
+//Incorrect - const is by default static in C++, so 
+//x2 is not visible externally (This is OK in C, since
+//const is not by default static in C)
+const __declspec(selectany) int x2 =2;
+
+//Correct - x3 is extern const, so externally visible
+extern const __declspec(selectany) int x3=3;
+
+//Correct - x4 is extern const, so it is externally visible
+extern const int x4;
+const __declspec(selectany) int x4=4;
+
+//Incorrect - __declspec(selectany) is applied to the uninitialized
+//declaration of x5
+extern __declspec(selectany) int x5;
+
+// OK: dynamic initialization of global object
+// compile with cl /c
+class X {
+public:
+X(int i){i++;};
+int i;
+};
+
+__declspec(selectany) X x(1);</PRE>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50congeneralpurposecompileroptions.htm">Compiler Options</A> | <A HREF="wce50con__declspec.htm">__declspec</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

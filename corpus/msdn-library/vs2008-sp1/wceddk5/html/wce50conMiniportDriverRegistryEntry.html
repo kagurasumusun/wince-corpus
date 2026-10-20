@@ -1,0 +1,80 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Miniport Driver Registry Settings</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Miniport Driver Registry Settings"/>
+<MSHelp:RLTitle Title="Miniport Driver Registry Settings"/>
+<MSHelp:Keyword Index="A" Term="wce50conMiniportDriverRegistryEntry"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Driver"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="False"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="ndis_guide4.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="True"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="True"/>
+<MSHelp:Attr Name="PBFeature" Value="NetworkDriver"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_3018398">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50conminiportdriverregistryentry"></A>Miniport Driver Registry Settings</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>Any adapter loaded by the bus driver will by default have a name that follows the format: <CODE>&lt;bus name&gt;\&lt;adapter instance name&gt;</CODE>.</P>
+
+<P>If a name that is based on the full bus name in the <CODE>HKLM\Comm\BusFriendlyNameList\&lt;full bus name&gt;\&lt;adapter instance name&gt;</CODE> registry value is specified, then <CODE>&lt;full bus name&gt;\&lt;adapter instance name&gt;</CODE> is used. An adapter instance that is not loaded by the bus driver will not have the <CODE>&lt;bus name&gt; </CODE>prefix.</P>
+
+<P>In order for NDIS to use the bus name prefix that is set by the bus driver, the exact bus name must be specified in the <CODE>HKLM\Comm\BusFriendlyNameList\&lt;bus friendly instance name&gt;</CODE> registry entry. If this value is present, it is used in place of the default <CODE>&lt;bus name&gt;\&lt;adapter instance name&gt;</CODE> value. The bus friendly name is recorded in <CODE>HKLM\Comm\BusFriendlyNames</CODE> each time the OS boots. You must boot your device at least once to determine the bus friendly name for an adapter.</P>
+
+<P>A bus name of PCCARD indicates that the miniport driver follows the PC Card driver model rather than the legacy PCMCIA driver model. For more information on PC Card drivers, see <A HREF="wce50oripccarddrivers.htm">PC Card Drivers</A>.</P>
+
+<P>NDIS creates the <CODE>HKLM\Comm\&lt;adapter instance name&gt;\Parms\PlugAndPlay</CODE> registry value to allow a miniport driver to determine if it is loaded using the PC Card driver model or the legacy PCMCIA driver model. This information may also be required for a miniport driver that can function using both models. If this value is set to 0, the miniport driver is loaded using the legacy PCMCIA driver model. If this value is set to 1, the miniport driver is loaded using the PC Card bus-agnostic driver model.</P>
+
+<P>The following registry setting sets the name of the import driver DLL file for the MYNIC device.</P>
+
+<PRE class="code">[HKEY_LOCAL_MACHINE\Comm\MYNIC]
+    "DisplayName"="NIC Miniport Driver"
+    "Group"="NDIS"
+    "ImagePath"="mynic.dll"</PRE>
+
+<P>The following registry setting notifies the bus driver that a miniport driver does not share an interrupt. If another device is already using the interrupt, the miniport driver will not be loaded by the bus driver.</P>
+
+<PRE class="code">[HKEY_LOCAL_MACHINE\Drivers\BuiltIn\PCI\Template\NE2000]
+    "Flags"=dword:100</PRE>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50conpcibusenumeratorregistrysettings.htm">PCI Bus Enumerator Registry Settings</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

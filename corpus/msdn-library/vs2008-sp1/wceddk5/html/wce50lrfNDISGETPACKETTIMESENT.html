@@ -1,0 +1,99 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>NDIS_GET_PACKET_TIME_SENT</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="NDIS_GET_PACKET_TIME_SENT"/>
+<MSHelp:RLTitle Title="NDIS_GET_PACKET_TIME_SENT"/>
+<MSHelp:Keyword Index="K" Term="NDIS_GET_PACKET_TIME_SENT"/>
+<MSHelp:Keyword Index="A" Term="wce50lrfNDISGETPACKETTIMESENT"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Driver"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="False"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="apiref"/>
+<MSHelp:Attr Name="Filename" Value="ndis_macros.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="True"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+<MSHelp:Attr Name="APIName" Value="NDIS_GET_PACKET_TIME_SENT"/>
+<MSHelp:Attr Name="PBFeature" Value="NetworkDriver"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_3018683">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50lrfndisgetpackettimesent"></A>NDIS_GET_PACKET_TIME_SENT</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>This macro returns the <B>TimeSent</B> value from the out-of-band (OOB) data block associated with a given packet descriptor.</P>
+
+<PRE class="syntax"><B>ULONGLONG NDIS_GET_PACKET_TIME_SENT(</B>
+  <B>PNDIS_PACKET</B> <I>_Packet</I>
+<B>);</B></PRE>
+
+<H4 class="dtH4">Parameters</H4>
+
+<DL>
+<DT><I>_Packet</I></DT>
+
+<DD>Points to a packet descriptor.</dd>
+</DL>
+
+<H4 class="dtH4">Return Values</H4>
+
+<P>The return value is the time stamp, if any, set by the miniport when the net packet was received on the underlying NIC.</P>
+
+<H4 class="dtH4">Remarks</H4>
+
+<P>When a protocol driver's <A HREF="wce50lrfprotocolreceivepacket.htm">ProtocolReceivePacket</A> function is called with an indication, it can use this macro to retrieve the <B>TimeSent</B> time stamp using the <I>_Packet</I> pointer it is given on entry. This value was set originally by a protocol on the remote node that transmitted the packet as the <B>TimeToSend</B> time stamp.</P>
+
+<P>A protocol driver can call <A HREF="wce50lrfndisgetreceivedpacket.htm">NdisGetReceivedPacket</A> followed by <B>NDIS_GET_PACKET_TIME_SENT</B> to obtain this time stamp from the <A HREF="wce50lrfndispacketoobdata.htm">NDIS_PACKET_OOB_DATA</A> block associated with a packet descriptor when its <A HREF="wce50lrfprotocolreceive.htm">ProtocolReceive</A> function is given an indication. However, these calls are superfluous if the protocol is bound to an underlying driver that does not supply OOB information with its indications.</P>
+
+<P>All time stamps set in the <B>NDIS_PACKET_OOB_DATA</B> blocks associated with packets are expressed in system time units as the number of 100-nanosecond intervals since January 1, 1601.</P>
+
+<P>A highest-level protocol driver might use this macro before it forwards a received net packet to clients if its clients expect time stamps. Still higher-level drivers or system components can convert this time stamp into locale-specific values more meaningful to the end user.</P>
+
+<P>The <B>NDIS_GET_PACKET_TIME_SENT</B> macro is defined as follows.</P>
+
+<PRE class="code">#define NDIS_GET_PACKET_TIME_SENT(_Packet)                              \
+                        ((PNDIS_PACKET_OOB_DATA)((PUCHAR)(_Packet) +    \
+                        (_Packet)-&gt;Private.NdisPacketOobOffset))-&gt;TimeSent</PRE>
+
+<H4 class="dtH4">Requirements</H4>
+
+<P><B>OS Versions:</B> Windows CE .NET 4.0 and later.<BR>
+<B>Header:</B> Ndis.h.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50lrfndisgetoriginalpacket.htm">NDIS_GET_ORIGINAL_PACKET</A> | <A HREF="wce50lrfndisgetcurrentsystemtime.htm">NdisGetCurrentSystemTime</A> | <A HREF="wce50lrfndisgetreceivedpacket.htm">NdisGetReceivedPacket</A> | <A HREF="wce50lrfndismindicatereceivepacket.htm">NdisMIndicateReceivePacket</A> | <A HREF="wce50lrfndispacketoobdata.htm">NDIS_PACKET_OOB_DATA</A> | <A HREF="wce50lrfprotocolreceive.htm">ProtocolReceive</A> | <A HREF="wce50lrfprotocolreceivepacket.htm">ProtocolReceivePacket</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

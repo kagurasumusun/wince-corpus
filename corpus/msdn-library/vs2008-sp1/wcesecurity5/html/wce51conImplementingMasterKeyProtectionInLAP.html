@@ -1,0 +1,91 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Implementing Master Key Protection in a LAP</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Implementing Master Key Protection in a LAP"/>
+<MSHelp:RLTitle Title="Implementing Master Key Protection in a LAP"/>
+<MSHelp:Keyword Index="A" Term="wce51conImplementingMasterKeyProtectionInLAP"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Feature"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="Technology" Value="Security"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="lass_os_development.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="False"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+<MSHelp:Attr Name="PBFeature" Value="SYSGEN_LASS"/>
+<MSHelp:Attr Name="PBOnly" Value="True"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_1072365">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce51conimplementingmasterkeyprotectioninlap"></A>Implementing Master Key Protection in a LAP</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>You can implement master key protection in LAPs that collect verification data from the user but that do not persist the data. An example of a LAP that does not persist user data is a password LAP, for which the user data is the password. For more information about creating a LAP with master key protection, see <A HREF="wce50grfcreatinglap.htm">Creating a LAP</A>. A sample password LAP is available, as described in <A HREF="wce50grflasssamples.htm">LASS Samples</A>.</P>
+
+<P>Master key protection is applicable only if the following conditions apply: 
+
+<UL type="disc">
+	<LI>The LAP supports master key protection.</li>
+
+	<LI>System powerup, represented by the StartUI AE_STARTUI event, is protected with the LASS AE_EVERYTIME event, using a policy of every time. This policy indicates that every time the operating system starts up, <A HREF="wce50lrfverifyuser.htm">VerifyUser</A> will be called. The policy is set when the <B>AEFrequencyType</B> and <B>AEFrequencyValue</B> registry subkeys are both set to 0. For more information about setting an AE policy, see <A HREF="wce50grfsettingaepolicy.htm">Setting an AE Policy</A>.</li>
+</UL>
+
+<P>When master key protection is applicable, <A HREF="wce50lrfverifyuser.htm">VerifyUser</A> implicitly sets the VU_HANDLE_MASTER_KEY flag when it is called by StartUI. In addition, any application call to <A HREF="wce50lrflassreloadconfig.htm">LASSReloadConfig</A> will implicitly invoke <B>VerifyUser</B> with the VU_HANDLE_MASTER_KEY flag. </P>
+
+<P>To enable master key protection, you must implement the following details in your LAP DLL entry points.
+
+<UL type="disc">
+	<LI><A HREF="wce50lrfinitlap.htm">InitLAP (function)</A>
+<P>Set the <B>capabilities</B> member in <A HREF="wce50lrfinitlapstructure.htm">InitLap (structure)</A> to include the LAP_CAPABILITIES_MASTER_KEY flag.
+</li>
+
+	<LI><A HREF="wce50lrfdeinitlap.htm">DeinitLAP</A>
+<P>Remove the master key protection when the LAP is unloaded.
+</li>
+
+	<LI><A HREF="wce50lrflapcreateenrollmentconfigdialog.htm">LAPCreateEnrollmentConfigDialog</A>
+<P>Start this function when the user is enrolled via an application call to <A HREF="wce50lrfcreateenrollmentconfigdialog.htm">CreateEnrollmentConfigDialog</A>. Apply master key protection only if the caller specifies the VU_HANDLE_MASTER_KEY flag in the <I>dwOptions</I> parameter. Remove master key protection when the LAP is unloaded. 
+</li>
+
+	<LI><A HREF="wce51lrfverifyuserlap.htm">VerifyUser (LAP)</A>
+<P>Apply master key protection only if the caller specifies the VU_HANDLE_MASTER_KEY flag in the <I>dwOptions</I> parameter. 
+</li>
+</UL>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50grfcreatinglap.htm">Creating a LAP</A> | <A HREF="wce50conmasterkeyprotectioninlass.htm">Master Key Protection in LASS</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

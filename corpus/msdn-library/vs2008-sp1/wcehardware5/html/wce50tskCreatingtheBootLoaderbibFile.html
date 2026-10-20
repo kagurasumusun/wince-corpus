@@ -1,0 +1,142 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Creating the Boot Loader .bib File</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Creating the Boot Loader .bib File"/>
+<MSHelp:RLTitle Title="Creating the Boot Loader .bib File"/>
+<MSHelp:Keyword Index="A" Term="wce50tskCreatingtheBootLoaderbibFile"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Hardware"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="True"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbTask"/>
+<MSHelp:Attr Name="Filename" Value="howto_developing_a_bootloader.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="True"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_3010335">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50tskcreatingthebootloaderbibfile"></A>Creating the Boot Loader .bib File</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>The .bib file details the memory layout that the boot loader will use. Romimage.exe uses this file to convert the boot loader executable (.exe) file into .bin and .nb0 files. </P>
+
+<P>For more information about .bib files, see <MSHelp:link keywords="wce50conBinaryImageBuilderFile" TABINDEX="0">Binary Image Builder File</MSHelp:link>. </P>
+
+<P>For more information about Romimage.exe, see <MSHelp:link keywords="wce50lrfRomimage" TABINDEX="0">Romimage</MSHelp:link>. </P>
+
+<P>For more information about the Windows CE memory, see <MSHelp:link keywords="wce50conMemoryArchitecture" TABINDEX="0">Memory Architecture</MSHelp:link>.</P>
+
+<P class="labelproc"><B>To create the boot loader BIB file</B>
+
+<OL type="1">
+	<LI>In %_WINCEROOT%\Platform\MyPlatform\Src\Bootloader\Eboot, create a file called Boot.bib.</li>
+
+	<LI>Add the following configuration information to the Boot.bib file.
+<PRE class="code">; Eboot is built to run out of RAM, though initially the location of the 
+; image may be in flash.  This .bib file will create two different Eboot 
+; images of interest:
+;
+; Eboot.nb0 - Can be used to flash an initial Eboot image using JTAG.
+; Eboot.bin - Can be downloaded by existing Eboot image and flashed.
+;
+; Note: The .nb0 file is a raw binary image. The .bin file is a recordized
+; image with header.
+;
+
+MEMORY
+;   Name     Start     Size      Type
+;   -------  --------  --------  ----
+    
+    ; Reserve some RAM before Eboot.
+    ; This memory will be used later.
+    
+    FILLER   A0000000  00030000  RESERVED   ; Replaced with data later.
+
+    EBOOT    A0030000  00020000  RAMIMAGE   ; Set aside 128 KB for loader; finalize later.
+    RAM      A0050000  00010000  RAM        ; Free RAM; finalize later.
+    
+CONFIG
+    COMPRESSION=OFF
+    PROFILE=OFF
+    KERNELFIXUPS=ON
+    
+    ; These configuration options cause the .nb0 file to be created. 
+    ; An .nb0 file may be directly written to flash memory and then 
+    ; booted. Because the loader is linked to execute from RAM, 
+    ; the following configuration options 
+    ; must match the RAMIMAGE section.
+    ROMSTART=A0030000
+    ROMWIDTH=32
+    ROMSIZE=20000
+
+MODULES
+;   Name         Path                                          Memory Type
+;   -----------  --------------------------------------------- -----------
+    nk.exe       $(_TARGETPLATROOT)\target\$(_TGTCPU)\$(WINCEDEBUG)\EBOOT.exe   EBOOT</PRE>
+
+<P>The previous configuration information specifies the following boot loader properties:
+
+<UL type="disc">
+	<LI>Running with the MMU off; thus, the addresses are physical.</li>
+
+	<LI>Running from RAM; thus, the RAMIMAGE line specifies a RAM address.</li>
+</UL>
+
+<P>The lengths specified in the boot loader image and the RAM used by the boot loader image are somewhat arbitrary. The values can be adjusted throughout the development process to more optimal values once the boot loader is completed.
+
+<P>For more information about the MEMORY section in the preceding configuration example, see <MSHelp:link keywords="wce50conMEMORYSection" TABINDEX="0">MEMORY Section</MSHelp:link>. 
+
+<P>For more information about the MODULES section in the preceding configuration example, see <MSHelp:link keywords="wce50conMODULESSection" TABINDEX="0">MODULES Section</MSHelp:link>. 
+
+<P>For more information about the CONFIG section in the preceding configuration example, see <MSHelp:link keywords="wce50conCONFIGSection" TABINDEX="0">CONFIG Section</MSHelp:link>.
+</li>
+
+	<LI>In %_WINCEROOT%\Platform\MyPlatform\Src\Bootloader\Eboot, create a file called Makefile.inc.</li>
+
+	<LI>Add the following code to the Makefile.inc file.
+<PRE class="code">BootImage:
+     romimage  boot.bib</PRE>
+</li>
+
+	<LI>Edit the sources file by adding the following code to the end of the sources file.
+<PRE class="code">WINCETARGETFILES=BootImage</PRE>
+</li>
+</OL>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50howhowtodevelopabootloader.htm">How to Develop a Boot Loader</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

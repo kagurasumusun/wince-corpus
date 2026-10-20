@@ -1,0 +1,123 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Hive-based Registry Initialization</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Hive-based Registry Initialization"/>
+<MSHelp:RLTitle Title="Hive-based Registry Initialization"/>
+<MSHelp:Keyword Index="A" Term="wce50tskInitializingtheFilebasedRegistry"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Feature"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="filesys_overview.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="True"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="True"/>
+<MSHelp:Attr Name="PBFeature" Value="FILESYSTEM"/>
+<MSHelp:Attr Name="PBOnly" Value="True"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_1055731">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50tskinitializingthefilebasedregistry"></A>Hive-based Registry Initialization</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>The following steps show the process that Filesys.exe uses to initialize the hive-based registry.
+
+<OL type="1">
+	<LI>Filesys.exe calls <MSHelp:link keywords="wce50lrfOEMIoControl" TABINDEX="0">OEMIoControl</MSHelp:link> with <MSHelp:link keywords="wce50lrfIOCTLHALGETREGSECUREKEYS" TABINDEX="0">IOCTL_HAL_GETREGSECUREKEYS</MSHelp:link> two times. The first call is a query to find out the required data buffer size. The second call is a query to get the buffer of secure key data. For more information, see <A HREF="wce50conrequestingadditionalsecureregistrykeys.htm">Requesting Additional Secure Registry Keys</A>.</li>
+
+	<LI>Filesys.exe mounts the boot hive (Boot.hv) from ROM. The boot hive contains the information that Filesys.exe needs to determine where the registry is stored and to start the drivers that are required to access it.</li>
+
+	<LI>Filesys.exe calls <B>OEMIoControl</B> with IOCTL <MSHelp:link keywords="wce50lrfIOCTLHALINITREGISTRY" TABINDEX="0">IOCTL_HAL_INITREGISTRY</MSHelp:link>, to give the OAL a chance to add data to the registry early in the boot process.</li>
+
+	<LI>Filesys.exe creates named events for all event names in the <B>HKEY_LOCAL_MACHINE\System\Events</B> registry location in the boot hive. These events are set by the processes that own them. For more information, see <MSHelp:link keywords="wce50conEventRegistration" TABINDEX="0">Ready-Event Registration</MSHelp:link>.</li>
+
+	<LI>Filesys.exe loads the Storage Manager if <B>HKEY_LOCAL_MACHINE\System\StorageManager</B> points to a loadable DLL. Filesys.exe creates a thread to initialize the Storage Manager. The thread will exit when initialization is complete.</li>
+
+	<LI>If the <B>Flags</B> value is set to 1 or 4, Filesys.exe starts boot phase 0. For more information about boot phases, see <A HREF="wce50conbootphases.htm">Boot Phases</A>.</li>
+
+	<LI>The system locale is initialized.</li>
+
+	<LI>If the <B>Flags</B> value is set to 1 or 4, Filesys.exe starts boot phase 1. For more information about boot phases, see <A HREF="wce50conbootphases.htm">Boot Phases</A>.</li>
+
+	<LI>If the <B>Flags</B> value is set to 2 or 8, Filesys.exe starts Device.exe.</li>
+
+	<LI>Filesys.exe creates an event called "SYSTEM/BootPhase2", which is triggered when the file system containing the system registry is loaded. This file system is identified by the <CODE>"MountFlags"=2</CODE> bitmask in its Storage Manager profile.</li>
+
+	<LI>Filesys.exe waits for a file system to register as the storage location for registry hives.</li>
+
+	<LI>If the registry hives are not being stored on a file system, Filesys.exe calls <B>OEMIoControl</B> with <MSHelp:link keywords="wce50lrfIOCTLHALGETHIVERAMREGION" TABINDEX="0">IOCTL_HAL_GET_HIVE_RAM_REGION</MSHelp:link> to find out if the registry data should be stored in a reserved area of RAM, instead of in a file.</li>
+
+	<LI>Filesys.exe mounts the ROM portion of the system registry, Default.hv.</li>
+
+	<LI>Filesys.exe calls <B>OEMIoControl</B> with with <MSHelp:link keywords="wce50lrfIOCTLHALGETHIVECLEANFLAG" TABINDEX="0">IOCTL_HAL_GET_HIVE_CLEAN_FLAG</MSHelp:link> and the HIVECLEANFLAG_SYSTEM flag to determine whether the OAL indicates that the system hive should be cleaned and recreated with data from ROM.</li>
+
+	<LI>If a clean registry is not required, the system registry hive file (System.hv) is loaded from the file system that contains it. A signature in the system hive file is checked against a signature in the ROM portion of the system registry. If the signatures do not match, then a clean registry is required, even if this is not indicated by <B>IOCTL_HAL_GET_HIVE_CLEAN_FLAG</B>.</li>
+
+	<LI>If a clean registry is required, the old registry hive file is deleted and a new hive file is created.</li>
+
+	<LI>Filesys.exe invalidates any currently open system registry handles before swapping out the boot registry hive.</li>
+
+	<LI>Filesys.exe migrates the changes from the boot registry hive to the system hive.</li>
+
+	<LI>If the boot is not a clean boot, Filesys.exe sets the registry value <B>RegPersisted</B> under <B>HKEY_LOCAL_MACHINE</B> to 1. At this point, non-user specific registry data becomes available.</li>
+
+	<LI>Filesys.exe determines where the user profiles are stored by looking at the registry value ProfileDir under <B>HKEY_LOCAL_MACHINE\init\BootVars</B>.</li>
+
+	<LI>Filesys.exe calls <B>OEMIoControl</B> with <B>IOCTL_HAL_GET_HIVE_CLEAN_FLAG</B> and the HIVECLEANFLAG_USERS flag, to determine whether the OAL indicates that the user profiles should be cleaned. If so, all user profile directories are removed, along with their contents.</li>
+
+	<LI>Filesys.exe determines if the default user profile should be loaded. If the registry value <B>NoDefaultUser</B> under <B>HKEY_LOCAL_MACHINE\init\BootVars</B> is set to 1, a call to <MSHelp:link keywords="wce50lrfSetCurrentUser" TABINDEX="0">SetCurrentUser</MSHelp:link> is required to load a user profile. If <B>NoDefaultUser</B> is set to 0, the default user profile is loaded.
+<P>The name of the default user is determined by the value of <B>DefaultUser</B>, a REG_SZ value, in <B>HKEY_LOCAL_MACHINE\init\BootVars</B>. The <B>DefaultUser</B> is set to the name of the user to use as the default profile when the system boots. If it is an existing user, the appropriate user hive is loaded. If it is a new user, the user profile can be created. If <B>DefaultUser</B> is not set, a user by the name "default" is loaded. You can choose a default user name with the following registry key.
+
+<PRE class="code">[HKEY_LOCAL_MACHINE\init\BootVars]
+    "DefaultUser"=&lt;<I>username</I>&gt;</PRE>
+</li>
+
+	<LI>When Filesys.exe loads the user registry, it performs the following actions:
+<OL type="a">
+	<LI>Mounts the ROM portion of the user registry hive from the User.hv file in ROM.</li>
+
+	<LI>Mounts the remaining portion of the user registry hive from the User.hv file in the user profile directory on the persistent file system.</li>
+
+	<LI>A signature in the user hive file is checked against a signature in the ROM portion of the user registry. If the signatures do not match, then a clean registry is required. The User.hv file in the user profile directory is deleted and a new hive file is created. No other files in the user profile directory are affected.</li>
+
+	<LI>If the user registry is not clean, Filesys.exe sets the registry value <B>RegPersisted</B> under <B>HKEY_CURRENT_USER</B> to 1.</li>
+</OL>
+</li>
+</OL>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50confilesysexebootprocess.htm">Filesys.exe Boot Process</A> | <A HREF="wce50tskinitializingtheobjectstorebasedregistry.htm">RAM-based Registry Initialization</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

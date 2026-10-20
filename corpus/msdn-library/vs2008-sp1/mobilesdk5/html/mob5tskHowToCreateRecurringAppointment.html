@@ -1,0 +1,154 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>How to: Create a Recurring Appointment</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="How to: Create a Recurring Appointment"/>
+<MSHelp:RLTitle Title="How to: Create a Recurring Appointment"/>
+<MSHelp:Keyword Index="A" Term="mob5tskHowToCreateRecurringAppointment"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Application"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbsmartphone"/>
+<MSHelp:Attr Name="Product" Value="kbPocketPC"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="Technology" Value="kbPocketPC"/>
+<MSHelp:Attr Name="Technology" Value="kbSmartphone"/>
+<MSHelp:Attr Name="TopicType" Value="kbTask"/>
+<MSHelp:Attr Name="Filename" Value="Pocket_Outlook_Object_Model_magneto.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="True"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_1063837">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Windows Mobile Version 5.0 SDK<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="mob5tskhowtocreaterecurringappointment"></A>How to: Create a Recurring Appointment</H1>
+<!--Feedback Link Top Start-->
+<P CLASS="feedback"><font size="1"><a href="mailto:medfdbk&#64;microsoft.com?subject=Product: Windows Mobile | Version: 5.0 | Release: SDK | Title: How to: Create a Recurring Appointment | Filename: mob5tskhowtocreaterecurringappointment.htm | Built on: Wednesday, September 14, 2005">Send Feedback</a> on this topic to the authors</font></p>
+<!--Feedback Link Top End-->
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>Any appointment becomes a recurring appointment when you retrieve its <A HREF="mob5lrfirecurrencepattern.htm">recurrence pattern</A> object, set the recurrence values, and then save the Appointment. The following procedure demonstrates how to create an appointment that recurs every Monday at 2:00 P.M.</P>
+
+<P class="labelproc"><B>To create a recurring appointment</B>
+
+<OL type="1">
+	<LI>Create an instance of the Outlook Mobile application object and then use it to establish a POOM session. For more information, see <A HREF="mob5tskhowtoestablishpoomsession.htm">How to: Establish a POOM session</A>.</li>
+
+	<LI>Declare and initialize a pointer to a new <A HREF="mob5lrfiappointment.htm">IAppointment</A> interface object, as follows:
+<PRE class="code">IAppointment *pAppt = NULL;</PRE>
+</li>
+
+	<LI>Create a PIM item: 
+<PRE class="code">polApp-&gt;CreateItem(olAppointmentItem, (IDispatch**)&amp;pAppt);</PRE>
+</li>
+
+	<LI>Create a <MSHelp:link keywords="wce50lrfSYSTEMTIME" TABINDEX="0">SYSTEMTIME</MSHelp:link> object, and initialize it with a start date:
+<PRE class="code">memset(&amp;st, 0, sizeof(SYSTEMTIME));
+st.wMonth = 7;
+st.wDay   = 26;
+st.wYear  = 2004;
+st.wHour  = 14;</PRE>
+</li>
+
+	<LI>Convert the system time object to a Variant date/time object:
+<PRE class="code">polApp-&gt;SystemTimeToVariantTime(&amp;st, &amp;date);</PRE>
+</li>
+
+	<LI>Set the appointment <A HREF="mob5lrfiappointmentput_start.htm">Start</A> property:
+<PRE class="code">pAppt-&gt;put_Start(date);</PRE>
+</li>
+
+	<LI>Set the appointment <A HREF="mob5lrfiappointmentput_subject.htm">Subject</A> property:
+<PRE class="code">pAppt-&gt;put_Subject(TEXT("Recurring Appointment"));</PRE>
+</li>
+
+	<LI>Set the appointment recurrence pattern:
+<PRE class="code">pAppt-&gt;GetRecurrencePattern(&amp;pRec);
+pRec-&gt;put_RecurrenceType(olRecursWeekly);
+pRec-&gt;put_DayOfWeekMask(olMonday);
+pRec-&gt;put_NoEndDate(VARIANT_TRUE);</PRE>
+</li>
+
+	<LI>Add the recurring appointment to the appointment collection:
+<PRE class="code">pAppt-&gt;Save();</PRE>
+</li>
+</OL>
+
+<H4 class="dtH4">Code Example</H4>
+
+<P>The following code example demonstrates how to create a recurring appointment.</P>
+
+<BLOCKQUOTE class="dtBlock">
+<b class="le">Note</b>&nbsp;&nbsp;&nbsp;To make the following code example easier to read, security checking and error handling are not included. This code example should not be used in a release configuration unless it has been modified to include them.</BLOCKQUOTE>
+
+<PRE class="code">void CreateRecurringApt(IPOutlookApp *polApp)
+{
+    IAppointment *pAppt;
+    IRecurrencePattern *pRec;
+    SYSTEMTIME st;
+    DATE date;
+
+    // Create an appointment item.
+    polApp-&gt;CreateItem(olAppointmentItem, (IDispatch**)&amp;pAppt);
+
+    // Set the appointment start date and time.
+    memset(&amp;st, 0, sizeof(SYSTEMTIME));
+    st.wMonth = 7;
+    st.wDay   = 27;
+    st.wYear  = 2004;
+    st.wHour  = 14;
+    polApp-&gt;SystemTimeToVariantTime(&amp;st, &amp;date);
+    pAppt-&gt;put_Start(date);
+
+    // Set the appointment subject.
+    pAppt-&gt;put_Subject(TEXT("Recurring Appointment"));
+
+    // Set the appointment recurrence pattern.
+    pAppt-&gt;GetRecurrencePattern(&amp;pRec);
+    pRec-&gt;put_RecurrenceType(olRecursWeekly);
+    pRec-&gt;put_DayOfWeekMask(olMonday);
+    pRec-&gt;put_NoEndDate(VARIANT_TRUE);
+
+    // Add the recurring appointment to the appointment collection.
+    pAppt-&gt;Save();
+
+    // Free resources.
+    pRec-&gt;Release();
+    pAppt-&gt;Release();
+}</PRE>
+
+<H4 class="dtH4">See Also</H4>
+
+<P>| <A HREF="mob5oripocketoutlookobjectmodel.htm">Pocket Outlook Object Model Application Development for Windows Mobile-based Devices</A><A HREF="mob5lrfiappointmentgetrecurrencepattern.htm">IAppointment::GetRecurrencePattern</A> | <A HREF="mob5lrfiappointmentsave.htm">IAppointment::Save</A> | <A HREF="mob5lrfirecurrencepattern.htm">IRecurrencePattern</A> | <A HREF="mob5lrfirecurrencepatternput_dayofweekmask.htm">IRecurrencePattern::put_DayOfWeekMask</A> | <A HREF="mob5lrfirecurrencepatternput_noenddate.htm">IRecurrencePattern::put_NoEndDate</A> | <A HREF="mob5lrfirecurrencepatternput_recurrencetype.htm">IRecurrencePattern::put_RecurrenceType</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Feedback Link Bottom Start-->
+<p><font size="1"><a href="mailto:medfdbk&#64;microsoft.com?subject=Product: Windows Mobile | Version: 5.0 | Release: SDK | Title: How to: Create a Recurring Appointment | Filename: mob5tskhowtocreaterecurringappointment.htm | Built on: Wednesday, September 14, 2005">Send Feedback</a> on this topic to the authors</font></p>
+<!--Feedback Link Bottom End-->
+<!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="mob5conCopyrightInformationForMagneto" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link></font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

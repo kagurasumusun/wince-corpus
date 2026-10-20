@@ -1,0 +1,202 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Determining the Security Policies and Roles on a Device</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Determining the Security Policies and Roles on a Device"/>
+<MSHelp:RLTitle Title="Determining the Security Policies and Roles on a Device"/>
+<MSHelp:Keyword Index="A" Term="wcconDeterminingSecurityPoliciesRolesOnDevice"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Application"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbsmartphone"/>
+<MSHelp:Attr Name="Product" Value="kbPocketPC"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="Technology" Value="kbPocketPC"/>
+<MSHelp:Attr Name="Technology" Value="kbSmartphone"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="cust_security_mo.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="True"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_1075548">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Windows Mobile Version 5.0 SDK<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wccondeterminingsecuritypoliciesrolesondevice"></A>Determining the Security Policies and Roles on a Device</H1>
+<!--Feedback Link Top Start-->
+<P CLASS="feedback"><font size="1"><a href="mailto:medfdbk&#64;microsoft.com?subject=Product: Windows Mobile | Version: 5.0 | Release: SDK | Title: Determining the Security Policies and Roles on a Device | Filename: wccondeterminingsecuritypoliciesrolesondevice.htm | Built on: Wednesday, September 14, 2005">Send Feedback</a> on this topic to the authors</font></p>
+<!--Feedback Link Top End-->
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>Before you change security policies, you need to determine what the current policies are on the device. You do this by:
+
+<OL type="1">
+	<LI>Query the current security policies on the device. To do this, you use the SecurityPolicy Configuration Service Provider.</li>
+
+	<LI>Use the query response to the determine the actual policies and roles. The value that is returned for each policy is a decimal representation of all of the roles that can access the policy.</li>
+</OL>
+
+<P>The following sections show an example of XML code that uses the SecurityPolicy Configuration Service Provider to query a device, an example of the return values that may be received, and and example of how to interpret the values returned to determine the current roles for each policy.</P>
+
+<H4 class="dtH4">Querying the Security Policies</H4>
+
+<P>The following code example shows how to query the security policy on a device. </P>
+
+<BLOCKQUOTE class="dtBlock">
+<b class="le">Note</b>&nbsp;&nbsp;&nbsp;This example is for OMA Client Provisioning. For an example of XML for OMA DM, see <MSHelp:link keywords="wce51samQueryingSecurityPolicyExampleForOMADM" TABINDEX="0">Querying a Security Policy Example for OMA DM</MSHelp:link>.</BLOCKQUOTE>
+
+<PRE class="code">&lt;wap-provisioningdoc&gt;
+ &lt;characteristic type="SecurityPolicy"&gt;
+   &lt;!--AutoRun Policy:--&gt;  &lt;parm-query name="2"/&gt;
+   &lt;!--Perimeter Security:--&gt;  &lt;parm-query name="10"/&gt;
+   &lt;!--RAPI:--&gt;  &lt;parm-query name="4097"/&gt;
+   &lt;!--Unsigned CABs:--&gt;  &lt;parm-query name="4101"/&gt;
+   &lt;!--Unsigned APPs:--&gt;  &lt;parm-query name="4102"/&gt;
+   &lt;!--Unsigned Themes:--&gt;  &lt;parm-query name="4103"/&gt;
+   &lt;!--TPS:--&gt;  &lt;parm-query name="4104"/&gt;
+   &lt;!--Message Authentication:--&gt;  &lt;parm-query name="4105"/&gt;
+   &lt;!--WAP Signed Message:--&gt;  &lt;parm-query name="4107"/&gt;
+   &lt;!--Service Loading:--&gt;  &lt;parm-query name="4108"/&gt;
+   &lt;!--Service Indication:--&gt;  &lt;parm-query name="4109"/&gt;
+   &lt;!--Unauthenticated Messages:--&gt;  &lt;parm-query name="4110"/&gt;
+   &lt;!--OTA Provisioning:--&gt;  &lt;parm-query name="4111"/&gt;
+   &lt;!--WSP Push:--&gt;  &lt;parm-query name="4113"/&gt;
+   &lt;!--Grant Manager:--&gt;  &lt;parm-query name="4119"/&gt;
+   &lt;!--Grant User Authenticated:--&gt;  &lt;parm-query name="4120"/&gt;
+   &lt;!--DRM Support:--&gt;  &lt;parm name="4129"/&gt;
+ &lt;/characteristic&gt;
+&lt;/wap-provisioningdoc&gt;</PRE>
+
+<H4 class="dtH4">Query Response</H4>
+
+<P>The following example shows the response to the query.  This example is for OMA Client Provisioning.</P>
+
+<PRE class="code">&lt;wap-provisioningdoc&gt;
+ &lt;characteristic type="SecurityPolicy"&gt;
+   &lt;!--AutoRun Policy:--&gt;  &lt;noparm name="2"/&gt;
+   &lt;!--RAPI:--&gt;  &lt;parm name="4097" value="2"/&gt;
+   &lt;!--Unsigned CABs:--&gt;  &lt;parm name="4101" value="16"/&gt;
+   &lt;!--Unsigned APPs:--&gt;  &lt;parm name="4102" value="1"/&gt;
+   &lt;!--Unsigned Themes:--&gt;  &lt;parm name="4103" value="64"/&gt;
+   &lt;!--TPS:--&gt;  &lt;parm name="4104" value="1"/&gt;
+   &lt;!--Message Authentication:--&gt;  &lt;parm name="4105" value="3"/&gt;
+   &lt;!--WAP Signed Message:--&gt;  &lt;parm name="4107" value="3204"/&gt;
+   &lt;!--Service Loading:--&gt;  &lt;parm name="4108" value="2048"/&gt;
+   &lt;!--Service Indication:--&gt;  &lt;parm name="4109" value="3072"/&gt;
+   &lt;!--Unauthenticated Messages:--&gt;  &lt;parm name="4110"
+     value="64"/&gt;
+   &lt;!--OTA Provisioning:--&gt;  &lt;parm name="4111" value="3732"/&gt;
+   &lt;!--WSP Push:--&gt;  &lt;parm name="4113" value="1"/&gt;
+   &lt;!--Grant Manager:--&gt;  &lt;parm name="4119" value="16"/&gt;
+   &lt;!--Grant User Authenticated:--&gt;  &lt;parm name="4120" value="16"/&gt;
+   &lt;!--DRM Support:--&gt;  &lt;parm name="4129" value="140"/&gt;
+   &lt;/characteristic&gt;
+&lt;/wap-provisioningdoc&gt;</PRE>
+
+<H4 class="dtH4">Determining the current policies and roles on a device</H4>
+
+<P>To understand the results of this response, you must look at the values returned in relation to the policy IDs as shown in <MSHelp:link keywords="wce51conSecurityPolicies" TABINDEX="0">Security Policies</MSHelp:link> and <MSHelp:link keywords="wce51grfSecurityPolicySettings" TABINDEX="0">Security Policy Settings</MSHelp:link>.</P>
+
+<P>For example, the response has the following values:</P>
+
+<PRE class="code">   &lt;!--OTA Provisioning:--&gt;  &lt;parm name="4111" value="3732"/&gt;</PRE>
+
+<P>In this example: 
+
+<UL type="disc">
+	<LI>The parm name refers to the security policy setting as described in <MSHelp:link keywords="wce51conSecurityPolicies" TABINDEX="0">Security Policies</MSHelp:link>s. In this example, 4111 refers to OTA management.</li>
+
+	<LI>The returned parm value for this setting is 3732. This value is the sum of all the decimal values for the Security Roles that are enabled for the policy (in this case, for OTA management). The decimal values of the Security Roles are described in <MSHelp:link keywords="wce51conSecurityRoles" TABINDEX="0">Security Roles</MSHelp:link>.</li>
+</UL>
+
+<P>The following table shows the default roles for OTA management as described in <MSHelp:link keywords="wce51grfSecurityPolicySettings" TABINDEX="0">Security Policy Settings</MSHelp:link>, and their associated values as described in <MSHelp:link keywords="wce51conSecurityRoles" TABINDEX="0">Security Roles</MSHelp:link>.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=37%>Role</TH>
+<TH width=63%>Decimal value</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=37%>SECROLE_OPERATOR_TPS</TD>
+<TD width=63%>128</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=37%>SECROLE_PPG_TRUSTED</TD>
+<TD width=63%>2048</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=37%>SECROLE_PPG_AUTH</TD>
+<TD width=63%>1024</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=37%>SECROLE_TRUSTED_PPG</TD>
+<TD width=63%>512</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=37%>SECROLE_USER_AUTH </TD>
+<TD width=63%>16</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=37%>SECROLE_MANAGER</TD>
+<TD width=63%>8</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=37%>SECROLE_OPERATOR</TD>
+<TD width=63%>4</TD>
+</TR>
+</table></div>
+
+<P>The following list shows how you would use these values to determine the actual policies and roles on the device:
+
+<OL type="1">
+	<LI>Adding these decimal values together. In this example, it results in a value of 3728 (128 + 2048 + 1024 + 512 + 16 +4 = 3728).
+<BLOCKQUOTE class="dtBlock">
+<b class="le">Note</b>&nbsp;&nbsp;&nbsp;OEMs may change the values from the default settings. </BLOCKQUOTE>
+</li>
+
+	<LI>Subtracting this number (3728) from the value that was returned (3732) leaves a decimal value of 4 (3732-3728=4).
+<P>Look at the decimal values in <MSHelp:link keywords="wce51conSecurityRoles" TABINDEX="0">Security Roles</MSHelp:link>. The SECROLE_OPERATOR setting has a decimal value of 4. Therefore, the SECROLE_OPERATOR policy is also valid on this device.
+</li>
+</OL>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wcconcustomizingsecuritypolicies.htm">Customizing Security Settings</A> | <MSHelp:link keywords="wce51grfSecurityPolicyCSP" TABINDEX="0">SecurityPolicy Configuration Service Provider</MSHelp:link><MSHelp:link keywords="wce51conProvisioningSecuritySettings" TABINDEX="0"> | Provisioning Security Settings</MSHelp:link> | <MSHelp:link keywords="wce51conPerimeterSecurity" TABINDEX="0">Perimeter Security</MSHelp:link></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Feedback Link Bottom Start-->
+<p><font size="1"><a href="mailto:medfdbk&#64;microsoft.com?subject=Product: Windows Mobile | Version: 5.0 | Release: SDK | Title: Determining the Security Policies and Roles on a Device | Filename: wccondeterminingsecuritypoliciesrolesondevice.htm | Built on: Wednesday, September 14, 2005">Send Feedback</a> on this topic to the authors</font></p>
+<!--Feedback Link Bottom End-->
+<!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="mob5conCopyrightInformationForMagneto" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link></font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

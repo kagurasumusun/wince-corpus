@@ -1,0 +1,141 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>LPCLEAR_FEATURE</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="LPCLEAR_FEATURE"/>
+<MSHelp:RLTitle Title="LPCLEAR_FEATURE"/>
+<MSHelp:Keyword Index="K" Term="LPCLEAR_FEATURE"/>
+<MSHelp:Keyword Index="A" Term="wce50lrfClearFeature"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Driver"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="False"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="apiref"/>
+<MSHelp:Attr Name="Filename" Value="usbhost_reference.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="False"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+<MSHelp:Attr Name="APIName" Value="LPCLEAR_FEATURE"/>
+<MSHelp:Attr Name="PBFeature" Value="USBHostDriver"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_3019398">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50lrfclearfeature"></A>LPCLEAR_FEATURE</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>This function sends a CLEAR_FEATURE request to a universal serial bus (USB) device.</P>
+
+<PRE class="syntax"><B>typedef USB_TRANSFER (* LPCLEAR_FEATURE)(
+  USB_HANDLE </B><I>hDevice</I><B>,
+  LPTRANSFER_NOTIFY_ROUTINE </B><I>lpStartAddress</I><B>,
+  LPVOID </B><I>lpvNotifyParameter</I><B>,
+  DWORD </B><I>dwFlags</I><B>,
+  WORD </B><I>wFeature</I><B>,
+  UCHAR </B><I>bIndex</I><B>
+);</B></PRE>
+
+<H4 class="dtH4">Parameters</H4>
+
+<DL>
+<DT><I>hDevice</I></DT>
+
+<DD>[in] Handle to a USB device.</dd>
+
+<DT><I>lpStartAddress</I></DT>
+
+<DD>[in] Pointer to the address, which might be NULL, of a callback routine of type <A HREF="wce50lrflptransfer_notify_routine.htm">LPTRANSFER_NOTIFY_ROUTINE</A>.</dd>
+
+<DT><I>lpvNotifyParameter</I></DT>
+
+<DD>[in] Pointer to the parameter to pass to a callback routine.</dd>
+
+<DT><I>dwFlags</I></DT>
+
+<DD>[in] Value of USB_NO_WAIT or zero (0) and one of the values from the following table.
+
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=34%>Value</TH>
+<TH width=66%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=34%>USB_SEND_TO_DEVICE</TD>
+<TD width=66%>Request for device</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=34%>USB_SEND_TO_INTERFACE</TD>
+<TD width=66%>Request for interface</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=34%>USB_SEND_TO_ENDPOINT</TD>
+<TD width=66%>Request for endpoint</TD>
+</TR>
+</table></div>
+
+</dd>
+
+<DT><I>wFeature</I></DT>
+
+<DD>[in] Feature selector. One of USB_FEATURE_<I>*</I> declared in the USB100.h header file.</dd>
+
+<DT><I>bIndex</I></DT>
+
+<DD>[in] Value of zero (0) for DEVICE or the interface or endpoint number.</dd>
+</DL>
+
+<H4 class="dtH4">Return Values</H4>
+
+<P>A USB_TRANSFER handle indicates success. NULL indicates failure.</P>
+
+<H4 class="dtH4">Remarks</H4>
+
+<P>This function, like all other USB driver interface functions, is not directly accessible by any client drivers. Invoke it by dereferencing the <B>lpClearFeature</B> member of the <A HREF="wce50lrfusb_funcs.htm">USB_FUNCS</A> structure passed to the client driver in the invocation of its <A HREF="wce50lrfusbdeviceattach.htm">USBDeviceAttach</A> function.</P>
+
+<P>This function initiates a control transfer to a USB device requesting that a specified feature be disabled. The <I>Universal Serial Bus Specification </I>defines features and appropriate feature request recipients. There is no facility for class-specific or vendor-specific feature selectors; vendors who need to implement non-standard operations should use vendor-specific requests rather than the standard requests.</P>
+
+<P>Successful return from this function indicates that the request was issued to the device, or queued for issuing if USB_NO_WAIT was set; it does not mean that the feature was actually cleared. You must wait for and check the transfer completion status to determine whether or not the device was able to clear the feature.</P>
+
+<H4 class="dtH4">Requirements</H4>
+
+<P><B>OS Versions:</B> Windows CE 2.10 and later.<BR>
+<B>Header:</B> Usbdi.h.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50lrfgettransferstatus.htm">GetTransferStatus</A> | <A HREF="wce50lrflpabort_transfer.htm">LPABORT_TRANSFER</A> | <A HREF="wce50lrfistransfercomplete.htm">LPIS_TRANSFER_COMPLETE</A> | <A HREF="wce50lrflptransfer_notify_routine.htm">LPTRANSFER_NOTIFY_ROUTINE</A> | <A HREF="wce50lrfsetfeature.htm">LPSET_FEATURE</A> | <A HREF="wce50lrfusb_funcs.htm">USB_FUNCS</A> | <A HREF="wce50lrfusbdeviceattach.htm">USBDeviceAttach</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

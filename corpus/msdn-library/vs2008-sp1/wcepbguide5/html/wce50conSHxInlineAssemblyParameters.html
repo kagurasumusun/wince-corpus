@@ -1,0 +1,136 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>SH-4 Inline Assembly Parameters</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="SH-4 Inline Assembly Parameters"/>
+<MSHelp:RLTitle Title="SH-4 Inline Assembly Parameters"/>
+<MSHelp:Keyword Index="A" Term="wce50conSHxInlineAssemblyParameters"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Guide"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="True"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="comp_sh4_callspec.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="True"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_3023876">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50conshxinlineassemblyparameters"></A>SH-4 Inline Assembly Parameters</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>The syntax of the <B>__asm</B> intrinsic call is:</P>
+
+<PRE class="code">__asm(string[,expression...]);</PRE>
+
+<P>You can pass parameters to a <B>__asm</B> intrinsic call using the list of <I>expressions</I>. The compiler processes the list of <I>expression </I>values in exactly the same way a function call with variable arguments. The compiler treats the first <I>expression</I> in the list as the first argument. </P>
+
+<P class="label"><B>Integer and Non-scalar Parameters</B></P>
+
+<P>In most circumstances, the first four 32-bit words of integer or non-scalar arguments are passed in registers <B>R4-R7</B>. The remaining words are placed on the stack frame, starting at a displacement of 16 bytes from the stack pointer. </P>
+
+<P>The following code example shows how to access parameters from registers and local argument stack space according to the calling standards. </P>
+
+<PRE class="code">__asm(
+   "add     R4,R5         ; add first two numbers\n"
+   "add     R5,R6         ; add third number\n"
+   "add     R6,R7         ; add fourth number\n"
+   "mov.l   @(16,SP), R0  ; retrieve fifth number\n"
+   "add     R0,R7         ; add fifth number\n"
+   "mov.l   @(20,SP), R0  ; get address of result\n"
+   "mov.l   R7,@R0         ; save results"
+   ,num1    // passed in R4
+   ,num2    // passed in R5
+   ,num3    // passed in R6
+   ,1000    // passed in R7
+   ,0xFFFF  // passed in stack at a displacement of 16 bytes from SP
+   ,&amp;result // passed in stack at a displacement of 20 bytes from SP
+   );</PRE>
+
+<P class="label"><B>Floating-point and Double Parameters</B></P>
+
+<P>To pass a floating-point argument into a <B>__asm</B> block, pass the address of the argument, and then load the argument to a register within the <B>__asm</B> block.</P>
+
+<P>Because the <B>__asm</B> prototype specifies a variable argument list, passing parameters of type floating-point and double is governed by the SH-4 calling standard for variable argument list. </P>
+
+<P>If a function is declared to use variable argument lists, floating-point registers are unused and floating-point arguments are passed using only the integer argument registers and the stack. </P>
+
+<P>In addition, the C and C++ ANSI standards require that float arguments in a variable argument list be promoted to type <B>double</B>. Consequently, floating point arguments are promoted to type <B>double</B>, and passed as word pairs in the integer registers and or on the stack.</P>
+
+<P>The following code example shows how to first pass the address of float arguments to <B>__asm</B> call and then load the argument to a register within the <B>__asm</B> statement.</P>
+
+<PRE class="code">//
+// Compute x+y+z --&gt; result
+//
+float add_trig(float x, float y, float z)
+{
+  float result;
+  void * temp_stk_space = _alloca(8);  // Reserve temp space in stack
+  __asm(
+    "mov.l  @(20,sp), r0  ; get pointer to temp stack space \n"
+    "mov.l  r6,  @r0      ; save pointer to z on stack \n"
+    "mov.l  r7,  @(4,r0)  ; save pointer to result on stack \n"
+    "mov.l  @r4,  r4      ; get x  \n"
+    "mov.l  @(16, sp),r0  ; get address of add routine \n"
+    "jsr    @r0           ; compute x+y \n"
+    "mov.l  @r5,  r5     ; get y  \n"
+    "mov    r0, r4       ; get x + y \n" 
+    "mov.l  @(20,sp), r1 ;\n"
+    "mov.l  @(16, sp),r0 ; get address of add routine \n"
+    "mov.l  @r1, r5      ; get pointer to z  \n"
+    "jsr    @r0          ; compute x+y+z \n"
+    "mov.l  @r5,  r5     ; get z \n"
+    "mov.l  @(20,sp), r1 ; get pointer to temp stack space \n"
+    "mov.l  @(4,r1),  r1 ; get pointer to result \n"
+    "mov.l  r0, @r1      ; store r0 into result addr \n",
+    &amp;x,      // pointer to x passed in r4
+    &amp;y,      // pointer to y passed in r5
+    &amp;z,      // pointer to z passed in r6
+    &amp;result, // pointer to result passed in r7 
+     _adds,  // pointer to _adds routine passed in @(16,sp)
+    temp_stk_space);  // pointer to temp stack space passed in // @(20,sp)
+
+  return result;
+}
+void main()
+{
+  float  retval = add_trig(1.0f, 2.0f,3.0f);
+  printf("%f\n", retval);
+}</PRE>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50conelementsoftheshxasmblock.htm">Elements of the SH-4 __asm Block</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

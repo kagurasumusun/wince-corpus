@@ -1,0 +1,82 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Stream Interface Driver Implementation</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Stream Interface Driver Implementation"/>
+<MSHelp:RLTitle Title="Stream Interface Driver Implementation"/>
+<MSHelp:Keyword Index="A" Term="wce50conStreamInterfaceDriverImplementation"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Driver"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="False"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="stream_guide.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="False"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+<MSHelp:Attr Name="PBFeature" Value="StreamDriver"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_3019291">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50constreaminterfacedriverimplementation"></A>Stream Interface Driver Implementation</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>Various issues can affect your design decisions as you implement a stream interface driver dynamic-link library (DLL). To implement the stream interface driver, create a DLL containing the required entry points for the drivers, and then decide whether you want to enforce either single or multiple access to the driver.</P>
+
+<P>Services in <MSHelp:link keywords="wce50conServicesexe" TABINDEX="0">Services.exe</MSHelp:link> behave similarly to drivers that the <A HREF="wce50condevicemanager.htm">Device Manager</A> manages.</P>
+
+<H2 class="dtH2">Stream Interface Driver Entry Points</H2>
+
+<P>You can implement a driver with only <B>Init</B> and <B>Deinit</B> entry points and no device prefix. You cannot access this driver using <MSHelp:link keywords="wce50lrfCreateFile" TABINDEX="0">CreateFile</MSHelp:link>. PCIBUS and RegEnum are two examples of this type of driver. These drivers are in the %_WINCEROOT%\Public\Common\OAK\Drivers\PCIbus and %_WINCEROOT%\Public\Common\OAK\Drivers\RegEnum.</P>
+
+<P>If DEVFLAGS_NAKEDENTRIES is specified in the driver's <B>Flags</B> registry subkey, the entry point names can be undecorated; for example, <B>Open</B>, <B>Close</B>, and so on. The sample battery driver, which is in %_WINCEROOT%\Public\Common\OAK\Drivers\Battdrvr, is an example of a driver that uses undecorated entry points. The battery driver's registry settings still must include a prefix.</P>
+
+<P>Your implementations of these entry points must be declared for export from your DLL by placing <code class="ce">__declspec(dllexport)</code> in front of your function declaration. If you are developing in C++, your entry points must also be declared <code class="ce">extern "C"</code> as well. The following table shows the entry points for the stream interface. </P>
+
+<P>For more information about the stream interface, see <A HREF="wce50grfstreaminterfacedriverfunctions.htm">Stream Interface Driver Functions</A>.</P>
+
+<H2 class="dtH2">Single Access and Multiple Access</H2>
+
+<P>Because peripheral devices are exposed to applications as files when you create a stream interface, you provide the implementation of such a file. Therefore, consider whether it is practical, based on the capabilities of the device that your driver exposes, to enable multiple applications to have simultaneous access to the file that represents the device. That is, consider whether your driver can have multiple open file handles on its device. A stream interface driver can implement either single access or multiple access by using the <I>hOpenContext</I> parameter passed to all file I/O functions.</P>
+
+<P>To enable multiple access, each call to the <A HREF="wce50lrfxxxopen17.htm">XXX_Open (Device Manager)</A> function should return a different value for <I>hOpenContext</I>. The device driver must track which return values from <B><I>XXX</I>_Open</B> are in use. Subsequent calls to <A HREF="wce50lrfxxxclose13.htm">XXX_Close (Device Manager)</A>, <A HREF="wce50lrfxxxread18.htm">XXX_Read (Device Manager)</A>, <A HREF="wce50lrfxxxwrite20.htm">XXX_Write (Device Manager)</A>, <A HREF="wce50lrfxxxseek19.htm">XXX_Seek (Device Manager)</A>, and <A HREF="wce50lrfxxxiocontrol16.htm">XXX_IOControl (Device Manager)</A> pass these values back to the device driver, enabling the driver to identify which internal data structures to manipulate.</P>
+
+<P>To enforce single access, only the first call to <B><I>XXX</I>_Open</B> should return a valid <I>hOpenContext</I> value. As long as this value remains valid, which is until <B><I>XXX</I>_Close</B> is called for the value, subsequent calls to <B><I>XXX</I>_Open</B> should return NULL to the calling application to indicate failure.</P>
+
+<P>To implement the Telephony API (TAPI) you must have serial port devices that support multiple access. OEMs who are using any of the serial port upper layer implementations from Microsoft gain this functionality automatically. OEMs who write their own serial port upper layers must implement multiple access for themselves in order to support TAPI.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50coniocontrolcodes.htm">I/O Control Codes</A> </P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

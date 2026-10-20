@@ -1,0 +1,162 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>CEDevice</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="CEDevice"/>
+<MSHelp:RLTitle Title="CEDevice"/>
+<MSHelp:Keyword Index="K" Term="CEDevice [Devices]"/>
+<MSHelp:Keyword Index="A" Term="wce50lrfCEDevice"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Guide"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="True"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="cabwiz.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="True"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_3012226">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50lrfcedevice"></A>CEDevice</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>The [CEDevice] section is optional and describes the hardware platform that your application is targeted for. </P>
+
+<P>If you want to use the .inf file to target multiple processors or platforms that you specify, append an unique label that indicates the platform to the section name to distinguish the sections. This is useful if you are using the same set of application binaries to create multiple .cab files targeted at multiple platforms. To do this, use a [Platform] section to specify the target platform versions, and use multiple [CEDevice.<I>XXX</I>] sections in the .inf file to help separate the application binaries into the appropriate .cab file for each platform. </P>
+
+<P>For more information, see <A HREF="wce50concreatinganinffile.htm">Information File</A>. </P>
+
+<P>If a key is nonexistent or contains no data, the checks specified for that key are not performed. The exception is <I>UnsupportedPlatforms.</I> If this key exists but there is no data, the previous value is not overridden.</P>
+
+<PRE class="syntax">[CEDevice]
+[ProcessorType =[processor_type]]
+[UnsupportedPlatforms = platform_family_name[,platform_family_name]]
+[VersionMin = [major_version.minor_version]]
+[BuildMax= [BuildMax_value]]</PRE>
+
+<H4 class="dtH4">Parameters</H4>
+
+<DL>
+<DT><I>processor_type</I></DT>
+
+<DD>Value returned by <B>SYSTEM_INFO</B>.dwProcessorType.
+</dd>
+
+<DT><I>platform_family_name</I></DT>
+
+<DD>A list of hardware platform family names that are known to be unsupported.
+
+<P>If the <I>platform_family_name</I> specified in the [CEDevice.<I>xxx</I>] section is different from that in the [CEDevice] section, both <I>platform_family_name</I> values are unsupported for the microprocessor specified by <I>xxx</I>. 
+
+
+<P>The list of specific unsupported hardware platform family names is appended to the previous list of unsupported hardware platform family names. 
+
+
+<P>Application Manager does not display the application for an unsupported hardware platform. 
+
+
+<P>If the .cab file is copied to an unsupported hardware platform, the user is warned during the setup process. 
+</dd>
+
+<DT><I>major_version </I>and<I> minor_version</I></DT>
+
+<DD>Numeric values that are returned by <B>OSVERSIONINFO</B>.<I>dwVersionMinor</I> and <B>OSVERSIONINFO</B>.<I>dwVersionMajor</I>. 
+
+<P>The .cab file is valid for the currently connected target device if the version is greater than or equal to <I>VersionMin</I>.
+</dd>
+
+<DT><I>BuildMax</I>_<I>value</I></DT>
+
+<DD>Value indicating support for square screens and screen rotation.
+
+<P>The following table shows the valid values that you can set.
+
+
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=50%>Value</TH>
+<TH width=50%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>0xA0000000</TD>
+<TD width=50%>Supports square screens.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>0xC0000000</TD>
+<TD width=50%>Supports screen rotation.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>0xE0000000</TD>
+<TD width=50%>Supports both square screens and screen rotation.</TD>
+</TR>
+</table></div>
+
+</dd>
+</DL>
+
+<H4 class="dtH4">Examples</H4>
+
+<P>In the following code example, the [CEDevice] section is independent of the hardware platform and sets <I>UnsupportedPlatforms</I> to pltfrm1, but [CEDevice.ARM] appends its own list of unsupported hardware platforms:</P>
+
+<PRE class="code"><code class="ce">[CEDevice]
+UnsupportedPlatforms = pltfrm1
+[CEDevice.ARM]
+UnsupportedPlatforms = pltfrm2</code></PRE>
+
+<P>The following code example inherits all [CEDevice] settings from the first example, but now [CEDevice.ARM] overrides the version settings so that no version checking is performed:</P>
+
+<PRE class="code">[CEDevice.ARM]
+ProcessorType = 2577
+UnsupportedPlatforms =
+VersionMin =</PRE>
+
+<P>The following code example inherits all [CEDevice] settings from the first example, but now [CEDevice.ARM] appends pltfrm2 to <I>UnsupportedPlatforms</I> so that pltfrm1 and pltfrm2 are not supported for the ARM hardware platform:</P>
+
+<PRE class="code">[CEDevice.ARM]
+ProcessorType = 2577
+UnsupportedPlatforms =pltfrm2</PRE>
+
+<H4 class="dtH4">Remarks</H4>
+
+<P>If you created multiple [CEDevice.<I>DeviceLabel</I>] sections in an .inf file in order to generate multiple .cab files, the labels appended must also be the labels specified when using the <I>hardware_platform_label</I> variable with the <B>/cpu</B> command-line parameter in a call to the CAB Wizard.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50concreatinganinffile.htm">Information File</A> | <A HREF="wce50concabwizardoverview.htm">CAB Wizard</A> </P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

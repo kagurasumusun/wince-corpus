@@ -1,0 +1,194 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>HID Report Interpretation</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="HID Report Interpretation"/>
+<MSHelp:RLTitle Title="HID Report Interpretation"/>
+<MSHelp:Keyword Index="A" Term="wce50conHIDReportInterpretation"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Driver"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="False"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="hid_guide.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="False"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+<MSHelp:Attr Name="PBFeature" Value="HIDDriver"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_3018102">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50conhidreportinterpretation"></A>HID Report Interpretation</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<H2 class="dtH2">Extracting Value Data by Specifying Its Usage</H2>
+
+<P>The following table shows the functions that HID client drivers can use to extract value data from a HID report.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=50%>Function</TH>
+<TH width=50%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><A HREF="wce50lrfhidpgetscaledusagevalue.htm">HidP_GetScaledUsageValue</A></TD>
+<TD width=50%>Returns a signed and scaled value. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><A HREF="wce50lrfhidpgetusagevalue.htm">HidP_GetUsageValue</A></TD>
+<TD width=50%>Returns a nonscaled value in an unsigned format or a scaled value that is out of its usual range. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><A HREF="wce50lrfhidpgetusagevaluearray.htm">HidP_GetUsageValueArray</A></TD>
+<TD width=50%>Returns a usage value array. 
+<P>To use <B>HidP_GetUsageValueArray</B>, applications and drivers must allocate a zero-initialized buffer that is large enough to hold the usage value array. The required size, in bytes, is the product of the <B>BitSize</B> and <B>ReportCount</B> members of the usage value array's <A HREF="wce50lrfhidpvaluecaps.htm">HIDP_VALUE_CAPS</A> structure, rounded up to the nearest byte.</P>
+</TD>
+</TR>
+</table></div>
+
+<H2 class="dtH2">Extracting Button Usages That Are Set to On</H2>
+
+<P>To extract button usages that are On, you must first allocate and zero-initialize the buffer used to return the array of button usages. Call <A HREF="wce50lrfhidpmaxusagelistlength.htm">HidP_MaxUsageListLength</A> to determine the number of button usages in a specified usage page in the report. If the HID client driver specifies a usage page of zero, the function returns the number of all the button usages in the report. </P>
+
+<P>The following table shows the functions that HID client drivers can use to extract the HID usages of buttons that are set to On (1), and the required buffer size. These functions return an array of all usage information for all buttons that are currently set to On. Implicitly, if these functions do not return the usage of the buttons, the usage is Off (zero).</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=33%>Function</TH>
+<TH width=33%>Required buffer size</TH>
+<TH width=34%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%><A HREF="wce50lrfhidpgetbuttons.htm">HidP_GetButtons</A>
+<P><A HREF="wce50lrfhidpgetusages.htm">HidP_GetUsages</A></P>
+</TD>
+<TD width=33%>Value returned by <B>HidP_MaxUsageListLength</B>, multiplied by <B>sizeof(USAGE)</B>.</TD>
+<TD width=34%>Returns the usage identifier of all buttons on a specified usage page that are On.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%><A HREF="wce50lrfhidpgetbuttonsex.htm">HidP_GetButtonsEx</A>
+<P><A HREF="wce50lrfhidpgetusagesex.htm">HidP_GetUsagesEx</A></P>
+</TD>
+<TD width=33%>Value returned by <B>HidP_MaxUsageListLength</B>, multiplied by <B>sizeof(USAGE_AND_PAGE)</B>.</TD>
+<TD width=34%>Returns the usage page and usage identifier of all buttons that are On.</TD>
+</TR>
+</table></div>
+
+<P>After a HID client driver uses these functions to obtain information about which buttons are currently set to On, the HID client driver can determine the difference between the current state and the previous state of the buttons by calling <A HREF="wce50lrfhidpusagelistdifference.htm">HidP_UsageListDifference</A> or <A HREF="wce50lrfhidpusageandpagelistdifference.htm">HidP_UsageAndPageListDifference</A>, which both return the difference between two arrays of usage information:</P>
+
+<H2 class="dtH2">Setting Value Data by Specifying Its Usage</H2>
+
+<P>The following table shows the functions that a HID client driver can use to set a value in a properly initialized HID report.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=50%>Function</TH>
+<TH width=50%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><A HREF="wce50lrfhidpsetscaledusagevalue.htm">HidP_SetScaledUsageValue</A> </TD>
+<TD width=50%>Sets a signed and scaled value in a report.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><A HREF="wce50lrfhidpsetusagevalue.htm">HidP_SetUsageValue</A> </TD>
+<TD width=50%>Sets a value in a report.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><A HREF="wce50lrfhidpsetusagevaluearray.htm">HidP_SetUsageValueArray</A> </TD>
+<TD width=50%>Sets a usage value array in a report.</TD>
+</TR>
+</table></div>
+
+<H2 class="dtH2">Setting Button State by Specifying Its Usage</H2>
+
+<P>The following table shows the functions that a HID client driver can use to set the state of buttons in a properly initialized HID report.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=50%>Function</TH>
+<TH width=50%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><A HREF="wce50lrfhidpsetbuttons.htm">HidP_SetButtons</A>
+<P><A HREF="wce50lrfhidpsetusages.htm">HidP_SetUsages</A></P>
+</TD>
+<TD width=50%>Sets a specified set of buttons to On.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><A HREF="wce50lrfhidpunsetbuttons.htm">HidP_UnsetButtons</A>
+<P><A HREF="wce50lrfhidpunsetusages.htm">HidP_UnsetUsages</A></P>
+</TD>
+<TD width=50%>Sets a specified set of buttons to Off.</TD>
+</TR>
+</table></div>
+
+<H2 class="dtH2">Extracting and Setting Control Data by Data Indexes</H2>
+
+<P>The following table shows the functions that a HID client driver can use with data indexes to extract and set control data in a HID report.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=50%>Function</TH>
+<TH width=50%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><A HREF="wce50lrfhidpgetdata.htm">HidP_GetData</A></TD>
+<TD width=50%>Returns an array of <A HREF="wce50lrfhidpdata.htm">HIDP_DATA</A> structures for a specified report that identifies the data indexes of all HID control buttons that are currently set to On, and for the data indexes and data associated with all HID control values.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><A HREF="wce50lrfhidpsetdata.htm">HidP_SetData</A></TD>
+<TD width=50%>Sets a specified set of HID control button and value usages in a HID report.</TD>
+</TR>
+</table></div>
+
+<P>By calling these functions, a HID client driver can efficiently obtain and set all values in a report. For example, to obtain all value data by their HID usages, a HID client driver must call <B>HidP_GetUsageValue</B> for each usage. However, to obtain all value data by data index, it only has to call <B>HidP_GetData</B> once.</P>
+
+<P>Use the data indexes specified in a collection's button capability arrays and value capability arrays to identify HID usages.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50conhidreportinitialization.htm">HID Report Initialization</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

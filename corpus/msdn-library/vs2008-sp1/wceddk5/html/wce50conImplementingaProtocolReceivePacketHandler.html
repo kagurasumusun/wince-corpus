@@ -1,0 +1,82 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Implementing a ProtocolReceivePacket Handler</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Implementing a ProtocolReceivePacket Handler"/>
+<MSHelp:RLTitle Title="Implementing a ProtocolReceivePacket Handler"/>
+<MSHelp:Keyword Index="A" Term="wce50conImplementingaProtocolReceivePacketHandler"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Driver"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="False"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="ndis_guide2.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="False"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+<MSHelp:Attr Name="PBFeature" Value="NetworkDriver"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_3018329">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50conimplementingaprotocolreceivepackethandler"></A>Implementing a ProtocolReceivePacket Handler</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>When an underlying NIC driver indicates an array of one or more packet descriptors with <A HREF="wce50lrfndismindicatereceivepacket.htm">NdisMIndicateReceivePacket</A>, NDIS will usually call a bound protocol driver's <A HREF="wce50lrfprotocolreceivepacket.htm">ProtocolReceivePacket</A> function with each packet descriptor, thereby allowing the protocol driver or its clients to retain the packet descriptor and all resources it specifies until the protocol or its clients have consumed the data and returned the packet descriptor. The following list shows the two kinds of NIC drivers that typically call <B>NdisMIndicateReceivePacket</B> with an array of packet descriptors: 
+
+<UL type="disc">
+	<LI>A NIC driver managing a busmaster DMA adapter that is capable of receiving several packets at a time into a ring of buffers </li>
+
+	<LI>A NIC driver that provides OOB containing media-specific information, such as packet priority, in the <A HREF="wce50lrfndispacketoobdata.htm">NDIS_PACKET_OOB_DATA</A> block associated with the packet descriptor </li>
+</UL>
+
+<P>If a protocol driver is aware that it is or might be bound to such a NIC driver, it should have a <B>ProtocolReceivePacket</B> function. The following list shows the actions this function allows the protocol driver to perform: 
+
+<UL type="disc">
+	<LI>Receive indications of full network packets from the underlying NIC driver. </li>
+
+	<LI>Read the OOB associated with each packet descriptor using NDIS-supplied macros.</li>
+
+	<LI>Retain ownership of the input packet descriptor and direct read-only access to the buffered data specified by the descriptor if the protocol makes copies of the data for its clients, or even to forward the indicated packet descriptor to its clients after selecting the range of packet data of interest to the clients.</li>
+
+	<LI>Return the packet descriptor and the resources it described, possibly along with other retained packet descriptors, with <A HREF="wce50lrfndisreturnpackets.htm">NdisReturnPackets</A> when the protocol has consumed the indicated data if it retains ownership of the input packet descriptor; otherwise, have clients return the packet descriptor if the protocol forwarded a receive indicator. </li>
+</UL>
+
+<P>Even when a protocol driver provides a <B>ProtocolReceivePacket</B> handler, there are cases when a call by a NIC driver to <B>NdisMIndicateReceivePacket</B> results in a call to the protocol driver's <B>ProtocolReceive</B> function. Because a NIC driver temporarily relinquishes ownership of driver-allocated resources when it calls <B>NdisMIndicateReceivePacket</B>, the underlying driver depends on the consumers of those packets to return them in a timely manner. Otherwise, the NIC driver can run short of receive resources, such as receive buffer space in the NIC. When it does, the NIC driver sets NDIS_STATUS_RESOURCES in the OOB block associated with a packet descriptor in the packet array it passes to <B>NdisMIndicateReceivePacket</B>. Indicating a packet with this status causes NDIS to call the overlying driver's <B>ProtocolReceive</B> function with a packet and with any subsequent packets in the array. This forces the protocol driver to copy the packet data immediately rather than retain the NIC-driver-allocated packet resources. </P>
+
+<P>If the protocol driver requires the OOB associated with a packet descriptor, but is called at <B>ProtocolReceive</B>, it must call <A HREF="wce50lrfndisgetreceivedpacket.htm">NdisGetReceivedPacket</A> and <A HREF="wce50lrfndisgetoriginalpacket.htm">NDIS_GET_ORIGINAL_PACKET</A> to copy the media-specific information into a protocol-supplied buffer, and possibly the <I>TimeSent</I> and <I>TimeReceived</I> values if the underlying NIC driver provides these time stamps. </P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50conreceivingdatainaprotocoldriver.htm">Receiving Data in a Protocol Driver</A> | <A HREF="wce50lrfndisgetoriginalpacket.htm">NDIS_GET_ORIGINAL_PACKET</A> | <A HREF="wce50lrfndispacketoobdata.htm">NDIS_PACKET_OOB_DATA</A> | <A HREF="wce50lrfndisgetreceivedpacket.htm">NdisGetReceivedPacket</A> | <A HREF="wce50lrfndismindicatereceivepacket.htm">NdisMIndicateReceivePacket</A> | <A HREF="wce50lrfndisreturnpackets.htm">NdisReturnPackets</A> | <A HREF="wce50lrfprotocolreceivepacket.htm">ProtocolReceivePacket</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

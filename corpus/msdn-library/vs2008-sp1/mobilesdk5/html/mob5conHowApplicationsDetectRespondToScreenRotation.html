@@ -1,0 +1,115 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>How Applications Detect and Respond to Screen Rotation</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="How Applications Detect and Respond to Screen Rotation"/>
+<MSHelp:RLTitle Title="How Applications Detect and Respond to Screen Rotation"/>
+<MSHelp:Keyword Index="A" Term="mob5conHowApplicationsDetectRespondToScreenRotation"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Application"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbsmartphone"/>
+<MSHelp:Attr Name="Product" Value="kbPocketPC"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="Technology" Value="kbPocketPC"/>
+<MSHelp:Attr Name="Technology" Value="kbSmartphone"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="Screen_Orientation_Modes_magneto.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="True"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_1063844">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Windows Mobile Version 5.0 SDK<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="mob5conhowapplicationsdetectrespondtoscreenrotation"></A>How Applications Detect and Respond to Screen Rotation</H1>
+<!--Feedback Link Top Start-->
+<P CLASS="feedback"><font size="1"><a href="mailto:medfdbk&#64;microsoft.com?subject=Product: Windows Mobile | Version: 5.0 | Release: SDK | Title: How Applications Detect and Respond to Screen Rotation | Filename: mob5conhowapplicationsdetectrespondtoscreenrotation.htm | Built on: Wednesday, September 14, 2005">Send Feedback</a> on this topic to the authors</font></p>
+<!--Feedback Link Top End-->
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>Generally, the user initiates a screen rotation either by pressing the screen rotation program key or by choosing a new screen orientation from the <B>General</B> tab of the Screen application, accessible from the Settings control panel.</P>
+
+<BLOCKQUOTE class="dtBlock">
+<b class="le">Note</b>&nbsp;&nbsp;&nbsp;The screen can also be rotated programmatically with the Windows CE <MSHelp:link keywords="wce50lrfChangeDisplaySettingsEx" TABINDEX="0">ChangeDisplaySettingsEx</MSHelp:link> function. For example, to programmatically rotate the screen into right-handed landscape mode, call <B>ChangeDisplaySettingsEx</B> with a <B>DEVMODE::dmDisplayOrientation</B> value of DMDO_270.</BLOCKQUOTE>
+
+<P>With each change in screen orientation, Windows CE performs the following actions automatically:
+
+<UL type="disc">
+	<LI>Resizes full-screen windows to the new orientation and sends each of them the <B>WM_SIZE</B> notification. </li>
+
+	<LI>Sends top-level windows the Windows CE <MSHelp:link keywords="wce50lrfWMSETTINGCHANGE" TABINDEX="0">WM_SETTINGCHANGE</MSHelp:link> message. 
+<BLOCKQUOTE class="dtBlock">
+<b class="le">Note</b>&nbsp;&nbsp;&nbsp;Windows CE does not send notifications to child windows, which are based on the <B>WS_CHILD</B> style, even if the child window is a full-screen window. When the parent window of a child window resizes, you must ensure that the child window displays properly.</BLOCKQUOTE>
+</li>
+</UL>
+
+<P>The <B>WM_SIZE</B> notification contains an <I>lParam</I> parameter that indicates whether a screen rotation has occurred. Its low-order word specifies the new client area width, and its high-order word specifies the new client area height. To use the <B>WM_SIZE</B> notification to determine whether a screen rotation has occurred, your code should perform a check to determine whether the screen dimensions have been reversed. If so, you can go ahead and process a block of code that displays the alternate screen layout.</P>
+
+<P>The <I>lParam's</I> low-order and high-order words do not swap perfectly. The height of a full-screen window in landscape mode is slightly less than the width of a full-screen window in portrait mode because the navigation and menu bars take up some of that screen height in landscape mode.</P>
+
+<P>Windows CE does not automatically resize windows that are not full-screen. A window is considered full-screen if its top, left, and right coordinates are at or outside the client area boundaries. The client area is the entire screen area below the title bar. For application windows that are not full-screen, you can use the Windows CE <B>WM_SETTINGCHANGE</B> message to detect and respond to screen rotations.</P>
+
+<P>The Windows CE <B>WM_SETTINGCHANGE</B> message contains a <I>wParam</I> parameter that contains the value <B>SETTINGCHANGE_RESET</B> when a screen rotation has occurred. To use the <B>WM_SETTINGCHANGE</B> message, your code should perform a check to determine whether the <I>wParam</I> parameter equals <B>SETTINGCHANGE_RESET</B>. If so, you can go ahead and process a block of code that displays the alternate screen layout.</P>
+
+<P>To detect and respond appropriately to a screen rotation, your application window must process one or both of these notifications and then redisplay its contents with an alternate layout that fits the new client area dimensions. You give them this functionality by including case statements for one or both notifications in the switch selection statement in their <B>WndProc</B> functions, as shown in the following example. </P>
+
+<PRE class="code">switch (uMessage)
+{
+    case WM_SIZE:
+        // Determine whether <I>lParam</I>'s low-order
+        // and high-order words have swapped.
+        if (...)
+        {
+            // Redraw to fit the dimensions of the new client area.
+            ...
+        {
+    break;
+
+    case WM_SETTINGCHANGE:
+        // Determine whether <I>wParam</I>'s contains 
+        // the value SETTINGCHANGE_RESET.
+        if (<I>wParam</I> == SETTINGCHANGE_RESET)
+        {
+            // Redraw to fit the dimensions of the new client area.
+            ...
+        }
+    break;
+}</PRE>
+
+<P>For more information on rotating the screen programmatically, see "Rotating the Content of the Screen" in the Windows CE documentation on MSDN.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="mob5condesignoptionsforscreenrotation.htm">Design Options for Screen Rotation</A> | <A HREF="mob5oriscreenorientationmodes.htm">Screen Orientation Modes</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Feedback Link Bottom Start-->
+<p><font size="1"><a href="mailto:medfdbk&#64;microsoft.com?subject=Product: Windows Mobile | Version: 5.0 | Release: SDK | Title: How Applications Detect and Respond to Screen Rotation | Filename: mob5conhowapplicationsdetectrespondtoscreenrotation.htm | Built on: Wednesday, September 14, 2005">Send Feedback</a> on this topic to the authors</font></p>
+<!--Feedback Link Bottom End-->
+<!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="mob5conCopyrightInformationForMagneto" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link></font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

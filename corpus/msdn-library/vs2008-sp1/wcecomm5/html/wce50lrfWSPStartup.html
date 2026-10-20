@@ -1,0 +1,340 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>WSPStartup</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="WSPStartup"/>
+<MSHelp:RLTitle Title="WSPStartup"/>
+<MSHelp:Keyword Index="K" Term="WSPStartup"/>
+<MSHelp:Keyword Index="A" Term="wce50lrfWSPStartup"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Feature"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="apiref"/>
+<MSHelp:Attr Name="Filename" Value="winsock2spi_functions.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="True"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+<MSHelp:Attr Name="APIName" Value="WSPStartup"/>
+<MSHelp:Attr Name="APIType" Value="LibDef"/>
+<MSHelp:Attr Name="APILocation" Value="Ws2.lib"/>
+<MSHelp:Attr Name="PBFeature" Value="SYSGEN_WINSOCK"/>
+<MSHelp:Attr Name="PBOnly" Value="False"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_3008307">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50lrfwspstartup"></A>WSPStartup</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>This function initiates use of a Windows Sockets service provider by a client.</P>
+
+<PRE class="syntax"><B>int WSPStartup(</B>
+  <B>WORD </B><I>wVersionRequested</I><B>,</B>
+  <B>LPWSPDATAW </B><I>lpWSPData</I><B>,</B> 
+  <B>LPWSAPROTOCOL_INFOW </B><I>lpProtocolInfo</I><B>,</B>
+  <B>WSPUPCALLTABLE </B><I>UpcallTable</I><B>,</B>
+  <B>LPWSPPROC_TABLE </B><I>lpProcTable </I>
+<B>);</B></PRE>
+
+<H4 class="dtH4">Parameters</H4>
+
+<DL>
+<DT><I>wVersionRequested</I></DT>
+
+<DD>[in] Highest version of Windows Sockets SPI support that the caller can use. The high-order byte specifies the minor version (revision) number; the low-order byte specifies the major version number.</dd>
+
+<DT><I>lpWSPData</I></DT>
+
+<DD>[out] Pointer to the data structure that is to receive details of the Windows Sockets service provider.</dd>
+
+<DT><I>lpProtocolInfo</I></DT>
+
+<DD>[in] Pointer to a <B>WSAPROTOCOL_INFOW</B> structure that defines the characteristics of the desired protocol. This is especially useful when a single provider DLL is capable of instantiating multiple different service providers.</dd>
+
+<DT><I>UpcallTable</I></DT>
+
+<DD>[in] Upcall dispatch table for ws2.dll.</dd>
+
+<DT><I>lpProcTable</I></DT>
+
+<DD>[out] Pointer to the table of SPI function pointers.</dd>
+</DL>
+
+<H4 class="dtH4">Return Values</H4>
+
+<P>This function returns zero if successful. Otherwise, it returns an error code. </P>
+
+<P>The following table shows the possible error codes.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=31%>Error value</TH>
+<TH width=69%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=31%>WSASYSNOTREADY</TD>
+<TD width=69%>Indicates that the underlying network subsystem is not ready for network communication.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=31%>WSAVERNOTSUPPORTED</TD>
+<TD width=69%>Version of Windows Sockets SPI support requested is not provided by this particular Windows Sockets service provider.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=31%>WSAEINPROGRESS</TD>
+<TD width=69%>Blocking Windows Sockets operation is in progress.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=31%>WSAEPROCLIM</TD>
+<TD width=69%>Limit on the number of clients supported by the Windows Sockets implementation has been reached.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=31%>WSAEFAULT</TD>
+<TD width=69%>The <I>lpWSPData</I> or <I>lpProcTable</I> parameter is invalid.</TD>
+</TR>
+</table></div>
+
+<H4 class="dtH4">Remarks</H4>
+
+<P>This function <I>must</I> be the first Windows Sockets SPI function called by a Windows Sockets SPI client on a per-process basis. It allows the client to specify the version of Windows Sockets SPI required and to provide its upcall dispatch table. All upcalls (that is, functions prefixed with <B>WPU</B>) made by the Windows Sockets service provider are invoked through the client's upcall dispatch table. This function also allows the client to retrieve details of the specific Windows Sockets service provider implementation. The Windows Sockets SPI client can only issue further Windows Sockets SPI functions after a successful <B>WSPStartup</B> invocation. A table of pointers to the rest of the SPI functions is retrieved through the <I>lpProcTable</I> parameter.</P>
+
+<P>In order to support future versions of the Windows Sockets SPI and the ws2.dll, which may have functionality differences from the current Windows Sockets SPI, a negotiation takes place in <B>WSPStartup</B>. The caller of <B>WSPStartup</B> (either the ws2.dll or a layered protocol) and the Windows Sockets service provider indicate to each other the highest version that they can support, and each confirms that the other's highest version is acceptable. On entering <B>WSPStartup</B>, the Windows Sockets service provider examines the version requested by the client. If this version is equal to or higher than the lowest version supported by the service provider, the call succeeds and the service provider returns in <I>wHighVersion </I>the highest version it supports and in <I>wVersion</I> the minimum of its high version and <I>wVersionRequested. </I>The Windows Sockets service provider then assumes that the Windows Sockets SPI client will use <I>wVersion. </I>If the <I>wVersion</I> member of the <A HREF="wce51lrfwspdata.htm">WSPDATA</A> structure is unacceptable to the caller, it should call <A HREF="wce50lrfwspcleanup.htm">WSPCleanup</A> and either search for another Windows Sockets service provider or fail to initialize.</P>
+
+<P>This negotiation allows both a Windows Sockets service provider and a Windows Sockets SPI client to support a range of Windows Sockets versions. A client can successfully utilize a Windows Sockets service provider if there is any overlap in the version ranges. </P>
+
+<P>The following table gives examples of how <B>WSPStartup</B> works in conjunction with different ws2.dll and Windows Sockets service provider (SP) versions. </P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=13%>DLL versions</TH>
+<TH width=13%>SP versions</TH>
+<TH width=16%><I>wVersion requested</I></TH>
+<TH width=13%><I>wVersion</I></TH>
+<TH width=12%><I>wHigh version</I></TH>
+<TH width=33%>End result </TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=13%>1.1</TD>
+<TD width=13%>1.1</TD>
+<TD width=16%>1.1</TD>
+<TD width=13%>1.1</TD>
+<TD width=12%>1.1</TD>
+<TD width=33%>use 1.1</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=13%>1.0 1.1</TD>
+<TD width=13%>1.0</TD>
+<TD width=16%>1.1</TD>
+<TD width=13%>1.0</TD>
+<TD width=12%>1.0</TD>
+<TD width=33%>use 1.0 </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=13%>1.0</TD>
+<TD width=13%>1.0 1.1</TD>
+<TD width=16%>1.0</TD>
+<TD width=13%>1.0</TD>
+<TD width=12%>1.1</TD>
+<TD width=33%>use 1.0</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=13%>1.1</TD>
+<TD width=13%>1.0 1.1</TD>
+<TD width=16%>1.1</TD>
+<TD width=13%>1.1</TD>
+<TD width=12%>1.1</TD>
+<TD width=33%>use 1.1</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=13%>1.1</TD>
+<TD width=13%>1.0</TD>
+<TD width=16%>1.1</TD>
+<TD width=13%>1.0</TD>
+<TD width=12%>1.0</TD>
+<TD width=33%>DLL fails</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=13%>1.0</TD>
+<TD width=13%>1.1</TD>
+<TD width=16%>1.0</TD>
+<TD width=13%>---</TD>
+<TD width=12%>---</TD>
+<TD width=33%>WSAVERNOTSUPPORTED</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=13%>1.0 1.1</TD>
+<TD width=13%>1.0 1.1</TD>
+<TD width=16%>1.1</TD>
+<TD width=13%>1.1</TD>
+<TD width=12%>1.1</TD>
+<TD width=33%>use 1.1</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=13%>1.1 2.0</TD>
+<TD width=13%>1.1</TD>
+<TD width=16%>2.0</TD>
+<TD width=13%>1.1</TD>
+<TD width=12%>1.1</TD>
+<TD width=33%>use 1.1</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=13%>2.0</TD>
+<TD width=13%>2.0</TD>
+<TD width=16%>2.0</TD>
+<TD width=13%>2.0</TD>
+<TD width=12%>2.0</TD>
+<TD width=33%>use 2.0</TD>
+</TR>
+</table></div>
+
+<P>The following code sample shows how a Windows Sockets SPI client makes a <B>WSPStartup</B> call.</P>
+
+<PRE class="code">WORD wVersionRequested;
+WSPDATA WSPData;
+ 
+int err;
+ 
+WSPUPCALLTABLE upcallTable =
+{ 
+    /* initialize upcallTable with function pointers */
+};
+ 
+LPWSPPROC_TABLE lpProcTable =
+{ 
+    /* allocate memory for the ProcTable */
+};
+ 
+wVersionRequested = MAKEWORD( 2, 2 );
+ 
+err = WSPStartup( wVersionRequested, &amp;WSPData, lpProtocolBuffer, upcallTable, lpProcTable );
+if ( err != 0 ) {
+    /* Tell the user that we could not find a useable */
+    /* Windows Sockets service provider.                     */
+    return;
+}
+ 
+/* Confirm that the Windows Sockets service provider supports 2.2.*/
+/* Note that if the service provider supports versions */
+/* later than 2.2 in addition to 2.2, it will still */
+/* return 2.2 in wVersion since that is the version we  */
+/* requested.                                           */
+ 
+if ( LOBYTE( WSPData.wVersion ) != 2 ||
+         HIBYTE( WSPData.wVersion ) != 2 ) {
+    /* Tell the user that we could not find a useable */
+    /* Windows Sockets service provider.                     */
+    WSPCleanup( );
+    return;   
+}
+ 
+/* The Windows Sockets service provider is acceptable. Proceed. */</PRE>
+
+<P>The following code sample shows how a Windows Sockets service provider performs the <B>WSPStartup</B> negotiation.</P>
+
+<PRE class="code">/* Make sure that the version requested is &gt;= 2.2.  */
+/* The low byte is the major version and the high   */
+/* byte is the minor version.                       */
+ 
+if ( LOBYTE( wVersionRequested ) &lt; 2) ||
+    ((LOBYTE( wVersionRequested ) == 2) &amp;&amp;
+     (HIBYTE( wVersionRequested ) &lt; 2))) {
+    return WSAVERNOTSUPPORTED;
+}
+ 
+/* Since we only support 2.2, set both wVersion and  */
+/* wHighVersion to 2.2.                              */
+ 
+lpWSPData-&gt;wVersion = MAKEWORD( 2, 2 );
+lpWSPData-&gt;wHighVersion = MAKEWORD( 2, 2 );</PRE>
+
+<P>Once the Windows Sockets SPI client has made a successful <B>WSPStartup</B> call, it can proceed to make other Windows Sockets SPI calls as needed. When it has finished using the services of the Windows Sockets service provider, the client must call <A HREF="wce50lrfwspcleanup.htm">WSPCleanup</A> in order to allow the Windows Sockets service provider to free any resources allocated for the client.</P>
+
+<P>A Windows Sockets SPI client can call <B>WSPStartup</B> more than once if it needs to obtain the <B>WSPData</B> structure information more than once. On each such call the client can specify any version number supported by the provider.</P>
+
+<P>There must be one <A HREF="wce50lrfwspcleanup.htm">WSPCleanup</A> call corresponding to every successful <B>WSPStartup</B> call to allow third-party DLLs to make use of a Windows Sockets provider. This means, for example, that if <B>WSPStartup</B> is called three times, the corresponding call to <B>WSPCleanup</B> must occur three times. The first two calls to <B>WSPCleanup</B> do nothing except decrement an internal counter; the final <B>WSPCleanup</B> call does all necessary resource deallocation.</P>
+
+<P>This function, like most other service provider functions, can be invoked in a thread that started out as a 16-bit process if the client is a 16-bit Windows Sockets 1.1 client. One important limitation of 16-bit processes is that a 16-bit process cannot create threads. This is significant to service provider implementers that plan to use an internal service thread as part of the implementation.</P>
+
+<P>The following list shows the strong conditions for a service thread: 
+
+<UL type="disc">
+	<LI>In the implementation of overlapped I/O completion. </li>
+
+	<LI>In the implementation of <A HREF="wce50lrfwspeventselect.htm">WSPEventSelect</A>. </li>
+</UL>
+
+<P>Both of these areas are only accessible through new Windows Sockets 2 functions, which can only be invoked by 32-bit processes. </P>
+
+<P>The following list shows the design rules that, if carefully followed, allow a service thread to be safely used: 
+
+<UL type="disc">
+	<LI>Use a service thread only for functionality that is unavailable to 16-bit Windows Sockets 1.1 clients.</li>
+
+	<LI>Create the service thread only on demand.</li>
+</UL>
+
+<P>Several other cautions apply to the use of internal service threads. First, threads generally carry some performance penalty. Use as few as possible, and avoid thread transitions wherever possible. Second, your code should always check for errors in creating threads and fail gracefully and informatively in case some execution event you did not expect results in a 16-bit process executing a code path that needs threads.</P>
+
+<P class="label"><B>Layered Service Provider Considerations</B></P>
+
+<P>A layered service provider supplies an implementation of this function, but it is also a client of this function when it calls <B>WSPStartup</B> to initialize the next layer in the provider chain. The call to the next layer's <B>WSPStartup</B> may happen during the execution of this layer's <B>WSPStartup</B> or it may be delayed and called on demand, such as when <A HREF="wce50lrfwspsocket.htm">WSPSocket</A> is called. In any case, some special considerations apply to this function's <I>lpProtocolInfo</I> parameter as it is propagated down through the layers of the provider chain.</P>
+
+<P>The layered provider searches the <I>ProtocolChain</I> of the structure referenced by <I>lpProtocolInfo</I> to determine its own location in the chain (by searching for the layer's own catalog entry <I>Id</I>) and the identity of the next element in the chain. If the next element is another layer, then, when the next layer's <B>WSPStartup</B> is called, this layer must pass to the next layer a <I>lpProtocolInfo</I> that references the same unmodified <B>WSAPROTOCOL_INFOW</B> structure with the same unmodified chain information. However, if the next layer is the base protocol (that is, the last element in the chain), this layer performs a substitution when calling the base provider's <B>WSPStartup</B>. In this case, the base provider's <B>WSAPROTOCOL_INFOW</B> structure should be referenced by the <I>lpProtocolInfo</I> parameter.</P>
+
+<P>One vital benefit of this policy is that base service providers do not have to be aware of provider chains.</P>
+
+<P>This same propagation policy applies when propagating a <B>WSAPROTOCOL_INFOW</B> structure through a layered sequence of other functions such as <A HREF="wce50lrfwspaddresstostring.htm">WSPAddressToString</A>, <A HREF="wce50lrfwspduplicatesocket.htm">WSPDuplicateSocket</A>, <A HREF="wce50lrfwspsocket.htm">WSPSocket</A>, or <A HREF="wce50lrfwspstringtoaddress.htm">WSPStringToAddress</A>.</P>
+
+<H4 class="dtH4">Requirements</H4>
+
+<P><B>OS Versions:</B> Windows CE .NET 4.0 and later.<BR>
+<B>Header:</B> Ws2spi.h.<BR>
+<B>Link Library:</B> Ws2.lib.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50lrfwspsend.htm">WSPSend</A> | <A HREF="wce50lrfwspsendto.htm">WSPSendTo</A> | <A HREF="wce50lrfwspcleanup.htm">WSPCleanup</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

@@ -1,0 +1,185 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>NLED_SUPPORTS_INFO</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="NLED_SUPPORTS_INFO"/>
+<MSHelp:RLTitle Title="NLED_SUPPORTS_INFO"/>
+<MSHelp:Keyword Index="K" Term="NLED_SUPPORTS_INFO"/>
+<MSHelp:Keyword Index="A" Term="wce50lrfNLEDSUPPORTSINFO"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Driver"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="False"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="apiref"/>
+<MSHelp:Attr Name="Filename" Value="nled_reference.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="False"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+<MSHelp:Attr Name="APIName" Value="NLED_SUPPORTS_INFO"/>
+<MSHelp:Attr Name="PBFeature" Value="NLEDDriver"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_3018979">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50lrfnledsupportsinfo"></A>NLED_SUPPORTS_INFO</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>This structure contains information about the capabilities of the specified LED.</P>
+
+<PRE class="syntax"><B>struct NLED_SUPPORTS_INFO {</B>
+  <B>UINT </B><I>LedNum</I><B>;</B>
+  <B>LONG </B><I>lCycleAdjust</I><B>;</B>
+  <B>BOOL </B><I>fAdjustTotalCycleTime</I><B>;</B>
+  <B>BOOL </B><I>fAdjustOnTime</I><B>;</B>
+  <B>BOOL </B><I>fAdjustOffTime</I><B>;</B>
+  <B>BOOL </B><I>fMetaCycleOn</I><B>;</B>
+  <B>BOOL </B><I>fMetaCycleOff</I><B>; </B>
+<B>};</B></PRE>
+
+<H4 class="dtH4">Members</H4>
+
+<DL>
+<DT><B>LedNum</B></DT>
+
+<DD>Number of the LED. The first LED is zero (0).</dd>
+
+<DT><B>lCycleAdjust</B></DT>
+
+<DD>Granularity of the cycle-time adjustments, in microseconds.</dd>
+
+<DT><B>fAdjustTotalCycleTime</B></DT>
+
+<DD>TRUE if the LED has an adjustable total cycle time; otherwise, it is FALSE.</dd>
+
+<DT><B>fAdjustOnTime</B></DT>
+
+<DD>TRUE if the LED has a separate on time; otherwise, it is FALSE.</dd>
+
+<DT><B>fAdjustOffTime</B></DT>
+
+<DD>TRUE if the LED has separate off time; otherwise, it is FALSE.</dd>
+
+<DT><B>fMetaCycleOn</B></DT>
+
+<DD>TRUE if the LED can blink <I>n</I> cycles, pause, and blink <I>n</I> cycles; otherwise, it is FALSE.</dd>
+
+<DT><B>fMetaCycleOff</B></DT>
+
+<DD>TRUE if the LED can blink <I>n</I> cycles, pause <I>n</I> cycles, and blink <I>n</I> cycles; otherwise, it is FALSE.</dd>
+</DL>
+
+<H4 class="dtH4">Remarks</H4>
+
+<P>The <A HREF="wce50lrfnleddrivergetdeviceinfo.htm">NLedDriverGetDeviceInfo</A> and <A HREF="wce50lrfnleddriversetdevice.htm">NLedDriverSetDevice</A> functions use this structure.</P>
+
+<P>The caller should first get the number of notification LEDs on the system. This is usually 1 but may be zero (0) and could be greater than 1. The caller should fill in the <B>Lednum</B> and then call <B>NLedDriverGetDeviceInfo</B>. LED numbering starts at zero (0).</P>
+
+<P>The <B>lCycleAdjust</B> member is the granularity to which cycle time adjustments can be made. For example if the granularity is 1/16 second, <B>lCycleAdjust</B> equals 62500 microseconds. If the LED does not support blinking, this value should be zero (0).</P>
+
+<P>Values are given in microseconds only to deal with computations involving fractional milliseconds. Usually only settings in the milliseconds range are meaningful. </P>
+
+<P>Usually a device will report that it supports up to two of <B>fAdjustTotalCycleTime</B>, <B>fAdjustOnTime</B>, and <B>fAdjustOffTime</B>; any two determine the third. </P>
+
+<P>The following table shows the most likely settings.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=33%>Setting</TH>
+<TH width=33%>Value</TH>
+<TH width=34%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%><B>fAdjustTotalCycleTime</B></TD>
+<TD width=33%>FALSE</TD>
+<TD width=34%>The cycle time is not adjustable.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%><B>fAdjustOnTime</B></TD>
+<TD width=33%>FALSE</TD>
+<TD width=34%>The cycle time is not adjustable.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%><B>fAdjustOffTime</B></TD>
+<TD width=33%>FALSE</TD>
+<TD width=34%>The cycle time is not adjustable.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%><B>fAdjustTotalCycleTime</B></TD>
+<TD width=33%>TRUE</TD>
+<TD width=34%>Only the overall cycle time is adjustable.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%><B>fAdjustOnTime</B></TD>
+<TD width=33%>FALSE</TD>
+<TD width=34%>Only the overall cycle time is adjustable.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%><B>fAdjustOffTime</B></TD>
+<TD width=33%>FALSE</TD>
+<TD width=34%>Only the overall cycle time is adjustable.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%><B>fAdjustTotalCycleTime</B></TD>
+<TD width=33%>FALSE</TD>
+<TD width=34%>The on and off times are independently adjustable.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%><B>fAdjustOnTime</B></TD>
+<TD width=33%>TRUE</TD>
+<TD width=34%>The on and off times are independently adjustable.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%><B>fAdjustOffTime</B></TD>
+<TD width=33%>TRUE</TD>
+<TD width=34%>The on and off times are independently adjustable.</TD>
+</TR>
+</table></div>
+
+<H4 class="dtH4">Requirements</H4>
+
+<P><B>OS Versions:</B> Windows CE 1.0 and later.<BR>
+<B>Header:</B> Nled.h.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50lrfnleddrivergetdeviceinfo.htm">NLedDriverGetDeviceInfo</A> | <A HREF="wce50lrfnleddriversetdevice.htm">NLedDriverSetDevice</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

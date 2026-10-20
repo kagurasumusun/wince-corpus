@@ -1,0 +1,135 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>NDIS_TAPI_GET_DEV_CAPS</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="NDIS_TAPI_GET_DEV_CAPS"/>
+<MSHelp:RLTitle Title="NDIS_TAPI_GET_DEV_CAPS"/>
+<MSHelp:Keyword Index="K" Term="NDIS_TAPI_GET_DEV_CAPS"/>
+<MSHelp:Keyword Index="A" Term="wce50lrfNDISTAPIGETDEVCAPS"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Driver"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="False"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="apiref"/>
+<MSHelp:Attr Name="Filename" Value="ndis_structures2.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="False"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+<MSHelp:Attr Name="APIName" Value="NDIS_TAPI_GET_DEV_CAPS"/>
+<MSHelp:Attr Name="PBFeature" Value="NetworkDriver"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_3018919">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50lrfndistapigetdevcaps"></A>NDIS_TAPI_GET_DEV_CAPS</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>The <B>NDIS_TAPI_GET_DEV_CAPS</B> structure is used by <A HREF="wce50lrfoidtapigetdevcaps.htm">OID_TAPI_GET_DEV_CAPS</A> when it requests the miniport driver to return the telephony capabilities of a specified line device. The returned information is valid for all addresses on the given line device. </P>
+
+<P>Support for this request is mandatory. </P>
+
+<PRE class="syntax"><B>typedef struct _NDIS_TAPI_GET_DEV_CAPS { </B>
+<B>  ULONG </B><I>ulRequestID</I><B>;</B> 
+  <B>ULONG</B> <I>ulDeviceID</I><B>;</B> 
+<B>  ULONG</B> <I>ulExtVersion</I><B>;</B> 
+<B>  LINE_DEV_CAPS</B> <I>LineDevCaps</I><B>;</B> 
+<B>} NDIS_TAPI_GET_DEV_CAPS, *PNDIS_TAPI_GET_DEV_CAPS; </B></PRE>
+
+<H4 class="dtH4">Members </H4>
+
+<DL>
+<DT><B>ulRequestID </B></DT>
+
+<DD>[in] Reserved. </dd>
+
+<DT><B>ulDeviceID </B></DT>
+
+<DD>[in] Specifies the link or data channel to be queried. This was set up in a preceding <A HREF="wce50lrfoidtapigetid.htm">OID_TAPI_GET_ID</A> request. </dd>
+
+<DT><B>ulExtVersion </B></DT>
+
+<DD>[in] Specifies the negotiated extension version number, if any. 
+
+<P>The value has already been negotiated for this device through the <A HREF="wce50lrfoidtapinegotiateextversion.htm">OID_TAPI_NEGOTIATE_EXT_VERSION</A> request. The value of this member is not validated when this request is made. 
+</dd>
+
+<DT><B>LineDevCaps </B></DT>
+
+<DD>[out] Specifies the virtual address of a variable-size structure of type LINE_DEV_CAPS. 
+
+<P>The NIC driver fills this structure with line device capabilities information to complete this request successfully. 
+
+
+<P>The structure at <B>LineDevCaps</B> has at least sizeof(<B>LINE_DEV_CAPS</B>) bytes reserved. 
+
+
+<P>The supplied provider information in the <B>dwProviderInfoOffset</B> member of <B>LINE_DEV_CAPS</B> must have the following format: 
+
+
+<UL type="disc">
+	<LI><code class="ce">MediaName\0ProviderName\0</code> <BR>
+where <BR>
+MediaName is ISDN, SW56, FrameRelay, and so forth, as appropriate. MediaName can also specify the type of device, such as RASDT_Direct (L"direct"), RASDT_Modem (L"modem"), or RASDT_Vpn (L"vpn")<BR>
+and <BR>
+ProviderName is the name of the manufacturer of the device and the unique name of the device, if any. </li>
+
+	<LI>For example, the driver of an ISDN device from SomeIHV Inc. would set the <B>dwProviderInfoOffset</B> member with a pointer to the string "ISDN\0SomeIHV\0"</li>
+</UL>
+</dd>
+</DL>
+
+<H4 class="dtH4">Remarks</H4>
+
+<P>The <A HREF="wce50lrfminiportqueryinformation.htm">MiniportQueryInformation</A> function can return one of the following:
+
+<UL type="disc">
+	<LI>NDIS_STATUS_SUCCESS</li>
+
+	<LI>NDIS_STATUS_PENDING</li>
+
+	<LI>NDIS_STATUS_TAPI_NODRIVER</li>
+
+	<LI>NDIS_STATUS_TAPI_RESOURCEUNAVAIL</li>
+
+	<LI>NDIS_STATUS_FAILURE</li>
+</UL>
+
+<H4 class="dtH4">Requirements</H4>
+
+<P><B>OS Versions:</B> Windows CE .NET 4.0 and later.<BR>
+<B>Header:</B> Ntddndis.h and Ndistapi.h.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50lrfoidtapigetdevcaps.htm">OID_TAPI_GET_DEV_CAPS</A> | <A HREF="wce50lrfoidtapigetid.htm">OID_TAPI_GET_ID</A> | <A HREF="wce50lrfoidtapinegotiateextversion.htm">OID_TAPI_NEGOTIATE_EXT_VERSION</A> | <A HREF="wce50lrfminiportqueryinformation.htm">MiniportQueryInformation</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

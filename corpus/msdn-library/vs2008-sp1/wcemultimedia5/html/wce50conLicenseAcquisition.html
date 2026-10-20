@@ -1,0 +1,129 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>License Acquisition</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="License Acquisition"/>
+<MSHelp:RLTitle Title="License Acquisition"/>
+<MSHelp:Keyword Index="A" Term="wce50conLicenseAcquisition"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Feature"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="drm_concepts.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="True"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+<MSHelp:Attr Name="PBFeature" Value="SYSGEN_DRM"/>
+<MSHelp:Attr Name="PBOnly" Value="False"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_3004466">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50conlicenseacquisition"></A>License Acquisition</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>License acquisition is the process of obtaining a license from a DRM license server to allow your device to play back DRM-protected content. Licenses are associated with the combination of a specific device and a specific piece of content. </P>
+
+<P>Windows CE-based devices cannot act as DRM license servers.</P>
+
+<P>The process of license acquisition can be either silent or nonsilent:
+
+<UL type="disc">
+	<LI>In a silent acquisition, the entire process of negotiating the request for, and acceptance of, the license takes place between the Windows CE-based device and the licensing server without any user input or interaction. </li>
+
+	<LI>In a nonsilent license acquisition, the user will be asked for information and confirmation before the digital certificate is transferred. This process is facilitated by the license acquisition OCX.  </li>
+</UL>
+
+<P>A platform can support both silent and nonsilent license acquisition methods.  The following diagram shows a typical method for integrating both methods into a single architecture.</P>
+
+<P class="fig"><IMG SRC="cxdrmlicenseacquisition.gif" ALT="" BORDER=0></P>
+
+<P>The license acquisition OCX can only be hosted inside of a Web page. It acts as the bridge between the Web-based interface that a content owner would use to gather information to generate licenses and the DRM license server. The license acquisition OCX is required to support nonsilent license acquisitions. This OCX is used exclusively by the DRM components in Windows CE.</P>
+
+<H2 class="dtH2">Nonsilent License Acquisition</H2>
+
+<P>Nonsilent acquisition occurs when a piece of content is DRM-protected and the license server indicates that direct user interaction is required in order to acquire the license.  This user interaction is initiated by the Windows Media splitter and results in a call to <MSHelp:link keywords="wce50lrfShellExecuteEx" TABINDEX="0">ShellExecuteEx</MSHelp:link> to launch the browser and load a web page specified by the license server.  This web page will in turn redirect the browser to a web page used by the content provider to manage the process of authorizing the user to receive the license.</P>
+
+<P>After the interaction with the user is completed and the license has been authorized, the licensing server sends the license to the device.  The browser then loads the license acquisition OCX (cedrm2.dll) and the OCX consumes the license and writes it to the license store.  This completes the transaction for acquiring the license.  </P>
+
+<P>In this process, the user had to navigate away from the web page containing the content they were originally trying to play.  The user will probably want to immediately return to the content once the license is acquired.  Windows CE provides a way to notify the client that a DRM license acquisition process is complete.  This allows your application to manage the user experience after the license is acquired.  Your application could, for example, automatically redirect the browser to the original content if the license acquisition was successful.</P>
+
+<P>Upon completing the license acquisition process, the license acquisition OCX makes an internal call to <B>IDocHostUIHandler::GetExternal</B> to obtain an <MSHelp:link keywords="wce50lrfIDispatch" TABINDEX="0">IDispatch</MSHelp:link> interface from the browser's host application.  For information on <B>IDocHostUIHandler </B>see the Advanced Hosting Reference in the <MSHelp:link keywords="wce50oriInternetExplorerBrowserControlHostOrient" TABINDEX="0">Internet Explorer Browser Control Host</MSHelp:link> documentation.</P>
+
+<P>Once the OCX obtains the <B>IDispatch</B> interface, it calls the <B>LicenseAcquired</B> method, which you must implement in your browser's host application.  This function has one parameter, a BOOL where a value of TRUE indicates that a license has been acquired and FALSE otherwise.</P>
+
+<P>You must make provision within your browser's host application to support the license acquisition OCX's internal calling sequence.  The following code shows how to enable the <B>GetExternal</B> method inside your browser's host application so it can return the <B>IDispatch</B> interface to the OCX.  </P>
+
+<PRE class="code">// IDocHostUIHandler methods
+STDMETHOD(GetExternal)(IDispatch **ppDispatch) 
+{
+  *ppDispatch = (IDispatch *)this;
+  return S_OK;
+}</PRE>
+
+<P>Your application can implement a separate object for <B>IDispatch</B> requests instead of using <CODE>this</CODE> in <B>GetExternal</B>.</P>
+
+<P>When a license is acquired the OCX initiates a call to <MSHelp:link keywords="wce50lrfIDispatchInvoke" TABINDEX="0">IDispatch::Invoke</MSHelp:link>.  This means that your implementation of <B>IDispatch::Invoke</B> requires a new dispatch ID.  The following code shows how to create the dispatch ID.</P>
+
+<PRE class="code">#define DISPID_LICENSEACQUIRED    /* Provide your ID number here */
+
+[id(DISPID_LICENSEACQUIRED), helpstring("Fired when License is
+acquired."), helpcontext(0x0000)]
+
+HRESULT LicenseAcquired([in] VARIANT_BOOL varResult );</PRE>
+
+<P>The following code shows how you can modify your <B>IDispatch::Invoke</B> method.</P>
+
+<PRE class="code">case DISPID_LICENSEACQUIRED :
+  VARIANT_BOOL fAcquired;
+  fAcquired = pdparams-&gt;rgvarg[0].boolVal;
+  LicenseAcquired( fAcquired ) ;
+  break ;</PRE>
+
+<P>The following code shows a possible definition for your <B>LicenseAcquired</B> method.</P>
+
+<PRE class="code">HRESULT   LicenseAcquired( VARIANT_BOOL varRestult )
+{
+  MessageBox(NULL, L"License, "Notification",MB_OK|MB_ICONSTOP);
+
+  /* ... Handle the outcome of the license acquisition ... */
+
+  return S_OK ;
+}</PRE>
+
+<P>At this point, your application has received notification on the status of the license.  From here you can control the user experience of a successful or failed license acquisition.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50oridigitalrightsmanagement.htm">DRM Application Development</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

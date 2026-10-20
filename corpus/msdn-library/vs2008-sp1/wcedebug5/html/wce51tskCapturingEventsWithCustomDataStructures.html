@@ -1,0 +1,103 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Capturing Events With Custom Data Structures</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Capturing Events With Custom Data Structures"/>
+<MSHelp:RLTitle Title="Capturing Events With Custom Data Structures"/>
+<MSHelp:Keyword Index="A" Term="wce51tskCapturingEventsWithCustomDataStructures"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Debugging"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="True"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbTask"/>
+<MSHelp:Attr Name="Filename" Value="celog_event_tracking_customization.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="True"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_1073144">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce51tskcapturingeventswithcustomdatastructures"></A>Capturing Events With Custom Data Structures</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>You can log any type of data, including any data structure, to CeLog. </P>
+
+<P class="labelproc"><B>To log any data structure with CeLog</B>
+
+<OL type="1">
+	<LI>Create a unique event identifier between CELID_USER and CELID_MAX. 
+<P>The following definition creates an event identifier called CELID_MY_EVENT: 
+
+<PRE class="code">#define CELID_MY_EVENT  (CELID_USER+0)</PRE>
+
+<P>By creating a different ID for each different data type you use, you can easily distinguish between data types when you view them in <A HREF="wce51orireadlogviewingtool.htm">Readlog</A> or <A HREF="wce50conremotekerneltracker.htm">Remote Kernel Tracker</A>. 
+</li>
+
+	<LI>Choose a <MSHelp:link keywords="wce50grfCeLogZones" TABINDEX="0">CeLog zone</MSHelp:link> to log the data to. 
+<UL type="disc">
+	<LI>CELZONE_MISC
+<P>The OS does not log events to CELZONE_MISC unless that zone is turned on. Hence, you can use this zone to turn logging on and off dynamically for your event.
+
+<P>- Or -
+</li>
+
+	<LI>CELZONE_ALWAYSON
+<P>CELZONE_ALWAYSON cannot be turned off, so logging for your event is always turned on.
+</li>
+</UL>
+</li>
+
+	<LI>Log the data using the ID, data structure, and zone that you have chosen.
+<P>The following line shows how use <B>CeLogData</B> to log the data defined by the unique ID you created in step 1.
+
+<PRE class="code">CeLogData(TRUE, CELID_MY_EVENT, (BYTE*)&amp;MyStructure, sizeof(MyStructure), 0, CELZONE_MISC, 0, FALSE);</PRE>
+
+<P>This example uses CELZONE_MISC. When the CELZONE_MISC zone is turned on, <MSHelp:link keywords="wce50lrfCeLogData" TABINDEX="0">CeLogData</MSHelp:link> adds your data structure to the log each time your code runs.
+</li>
+</OL>
+
+<P class="labelproc"><B>Viewing your custom event type</B></P>
+
+<P>When you define a custom event type, instead of using a pre-defined type, the <A HREF="wce51orireadlogviewingtool.htm">Readlog viewing tool</A> cannot display your event data without modification. Remote Kernel Tracker cannot display custom event types, but can display output from a Readlog extension after appropriate preparation. </P>
+
+<P>When Readlog encounters a custom event type, it prints only the event ID and event size, as shown in the following line of output:</P>
+
+<PRE class="code">0:01:42.107.225 : ID=8192, Len= 64</PRE>
+
+<P>To view custom event types, you must create a Readlog extension that formats and prints the data in the way you want. For more information, see <A HREF="wce51tskwritingreadlogextensiontoviewcustomevents.htm">Writing A Readlog Extension to View Custom Events</A>. Once you have written your extension, you can use Readlog to process the log file so that Remote Kernel Tracker can also display your data. For more information, see <A HREF="wce51tskviewingoutputfromreadlogextensioninremotekerneltracker.htm">Viewing Output from a Readlog Extension</A>.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce51orireadlogviewingtool.htm">Readlog Viewing Tool</A> | <A HREF="wce50conceloglibandremotekerneltracker.htm">Remote Kernel Tracker</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

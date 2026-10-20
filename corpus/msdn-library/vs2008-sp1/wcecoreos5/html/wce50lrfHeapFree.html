@@ -1,0 +1,135 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>HeapFree</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="HeapFree"/>
+<MSHelp:RLTitle Title="HeapFree"/>
+<MSHelp:Keyword Index="K" Term="HeapFree"/>
+<MSHelp:Keyword Index="A" Term="wce50lrfHeapFree"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Feature"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="apiref"/>
+<MSHelp:Attr Name="Filename" Value="memory_management_reference.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="False"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+<MSHelp:Attr Name="APIName" Value="HeapFree"/>
+<MSHelp:Attr Name="APIType" Value="LibDef"/>
+<MSHelp:Attr Name="APILocation" Value="Coredll.lib"/>
+<MSHelp:Attr Name="PBFeature" Value="CORE"/>
+<MSHelp:Attr Name="PBOnly" Value="False"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_3002542">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50lrfheapfree"></A>HeapFree</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>This function frees a memory block allocated from a heap by the <A HREF="wce50lrfheapalloc.htm">HeapAlloc</A> or <A HREF="wce50lrfheaprealloc.htm">HeapReAlloc</A> function. </P>
+
+<PRE class="syntax"><B>BOOL</B> <B>HeapFree(</B>
+  <B>HANDLE</B> <I>hHeap</I><B>,</B><I> </I>
+  <B>DWORD</B> <I>dwFlags</I><B>,</B><I> </I>
+  <B>LPVOID</B> <I>lpMem </I>
+<B>);</B></PRE>
+
+<H4 class="dtH4">Parameters</H4>
+
+<DL>
+<DT><I>hHeap</I></DT>
+
+<DD>[in] Handle to the heap whose memory block is freed by the function. This parameter is a handle returned by the <A HREF="wce50lrfheapcreate.htm">HeapCreate</A> or <A HREF="wce50lrfgetprocessheap.htm">GetProcessHeap</A> function. </dd>
+
+<DT><I>dwFlags</I></DT>
+
+<DD>[in] Controllable aspects of freeing a memory block. Only one flag is currently defined; however, all other flag values are reserved for future use. 
+
+<P>The following table shows the flag you can specify. Specifying this flag overrides the corresponding flag specified in the <I>flOptions</I> parameter when the heap was created using the <B>HeapCreate</B> function. 
+
+
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=28%>Value</TH>
+<TH width=72%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=28%>HEAP_NO_SERIALIZE</TD>
+<TD width=72%>Specifies that mutual exclusion will not be used while <B>HeapFree</B> is accessing the heap. 
+<P>Do not specify this flag when accessing the process heap. The system might create additional threads within the application's process that simultaneously access the process heap.</P>
+
+<P>This flag is ignored.</P>
+</TD>
+</TR>
+</table></div>
+
+</dd>
+
+<DT><I>lpMem</I></DT>
+
+<DD>[in] Pointer to the memory block to be freed. 
+
+<P>This pointer is returned by the <B>HeapAlloc</B> or <B>HeapReAlloc</B> function. 
+</dd>
+</DL>
+
+<H4 class="dtH4">Return Values</H4>
+
+<P>Nonzero indicates success. </P>
+
+<P>Zero indicates failure. </P>
+
+<P>To get extended error information, call <A HREF="wce50lrfgetlasterror.htm">GetLastError</A>. </P>
+
+<H4 class="dtH4">Remarks</H4>
+
+<P>Serialization ensures mutual exclusion when two or more threads attempt to simultaneously allocate or free blocks from the same heap. There is a small performance cost, but it must be used when multiple threads allocate and free memory from the same heap. </P>
+
+<P>A critical section is always used to serialize access to an individual heap. There is a critical section per heap to protect access to each heap. </P>
+
+<P>An attempt to grab a critical section that is not owned is a fast path operation that incurs little overhead. This is similar to using the HEAP_NO_SERIALIZE flag if only one thread was ever accessing a particular heap. </P>
+
+<P>If there is contention for the critical section and therefore the heap, a new thread request to allocate heap space will serialize.</P>
+
+<H4 class="dtH4">Requirements</H4>
+
+<P><B>OS Versions:</B> Windows CE 1.0 and later.<BR>
+<B>Header:</B> Winbase.h.<BR>
+<B>Link Library:</B> Coredll.lib.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50lrfgetprocessheap.htm">GetProcessHeap</A> | <A HREF="wce50lrfheapalloc.htm">HeapAlloc</A> | <A HREF="wce50lrfheapcreate.htm">HeapCreate</A> | <A HREF="wce50lrfheapdestroy.htm">HeapDestroy</A> | <A HREF="wce50lrfheaprealloc.htm">HeapReAlloc</A> | <A HREF="wce50lrfheapsize.htm">HeapSize</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

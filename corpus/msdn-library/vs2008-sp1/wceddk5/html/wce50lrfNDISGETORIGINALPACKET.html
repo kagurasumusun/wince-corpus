@@ -1,0 +1,102 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>NDIS_GET_ORIGINAL_PACKET</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="NDIS_GET_ORIGINAL_PACKET"/>
+<MSHelp:RLTitle Title="NDIS_GET_ORIGINAL_PACKET"/>
+<MSHelp:Keyword Index="K" Term="NDIS_GET_ORIGINAL_PACKET"/>
+<MSHelp:Keyword Index="A" Term="wce50lrfNDISGETORIGINALPACKET"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Driver"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="False"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="apiref"/>
+<MSHelp:Attr Name="Filename" Value="ndis_macros.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="True"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+<MSHelp:Attr Name="APIName" Value="NDIS_GET_ORIGINAL_PACKET"/>
+<MSHelp:Attr Name="PBFeature" Value="NetworkDriver"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_3018677">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50lrfndisgetoriginalpacket"></A>NDIS_GET_ORIGINAL_PACKET</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>This macro returns a pointer to a packet descriptor that the lowest-level driver in a layered stack of NDIS drivers indicated. The calling driver should access the out-of-band (OOB) data block from this original packet rather than the packet that the driver below the calling driver indicated. If the calling driver is not part of a layered stack, the returned packet descriptor will be identical to the packet that the driver below the calling driver indicated.</P>
+
+<PRE class="syntax"><B>PNDIS_PACKET NDIS_GET_ORIGINAL_PACKET(</B>
+  <B>PNDIS_PACKET</B> <I>_P</I>
+<B>);</B></PRE>
+
+<H4 class="dtH4">Parameters</H4>
+
+<DL>
+<DT><I>_P</I></DT>
+
+<DD>Points to a packet descriptor that the driver below the calling driver indicated.</dd>
+</DL>
+
+<H4 class="dtH4">Return Values</H4>
+
+<P>The return value is a pointer to the packet descriptor that the lowest-level driver in a layered stack of NDIS drivers indicated, or if the calling driver is not part of a layered stack, the return value is the packet descriptor that the driver below the calling driver indicated.</P>
+
+<H4 class="dtH4">Remarks</H4>
+
+<P>Typically, the packet that is returned by <B>NDIS_GET_ORIGINAL_PACKET</B> is the same packet that was indicated up by the driver below the calling driver. To indicate packets to a higher-level driver, a driver can call, for example, the <A HREF="wce50lrfndismindicatereceivepacket.htm">NdisMIndicateReceivePacket</A> function. To retrieve packets that were indicated up from a lower-level driver, a driver can call the <A HREF="wce50lrfndisgetreceivedpacket.htm">NdisGetReceivedPacket</A> function.</P>
+
+<P>Call <B>NDIS_GET_ORIGINAL_PACKET</B> to obtain a pointer to a packet that was indicated up by the lowest-level driver in a layered stack of NDIS protocol and intermediate drivers. In this call, the drivers passed the pointer to the received packet through the higher-level layered drivers. In this way, each driver in the layered stack can access the OOB data block associated with a packet received from the network, without requiring that the packet be copied to each layer.</P>
+
+<P>The <B>NDIS_GET_ORIGINAL_PACKET</B> macro is defined as follows.</P>
+
+<PRE class="code">#define NDIS_GET_ORIGINAL_PACKET(_P) NDIS_PER_PACKET_INFO_FROM_PACKET(_P, OriginalPacketInfo)</PRE>
+
+<P>The following example code retrieves a packet that was received from the driver below and obtains the original packet from the retrieved packet.</P>
+
+<PRE class="code">// Get the original packet, which could be the received packet
+// or the packet originating from the lowest-level driver.
+// This result is based on the number of layered drivers in the stack.
+//
+Pkt = NdisGetReceivedPacket(BindingHandle, MacReceiveContext);
+OrigPkt = NDIS_GET_ORIGINAL_PACKET(Pkt);</PRE>
+
+<H4 class="dtH4">Requirements</H4>
+
+<P><B>OS Versions:</B> Windows CE .NET 4.0 and later.<BR>
+<B>Header:</B> Ndis.h.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50lrfndispacket.htm">NDIS_PACKET</A> | <A HREF="wce50lrfndisgetreceivedpacket.htm">NdisGetReceivedPacket</A> | <A HREF="wce50lrfndismindicatereceivepacket.htm">NdisMIndicateReceivePacket</A> | <A HREF="wce50lrfndisperpacketinfofrompacket.htm">NDIS_PER_PACKET_INFO_FROM_PACKET</A> | <A HREF="wce50lrfndispacketoobdata.htm">NDIS_PACKET_OOB_DATA</A> | <A HREF="wce50lrfndisgetpackettimereceived.htm">NDIS_GET_PACKET_TIME_RECEIVED</A> | <A HREF="wce50lrfndissetoriginalpacket.htm">NDIS_SET_ORIGINAL_PACKET</A> | <A HREF="wce50lrfndisgetpacketmediaspecificinfo.htm">NDIS_GET_PACKET_MEDIA_SPECIFIC_INFO</A> | <A HREF="wce50lrfprotocolreceive.htm">ProtocolReceive</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

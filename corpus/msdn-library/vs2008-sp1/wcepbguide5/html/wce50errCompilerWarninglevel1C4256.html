@@ -1,0 +1,78 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Compiler Warning (level 1) C4256</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Compiler Warning (level 1) C4256"/>
+<MSHelp:RLTitle Title="Compiler Warning (level 1) C4256"/>
+<MSHelp:Keyword Index="A" Term="wce50errCompilerWarninglevel1C4256"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Guide"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="True"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbRef"/>
+<MSHelp:Attr Name="Filename" Value="err42xx.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="True"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_3025521">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50errcompilerwarninglevel1c4256"></A>Compiler Warning (level 1) C4256</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<PRE class="syntax"><B>'<I>function</I>' : constructor for class with virtual bases has '...'; </B>
+<B>calls may not be compatible with older versions of Visual C++</B></PRE>
+
+<P>Possible incompatibility.</P>
+
+<P>Based on the code sample below, if the definition of the constructor S2::S2( int i, ... ) were compiled with a version of Microsoft&reg; eMbedded Visual C++&reg; prior to 6.1, but the code snippet here were compiled with 6.1, the call to the constructor for S3 would not work correctly, due to a special-case calling convention change. If both were compiled with eMbedded Visual C++ 6.0, the call would not work quite right either, unless no parameters were passed for the ellipsis.</P>
+
+<P>To resolve this warning,
+
+<OL type="1">
+	<LI>Don't use ellipsis in a constructor.</li>
+
+	<LI>Make sure that all components in a project are built with VC6.1 (including any libraries that may define or reference this class), then disable the warning using the warning
+<PRE class="code">// #pragma warning(disable : 4256)
+struct S1 {};
+struct S2: virtual public S1 {
+S2( int i, ... );  // C4256 issued here
+};
+
+void func1() {
+S2 S3( 2, 1, 2 );  // C4256 issued here as well.
+}</PRE>
+</li>
+</OL>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

@@ -1,0 +1,113 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>WSPRecvDisconnect</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="WSPRecvDisconnect"/>
+<MSHelp:RLTitle Title="WSPRecvDisconnect"/>
+<MSHelp:Keyword Index="K" Term="WSPRecvDisconnect"/>
+<MSHelp:Keyword Index="A" Term="wce50lrfWSPRecvDisconnect"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Feature"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="apiref"/>
+<MSHelp:Attr Name="Filename" Value="winsock2spi_functions.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="False"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+<MSHelp:Attr Name="APIName" Value="WSPRecvDisconnect"/>
+<MSHelp:Attr Name="APIType" Value="LibDef"/>
+<MSHelp:Attr Name="APILocation" Value="Ws2.lib"/>
+<MSHelp:Attr Name="PBFeature" Value="SYSGEN_WINSOCK"/>
+<MSHelp:Attr Name="PBOnly" Value="False"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_3008298">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50lrfwsprecvdisconnect"></A>WSPRecvDisconnect</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>This function terminates reception on a socket and retrieves the disconnect data, if the socket is connection oriented.</P>
+
+<BLOCKQUOTE class="dtBlock">
+<b class="le">Note</b>&nbsp;&nbsp;&nbsp;<B>WSPRecvDisconnect</B> is not supported for the default TCP/UDP provider in Windows CE. However, third parties can implement their own provider and have support for this function if they choose.</BLOCKQUOTE>
+
+<PRE class="syntax"><B>int WSPRecvDisconnect(</B>
+  <B>SOCKET </B><I>s</I><B>,</B>
+  <B>LPWSABUF </B><I>lpInboundDisconnectData</I><B>,</B>
+  <B>LPINT </B><I>lpErrno </I>
+<B>);</B></PRE>
+
+<H4 class="dtH4">Parameters</H4>
+
+<DL>
+<DT><I>s</I></DT>
+
+<DD>[in] Descriptor identifying a socket.</dd>
+
+<DT><I>lpInboundDisconnectData</I></DT>
+
+<DD>[out] Pointer to a buffer into which disconnect data is to be copied.</dd>
+
+<DT><I>lpErrno</I></DT>
+
+<DD>[out] Pointer to the error code.</dd>
+</DL>
+
+<H4 class="dtH4">Return Values</H4>
+
+<P>This function always returns SOCKET_ERROR and sets <I>lpErrno</I> to WSASYSCALLFAILURE on Windows CE.</P>
+
+<H4 class="dtH4">Remarks</H4>
+
+<P>This function is used on connection-oriented sockets to disable reception, and retrieve any incoming disconnect data from the remote party.</P>
+
+<P>After this function has been successfully issued, subsequent receives on the socket will be disallowed. This has no effect on the lower protocol layers. For TCP, the TCP window is not changed and incoming data will be accepted (but not acknowledged) until the window is exhausted. For UDP, incoming datagrams are accepted and queued. In no case will an ICMP error packet be generated.</P>
+
+<P>To successfully receive incoming disconnect data, a Windows Sockets SPI client must use other mechanisms to determine that the circuit has been closed. For example, a client needs to receive an FD_CLOSE notification, or get a zero return value, or a WSAEDISCON error code from <A HREF="wce50lrfwsprecv.htm">WSPRecv</A>.</P>
+
+<BLOCKQUOTE class="dtBlock">
+<b class="le">Note</b>&nbsp;&nbsp;&nbsp;<B>WSPRecvDisconnect</B> does not close the socket, and resources attached to the socket will <I>not</I> be freed until <A HREF="wce50lrfwspclosesocket.htm">WSPCloseSocket</A> is invoked. Also, <B>WSPRecvDisconnect</B> does not block regardless of the SO_LINGER setting on the socket.</BLOCKQUOTE>
+
+<BLOCKQUOTE class="dtBlock">
+A Windows Sockets SPI client should not rely on being able to reuse a socket after it has been disconnected by using <B>WSPRecvDisconnect</B>. In particular, a Windows Sockets provider is not required to support the use of <A HREF="wce50lrfwspconnect.htm">WSPConnect</A> on such a socket.</BLOCKQUOTE>
+
+<H4 class="dtH4">Requirements</H4>
+
+<P><B>OS Versions:</B> Windows CE .NET 4.0 and later.<BR>
+<B>Header:</B> Ws2spi.h.<BR>
+<B>Link Library:</B> Ws2.lib.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50lrfwspconnect.htm">WSPConnect</A> | <A HREF="wce50lrfwspsocket.htm">WSPSocket</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

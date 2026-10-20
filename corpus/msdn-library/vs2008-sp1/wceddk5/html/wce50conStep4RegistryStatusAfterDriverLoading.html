@@ -1,0 +1,288 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Step 5: Loading Drivers on the PCI Bus</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Step 5: Loading Drivers on the PCI Bus"/>
+<MSHelp:RLTitle Title="Step 5: Loading Drivers on the PCI Bus"/>
+<MSHelp:Keyword Index="A" Term="wce50conStep4RegistryStatusAfterDriverLoading"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Driver"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="False"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="pci_guide.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="True"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="True"/>
+<MSHelp:Attr Name="PBFeature" Value="PCIBusDriver"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_3017987">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50constep4registrystatusafterdriverloading"></A>Step 5: Loading Drivers on the PCI Bus</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>In this step of the driver loading process example, the PCI bus driver loads the DLL indicated by <B>Drivers\PCI\Instance\Dll</B> so that it can load the device drivers. This DLL is typically BusEnum.dll, the bus enumerator. BusEnum.dll examines the <B>Instance</B> subkeys of the <B>Drivers\PCI</B> key to determine which drivers to load based on their <B>Order</B>. If no <B>Order</B> is specified, the associated driver loads last. In this example, no <B>Order</B> is specified for any of the drivers, so the load order is arbitrary. If the serial driver is loaded first, the PCI bus driver finds the <B>Drivers\PCI\Instance\Serial1</B> key and loads the corresponding DLL, if it is not loaded already. Then, it calls its default entry point, <A HREF="wce50lrfcominit.htm">COM_Init</A>, with the key <B>Drivers\PCI\Instance\Serial1</B>. Then, the driver reads its configuration information from the registry. The same driver is used for 16550 serial controllers on the built-in, ISA, and PCI buses. Because the registry key passed to the <B>COM_Init </B>function has all of the information the driver needs to run, it does not matter whether the registry has been populated by the OEM, the user, or by a bus enumerator such as the PCI bus driver. </P>
+
+<P>For the first NE2000 driver instance, the PCI bus driver first loads NDIS.dll, if necessary, and then calls the default entry point <B>NDIS_Init</B> with <B>Drivers\PCI\Instance\NE20001</B> passed in as a parameter. NDIS examines the registry and, because it recognizes that the <B>MiniPort</B> value is present, it loads NE2000.dll, if necessary. It then calls its default entry point, as defined by the NDIS driver. The same procedure is used for the second NE2000 driver instance.</P>
+
+<H2 class="dtH2">Registry Keys After Driver Loading</H2>
+
+<P>The following registry entry example shows the state of the registry after the PCI bus driver has loaded the drivers.</P>
+
+<PRE class="code">[HKEY_LOCAL_MACHINE\Drivers]
+    "RootKey"="Drivers"
+    "Dll"="BusEnum.dll"
+
+[HKEY_LOCAL_MACHINE\Drivers\Debug]
+    "Dll"="BusEnum.dll"
+    "Order"=dword:0
+    "Flags"=dword:1
+
+[HKEY_LOCAL_MACHINE\Drivers\Debug\KITL]
+    "Flags"=dword:4
+    "Irq"=dword:1
+    "MemBase"=dword:FFBFA000
+    "MemLen"=dword:1000
+    "SysIntr"=dword:11
+
+[HKEY_LOCAL_MACHINE\Drivers\Virtual]
+    "Dll"="BusEnum.dll"
+    "Order"=dword:1
+    "Flags"=dword:1
+
+[HKEY_LOCAL_MACHINE\Drivers\Virtual\NDIS]
+    "Dll"="NDIS.dll"
+    "Order"=dword:1
+    "Prefix"="NDS"
+    "Index"=dword:0
+
+[HKEY_LOCAL_MACHINE\Drivers\CSP]
+    "Dll"="BusEnum.dll"
+    "Order"=dword:2
+    "Flags"=dword:1
+
+[HKEY_LOCAL_MACHINE\Drivers\CSP\Serial]
+    "Dll"="Com16550.Dll"
+    "Order"=dword:0
+    "Irq"=dword:3
+    "MemBase"=dword:FFBFC000
+    "MemLen"=dword:8
+    "SysIntr"=dword:13
+    "Prefix"="COM"
+    "DeviceArrayIndex"=dword:0
+    "Priority"=dword:0
+
+[HKEY_LOCAL_MACHINE\Drivers\CSP\Serial\Unimodem]
+    "Tsp"="Unimodem.dll"
+    "DeviceType"=dword:0
+    "FriendlyName"="Serial Cable on COM1:"
+    "DevConfig"=hex: 10,00, 00,00, 05,00,00,00, 10,01,00,00, 00,4B,00,00
+
+[HKEY_LOCAL_MACHINE\Drivers\ISA]
+    "Dll"="BusEnum.dll"
+    "Order"=dword:3
+    "Flags"=dword:1
+
+[HKEY_LOCAL_MACHINE\Drivers\ISA\Serial]
+    "Dll"="Com16550.Dll"
+    "Order"=dword:0
+    "Irq"=dword:4
+    "IoBase"=dword:02F8
+    "IoLen"=dword:8
+    "SysIntr"=dword:14
+    "Prefix"="COM"
+    "DeviceArrayIndex"=dword:1
+    
+[HKEY_LOCAL_MACHINE\Drivers\ISA\Serial\Unimodem]
+    "Tsp"="Unimodem.dll"
+    "DeviceType"=dword:0
+    "FriendlyName"="Serial Cable on COM2:"
+    "DevConfig"=hex: 10,00, 00,00, 05,00,00,00, 10,01,00,00, 00,4B,00,00
+    
+[HKEY_LOCAL_MACHINE\Drivers\ISA\PCMCIA]
+    "Dll"="PCMCIA.dll"
+    "Order"=dword:1
+    "Irq"=dword:B
+    "SysIntr"=dword:1B
+    "IoBase"=dword:03e0
+    "IoLen"=dword:2
+
+[HKEY_LOCAL_MACHINE\Drivers\PCI]
+    "Dll"="PCIbus.dll"
+    "Order"=dword:4
+    "Flags"=dword:1
+    "MemBase"=dword:FFC00000
+    "MemLen"=dword:100000
+    "IoBase"=dword:D000
+    "IoLen"=dword:3000    
+
+[HKEY_LOCAL_MACHINE\Drivers\PCI\Template\Serial]
+    "Dll"="Com16550.Dll"
+    "Class"=dword:07
+    "SubClass"=dword:00
+    "ProgIF"=dword:02
+    "VendorID"=multi_sz:"0AF0","B320","B320"
+    "DeviceID"=multi_sz:"0020","0300","0302"
+    "Prefix"="COM"
+
+[HKEY_LOCAL_MACHINE\Drivers\PCI\Template\Serial\Unimodem]
+    "Tsp"="Unimodem.dll"
+    "DeviceType"=dword:0
+    "FriendlyName"="Serial Cable on PCI"
+    "DevConfig"=hex: 10,00, 00,00, 05,00,00,00, 10,01,00,00, 00,4B,00,00
+
+[HKEY_LOCAL_MACHINE\Drivers\PCI\Instance\Serial1\Unimodem]
+    "FriendlyName"="Serial Cable on COM3:"
+
+[HKEY_LOCAL_MACHINE\Drivers\PCI\Template\NE2000]
+    "Dll"="NDIS.dll"
+    "ConfigDll"="NE2000cfg.dll"
+    "ConfigEntry"="DeviceConfig"
+    "Class"=dword:02
+    "SubClass"=dword:00
+    "ProgIF"=dword:00
+    "MiniPort"="NE2000"
+
+[HKEY_LOCAL_MACHINE\Drivers\PCI\Instance\Serial1]
+    "InstanceIndex"=dword:1
+    "Dll"="Com16550.Dll"
+    "Prefix"="COM"
+    "Priority"=dword:0
+    "Class"=dword:7
+    "SubClass"=dword:0
+    "ProgIF"=dword:2
+    "VendorID"=dword:B320
+    "DeviceID"=dword:300
+    "RevisionID"=dword:0
+    "SubVendorID"=dword:B330
+    "SubSystemID"=dword:300
+    "InterfaceType"=dword:5
+    "BusNumber"=dword:0
+    "DeviceNumber"=dword:2
+    "FunctionNumber"=dword:0
+    "IoBase"=dword:D2F8
+    "IoLen"=dword:8
+    "Irq"=dword:9
+    "SysIntr"=dword:19 
+
+[HKEY_LOCAL_MACHINE\Drivers\PCI\Instance\Serial1\Unimodem]
+    "Tsp"="Unimodem.dll"
+    "DeviceType"=dword:0
+    "FriendlyName"="Serial Cable on COM3:"
+    "DevConfig"=hex: 10,00, 00,00, 05,00,00,00, 10,01,00,00, 00,4B,00,00
+
+[HKEY_LOCAL_MACHINE\Drivers\PCI\Instance\NE20001]
+    "InstanceIndex"=dword:1
+    "Dll"="NDIS.dll"
+    "ConfigDll"="NE2000cfg.dll"
+    "ConfigEntry"="DeviceConfig"
+    "Prefix"="COM"
+    "MiniPort"="NE2000"
+    "Class"=dword:2
+    "SubClass"=dword:0
+    "ProgIF"=dword:0
+    "VendorID"=dword:10EC
+    "DeviceID"=dword:8029
+    "RevisionID"=dword:0
+    "SubVendorID"=dword:10EC
+    "SubSystemID"=dword:8029
+    "InterfaceType"=dword:5
+    "BusNumber"=dword:2
+    "DeviceNumber"=dword:1
+    "FunctionNumber"=dword:0
+    "IoBase"=dword:D100
+    "IoLen"=dword:10
+    "Irq"=dword:A
+    "SysIntr"=dword:1A
+
+[HKEY_LOCAL_MACHINE\Drivers\PCI\Instance\NE20002]
+    "InstanceIndex"=dword:2
+    "Dll"="NDIS.dll"
+    "ConfigDll"="NE2000cfg.dll"
+    "ConfigEntry"="DeviceConfig"
+    "Prefix"="COM"
+    "MiniPort"="NE2000"
+    "Class"=dword:2
+    "SubClass"=dword:0
+    "ProgIF"=dword:0
+    "VendorID"=dword:10EC
+    "DeviceID"=dword:8029
+    "RevisionID"=dword:0
+    "SubVendorID"=dword:10EC
+    "SubSystemID"=dword:8029
+    "InterfaceType"=dword:5
+    "BusNumber"=dword:3
+    "DeviceNumber"=dword:1
+    "FunctionNumber"=dword:0
+    "IoBase"=dword:D200
+    "IoLen"=dword:10
+    "Irq"=dword:C
+    "SysIntr"=dword:1C
+
+; NE2000 common and instance specific information
+[HKEY_LOCAL_MACHINE\Comm\NE2000]
+    "DisplayName"="NE2000 Compatible Ethernet Driver"
+    "Group"="NDIS"
+    "ImagePath"="NE2000.dll"
+
+[HKEY_LOCAL_MACHINE\Comm\NE20001]
+    "DisplayName"="NE2000 Compatible Ethernet Driver 1"
+
+[HKEY_LOCAL_MACHINE\Comm\NE20001\Parms]
+    "Transceiver"=dword:3
+
+[HKEY_LOCAL_MACHINE\Comm\NE20001\Parms\TcpIp]
+    "EnableDHCP"=dword:1
+    "DefaultGateway"=""
+    "UseZeroBroadcast"=dword:0
+    "IpAddress"="0.0.0.0"
+    "Subnetmask"="0.0.0.0"
+
+[HKEY_LOCAL_MACHINE\Comm\NE20002]
+    "DisplayName"="NE2000 Compatible Ethernet Driver 2"
+
+[HKEY_LOCAL_MACHINE\Comm\NE20002\Parms]
+    "Transceiver"=dword:2
+
+[HKEY_LOCAL_MACHINE\Comm\NE20002\Parms\TcpIp]
+    "EnableDHCP"=dword:0
+    "DefaultGateway"=""
+    "UseZeroBroadcast"=dword:0
+    "IpAddress"="157.56.148.128"
+    "Subnetmask"="255.255.252.0"</PRE>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50consampledriverloadingonpcibus.htm">Example: Loading Drivers on the PCI Bus</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

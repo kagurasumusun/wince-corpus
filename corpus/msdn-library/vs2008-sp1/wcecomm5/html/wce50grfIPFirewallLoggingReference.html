@@ -1,0 +1,106 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>IP Firewall Logging Reference</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="IP Firewall Logging Reference"/>
+<MSHelp:RLTitle Title="IP Firewall Logging Reference"/>
+<MSHelp:Keyword Index="A" Term="wce50grfIPFirewallLoggingReference"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Feature"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="IPfirewall_reference.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="True"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="True"/>
+<MSHelp:Attr Name="PBFeature" Value="SYSGEN_FIREWALL"/>
+<MSHelp:Attr Name="PBOnly" Value="False"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_3006819">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50grfipfirewallloggingreference"></A>IP Firewall Logging Reference</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>IP Firewall logging is achieved by calling exported functions in external DLLs that are provided. To avoid calling an external DLL from the critical path, the firewall stores information about packets in a circular buffer, and then calls the DLLs from a secondary normal priority thread. </P>
+
+<P>Packets that are sent at a faster rate than the firewall can process do not appear in the log. If the entire buffer is consumed because log entries are generated faster than they are consumed, new entries override older ones, and the older entries are lost. You can configure the size of the buffer through the registry. For more information about the registry or priorities, see <A HREF="wce50conipfirewallloggingregistrysettings.htm">IP Firewall Logging Registry Settings</A>.</P>
+
+<P>By default, the firewall does not log any packets. To enable logging, you must create a firewall rule that specifies which packets should be logged. Logging rules can be based on the same criteria as are used for the rules used to block or allow packets. Additionally, logging rules can be based on the action taken by the firewall for the packet, for example, to log only packets that are blocked by the firewall.</P>
+
+<P>The following example specifies that all dropped inbound IPv4 and IPv6 packets should be logged:</P>
+
+<PRE class="code">[HKEY_LOCAL_MACHINE\COMM\Firewall\Rules\LogInboundIPv6]
+"Mask"=dword:0          ; 
+"Flags"=dword:0C        ; FWF_LOG | FWF_INBOUND
+"PrivateHost"=hex:17,00 ; AF_INET6
+
+[HKEY_LOCAL_MACHINE\COMM\Firewall\Rules\LogInboundIPv4]
+"Mask"=dword:0          ; 
+"Flags"=dword:0C        ; FWF_LOG | FWF_INBOUND
+"PrivateHost"=hex:02,00 ; AF_INET</PRE>
+
+<P>Logging applies only to packets that pass through the firewall. Packets that do not cross a firewall boundary, such as packets between two private hosts on the network, are not logged.</P>
+
+<P>The following table shows the functions that the logging DLL should export.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=35%>Programming element</TH>
+<TH width=65%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=35%><A HREF="wce50lrffirewallloginit.htm">FirewallLogInit</A></TD>
+<TD width=65%>Called when the firewall initializes and loads the logging DLL. The logging DLL exports this function, although it is optional.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=35%><A HREF="wce50lrffirewalllogpacket.htm">FirewallLogPacket</A></TD>
+<TD width=65%>Called for every packet that is logged. The logging DLL must export this function.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=35%><A HREF="wce50lrffirewallloguninit.htm">FirewallLogUninit</A></TD>
+<TD width=65%>Can be called when the firewall is shutting down. The logging DLL exports this function, although it is optional.</TD>
+</TR>
+</table></div>
+
+<P>If more than one logging DLL is registered with the firewall, then the logging functions of those DLLs are called sequentially. </P>
+
+<P>A code sample of the IP firewall log is located in the %_WINCEROOT%\Public\Common\Sdk\Samples\Firewall directory.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50conipfirewall.htm">IP Firewall OS Design Development</A> | <A HREF="wce50conipfirewallloggingregistrysettings.htm">IP Firewall Logging Registry Settings</A> | <A HREF="wce50grfipfirewallreference.htm">IP Firewall Reference</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

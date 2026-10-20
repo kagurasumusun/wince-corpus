@@ -1,0 +1,100 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Device Manager Architecture</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Device Manager Architecture"/>
+<MSHelp:RLTitle Title="Device Manager Architecture"/>
+<MSHelp:Keyword Index="A" Term="wce51conDeviceManagerArchitecture"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Driver"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="False"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="device_manager.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="False"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="True"/>
+<MSHelp:Attr Name="PBFeature" Value="CoreDriver"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_1074547">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce51condevicemanagerarchitecture"></A>Device Manager Architecture</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>Device Manager is a process that runs under the Windows CE operating system tracking loaded drivers and their interfaces. It runs continuously and launches from the kernel. Device Manager can notify the user when device interfaces become available and unavailable. A user or the system itself can make device interfaces available or unavailable. Additionally, Device Manager notifies the kernel that a device interface supports file operations, such as <MSHelp:link keywords="wce50lrfCreateFile" TABINDEX="0">CreateFile</MSHelp:link>, to access devices that expose the stream interface. Device Manager sends power notification callbacks to device drivers and provides power management services. For more information, see <MSHelp:link keywords="wce50conPowerManagement" TABINDEX="0">Power Management</MSHelp:link>.</P>
+
+<P>Device Manager controls the <B>Active</B> key in the registry. Only Device Manager should access the <B>Active</B> key for read or write access. You can indirectly access the <B>Active</B> key through a parameter to a device driver's initialization function.</P>
+
+<P>Device Manager searches the <B>HKEY_LOCAL_MACHINE\Drivers\<I>RootKey</I></B> registry key to determine the key to begin the driver loading process. The default value of <B><I>RootKey</I></B> is <B>Drivers</B>, but it is usually equal to <B>Drivers\BuiltIn</B>. Device Manager calls <MSHelp:link keywords="wce50lrfActivateDeviceEx" TABINDEX="0">ActivateDeviceEx</MSHelp:link> to load the driver specified by the <B>Dll</B> subkey's value found in the key specified by the <B><I>RootKey</I></B> value. The <B>Dll</B> subkey's value is by default <B>BusEnum.dll</B>, also referred to as the bus enumerator. Loading BusEnum.dll causes all device drivers to load. A device loaded by <A HREF="wce50lrfactivatedeviceex.htm">ActivateDeviceEx</A> can read its activation handle from its <B>Active</B> registry key.</P>
+
+<P>Device Manager associates a bus name with drivers. Unnamed devices can also have a bus name because even though applications might not be able to access the driver, the driver can be accessed by other drivers or system entities, such as the Power Manager. The bus name can have a different ACL from the regular device name.</P>
+
+<P>Drivers can programmatically advertise interfaces by calling <A HREF="wce50lrfdmadvertiseinterface.htm">DMAdvertiseInterface</A>. <B>DMAdvertiseInterface</B> enables drivers to add more searchable GUIDs to their associated lists. <B>DMAdvertiseInterface</B> is exposed by Devmgr.dll, which also implements most Device Manager functionality. Because only the Device Manager can load Devmgr.dll, only device drivers can call <B>DMAdvertiseInterface</B>. If a device driver does not advertise the unavailability of its interfaces when the driver is unloaded, Device Manager automatically cleans up the interface advertisement notification.</P>
+
+<H2 class="dtH2">Device Manager Components</H2>
+
+<P>Device Manager consists of Device.exe and Devmgr.dll. Device.exe contains Devmgr.dll, which implements the core Device Manager functionality. Because Device Manager consists of two separate modules, device drivers can link directly with Device Manager and invoke specific functions, such as <A HREF="wce50lrfdmadvertiseinterface.htm">DMAdvertiseInterface</A>, without incurring the overhead of a system call. </P>
+
+<P>The following table shows the components of Device Manager.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=24%>Component</TH>
+<TH width=76%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=24%>devcore</TD>
+<TD width=76%>Provides the core Device Manager functionality.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=24%>iorm</TD>
+<TD width=76%>Provides the I/O Resource Manager functionality. Iorm is a required component and cannot be removed.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=24%>pmif
+<P>nopmif</P>
+</TD>
+<TD width=76%>Pmif provides the interface to Power Manager DLL entry points.
+<P>Nopmif provides the stubbed version of the Power Manager entry points. </P>
+</TD>
+</TR>
+</table></div>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50constreaminterfacedriverentrypoints.htm">Resolving Race Conditions in Device Drivers</A> | <A HREF="wce50oristreaminterfacedrivers.htm">Stream Interface Drivers</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

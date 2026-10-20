@@ -1,0 +1,238 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>CryptGenKey</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="CryptGenKey"/>
+<MSHelp:RLTitle Title="CryptGenKey"/>
+<MSHelp:Keyword Index="K" Term="CryptGenKey"/>
+<MSHelp:Keyword Index="A" Term="wce50lrfCryptGenKey"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Feature"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="Technology" Value="Security"/>
+<MSHelp:Attr Name="TopicType" Value="apiref"/>
+<MSHelp:Attr Name="Filename" Value="crypto1_functions.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="True"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+<MSHelp:Attr Name="APIName" Value="CryptGenKey"/>
+<MSHelp:Attr Name="APIType" Value="LibDef"/>
+<MSHelp:Attr Name="APILocation" Value="Coredll.lib"/>
+<MSHelp:Attr Name="PBFeature" Value="SYSGEN_CRYPTO"/>
+<MSHelp:Attr Name="PBOnly" Value="False"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_3002299">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50lrfcryptgenkey"></A>CryptGenKey</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>This function generates a random cryptographic session key or a public/private key pair for use with the cryptographic service provider (CSP). The function retrieves a handle to the key in the <I>phKey</I> parameter. This handle can then be used as needed with any of the other CryptoAPI functions requiring a key handle. </P>
+
+<P>When calling this function, the application must specify the algorithm. Because this algorithm type is kept bundled with the key, the application does not need to specify the algorithm later when the actual cryptographic operations are performed.</P>
+
+<PRE class="syntax"><B>BOOL CRYPTFUNC CryptGenKey( </B>
+  <B>HCRYPTPROV</B> <I>hProv</I><B>,</B> 
+  <B>ALG_ID</B> <I>Algid</I><B>,</B>
+  <B>DWORD</B> <I>dwFlags</I><B>,</B> 
+  <B>HCRYPTKEY* </B><I>phKey</I>
+<B>);</B></PRE>
+
+<H4 class="dtH4">Parameters</H4>
+
+<DL>
+<DT><I>hProv</I></DT>
+
+<DD>[in] <A HREF="wce50lrfhcryptprov.htm">HCRYPTPROV</A> handle to a CSP created by a call to <A HREF="wce50lrfcryptacquirecontext.htm">CryptAcquireContext</A>.</dd>
+
+<DT><I>Algid</I></DT>
+
+<DD>[in] <A HREF="wce50lrfalgid.htm">ALG_ID</A> identifier of the algorithm for the key to be generated. For more information about the <I>Algid</I> parameter, see the Remarks section.</dd>
+
+<DT><I>dwFlags</I></DT>
+
+<DD>[in] Flags describing the type of key generated, or zero. The following table shows flags that you can specify. You can use the bitwise <B>OR</B> operator to combine flags. For information about setting key size using this parameter, see the Remarks section.
+
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=34%>Flag</TH>
+<TH width=66%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=34%>CRYPT_EXPORTABLE</TD>
+<TD width=66%>If this flag is set, the key can be transferred out of the CSP into a key BLOB by using the <A HREF="wce50lrfcryptexportkey.htm">CryptExportKey</A> function. Because session keys generally must be exportable, this flag should usually be set when they are created.
+<P>If this flag is not set, the key will not be exportable. For a session key, this means that the key will be available only within the current session and only the application that created it will be able to use it. For a public/private key pair, this means that the private key cannot be transported or backed up.</P>
+
+<P>This flag applies only to session key and private key BLOBs. It does not apply to public keys, which are always exportable.</P>
+</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=34%>CRYPT_CREATE_SALT</TD>
+<TD width=66%>If this flag is set, the key will be assigned a random salt value automatically. You can retrieve this salt value by using the <A HREF="wce50lrfcryptgetkeyparam.htm">CryptGetKeyParam</A> function with the <I>dwParam</I> parameter set to KP_SALT.
+<P>If this flag is not set, the key will be given a salt value of zero.</P>
+
+<P>When keys with nonzero salt values are exported through <A HREF="wce50lrfcryptexportkey.htm">CryptExportKey</A>, the salt value must also be obtained and kept with the key BLOB.</P>
+</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=34%>CRYPT_NO_SALT</TD>
+<TD width=66%>Specifies that a no salt value gets allocated for a 40-bit symmetric key. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=34%>CRYPT_USER_PROTECTED</TD>
+<TD width=66%>The Microsoft cryptographic service providers ignore this flag.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=34%>CRYPT_PREGEN.</TD>
+<TD width=66%>Specifies an initial Diffie-Hellman or DSS key generation. Useful only with Diffie-Hellman/DSS CSPs.</TD>
+</TR>
+</table></div>
+
+</dd>
+
+<DT><I>phKey</I></DT>
+
+<DD>[out] Pointer to an <A HREF="wce50lrfhcryptkey.htm">HCRYPTKEY</A> handle to the newly generated key.</dd>
+</DL>
+
+<H4 class="dtH4">Return Values</H4>
+
+<P>TRUE indicates success. FALSE indicates failure. To get extended error information, call the <MSHelp:link keywords="wce50lrfGetLastError" TABINDEX="0">GetLastError</MSHelp:link> function. </P>
+
+<P>The following table describes the common values for the <B>GetLastError</B> function. The error values prefaced by NTE are generated by the particular CSP you are using.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=37%>Value</TH>
+<TH width=63%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=37%>ERROR_INVALID_HANDLE</TD>
+<TD width=63%>One of the parameters specifies an invalid handle. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=37%>ERROR_INVALID_PARAMETER</TD>
+<TD width=63%>One of the parameters contains an invalid value. This is most often an illegal pointer.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=37%>NTE_BAD_ALGID</TD>
+<TD width=63%>The <I>Algid</I> parameter specifies an algorithm that this CSP does not support.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=37%>NTE_BAD_FLAGS</TD>
+<TD width=63%>The <I>dwFlags</I> parameter contains an invalid value.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=37%>NTE_BAD_UID</TD>
+<TD width=63%>The <I>hProv</I> parameter does not contain a valid context handle.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=37%>NTE_FAIL</TD>
+<TD width=63%>The function failed in some unexpected way.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=37%>NTE_SILENT_CONTEXT</TD>
+<TD width=63%>The provider could not perform the action because the context was acquired as silent.</TD>
+</TR>
+</table></div>
+
+<H4 class="dtH4">Remarks</H4>
+
+<P>To generate a session key to be used with a symmetric encryption algorithm, use the <I>Algid</I> parameter to specify the algorithm. The valid values for this parameter vary depending on the CSP. See <A HREF="wce50lrfalgid.htm">ALG_ID</A> for identifier definitions.</P>
+
+<P>In addition to generating keys for symmetric algorithms, the <B>CryptGenKey</B> function can generate keys for public/private key pair algorithms. The use of public/private key pair algorithms is restricted to key exchange and digital signatures, with key specifications AT_KEYEXCHANGE and AT_SIGNATURE, respectively. Each CryptoAPI client generally possesses one key pair for each of these operations. The algorithm identifier that is used to generate a key depends on the provider used. As a result, for these key specifications, the values retrieved by the <A HREF="wce50lrfcryptgetkeyparam.htm">CryptGetKeyParam</A> function, with the KP_ALGID key type specified for the <I>dwParam</I> parameter, depend on the provider used. </P>
+
+<P>When keys are generated for symmetric block ciphers, the key is set up by default in cipher block chaining (CBC) mode with an initialization vector of zero. This cipher mode provides a good default method for bulk data encryption. To change these parameters, use the <A HREF="wce50lrfcryptsetkeyparam.htm">CryptSetKeyParam</A> function.</P>
+
+<P>The size of a key can be set when the key is generated. The key size is set with the upper 16 bits of the <I>dwFlags</I> parameter, which represent the length of the key, or modulus. For example, if a 2048-bit RSA signature key is to be generated, then the value 0x08000000 is combined with the <I>dwFlags</I> parameter in a bitwise <B>OR</B> operation. Notice that the upper 16 bits of 0x08000000 is 0x0800, or 2048 in decimal notation. If none of the upper 16 bits are set, the default key size is generated. If a key is given that is larger than the maximum key size or smaller than the minimum size, the call fails with ERROR_INVALID_PARAMETER. For a description of default key sizes for different CSPs, see <A HREF="wce50conkeylengthcomparison.htm">Key Length Comparison</A>.</P>
+
+<P>To choose an appropriate key length, the following methods are recommended: 
+
+<UL type="disc">
+	<LI>Enumerate the algorithms that the CSP supports and get the maximum and minimum key lengths for each algorithm. </li>
+
+	<LI>Use the minimum and maximum lengths to choose an appropriate key length. It is not always advisable to choose the maximum length because this can lead to performance issues. </li>
+
+	<LI>After choosing the desired key length, use the upper 16 bits of the <I>dwFlags</I> parameter to specify the length. </li>
+</UL>
+
+<H4 class="dtH4">Example Code</H4>
+
+<PRE class="code">#include &lt;wincrypt.h&gt;
+
+HCRYPTPROV hProv = 0;
+HCRYPTKEY hKey = 0;
+
+// Get a handle to user default provider.
+// Call CryptAcquireContext. For sample code, see <A HREF="wce50lrfcryptacquirecontext.htm">CryptAcquireContext</A>.
+
+// Create a block cipher session key.
+if(!CryptGenKey(hProv, CALG_RC2, CRYPT_EXPORTABLE, &amp;hKey)) {
+ printf("Error %x during CryptGenKey!\n", GetLastError());
+ goto done;
+}
+
+// Use 'hKey' to encrypt or decrypt a message.
+...
+
+done:
+
+// Destroy the session key.
+if(hKey != 0) CryptDestroyKey(hKey);
+// Free the provider handle.
+if(hProv != 0) CryptReleaseContext(hProv, 0);
+ </PRE>
+
+<H4 class="dtH4">Requirements</H4>
+
+<P><B>OS Versions:</B> Windows CE 2.10 and later.<BR>
+<B>Header:</B> Wincrypt.h.<BR>
+<B>Link Library:</B> Coredll.lib.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50lrfalgid.htm">ALG_ID</A> | <A HREF="wce50lrfcryptacquirecontext.htm">CryptAcquireContext</A> | <A HREF="wce50lrfcryptdestroykey.htm">CryptDestroyKey</A> | <A HREF="wce50lrfcryptexportkey.htm">CryptExportKey</A> | <A HREF="wce50lrfcryptgetkeyparam.htm">CryptGetKeyParam</A> | <A HREF="wce50lrfcryptimportkey.htm">CryptImportKey</A> | <A HREF="wce50lrfcryptsetkeyparam.htm">CryptSetKeyParam</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

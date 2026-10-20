@@ -1,0 +1,129 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>IOleLink::SetSourceMoniker</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="IOleLink::SetSourceMoniker"/>
+<MSHelp:RLTitle Title="IOleLink::SetSourceMoniker"/>
+<MSHelp:Keyword Index="K" Term="IOleLink, SetSourceMoniker"/>
+<MSHelp:Keyword Index="A" Term="wce50lrfIOleLinkSetSourceMoniker"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Feature"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="apiref"/>
+<MSHelp:Attr Name="Filename" Value="com_interfaces2.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="True"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+<MSHelp:Attr Name="APIName" Value="IOleLink.SetSourceMoniker"/>
+<MSHelp:Attr Name="APIType" Value="LibDef"/>
+<MSHelp:Attr Name="APILocation" Value="Ole32.lib, Uuid.lib"/>
+<MSHelp:Attr Name="PBFeature" Value="SYSGEN_DCOM"/>
+<MSHelp:Attr Name="PBOnly" Value="False"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_3003692">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50lrfiolelinksetsourcemoniker"></A>IOleLink::SetSourceMoniker</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>This method specifies the new link source of a linked object using a moniker. </P>
+
+<PRE class="syntax"><B>HRESULT SetSourceMoniker(</B>
+  <B>IMoniker* </B><I>pmk</I><B>,</B>
+  <B>REFCLSID</B> <I>rclsid</I> 
+<B>);</B></PRE>
+
+<H4 class="dtH4">Parameters</H4>
+
+<DL>
+<DT><I>pmk </I></DT>
+
+<DD>[in] Pointer to the <A HREF="wce50lrfimonikeriunknown.htm">IMoniker</A> interface on a moniker that identifies the new link source of the linked object. A value of NULL breaks the link. </dd>
+
+<DT><I>rclsid </I></DT>
+
+<DD>[in] CLSID of the link source that the linked object should use to access information about the linked object when it is not bound. </dd>
+</DL>
+
+<H4 class="dtH4">Return Values</H4>
+
+<P>If the moniker was set successfully, the method returns S_OK. </P>
+
+<H4 class="dtH4">Remarks</H4>
+
+<P>The <A HREF="wce50lrfiolelinkiunknown.htm">IOleLink</A> contract does not specify how the linked object stores or uses the link source moniker. </P>
+
+<P>The provided implementation stores the absolute moniker specified when the link is created or when the moniker is changed; it then computes and stores a relative moniker. </P>
+
+<P>Future implementations might manage monikers differently to provide better moniker tracking. </P>
+
+<P>The absolute moniker provides the complete path to the link source. The linked object uses this absolute moniker and the moniker of the compound document to compute a relative moniker that identifies the link source relative to the compound document that contains the link.</P>
+
+<PRE class="code">pmkCompoundDoc-&gt;RelativePathTo(pmkAbsolute, ppmkRelative) </PRE>
+
+<P>When binding to the link source, the linked object first tries to bind using the relative moniker. If that fails, it tries to bind the absolute moniker. </P>
+
+<P>When the linked object successfully binds using either the relative or absolute moniker, it automatically updates the other moniker. </P>
+
+<P>The linked object also updates both monikers when it is bound to the link source and it receives a rename notification through the <A HREF="wce50lrfiadvisesinkonrename.htm">IAdviseSink::OnRename</A> method. </P>
+
+<P>A container application can also use the <A HREF="wce50lrfiolelinksetsourcedisplayname.htm">IOleLink::SetSourceDisplayName</A> method to change a link's moniker.</P>
+
+<P>The linked object's implementation of the <A HREF="wce50lrfipersiststoragesave.htm">IPersistStorage::Save</A> method saves both the relative and absolute moniker.</P>
+
+<P class="label"><B>Notes to Callers</B></P>
+
+<P>Your container application can call <B>IOleLink::SetSourceMoniker</B> when the user changes the source of a link or breaks a link. Note that this requires your container to use the <A HREF="wce50lrfmkparsedisplayname.htm">MkParseDisplayName</A> function to create a moniker out of the display name that the user enters. </P>
+
+<P>If you would rather have the linked object perform the parsing, your container can call <B>IOleLink::SetSourceDisplayName</B> instead of <B>IOleLink::SetSourceMoniker</B>. </P>
+
+<P>The user changes the source of a link or breaks a link using the <B>Links</B> dialog box. </P>
+
+<P>If you use the <MSHelp:link keywords="wce50conProgrammingElementNotSupported" TABINDEX="0">OleUIEditLinks</MSHelp:link> function to display the <B>Links </B>dialog box, you must implement the <MSHelp:link keywords="wce50conProgrammingElementNotSupported" TABINDEX="0">IOleUILinkContainer</MSHelp:link> interface. </P>
+
+<P>The dialog box calls your implementations of <MSHelp:link keywords="wce50conProgrammingElementNotSupported" TABINDEX="0">IOleUILinkContainer::SetLinkSource</MSHelp:link> and <MSHelp:link keywords="wce50conProgrammingElementNotSupported" TABINDEX="0">IOleUILinkContainer::CancelLink</MSHelp:link>; your implementation of these methods can call <B>IOleLink::SetSourceMoniker</B>. </P>
+
+<P>If the linked object is currently bound to its link source, the linked object's implementation of <B>IOleLink::SetSourceMoniker</B> closes the link before changing the moniker.</P>
+
+<P>To determine whether the platform supports this interface, see <A HREF="wce50condeterminingsupportedcomapis.htm">Determining Supported COM APIs</A>.</P>
+
+<H4 class="dtH4">Requirements</H4>
+
+<P><B>OS Versions:</B> Windows CE 3.0 and later.<BR>
+<B>Header:</B> Oleidl.h, Oleidl.idl.<BR>
+<B>Link Library:</B> Ole32.lib, Uuid.lib.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50lrfmkparsedisplayname.htm">MkParseDisplayName</A> | <A HREF="wce50lrfimonikeriunknown.htm">IMoniker</A> | <A HREF="wce50lrfiolelinkiunknown.htm">IOleLink</A> | <A HREF="wce50lrfiadvisesinkonrename.htm">IAdviseSink::OnRename</A> | <A HREF="wce50lrfiolelinksetsourcedisplayname.htm">IOleLink::SetSourceDisplayName</A> | <A HREF="wce50lrfipersiststoragesave.htm">IPersistStorage::Save</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

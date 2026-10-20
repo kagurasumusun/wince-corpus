@@ -1,0 +1,173 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>USB Function Controller PDD Functions</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="USB Function Controller PDD Functions"/>
+<MSHelp:RLTitle Title="USB Function Controller PDD Functions"/>
+<MSHelp:Keyword Index="A" Term="wce50lrfUSBFunctionControllerDriverPDDFunctions"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Driver"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="False"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="usbfunction_reference.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="False"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+<MSHelp:Attr Name="PBFeature" Value="USBFunctionDriver"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_1035547">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50lrfusbfunctioncontrollerdriverpddfunctions"></A>USB Function Controller PDD Functions</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>The following table shows the platform dependent driver (PDD) functions, which only the model device driver (MDD) calls. The PDD should initialize these function pointers in the <B>UfnPdd_Init</B> function. These function pointers are contained in the <B>UFN_PDD_INTERFACE_INFO</B> structure.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=50%>Function</TH>
+<TH width=50%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><B>pfnDeinit</B></TD>
+<TD width=50%>This function deinitializes the PDD.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><B>pfnIsConfigurationSupportable</B></TD>
+<TD width=50%>This function determines if a configuration can be supported.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><B>pfnIsEndpointSupportable</B></TD>
+<TD width=50%>This function determines whether an endpoint supports a particular endpoint configuration.
+<P>This function determines whether the target endpoint can support the specified settings. The <B>wMaxPacketSize </B>member of <A HREF="wce50lrfusbendpointdescriptor.htm">USB_ENDPOINT_DESCRIPTOR</A> is between zero and 1024. If an endpoint can support a particular setting, the MDD allocates it. </P>
+</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><B>pfnInitEndpoint</B></TD>
+<TD width=50%>This function configures and allocates an endpoint.
+<P>This function verifies that the target endpoint supports the specified settings and that the target endpoint is not already allocated. If this is the case, the endpoint is configured to support the specified settings and then allocated. This process might include enabling the interrupt of the associated endpoint. The event system uses the <B>lpNotify</B> and <B>lpNotifyParameter </B>parameters.</P>
+</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><B>pfnRegisterDevice</B></TD>
+<TD width=50%>This function accepts the validated device descriptors from the PDD. The PDD can ignore this call if the MDD handles enumeration.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><B>pfnDeregisterDevice</B></TD>
+<TD width=50%>This function deregisters a device.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><B>pfnStart</B></TD>
+<TD width=50%>This function starts the USB function device.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><B>pfnStop</B></TD>
+<TD width=50%>This function stops the USB function device. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><B>pfnIssueTransfer</B></TD>
+<TD width=50%>This function sets up a transfer to be performed the next time the host sends an IN token packet or an OUT token packet, as appropriate.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><B>pfnAbortTransfer</B></TD>
+<TD width=50%>This function aborts a transfer that has already started. This should cause the endpoints first in, first out (FIFO) buffer to empty.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><B>pfnDeinitEndpoint</B></TD>
+<TD width=50%>This function frees an endpoint. 
+<P>Because this function marks the target endpoint as not currently allocated, any subsequent attempt to access the target endpoint results in failure.</P>
+
+<P>The PDD provides a set of functions that allows the MDD to determine the current configuration settings of a particular endpoint. For information about these functions, see <A HREF="wce50conusbfunctioncontrollerdriverdirectorystructure.htm">USB Function Controller Driver Samples</A>.</P>
+</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><B>pfnStallEndpoint</B></TD>
+<TD width=50%>This function stalls the endpoint.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><B>pfnClearEndpointStall</B></TD>
+<TD width=50%>This function clears an endpoint stall.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><B>pfnSendControlStatusHandshake</B></TD>
+<TD width=50%>This function causes endpoint zero to initiate the control status phase of a control transfer. This causes the control transfer to be completed with either an ACK handshake packet or a STALL handshake packet.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><B>pfnSetAddress</B></TD>
+<TD width=50%>This function sets the address of the device on the USB bus. 
+<P>Not all device controllers expose the USB address, because some device controllers handle the SET_ADDRESS standard request internally. Function drivers should not attempt to synthesize the USB protocol or assume a particular sequence of events. For more information, see <A HREF="wce50conusbfunctioncontrollerdrivermddddi.htm">USB Function Controller Driver MDD and DDI Interface</A>.</P>
+</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><B>pfnIsEndpointHalted</B></TD>
+<TD width=50%>This function checks to see if the endpoint is stalled.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><B>pfnInitiateRemoteWakeup</B></TD>
+<TD width=50%>This function initiates a remote wakeup.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><B>pfnPowerDown</B></TD>
+<TD width=50%>This function responds to <B>UFN_PowerDown</B>.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><B>pfnPowerUp</B></TD>
+<TD width=50%>This function responds to <B>UFN_PowerUp</B>.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><B>pfnIOControl</B></TD>
+<TD width=50%>This function executes IOCTLs.</TD>
+</TR>
+</table></div>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

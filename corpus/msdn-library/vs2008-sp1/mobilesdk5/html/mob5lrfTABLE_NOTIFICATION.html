@@ -1,0 +1,193 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>TABLE_NOTIFICATION</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="TABLE_NOTIFICATION"/>
+<MSHelp:RLTitle Title="TABLE_NOTIFICATION"/>
+<MSHelp:Keyword Index="K" Term="TABLE_NOTIFICATION"/>
+<MSHelp:Keyword Index="A" Term="mob5lrfTABLE_NOTIFICATION"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Application"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbsmartphone"/>
+<MSHelp:Attr Name="Product" Value="kbPocketPC"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="Technology" Value="kbPocketPC"/>
+<MSHelp:Attr Name="Technology" Value="kbSmartphone"/>
+<MSHelp:Attr Name="TopicType" Value="apiref"/>
+<MSHelp:Attr Name="Filename" Value="CE_MAPI_FuncStrucEnum_magneto.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="False"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_1064623">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Windows Mobile Version 5.0 SDK<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="mob5lrftable_notification"></A>TABLE_NOTIFICATION</H1>
+<!--Feedback Link Top Start-->
+<P CLASS="feedback"><font size="1"><a href="mailto:medfdbk&#64;microsoft.com?subject=Product: Windows Mobile | Version: 5.0 | Release: SDK | Title: TABLE_NOTIFICATION | Filename: mob5lrftable_notification.htm | Built on: Wednesday, September 14, 2005">Send Feedback</a> on this topic to the authors</font></p>
+<!--Feedback Link Top End-->
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>The <B>TABLE_NOTIFICATION </B>structure describes a row in a table that has been affected by some type of event, such as a change or an error, causing a table notification to be generated. </P>
+
+<H4 class="dtH4">Syntax</H4>
+
+<PRE class="syntax"><B>struct { </B>
+  <B>ULONG </B><I>ulTableEvent</I><B>;</B> 
+  <B>HRESULT </B><I>hResult</I><B>;</B> 
+  <B>SPropValue </B><I>propIndex</I><B>;</B> 
+  <B>SPropValue </B><I>propPrior</I><B>;</B> 
+  <B>SRow </B><I>row</I><B>;</B>
+<B>} TABLE_NOTIFICATION; </B></PRE>
+
+<H4 class="dtH4">Members</H4>
+
+<DL>
+<DT><B>ulTableEvent</B></DT>
+
+<DD>Bitmask of flags used to represent the table event type. The following flags can be set: 
+
+<P><B>TABLE_CHANGED</B>
+
+
+<P>Indicates at a high level that something about the table has changed. The table state is as it was before the event. Handle this event by re-reading the entire table. Service providers that do not want to implement "rich" table notifications simply send <B>TABLE_CHANGED</B> events rather than more detailed events to indicate a particular type of change. 
+
+
+<P><B>TABLE_ERROR</B>
+
+
+<P>An error has occurred, usually during the processing of an asynchronous operation. Errors during the processing of the following methods can generate the following:
+
+
+<P><A HREF="mob5lrfimapitablesorttable.htm">IMAPITable::SortTable</A>
+
+
+<P><A HREF="mob5lrfimapitablesetcolumns.htm">IMAPITable::SetColumns</A>
+
+
+<P><A HREF="mob5lrfimapitablerestrict.htm">IMAPITable::Restrict</A>
+
+
+<P>After receiving a <B>TABLE_ERROR</B> event, a client cannot rely on the accuracy of the table contents. Also, pending notifications about other changes might be lost. 
+
+
+<P><B>TABLE_RELOAD</B>
+
+
+<P>The data in the table should be reloaded. For example, service providers send <B>TABLE_RELOAD</B> when the underlying data is stored in a database and the database is replaced. 
+
+
+<P>Handle this event by assuming that nothing about the table is still valid and by re-reading the entire table. All bookmarks, instance keys, status, and positioning information are nonvalid.
+
+
+<P><B>TABLE_RESTRICT_DONE</B>
+
+
+<P>A restriction operation initiated with an <A HREF="mob5lrfimapitablerestrict.htm">IMAPITable::Restrict</A> method call has completed. 
+
+
+<P><B>TABLE_ROW_ADDED</B>
+
+
+<P>A new row has been added to the table. 
+
+
+<P><B>TABLE_ROW_DELETED</B>
+
+
+<P>A row has been removed from the table; <B>propPrior</B> is set to <B>NULL</B>. 
+
+
+<P><B>TABLE_ROW_MODIFIED</B>
+
+
+<P>A row has been changed; <B>row</B> contains the affected properties for the row. Multiple <B>TABLE_ROW_MODIFIED</B> events are sent in the order that they appear in the table view. 
+
+
+<P>If the modified row is now the first row in the table, the value of the property tag in <B>propPrior</B> is <B>PR_NULL</B>.
+
+
+<P><B>TABLE_SETCOL_DONE</B>
+
+
+<P>A column setting operation initiated with an <A HREF="mob5lrfimapitablesetcolumns.htm">IMAPITable::SetColumns</A> method call has completed. 
+
+
+<P><B>TABLE_SORT_DONE</B>
+
+
+<P>A table sorting operation initiated with an <A HREF="mob5lrfimapitablesorttable.htm">IMAPITable::SortTable</A> method call has completed. 
+</dd>
+
+<DT><B>hResult</B></DT>
+
+<DD><B>HRESULT</B> value for the error that has occurred, if <B>ulTableEvent</B> is set to <B>TABLE_ERROR</B>.</dd>
+
+<DT><B>propIndex</B></DT>
+
+<DD><A HREF="mob5lrfspropvalue.htm">SPropValue</A> structure for the property of the affected row. </dd>
+
+<DT><B>propPrior</B></DT>
+
+<DD><B>SPropValue</B> structure for the property of the row preceding the affected one. If the affected row is the first row in the table, <B>propPrior</B> must be set to <B>PR_NULL</B> and not zero. Zero is not a valid property tag. </dd>
+
+<DT><B>row</B></DT>
+
+<DD><A HREF="mob5lrfsrow.htm">SRow</A> structure describing the affected row. This structure is filled for all table notification events. For table notification events that do not pass row data, the <B>cValues </B>member of the <B>SRow</B> structure is set to zero and <B>lpProps </B>is set to <B>NULL</B>. 
+
+<P>Because this <B>SRow</B> structure is read-only, clients must make a copy of it if they want to make modifications. 
+</dd>
+</DL>
+
+<H4 class="dtH4">Remarks</H4>
+
+<P>This type is supported, but the notification that uses it (<B>fnevTableNotification</B>) is never sent by MAPI.</P>
+
+<P>The <B>TABLE_NOTIFICATION </B>structure is one of the members of the union of structures included in the <B>info</B> member of the <A HREF="mob5lrfnotification.htm">NOTIFICATION</A> structure. The <B>info</B> member includes a <B>TABLE_NOTIFICATION</B> structure when the <B>ulEventType</B> member of the structure is set to <B>fnevTableModified</B>.</P>
+
+<P>The order and type of columns in the row member reflect the order and type that was in effect at the time that the notification was generated, which is not necessarily the same as when the notification was delivered. </P>
+
+<P>Because table notifications are asynchronous, it is possible to receive notification of an added row after learning about the addition through another means. It is possible to receive a <B>TABLE_ERROR</B> event when there is an error in an <A HREF="mob5lrfimapitablesorttable.htm">IMAPITable::SortTable</A>, <A HREF="mob5lrfimapitablerestrict.htm">IMAPITable::Restrict</A>, or <A HREF="mob5lrfimapitablesetcolumns.htm">IMAPITable::SetColumns</A> method or when an underlying process attempts to update a table with, for example, new or modified rows. </P>
+
+<H4 class="dtH4">Requirements</H4>
+
+<P><B>Pocket&nbsp;PC:</B> Pocket&nbsp;PC&nbsp;2002 and later<BR>
+<B>Smartphone:</B> Smartphone&nbsp;2002 and later<BR>
+<B>OS&nbsp;Versions:</B> Windows&nbsp;CE&nbsp;3.0 and later<BR>
+<B>Header:</B> mapidefs.h</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="mob5lrfimapitablerestrict.htm">IMAPITable::Restrict</A> | <A HREF="mob5lrfimapitablesetcolumns.htm">IMAPITable::SetColumns</A> | <A HREF="mob5grfmapistructures.htm">MAPI Structures</A> | <A HREF="mob5orimessaging.htm">Messaging</A> | <A HREF="mob5lrfnotification.htm">NOTIFICATION</A> | <A HREF="mob5lrfspropvalue.htm">SPropValue</A> | <A HREF="mob5lrfsrow.htm">SRow</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Feedback Link Bottom Start-->
+<p><font size="1"><a href="mailto:medfdbk&#64;microsoft.com?subject=Product: Windows Mobile | Version: 5.0 | Release: SDK | Title: TABLE_NOTIFICATION | Filename: mob5lrftable_notification.htm | Built on: Wednesday, September 14, 2005">Send Feedback</a> on this topic to the authors</font></p>
+<!--Feedback Link Bottom End-->
+<!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="mob5conCopyrightInformationForMagneto" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link></font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

@@ -1,0 +1,144 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Power State Transitions</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Power State Transitions"/>
+<MSHelp:RLTitle Title="Power State Transitions"/>
+<MSHelp:Keyword Index="A" Term="wce50conPowerStateTransition"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Feature"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="os_power.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="False"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+<MSHelp:Attr Name="PBFeature" Value="CORE"/>
+<MSHelp:Attr Name="PBOnly" Value="True"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_3009791">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50conpowerstatetransition"></A>Power State Transitions</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<H4 class="dtH4">Power on reset</H4>
+
+<P>A power-on reset initiates execution of the boot loader. A power-on reset happens when connecting the battery or AC power to the target device when the target device is powered-down. During a power-on reset, the following happens:
+
+<OL type="1">
+	<LI>Power is applied to the microprocessor and storage.</li>
+
+	<LI>Non-persistent storage is cleared.</li>
+
+	<LI>If needed, the file system is initialized to its default state by copying its initial files from persistent storage.</li>
+
+	<LI>The target device transitions to the on power state.</li>
+</OL>
+
+<H4 class="dtH4">Cold boot</H4>
+
+<P>A cold boot completely resets the target device by forcibly closing all applications, but leaving the file system intact. A cold boot is typically initiated by removing all power, including any backup batteries, from the target device. When power is reapplied to the target device, a power-on reset happens.</P>
+
+<H4 class="dtH4">Clean boot</H4>
+
+<P>A clean boot forces the operating system (OS) to boot from a clean file system. In software, you can initiate a clean boot with the following:
+
+<UL type="disc">
+	<LI><MSHelp:link keywords="wce50lrfIOCTLHALGETHIVECLEANFLAG" TABINDEX="0">IOCTL_HAL_GET_HIVE_CLEAN_FLAG</MSHelp:link></li>
+
+	<LI><MSHelp:link keywords="wce50lrfNKForceCleanBoot" TABINDEX="0">NKForceCleanBoot</MSHelp:link></li>
+
+	<LI><MSHelp:link keywords="wce50lrfpNotifyForceCleanboot" TABINDEX="0">pNotifyForceCleanboot</MSHelp:link></li>
+
+	<LI><MSHelp:link keywords="wce50lrfSetCleanRebootFlag" TABINDEX="0">SetCleanRebootFlag</MSHelp:link></li>
+</UL>
+
+<H4 class="dtH4">Warm boot</H4>
+
+<P>A warm boot is a transition from the On, Idle, or Suspend power state. A warm boot closes all applications, clears RAM, but preserves the file system. A warm boot can happen due to a software interrupt or by manually resetting the target device.</P>
+
+<P>Applications can warm boot the device by calling the <A HREF="wce50lrfkerneliocontrol.htm">KernelIoControl</A> function with the <MSHelp:link keywords="wce50lrfIOCTLHALREBOOT" TABINDEX="0">IOCTL_HAL_REBOOT</MSHelp:link> I/O control (IOCTL) code. The OEM must implement this IOCTL code for it to be supported on the target device.</P>
+
+<H4 class="dtH4">On-to-Idle</H4>
+
+<P>When transitioning from the On power state to the Idle power state, a timer in the microprocessor stops. This transition requires approximately 10 microseconds. While in the Idle power state, the microprocessor uses a small amount of power only to wait for an interrupt to occur. The kernel calls the <MSHelp:link keywords="wce50lrfOEMIdle" TABINDEX="0">OEMIdle</MSHelp:link> function when there are no threads ready to run. For information about using <B>OEMIdle</B> in the OEM adaptation layer (OAL), see <MSHelp:link keywords="wce50conEnablingPowerManagement" TABINDEX="0">Enabling Power Management</MSHelp:link>.</P>
+
+<H4 class="dtH4">Idle-to-On</H4>
+
+<P>An Idle-to-On transition occurs typically in conjunction with an interrupt, typically a timer interrupt. When the kernel receives an interrupt, the microprocessor is returned to full-power operation. </P>
+
+<H4 class="dtH4">On-to-Suspend</H4>
+
+<P>An On-to-Suspend transition can occur when:
+
+<UL type="disc">
+	<LI>The user input inactivity timer times out.</li>
+
+	<LI>The OFF switch on the target device is pressed.</li>
+
+	<LI>An application calls the <MSHelp:link keywords="wce50lrfGwesPowerOffSystem" TABINDEX="0">GwesPowerOffSystem</MSHelp:link> function or the <MSHelp:link keywords="wce50lrfSetSystemPowerState" TABINDEX="0">SetSystemPowerState</MSHelp:link> function.</li>
+</UL>
+
+<P>Besides the OAL, device drivers are notified of On-to-Suspend and Suspend-to-On transitions. During an On-to-Suspend transition, the device driver can respond to notifications by saving the state of the hardware in RAM, and then shutting down the hardware components in the appropriate order. Then, as the Suspend-to-On transition occurs, the device driver can re-initialize the hardware and reset any necessary power states.</P>
+
+<P>Device drivers are called while the operating system is not scheduling other tasks, this limits the actions that a device driver can take in these power states. During the transitions, most function calls are not available and no other threads are running. For example, a driver cannot enter a critical section to guard access to its resources in its <MSHelp:link keywords="wce50lrfXXXPowerDown" TABINDEX="0">XXX_PowerDown (Device Manager)</MSHelp:link> and <MSHelp:link keywords="wce50lrfXXXPowerUp" TABINDEX="0">XXX_PowerUp (Device Manager)</MSHelp:link> functions. However, these functions will run to completion without interruption because they are called in the kernel's power-up/power-down thread context. To allow more complex power-up scenarios, the <A HREF="wce50lrfsetinterruptevent.htm">SetInterruptEvent</A> function is available during the PowerHandler state, and is used to signal the interrupt event for the driver. Typically, the <B><I>XXX</I>_PowerUp</B> routine will set a driver variable indicating that <B>PowerOn</B> has occurred, and then call <B>SetInterruptEvent</B>. Once <B><I>XXX</I>_PowerUp</B> has completed, the IST, which is scheduled as a result of the event, can use the driver variable to perform any complex power-on handling.</P>
+
+<H4 class="dtH4">Suspend-to-On</H4>
+
+<P>A Suspend-to-On transition can occur when:
+
+<UL type="disc">
+	<LI>The ON switch is pressed on the target device.</li>
+
+	<LI>An alarm signals an event.</li>
+
+	<LI>A wake-up event signals. For example, carrier detection on the target device, or an OEM-specific wake-up source, such as the ring indicator on a PCMCIA modem.</li>
+</UL>
+
+<P>Besides the OAL, device drivers are notified of On-to-Suspend and Suspend-to-On transitions. During an On-to-Suspend transition, the device driver can respond to notifications by saving the state of the hardware in RAM, and then shutting down the hardware components in the appropriate order. Then, as the Suspend-to-On transition occurs, the device driver can re-initialize the hardware and reset any necessary power states.</P>
+
+<P>Device drivers are called while the operating system is not scheduling other tasks, this limits the actions that a device driver can take in these power states. During the transitions, most function calls are not available and no other threads are running. For example, a driver cannot enter a critical section to guard access to its resources in its <MSHelp:link keywords="wce50lrfXXXPowerDown" TABINDEX="0">XXX_PowerDown (Device Manager)</MSHelp:link> and <MSHelp:link keywords="wce50lrfXXXPowerUp" TABINDEX="0">XXX_PowerUp (Device Manager)</MSHelp:link> functions. However, these functions will run to completion without interruption because they are called in the kernel's power-up/power-down thread context. To allow more complex power-up scenarios, the <A HREF="wce50lrfsetinterruptevent.htm">SetInterruptEvent</A> function is available during the PowerHandler state, and is used to signal the interrupt event for the driver. Typically, the <B><I>XXX</I>_PowerUp</B> routine will set a driver variable indicating that <B>PowerOn</B> has occurred, and then call <B>SetInterruptEvent</B>. Once <B><I>XXX</I>_PowerUp</B> has completed, the IST, which is scheduled as a result of the event, can use the driver variable to perform any complex power-on handling.</P>
+
+<H4 class="dtH4">Critical-to-Off</H4>
+
+<P>A Critical-to-Off transition occurs when battery voltages for the primary batteries decrease to a critically low level that prevents the target device from performing a safe shutdown.</P>
+
+<P>Instead of executing an On-to-Suspend transition, during which power is shut down in a timely manner, the Critical-to-Off transition bypasses the usual steps of turning off power to any peripherals or devices by immediately shutting down power to them and applying refresh voltage to the RAM. This preserves the file system and sets the microprocessor to the suspend power state. </P>
+
+<P>Recovery from a critical-to-off transition occurs when adequate power is applied to the device. Note that the process of a target device recovering from a Critical-to-Off transition is equivalent to a warm boot transition.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><MSHelp:link keywords="wce50conPowerManagement" TABINDEX="0">Power Management</MSHelp:link> | <A HREF="wce50conkernelpowermanagement.htm">Kernel Power Management</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

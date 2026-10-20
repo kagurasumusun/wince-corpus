@@ -1,0 +1,145 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>IcmpSendEcho2</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="IcmpSendEcho2"/>
+<MSHelp:RLTitle Title="IcmpSendEcho2"/>
+<MSHelp:Keyword Index="K" Term="IcmpSendEcho2"/>
+<MSHelp:Keyword Index="A" Term="wce50lrfIcmpSendEcho2"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Feature"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="apiref"/>
+<MSHelp:Attr Name="Filename" Value="icmp_functions.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="False"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+<MSHelp:Attr Name="APIName" Value="IcmpSendEcho2"/>
+<MSHelp:Attr Name="PBFeature" Value="SYSGEN_TCPIP"/>
+<MSHelp:Attr Name="PBOnly" Value="False"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_3006678">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50lrficmpsendecho2"></A>IcmpSendEcho2</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>This function sends an ICMP echo request and the call returns either immediately, if the <I>Event</I> parameter is non-NULL, or returns after the specified timeout. The <I>ReplyBuffer</I> contains the ICMP responses, if any.</P>
+
+<PRE class="syntax"><B>IcmpSendEcho2(</B>
+  <B>HANDLE</B> <I>IcmpHandle</I><B>,</B>
+  <B>HANDLE</B> <I>Event</I><B>,</B>
+  #ifdef PIO_APC_ROUTINE_DEFINED
+  <B>PIO</B>_<B>APC</B>_<B>ROUTINE</B> <I>ApcRoutine</I><B>,</B>
+  #else
+  <B>FARPROC</B> <I>ApcRoutine</I><B>,</B>
+  #endif
+  <B>PVOID</B> <I>ApcContext</I><B>,</B>
+  <B>IPAddr</B> <I>DestinationAddress</I><B>,</B>
+  <B>LPVOID</B> <I>RequestData</I><B>,</B>
+  <B>WORD</B> <I>RequestSize</I><B>,</B>
+  <B>PIP</B>_<B>OPTION</B>_<B>INFORMATION</B> <I>RequestOptions</I><B>,</B>
+  <B>LPVOID</B> <I>ReplyBuffer</I><B>,</B>
+  <B>DWORD</B> <I>ReplySize</I><B>,</B>
+  <B>DWORD</B> <I>Timeout</I>
+<B>);</B></PRE>
+
+<H4 class="dtH4">Parameters</H4>
+
+<DL>
+<DT><I>IcmpHandle</I></DT>
+
+<DD>An open handle returned by <A HREF="wce50lrficmpcreatefile.htm">IcmpCreateFile</A>.</dd>
+
+<DT><I>Event</I></DT>
+
+<DD>Event to be signalled whenever an ICMPv6 response comes in.</dd>
+
+<DT><I>ApcRoutine</I></DT>
+
+<DD>Parameter that is always set to NULL in Windows CE.</dd>
+
+<DT><I>ApcContext </I></DT>
+
+<DD>Optional. This parameter is given to the <I>ApcRoutine</I> parameter when this call succeeds.</dd>
+
+<DT><I>DestinationAddress</I></DT>
+
+<DD>The destination of the echo request.</dd>
+
+<DT><I>RequestData</I></DT>
+
+<DD>A buffer containing the data to send in the request.</dd>
+
+<DT><I>RequestSize</I></DT>
+
+<DD>The number of bytes in the request data buffer.</dd>
+
+<DT><I>RequestOptions</I></DT>
+
+<DD>Pointer to the IP header options for the request. This parameter may be NULL.</dd>
+
+<DT><I>ReplyBuffer</I></DT>
+
+<DD>A buffer to hold any replies to the request. On return, the buffer will contain an array of <A HREF="wce50lrficmpechoreply.htm">ICMP_ECHO_REPLY</A> structures followed by options and data. The buffer must be large enough to hold at least one <B>ICMP_ECHO_REPLY</B> structure. It should be large enough also to hold 8 more bytes of data to accommodate an ICMP error message.</dd>
+
+<DT><I>ReplySize</I></DT>
+
+<DD>The size in bytes of the reply buffer.</dd>
+
+<DT><I>Timeout</I></DT>
+
+<DD>The time in milliseconds to wait for replies.
+
+<P>This is not used if either <I>ApcRoutine</I> or <I>Event </I>is not NULL.
+</dd>
+</DL>
+
+<H4 class="dtH4">Return Values</H4>
+
+<P>Returns the number of replies received and stored in <I>ReplyBuffer</I>. Zero indicates failure. Extended error information is available through <MSHelp:link keywords="wce50lrfGetLastError" TABINDEX="0">GetLastError</MSHelp:link>.</P>
+
+<H4 class="dtH4">Remarks</H4>
+
+<P>On platforms not based on Windows NT, the <I>Event</I>, <I>ApcRoutine</I> and <I>ApcContext</I> parameters are ignored.</P>
+
+<H4 class="dtH4">Requirements</H4>
+
+<P><B>OS Versions:</B> Windows CE 2.12 and later.<BR>
+<B>Header:</B> Icmpapi.h.<BR>
+<B>Library:</B> Icmplib.lib.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50grficmpfunctions.htm">ICMP Functions</A> | <A HREF="wce50lrficmpcreatefile.htm">IcmpCreateFile</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

@@ -1,0 +1,325 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Trusted Environment Creation</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Trusted Environment Creation"/>
+<MSHelp:RLTitle Title="Trusted Environment Creation"/>
+<MSHelp:Keyword Index="A" Term="wce50conCreateaTrustedEnvironment"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="OS"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="True"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="os_secur.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="True"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+<MSHelp:Attr Name="Technology" Value="Security"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_3011076">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50concreateatrustedenvironment"></A>Trusted Environment Creation</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>Microsoft&reg; Windows&reg; CE devices send, receive, and process information that requires protection from potentially unsafe applications. To protect your device, you can implement security measures that prevent the OS from loading unknown modules, restrict access to system application programming interfaces (APIs), and prevent write access to parts of the system registry. You can designate a module as trusted or not trusted when certifying applications. The kernel uses this information to prevent unauthorized applications from loading or limits their access to the system.</P>
+
+<BLOCKQUOTE class="dtBlock">
+<b class="le">Note&nbsp;&nbsp;&nbsp;</b>Threads in non-trusted applications can use thread priorities 248 through 255. Threads in trusted applications can use any thread priority. For more information about thread priority levels in Windows CE, see <MSHelp:link keywords="wce50conRealTimePrioritySystemLevels" TABINDEX="0">Real-Time Priority System Levels</MSHelp:link>.</BLOCKQUOTE>
+
+<P>To create a trusted environment, you must disable full-kernel mode by setting the second bit of <A HREF="wce50lrfromflags.htm">ROMFLAGS</A> in the Config.bib file for the Windows CE-based run-time image. Depending on what other flags are set, the value of ROMFLAGS might vary. In addition, your OAL must implement the following functions: 
+
+<UL type="disc">
+	<LI><MSHelp:link keywords="wce50lrfOEMCertifyModuleInit" TABINDEX="0">OEMCertifyModuleInit</MSHelp:link></li>
+
+	<LI><MSHelp:link keywords="wce50lrfOEMCertifyModule" TABINDEX="0">OEMCertifyModule</MSHelp:link><B> </B></li>
+</UL>
+
+<P>Before the kernel loads an application, the <B>OEMCertifyModule</B> function verifies the application signature to protect your system from unfamiliar applications. This ensures that the Windows CE&#0150;based run-time image loads an application only if it contains a valid digital signature. The following table further describes the functions.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=16%>Function</TH>
+<TH width=54%>Description</TH>
+<TH width=30%>Return value</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=16%><B>OEMCertifyModuleInit</B></TD>
+<TD width=54%>Enables the OS loader to notify the original equipment manufacturer that a new module is being loaded. Allows the manufacturer to decide whether to verify the module for safety.</TD>
+<TD width=30%>TRUE or FALSE </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=16%><B>OEMCertifyModule</B></TD>
+<TD width=54%>Allows the OS loader to pass the module code (for example, DLL, EXE, and OCX) to the manufacturer for verification that it is safe to run on the system.</TD>
+<TD width=30%>OEM_CERTIFY_TRUST 
+<P>OEM_CERTIFY_RUN </P>
+
+<P>OEM_CERTIFY_FALSE </P>
+</TD>
+</TR>
+</table></div>
+
+<P>The following table shows the return values for <B>OEMCertifyModule</B> function.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=32%>Return value</TH>
+<TH width=68%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=32%>OEM_CERTIFY_TRUST </TD>
+<TD width=68%>Fully trusted application to perform any operation. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=32%>OEM_CERTIFY_RUN </TD>
+<TD width=68%>Trusted application to run, but restricted from making any privileged function calls. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=32%>OEM_CERTIFY_FALSE </TD>
+<TD width=68%>Not trusted and therefore not allowed to run. </TD>
+</TR>
+</table></div>
+
+<P>An <B>OEMCertifyModule</B> function can perform any type of check on the module that is loading. For example, the function may perform a cyclic redundancy check or a certificate check. When a dynamic-link library (DLL) loads into the address space of an .exe file, the trust level of the .exe file determines the final access level. For example, when an .exe file with the OEM_CERTIFY_RUN trust level tries to load a DLL that has a higher trust level (OEM_CERTIFY_TRUST), the final trust level of the DLL is OEM_CERTIFY_RUN. On the other hand, when the .exe file tries to load a DLL that has a lower trust level, the DLL will fail to load.</P>
+
+<P>The following table shows the different combinations of .exe file and DLL trust levels.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=33%>EXE trust</TH>
+<TH width=33%>DLL trust</TH>
+<TH width=34%>Final DLL trust</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%>OEM_CERTIFY_RUN</TD>
+<TD width=33%>OEM_CERTIFY_RUN</TD>
+<TD width=34%>OEM_CERTIFY_RUN </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%>OEM_CERTIFY_RUN</TD>
+<TD width=33%>OEM_CERTIFY_TRUST</TD>
+<TD width=34%>OEM_CERTIFY_RUN</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%>OEM_CERTIFY_TRUST</TD>
+<TD width=33%>OEM_CERTIFY_RUN</TD>
+<TD width=34%>DLL fails to load </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%>OEM_CERTIFY_TRUST</TD>
+<TD width=33%>OEM_CERTIFY_TRUST</TD>
+<TD width=34%>OEM_CERTIFY_TRUST </TD>
+</TR>
+</table></div>
+
+<BLOCKQUOTE class="dtBlock">
+<B><b class="le">Note</b>&nbsp;&nbsp;&nbsp;</B>When you implement the trusted security model, untrusted drivers will fail to load. The original equipment manufacturer must verify all third-party drivers as trusted. </BLOCKQUOTE>
+
+<P>The simplest implementation of the trusted model uses the <B>OEMCertifyModule</B> function to return OEM_CERTIFY_RUN for all applications. This allows applications that are not part of the ROM MODULES section of the image to run, but they are restricted from making privileged function calls. </P>
+
+<P>By using the <B>OEMCertifyModule</B> implementation, at run time, you do not have to specify which applications are trusted. If OEM_CERTIFY_FALSE is returned, applications in RAM will not be able to run. </P>
+
+<P>Regardless of which implementation of the trusted model you choose, <B>OEMCertifyModuleInit</B> or <B>OEMCertifyModule</B>, the operating system files in the ROM MODULES section of the image will always run with full privileges.</P>
+
+<P>Certain files might need to be explicitly excluded from signature checking. For example, the Microsoft RSA Base Provider, RSAENH.DLL, already contains a signature that is checked by CryptoAPI. Moreover, this DLL cannot be located in the ROM MODULES section of the image. Therefore, the <B>OEMCertifyModule</B> function will be asked to verify the trust of this module, although it is provided by Microsoft.</P>
+
+<P>The implementation of <B>OEMCertifyModule</B> and <B>OEMCertifyModuleInit</B> can deal with this situation by keeping a list of known executable files. To minimize the chance of unintentionally loading a malicious file of the same name, the application should store a cryptographic checksum of the DLL and verify this checksum when the module is loaded.</P>
+
+<P>The following code example shows an implementation of the <B>OEMCertifyModuleInit</B> and <B>OEMCertifyModule</B> functions using Loadauth.lib functions.</P>
+
+<PRE class="code">/* The signature public key BLOB. */
+const unsigned char g_bSignPublicKeyBlob[] = {
+0x06,0x02,0x00,0x00,0x00,0x24,0x00,0x00,0x52,0x53,0x41,0x31,0x00,0x02,
+0x00,0x00,0x01,0x00,0x01,0x00,0xb1,0x00,0x93,0x7c,0x18,0x63,0xce,0xf3,
+0x23,0xe3,0x57,0x74,0x13,0x54,0x17,0x2c,0xdb,0xf6,0x56,0x77,0xb3,0x8d,
+0x34,0x6c,0x41,0x3d,0x4e,0xbb,0xc1,0xaf,0x3d,0x17,0xb6,0x0e,0x70,0x72,
+0x43,0x12,0x1d,0xb1,0x2a,0x57,0x05,0x27,0x58,0x63,0xef,0xb7,0x3b,0x71,
+0xee,0xe4,0xcd,0x14,0xbe,0xf7,0x32,0xec,0xa2,0xae,0xbf,0x9a,0x6b,0x75
+};
+// Declarations for load-time signature checking 
+// of RAM executables.
+typedef BOOL (* OEMLoadInit_t)(LPWSTR lpszName);
+typedef DWORD (* OEMLoadModule_t)(LPBYTE lpData, DWORD cbData);
+
+extern OEMLoadInit_t pOEMLoadInit;
+extern OEMLoadModule_t pOEMLoadModule;
+extern BOOL InitPubKey(const BYTE *KeyBlob, DWORD cbKeyBlob);
+
+// Loadauth library routines.
+extern BOOL CertifyModuleInit(void);
+extern BOOL CertifyModule(PBYTE pbBlock, DWORD cbBlock);
+extern BOOL CertifyModuleFinal(PBYTE *ppbSignData,
+                               PDWORD pcbSignData);
+
+#define MAX_CHECKSUM_SIZE   20  // This can accomodate a SHA checksum.
+
+typedef  struct {
+    LPWSTR filename,
+    BYTE checksum[MAX_CHECKSUM_SIZE];
+} KNOWN_FILE_DESCRIPTOR;
+
+// The following files are excluded from signature checking.
+KNOWN_FILE_DESCRIPTOR knownFiles[] = {
+        L"\\windows\\rsaenh.dll", {/* checksum bytes for rsaenh.dll */},
+        NULL, {0}
+}
+
+KNOWN_FILE_DESCRIPTOR *pKnownFile;
+
+// Called once for each RAM executable module
+// to initialize signature checking.
+static BOOL OEMCertifyInit(LPWSTR lpszName)
+{
+  // Some files may not need to be signed
+  // if you know about them in advance.
+  for (pKnownFile = knownFiles, pKnownFile-&gt;filename != NULL,  pKnownFile++)
+    if (_wcsicmp(pKnownFile-&gt;filename, lpszName) == 0)
+      break;
+  if (pKnownFile-&gt;filename != NULL)
+  {
+    ChecksumInit(&amp;checksumContext);
+    return TRUE; 
+  }
+
+   // You will need to verify the signature on this file.
+   pKnownFile = NULL;
+   return CertifyModuleInit();
+}
+
+// Called one or more times after OemLoadInit.
+static DWORD OEMCertifyModule(LPBYTE lpData, DWORD cbData)
+{
+    // First see if you need to check the signature on this file or just a checksum.
+    if (pKnownFile)
+    {
+        if (cbData)
+        {
+            ChecksumUpdate(&amp;checksumContext, lpData, cbData);
+            return OEM_CERTIFY_TRUST;
+        }
+        else
+        {
+            // Final call.
+            BYTE checksum[MAX_CHECKSUM_SIZE];
+            BYTE checksumsize = MAX_CHECKSUM_SIZE;
+            
+            ChecksumFinal(&amp;checksumContext, checksum, &amp;checksumsize);
+            // Compare the checksum of the file against the known checksum.
+            if (memcmp(checksum, pKnownFile-&gt;checksum, checksumsize) == 0)
+            {
+                return OEM_CERTIFY_TRUST;
+            }
+            else
+            {
+                return OEM_CERTIFY_FALSE;
+            }
+        }
+    }
+
+    if (cbData)
+    {
+        return CertifyModule(lpData, cbData);
+    }
+    else
+    {
+        // Final call.
+        DWORD dwTrustLevel = OEM_CERTIFY_FALSE;
+        LPBYTE pSignedData;
+        DWORD cbSignedData;
+
+        BOOL fRet = CertifyModuleFinal(&amp;pSignedData,
+                                       &amp;cbSignedData);
+        if (fRet)
+        {
+            // The file has a valid signature
+            // you expect the trust level to be returned as
+            // signed data.
+            if (cbSignedData &lt; sizeof(CHAR))
+                dwTrustLevel = OEM_CERTIFY_RUN;
+            else
+            switch (*pSignedData)
+            {
+                case 'T' :
+                    dwTrustLevel = OEM_CERTIFY_TRUST;
+                    break;
+                case 'R' :
+                    dwTrustLevel = OEM_CERTIFY_RUN;
+                    break;
+                default:
+                    dwTrustLevel = OEM_CERTIFY_FALSE;
+                    break;
+            }
+        }
+        #ifdef DEBUG
+        if (!fRet)
+        lpWriteDebugStringFunc(TEXT("OEMCertifyModule:signature
+                                          check failed.\r\n"));
+        #endif
+        // Return one of the OEM_CERTIFY levels:
+        return dwTrustLevel;
+    }
+}
+
+void OEMInit()
+{
+    ...
+    ...
+    //
+    // Set the module signature verification hooks.
+    //
+    pOEMLoadInit = OEMCertifyInit;
+    pOEMLoadModule = OEMCertifyModule;
+    //
+    // Initialize the signature verification public key.
+    //
+    InitPubKey(g_bSignPublicKeyBlob,sizeof(g_bSignPublicKeyBlob));
+    
+    // 
+    // Other OEM initialization steps.
+    //
+    ...
+}</PRE>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50concreatingasecuredevice.htm">Enhancing the Security of a Device</A> | <MSHelp:link keywords="wce50lrfOEMCertifyModuleInit" TABINDEX="0">OEMCertifyModuleInit</MSHelp:link> | <MSHelp:link keywords="wce50lrfOEMCertifyModule" TABINDEX="0">OEMCertifyModule</MSHelp:link> | <MSHelp:link keywords="wce50conFullKernelMode" TABINDEX="0">Full-Kernel Mode</MSHelp:link></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

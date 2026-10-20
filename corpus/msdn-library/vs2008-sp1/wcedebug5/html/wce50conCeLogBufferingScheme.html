@@ -1,0 +1,139 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>CeLog Buffering Scheme</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="CeLog Buffering Scheme"/>
+<MSHelp:RLTitle Title="CeLog Buffering Scheme"/>
+<MSHelp:Keyword Index="A" Term="wce50conCeLogBufferingScheme"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Debugging"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="True"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="celog_event_tracking_customization.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="False"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_1073135">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50concelogbufferingscheme"></A>CeLog Buffering Scheme</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>The CeLog RAM buffer forms the interface between the event tracking library, which places data into the buffer, and the flushing application, which removes it. To communicate properly, both the library and the flushing application must interpret the data in the same way and follow certain rules about adding and removing data from the buffer. Only one event tracking library and one flush application may access the CeLog buffer at a time.</P>
+
+<P>CeLog.dll is the default event tracking library, but any event tracking library that must work with the existing flushing applications must be able to place the data in the CeLog buffer the same way the default library CeLog.dll does.</P>
+
+<P>Windows CE 5.0 includes several flushing applications, such as <A HREF="wce51oricelogflushexe.htm">CeLogFlush.exe</A>, <A HREF="wce51orioscaptureexe.htm">OSCapture.exe</A>, and the <A HREF="wce50conremotekerneltracker.htm">Remote Kernel Tracker</A> data transport layer. In addition, OEMs and application developers can create their own flushing applications. Any flushing applications must be able to work with the data in the CeLog buffer.</P>
+
+<P>CeLog buffers its data in a named, memory-mapped file. The buffer name is <B>SYSTEM/CeLog Data</B>. The CELOG_DATAMAP_NAME macro is provided for referring to this name.</P>
+
+<P>An event tracking library creates this buffer by calling the <B>pCreateFileMappingW</B> and <B>pMapViewOfFile</B> functions from <MSHelp:link keywords="wce50lrfCeLogImportTable" TABINDEX="0">CeLogImportTable</MSHelp:link>. A flushing application can open a view of this buffer by calling <MSHelp:link keywords="wce50lrfCreateFileForMapping" TABINDEX="0">CreateFileForMapping</MSHelp:link> and <MSHelp:link keywords="wce50lrfMapViewOfFile" TABINDEX="0">MapViewOfFile</MSHelp:link>.</P>
+
+<P>The buffer data structure is a <MSHelp:link keywords="wce50lrfMAPHEADER" TABINDEX="0">MAPHEADER</MSHelp:link> structure followed by a ring buffer, where data can wrap around from the end of the ring buffer to the beginning. </P>
+
+<P>One other object is used to communicate between event tracking libraries and flushing applications: a named event that the event tracking library signals when the buffer is nearly full. An event-tracking library creates and signals this event by calling the <B>pCreateEventW</B> and <B>pEventModify</B> functions from <B>CeLogImportTable</B>. A flushing application can open and wait for this event by calling <MSHelp:link keywords="wce50lrfOpenEvent" TABINDEX="0">OpenEvent</MSHelp:link> and <MSHelp:link keywords="wce50lrfWaitForSingleObject" TABINDEX="0">WaitForSingleObject</MSHelp:link>. The event name is <B>SYSTEM/CeLog Fill</B>. The CELOG_FILLEVENT_NAME macro is provided for referring to this event.</P>
+
+<P>The following table describes how event tracking libraries and flushing applications use the members of the <B>MAPHEADER</B> structure.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=20%>Member</TH>
+<TH width=80%>Description of use</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=20%><B>dwBufSize</B></TD>
+<TD width=80%>This member is initialized by the event tracking library that creates the buffer, and can be used by the flush application to determine where the end of the ring buffer wraps to the beginning.
+<P><B>dwBufSize</B> does not include the size of the <B>MAPHEADER</B> structure at the beginning of the map. The ring buffer starts at address (map_addr + <B>sizeof(MAPHEADER)</B>) and ends at (map_addr + <B>sizeof(MAPHEADER)</B> + <B>dwBufSize</B>).</P>
+</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=20%><B>pWrite</B></TD>
+<TD width=80%>This member represents the end of the buffered data. This pointer is maintained by the event-tracking library and should not be modified by the flush application.
+<P>The event-tracking library should never allow <B>pWrite</B> to wrap past <B>pRead</B>. If <B>pWrite</B> reaches <B>pRead</B>, the buffer is full, and the event-tracking library must discard data until the flush application moves <B>pRead</B> to make room for more data.</P>
+</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=20%>pRead</TD>
+<TD width=80%>This member points to the oldest data in the buffer, the next location for the flush application to read from the ring buffer. This pointer is maintained by the flush application and should not be modified by the event-tracking library.
+<P>The flush application should never allow <B>pRead</B> to wrap past <B>pWrite</B>. If <B>pRead</B> reaches <B>pWrite</B>, the buffer is empty, and the flush application must wait until the event-tracking library moves <B>pWrite</B> when it writes new data into the buffer.</P>
+</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=20%>fSetEvent</TD>
+<TD width=80%>This member indicates whether the event-tracking library should signal the fill event to indicate that the buffer is approaching full. <B>fSetEvent</B> is used to keep the event tracking library from setting the event multiple times in a row. 
+<P>The flush application sets this value to TRUE when it is done flushing, and the event tracking library sets it to FALSE after it signals the fill event.</P>
+</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=20%>dwLostBytes</TD>
+<TD width=80%> </TD>
+</TR>
+</table></div>
+
+<P>The remainder of the buffer contains data.</P>
+
+<P>The following list further explains the rules that govern the interaction of the event tracking library and flush application with the data buffer.
+
+<UL type="disc">
+	<LI>Read and write range
+<P>The flush application is free to read between <B>pRead</B> and <B>pWrite</B>, but not past <B>pWrite</B>. Addresses must be managed modulo the buffer size. 
+
+<P>The event-tracking library writes data starting at <B>pWrite</B> and stops at <B>pRead</B>. If the space between <B>pWrite</B> and <B>pRead</B> is insufficient to contain new event data, the event-tracking library must discard the new data without writing into the buffer. The event-tracking library should update the <B>dwLostBytes</B> counter with the amount of discarded data. 
+</li>
+
+	<LI>Data loss events
+<P>The event-tracking library does not generate CELID_DATA_LOSS data loss events. The flush application is responsible for creating the data loss event and adding it to the event stream. This allows the flush application to ensure that the data loss events are not lost. For more information, see <A HREF="wce51tskwritingyourowncelogflushapplication.htm">Writing your own CeLog Flush Application</A>.
+</li>
+
+	<LI>Fill events
+<P>The event-tracking library signals this event when the amount of empty space in the buffer passes below a minimum mark. The flush application can wait until this event is signaled and then reads the data. This eliminates the need for polling.
+
+<P>The fill event is used in coordination with the <B>fSetEvent</B> flag. 
+
+<P>The event-tracking library sets this flag to FALSE when it signals the fill event, and does not signal the event again as long as the flag is FALSE. This prevents the event-tracking library from signaling the event many times in a row while the flush application is busy flushing. 
+
+<P>The flush application should reset the flag to TRUE when it is ready to wait for the fill event again. If the flag is not reset, the event-tracking library no longer signals the fill event.
+</li>
+</UL>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce51conimplementingeventtrackinglibrary.htm">Implementing an Event Tracking Library</A> | <A HREF="wce51tskwritingyourowncelogflushapplication.htm">Writing Your Own CeLog Flush Application</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

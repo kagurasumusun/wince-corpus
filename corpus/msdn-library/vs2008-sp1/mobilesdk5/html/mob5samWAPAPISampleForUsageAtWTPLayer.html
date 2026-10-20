@@ -1,0 +1,215 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>WAP API Sample for Usage at the WTP Layer</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="WAP API Sample for Usage at the WTP Layer"/>
+<MSHelp:RLTitle Title="WAP API Sample for Usage at the WTP Layer"/>
+<MSHelp:Keyword Index="A" Term="mob5samWAPAPISampleForUsageAtWTPLayer"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Application"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbsmartphone"/>
+<MSHelp:Attr Name="Product" Value="kbPocketPC"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="Technology" Value="kbPocketPC"/>
+<MSHelp:Attr Name="Technology" Value="kbSmartphone"/>
+<MSHelp:Attr Name="TopicType" Value="kbSampleProd"/>
+<MSHelp:Attr Name="Filename" Value="WAP_API_magneto.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="True"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_1076940">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Windows Mobile Version 5.0 SDK<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="mob5samwapapisampleforusageatwtplayer"></A>WAP API Sample for Usage at the WTP Layer</H1>
+<!--Feedback Link Top Start-->
+<P CLASS="feedback"><font size="1"><a href="mailto:medfdbk&#64;microsoft.com?subject=Product: Windows Mobile | Version: 5.0 | Release: SDK | Title: WAP API Sample for Usage at the WTP Layer | Filename: mob5samwapapisampleforusageatwtplayer.htm | Built on: Wednesday, September 14, 2005">Send Feedback</a> on this topic to the authors</font></p>
+<!--Feedback Link Top End-->
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>Using WAP APIs at the WTP layer requires filling in certain structures, such as WTP_INVOKE. </P>
+
+<BLOCKQUOTE class="dtBlock">
+<b class="le">Note</b>&nbsp;&nbsp;&nbsp;If the structure elements are not correctly initialized, the WAP API returns the error 0x80070057, "The parameter is incorrect."</BLOCKQUOTE>
+
+<P>The following code example shows how to send a WTP invoke request and read a WTP invoke indication.</P>
+
+<PRE class="code">#include &lt;windows.h&gt;
+#include &lt;wap.h&gt;
+
+//
+//  The following code illustrates
+//  how to send a WTP invoke request and
+//  read a WTP invoke indication.
+//
+bool WtpInvokeRequestIndication( void ) {
+
+    bool bReqIndOk = false;
+
+    HRESULT hResult;
+    DWORD dwResult;
+    TCHAR tszDbgMsg[ 256 ];
+
+    tszDbgMsg[ 255 ] = _T('\0');
+
+    //  open WAP for sending WTP invoke request
+    const WAP_LAYER wlWtp = WAP_LAYER_WTP;
+    const DWORD dwSendPort = 3000L;
+    WAP_HANDLE hWapInvokeReq = 0L;
+    HANDLE hWapInvokeReqMsgEvent = NULL;
+
+    hResult = WapOpen( wlWtp, dwSendPort, &amp;hWapInvokeReq, &amp;hWapInvokeReqMsgEvent );
+    if ( FAILED(hResult) || !hWapInvokeReq || !hWapInvokeReqMsgEvent ) {
+        OutputDebugString( _T("WapOpen() for sending WTP invoke request failed") );
+        return false;
+    }
+
+    //  open WAP for reading WTP invoke indication
+    const DWORD dwRecvPort = 3001L;
+    WAP_HANDLE hWapInvokeInd = 0L;
+    HANDLE hWapInvokeIndMsgEvent = NULL;
+
+    hResult = WapOpen( wlWtp, dwRecvPort, &amp;hWapInvokeInd, &amp;hWapInvokeIndMsgEvent );
+    if ( FAILED(hResult) || !hWapInvokeInd || !hWapInvokeIndMsgEvent ) {
+        OutputDebugString( _T("WapOpen() for reading WTP invoke indication failed") );
+        hWapInvokeInd = 0L;
+        goto exit_label;
+    }
+
+    //  create WTP invoke request structure with no user data
+    WAP_ADDRESS waInvokeReqInd;
+    const TCHAR *const tszIpLoopbackAddr = _T("127.0.0.1");
+
+    _tcsncpy( waInvokeReqInd.ptsAddress, tszIpLoopbackAddr, MAX_WAP_ADDRESS_LENGTH );
+    waInvokeReqInd.watAddressType = WAP_ADDRESS_TYPE_UDP;
+
+    WTP_INVOKE WtpPrimInvokeReq;
+
+    memset( &amp;WtpPrimInvokeReq, 0, sizeof(WtpPrimInvokeReq) );
+    WtpPrimInvokeReq.wpiPrimitiveID = WAP_PRIMITIVE_ID_TR_INVOKE;
+    WtpPrimInvokeReq.wptPrimitiveType = WAP_PRIMITIVE_TYPE_REQUEST;
+    WtpPrimInvokeReq.dwValidFields = ( WTP_FIELD_SOURCEADDRESS |
+                                       WTP_FIELD_SOURCEPORT |
+                                       WTP_FIELD_DESTINATIONADDRESS |
+                                       WTP_FIELD_DESTINATIONPORT |
+                                       WTP_FIELD_WANTSECURETRANSACTION |
+                                       WTP_FIELD_USERACKNOWLEDGEMENT |
+                                       WTP_FIELD_CLASSTYPE |
+                                       WTP_FIELD_USERDATA );
+    WtpPrimInvokeReq.waSourceAddress = waInvokeReqInd;
+    WtpPrimInvokeReq.dwSourcePort = dwSendPort;
+    WtpPrimInvokeReq.waDestinationAddress = WtpPrimInvokeReq.waSourceAddress;
+    WtpPrimInvokeReq.dwDestinationPort = dwRecvPort;
+    WtpPrimInvokeReq.wtctClassType = WTP_TRANSACTION_CLASS_TYPE_0;
+
+    //  send WTP invoke request
+    hResult = WapSend( hWapInvokeReq, (WAP_PRIMITIVE_BASE *)&amp;WtpPrimInvokeReq );
+    if ( FAILED(hResult) ) {
+        OutputDebugString( _T("WapSend() with WTP invoke request failed") );
+        goto exit_label;
+    }
+
+    _sntprintf( tszDbgMsg, 255, _T("WTP invoke request handle: %#x"),
+                WtpPrimInvokeReq.wthTransactionHandle );
+    OutputDebugString( tszDbgMsg );
+
+    //  wait for WTP invoke indication
+    dwResult = WaitForSingleObject( hWapInvokeIndMsgEvent, 10000L );
+    if ( dwResult != WAIT_OBJECT_0 ) {
+        OutputDebugString( _T("Failed to wait for or timed out waiting for expected WTP invoke indication") );
+        goto exit_label;
+    }
+
+    //  allocate memory for storing WTP invoke indication
+    DWORD dwWtpPrimInvokeIndSize = 0L;
+
+    hResult = WapGetNextPrimitiveSize( hWapInvokeInd, &amp;dwWtpPrimInvokeIndSize );
+    if ( FAILED(hResult) || (dwWtpPrimInvokeIndSize &lt; sizeof(WTP_INVOKE)) ) {
+        OutputDebugString( _T("WapGetNextPrimitiveSize() failed") );
+        goto exit_label;
+    }
+
+    BYTE *pcbWtpPrimInvokeInd = new BYTE[ dwWtpPrimInvokeIndSize ];
+    if ( !pcbWtpPrimInvokeInd ) {
+        OutputDebugString( _T("Failed to allocate memory for storing WTP invoke indication") );
+        goto exit_label;
+    }
+
+    //  read WTP invoke indication
+    hResult = WapRead( hWapInvokeInd, (WAP_PRIMITIVE_BASE *)pcbWtpPrimInvokeInd, dwWtpPrimInvokeIndSize );
+    if ( FAILED(hResult) ) {
+        OutputDebugString( _T("WapRead() failed") );
+        goto exit_label;
+    }
+
+    _sntprintf( tszDbgMsg, 255, _T("WTP invoke indication handle: %#x"),
+                ((WTP_INVOKE *)pcbWtpPrimInvokeInd)-&gt;wthTransactionHandle );
+    OutputDebugString( tszDbgMsg );
+
+    bReqIndOk = true;
+
+    exit_label:
+    //  close WAP
+    if ( hWapInvokeReq ) {
+        hResult = WapClose( hWapInvokeReq );
+        if ( FAILED(hResult) ) {
+            OutputDebugString( _T("WapClose() for sending WTP invoke request failed") );
+            bReqIndOk = false;
+        } else {
+            hWapInvokeReq = 0L;
+        }
+    }
+
+    if ( hWapInvokeInd ) {
+        hResult = WapClose( hWapInvokeInd );
+        if ( FAILED(hResult) ) {
+            OutputDebugString( _T("WapClose() for reading WTP invoke indication failed") );
+            bReqIndOk = false;
+        } else {
+            hWapInvokeInd = 0L;
+        }
+    }
+
+    if ( pcbWtpPrimInvokeInd ) {
+        delete [] pcbWtpPrimInvokeInd;
+        pcbWtpPrimInvokeInd = NULL;
+    }
+
+    return bReqIndOk;
+}</PRE>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="mob5conwirelessapplicationprotocolwapapi.htm">Wireless Application Protocol (WAP) API</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Feedback Link Bottom Start-->
+<p><font size="1"><a href="mailto:medfdbk&#64;microsoft.com?subject=Product: Windows Mobile | Version: 5.0 | Release: SDK | Title: WAP API Sample for Usage at the WTP Layer | Filename: mob5samwapapisampleforusageatwtplayer.htm | Built on: Wednesday, September 14, 2005">Send Feedback</a> on this topic to the authors</font></p>
+<!--Feedback Link Bottom End-->
+<!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="mob5conCopyrightInformationForMagneto" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link></font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

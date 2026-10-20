@@ -1,0 +1,142 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Device File Names</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Device File Names"/>
+<MSHelp:RLTitle Title="Device File Names"/>
+<MSHelp:Keyword Index="A" Term="wce50conDeviceFileNames"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Driver"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="False"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="device_manager.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="False"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+<MSHelp:Attr Name="PBFeature" Value="CoreDriver"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_3009242">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50condevicefilenames"></A>Device File Names</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>Applications can access peripheral devices through file system functions, such as <MSHelp:link keywords="wce50lrfCreateFile" TABINDEX="0">CreateFile</MSHelp:link>. The file I/O operations are redirected to the stream interface.</P>
+
+<P>The following table shows descriptions and examples for the three device namespaces.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=50%>Namespace description</TH>
+<TH width=50%>Example</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>Three letter prefix, followed by a number between 0 and 9, followed by a colon.</TD>
+<TD width=50%>"LPT2:"</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>$bus mount point, followed by the bus name, bus number, device number, and function number.</TD>
+<TD width=50%>"\$bus\PCMCIA_0_0_0"</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>$device mount point, followed by a three letter prefix representing the device, followed by a number.</TD>
+<TD width=50%>"\$device\COM7"</TD>
+</TR>
+</table></div>
+
+<P>In the example, COM7 is device 0, function 0 on PCMCIA bus 0. <B>CreateFile</B> can accept any of these names. Each name space returns handles with different properties. </P>
+
+<P>The namespaces containing mount points support more than 10 instances of a device with the same three letter prefix. For example, COM23 can represent serial port 23. </P>
+
+<H2 class="dtH2">Device File Name Prefixes</H2>
+
+<P>If the <B>Prefix</B> subkey does not exist, then there must be initialization and de-initialization entry points. Otherwise, the prefix consists of three uppercase letters that identify which device file name corresponds to a particular stream interface. The prefix is stored in a registry value called <B>Prefix</B>, which is located within the key for the driver. Typically, the setup utility that installs a driver creates this registry value, along with the other values that the driver needs.</P>
+
+<P>When you implement the stream interface, you designate the three-letter prefix. It can be any three letters, although you should use a common prefix, if your driver is the same class of device as other drivers. For example, drivers for serial devices, such as modems, could use the common prefix COM, even though other drivers might already be using that prefix. Your driver can distinguish itself from other drivers by using a different index. </P>
+
+<P>First, the prefix identifies all possible device file names that can access the stream interface driver. Second, the prefix tells the operating system what entry-point file names to expect in the stream interface DLL. For example, to implement a device driver for a PC Card pager, you could choose PGR as the three-letter prefix, which in turn would dictate entry-point names, such as <B>PGR_Init</B>, <B>PGR_IOControl</B>, and so on.</P>
+
+<H2 class="dtH2">Device File Name Indexes</H2>
+
+<P>The index differentiates similar devices that the stream interface manages. The index is the digit that follows the prefix. By default, Device Manager indexes logically from 1 through 9, with 1 corresponding to the first device file name. If you require a tenth device file name, use 0 as the index.</P>
+
+<P>If you must number your device file names starting at an index other than 1, specify a starting index in a registry value called <B>Index</B> within the registry key for your driver. This is often necessary if your stream interface driver serves a device that should use a common prefix, such as COM. For example, COM1:, COM2:, and COM3: usually correspond to built-in serial port hardware. If your driver is for a serial device, such as a packet-radio modem, it should appear as a COM port because modem software often assumes that modems are connected to COM ports. You could specify an <B>Index</B> value of 4 to differentiate your serial device from ones that are built into the hardware.</P>
+
+<P>If you specify <B>Index</B>, rather than letting Device Manager assign indexes, by default, your driver will support only one device because Device Manager can register only one device file name. If you need to specify <B>Index</B> but need more than one device file name, you have two options. The initialization function can register additional device file names with the <MSHelp:link keywords="wce50lrfActivateDeviceEx" TABINDEX="0">ActivateDeviceEx</MSHelp:link> function, or the setup utility can create additional sets of registry keys, each with a different index, when your driver is installed.</P>
+
+<H2 class="dtH2">Device Handle and File Handle Operations</H2>
+
+<P>Accesses to device drivers in the $device and $bus namespaces are automatically routed to the <B>CreateFile</B> entry point registered with <B>RegisterAFSEx</B>.</P>
+
+<P>Device handles allow direct requests to the bus driver. For example, a control panel application might want to unload a device driver or force the bus driver to re-enumerate its child devices.</P>
+
+<P>Calls to <B>CreateFile</B> implicitly call the device driver's <A HREF="wce50lrfxxxopen17.htm">XXX_Open (Device Manager)</A> function. Device Manager can notify the driver that a particular handle will be used for device-level operations by adding a bit to the access rights mask passed into the driver's <A HREF="wce50lrfxxxinit15.htm">XXX_Init (Device Manager)</A> function. This bit is added based on the namespace used to open the handle and cannot be one of the parameters to <B>CreateFile</B>. For reference, the driver can associate the access bit with the open data it returns from its <B>XXX_Open</B> function when processing other APIs.</P>
+
+<P>The following table shows how to obtain a device handle or a file handle.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=50%>First parameter to CreateFile</TH>
+<TH width=50%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><B>"COM7:"</B></TD>
+<TD width=50%>Returns a normal file handle to the device. This is the legacy naming convention.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><B>"\$device\COM7"</B></TD>
+<TD width=50%>Returns a normal file handle, which might be for a device that cannot be named using the legacy naming convention.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><B>"\$bus\PCMCIA_0_0_0"</B></TD>
+<TD width=50%>Returns a device handle to device 0, function 0 on PCMCIA bus 0. Although this handle can be manipulated using the same APIs as a normal file handle, the operations it enables might be different and access to these handles might be secured differently by the OS.</TD>
+</TR>
+</table></div>
+
+<P>All three device paths might be implemented by the same driver. Paths 1 and 2 are equivalent. Path 3 can be used for power management, but not for data traffic.</P>
+
+<H2 class="dtH2">Determining Device Handle Support</H2>
+
+<P>The appropriate method for determining which devices support the new handle is to rely on advertised interfaces. A bus driver can advertise a specified GUID to indicate that the bus driver supports unloading and reloading drivers. A bus driver can also advertise another GUID to indicate that the bus driver supports power management on child devices. Similarly, a new GUID might indicate that Power Manager IOCTLs should use device handles. </P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50condeviceinterfaceclasses.htm">Device Interfaces</A> | <A HREF="wce50condevicemanager.htm">Device Manager</A> | <A HREF="wce50grfdevicemanagerreference.htm">Device Manager Reference</A> | <A HREF="wce50constreaminterfacedriverentrypoints.htm">Resolving Race Conditions in Device Drivers</A> | <A HREF="wce50oristreaminterfacedrivers.htm">Stream Interface Drivers</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

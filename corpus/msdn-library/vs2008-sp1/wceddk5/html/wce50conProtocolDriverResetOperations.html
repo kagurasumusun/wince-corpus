@@ -1,0 +1,76 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Protocol Driver Reset Operations</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Protocol Driver Reset Operations"/>
+<MSHelp:RLTitle Title="Protocol Driver Reset Operations"/>
+<MSHelp:Keyword Index="A" Term="wce50conProtocolDriverResetOperations"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Driver"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="False"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="ndis_guide2.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="False"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+<MSHelp:Attr Name="PBFeature" Value="NetworkDriver"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_3018334">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50conprotocoldriverresetoperations"></A>Protocol Driver Reset Operations</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>A protocol driver can initiate a reset operation by calling <A HREF="wce50lrfndisreset.htm">NdisReset</A>. If its reset request returns NDIS_STATUS_PENDING, <A HREF="wce50lrfprotocolresetcomplete.htm">ProtocolResetComplete</A> is called when the reset operation is complete. </P>
+
+<P>A protocol driver seldom calls <B>NdisReset</B> unless it has special knowledge that the underlying NIC is not functioning correctly. For instance, if a protocol driver detects that it has not received completion calls for an unusually large number of sends or requests, and it has enough knowledge of the underlying NIC to conclude that this indicates hardware problems, it can call <B>NdisReset</B>. Typically, however, NDIS or the NIC driver itself, using time-out logic, detects and initiates a reset. If a protocol driver is bound to an underlying NDIS driver that reports its medium as NdisMediumWan, the protocol driver cannot call <B>NdisReset</B>. </P>
+
+<P>Typically, an underlying NIC driver resets its NIC because the NIC is timing out during send or request operations, which causes NDIS to call the NIC driver's MiniportCheckForHang and subsequently <A HREF="wce50lrfminiportreset.htm">MiniportReset</A> function, or because the NIC driver determines the NIC's receive capability is dysfunctional. If a reset is initiated by NDIS and <B>MiniportReset</B> returns NDIS_STATUS_PENDING, NDIS first calls the <A HREF="wce50lrfprotocolstatus.htm">ProtocolStatus</A> function of each bound protocol driver with a status of NDIS_STATUS_RESET_START, and then calls the same bound protocol driver's <A HREF="wce50lrfprotocolstatuscomplete.htm">ProtocolStatusComplete</A> function. </P>
+
+<P>A protocol driver must handle the possibility that outstanding sends on a binding to an underlying NIC can be cancelled because the NIC is reset. If a bound protocol driver has any transmit packets pending, NDIS will complete those packets back to the protocol driver with an appropriate status. The protocol driver must resubmit the packets when the reset operation is completed, assuming the NIC becomes operational again.</P>
+
+<P>The following list shows the action a protocol driver must take when it receives a status of NDIS_STATUS_RESET_START: 
+
+<UL type="disc">
+	<LI>Hold any packets ready to be transmitted until <B>ProtocolStatus</B> receives an NDIS_STATUS_RESET_END notification. </li>
+
+	<LI>Refrain from making NDIS calls directed to the underlying miniport, except calls to return resources, such as returning packets with <A HREF="wce50lrfndisreturnpackets.htm">NdisReturnPackets</A>. </li>
+</UL>
+
+<P>After <B>ProtocolStatus</B> receives an NDIS_STATUS_RESET_END message and <B>ProtocolStatusComplete</B> is called, the protocol driver can resume sending packets and requests.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50conprotocoldrivers.htm">Protocol Drivers</A> | <A HREF="wce50lrfminiportreset.htm">MiniportReset</A> | <A HREF="wce50lrfndisreset.htm">NdisReset</A> | <A HREF="wce50lrfndisreturnpackets.htm">NdisReturnPackets</A> | <A HREF="wce50lrfprotocolresetcomplete.htm">ProtocolResetComplete</A> | <A HREF="wce50lrfprotocolstatus.htm">ProtocolStatus</A> | <A HREF="wce50lrfprotocolstatuscomplete.htm">ProtocolStatusComplete</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

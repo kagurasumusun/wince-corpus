@@ -1,0 +1,96 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Enabling CeLog Zones During Boot</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Enabling CeLog Zones During Boot"/>
+<MSHelp:RLTitle Title="Enabling CeLog Zones During Boot"/>
+<MSHelp:Keyword Index="A" Term="wce51tskEnablingCeLogZonesDuringBoot"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Debugging"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="True"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbTask"/>
+<MSHelp:Attr Name="Filename" Value="celog_event_tracking_collection.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="False"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="True"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_1073080">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce51tskenablingcelogzonesduringboot"></A>Enabling CeLog Zones During Boot</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>If your target device is connected to a development workstation using a KITL connection, you can set CeLog zones that control the CeLog collection process during boot by setting a registry data value on your development workstation rather than on the device. </P>
+
+<P>The value in the registry of the development workstation is read only once, when the device boots. It provides the initial zone settings. If this value is not present, all zones except CELZONE_KCALL are turned on by default. In other words, the default zone setting is 0xFFBFFFFF if no registry value is present.</P>
+
+<P>On the development workstation, zones are enabled with a hexadecimal bit mask, in which each bit represents a zone to log. If a bit is set, the corresponding zone or process is logged; otherwise, it is not logged. </P>
+
+<P>For information on supported zones, see <MSHelp:link keywords="wce50grfCeLogZones" TABINDEX="0">CeLog Zones</MSHelp:link>.</P>
+
+<P>The following table shows the zone value that can be set in the registry of the development workstation at the <B>HKEY_CURRENT_USER\Pegasus\Zones </B>key.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=50%>Zone argument</TH>
+<TH width=50%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><B>CeLogZoneCE:</B> REG_DWORD</TD>
+<TD width=50%>Indicates which OS zones are to be logged. </TD>
+</TR>
+</table></div>
+
+<P>By setting <B>CeLogZoneCE</B> to 0 on boot, and then turning on logging with <MSHelp:link keywords="wce50lrfCeLogSetZones" TABINDEX="0">CeLogSetZones</MSHelp:link><B> </B>after the device is running, you can trigger logging during a specific activity. </P>
+
+<P>You can also set <B>CeLogZoneCE</B> to a non-zero value to enable one or more zones. To combine zones, set <B>CeLogZoneCE</B> to the bitwise OR of their values. For example, if you set <B>CeLogZoneCE</B>=0x00000062, CeLog will capture all data logged to <B>CELZONE_RESCHEDULE, CELZONE_THREAD</B> and <B>CELZONE_PROCESS</B>. </P>
+
+<BLOCKQUOTE class="dtBlock">
+<B>Note</B> CeLog logs events pertaining to device boot if you enable the zone CELZONE_BOOT_TIME. For information on how to view these events after you have collected them, see <A HREF="wce51tskviewingbooteventswithreadlog.htm">Viewing Boot Events With Readlog</A>.</BLOCKQUOTE>
+
+<H4 class="dtH4">Remarks</H4>
+
+<P>If a log flushing application, such as <A HREF="wce51oricelogflushexe.htm">CeLogFlush.exe</A> or <A HREF="wce51orioscaptureexe.htm">OSCapture.exe</A>, is in use, then the zone settings from the target device registry can override zone settings from the development workstation.</P>
+
+<P>As it loads, CeLog.dll reads the initial zone setting from the registry of the development workstation. CeLog.dll does not read the setting a second time. </P>
+
+<P>The flushing applications, CeLogFlush.exe and OSCapture.exe, begin to run after CeLog is loaded and after CeLog reads the initial zone setting. These applications read zone settings from the target device registry, rather than from the development workstation. The flushing applications update the initial zone values to the new zone value from the target device with a call <MSHelp:link keywords="wce50lrfCeLogSetZones" TABINDEX="0">CeLogSetZones</MSHelp:link>. </P>
+
+<P>For more information about how to control the CeLog zones using the registry of the target device, see <A HREF="wce51grfcelogflushregistrysettings.htm">CeLogFlush Registry Settings</A> or <A HREF="wce51grfoscaptureregistrysettings.htm">OSCapture Registry Settings</A>. </P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><MSHelp:link keywords="wce50lrfIOCTLCELOGGETDESKTOPZONE" TABINDEX="0">IOCTL_CELOG_GETDESKTOPZONE</MSHelp:link> | <MSHelp:link keywords="wce50grfCeLogZones" TABINDEX="0">CeLog Zones</MSHelp:link> | <A HREF="wce51tskcapturingcelogdataduringboot.htm">Capturing CeLog Data During Boot</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

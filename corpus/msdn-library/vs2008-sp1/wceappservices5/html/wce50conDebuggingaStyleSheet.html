@@ -1,0 +1,135 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Debugging a Style Sheet</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Debugging a Style Sheet"/>
+<MSHelp:RLTitle Title="Debugging a Style Sheet"/>
+<MSHelp:Keyword Index="A" Term="wce50conDebuggingaStyleSheet"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Feature"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="XSLpg03.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="True"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+<MSHelp:Attr Name="PBFeature" Value="SYSGEN_MSXML"/>
+<MSHelp:Attr Name="PBOnly" Value="False"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_3024119">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50condebuggingastylesheet"></A>Debugging a Style Sheet</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>Because the interaction of a style sheet with a data file can be complex, and style sheet errors are not always obvious, the following information provides troubleshooting advice for the style sheet author.</P>
+
+<P class="label"><B>Problem</B></P>
+
+<P>No output at all.</P>
+
+<P class="label"><B>Solution</B></P>
+
+<P>When browsing to an XML file with an XSLT style sheet, well-formed errors in the source file or the style sheet are reported, along with XSLT syntax errors and run-time errors. These errors are not automatically reported when using XSLT from script.</P>
+
+<P>If no errors are reported, the problem is most likely an error in the style sheet design, which can be diagnosed and corrected by the style sheet author. Begin by testing that the root template of the style sheet is being executed, using the method outlined in the following section.</P>
+
+<P class="label"><B>Problem</B></P>
+
+<P>Expected template is not being used.</P>
+
+<P class="label"><B>Solution:</B></P>
+
+<P>If the contents of a template, including the root template, are not appearing in the output, verify the template is being called by adding an explicit trace message.</P>
+
+<PRE class="code">&lt;xsl:template match="address"&gt;
+  !! inside address template !!
+  &lt;xsl:apply-templates select="zipcode"/&gt;
+&lt;/xsl:template&gt;</PRE>
+
+<P>If the trace message appears in the output, the template is being executed, and the problem is likely that this &lt;xsl:apply-templates&gt; is not returning any output. For more information about why the select pattern returns no results, see No Results from Select Pattern below.</P>
+
+<P>If the trace message does not appear, the problem could be that the match pattern is in error. Check the spelling and case of element and attribute names, and check that the full context for the match is actually present in the source data.</P>
+
+<P>Also determine which &lt;xsl:apply-templates&gt; element should invoke the template and ensure that it is selecting the correct nodes. For more information, see the No Results from Select Pattern problem.</P>
+
+<P>If the template uses the root pattern (/) and is not being called, check that no template later in the style sheet uses the root pattern or omits the match attribute (matching all nodes, including the document root). If the style sheet is being executed against a node other than the document root, a template matching that element is used instead of the root template.</P>
+
+<P class="label"><B>Problem</B></P>
+
+<P>No results from select pattern.</P>
+
+<P class="label"><B>Solution</B></P>
+
+<P>One of the most frequent errors preventing output is <B>select</B> patterns that do not match the input data. Fortunately, these are easy to fix. The debug line added to the example below uses &lt;xsl:value-of&gt; to output the node and its children as preformatted XML source.</P>
+
+<PRE class="code">&lt;xsl:template match="address"&gt;
+  &lt;PRE&gt;&lt;xsl:value-of select="."/&gt;&lt;/PRE&gt;
+  &lt;xsl:apply-templates select="zipcode"/&gt;
+&lt;/xsl:template&gt;</PRE>
+
+<P>When comparing the actual XML data to the select pattern, you may find spelling mistakes in element and attribute names; for example, the data could show "zip-code" or "zipCode" as the correct element name. The context of the query can be checked. Is "zipcode" a child of "address"? And the source data can also be checked for accuracy. Does this "address" have a "zipcode"?</P>
+
+<P>For complex patterns, it is often helpful to progressively simplify the pattern to isolate the problem.</P>
+
+<P class="label"><B>Problem</B></P>
+
+<P>Elements with the XSLT namespace appear in output.</P>
+
+<P class="label"><B>Solution</B></P>
+
+<P>Elements from the XSLT name space appearing in the output indicate that the XSLT namespace declaration is using an incorrect URL. The XSLT processor does not recognize these elements as XSLT elements and treats them as output elements.</P>
+
+<P>The correct namespace identifier for XSLT is "http://www.w3.org/1999/XSL/Transform".</P>
+
+<P class="label"><B>Problem</B></P>
+
+<P>Highlighting elements not handled by a template.</P>
+
+<P class="label"><B>Solution</B></P>
+
+<P>Often it is helpful to author a style sheet incrementally, adding templates for elements one at a time. Adding this template to your style sheet will show you visually those elements that do not yet have templates associated with them.</P>
+
+<PRE class="code">&lt;xsl:template match="*"&gt;
+  &lt;SPAN STYLE="background-color:yellow"&gt;
+    &lt;xsl:attribute name="title"&gt;&amp;lt;&lt;xsl:value-of select="."/&gt;&amp;gt;&lt;/xsl:attribute&gt;
+    &lt;xsl:apply-templates/&gt;
+  &lt;/SPAN&gt;
+&lt;/xsl:template&gt;</PRE>
+
+<P>Add this template near the top of your style sheet so that it does not override templates that handle specific elements. This template will display a yellow background behind the content of any element without a specific template in existence. Running the mouse over the yellow areas will display a ToolTip showing those elements that must still be handled by templates.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50conadvancedxsltfeatures.htm">Advanced XSLT Functionality</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

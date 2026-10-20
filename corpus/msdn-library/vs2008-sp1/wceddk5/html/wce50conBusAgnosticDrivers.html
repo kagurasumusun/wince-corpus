@@ -1,0 +1,84 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Bus Agnostic Drivers</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Bus Agnostic Drivers"/>
+<MSHelp:RLTitle Title="Bus Agnostic Drivers"/>
+<MSHelp:Keyword Index="A" Term="wce50conBusAgnosticDrivers"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Driver"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="False"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="driverarchitecture.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="False"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+<MSHelp:Attr Name="PBFeature" Value="CoreDriver"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_1055612">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50conbusagnosticdrivers"></A>Bus Agnostic Drivers</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>Implementing a bus agnostic device driver allows the device driver to execute on different busses. For example, a bus agnostic driver can execute on a PCI bus, a 16-bit PC Card bus, a 32-bit PC Card bus, or a bus that is specific to a hardware platform. Typically, you can migrate bus agnostic drivers more easily between hardware platforms than other types of drivers.</P>
+
+<P>A bus agnostic driver does not call functions that are specific to a hardware platform. Each driver gets its resources from the registry, requests configuration information from its parent bus driver, sets power states through its parent bus driver, and translates bus addresses to system addresses through its parent bus driver.</P>
+
+<P>A bus agnostic driver is a standard driver that is relatively simple to implement and can be shared by various bus implementations for the same hardware chipset. For example, the bus agnostic PCI NE2000 driver works correctly for the NE2000 PCMCIA card. The NE2000 PCMCIA card functions the same with the PCI NE2000 driver as it would with the PCMCIA NE2000 driver.</P>
+
+<P class="labelproc"><B>To develop a bus agnostic driver</B>
+
+<OL type="1">
+	<LI>Open the device key by calling the <MSHelp:link keywords="wce50lrfOpenDeviceKey" TABINDEX="0">OpenDeviceKey</MSHelp:link> function.</li>
+
+	<LI>Obtain ISR information by calling the <MSHelp:link keywords="wce50lrfDDKRegGetIsrInfo" TABINDEX="0">DDKReg_GetIsrInfo</MSHelp:link> function.</li>
+
+	<LI>Obtain hardware I/O or memory window information by calling the <MSHelp:link keywords="wce50lrfDDKRegGetWindowInfo" TABINDEX="0">DDKReg_GetWindowInfo</MSHelp:link> function.</li>
+
+	<LI>Obtain a hardware and by calling the <MSHelp:link keywords="wce50lrfHalTranslateBusAddress" TABINDEX="0">HalTranslateBusAddress</MSHelp:link> function to translate the bus-specific address to a system physical address.</li>
+
+	<LI>Obtain a virtual address by calling the <B>MnMapIoSpace </B>function to map the system physical address </li>
+
+	<LI>Reset your hardware and disable the interrupt.</li>
+
+	<LI>Load the installable ISR by calling the <MSHelp:link keywords="wce50lrfLoadIntChainHandler" TABINDEX="0">LoadIntChainHandler</MSHelp:link> function with information obtained from <MSHelp:link keywords="wce50lrfDDKRegGetIsrInfo" TABINDEX="0">DDKReg_GetIsrInfo</MSHelp:link>. You should assume that your ISR will access the card register to identify the interrupt. <MSHelp:link keywords="wce50lrfTransBusAddrToStatic" TABINDEX="0">TransBusAddrToStatic</MSHelp:link> is needed to map the system physical address for hardware. </li>
+
+	<LI>Begin the IST and enable the interrupt.</li>
+</OL>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50oridriverhelperapplicationsfunctionslibraries.htm">Device Driver Development Helper Libraries</A> | <A HREF="wce50oripccarddrivers.htm">PC Card Drivers</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

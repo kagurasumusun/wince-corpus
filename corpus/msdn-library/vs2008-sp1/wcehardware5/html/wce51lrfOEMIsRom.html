@@ -1,0 +1,113 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>OEMIsRom</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="OEMIsRom"/>
+<MSHelp:RLTitle Title="OEMIsRom"/>
+<MSHelp:Keyword Index="K" Term="OEMIsRom"/>
+<MSHelp:Keyword Index="A" Term="wce51lrfOEMIsRom"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Hardware"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="True"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="apiref"/>
+<MSHelp:Attr Name="Filename" Value="oal_functions1.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="True"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+<MSHelp:Attr Name="APIName" Value="OEMIsRom"/>
+<MSHelp:Attr Name="APIType" Value="IDLDef"/>
+<MSHelp:Attr Name="APILocation" Value="OEM-defined"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_1068602">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce51lrfoemisrom"></A>OEMIsRom</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>This function determines if a given address range falls within a valid range of ROM addresses, and may be used to support ROM breakpoints.</P>
+
+<PRE class="syntax"><B>BOOL OEMIsROM(</B>
+<B>  LPVOID </B><I>pvAddr</I><B>,</B>
+<B>  DWORD </B><I>cbSize</I>
+<B>);</B></PRE>
+
+<H4 class="dtH4">Parameters</H4>
+
+<DL>
+<DT><I>pvAddr</I></DT>
+
+<DD>Starting address of ROM range.</dd>
+
+<DT><I>cbSize</I></DT>
+
+<DD>Size of address range.</dd>
+</DL>
+
+<H4 class="dtH4">Return Value</H4>
+
+<P>This function returns TRUE if the given address falls within an accessible range of ROM addresses.</P>
+
+<H4 class="dtH4">Remarks</H4>
+
+<P>The kernel pointer <A HREF="wce51lrfpfnoemisrom.htm">pfnOEMIsRom</A> should be assigned to this function during <A HREF="wce50lrfoeminit.htm">OEMInit</A>.</P>
+
+<P>Your implementation of the <B>OEMIsRom</B> function must meet the following requirements:
+
+<UL type="disc">
+	<LI>Debug trace output is not allowed in this function.</li>
+
+	<LI>If the input address range partially overlaps the ROM range, the function should return TRUE.</li>
+</UL>
+
+<P>The following code example shows an implementation of <B>OEMIsRom</B>.</P>
+
+<PRE class="code">BOOL OEMIsRom( LPVOID pvAddr, DWORD cbSize )
+{
+    DWORD  CachedAddr;
+    // Use cached addresses
+    CachedAddr = (DWORD )pvAddr &amp; ~CACHED_TO_UNCACHED_OFFSET;
+    // Both addresses must fall within the flash range
+         return( (CachedAddr &lt; FLASH_END) &amp;&amp; ((CachedAddr + cbSize) &gt; FLASH_START) );
+}</PRE>
+
+<H4 class="dtH4">Requirements</H4>
+
+<P><B>OS Versions: </B>Windows CE 5.0 or later.<BR>
+<B>Header: </B>OEM-defined.<BR>
+<B>Link Library:</B> OEM-defined.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><MSHelp:link keywords="wce51conAddingSupportForROMBreakpoints" TABINDEX="0">Adding Support for ROM Breakpoints</MSHelp:link> | <A HREF="wce51lrfpfnoemisrom.htm">pfnOEMIsROM</A> | <A HREF="wce50lrfoeminit.htm">OEMInit</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

@@ -1,0 +1,114 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>MiniportCancelSendPackets</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="MiniportCancelSendPackets"/>
+<MSHelp:RLTitle Title="MiniportCancelSendPackets"/>
+<MSHelp:Keyword Index="K" Term="MiniportCancelSendPackets"/>
+<MSHelp:Keyword Index="A" Term="wce50lrfMiniportCancelSendPackets"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Driver"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="False"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="apiref"/>
+<MSHelp:Attr Name="Filename" Value="ndis_upper_edge_functions.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="False"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+<MSHelp:Attr Name="APIName" Value="MiniportCancelSendPackets"/>
+<MSHelp:Attr Name="PBFeature" Value="NetworkDriver"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_3018963">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50lrfminiportcancelsendpackets"></A>MiniportCancelSendPackets</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>The<I> </I><B>MiniportCancelSendPackets</B> function is optional. For a specified adapter, <B>MiniportCancelSendPackets</B> cancels the transmission of all packets that are marked with a specified cancellation identifier.</P>
+
+<PRE class="syntax"><B>VOID MiniportCancelSendPackets(</B>
+<B>  NDIS_HANDLE </B><I>MiniportAdapterContext</I><B>,</B>
+<I>  </I><B>ULONG_PTR</B> <I>CancelId</I>
+<B>);</B></PRE>
+
+<H4 class="dtH4">Parameters</H4>
+
+<DL>
+<DT><I>MiniportAdapterContext </I></DT>
+
+<DD>[in] Specifies the handle to a miniport driver-allocated context area in which the miniport driver maintains per-NIC state, set up by <I>MiniportInitialize</I>. </dd>
+
+<DT><I>CancelId </I></DT>
+
+<DD>[in] A cancellation identifier. This identifier specifies the packet or group of packets whose transmission is being canceled. </dd>
+</DL>
+
+<H4 class="dtH4">Return Values</H4>
+
+<P>None.</P>
+
+<H4 class="dtH4">Remarks</H4>
+
+<P>Miniport drivers and intermediate drivers that queue send packets for more than one second should export a <B>MiniportCancelSendPackets</B> function. The <B>MiniportCancelSendPackets</B> function allows the miniport driver or intermediate driver to cancel the pending transmission of specified send packets.</P>
+
+<P>When a protocol driver or intermediate driver calls the <A HREF="wce50lrfndiscancelsendpackets.htm">NdisCancelSendPackets</A> function, NDIS calls the <B>MiniportCancelSendPackets</B> function of the appropriate lower-level driver (miniport driver or intermediate driver) on the binding, provided that the lower-lever driver exports a <B>MiniportCancelSendPackets</B> function.</P>
+
+<P>A miniport driver's <B>MiniportCancelSendPackets</B> function performs the following operations: 
+
+<OL type="1">
+	<LI>Traverses its list of queued packets for the specified adapter and calls <A HREF="wce50lrfndisgetpacketcancelid.htm">NdisGetPacketCancelId</A> to obtain the cancellation identifier for each queued packet. The miniport driver compares the cancellation ID returned by <B>NdisGetPacketCancelId</B> with the cancellation ID supplied to <B>MiniportCancelSendPackets</B>. </li>
+
+	<LI>Unlinks all packets whose cancellation identifiers match the specified cancellation identifier. </li>
+
+	<LI>Calls the <A HREF="wce50lrfndismsendcomplete.htm">NdisMSendComplete</A> or <A HREF="wce50lrfndismwansendcomplete.htm">NdisMWanSendComplete</A> function for all unlinked packets to return the packet with a completion status of NDIS_STATUS_ABORTED. </li>
+</OL>
+
+<P>An intermediate driver's <B>MiniportCancelSendPackets</B> function performs the following operations: 
+
+<OL type="1">
+	<LI>Performs the operations liste<I>d </I>above<I> </I>for a miniport driver's<I> </I><B>MiniportCancelSendPackets</B> function. </li>
+
+	<LI>Calls the <B>NdisCancelSendPackets</B> function, specifying the binding that maps to the adapter specified in the call to <B>MiniportCancelSendPackets</B>. In the call to <B>NdisCancelSendPackets</B>, the intermediate miniport driver passes the appropriate NdisBindingHandle and cancellation identifier (<I>CancelId</I>) passed to its <B>MiniportCancelSendPackets</B> function. </li>
+</OL>
+
+<P>An intermediate driver performs these operations regardless of whether it supports packet stacking. </P>
+
+<H4 class="dtH4">Requirements</H4>
+
+<P><B>OS Versions:</B> Windows CE .NET 4.0 and later.<BR>
+<B>Header:</B> Externs.h.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50lrfndiscancelsendpackets.htm">NdisCancelSendPackets</A> | <A HREF="wce50lrfndisgetpacketcancelid.htm">NdisGetPacketCancelId</A> | <A HREF="wce50lrfndisgeneratepartialcancelid.htm">NdisGeneratePartialCancelId</A> | <A HREF="wce50lrfndismsendcomplete.htm">NdisMSendComplete</A> | <A HREF="wce50lrfndismwansendcomplete.htm">NdisMWanSendComplete</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

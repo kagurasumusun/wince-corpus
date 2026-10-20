@@ -1,0 +1,163 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Implementing the KeybdPdd_GetEventEx2 Function</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Implementing the KeybdPdd_GetEventEx2 Function"/>
+<MSHelp:RLTitle Title="Implementing the KeybdPdd_GetEventEx2 Function"/>
+<MSHelp:Keyword Index="A" Term="wce50tskImplementingtheKeybdPddGetEventEx2Function"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Driver"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="False"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbTask"/>
+<MSHelp:Attr Name="Filename" Value="howto_migkbddrvrlayoutmgr.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="True"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+<MSHelp:Attr Name="PBFeature" Value="KeyboardDriver"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_3017595">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50tskimplementingthekeybdpddgeteventex2function"></A>Implementing the KeybdPdd_GetEventEx2 Function</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>In your Windows CE .NET 4.2 or later keyboard driver, replace the implementation of the <B>KeybdPdd_GetEventEx</B> function with an implementation of the <B>KeybdPdd_GetEventEx2</B> function.</P>
+
+<P>Perform the following steps in the files that contain the declaration and the implementation of the Windows CE .NET 4.1 or earlier <B>KeybdPdd_GetEventEx</B> function. Usually, these files are named Ps2keybd.hpp and Ps2keybd.cpp.</P>
+
+<P class="labelproc"><B>To implement the KeybdPdd_GetEventEx2 function</B>
+
+<OL type="1">
+	<LI>In the source file, replace the <B>KeybdPdd_GetEventEx</B> function implementation with the <B>KeybdPdd_GetEventEx2</B> function implementation. 
+<P>The following code example shows an implementation of <B>KeybdPdd_GetEventEx2</B>.
+
+<PRE class="code">static
+UINT
+KeybdPdd_GetEventEx2(
+  UINT uiPddId,
+  UINT32 rguiScanCode[16],
+  BOOL rgfKeyUp[16]
+)
+{
+  SETFNAME(_T("KeybdPdd_GetEventEx2"));
+
+  UINT8 ui8ScanCode;
+  UINT cEvents = 0;
+
+  static UINT32 scInProgress;
+  static UINT32 scPrevious;
+  static BOOL fKeyUp;
+
+  DEBUGCHK(rguiScanCode != NULL);
+  DEBUGCHK(rgfKeyUp != NULL);
+
+  v_pp2k-&gt;m_pp2p-&gt;KeybdDataRead(&amp;ui8ScanCode);
+
+  DEBUGMSG(ZONE_SCANCODES, (_T("%s: scan code 0x%08x, code in progress 0x%08x, previous 0x%08x\r\n"), pszFname, ui8ScanCode, scInProgress, scPrevious));
+
+  if (ui8ScanCode == 0xf0) {
+    fKeyUp = TRUE;
+  }
+  else if (ui8ScanCode == scE0Extended) {
+      scInProgress = 0xe000;
+  } else if (ui8ScanCode == scE1Extended) {
+      scInProgress = 0xe10000;
+  } else if (scInProgress == 0xe10000) {
+      scInProgress |= ui8ScanCode &lt;&lt; 8;
+  } else {
+      scInProgress |= ui8ScanCode;
+      if ((scInProgress == scPrevious) &amp;&amp; (fKeyUp == FALSE)) {
+          // mdd handles auto-repeat so ignore auto-repeats from keybd
+      } 
+      else {
+          // Not a repeated key.  This is the real thing.
+          // The Korean keyboard has two keys which generate a single
+          // scan code when pressed.  The keys do not auto-repeat or
+          // generate a scan code on release.  The scan codes are 0xf1
+          // and 0xf2.  It does notlook like any other driver uses
+          // the 0x71 or 0x72 scan code so it should be safe.
+
+          // If it is one of the Korean keys, drop the previous scan code.
+          // If we did not, the earlier check to ignore auto-repeating keys
+          // would prevent this key from working twice in a row because the
+          // key does not generate a scan code on release.
+          if ( ( fKeyUp == TRUE ) ||
+              ( scInProgress == 0xf1 ) ||
+              ( scInProgress == 0xf2 ) )
+          {
+              scPrevious = 0;
+          }
+          else {
+              scPrevious = scInProgress;
+          }
+
+          rguiScanCode[cEvents] = scInProgress;
+          rgfKeyUp[cEvents] = fKeyUp;
+          ++cEvents;
+      }
+
+      scInProgress = 0;
+      fKeyUp = FALSE;
+  }
+
+  return cEvents;
+}</PRE>
+</li>
+
+	<LI>In the header file, replace the declaration of <B>KeybdPdd_GetEventEx</B> with a declaration for <B>KeybdPdd_GetEventEx2</B>. 
+<P>The following code example shows a sample declaration for <B>KeybdPdd_GetEventEx2</B>.
+
+<PRE class="code">UINT
+WINAPI
+KeybdPdd_GetEventEx2(
+    UINT    uiPddId,
+    UINT32  rguiScanCode[16],
+    BOOL    rgfKeyDown[16]
+    );</PRE>
+</li>
+
+	<LI>For some hardware platforms, in the header file, you might need to add a declaration for the <B>KeybdPdd_PowerHandler</B> function, which is type defined as <A HREF="wce50lrfpfn_keybd_pdd_power_handler.htm">PFN_KEYBD_PDD_POWER_HANDLER</A>. 
+<P>The following code example shows a declaration for this function.
+
+<PRE class="code">void
+KeybdPdd_PowerHandler(
+    BOOL bOff
+    );</PRE>
+</li>
+</OL>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50conlayoutmanager.htm">Layout Manager</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

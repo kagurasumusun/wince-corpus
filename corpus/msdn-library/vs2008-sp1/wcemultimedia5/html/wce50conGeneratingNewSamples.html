@@ -1,0 +1,93 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Generating New Samples</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Generating New Samples"/>
+<MSHelp:RLTitle Title="Generating New Samples"/>
+<MSHelp:Keyword Index="A" Term="wce50conGeneratingNewSamples"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Feature"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="directshow_concepts1.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="False"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+<MSHelp:Attr Name="PBFeature" Value="SYSGEN_DSHOW"/>
+<MSHelp:Attr Name="PBOnly" Value="False"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_3020489">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50congeneratingnewsamples"></A>Generating New Samples</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>This section describes how source filters generate media samples.</P>
+
+<H2 class="dtH2"><A NAME="wce50congeneratingnewsamplesanchor1"></A>Push Model</H2>
+
+<P>In the push model, the source filter initiates the process, as follows:
+
+<UL type="disc">
+	<LI>The source filter calls <A HREF="wce50lrfimemallocatorgetbuffer.htm">IMemAllocator::GetBuffer</A> to retrieve an empty media sample. </li>
+
+	<LI>The source filter fills the media sample with data. How this occurs depends entirely on the nature of the source. </li>
+
+	<LI>The source filter calls <A HREF="wce50lrfimeminputpinreceive.htm">IMemInputPin::Receive</A> on the downstream input pin, passing it a pointer to the sample's <A HREF="wce50lrfimediasampleinterface.htm">IMediaSample</A> interface. </li>
+
+	<LI>The downstream filter can either process the sample before returning from <B>Receive</B>, or else hold the sample and process it afterward. If the downstream filter holds the sample, it calls <MSHelp:link keywords="wce50lrfIUnknownAddRef" TABINDEX="0">IUnknown::AddRef</MSHelp:link> on the sample. </li>
+
+	<LI>The source filter calls <MSHelp:link keywords="wce50lrfIUnknownRelease" TABINDEX="0">IUnknown::Release</MSHelp:link> on the sample. </li>
+</UL>
+
+<P>At this point, the downstream filter might hold a reference count on the sample, so the source filter cannot simply re-use the sample. To deliver the next sample, it must call <B>IMemAlloctor::GetBuffer</B> again, as described in step 1.</P>
+
+<BLOCKQUOTE class="dtBlock">
+<b class="le">Note</b>&nbsp;&nbsp;&nbsp;To deliver multiple samples, in step 3 the source filter could call <A HREF="wce50lrfimeminputpinreceivemultiple.htm">IMemInputPin::ReceiveMultiple</A> instead.</BLOCKQUOTE>
+
+<H2 class="dtH2"><A NAME="wce50congeneratingnewsamplesanchor2"></A>Pull Model</H2>
+
+<P>In the pull model, the parser filter requests data from the source filter. The parser filter uses the <A HREF="wce50lrfiasyncreaderinterface.htm">IAsyncReader</A> interface on the source filter's output pin, as follows:
+
+<OL type="1">
+	<LI>The parser filter calls <B>IMemAllocator::GetBuffer</B> to retrieve an empty media sample. </li>
+
+	<LI>It calls <A HREF="wce50lrfiasyncreaderrequest.htm">IAsyncReader::Request</A> to request data from the source filter. </li>
+
+	<LI>While the source filter is retrieving the data, the parser calls <A HREF="wce50lrfiasyncreaderwaitfornext.htm">IAsyncReader::WaitForNext</A>. This method waits until the request from step 2 is completed. </li>
+
+	<LI>The parser filter processes the data (possibly by calling <B>IMemInputPin::Receive</B> on its own input pin) and delivers it downstream. </li>
+</OL>
+
+<P>Steps 2 and 3 perform an asynchronous read operation. The parser can request a synchronous read operation instead, using the <A HREF="wce50lrfiasyncreadersyncread.htm">IAsyncReader::SyncRead</A> or <A HREF="wce50lrfiasyncreadersyncreadaligned.htm">IAsyncReader::SyncReadAligned</A> method.</P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

@@ -1,0 +1,95 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Timestamps (RFC 1323)</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Timestamps (RFC 1323)"/>
+<MSHelp:RLTitle Title="Timestamps (RFC 1323)"/>
+<MSHelp:Keyword Index="A" Term="wce50conTimestampsRFC1323"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Feature"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="tcpip_concepts.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="True"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+<MSHelp:Attr Name="PBFeature" Value="SYSGEN_TCPIP"/>
+<MSHelp:Attr Name="PBOnly" Value="False"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_3006854">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50contimestampsrfc1323"></A>Timestamps (RFC 1323)</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>Windows CE supports TCP timestamps, as explained in RFC 1323, "TCP Extensions for High Performance," which can be viewed at the <A HREF="http://go.microsoft.com/fwlink/?LinkId=6746">Internet Engineering Task Force Web site</A>. Like SACK, timestamps are important for connections using large window sizes. Timestamps assist TCP in accurately measuring round trip time (RTT), which is used to adjust retransmission timeouts. </P>
+
+<H1 class="dtH1">TCP Timestamps Option (TSopt)</H1>
+
+<P>The TCP timestamps option carries two 4-byte timestamp fields. The TCP timestamps option header is shown here, from RFC 1323:</P>
+
+<P>Kind: 8</P>
+
+<P>Length: 10 bytes</P>
+
+<PRE class="code">+-------+-------+---------------------+---------------------+
+|Kind=8 |  10   |   TS Value (TSval)  |TS Echo Reply (TSecr)|
++-------+-------+---------------------+---------------------+
+    1       1              4                     4</PRE>
+
+<P>The Timestamp Value field (TSval) contains the current value of the timestamp clock of the TCP sending the option. The Timestamp Echo Reply field echoes a timestamp value that was sent by the remote TCP in the TSval field of the Timestamps option. The TSecr field is only valid if the ACK bit is set in the TCP header. When TSecr is not valid, its value must be zero. </P>
+
+<P>The TSecr value will generally be from the most recent timestamp option that was received. One possible exception is if a TCP transmission sends the timestamps option (TSopt) in an initial &lt;SYN&gt; segment, for example, a segment containing a SYN bit and no ACK bit, and sends a TSopt in other segments only if it received a TSopt in the initial &lt;SYN&gt; segment for the connection.</P>
+
+<P>The timestamps option field can be viewed in a Network Monitor trace by expanding the TCP options field, as shown below.</P>
+
+<PRE class="code">TCP: Timestamps Option
+    TCP: Option Type = Timestamps
+    TCP: Option Length = 10 (0xA)
+    TCP: Timestamp = 2525186 (0x268802)
+    TCP: Reply Timestamp = 1823192 (0x1BD1D8)</PRE>
+
+<P>Windows CE enables the timestamps option by default. You can disable timestamps by setting the Tcp1323Opts registry entry to 0. If you need to re-enable the option, you can set the registry entry to 2.</P>
+
+<H1 class="dtH1">RTT Mechanism (RTTM) for Timestamps</H1>
+
+<P>The value to be sent in the TSval field of the timestamps option is obtained from the timestamp clock, a type of virtual clock. To measure actual RTT, this clock's values must be approximately proportional to real time. For more information about the RTTM for timestamps, see RFC 1323 at the <A HREF="http://go.microsoft.com/fwlink/?LinkId=6746">Internet Engineering Task Force Web site</A>.</P>
+
+<H1 class="dtH1">Echoing a Timestamp Value</H1>
+
+<P>If more than one timestamps option is received before a reply segment is sent, the TCP must choose only one of the timestamp values (TSvals) to echo, ignoring the others. The unprocessed values are kept in the receiver as the timestamp state. To minimize this state, the receiver should keep no more than one timestamp in the connection control block. For more information about echoing for timestamp values, see RFC 1323 at the <A HREF="http://go.microsoft.com/fwlink/?LinkId=6746">Internet Engineering Task Force Web site</A>.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50contransmissioncontrolprotocoltcp.htm">Transmission Control Protocol (TCP)</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

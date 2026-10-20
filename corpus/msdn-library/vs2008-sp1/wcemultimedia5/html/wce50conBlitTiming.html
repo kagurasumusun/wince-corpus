@@ -1,0 +1,64 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Blit Timing</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Blit Timing"/>
+<MSHelp:RLTitle Title="Blit Timing"/>
+<MSHelp:Keyword Index="A" Term="wce50conBlitTiming"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Feature"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="directdraw_concepts.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="False"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+<MSHelp:Attr Name="PBFeature" Value="SYSGEN_DDRAW"/>
+<MSHelp:Attr Name="PBOnly" Value="False"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_1073773">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50conblittiming"></A>Blit Timing</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>When you copy pixels to a surface using either <A HREF="wce50lrfidirectdrawsurface5blt.htm">IDirectDrawSurface5::Blt</A> or <A HREF="wce50lrfidirectdrawsurface5bltfast.htm">IDirectDrawSurface5::BltFast</A>, the method might fail with <A HREF="wce50condirectdrawreturnvalues.htm#wce50condirectdrawreturnvaluesanchor109">DDERR_WASSTILLDRAWING</A> because the hardware blitter was not ready to accept the command.</P>
+
+<P>If your application has no urgent business to perform while waiting for the blitter to come back into a state of readiness, you can specify the DDBLT_WAIT flag in the <I>dwFlags</I> parameter of <B>Blt</B>, or the equivalent DDBLTFAST_WAIT flag for <B>BltFast</B>. </P>
+
+<P>The flag causes the method to wait until the blit can be handed off to the blitter (or until an error other than DDERR_WASSTILLDRAWING occurs).</P>
+
+<P><B>Blt</B> accepts another flag, DDBLT_ASYNC, that takes advantage of any hardware FIFO (first in, first out) queuing capabilities.  If the <B>dwFlags</B> member is DDBLT_ASYNC, and there is enough FIFO memory to do a blit, the blit is done asynchronously through the FIFO queue, in the order received.  If there is not enough FIFO memory, a message is sent out for debugging purposes to indicate that the asynchronous blit failed, the <B>ddRVal</B> member of the <MSHelp:link keywords="wce50lrfDDHALBLTDATA" TABINDEX="0">DDHAL_BLTDATA</MSHelp:link> structure is set to DDERR_WASSTILLDRAWING, and DDHAL_DRIVER_HANDLED is returned.</P>
+
+<P>If you set both DDBLT_ASYNC and DDBL_WAIT the call will try to queue the blit in the FIFO and, if successful, return immediately.  If the queue is blocked, the call will wait until there is room in the queue.  Once there is room for the blit, the call place the blit on the queue and then proceed asynchronously.</P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

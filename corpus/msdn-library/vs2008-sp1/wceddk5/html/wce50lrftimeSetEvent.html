@@ -1,0 +1,186 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>timeSetEvent</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="timeSetEvent"/>
+<MSHelp:RLTitle Title="timeSetEvent"/>
+<MSHelp:Keyword Index="K" Term="timeSetEvent"/>
+<MSHelp:Keyword Index="A" Term="wce50lrftimeSetEvent"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Driver"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="False"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="apiref"/>
+<MSHelp:Attr Name="Filename" Value="timer_reference.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="False"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+<MSHelp:Attr Name="APIName" Value="timeSetEvent"/>
+<MSHelp:Attr Name="APIType" Value="LibDef"/>
+<MSHelp:Attr Name="APILocation" Value="Mmtimer.lib"/>
+<MSHelp:Attr Name="PBFeature" Value="TimerDriver"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_1042336">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50lrftimesetevent"></A>timeSetEvent</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>This function starts a specified timer event. </P>
+
+<PRE class="syntax"><B>MMRESULT timeSetEvent(</B>
+  <B>UINT</B><I> uDelay</I><B>,</B>
+  <B>UINT</B><I> uResolution</I><B>,</B>
+  <B>LPTIMECALLBACK</B><I> fptc</I><B>,</B>
+  <B>DWORD</B><I> dwUser</I><B>,</B>
+<B>  UINT </B><I>fuEvent</I>
+<B>);</B></PRE>
+
+<H4 class="dtH4">Parameters</H4>
+
+<DL>
+<DT><I>uDelay</I></DT>
+
+<DD>[in] Event delay, in milliseconds. 
+
+<P>If this value is not in the range of the minimum and maximum event delays supported by the timer, the function returns an error.
+</dd>
+
+<DT><I>uResolution</I></DT>
+
+<DD>[in] Resolution of the timer event, in milliseconds. 
+
+<P>The resolution increases with smaller values; a resolution of zero indicates periodic events should occur with the greatest possible accuracy. To reduce system overhead, however, you should use the maximum value appropriate for your application.
+</dd>
+
+<DT><I>fptc</I></DT>
+
+<DD>[in] Pointer to a callback function that is called once on expiration of a single event or periodically on expiration of periodic events. 
+
+<P>If <I>fuEvent</I> specifies the TIME_CALLBACK_EVENT_SET or TIME_CALLBACK_EVENT_PULSE flag, and then the <I>lpTimeProc</I> parameter is interpreted as a handle to an event object. The event will be set or pulsed on completion of a single event or periodically on completion of periodic events. 
+
+
+<P>For any other value of <I>fuEvent</I>, the <I>lpTimeProc</I> parameter is interpreted as a function pointer. 
+
+
+<P>The following code example shows the signature for the function pointer.
+
+
+<P><code class="ce">typedef void (CALLBACK TIMECALLBACK)(UINT uTimerID, UINT uMsg, DWORD_PTR dwUser, DWORD_PTR dw1, DWORD_PTR dw2);</code>
+
+
+<P><code class="ce">typedef TIMECALLBACK FAR *LPTIMECALLBACK;</code>
+</dd>
+
+<DT><I>dwUser</I></DT>
+
+<DD>[in] User-supplied callback data.</dd>
+
+<DT><I>fuEvent</I></DT>
+
+<DD>[in] Timer event type. 
+
+<P>The following table shows the values that can be included by the <I>fuEvent</I> parameter.
+
+
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=40%>Value</TH>
+<TH width=60%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=40%>TIME_ONESHOT</TD>
+<TD width=60%>Event occurs once, after <I>uDelay</I> milliseconds.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=40%>TIME_PERIODIC</TD>
+<TD width=60%>Event occurs every <I>uDelay</I> milliseconds.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=40%>TIME_CALLBACK_FUNCTION</TD>
+<TD width=60%>When the timer expires, the system calls the function pointed to by the <I>lpTimeProc</I> parameter. 
+<P>This is the default value.</P>
+</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=40%>TIME_CALLBACK_EVENT_SET</TD>
+<TD width=60%>When the timer expires, the system calls the <MSHelp:link keywords="wce50lrfSetEvent" TABINDEX="0">SetEvent</MSHelp:link> function to set the event pointed to by the <I>lpTimeProc</I> parameter. 
+<P>The <I>dwUser</I> parameter is ignored.</P>
+</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=40%>TIME_CALLBACK_EVENT_PULSE</TD>
+<TD width=60%>When the timer expires, the system calls <MSHelp:link keywords="wce50lrfPulseEvent" TABINDEX="0">PulseEvent</MSHelp:link> function to pulse the event pointed to by the <I>lpTimeProc</I> parameter.
+<P>The <I>dwUser</I> parameter is ignored.</P>
+</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=40%>TIME_KILL_SYNCHRONOUS</TD>
+<TD width=60%>Passing this flag prevents an event from occurring after the <A HREF="wce50lrftimekillevent.htm">timeKillEvent</A> function is called.</TD>
+</TR>
+</table></div>
+
+</dd>
+</DL>
+
+<H4 class="dtH4">Return Values</H4>
+
+<P>Returns an identifier for the timer event, if successful; otherwise, an error is returned. </P>
+
+<P>This function returns NULL if it fails and the timer event was not created. </P>
+
+<P>This identifier is passed to the callback function.</P>
+
+<H4 class="dtH4">Remarks</H4>
+
+<P>Each call to <B>timeSetEvent</B> for periodic timer events requires a corresponding call to the <B>timeKillEvent</B> function.</P>
+
+<P>Creating an event with the TIME_KILL_SYNCHRONOUS and the TIME_CALLBACK_FUNCTION flags prevents the event from occurring after the <B>timeKillEvent</B> function is called.</P>
+
+<H4 class="dtH4">Requirements</H4>
+
+<P><B>OS Versions:</B> Windows CE .NET 4.2 and later.<BR>
+<B>Header:</B> Mmsystem.h.<BR>
+<B>Link Library:</B> Mmtimer.lib.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><MSHelp:link keywords="wce50lrfSetEvent" TABINDEX="0">SetEvent</MSHelp:link> | <MSHelp:link keywords="wce50lrfPulseEvent" TABINDEX="0">PulseEvent</MSHelp:link> | <A HREF="wce50lrftimekillevent.htm">timeKillEvent</A> | <MSHelp:link keywords="wce50grfTimeReference" TABINDEX="0">Time Reference</MSHelp:link></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

@@ -1,0 +1,135 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>PFXImportCertStore</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="PFXImportCertStore"/>
+<MSHelp:RLTitle Title="PFXImportCertStore"/>
+<MSHelp:Keyword Index="K" Term="PFXImportCertStore"/>
+<MSHelp:Keyword Index="A" Term="wce50lrfPFXImportCertStore"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Feature"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="Technology" Value="Security"/>
+<MSHelp:Attr Name="TopicType" Value="apiref"/>
+<MSHelp:Attr Name="Filename" Value="crypto2_functions.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="False"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+<MSHelp:Attr Name="APIName" Value="PFXImportCertStore"/>
+<MSHelp:Attr Name="APIType" Value="LibDef"/>
+<MSHelp:Attr Name="APILocation" Value="Crypt32.lib"/>
+<MSHelp:Attr Name="PBFeature" Value="SYSGEN_CERTS"/>
+<MSHelp:Attr Name="PBOnly" Value="False"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_1037665">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50lrfpfximportcertstore"></A>PFXImportCertStore</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>This function imports a Personal Information Exchange (PFX) BLOB and returns the handle of a store containing certificates and any associated private keys. </P>
+
+<P>PFX format is also known as Public-Key Cryptography Standards #12 (PKCS #12) format. </P>
+
+<PRE class="syntax"><B>HCERTSTORE WINAPI PFXImportCertStore(</B>
+<B>  CRYPT_DATA_BLOB* </B><I>pPFX</I><B>,</B>
+<B>  LPCWSTR </B><I>szPassword</I><B>,</B>
+<B>  DWORD </B><I>dwFlags</I>
+<B>);</B></PRE>
+
+<H4 class="dtH4">Parameters</H4>
+
+<DL>
+<DT><I>pPFX</I></DT>
+
+<DD>[in] Pointer to a <A HREF="wce50lrfblobcryptography.htm">CRYPT_DATA_BLOB</A> structure containing a PFX packet with the exported and encrypted certificates and keys. </dd>
+
+<DT><I>szPassword</I></DT>
+
+<DD>[in] String password used to decrypt and verify the PFX packet. This password must be exactly the same as the password that was used to encrypt the packet. </dd>
+
+<DT><I>dwFlags</I> </DT>
+
+<DD>[in] Flag values can be set to the following. 
+
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=40%>Flag value</TH>
+<TH width=60%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=40%>CRYPT_EXPORTABLE </TD>
+<TD width=60%>Imported keys are marked as exportable If this flag is not used, calls to <A HREF="wce50lrfcryptexportkey.htm">CryptExportKey</A> with the key handle fail. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=40%>CRYPT_USER_PROTECTED </TD>
+<TD width=60%>The user is to be notified through a dialog box or another method when certain actions are attempting to use this key. The precise behavior is specified by the Cryptographic Service Provider (CSP) that is being used. If the provider context was opened with the CRYPT_SILENT flag set, using this flag causes a failure and the last error is set to NTE_SILENT_CONTEXT. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=40%>CRYPT_MACHINE_KEYSET </TD>
+<TD width=60%>The private keys are stored under local machine and not the current user. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=40%>CRYPT_USER_KEYSET </TD>
+<TD width=60%>The private keys are stored under the current user and not the local machine even if the PFX BLOB specifies that they should go into local machine. </TD>
+</TR>
+</table></div>
+
+</dd>
+</DL>
+
+<H4 class="dtH4">Return Values</H4>
+
+<P>If successful, this function returns the handle to a certificate store that contains the imported certificates, including available private keys. If the password parameter does not contain an exact match with the password used to encrypt the exported packet, or if there were any other problems decoding the PFX BLOB, the function returns NULL and an error code can be found by calling the <MSHelp:link keywords="wce50lrfGetLastError" TABINDEX="0">GetLastError</MSHelp:link> function.</P>
+
+<P>The returned value <B>HCERTSTORE</B> is a temporary memory store that should be freed using <A HREF="wce50lrfcertclosestore.htm">CertCloseStore</A>.</P>
+
+<H4 class="dtH4">Remarks</H4>
+
+<P>When you have finished using <I>szPassword</I>, clear the password from memory by calling the <MSHelp:link keywords="wce50lrfSecureZeroMemory" TABINDEX="0">SecureZeroMemory</MSHelp:link> function.</P>
+
+<H4 class="dtH4">Requirements</H4>
+
+<P><B>OS Versions:</B> Windows CE 5.0 and later.<BR>
+<B>Header:</B> Wincrypt.h.<BR>
+<B>Link Library:</B> Crypt32.lib.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50grfcertificatesfunctions.htm">Certificates Functions</A> | <A HREF="wce50lrfpfxexportcertstoreex.htm">PFXExportCertStoreEx</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

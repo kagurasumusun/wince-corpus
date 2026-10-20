@@ -1,0 +1,181 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>How to: Create a Message</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="How to: Create a Message"/>
+<MSHelp:RLTitle Title="How to: Create a Message"/>
+<MSHelp:Keyword Index="A" Term="mob5tskHowToCreateMessage"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Application"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbsmartphone"/>
+<MSHelp:Attr Name="Product" Value="kbPocketPC"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="Technology" Value="kbPocketPC"/>
+<MSHelp:Attr Name="Technology" Value="kbSmartphone"/>
+<MSHelp:Attr Name="TopicType" Value="kbTask"/>
+<MSHelp:Attr Name="Filename" Value="Messaging_magneto.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="True"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_1063802">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Windows Mobile Version 5.0 SDK<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="mob5tskhowtocreatemessage"></A>How to: Create a Message</H1>
+<!--Feedback Link Top Start-->
+<P CLASS="feedback"><font size="1"><a href="mailto:medfdbk&#64;microsoft.com?subject=Product: Windows Mobile | Version: 5.0 | Release: SDK | Title: How to: Create a Message | Filename: mob5tskhowtocreatemessage.htm | Built on: Wednesday, September 14, 2005">Send Feedback</a> on this topic to the authors</font></p>
+<!--Feedback Link Top End-->
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>New messages are always created from a message store's Drafts folder. After you create a message, you can set its property values (subject, body, list of recipients, and so on) and then send the message.</P>
+
+<P class="labelproc"><B>To create a message object</B>
+
+<OL type="1">
+	<LI>Initialize the MAPI subsystem, and log onto a MAPI session. For more information, see <A HREF="mob5tskhowtobeginmapisession.htm">How to: Begin a MAPI Session</A>.</li>
+
+	<LI>Establish a connection to a message store. For more information, see <A HREF="mob5tskhowtoconnecttomessagestore.htm">How to: Connect to a Message Store</A>.</li>
+
+	<LI>Initialize the property tag array to request the Entry ID property value of the Drafts folder by setting the property tag of the array to <B>PR_CE_IPM_DRAFTS_ENTRYID</B>:
+<PRE class="code">SPropTagArray STags = { 1, {<code><b class="cfe">PR_CE_IPM_DRAFTS_ENTRYID</b></code>} };</PRE>
+</li>
+
+	<LI>Get the Entry ID property value of the Drafts folder by calling <A HREF="mob5lrfimapipropgetprops.htm">IMAPIProp::GetProps</A> on the message store object:
+<PRE class="code">hr = pStore-&gt;GetProps(<code><b class="cfe">&amp;STags</b></code>, 0, &amp;cValues, <code><b class="cfe">&amp;pSProps</b></code>);</PRE>
+</li>
+
+	<LI>Open the Drafts folder by calling <A HREF="mob5lrfimsgstoreopenentry.htm">IMsgStore::OpenEntry</A> for the returned Entry ID:
+<PRE class="code">hr = pStore-&gt;OpenEntry(<code><b class="cfe">pSProps[0].Value.bin.cb</b></code>, 
+                      <code><b class="cfe">(LPENTRYID)pSProps[0].Value.bin.lpb</b></code>, 
+                      NULL, 
+                      0, 
+                      &amp;ulObjType, 
+                      <code><b class="cfe">(IUnknown **)&amp;pFldrDrafts</b></code>);</PRE>
+</li>
+
+	<LI>Declare a <B>NULL</B> <A HREF="mob5lrfimessage.htm">IMessage</A> interface object, and then create a new message in the Drafts folder by using the <A HREF="mob5lrfimapifoldercreatemessage.htm">IMAPIFolder::CreateMessage</A> method:
+<PRE class="code">hr = pFldrDrafts-&gt;CreateMessage(NULL, 0, <code><b class="cfe">&amp;pMsg</b></code>);</PRE>
+</li>
+
+	<LI>If no longer needed, release the message store and Drafts folder by calling <A HREF="mob5lrfiunknownrelease.htm">IUnknown::Release</A> on their interface objects, and free the memory allocated for the property value structure by calling <A HREF="mob5lrfmapifreebuffer.htm">MAPIFreeBuffer</A>:
+<PRE class="code">pStore-&gt;Release();
+pFldrDrafts-&gt;Release();
+MAPIFreeBuffer(pSProps);</PRE>
+</li>
+</OL>
+
+<H4 class="dtH4">Code Example</H4>
+
+<P>The following code example demonstrates how to create a message.</P>
+
+<BLOCKQUOTE class="dtBlock">
+<b class="le">Note</b>&nbsp;&nbsp;&nbsp;To make the following code example easier to read, security checking and error handling are not included. This code example should not be used in a release configuration unless it has been modified to include them.</BLOCKQUOTE>
+
+<PRE class="code">HRESULT hr;
+IMsgStore * pStore = NULL;
+<code><b class="cfe">SPropTagArray STags = { 1, {PR_CE_IPM_DRAFTS_ENTRYID} };</b></code>
+ULONG cValues = 0;
+SPropValue * pSProps = NULL;
+ULONG ulObjType = 0;
+IMAPIFolder * pFldrDrafts = NULL;
+
+// See the code example in "How to: Connect to a Message Store" for 
+// information on obtaining pStore.
+
+BOOL GPError = FALSE;
+<code><b class="cfe">hr = pStore-&gt;GetProps(&amp;STags, 0, &amp;cValues, &amp;pSProps);</b></code>
+if (hr != S_OK) {
+    GPError = TRUE;
+} else if (pSProps == NULL) {
+    GPError = TRUE;
+} else if (pSProps[0].ulPropTag != PR_CE_IPM_DRAFTS_ENTRYID) {
+    GPError = TRUE;
+}
+if (GPError) {
+    // GetProps failed.
+    MessageBox(NULL, 
+               _T("GetProps failed."),
+               _T("Warning"), 
+               MB_OK);
+    exit(0);  // Replace with specific error handling.
+}
+
+BOOL OEError = FALSE;
+<code><b class="cfe">hr = pStore-&gt;OpenEntry(pSProps[0].Value.bin.cb, </b></code>
+<code><b class="cfe">                      (LPENTRYID)pSProps[0].Value.bin.lpb, </b></code>
+<code><b class="cfe">                      NULL, </b></code>
+<code><b class="cfe">                      0, </b></code>
+<code><b class="cfe">                      &amp;ulObjType, </b></code>
+<code><b class="cfe">                      (IUnknown **)&amp;pFldrDrafts);</b></code>
+if (hr != S_OK) {
+    OEError = TRUE;
+} else if (pFldrDrafts == NULL) {
+    OEError = TRUE;
+}
+if (OEError) {
+    // OpenEntry failed.
+    MessageBox(NULL, 
+               _T("OpenEntry failed."),
+               _T("Warning"), 
+               MB_OK);
+    exit(0);  // Replace with specific error handling.
+}
+
+BOOL CMError = FALSE;
+<code><b class="cfe">hr = pFldrDrafts-&gt;CreateMessage(NULL, 0, &amp;pMsg);</b></code>
+if (hr != S_OK) {
+    CMError = TRUE;
+} else if (pMsg == NULL) {
+    CMError = TRUE;
+}
+if (CMError) {
+    // CreateMessage failed.
+    MessageBox(NULL, 
+               _T("CreateMessage failed."),
+               _T("Warning"), 
+               MB_OK);
+    exit(0);  // Replace with specific error handling.
+}
+
+<code><b class="cfe">pStore-&gt;Release();</b></code>
+<code><b class="cfe">pFldrDrafts-&gt;Release();</b></code>
+<code><b class="cfe">MAPIFreeBuffer(pSProps);</b></code>
+pStore = NULL;
+pFldrDrafts = NULL;
+pSProps = NULL;</PRE>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="mohowhowtocreatemessagingapplication.htm">How to Create a Messaging Application</A> | <A HREF="mob5orimessagingoverview.htm">Messaging Application Development for Windows Mobile-based Devices</A> | <A HREF="mob5orimessaging.htm">Messaging</A> | <A HREF="mob5tskhowtobeginmapisession.htm">How to: Begin a MAPI Session</A> | <A HREF="mob5tskhowtoconnecttomessagestore.htm">How to: Connect to a Message Store</A> | <A HREF="mob5tskhowtosendmessage.htm">How to: Send a Message</A> | <A HREF="mob5tskhowtoendmapisession.htm">How to: End a MAPI Session</A> | <A HREF="mob5conmessagingsamplecode.htm">Messaging Sample Code</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Feedback Link Bottom Start-->
+<p><font size="1"><a href="mailto:medfdbk&#64;microsoft.com?subject=Product: Windows Mobile | Version: 5.0 | Release: SDK | Title: How to: Create a Message | Filename: mob5tskhowtocreatemessage.htm | Built on: Wednesday, September 14, 2005">Send Feedback</a> on this topic to the authors</font></p>
+<!--Feedback Link Bottom End-->
+<!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="mob5conCopyrightInformationForMagneto" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link></font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

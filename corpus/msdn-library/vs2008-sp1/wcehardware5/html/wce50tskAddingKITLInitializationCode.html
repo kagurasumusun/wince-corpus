@@ -1,0 +1,84 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Adding KITL Initialization Code</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Adding KITL Initialization Code"/>
+<MSHelp:RLTitle Title="Adding KITL Initialization Code"/>
+<MSHelp:Keyword Index="A" Term="wce50tskAddingKITLInitializationCode"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Hardware"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="True"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbTask"/>
+<MSHelp:Attr Name="Filename" Value="howto_developing_an_OAL.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="False"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_3010383">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50tskaddingkitlinitializationcode"></A>Adding KITL Initialization Code</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>Kernel independent transport layer (KITL) support enables a debug communications channel with the development workstation through Platform Builder, and is essential for enabling kernel debugger support. </P>
+
+<P>If the KITL connection occurs over an Ethernet connection, the Ethernet debug (EDBG) library used in the boot loader development process can be used. The EDBG library will be referenced and linked into the kernel executable. For more information about KITL, see <A HREF="wce50conkernelindependenttransportlayer.htm">Kernel Independent Transport Layer</A>.</P>
+
+<P>The following list shows the suggested tasks when adding KITL initialization code to the <A HREF="wce50lrfoeminit.htm">OEMInit</A> function:
+
+<UL type="disc">
+	<LI>Initialize any PCI bridges and devices, and then enumerate, assign resources, and enable these.
+<BLOCKQUOTE class="dtBlock">
+<b class="le">Note</b>&nbsp;&nbsp;&nbsp;This should only be done for the KITL network interface card (NIC) and for any bridges required by the KITL NIC.</BLOCKQUOTE>
+</li>
+
+	<LI>Perform any other bus initialization required for the CPU in order to recognize the NIC.</li>
+
+	<LI>Initialize KITL by calling the <A HREF="wce50lrfkitlinit.htm">KitlInit</A> function. You can copy most of the code by using Halkitl.c from another hardware platform. <B>KitlInit</B> must be called before any debug services can be started. For more information about <B>KitlInit</B> and enabling KITL, see <A HREF="wce50conenablingkitl.htm">Enabling KITL</A>.</li>
+
+	<LI>Implement the <A HREF="wce50lrfoemkitlinit.htm">OEMKitlInit</A> function, which searches for either KITL NIC, KITL serial, or parallel connections. For more information about implementing <B>OEMKitlInit</B>, see <A HREF="wce50tskimplementingtheoemkitlinitfunction.htm">Implementing the OEMKitlInit Function</A>.
+<P><B>OEMKitlInit</B> performs the search by calling the <A HREF="wce50lrfoemethinit.htm">OEMEthInit</A> function, which in turn performs the same tasks as the <A HREF="wce50lrfoempredownload.htm">OEMPreDownload</A> function in the boot loader.
+
+<P>For more information about the tasks performed by <B>OEMPreDownload</B>, see <A HREF="wce50tskimplementingtheoempredownloadfunction.htm">Implementing the OEMPreDownload Function</A>.
+</li>
+
+	<LI>After implementing the <B>OEMKitlInit</B> function, include Kitl.lib and Kitleth.lib in your Platform\<I>&lt;Hardware Platform Name&gt;</I>\Src\Kernel\Kernkitl sources file.</li>
+</UL>
+
+<P>After performing the above tasks, you can enable KITL polling.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50howhowtodevelopanoemadaptationlayer.htm">How to Develop an OEM Adaptation Layer</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

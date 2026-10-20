@@ -1,0 +1,142 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Implementing the GenBltCpuInitialize Function</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Implementing the GenBltCpuInitialize Function"/>
+<MSHelp:RLTitle Title="Implementing the GenBltCpuInitialize Function"/>
+<MSHelp:Keyword Index="A" Term="wce50tskImplementingGenBltCpuInitialize"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Driver"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="False"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbTask"/>
+<MSHelp:Attr Name="Filename" Value="display_guide.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="True"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+<MSHelp:Attr Name="PBFeature" Value="DisplayDriver"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_1057367">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50tskimplementinggenbltcpuinitialize"></A>Implementing the GenBltCpuInitialize Function</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>The <B>GenBltCpuInitialize</B> function retrieves the translation and optimization functions. An example implementation of <B>GenBltCpuInitialize</B> is in the %_WINCEROOT%\Public\Common\OAK\Cpulibs\%_TGTCPUFAMILY%\Genblt_cpu directory.</P>
+
+<P><B>GenBltCpuInitialize</B> detects the microprocessor and places the microprocessor-specific translation and optimization functions in memory. Use the <MSHelp:link keywords="wce50lrfIsProcessorFeaturePresent" TABINDEX="0">IsProcessorFeaturePresent</MSHelp:link> function and the <MSHelp:link keywords="wce50lrfQueryInstructionSet" TABINDEX="0">QueryInstructionSet</MSHelp:link> function to determine the characteristics of the current microprocessor.</P>
+
+<P>The function that calls <B>GenBltCpuInitialize</B> initializes all entries of the <B>GenBltCpuFuncs</B> structure to invalid values. When initializing the <B>GenBltCpuFuncs</B> structure, set individual members to valid values only if you will use the individual members.</P>
+
+<H2 class="dtH2">GenBltCpuInitialize ARM Implementation</H2>
+
+<P>The following code example shows the ARM implementation of the <B>GenBltCpuInitialize</B> function. This code is located in %_WINCEROOT%\Public\Common\OAK\Cpulibs\ARM\Genblt_cpu\Genblt_arm.cpp.</P>
+
+<PRE class="code">BOOL GenBltCpuInitialize(GenBltCpuFuncs * pCpuFuncs)
+{
+    BOOL fResult = FALSE;
+
+    //
+    // Detect various ARM variants and select the best translator
+    // and optimizer.
+    //
+
+    if (IsProcessorFeaturePresent(PF_ARM_V4))
+    {
+        pCpuFuncs-&gt;pfnPCodeToCpuCode = GenBltArmV4Translate;
+        pCpuFuncs-&gt;pfnCpuOptimize    = GenBltArmV4Optimize;
+
+        fResult = TRUE;
+    }
+    else
+    {
+        RETAILMSG(1, (L"GenBlt: Attempting to use ARM specific" \
+                       "code on an unsupported CPU"));
+    }
+
+    //
+    // Returning FALSE here means that GeneratedBlts will not be
+    // used.
+    //
+
+    return fResult;
+}</PRE>
+
+<H2 class="dtH2">GenBltCpuInitialize ARMV5 Implementation</H2>
+
+<P>The following code example shows the ARM implementation of the <B>GenBltCpuInitialize</B> function that uses ARMV5-specific translation and optimization functions. This code is located in %_WINCEROOT%\Public\Common\OAK\Cpulibs\ARM\Genblt_cpu\Genblt_arm.cpp.</P>
+
+<P>The <B>GenBltArmV5Translate</B> function is the ARMV5-specific translation function and the <B>GenBltArmV5Optimize</B> function is the ARMV5-specific optimization function. The optimization function supports two passes. One pass executes after 10 blits, and one pass executes after 25 blits.</P>
+
+<PRE class="code">BOOL GenBltCpuInitialize(GenBltCpuFuncs * pCpuFuncs)
+{
+    BOOL fResult = FALSE;
+
+    //
+    // Detect various ARM variants and select the best translator
+    // and optimizer.
+    //
+
+    if (IsProcessorFeaturePresent(PF_ARM_V5))
+    {
+        pCpuFuncs-&gt;pfnPCodeToCpuCode = GenBltArmV5Translate;
+        pCpuFuncs-&gt;pfnCpuOptimize    = GenBltArmV5Optimize;
+
+        pCpuFuncs-&gt;dwOptimizeTimes[0] = 10;
+        pCpuFuncs-&gt;dwOptimizeTimes[1] = 25;
+    }
+    if (IsProcessorFeaturePresent(PF_ARM_V4))
+    {
+        pCpuFuncs-&gt;pfnPCodeToCpuCode = GenBltArmV4Translate;
+        pCpuFuncs-&gt;pfnCpuOptimize    = GenBltArmV4Optimize;
+
+        fResult = TRUE;
+    }
+    else
+    {
+        RETAILMSG(1, (L"GenBlt: Attempting to use ARM specific" \
+                       "code on an unsupported CPU"));
+    }
+
+    //
+    // Returning FALSE here means that GeneratedBlts will not be
+    // used.
+    //
+
+    return fResult;
+}</PRE>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50tskimplementinggenbltcputranslate.htm">Implementing the Translation Function</A> | <A HREF="wce50tskimplementinggenbltcpuoptimize.htm">Implementing the Optimization Function</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

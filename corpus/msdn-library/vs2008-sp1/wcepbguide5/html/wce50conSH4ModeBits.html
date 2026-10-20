@@ -1,0 +1,111 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>SH-4 Mode Bits</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="SH-4 Mode Bits"/>
+<MSHelp:RLTitle Title="SH-4 Mode Bits"/>
+<MSHelp:Keyword Index="A" Term="wce50conSH4ModeBits"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Guide"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="True"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="comp_sh4_callspec.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="True"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_3023873">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50consh4modebits"></A>SH-4 Mode Bits</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>Mode bits in the floating-point control register (<B>FPSCR</B>) control several instructions of the SH-4. The mode bits <B>FR</B>, <B>PR</B>, and <B>SZ</B> dictate which floating-point register bank is currently active and whether floating point register operands are 32 or 64 bits.</P>
+
+<P>Before control leaves the scope of an inline assembly sequence, the state of the mode bits must be returned to their value on entry to the scope. Failure to maintain consistency in these mode bits may result in undefined and unanticipated program failures.</P>
+
+<P>The following code fragment illustrates how to change and restore the <B>PR</B> bit in the <B>FPSCR</B> control register.</P>
+
+<PRE class="code">// Compute x+y+z --&gt; result
+float add_trig(float x, float y, float z)
+{
+  float result;
+  __asm("lds r4,    fpul  ;   load lw-part of x to fpul \n"
+     "fsts   fpul,  fr5   ; copy lw-part of x to fr5 \n"
+     "lds    r5,    fpul  ; load hi-part of x to fpul \n"
+     "fsts   fpul,  fr4   ; copy hi-part of x to fr4 \n" 
+     "lds    r6,    fpul  ; load lw-part of y to fpul \n"
+     "fsts   fpul,  fr7   ; copy lw-part of y to fr7 \n"
+     "lds    r7,    fpul  ; load hi-part of y to fpul \n"
+     "fsts   fpul,  fr6   ; copy hi-part of y to fr6 \n"
+     "mov.l  @(16,sp),r0  ; load lw-part of z to r0 \n"
+     "lds    r0,    fpul  ; \n"
+     "fsts   fpul,  fr9   ; copy lw-part of z to fr9 \n"
+     "mov.l  @(20,sp),r0   ; load hi-part of z to r0 \n"
+     "lds    r0,     fpul  ; \n"
+     "fsts   fpul,   fr8   ; copy hi-part of z to fr8 \n"
+     "mov    #8,     r0    ; prepare to mask the pr bit \n"
+     "shll16 r0      ; \n"
+     "sts    fpscr,  r1    ; \n"
+     "xor    r0,     r1    ; toggle pr bit \n"
+     "lds    r1,     fpscr ; turn-on pr bit \n"
+     "fcnvds dr4,    fpul  ; convert x double to single precision\n"
+     "fsts   fpul,   fr4   ; store float x in fr4\n"
+     "fcnvds dr6,    fpul  ; convert y double to single precision\n"
+     "fsts   fpul,   fr5   ; store float y in fr5\n"
+     "fcnvds dr8,    fpul  ; convert z double to single precision\n"
+     "fsts   fpul,   fr6   ; store float z in fr6\n"
+     "xor    r0,     r1    ; toggle pr bit \n"
+     "lds    r1,     fpscr ; turn-off pr bit\n" 
+     "fadd   fr4,    fr5   ; compute x+y\n"
+     "fadd   fr5,    fr6   ; compute x+y+z \n"
+     "mov.l  @(24,sp), r0  ; load result address\n"
+     "fmov.s fr6, @r0      ; store fr6 into result addr\n",
+  x,   // promoted to double and passed in r4 and r5 
+  y,   // promoted to double and passed in r6 and r7
+  z,   // promoted to double and passed in @(16,sp) 
+      // and @(20,sp)
+  &amp;result);  // pointer to result passed in @(24,sp) 
+  return result;
+}
+void main()
+{
+  float  retval = add_trig(1.0f, 2.0f,3.0f);
+  printf("%g\n", retval);
+}</PRE>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50conshxinlineassemblylanguage.htm">SH-4 Inline Assembly Language</A> | <A HREF="wce50samshxinlineassemblysamples.htm">SH-4 Inline Assembly Code Examples</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

@@ -1,0 +1,250 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>WSPEnumNetworkEvents</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="WSPEnumNetworkEvents"/>
+<MSHelp:RLTitle Title="WSPEnumNetworkEvents"/>
+<MSHelp:Keyword Index="K" Term="WSPEnumNetworkEvents"/>
+<MSHelp:Keyword Index="A" Term="wce50lrfWSPEnumNetworkEvents"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Feature"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="apiref"/>
+<MSHelp:Attr Name="Filename" Value="winsock2spi_functions.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="True"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+<MSHelp:Attr Name="APIName" Value="WSPEnumNetworkEvents"/>
+<MSHelp:Attr Name="APIType" Value="LibDef"/>
+<MSHelp:Attr Name="APILocation" Value="Ws2.lib"/>
+<MSHelp:Attr Name="PBFeature" Value="SYSGEN_WINSOCK"/>
+<MSHelp:Attr Name="PBOnly" Value="False"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_3008288">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50lrfwspenumnetworkevents"></A>WSPEnumNetworkEvents</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>This function reports occurrences of network events for the indicated socket.</P>
+
+<PRE class="syntax"><B>int WSPEnumNetworkEvents(</B>
+  <B>SOCKET </B><I>s</I><B>,</B>
+  <B>WSAEVENT </B><I>hEventObject</I><B>,</B>
+  <B>LPWSANETWORKEVENTS </B><I>lpNetworkEvents</I><B>,</B>
+  <B>LPINT </B><I>lpErrno </I>
+<B>);</B></PRE>
+
+<H4 class="dtH4">Parameters</H4>
+
+<DL>
+<DT><I>s</I></DT>
+
+<DD>[in] Descriptor identifying the socket.</dd>
+
+<DT><I>hEventObject</I></DT>
+
+<DD>[in] An optional handle identifying an associated event object to be reset.</dd>
+
+<DT><I>lpNetworkEvents</I></DT>
+
+<DD>[out] Pointer to a <A HREF="wce50lrfwsanetworkevents.htm">WSANETWORKEVENTS</A> structure that is filled with a record of occurred network events and any associated error codes. The <B>WSANETWORKEVENTS</B> structure is defined in the following text.</dd>
+
+<DT><I>lpErrno</I></DT>
+
+<DD>[out] Pointer to the error code.</dd>
+</DL>
+
+<H4 class="dtH4">Return Values</H4>
+
+<P>The return value is zero if the operation was successful. Otherwise, the value SOCKET_ERROR is returned, and a specific error number is available in <I>lpErrno</I>.</P>
+
+<P>The following table shows the possible error codes.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=37%>Error value</TH>
+<TH width=63%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=37%>WSAENETDOWN</TD>
+<TD width=63%>Network subsystem has failed.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=37%>WSAEINVAL</TD>
+<TD width=63%>Indicates that one of the specified parameters was invalid.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=37%>WSAEINPROGRESS</TD>
+<TD width=63%>A blocking Windows Sockets call is in progress, or the service provider is still processing a callback function.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=37%>WSAENOTSOCK</TD>
+<TD width=63%>Descriptor is not a socket.</TD>
+</TR>
+</table></div>
+
+<H4 class="dtH4">Remarks</H4>
+
+<P>This function is used to report network events that have occurred for the indicated socket since the last invocation of this function. It is intended for use in conjunction with <A HREF="wce50lrfwspeventselect.htm">WSPEventSelect</A>, which associates an event object with one or more network events. Recording of network events commences when <B>WSPEventSelect</B> is called with a nonzero <I>lNetworkEvents</I> parameter and remains in effect until another call is made to <B>WSPEventSelect</B> with the <I>lNetworkEvents</I> parameter set to zero.</P>
+
+<P>This function only reports network activity and errors nominated through <B>WSPEventSelect</B>. See the description of <A HREF="wce50lrfwspselect.htm">WSPSelect</A> to find out how this function reports network activity and errors.</P>
+
+<P>The socket's internal record of network events is copied to the structure referenced by <I>lpNetworkEvents</I>, after which the internal network events record is cleared. If <I>hEventObject </I>is non-NULL, the indicated event object is also reset. The Windows Sockets provider guarantees that the operations of copying the network event record, clearing it, and resetting any associated event object are atomic, such that the next occurrence of a nominated network event will cause the event object to become set. In the case of this function returning SOCKET_ERROR, the associated event object is not reset and the record of network events is not cleared.</P>
+
+<P>The following code sample shows how the <B>WSANETWORKEVENTS</B> structure is defined.</P>
+
+<PRE class="code">typedef struct _WSANETWORKEVENTS {
+       long lNetworkEvents;
+       int iErrorCode[FD_MAX_EVENTS];
+} WSANETWORKEVENTS, FAR * LPWSANETWORKEVENTS;</PRE>
+
+<P>The <B>lNetworkEvent</B><I> </I>member of the structure indicates which of the FD_XXX network events have occurred. The <B>iErrorCode</B> array is used to contain any associated error codes, with array index corresponding to the position of event bits in <B>lNetworkEvents</B>. The identifiers such as FD_READ_BIT and FD_WRITE_BIT can be used to index the <B>iErrorCode</B><I> </I>array.</P>
+
+<P>Note that only those elements of the <B>iErrorCode</B> array are set that correspond to the bits set in <B>lNetworkEvents</B> member. Other members are not modified (this is important for backward compatibility with the Windows Socket 2 SPI clients that are not aware of new FD_ROUTING_INTERFACE_CHANGE and FD_ADDRESS_LIST_CHANGE events).</P>
+
+<P>The following tables show the error codes that can be returned along with the respective network event.</P>
+
+<P><B>Event: FD_CONNECT</B></P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=37%>Error Value</TH>
+<TH width=63%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=37%>WSAEAFNOSUPPORT</TD>
+<TD width=63%>Addresses in the specified family cannot be used with this socket.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=37%>WSAECONNREFUSED</TD>
+<TD width=63%>Attempt to connect was forcefully rejected.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=37%>WSAENETUNREACH</TD>
+<TD width=63%>Network cannot be reached from this host at this time.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=37%>WSAENOBUFS</TD>
+<TD width=63%>No buffer space is available. The socket cannot be connected.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=37%>WSAETIMEDOUT</TD>
+<TD width=63%>Attempt to connect timed out without establishing a connection.</TD>
+</TR>
+</table></div>
+
+<P><B>Event: FD_CLOSE</B></P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=37%>Error Value</TH>
+<TH width=63%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=37%>WSAENETDOWN</TD>
+<TD width=63%>Network subsystem has failed.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=37%>WSAECONNRESET</TD>
+<TD width=63%>Connection was reset by the remote side.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=37%>WSAECONNABORTED</TD>
+<TD width=63%>Connection was terminated due to a time-out or other failure.</TD>
+</TR>
+</table></div>
+
+<P><B>Event: FD_READ</B></P>
+
+<P><B>Event: FD_WRITE</B></P>
+
+<P><B>Event: FD_OOB</B></P>
+
+<P><B>Event: FD_ACCEPT</B></P>
+
+<P><B>Event: FD_ADDRESS_LIST_CHANGE</B></P>
+
+<P><B>Event: FD_ROUTING_INTERFACE_CHANGE</B></P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=37%>Error Value</TH>
+<TH width=63%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=37%>WSAENETUNREACH</TD>
+<TD width=63%>Specified destination is no longer reachable.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=37%>WSAENETDOWN</TD>
+<TD width=63%>Network subsystem has failed.</TD>
+</TR>
+</table></div>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=37%>Error Value</TH>
+<TH width=63%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=37%>WSAENETDOWN</TD>
+<TD width=63%>Network subsystem has failed.</TD>
+</TR>
+</table></div>
+
+<H4 class="dtH4">Requirements</H4>
+
+<P><B>OS Versions:</B> Windows CE .NET 4.0 and later.<BR>
+<B>Header:</B> Ws2spi.h.<BR>
+<B>Link Library:</B> Ws2.lib.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50lrfwspeventselect.htm">WSPEventSelect</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

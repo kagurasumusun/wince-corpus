@@ -1,0 +1,95 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Using the Service Callback Interface</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Using the Service Callback Interface"/>
+<MSHelp:RLTitle Title="Using the Service Callback Interface"/>
+<MSHelp:Keyword Index="A" Term="wce50conUsingServiceCallbackInterface"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Debugging"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="True"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="corecon_application_services.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="False"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_1052484">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50conusingservicecallbackinterface"></A>Using the Service Callback Interface</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>If you need to send feedback to the client on a pending asynchronous call, you can implement the <A HREF="wce50grficcservicecb.htm">ICcServiceCB</A> interface to do the following:
+
+<UL type="disc">
+	<LI>Inform a client when there is a state change.</li>
+
+	<LI>Inform a client of progress on a lengthy task, such as downloading a run-time image to a target device.</li>
+</UL>
+
+<P>The Core Connectivity infrastructure provides the service callback interface through <MSHelp:link keywords="wce50lrfIConnectionPointContainerIUnknown" TABINDEX="0">IConnectionPointContainer</MSHelp:link><B>.</B> </P>
+
+<P>The following steps show how to use the callback features:
+
+<OL type="1">
+	<LI>Implement <B>ICcServiceCB</B> on an object.</li>
+
+	<LI>Call <MSHelp:link keywords="wce50lrfIUnknownQueryInterface" TABINDEX="0">IUnknown::QueryInterface</MSHelp:link> for <B>IConnectionPointContainer</B>.</li>
+
+	<LI>Call <MSHelp:link keywords="wce50lrfIConnectionPointContainerFindConnectionPoint" TABINDEX="0">IConnectionPointContainer::FindConnectionPoint</MSHelp:link>.
+<P>This returns a connection point object for the interface specified in this call. 
+
+<P>Because connectivity services support only the <B>ICcServiceCB</B> connection sink, clients must pass in the IID for that interface in this call.
+</li>
+
+	<LI>Call <MSHelp:link keywords="wce50lrfIConnectionPointAdvise" TABINDEX="0">IConnectionPoint::Advise</MSHelp:link><B>.</B>
+<P>This registers the client for callback notifications. 
+
+<P>Clients must pass in the <B>ICcServiceCB</B> implementation in this call.
+</li>
+
+	<LI>Get callback notifications.</li>
+
+	<LI>Call <MSHelp:link keywords="wce50lrfIConnectionPointUnadvise" TABINDEX="0">IConnectionPoint::Unadvise</MSHelp:link>
+<P>Clients must call this API to de-register the connection point sink. 
+
+<P>The cookie parameter used in this call is the same cookie returned by the service in the call to <B>IConnectionPoint::Advise</B>. After this call is made, the client no longer receives callback notifications.
+</li>
+</OL>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50conkerneltransportservices.htm">Kernel Transport Services</A> | <A HREF="wce50conapplicationtransportservices.htm">Application Transport Services</A> | <A HREF="wce50conkerneldownloadservices.htm">Kernel Download Services</A> | <A HREF="wce50conapplicationdownloadservices.htm">Application Download Services</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

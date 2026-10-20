@@ -1,0 +1,136 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Make Binary Image Tool</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Make Binary Image Tool"/>
+<MSHelp:RLTitle Title="Make Binary Image Tool"/>
+<MSHelp:Keyword Index="A" Term="wce50conMakeBinaryImageTool"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Guide"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="True"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="tools.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="True"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_3014198">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50conmakebinaryimagetool"></A>Make Binary Image Tool</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>The Make Binary Image tool (Makeimg.exe) calls a number of programs and batch files in the process of making the run-time image. </P>
+
+<P>Makeimg.exe performs all processing in the %_FLATRELEASEDIR% directory. After processing, the Ce.bib file defines which binaries and files are to be included in the run-time image. By default, the run-time image is named Nk.bin.</P>
+
+<P>If you have modified and built files in your OS design, you can copy these files to %_FLATRELEASEDIR% and then run the Make Binary Image tool to include these files in the run-time image. This can decrease time spent running builds on your entire OS design. For more information about adding files to the run-time image, see <MSHelp:link keywords="wce50tskAddingaFiletoanOperatingSystem" TABINDEX="0">Adding a File to a Run-time Image</MSHelp:link>.</P>
+
+<P>Makeimg.exe calls the following programs: 
+
+<UL type="disc">
+	<LI>The NLS Compression tool (Cenlscmp.exe) enables national language support (NLS) compression. Cenlscmp.exe combines the settings file Nlscfg.out and the input file Nlssrc.txt to build the output file Wince.nls in the %_FLATRELEASEDIR% directory.</li>
+
+	<LI>The File Merge tool (Fmerge.exe) merges settings files to create four initialization files, which are created in the %_FLATRELEASEDIR% directory. Fmerge.exe also includes settings files from dependent projects &#0151; for example, the Wceshell or Wceshellfe project. 
+<P>If the settings files for the dependent projects are defined in the _DEPTREES environment variable, and if they also exist in the %_FLATRELEASEDIR% directory, Fmerge.exe merges them into the appropriate initialization file. 
+
+<P>The following table shows the original files and merged initialization file for each file type. 
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=35%>Original files</TH>
+<TH width=65%>Merged initialization file</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=35%>Common.bib, Config.bib, Project.bib, Platform.bib</TD>
+<TD width=65%>Ce.bib, which identifies all the Windows CE files to be combined into the run-time image.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=35%>Common.reg, Project.reg, Platform.reg</TD>
+<TD width=65%>Reginit.ini, which provides a collection of registry entries for the run-time image.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=35%>Common.dat, Project.dat, Platform.dat</TD>
+<TD width=65%>Initobj.dat, which provides a description of the directory and file locations for the run-time image.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=35%>Common.db, Project.db, Platform.db</TD>
+<TD width=65%>Initdb.ini, which defines the creation of any databases in the Windows CE object store.</TD>
+</TR>
+</table></div>
+</li>
+
+	<LI>The Registry Compression tool (Regcomp.exe) performs registry compression by reading Reginit.ini and compressing it into a binary registry file called Default.fdf, which is eventually included in the run-time image. Default.fdf is always loaded on a cold boot. The Ce.bib file references Default.fdf, which then initializes the system registry on the target device.</li>
+
+	<LI>The Resource Update tool (Res2exe.exe) replaces the resources in specified .dll, .exe, or Control Panel (.cpl) files with the appropriate resources for the language specified by the LOCALE environment variable. </li>
+
+	<LI>The Text to Unicode tool (Txt2ucde.exe) converts any ASCII text strings in Initobj.tmp, which was created by Fmerge.exe, to Unicode text strings and creates the file Initobj.dat, which contains the Unicode conversion.</li>
+
+	<LI>The ROM Image Builder tool (Romimage.exe) reads the Ce.bib file to determine which binaries and files, located in %_FLATRELEASEDIR%, are to be included in the run-time image, including how they are stored in memory. 
+<P>The Ce.bib file also lists the following processed files: Wince.nls, Reginit.ini, Initobj.dat, Initdb.ini, and Default.fdf. 
+
+<P>Then, Romimage.exe combines the binaries and files into the run-time image, which is usually called Nk.bin unless specified otherwise in the <B>MEMORY</B> section of the Ce.bib file.
+</li>
+</UL>
+
+<PRE class="syntax"><B>Makeimg</B><I> </I></PRE>
+
+<H4 class="dtH4">Error Messages</H4>
+
+<DL>
+<DT>MAKEIMG FAILED: Missing or invalid LOCALE variable</DT>
+
+<DT>MAKEIMG: res2exe FAILED: LOCALE var not set</DT>
+
+<DD>These two messages appear if the LOCALE environment variable was not set or an incorrect setting was used. </dd>
+</DL>
+
+<H4 class="dtH4">Example</H4>
+
+<P>The following code example shows how to use Makeimg.exe.</P>
+
+<PRE class="code">makeimg</PRE>
+
+<H4 class="dtH4">Remarks</H4>
+
+<P>The environment variables in the binary image builder file (.bib), file system file (.dat), database file (.db), and registry file (.reg) help determine how Makeimg.exe builds the run-time image.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><MSHelp:link keywords="wce50tskBuildingaCEPCOSImageforUsewithanEthernetCard" TABINDEX="0">Building a CEPC Run-Time Image for Use with an Ethernet Card</MSHelp:link> | <MSHelp:link keywords="wce50tskCreatingaProfileEnabledOSImageforaCEPC" TABINDEX="0">Building a Run-Time Image That Supports the Kernel Profiler</MSHelp:link> | <MSHelp:link keywords="wce50conEnvironmentVariables" TABINDEX="0">Environment Variables</MSHelp:link> | <A HREF="wce50conromimagecreation.htm">ROM Run-time Image Creation</A> | <MSHelp:link keywords="wce50tskLocalizingaConfigurationFile" TABINDEX="0">Localizing a Run-time Image Configuration File</MSHelp:link> | <MSHelp:link keywords="wce50conPlatformLocalization" TABINDEX="0">OS Localization</MSHelp:link> | <A HREF="wce50lrfcvrtbintool.htm">Cvrtbin Tool</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

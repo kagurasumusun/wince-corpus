@@ -1,0 +1,236 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Nk.exe Boot Process</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Nk.exe Boot Process"/>
+<MSHelp:RLTitle Title="Nk.exe Boot Process"/>
+<MSHelp:Keyword Index="A" Term="wce50conNkexeBootProcess"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Feature"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="kernel_overview.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="False"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+<MSHelp:Attr Name="PBFeature" Value="CORE"/>
+<MSHelp:Attr Name="PBOnly" Value="True"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_3009772">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50connkexebootprocess"></A>Nk.exe Boot Process</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>During the kernel boot process, the following calls are made in the order shown:</P>
+
+<P><B>StartUp()</B></P>
+
+<P><B>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;KernelStart() / KernelInitialize()</B></P>
+
+<P><B>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</B><I>&lt;Main kernel initialization function&gt;</I></P>
+
+<P><B>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;OEMInitDebugSerial()</B></P>
+
+<P><B>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;OEMInit()</B></P>
+
+<P><B>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;KernelInit()</B></P>
+
+<P><B>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;HeapInit()</B></P>
+
+<P><B>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;InitMemoryPool()</B></P>
+
+<P><B>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ProcInit()</B></P>
+
+<P><B>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;SchedInit()</B></P>
+
+<P><B>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;FirstSchedule()</B></P>
+
+<P><B>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;SystemStartupFunc()</B></P>
+
+<P><B>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</B>IOCTL_HAL_POSTINIT</P>
+
+<P>For more information about kernel initialization and specific kernel initialization considerations, see <MSHelp:link keywords="wce50tskKernelInitialization" TABINDEX="0">Kernel Initialization</MSHelp:link>.</P>
+
+<H3 class="dtH3">StartUp()</H3>
+
+<P><MSHelp:link keywords="wce50lrfStartUp" TABINDEX="0">StartUp</MSHelp:link> is the first function called during kernel startup and it is responsible for initializing the CPU to a known state.</P>
+
+<P>The <B>StartUp</B> function performs the following tasks:
+
+<UL type="disc">
+	<LI>Performs minimal processor and hardware initialization</li>
+
+	<LI>Disables interrupts, caches, and the memory management unit (MMU)</li>
+</UL>
+
+<P>Once the <B>StartUp</B> function has initialized the CPU, it calls the <B>KernelStart</B> or <B>KernelInitialize</B> function.</P>
+
+<P>The <B>StartUp</B> function, found under %_WINCEROOT%\Platform\<I>&lt;Hardware Platform Name&gt;</I>\Src\Kernel\OAL\Startup.s, is usually written in assembly language and is shared with the boot loader.</P>
+
+<H3 class="dtH3">KernelStart() / KernelInitialize()</H3>
+
+<P>The OEM adaptation layer (OAL) sets up any platform or CPU-specific settings that is required for the kernel to access ROM and RAM. To start the system, it then jumps to <B>KernelInitialize</B>, for x86-based hardware platforms, or <B>KernelStart</B>, for all other hardware platforms. At this point, the MMU and caches should not be enabled.</P>
+
+<P>The <B>KernelStart</B> or <B>KernelInitialize</B> function performs the following tasks:
+
+<UL type="disc">
+	<LI>Initializes the first-level page table based on the contents of <MSHelp:link keywords="wce50conOEMAddressTable" TABINDEX="0">OEMAddressTable</MSHelp:link></li>
+
+	<LI>Enables the MMU and caches
+<P>Until the MMU is enabled, the kernel symbolic addresses are invalid and must be translated through the <B>OEMAddressTable</B> to obtain the correct physical addresses.
+</li>
+
+	<LI>Initializes the stacks for each mode of operation</li>
+</UL>
+
+<P>The implementation of the <B>KernelStart</B> and <B>KernelInitialize</B> function is under the private directory.</P>
+
+<P>Once <B>KernelStart</B> or <B>KernelInitialize</B> has performed all its tasks, it calls the main initialization function for the kernel that you are using.</P>
+
+<H3 class="dtH3">Main kernel initialization function</H3>
+
+<P>The main kernel initialization function is responsible for calling the OEM supplied initialization functions. It also performs the following tasks:
+
+<UL type="disc">
+	<LI>Initializes the debug serial port through a call to <MSHelp:link keywords="wce50lrfOEMInitDebugSerial" TABINDEX="0">OEMInitDebugSerial</MSHelp:link></li>
+
+	<LI>Displays the Windows CE sign-on message through the debug port</li>
+
+	<LI>Initializes the hardware platform through a call to <MSHelp:link keywords="wce50lrfOEMInit" TABINDEX="0">OEMInit</MSHelp:link></li>
+</UL>
+
+<P>If you have an ARM kernel for example, <B>KernelStart</B> calls <B>ARMInit</B> as the main kernel initialization function.</P>
+
+<H3 class="dtH3">OEMInitDebugSerial()</H3>
+
+<P><B>OEMInitDebugSerial</B> initializes the debug serial port on the target device.</P>
+
+<P>The debug functions typically communicate with a serial device. Because the boot loader implements the same code, a single implementation can be shared between the OAL and the boot loader.</P>
+
+<P>These are serial debug functions that OEMs need to implement:
+
+<UL type="disc">
+	<LI><MSHelp:link keywords="wce50lrfOEMDebugInit" TABINDEX="0">OEMDebugInit</MSHelp:link></li>
+
+	<LI><MSHelp:link keywords="wce50lrfOEMWriteDebugString" TABINDEX="0">OEMWriteDebugString</MSHelp:link></li>
+
+	<LI><MSHelp:link keywords="wce50lrfOEMWriteDebugByte" TABINDEX="0">OEMWriteDebugByte</MSHelp:link></li>
+
+	<LI><MSHelp:link keywords="wce50lrfOEMReadDebugByte" TABINDEX="0">OEMReadDebugByte</MSHelp:link></li>
+</UL>
+
+<P>The NK banner is displayed after the <B>OEMInitDebugSerial</B> function completes.</P>
+
+<H3 class="dtH3">OEMInit()</H3>
+
+<P><B>OEMInit</B> is implemented by OEMs to initialize all hardware interfaces for the target device.</P>
+
+<P>At this point in the kernel boot process, interrupts are disabled and the kernel is unable to handle exceptions. The only kernel service available to <B>OEMInit</B> is <A HREF="wce50lrfhookinterrupt.htm">HookInterrupt</A>. <B>OEMInit</B> can register interrupt service routines (ISRs) by calling <B>HookInterrupt</B>.</P>
+
+<P>At this point in the boot process, the following hardware initialization is usually required:
+
+<UL type="disc">
+	<LI>Interrupts</li>
+
+	<LI>System timer</li>
+
+	<LI>KITL interface</li>
+</UL>
+
+<P>Depending on the hardware, optional initialization would include:
+
+<UL type="disc">
+	<LI>Bus interfaces</li>
+</UL>
+
+<P>Sample implementations of the <B>OEMInit</B> function can be found in %_WINCEROOT%\Platform\<I>&lt;Hardware Platform Name&gt;</I>\Src\Kernel\OAL\Init.c.</P>
+
+<H3 class="dtH3">KernelInit()</H3>
+
+<P>The <B>KernelInit</B> function encapsulates the initialization of the kernel. It initializes the following parts of the kernel through calls to different initialization functions:
+
+<UL type="disc">
+	<LI>Heap</li>
+
+	<LI>Memory pool</li>
+
+	<LI>Kernel process</li>
+
+	<LI>Scheduler</li>
+</UL>
+
+<P>Upon exiting this function, the system is ready to schedule the first thread through <B>SystemStartupFunc</B>.</P>
+
+<P>The implementation of the <B>KernelInit</B> function is under the private directory.</P>
+
+<H3 class="dtH3">HeapInit()</H3>
+
+<P><B>HeapInit</B> initializes the kernel heap.</P>
+
+<P>The implementation of the <B>HeapInit</B> function is under the private directory.</P>
+
+<H3 class="dtH3">InitMemoryPool()</H3>
+
+<P><B>InitMemoryPool</B> initializes the kernel memory pool.</P>
+
+<P>The implementation of the <B>InitMemoryPool</B> function is under the private directory.</P>
+
+<H3 class="dtH3">ProcInit()</H3>
+
+<P><B>ProcInit</B> initializes the Windows CE kernel process.</P>
+
+<P>The implementation of the <B>ProcInit</B> function is under the private directory.</P>
+
+<H3 class="dtH3">SchedInit()</H3>
+
+<P><B>SchedInit</B> initializes the scheduler and creates the <B>SystemStartupFunc</B> thread.</P>
+
+<P>The implementation of the <B>SchedInit</B> function is under the private directory.</P>
+
+<H3 class="dtH3">FirstSchedule()</H3>
+
+<P><B>FirstSchedule</B> starts the scheduler.</P>
+
+<P>The implementation of the <B>FirstSchedule</B> function is under the private directory.</P>
+
+<H3 class="dtH3">SystemStartupFunc()</H3>
+
+<P><B>SystemStartupFunc</B> executes <MSHelp:link keywords="wce50lrfIOCTLHALPOSTINIT" TABINDEX="0">IOCTL_HAL_POSTINIT</MSHelp:link>. Implementation of this function can be handled by OEM code to complete the kernel initialization process.</P>
+
+<P>The implementation of the <B>SystemStartupFunc</B> function is under the private directory.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><MSHelp:link keywords="wce50conFilesysexeBootProcess" TABINDEX="0">Filesys.exe Boot Process</MSHelp:link> | <A HREF="wce50conkernel.htm">Kernel Overview</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

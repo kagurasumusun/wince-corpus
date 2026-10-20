@@ -1,0 +1,64 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Spin Locks</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Spin Locks"/>
+<MSHelp:RLTitle Title="Spin Locks"/>
+<MSHelp:Keyword Index="A" Term="wce50conSpinLocks"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Driver"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="False"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="ndis_guide1.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="False"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+<MSHelp:Attr Name="PBFeature" Value="NetworkDriver"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_3018300">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50conspinlocks"></A>Spin Locks</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>A spin lock is a synchronization mechanism for protecting resources shared by kernel-mode threads. A spin lock handles synchronization among various threads of execution running concurrently. A thread acquires a spin lock before accessing protected resources. Only the thread holding the spin lock can use the resource and only until the lock is released. The spin lock prevents other threads from accessing the resource. While waiting for the spin lock to release, another thread can initiate a loop that attempts to acquire the spin lock and continues looping until the thread that holds the lock releases the spin lock.</P>
+
+<P>For example, the <A HREF="wce50lrfminiportsend.htm">MiniportSend</A> function might queue packets passed to it by a protocol driver. Because other driver functions also use this queue, <B>MiniportSend</B> must protect the queue with a spin lock so that only one thread at a time can manipulate the links or contents. <B>MiniportSend</B> acquires the spin lock, adds the packet to the queue, and then releases the spin lock. By using a spin lock, <B>MiniportSend</B> ensures that the thread holding the lock is the only thread modifying the queue links while the packet is safely added to the queue. When the NIC driver removes the packets from the queue, the same spin lock protects its access. When a driver executes instructions that modify the head of the queue or any of the link fields making up the queue, the driver must protect the queue with a spin lock. </P>
+
+<P>A well-written network driver will minimize the amount of time a particular thread holds a spin lock and, at the same time, not overprotect a queue. For example, your driver can perform some operations outside the region protected by the spin lock, such as filling in the length of a packet before it queues the packet. In addition, once the packet is in the queue and the executing thread releases the spin lock, the driver must assume that other threads can de-queue the packet immediately.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50consynchronization144.htm">NDIS Synchronization</A> | <A HREF="wce50lrfminiportsend.htm">MiniportSend</A> | <A HREF="wce50lrfndisacquirespinlock.htm">NdisAcquireSpinLock</A> | <A HREF="wce50lrfndisallocatespinlock.htm">NdisAllocateSpinLock</A> | <A HREF="wce50lrfndisdpracquirespinlock.htm">NdisDprAcquireSpinLock</A> | <A HREF="wce50lrfndisdprreleasespinlock.htm">NdisDprReleaseSpinLock</A> | <A HREF="wce50lrfndisfreespinlock.htm">NdisFreeSpinLock</A> | <A HREF="wce50lrfndisreleasespinlock.htm">NdisReleaseSpinLock</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

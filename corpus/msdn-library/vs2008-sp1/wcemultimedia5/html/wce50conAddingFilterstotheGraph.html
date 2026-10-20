@@ -1,0 +1,58 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Adding Filters to the Graph</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Adding Filters to the Graph"/>
+<MSHelp:RLTitle Title="Adding Filters to the Graph"/>
+<MSHelp:Keyword Index="A" Term="wce50conAddingFilterstotheGraph"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Feature"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="directshow_concepts1.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="False"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+<MSHelp:Attr Name="PBFeature" Value="SYSGEN_DSHOW"/>
+<MSHelp:Attr Name="PBOnly" Value="False"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_3020476">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50conaddingfilterstothegraph"></A>Adding Filters to the Graph</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>If a moniker is found for a source filter that can read a file of the specified type, the Filter Graph Manager uses <MSHelp:link keywords="wce50lrfCoCreateInstance" TABINDEX="0">CoCreateInstance</MSHelp:link> to create an instance of the filter using the returned GUID, and then calls its own <A HREF="wce50lrfifiltergraphaddfilter.htm">AddFilter</A> method to add the filter to the filter graph. Once added to the graph, the filter creates one or more output pins configured for the type of file it will be reading. After the pin(s) are created, the Filter Graph Manager will examine the media type each pin supports and then look again in the registry for a filter that can accept that media type on its input pin. When it finds a suitable filter, it adds it to the graph and then calls the <A HREF="wce50lrfipinconnect.htm">IPin::Connect</A> method on the upstream filter's output pin. The output pin can enumerate the supported media types on the input pin and attempt to use that type by calling <A HREF="wce50lrfipinreceiveconnection.htm">IPin::ReceiveConnection</A> on that pin. If the input pin agrees on the media type, then the connection is made. This process is repeated until all the necessary filters have been added to the graph. Typically, the second filter in a playback graph will be a parser or splitter filter, which reads a raw stream of data, such as AVI or MPEG, and splits it into separate audio and video streams, creating an output pin for each stream. If the data for either stream is compressed, the next filter on each stream will be a decompressor, followed by a renderer filter. </P>
+
+<P>The <I>Intelligent Connect</I> mechanisms can also be used by applications to partially build graphs. For example, assume you have a special filter that captures data from some device and outputs it in a standard format. Your application can manually add the first filter to the graph, then use the Filter Graph Manager to obtain a pointer to the filter, then use the filter's <A HREF="wce50lrfibasefilterenumpins.htm">EnumPins</A> or <A HREF="wce50lrfibasefilterfindpin.htm">FindPin</A> methods to obtain pointers to the output pins. Then, when the application supplies that pointer in a call to <A HREF="wce50lrfigraphbuilderrender.htm">IGraphBuilder::Render</A>, the Filter Graph Manager will use the Intelligent Connect process to finish building the rest of the graph. An application can also manually disconnect any filter inserted into a graph and replace it with another filter. </P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

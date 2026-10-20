@@ -1,0 +1,90 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Hive-Based Registry Stored in RAM</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Hive-Based Registry Stored in RAM"/>
+<MSHelp:RLTitle Title="Hive-Based Registry Stored in RAM"/>
+<MSHelp:Keyword Index="A" Term="wce50conHiveBasedRegistryStoredinRAM"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Feature"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="registry_overview.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="True"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="True"/>
+<MSHelp:Attr Name="PBFeature" Value="REGISTRY"/>
+<MSHelp:Attr Name="PBOnly" Value="True"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_1055666">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50conhivebasedregistrystoredinram"></A>Hive-Based Registry Stored in RAM</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>You can specify a region of RAM to store a registry hive in, rather than using the hive as a memory-mapped file on a file system. Presumably, the region of RAM is static RAM (SRAM) chip or similar permanent storage, although, it can be a reserved area of RAM specified in the Config.bib file. </P>
+
+<P>When the file system brings up the registry, the file system calls <MSHelp:link keywords="wce50lrfIOCTLHALGETHIVERAMREGION" TABINDEX="0">IOCTL_HAL_GET_HIVE_RAM_REGION</MSHelp:link> to retrieve the necessary information for storing the hive-based registry.</P>
+
+<P>Rather than using a file on the file system, the registry data is stored directly in the region of RAM. There can only be one user and the user data is stored in the same RAM region as the system data. If you want to support multiple users, all users have to share the same data under the <B>HKEY_CURRENT_USER</B> registry subtree.</P>
+
+<P>To support IOCTL_HAL_GET_HIVE_RAM_REGION, you must set certain registry keys to specified values. The following registry key example shows how to support IOCTL_HAL_GET_HIVE_RAM_REGION:</P>
+
+<PRE class="code">[HKEY_LOCAL_MACHINE\init\BootVars]
+"Flags"=dword:0
+"NoDefaultUser"=dword:0</PRE>
+
+<P>Setting <B>Flags</B> equal to zero prevents Device.exe from starting in the first boot phase. Setting <B>NoDefaultUser</B> equal to zero simply logs in a default user.</P>
+
+<P>Storing the hive-based registry in RAM and the incorporation of the user hive into the same RAM space has certain implications, as follow:
+
+<UL type="disc">
+	<LI>There is no OS-provided save-and-restore mechanism for the registry when it is stored in the RAM region. <A HREF="wce50lrfregcopyfile.htm">RegCopyFile</A>, <A HREF="wce50lrfregrestorefile.htm">RegRestoreFile</A>, <A HREF="wce50lrfregreplacekey.htm">RegReplaceKey</A>, <MSHelp:link keywords="wce50lrfWriteRegistryToOEM" TABINDEX="0">WriteRegistryToOEM</MSHelp:link> and <MSHelp:link keywords="wce50lrfReadRegistryFromOEM" TABINDEX="0">ReadRegistryFromOEM</MSHelp:link> are not supported. The registry data persists as long as its region of RAM persists, and atomic transactioning of changes protects the registry data against corruption. <A HREF="wce50lrfregsavekey.htm">RegSaveKey</A> is supported; when an application calls <B>RegSaveKey</B>, the OS will make a call to the OEM's implementation of <MSHelp:link keywords="wce50lrfIOCTLHALSAVEHIVERAMREGION" TABINDEX="0">IOCTL_HAL_SAVE_HIVE_RAM_REGION</MSHelp:link>. This mechanism allows the OEM to save the registry when it is in a steady state.</li>
+
+	<LI><A HREF="wce50lrfregflushkey.htm">RegFlushKey</A> is unsupported. The RAM region assumes persistence, so there is no need to flush anything.</li>
+
+	<LI><MSHelp:link keywords="wce50lrfIOCTLHALGETHIVECLEANFLAG" TABINDEX="0">IOCTL_HAL_GET_HIVE_CLEAN_FLAG</MSHelp:link> is applicable in this case and you can use it to force the registry to be cleaned. However, because there is only one user and the data for that user is stored together with the system data, there is only one call to IOCTL_HAL_GET_HIVE_CLEAN_FLAG, along with HIVECLEANFLAG_SYSTEM, to determine whether you want to clean the entire registry. If you clean the registry, the cleaning does not affect the user profile directories. While there will not be any user registry data stored in the user profile directories, these directories may be used to hold other user-specific data and settings. Therefore, you are responsible for implementing your own cleanup mechanism to remove user profiles.</li>
+
+	<LI>The registry security mechanism applies with no differences.</li>
+
+	<LI>Because <MSHelp:link keywords="wce50lrfVirtualCopy" TABINDEX="0">VirtualCopy</MSHelp:link> receives the region of RAM to obtain a virtual address to access the RAM with, the region resides inside the memory space of Filesys.exe as long as it is under 2 MB in size. If the region is larger than 2 MB, it will be in public memory space. This is significant because in public memory space, any application can read and overwrite the data stored in the region. Therefore, limit the registry RAM region to 2 MB or less if possible.</li>
+
+	<LI>There is only one copy of user data stored. You can still implement multiple-user support by leaving the data under the <B>HKEY_CURRENT_USER</B> subtree. All users share the data under this subtree. <MSHelp:link keywords="wce50lrfSetCurrentUser" TABINDEX="0">SetCurrentUser</MSHelp:link> will still succeed in switching between users. User profile directories will still be created for each user, and will be placed in the object store as specified by the <B>"ProfileDir"</B> registry subkey. For more information see <MSHelp:link keywords="wce50conUserProfileStorage" TABINDEX="0">User Profile Storage</MSHelp:link>.</li>
+</UL>
+
+<P>If the OAL does not support IOCTL_HAL_GET_HIVE_RAM_REGION, or if IOCTL_HAL_GET_HIVE_RAM_REGION fails for any reason, the registry hives are stored in the object store.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50conadvancedregistryconcepts.htm">Advanced Registry Concepts</A> | <A HREF="wce50conregistry.htm">Registry</A> | <MSHelp:link keywords="wce50lrfIOCTLHALGETHIVERAMREGION" TABINDEX="0">IOCTL_HAL_GET_HIVE_RAM_REGION</MSHelp:link> | <MSHelp:link keywords="wce50lrfIOCTLHALSAVEHIVERAMREGION" TABINDEX="0">IOCTL_HAL_SAVE_HIVE_RAM_REGION</MSHelp:link> | <A HREF="wce50conmasterkeystorage.htm">Master Key Storage</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

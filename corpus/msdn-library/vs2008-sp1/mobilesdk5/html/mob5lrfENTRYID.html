@@ -1,0 +1,186 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>ENTRYID</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="ENTRYID"/>
+<MSHelp:RLTitle Title="ENTRYID"/>
+<MSHelp:Keyword Index="K" Term="ENTRYID"/>
+<MSHelp:Keyword Index="A" Term="mob5lrfENTRYID"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Application"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbsmartphone"/>
+<MSHelp:Attr Name="Product" Value="kbPocketPC"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="Technology" Value="kbPocketPC"/>
+<MSHelp:Attr Name="Technology" Value="kbSmartphone"/>
+<MSHelp:Attr Name="TopicType" Value="apiref"/>
+<MSHelp:Attr Name="Filename" Value="CE_MAPI_FuncStrucEnum_magneto.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="False"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_1064570">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Windows Mobile Version 5.0 SDK<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="mob5lrfentryid"></A>ENTRYID</H1>
+<!--Feedback Link Top Start-->
+<P CLASS="feedback"><font size="1"><a href="mailto:medfdbk&#64;microsoft.com?subject=Product: Windows Mobile | Version: 5.0 | Release: SDK | Title: ENTRYID | Filename: mob5lrfentryid.htm | Built on: Wednesday, September 14, 2005">Send Feedback</a> on this topic to the authors</font></p>
+<!--Feedback Link Top End-->
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>The <B>ENTRYID</B> structure contains an entry identifier for a MAPI object. </P>
+
+<H4 class="dtH4">Syntax</H4>
+
+<PRE class="syntax"><B>struct { </B>
+  <B>BYTE </B><I>abFlags</I><B>[4];</B> 
+  <B>BYTE </B><I>ab</I><B>[MAPI_DIM];</B> 
+<B>} ENTRYID, FAR *LPENTRYID; </B></PRE>
+
+<H4 class="dtH4">Members</H4>
+
+<DL>
+<DT><B>abFlags</B></DT>
+
+<DD>Bitmask of flags that provide information describing the object. Only the first byte of the flags, <B>abFlags[0]</B>, may be set by the provider; the other three are reserved. These flags must not be set for permanent entry identifiers; they are set only for short-term entry identifiers. To clients, this structure is read-only. 
+
+<P>The following flags can be set in <B>abFlags[0]</B>: 
+
+
+<P><B>MAPI_NOTRECIP</B>
+
+
+<P>The entry identifier cannot be used as a recipient on a message.
+
+
+<P><B>MAPI_NOTRESERVED</B>
+
+
+<P>Other users cannot access the entry identifier.
+
+
+<P><B>MAPI_NOW</B>
+
+
+<P>The entry identifier cannot be used at other times.
+
+
+<P><B>MAPI_SHORTTERM</B>
+
+
+<P>The entry identifier is short-term. All other values in this byte must be set unless other uses of the entry identifier are allowed.
+
+
+<P><B>MAPI_THISSESSION</B>
+
+
+<P>The entry identifier cannot be used on other sessions. 
+</dd>
+
+<DT><B>ab</B></DT>
+
+<DD>Indicates an array of binary data used by service providers. The client application cannot use this array.</dd>
+</DL>
+
+<H4 class="dtH4">Remarks</H4>
+
+<P>The <B>ENTRYID</B> structure is used by message store and address book providers to construct unique identifiers for their objects. Entry identifiers are used to identify the following object types:
+
+<UL type="disc">
+	<LI>Message store</li>
+
+	<LI>Folder</li>
+
+	<LI>Message</li>
+
+	<LI>Address book container</li>
+
+	<LI>Distribution list</li>
+
+	<LI>Messaging user</li>
+
+	<LI>Status</li>
+
+	<LI>Profile section</li>
+</UL>
+
+<P>Each provider uses a format for the <B>ENTRYID</B> structure that makes sense for that provider.</P>
+
+<P>Entry identifiers cannot be compared directly because one object can be represented by two different binary values. To determine whether two entry identifiers represent the same object, call the <A HREF="mob5lrfimapisessioncompareentryids.htm">IMAPISession::CompareEntryIDs</A> method.</P>
+
+<P>When a client calls an object's <A HREF="mob5lrfimapipropgetprops.htm">IMAPIProp::GetProps</A><A HREF="mob5lrfimapipropgetprops.htm">IMAPIProp::GetProps</A> method to retrieve its entry identifier, the object returns the most permanent form of the entry identifier. A client can verify that an entry identifier is long-term by checking that none of the flags are set in the first byte of the <B>abFlags</B> member.</P>
+
+<P>When a client accesses an entry identifier through a column in a table, most likely this entry identifier is short-term rather than long-term. Short-term entry identifiers can be used to open their corresponding objects only in the current MAPI session. A client can verify that an entry identifier is short-term by checking that all of the flags are set in the first byte of <B>abFlags</B>.</P>
+
+<P>Some entry identifiers are short-term but have long-term use. Such entry identifiers have one or more of the appropriate flags set in the first byte of <B>abFlags</B>.</P>
+
+<P>An<B> ENTRYID</B> structure has the following characteristics: 
+
+<UL type="disc">
+	<LI>Does not store the size of the entry identifier. </li>
+
+	<LI>Stores the flag data and the rest of the entry identifier separately. </li>
+
+	<LI>Is passed as a parameter to the methods of the <A HREF="mob5lrfimapiprop.htm">IMAPIProp</A> interface and to the following <B>OpenEntry</B> methods:
+<UL type="disc">
+	<LI><A HREF="mob5lrfimapicontaineropenentry.htm">IMAPIContainer::OpenEntry</A></li>
+
+	<LI><A HREF="mob5lrfimapisessionopenentry.htm">IMAPISession::OpenEntry</A></li>
+
+	<LI><A HREF="mob5lrfimsgstoreopenentry.htm">IMsgStore::OpenEntry</A></li>
+</UL>
+</li>
+
+	<LI>Is used to store an entry identifier on disk.</li>
+</UL>
+
+<P>Clients should always pass in naturally aligned entry identifiers. Although providers should handle arbitrarily aligned entry identifiers, clients should not expect this behavior. Failure to pass a suitable aligned entry identifier to a method can result in an alignment fault on RISC processors. </P>
+
+<P>The natural alignment factor, typically 8 bytes, is the largest data type supported by the CPU and is usually the same alignment factor used by the system memory allocator. A naturally aligned memory address allows the CPU to access any data type it supports at that address without generating an alignment fault. For RISC CPUs, a data type of size <I>n</I> bytes must usually be aligned on an even multiple of <I>n</I> bytes, with the address being an even multiple of n.</P>
+
+<H4 class="dtH4">Requirements</H4>
+
+<P><B>Pocket&nbsp;PC:</B> Pocket&nbsp;PC&nbsp;2002 and later<BR>
+<B>Smartphone:</B> Smartphone&nbsp;2002 and later<BR>
+<B>OS&nbsp;Versions:</B> Windows&nbsp;CE&nbsp;3.0 and later<BR>
+<B>Header:</B> mapidefs.h</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="mob5grfmapistructures.htm">MAPI Structures</A> | <A HREF="mob5orimessaging.htm">Messaging</A></P>
+
+<H4 class="dtH4">Related Macros</H4>
+
+<P><A HREF="mob5lrfcbnewentryid.htm">CbNewENTRYID</A> | <A HREF="mob5lrfsizedentryid.htm">SizedENTRYID</A><B> </B></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Feedback Link Bottom Start-->
+<p><font size="1"><a href="mailto:medfdbk&#64;microsoft.com?subject=Product: Windows Mobile | Version: 5.0 | Release: SDK | Title: ENTRYID | Filename: mob5lrfentryid.htm | Built on: Wednesday, September 14, 2005">Send Feedback</a> on this topic to the authors</font></p>
+<!--Feedback Link Bottom End-->
+<!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="mob5conCopyrightInformationForMagneto" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link></font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

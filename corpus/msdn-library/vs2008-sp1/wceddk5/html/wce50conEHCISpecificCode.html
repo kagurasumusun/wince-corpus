@@ -1,0 +1,306 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>EHCI-specific Code</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="EHCI-specific Code"/>
+<MSHelp:RLTitle Title="EHCI-specific Code"/>
+<MSHelp:Keyword Index="A" Term="wce50conEHCISpecificCode"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Driver"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="False"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="usbhost_guide.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="False"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+<MSHelp:Attr Name="PBFeature" Value="USBHostDriver"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_1034304">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50conehcispecificcode"></A>EHCI-specific Code</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>The USB 2.0 implementation includes some code that is specific to the host controller. The EHCI-specific module, EHCI.dll, implements <B>CPipeAbs</B> for all USB pipes and implements the pure virtual functions declared in <B>CHcd</B>. <B>CEhcd</B> contains hardware properties and includes all data structures that it shares with the hardware. The <B>CIsochronousPipe</B>, <B>CInterruptPipe</B> and <B>CControlPipe</B> classes manage various USB transactions.</P>
+
+<P>The following list shows what performs, composes, and manages transfers to the host controller:
+
+<UL type="disc">
+	<LI>Pipes perform transfers.</li>
+
+	<LI>Multiple transfer descriptors compose transfers.</li>
+
+	<LI>Transfer classes and transfer descriptors manage transfers.</li>
+
+	<LI>Transfer classes and transfer descriptors compose transfers.</li>
+</UL>
+
+<P>The hardware and the queue header use the transfer descriptor. Hardware and software share the transfer descriptor and the queue header. </P>
+
+<P><B>CHW</B> is the hardware abstract class for the EHCI hardware registers and its structure. <B>CHW</B> includes the host controller operation register, periodic frame-list handling, and the asynchronous list. </P>
+
+<H2 class="dtH2">EHCI-specific Pipe Classes</H2>
+
+<P>Depending on the endpoint type, USB transactions use the <B>CIsochronousPipe</B>, <B>CInterruptPipe</B> and <B>CControlPipe</B> classes. Each instance of the <B>CControlPipe</B>, <B>CBulkPipe</B> and <B>CInterrupt</B> classes has an endpoint descriptor structure that is used to create the instance. For interrupt, bulk, and control transfers that are queued, the pipe creates a queue header instance that is inserted either into an asynchronous schedule queue or into a periodic schedule queue. An instance of the HCD hardware class manages the asynchronous schedule queue and the periodic schedule queue, which a separate class defines.</P>
+
+<P>The <B>CQH</B> class implements the queue header structure functionality. The next <B>qTD</B> pointer inside the queue header structure references the transfer descriptor structure list that is associated with this queue header. </P>
+
+<P><B>CTransfer</B> creates and owns the transfer descriptor list. <B>CTransfer</B> queues or dequeues those transfer descriptors to or from the queue header using <B>CPipe</B>. Both the EHCI hardware and the <B>CQueuePipe</B> class reference the queue header that <B>CQueuePipe</B> uses. For more information, see <A HREF="wce50concqueuepipectransferdatastructures.htm">CQueuePipe Class and CTransfer Class Relationship</A>.</P>
+
+<P>All pipes support accepting more than one transfer. The <B>CQueuePipe</B> member <B>m_pUnQueuedTransfer</B> holds the outstanding queue transfer.</P>
+
+<P>For information about the relationship between the periodic table, the isochronous transfer descriptor, and the interrupt endpoint descriptor, see <A HREF="wce50concisochronouspipecisochtransferdatastructures.htm">CIsochronousPipe Class and CIsochTransfer Class Relationship</A>.</P>
+
+<P>The hardware register class, <B>CHW</B>, creates the periodic table, which the hardware references. Each entry represents a frame, not a micro-frame. All transfer descriptors that send within this frame are horizontally linked. For more information, see <A HREF="wce50concisochronouspipecisochtransferdatastructures.htm">CIsochronousPipe Class and CIsochTransfer Class Relationship</A>. In addition, software vertical links are created to link those transfer descriptors that belong to a transfer. Members of the <B>CIsochTransfer</B> class reference the header of this vertical list. <B>CTransfer</B> and <B>CIsochTransfer</B> create and own these transfer descriptors. The queue header for interrupt transfers also queues horizontally after isochronous transfer descriptors.</P>
+
+<P>The following table shows the hierarchy of the pipe classes in EHCI-specific code.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=50%>Class</TH>
+<TH width=50%>Description and hierarchy</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><B>CPipeAbs</B></TD>
+<TD width=50%>The <B>CPipeAbs</B> abstract class connects to the <B>CPipe</B> abstract class. 
+<P><B>CPipeAbs</B> is at the top of the class hierarchy.</P>
+</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><B>CPipe</B></TD>
+<TD width=50%>The <B>cPipe</B> abstract class implements the common code between the queue pipe and the isochronous pipe. This class includes a split mask and a complete mask for a full speed endpoint. It also holds the transaction translation address and the speed of the pipe.
+<P>The <B>CPipe</B> abstract class is below and connects to the <B>CPipeAbs</B> abstract class.</P>
+
+<P>The <B>CPipe</B> abstract class is above and connects to the <B>CQueuedPipe</B> abstract class. </P>
+
+<P>The <B>CPipe</B> abstract class is above and connects to the <B>CIsochronousPipe</B> class.</P>
+</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><B>CQueuedPipe</B></TD>
+<TD width=50%>The <B>CQueuedPipe</B> abstract class is used for queue-type pipes, control, bulk, and interrupt common code. It holds the queue header class instance it used. It also holds the currently processing transfer instance and the outstanding queued transfer instance. A transfer class such as <B>CIoschTransfer</B> and <B>CQTransfer</B> manage the transfer. 
+<P><B>CQueuedPipe</B> handles queued transfers to the queue header. It also handles transfers to the queue header that are not queued. It also controls the state of the queue header through an instance of <B>CQH</B>, the queue header class.</P>
+
+<P><B>CQueuedPipe</B> abstract class is below and connects to the <B>CPipe</B> abstract class.</P>
+
+<P>The <B>CQueuedPipe</B> abstract class is above and connects to the <B>CControlPipe</B>, <B>CInterruptPipe</B>, and <B>CBulkPipe</B> classes.</P>
+</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><B>CIsochronousPipe</B></TD>
+<TD width=50%>The <B>CIsochronousPipe</B> class is below and connects to the <B>CPipe</B> abstract class.
+<P><B>CIsochronousPipe</B> cannot use <B>CQueuePipe</B> because <B>CIsochronousPipe</B> is not a queue based transfer. Instead, <B>CQueuePipe</B> extends <B>CPipe</B>. <B>CQueuePipe</B> has multiple transfers queued into the periodic schedule table to support the continuation of a transfer. <B>CIsochronousPipe</B> references only the header of those transfer lists. Those transfers might all have transfer descriptors inserted into the periodic schedule list table.</P>
+</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><B>CControlPipe</B></TD>
+<TD width=50%>The <B>CControlPipe</B> abstract class extends <B>CQueuePipe</B> for control pipes. It sets up the queue header according to the control type and it queues this queue header into the hardware asynchronous queue header list. It provides parameters and the ability to change the packet size at least once for this queue header.
+<P>The <B>CControlPipe</B> class is below and connects to the <B>CQueuedPipe</B> abstract class.</P>
+</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><B>CInterruptPipe</B></TD>
+<TD width=50%>The <B>CInterruptPipe</B> abstract class calls <B>AllocateBusTime</B> in the USB20 library for this endpoint and uses <B>GetSMASK</B> and <B>GetCMASK</B> with the bus bandwidth information as parameters to get the split and complete mask. This class processes high-speed and full-speed interrupt endpoints. It also queues this queue header into the periodic schedule list table.
+<P><B>CInterruptPipe</B> extends <B>CQueuePipe</B> for interrupt pipes. It sets up the queue header according to the interrupt type. It also sets up the split and complete mask for its queue header. </P>
+
+<P>The <B>CInterruptPipe</B> class is below and connects to the <B>CQueuedPipe</B> abstract class.</P>
+</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><B>CBulkPipe</B></TD>
+<TD width=50%>The <B>CBulkPipe</B> abstract class extends <B>CQueuePipe</B> for bulk pipes. It sets up the queue header according to the bulk type, and it queues this queue header into the hardware asynchronous queue header list. It also provides parameter checking functions for <B>IssueTransfer</B>.
+<P>The <B>CBulkPipe</B> class is below and connects to the <B>CQueuedPipe</B> abstract class.</P>
+</TD>
+</TR>
+</table></div>
+
+<H2 class="dtH2">EHCI-specific Transfer Classes</H2>
+
+<P>Pipes use transfers to carry out transactions initiated by the user. A pipe carries the transfer parameter and status. It also contains the transfer descriptor class instance that it used. When there is a hardware interrupt, an active transfer that potentially connects the transfer descriptor to the hardware data structure calls the <B>DoneTransfer</B> class member. For queued endpoints, the transfer referenced by <B>m_pQueuedTransfer</B> in <B>CQueuedPipe</B> is the active transfer. For more information, see <A HREF="wce50concqueuepipectransferdatastructures.htm">CQueuePipe Class and CTransfer Class Relationship</A>.</P>
+
+<P>For isochronous endpoints, all of the queued transfers are potentially active transfers. For more information, see <A HREF="wce50concisochronouspipecisochtransferdatastructures.htm">CIsochronousPipe Class and CIsochTransfer Class Relationship</A>.</P>
+
+<P>The following table shows the hierarchy of the transfer classes in host controller-specific code.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=50%>Class</TH>
+<TH width=50%>Description and hierarchy</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><B>CTransfer</B></TD>
+<TD width=50%>The <B>CTransfer</B> abstract class allocates memory for the client, initializes transfer buffers for the client, and performs a callback when it is finished.
+<P><B>CTransfer</B> is above <B>CQTransfer</B> and <B>CIsochTransfer</B> and connects to both.</P>
+</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><B>CQTransfer</B></TD>
+<TD width=50%>The <B>CQTransfer</B> abstract class implements the transfer descriptor list initialization with <B>AddTransfer</B>. It also implements checking for completion and transfer descriptor completion actions, and implements aborting actions if a transfer must terminate.
+<P><B>CQueuedPipe</B> uses <B>CQTransfer</B> for queued pipe endpoints, control transfers, and bulk interrupt transfers. <B>CQTransfer</B> manages the queue transfer descriptor list and references it with the <B>m_pCQTDList</B> member. </P>
+
+<P><B>CQTransfer</B> is below and connects to <B>CTransfer</B>. <B>CQTransfer</B> is parallel to <B>CIsochTransfer</B>.</P>
+</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><B>CIsochTransfer</B></TD>
+<TD width=50%>The <B>CIsochTransfer</B> abstract class is the common interface between <B>CITransfer</B> and <B>CSITransfer</B>. With few exceptions, the <B>CIsochronous</B> class interfaces only with <B>CIsochTransfer</B>. <B>CITransfer</B> handles high-speed USB isochronous transfers. <B>CSITransfer</B>, which handles split isochronous transfers, handles full-speed isochronous transfers. <B>CITransfer</B> creates the isochronous transfer descriptors and <B>CSITransfer</B> creates the split isochronous transfer descriptors. 
+<P><B>CIsochTransfer</B> is below and connects to <B>CTransfer</B>. <B>CIsochTransfer</B> is above <B>CITransfer</B> and <B>CSITransfer</B>. <B>CIsochTransfer</B> is parallel to <B>CQTransfer</B>.</P>
+</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><B>CITransfer</B></TD>
+<TD width=50%>The CITransfer abstract class manages isochronous transfers.
+<P>The <B>CITransfer</B> abstract class is below and connects to <B>CIsochTransfer</B>. <B>CITransfer</B> is parallel to <B>CSITransfer</B>.</P>
+</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><B>CSITransfer</B></TD>
+<TD width=50%>The <B>CSITransfer </B>abstract class manages high-speed isochronous transfers.
+<P><B>CSITransfer</B> abstract class is below and connects to <B>CIsochTransfer</B>. <B>CSITransfer</B> is parallel to <B>CITransfer</B>.</P>
+</TD>
+</TR>
+</table></div>
+
+<H2 class="dtH2">EHCI-specific Transfer Descriptors and Queued Headers</H2>
+
+<P>The EHCI hardware and the EHCI driver share the queue header and use it for queued transfers. Each pipe or endpoint has one queue header that the asynchronous list or periodic frame list can reference. </P>
+
+<P>The following list shows the queue header objects in EHCI-specific code:
+
+<UL type="disc">
+	<LI>The <B>CQH</B> object is an extended queue header structure that simplifies queue header management. 
+<P>It contains a pointer that references the pipe class that owns this instance of the class. It also contains a virtual address reference to the next <B>CQH</B> to which the next physical queue address points. This allows access to the next <B>CQH</B> without converting the physical address. 
+</li>
+
+	<LI>The <B>CQTD</B> object is an extended queued transfer descriptor structure that manages queued transfer descriptors. 
+<P>It contains references to the instance transfer class, <B>CQTransfer</B>, and to <B>CQH</B>, which simplifies the driver architecture.
+</li>
+
+	<LI>The <B>CITD</B> object is an extended isochronous transfer descriptor structure that manages transfer descriptors.
+<P>It contains a reference to the transfer that owns this instance. <B>CITD</B> has extended reference pointers that point to the next transfer descriptors that transfer to the next frame within the same transfer.
+</li>
+
+	<LI>The <B>CSITD</B> object is an extended split isochronous transfer descriptor structure that facilitates managing split transfers. 
+<P>It contains a reference to the transfer that created and owns this instance. It also contains a reference to the previous <B>CSITD</B> in the list. You can use the reference to the previous <B>CSITD</B> for initialization or to navigate backwards through the list. <B>CSITD</B> has extended reference pointers that point to the next transfer descriptors that transfer to the next frame within the same transfer.
+</li>
+</UL>
+
+<P>For more information about the relationship between these classes, see <A HREF="wce50concisochronouspipecisochtransferdatastructures.htm">CIsochronousPipe Class and CIsochTransfer Class Relationship</A>.</P>
+
+<H2 class="dtH2">EHCI-specific Code and USB 2.0 Common Code Interface</H2>
+
+<P>USB 2.0 common code requires all host controller specific code to implement the virtual functions exposed by the HCD class. The following table shows the components used to implement the host controller functionality.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=50%>Component</TH>
+<TH width=50%>Description and hierarchy</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><B>HCD</B></TD>
+<TD width=50%><B>HCD</B> implements the host controller driver interface. This abstract class passes requests to other objects.
+<P>Above <B>CHW</B> and connects to <B>CHW</B>.</P>
+</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><B>CHW</B></TD>
+<TD width=50%><B>CHW</B> implements all of the <B>HCD</B> virtual functions and interfaces with the hardware. There are two reference pointers in hardware that point to the structure to manage. 
+<P>Below <B>HCD</B> and connects to <B>HCD</B>.</P>
+
+<P>Above <B>CEhcd</B> and connects to <B>CEhcd</B>.</P>
+</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>USB2lib</TD>
+<TD width=50%>USB2lib handles scheduling of USB transactions.
+<P>Parallel to <B>CHW</B> and connects to <B>CEhcd</B>.</P>
+</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><B>CEhcd</B></TD>
+<TD width=50%><B>CEhcd</B> contains USB2lib code that the pipe class utilizes.
+<P>Below <B>CHW</B> and connects to <B>CHW</B>.</P>
+
+<P>Below USB2lib and connects to USB2lib.</P>
+</TD>
+</TR>
+</table></div>
+
+<P>The following table shows a comparison between periodic scheduling and asynchronous scheduling.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=50%>Scheduling method</TH>
+<TH width=50%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>Periodic</TD>
+<TD width=50%>The periodic list base hardware register references this scheduling structure. The <B>CPeriodicMgr</B> class manages the referenced structures. 
+<P><B>CPeriodicMgr</B> creates the periodic list table during initialization. It also initializes the dummy periodic queue header and links the list table and queue header according to the polling rate. This avoids complications when inserting a periodic queue header requested from <B>CPipeInterrupt</B> that has a different polling rate.</P>
+
+<P><B>CPeriodicMgr</B> exposes a public interface for pipes and transfers to use. The public interface includes functions to insert CITD, CSITD, and CQH objects, and functions to delete CITD, CSITD, and CQH objects.</P>
+</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>Asynchronous</TD>
+<TD width=50%>The asynchronous list address hardware register references this scheduling structure. The <B>CAsyncMgr</B> class manages the referenced structures.
+<P><B>CAsyncMgr</B> creates the dummy periodic queue header that serves as the head of the list. This header has the reclamation flag set and it is not deleted until its class instance is deleted. It does not have to move the reclamation flag when a queue header is inserted or deleted.</P>
+
+<P><B>CAsyncMgr</B> exposes a public interface that pipes use to insert and delete asynchronous queue headers.</P>
+</TD>
+</TR>
+</table></div>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50conusb20.htm">The Enhanced Host Controller Interface (EHCI) Driver</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

@@ -1,0 +1,96 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>USB Function Controller Driver Architecture</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="USB Function Controller Driver Architecture"/>
+<MSHelp:RLTitle Title="USB Function Controller Driver Architecture"/>
+<MSHelp:Keyword Index="A" Term="wce50conUSBFunctionControllerDriverArchitecture"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Driver"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="False"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="usbfunction_guide.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="False"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+<MSHelp:Attr Name="PBFeature" Value="USBFunctionDriver"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_1035397">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50conusbfunctioncontrollerdriverarchitecture"></A>USB Function Controller Driver Architecture</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>The PDD abstracts a USB function controller and the MDD provides a function driver with the ability to configure and access the underlying USB function controller. For information about the responsibilities of the PDD, see <A HREF="wce50conusbfunctioncontrollerdriverpddddsi.htm">USB Function Controller Driver PDD and DDSI Interface</A>. For a discussion of the interaction between a mounted function driver and the USB function controller driver, see <A HREF="wce50conusbfunctioncontrollerdrivermddddi.htm">USB Function Controller Driver MDD and DDI Interface</A>.</P>
+
+<H2 class="dtH2">Boot-time Initialization</H2>
+
+<P>The following steps show the boot-time initialization process:
+
+<OL type="1">
+	<LI>The OS locates the function controller, and then loads the function controller driver by loading the dynamic-link library (DLL) that contains the PDD and the MDD. </li>
+
+	<LI>The <MSHelp:link keywords="wce50lrfDllMain" TABINDEX="0">DllMain</MSHelp:link> function in the PDD calls <B>DllEntry</B> in the MDD. </li>
+
+	<LI>The OS activates the stream interface that the MDD contains by calling <B>UFN_Init</B>. </li>
+
+	<LI><B>UFN_Init</B> calls into the PDD to initialize the hardware. </li>
+
+	<LI><B>UFN_Init</B> determines the client driver to load, and then calls the client driver's initialization routine.</li>
+</OL>
+
+<P>The hardware initialization function carries out its responsibilities in the following order:
+
+<OL type="1">
+	<LI>Initializes the function controller on its bus.</li>
+
+	<LI>Places the function controller in the initialized state because the configuration might persist after a soft reset.</li>
+
+	<LI>Disables the USB connection.</li>
+
+	<LI>Disables device and endpoint interrupts.</li>
+
+	<LI>Clears pending device and endpoint interrupts.</li>
+
+	<LI>Clears configuration registers and the first in, first out (FIFO) buffer.</li>
+
+	<LI>Resets any internal data structures.</li>
+</OL>
+
+<P>The client driver's initialization routine must read any configuration parameters from the registry. When the client is ready to enable the device on the bus, the initialization routine must call or schedule a call to <B>lpRegisterDevice </B>with the device descriptors and a call to <B>lpStart</B>.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50conusbfunctioncontrollerdriverpdd.htm">USB Function Controller Driver PDD</A> | <A HREF="wce50conusbfunctioncontrollerdrivermdd.htm">USB Function Controller Driver MDD</A> | <A HREF="wce50conusbfunctioncontrollerdriverpddddsi.htm">USB Function Controller Driver PDD and DDSI Interface</A> | <A HREF="wce50conusbfunctioncontrollerdrivermddddi.htm">USB Function Controller Driver MDD and DDI Interface</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

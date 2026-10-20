@@ -1,0 +1,152 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Modifying the Binary Image Builder Files</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Modifying the Binary Image Builder Files"/>
+<MSHelp:RLTitle Title="Modifying the Binary Image Builder Files"/>
+<MSHelp:Keyword Index="A" Term="wce50tskModifyingtheBinaryImageBuilderFiles"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Feature"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbTask"/>
+<MSHelp:Attr Name="Filename" Value="howto_createXIPimage.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="True"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+<MSHelp:Attr Name="PBFeature" Value="CORE"/>
+<MSHelp:Attr Name="PBOnly" Value="False"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_3009823">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50tskmodifyingthebinaryimagebuilderfiles"></A>Modifying the Binary Image Builder Files</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>After you have created your OS design, you must modify the config.bib and platform.bib (binary image builder) files to specify files and settings that are required to build a run-time image with multiple XIP regions.</P>
+
+<P class="labelproc"><B>To modify the .bib files for your run-time image with multiple XIP regions</B>
+
+<OL type="1">
+	<LI>In Platform Builder, from the Workspace window, choose the <B>ParameterView</B> tab at the bottom of the window. In the project tree, under the <B>CEPC</B> node, expand the <B>Hardware Specific Files</B> node, and double-click the Config.bib file.
+<BLOCKQUOTE class="dtBlock">
+<b class="le">Note</b>&nbsp;&nbsp;&nbsp;It is recommended that you create a backup copy of config.bib so that, if config.bib becomes corrupted by the changes you make to the file, you do not need to repair the Windows CE OS installation for your BSP.</BLOCKQUOTE>
+</li>
+
+	<LI>In config.bin, navigate to the MEMORY section and define the multiple XIP regions for your run-time image. By default, the MEMORY section includes a list of <B>#elif</B> <B>defined</B> statements for IMGRAM variables of different sizes. In the MEMORY section of config.bib, paste the following code example after the <B>#elif defined</B> statements, right before the <B>#else</B> statement. The multiple XIP regions defined in the following example will work for a CEPC BSP.
+<PRE class="code">#elif defined IMGMULTIBIN
+;  NAME           START ADDR    SIZE       TYPE
+;  ----------------------------------------------------------------
+    NK            80220000      007DE000   RAMIMAGE   
+    SHELL         809FE000      00100000   RAMIMAGE   
+    APPS          80AFE000      00100000   RAMIMAGE   
+    CHAIN         80BFE000      00002000   RESERVED ; XIP chain info
+    RAM           80C00000      01000000   RAM        
+    pdwXIPLoc     00000000      80BFE000   FIXUPVAR   ; XIP pTOC</PRE>
+
+<P>In the above example, the NK region has been divided so that the image includes three new regions: SHELL, APPS, and CHAIN. All regions are contiguous, and there are no address gaps between any of the regions. The values listed above are examples that can be used for the purpose of this procedure. However, you can also choose a custom size for each region. The size that you define for each region is arbitrary, and depends on the files you are planning to add to each region and whether any of these will be compressed by Romimage.exe. As a good practice, add the sizes of all files for a given region, and then add an extra 32K as a buffer. Adding this extra amount provides room for the files to reduce and expand as they change between each successive build.
+
+<P>In the above example, the CHAIN region has been placed last behind all other regions. The location where you define the CHAIN region in config.bib depends on your bootloader. For example, a CEPC requires that the CHAIN region is defined after the NK region.
+
+<P>The above example also shows that <I>pdwXIPLoc</I> has been declared as the fixup variable and that its location has been set to the same address as the start of the CHAIN region.
+</li>
+
+	<LI>After defining the multiple XIP regions in the MEMORY section, you must add a set of values to the CONFIG section of config.bin to provide Romimage.exe with the address of where the chain file needs to be placed. These values also configure Romimage.exe to automatically size the module images. In config.bib, in the CONFIG section, set the following values:
+<BLOCKQUOTE class="dtBlock">
+<B><b class="le">Note</b>&nbsp;&nbsp;&nbsp;</B>Some of these values may already be set by default.</BLOCKQUOTE>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=33%>Value</TH>
+<TH width=67%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%>AUTOSIZE=ON</TD>
+<TD width=67%>Adjusts the start address of RAM to the end of the last XIP region.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%>ROM_AUTOSIZE=ON</TD>
+<TD width=67%>Automatically sizes each separate XIP region.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%>DLLADDR_AUTOSIZE=ON</TD>
+<TD width=67%>Automatically sizes the DLL address space across multiple XIP regions.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%>XIPSCHAIN=80bfe000</TD>
+<TD width=67%>Points to the start of the CHAIN region defined in the MEMORY section.
+<BLOCKQUOTE class="dtBlock">
+<B><b class="le">Note</b>&nbsp;&nbsp;&nbsp;</B>This address is applicable for the example provided in the previous step of this procedure. If you use a customized address for the CHAIN region or a different BSP, you will have to update this variable to match your settings.</BLOCKQUOTE>
+</TD>
+</TR>
+</table></div>
+</li>
+
+	<LI>To save your changes to the Config.bib file, from the <B>File</B> menu, choose <B>Save</B>.</li>
+
+	<LI>In the project tree, under the <B>CEPC</B> node, expand the <B>Hardware Specific Files</B> node, and double-click the platform.bin file.</li>
+
+	<LI>Locate the Files section at the end of platform.bib and add the following entries at the end of the Files section:</li>
+</OL>
+
+<PRE class="code">if IMGMULTIBIN
+   shell.exe   $(_FLATRELEASEDIR)\shell.exe   SHELL   SH
+   filesys.exe $(_FLATRELEASEDIR)\filesys.exe SHELL   SH
+#else
+   shell.exe   $(_FLATRELEASEDIR)\shell.exe   NK  SH
+   filesys.exe $(_FLATRELEASEDIR)\filesys.exe NK  SH
+#endif</PRE>
+
+<P>These entries will tell romimage.exe to place the Shell and File System in the SHELL region,<B> </B>and to load these applications from this region in memory.
+
+<OL type="1">
+	<LI>To save your changes to platform.bib, from the <B>File</B> menu, choose <B>Save</B>.</li>
+
+	<LI>To add the IMG environment variable for multiple XIP support, from the <B>Platform</B> menu, choose <B>Settings</B>.</li>
+
+	<LI>Choose the <B>Environment</B> tab, and then choose <B>New</B>. </li>
+
+	<LI>In the <B>Variable name</B> box, type <B>IMGMULTIBIN</B>. </li>
+
+	<LI>In the <B>Variable value </B>box, type <B>1</B>, and then choose <B>OK</B>. </li>
+
+	<LI>To close the <B>Platform Settings</B> dialog box and save your changes, choose <B>OK</B>. </li>
+</OL>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50howhowtocreateanimagewithmultiplexipregions.htm">How to Create a Run-Time Image with Multiple XIP Regions</A> | <MSHelp:link keywords="wce50conConfigbibCustomization" TABINDEX="0">Config.bib Customization</MSHelp:link> | <A HREF="wce50conconfigbibchecklist.htm">Config.bib Checklist</A> | <MSHelp:link keywords="wce50conBinaryImageBuilderFile" TABINDEX="0">Binary Image Builder File</MSHelp:link> | <MSHelp:link keywords="wce50conMODULESSection" TABINDEX="0">MODULES Section</MSHelp:link> | <A HREF="wce50conxipchain.htm">XIP Chain</A> </P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

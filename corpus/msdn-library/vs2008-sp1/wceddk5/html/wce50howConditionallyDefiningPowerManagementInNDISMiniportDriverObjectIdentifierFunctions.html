@@ -1,0 +1,494 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Conditionally Defining Power Management in the NDIS Miniport Driver Object Identifier Functions</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Conditionally Defining Power Management in the NDIS Miniport Driver Object Identifier Functions"/>
+<MSHelp:RLTitle Title="Conditionally Defining Power Management in the NDIS Miniport Driver Object Identifier Functions"/>
+<MSHelp:Keyword Index="A" Term="wce50howConditionallyDefiningPowerManagementInNDISMiniportDriverObjectIdentifierFunctions"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Driver"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="False"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbTask"/>
+<MSHelp:Attr Name="Filename" Value="howto_portndisdriver.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="True"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+<MSHelp:Attr Name="PBFeature" Value="NetworkDriver"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_1038196">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50howconditionallydefiningpowermanagementinndisminiportdriverobjectidentifierfunctions"></A>Conditionally Defining Power Management in the NDIS Miniport Driver Object Identifier Functions</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>After you modify the NDIS miniport driver send and receive functions, modify the NDIS miniport driver object identifier functions.</P>
+
+<P class="labelproc"><B>To conditionally define power management for the NDIS miniport driver object identifier functions</B>
+
+<OL type="1">
+	<LI>In the <B>MPQueryInformation </B>function definition, use the <code class="ce">#ifdef</code>, <code class="ce">#ifndef</code>, and <code class="ce">#endif</code> directives to conditionally include or exclude local variables that the Windows CE NDIS miniport driver build may or may not require, depending on the existence of defines such as WINCE_PM_ENABLE.
+<P>The following code example shows how to exclude these local variables from the Windows CE build.
+
+<PRE class="code">#ifdef WINCE_PM_ENABLE    
+    NDIS_PNP_CAPABILITIES       Power_Management_Capabilities;
+#endif
+
+    ULONG                       ulInfo = 0;
+    ULONG64                     ul64Info = 0;
+    
+    USHORT                      usInfo = 0;
+#ifndef UNDER_CE    
+    UCHAR                       arrInfo[ETH_LENGTH_OF_ADDRESS];
+#endif
+    PVOID                       pInfo = (PVOID) &amp;ulInfo;
+    ULONG                       ulInfoLen = sizeof(ulInfo);
+    ULONG                       ulBytesAvailable = ulInfoLen;
+#ifndef UNDER_CE    
+    PNDIS_TASK_OFFLOAD_HEADER   pNdisTaskOffloadHdr;
+#endif</PRE>
+</li>
+
+	<LI>In the <B>MPQueryInformation </B>function definition, exclude the <code class="ce">case OID_GEN_SUPPORTED_GUIDS</code> statement from the Windows CE build.
+<P>The following code example shows how to exclude this statement from the build.
+
+<PRE class="code">#ifndef UNDER_CE
+            // WMI support
+        case OID_GEN_SUPPORTED_GUIDS:
+            pInfo = (PUCHAR) &amp;NICGuidList;
+            ulBytesAvailable = ulInfoLen =  sizeof(NICGuidList);
+            break;
+#endif            </PRE>
+</li>
+
+	<LI>In the <B>MPQueryInformation </B>function definition, use WINCE_PM_ENABLE to conditionally include the <code class="ce">case OID_PNP_CAPABILITIES</code> and <code class="ce">case OID_PNP_QUERY_POWER</code> statements.
+<P>The following code example shows how to conditionally include this statement.
+
+<PRE class="code">#ifdef WINCE_PM_ENABLE
+        case OID_PNP_CAPABILITIES:
+
+            MPFillPoMgmtCaps (Adapter, 
+                                &amp;Power_Management_Capabilities, 
+                                &amp;Status,
+                                &amp;ulInfoLen);
+            if (Status == NDIS_STATUS_SUCCESS)
+            {
+                pInfo = (PVOID) &amp;Power_Management_Capabilities;
+            }
+            else
+            {
+                pInfo = NULL;
+            }
+
+            break;
+
+        case OID_PNP_QUERY_POWER:
+            // Status is pre-set in this routine to Success
+
+            Status = NDIS_STATUS_SUCCESS; 
+
+            break;
+#endif            </PRE>
+</li>
+
+	<LI>In the <B>MPSetInformation</B> function definition, use WINCE_PM_ENABLE to conditionally include the <B>NewPowerState</B> local variable.
+<P>The following code example shows how to conditionally include this variable.
+
+<PRE class="code">#ifdef WINCE_PM_ENABLE    
+    NDIS_DEVICE_POWER_STATE     NewPowerState;
+#endif</PRE>
+</li>
+
+	<LI>In the <B>MPSetInformation</B> function definition, use WINCE_PM_ENABLE to conditionally include the power related <code class="ce">case</code> statements.
+<P>The following code example shows how to conditionally include these statements.
+
+<PRE class="code">#ifdef WINCE_PM_ENABLE
+
+        case OID_PNP_SET_POWER:
+
+            DBGPRINT(MP_LOUD, ("SET: Power State change, "PTR_FORMAT"!!!\n", InformationBuffer));
+
+            if (InformationBufferLength != sizeof(NDIS_DEVICE_POWER_STATE ))
+            {
+                return(NDIS_STATUS_INVALID_LENGTH);
+            }
+
+            NewPowerState = *(PNDIS_DEVICE_POWER_STATE    )InformationBuffer;
+
+            //
+            // Set the power state - Cannot fail this request
+            //
+            MPSetPower(Adapter ,NewPowerState );
+        
+            *BytesRead = sizeof(NDIS_DEVICE_POWER_STATE    );
+            Status = NDIS_STATUS_SUCCESS; 
+            break;
+
+        case OID_PNP_ADD_WAKE_UP_PATTERN:
+            //
+            // call a function that would program the adapter's wake
+            // up pattern, return success
+            //
+            DBGPRINT(MP_LOUD, ("SET: Add Wake Up Pattern, !!!\n"));
+
+            if (MPIsPoMgmtSupported(Adapter) )
+            {
+                Status = MPAddWakeUpPattern(Adapter,InformationBuffer, InformationBufferLength); 
+
+                if (Status == NDIS_STATUS_SUCCESS)
+                {
+                    *BytesRead = InformationBufferLength;   
+                }
+            }
+            else
+            {
+                Status = NDIS_STATUS_NOT_SUPPORTED;
+            }
+            break;
+
+    
+        case OID_PNP_REMOVE_WAKE_UP_PATTERN:
+            DBGPRINT(MP_LOUD, ("SET: Got a WakeUpPattern REMOVE Call\n"));
+            //
+            // call a function that would remove the adapter's wake
+            // up pattern, return success
+            //
+            if (MPIsPoMgmtSupported(Adapter) )
+            {
+                Status = MPRemoveWakeUpPattern(Adapter,InformationBuffer, InformationBufferLength );
+
+                if (Status == NDIS_STATUS_SUCCESS)
+                {
+                    *BytesRead = InformationBufferLength;
+                }
+            }
+            else
+            {
+                Status = NDIS_STATUS_NOT_SUPPORTED;
+            }
+            break;
+
+        case OID_PNP_ENABLE_WAKE_UP:
+            DBGPRINT(MP_LOUD, ("SET: Got a EnableWakeUp Call, "PTR_FORMAT"\n",InformationBuffer));
+            //
+            // call a function that would enable wake up on the adapter
+            // return success
+            //
+            if (MPIsPoMgmtSupported(Adapter) )
+            {
+                *BytesRead = InformationBufferLength;                         
+                Status = NDIS_STATUS_SUCCESS; 
+            }
+            else
+            {
+                Status = NDIS_STATUS_NOT_SUPPORTED;
+            }
+
+            break;
+
+#endif  // WINCE_PM_ENABLE            </PRE>
+</li>
+
+	<LI>Use WINCE_PM_ENABLE to conditionally include the <B>MPSetPowerD0</B>, <B>MPSetPowerLow</B>, and <B>MPSetPower</B> function definitions.
+<P>The following code example shows how to conditionally include these functions.
+
+<PRE class="code">#ifdef WINCE_PM_ENABLE
+VOID
+MPSetPowerD0(
+    PMP_ADAPTER  Adapter
+    )
+/*++
+Routine Description:
+
+    This routine is called when the adapter receives a SetPower 
+    to D0.
+    
+Arguments:
+    
+    Adapter                 Pointer to the adapter structure
+    PowerState              NewPowerState
+    
+Return Value:
+
+    
+--*/
+{
+
+    MPSetPowerD0Private (Adapter);       
+    Adapter-&gt;CurrentPowerState = NdisDeviceStateD0;
+}
+
+#endif
+
+#ifdef WINCE_PM_ENABLE
+VOID
+MPSetPowerLow(
+    PMP_ADAPTER              Adapter ,
+    NDIS_DEVICE_POWER_STATE  PowerState 
+    )
+/*++
+Routine Description:
+
+    This routine is called when the adapter receives a SetPower 
+    to a PowerState &gt; D0
+    
+Arguments:
+    
+    Adapter                 Pointer to the adapter structure
+    PowerState              NewPowerState
+    
+Return Value:
+
+    
+--*/
+{
+
+    NDIS_STATUS Status = NDIS_STATUS_FAILURE;
+
+    do
+    {
+        Adapter-&gt;NextPowerState = PowerState;
+
+        //        
+        // Stop sending packets. Create a new flag and make it part 
+        // of the Send Fail Mask
+        //
+
+        //
+        // Stop hardware from receiving packets - Set the RU to idle 
+        //
+        
+        //
+        // Check the current status of the receive unit
+        //
+        if ((Adapter-&gt;CSRAddress-&gt;ScbStatus &amp; SCB_RUS_MASK) != SCB_RUS_IDLE)
+        {
+            //
+            // Issue an RU abort.  Since an interrupt will be issued, the
+            // RU will be started by the DPC.
+            //
+            Status = D100IssueScbCommand(Adapter, SCB_RUC_ABORT, TRUE);
+        }
+
+        if (Status != NDIS_STATUS_SUCCESS)
+        {
+            break;
+        }
+
+        //
+        // Wait for outstanding Receive packets
+        //
+        while (Adapter-&gt;PoMgmt.OutstandingRecv != 0)
+        {
+            //
+            // Sleep for 2 Ms;
+            //
+            NdisMSleep (2000);
+        }
+
+        //
+        // Wait for all incoming sends to complete
+        //
+
+        //
+        // Start Hardware specific part of the transition to low power state
+        // Setting up wake-up patterns, filters, wake-up events etc
+        //
+        NdisMSynchronizeWithInterrupt(
+                &amp;Adapter-&gt;Interrupt,
+                MPSetPowerLowPrivate,
+                Adapter);
+
+        Status = NDIS_STATUS_SUCCESS;
+
+    } while (FALSE);
+
+    return;
+}
+
+
+#endif
+
+#ifdef WINCE_PM_ENABLE
+VOID
+MPSetPower(
+    PMP_ADAPTER     Adapter ,
+    NDIS_DEVICE_POWER_STATE   PowerState 
+    )
+/*++
+Routine Description:
+
+    This routine is called when the adapter receives a SetPower 
+    request. It redirects the call to an appropriate routine to
+    Set the New PowerState
+    
+Arguments:
+    
+    Adapter                 Pointer to the adapter structure
+    PowerState              NewPowerState
+    
+Return Value:
+
+    
+--*/
+{
+    if (PowerState == NdisDeviceStateD0)
+    {
+        MPSetPowerD0 (Adapter);
+    }
+    else
+    {
+        MPSetPowerLow (Adapter, PowerState);
+    }
+}
+#endif</PRE>
+</li>
+
+	<LI>Use WINCE_PM_ENABLE to conditionally include the <B>MPAddWakeUpPattern</B> function definition .
+<P>The following code example shows how to conditionally include this function.
+
+<PRE class="code">#ifdef WINCE_PM_ENABLE
+NDIS_STATUS
+MPAddWakeUpPattern(
+    IN PMP_ADAPTER  pAdapter,
+    IN PVOID        InformationBuffer, 
+    IN UINT         InformationBufferLength
+    )
+/*++
+Routine Description:
+
+    This routine will allocate a local memory structure, copy the pattern, 
+    insert the pattern into a linked list and return success
+
+    We are guaranteed that we wll get only one request at a time, so this is implemented
+    without locks.
+    
+Arguments:
+    
+    Adapter                 Adapter structure
+    InformationBuffer       Wake up Pattern
+    InformationBufferLength Wake Up Pattern Length
+    
+Return Value:
+
+    Success - if successful.
+    NDIS_STATUS_FAILURE - if memory allocation fails. 
+    
+--*/
+{
+
+    NDIS_STATUS         Status = NDIS_STATUS_FAILURE;
+    PMP_WAKE_PATTERN    pWakeUpPattern = NULL;
+    UINT                AllocationLength = 0;
+    PNDIS_PM_PACKET_PATTERN pPmPattern = NULL;
+    ULONG               Signature = 0;
+    
+    do
+    {
+        pPmPattern = (PNDIS_PM_PACKET_PATTERN) InformationBuffer;
+
+        //
+        // Calculate the e100 signature
+        //
+        Status = MPCalculateE100PatternForFilter (
+            (PUCHAR)pPmPattern+ pPmPattern-&gt;PatternOffset,
+            pPmPattern-&gt;PatternSize,
+            (PUCHAR)pPmPattern +sizeof(NDIS_PM_PACKET_PATTERN),
+            pPmPattern-&gt;MaskSize,
+            &amp;Signature );
+        
+        if ( Status != NDIS_STATUS_SUCCESS)
+        {
+            break;
+        }
+
+        //
+        // Allocate the memory to hold the WakeUp Pattern
+        //
+        AllocationLength = sizeof (MP_WAKE_PATTERN) + InformationBufferLength;
+        
+        Status = NdisAllocateMemoryWithTag( &amp;pWakeUpPattern, 
+                                            AllocationLength ,
+                                            NIC_TAG );
+
+        if (Status != NDIS_STATUS_SUCCESS)
+        {
+            pWakeUpPattern = NULL;
+            break;
+        }
+
+        //
+        // Initialize pWakeUpPattern
+        //
+        NdisZeroMemory (pWakeUpPattern, AllocationLength);
+
+        pWakeUpPattern-&gt;AllocationSize = AllocationLength;
+        
+        pWakeUpPattern-&gt;Signature = Signature;
+
+        //
+        // Copy the pattern into local memory
+        //
+        NdisMoveMemory (&amp;pWakeUpPattern-&gt;Pattern[0],InformationBuffer, InformationBufferLength);
+            
+        //
+        // Insert the pattern into the list 
+        //
+        NdisInterlockedInsertHeadList (&amp;pAdapter-&gt;PoMgmt.PatternList, 
+                                        &amp;pWakeUpPattern-&gt;linkListEntry, 
+                                        &amp;pAdapter-&gt;Lock);
+
+        Status = NDIS_STATUS_SUCCESS;
+
+    } while (FALSE);
+
+    return Status;
+}
+#endif</PRE>
+</li>
+
+	<LI>From the IDE <B>Build</B> menu, choose <B>Open Build Release Directory</B>. </li>
+
+	<LI>Navigate to the directory containing your Windows CE NDIS miniport driver. 
+<P>Be sure your NDIS miniport driver is in %_WINCEROOT%\Platform\%_TGTPLAT%\Drivers\<I>CENDISMiniport</I>.
+</li>
+
+	<LI>Build the Windows CE NDIS miniport driver with the Build tool. 
+<P>For more information about the Build tool, see <MSHelp:link keywords="wce50conBuildTool" TABINDEX="0">Build Tool</MSHelp:link>. Microsoft recommends using the <B>-c</B> parameter with the Build tool to delete all object files.
+</li>
+</OL>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50howhowtomigratewindows-baseddesktopndisminiportdrivertowindowsce.htm">How to Migrate a Windows-based Desktop NDIS Miniport Driver to Windows CE</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

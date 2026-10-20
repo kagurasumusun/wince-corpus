@@ -1,0 +1,101 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Open Function</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Open Function"/>
+<MSHelp:RLTitle Title="Open Function"/>
+<MSHelp:Keyword Index="A" Term="wce50conOpenFunction"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Debugging"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="True"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="remote_performance_monitor.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="True"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="True"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_3013981">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50conopenfunction"></A>Open Function</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>The system calls the <B>Open</B> function when an application first connects to the registry to collect performance data. This function performs the initialization required for the application to provide performance data.</P>
+
+<P>The following code example shows the syntax for an <B>Open</B> function.</P>
+
+<PRE class="code">DWORD CALLBACK OpenPerformanceData(
+LPWSTR lpDeviceNames 
+);</PRE>
+
+<P>The <I>OpenPerformanceData</I> function name is a placeholder for a name defined by your application. </P>
+
+<P>The <I>lpDeviceNames</I> parameter points to a buffer containing the Unicode strings stored in the <B>Export</B> value in the <B>HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\Application_Name\Linkage</B> registry key.</P>
+
+<P>The strings are REG_MULTI_SZ strings, separated by a UNICODE_NULL character and terminated by two UNICODE_NULL characters. </P>
+
+<P>If the <B>Export</B> value does not exist, the value of <I>lpDeviceNames</I> should be NULL. </P>
+
+<P>The strings are the names of the devices managed by the application. </P>
+
+<P>The <B>Open</B> function calls the <B>CreateFile</B> function to open a handle to each device named. </P>
+
+<P>If <B>CreateFile</B> fails, the <B>Open</B> function must return the error code returned by the <B>GetLastError</B> function; otherwise, it should return ERROR_SUCCESS.</P>
+
+<P>The <B>Open</B> function initializes the data structures it returns to the performance monitoring application. </P>
+
+<P>In particular, the <B>Open</B> function examines the registry to get the <B>Counter</B> and <B>Help</B> indexes of the objects and counters supported by the application. The <B>Open</B> function then stores these indexes in the appropriate members of the <A HREF="wce50conperfobjecttype.htm">PERF_OBJECT_TYPE</A> and <A HREF="wce50conperfcounterdefinition.htm">PERF_COUNTER_DEFINITION</A> structures.</P>
+
+<P>The <B>Open</B> function might also perform the following initialization tasks:
+
+<UL type="disc">
+	<LI>Open and map a file-mapping object used by the application to store performance data. 
+<P>To prevent the application from changing a value while the performance DLL is reading it, create a mutex. 
+
+<P>This is one way to communicate performance data from the application to the performance DLL. If you use a different form of interprocess communication, substitute the appropriate steps to initialize that mechanism.
+</li>
+
+	<LI>Initialize event logging, if the DLL uses event logging to report errors. 
+<P>This is the only way for the performance DLL to report error conditions to the user, other than through the debugger.
+</li>
+
+	<LI>Each time the performance DLL is loaded, initialize the object and counter indexes.
+<P>This is necessary because indexes vary from machine to machine.
+</li>
+
+	<LI>Perform other initialization tasks necessary for the <B>Collect</B> function to collect performance data efficiently.</li>
+
+	<LI>Record, in the event log, error that prevents the <B>Open</B> function from completing successfully.</li>
+</UL>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

@@ -1,0 +1,123 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>THUMB Epilog</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="THUMB Epilog"/>
+<MSHelp:RLTitle Title="THUMB Epilog"/>
+<MSHelp:Keyword Index="A" Term="wce50conTHUMBEpilog"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Guide"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="True"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="comp_arm_callspec.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="True"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_3023290">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50conthumbepilog"></A>THUMB Epilog</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>The THUMB epilog is a contiguous sequence of instructions that does the following:
+
+<UL type="disc">
+	<LI>Restores the saved permanent registers </li>
+
+	<LI>Resets the stack pointer to its value on function entry</li>
+
+	<LI>Returns to the function's calling function</li>
+</UL>
+
+<P>The following list shows important information about an epilog. 
+
+<UL type="disc">
+	<LI>If a frame pointer has been set up by the prolog, the epilog restores the stack pointer from the frame pointer. It uses a single <B>mov</B> instruction to copy <B>R7</B> to <B>R13</B>. This copy restores <B>R13</B> to the value it had just after the prolog linked the stack.<BR>
+Unlinking the stack restores <B>R13</B>.</li>
+
+	<LI>If {<B>R4-R7</B>} are to be restored, and if high registers are not to be restored, the epilog must contain an instruction to pop {<B>R4-R7</B>}. This instruction updates the stack pointer. If the <B>Unwinder</B> restores high registers, it also restores <B>R4-R7</B>.</li>
+
+	<LI>The epilog contains a sequence of zero or two instructions that pop the link register from the stack into <B>R3</B>. 
+<P>If the routine is a leaf or if the routine restores high registers, the epilog omits this sequence.
+
+<P>If the epilog restores high registers, it uses a branch and link to call a restore-register routine that restores <B>R4</B> through <B>R7</B> and the link register. It also restores the stack pointer to the value it held just after the prolog saved {<B>R0-R3</B>}, or to the value the stack pointer held on entry of the function if {<B>R0-R3</B>} were saved. 
+</li>
+
+	<LI>In a non-interworking routine that does not need to save registers other than {<B>R4-R7, LR</B>}, the epilog ends with pop {<B>R4-R7, PC</B>} or pop {<B>PC</B>} if {<B>R4-R7</B>} do not need to be saved. If a noninterworking routine needs to save other registers, the epilog ends with a copy of <B>R3</B> to the <B>PC</B>.
+<P>In an interworking routine, the epilog ends with a branch and exchange (BX) to <B>R3</B>.
+</li>
+</UL>
+
+<H4 class="dtH4">Example</H4>
+
+<P>The following examples show a variety of THUMB epilogs.
+
+<UL type="disc">
+	<LI>THUMB Epilog with no frame.
+<PRE class="code">ADD    SP, SP, #4    ; Stack link (as needed)
+POP    {r4-r7}      
+POP    {r3}        ; POP link register into r3
+ADD    SP, SP, #16    ; POP r0-r3 as needed
+MOV    PC, r3</PRE>
+</li>
+
+	<LI>THUMB Epilog with frame in R7.
+<PRE class="code">MOV    r13, r7
+ADD    SP, SP, #4    ; Stack unlink (as needed)
+POP    {r4-r7}      
+POP    {r3}        ; POP link register into r3
+ADD    SP, SP, #16    ; POP r0-r3 as needed
+MOV    PC, r3</PRE>
+</li>
+
+	<LI>THUMB Epilog restoring high registers.
+<PRE class="code">ADD    SP, SP, #4    ; Stack link (as needed)
+BL    __restgpr_9
+ADD    SP, SP, #16    ; POP r0-r3 as needed
+BX    LR</PRE>
+</li>
+
+	<LI>THUMB Epilog with a large stack frame.
+<PRE class="code">LDR    r7, [PC, #4]
+ADD    SP, r7
+POP    {r7}
+MOV    PC, LR</PRE>
+</li>
+</UL>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50consehinriscenvironments.htm">SEH in RISC Environments</A> | <A HREF="wce50conthumbprolog.htm">THUMB Prolog</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

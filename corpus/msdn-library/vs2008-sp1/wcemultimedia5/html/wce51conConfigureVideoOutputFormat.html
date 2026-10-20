@@ -1,0 +1,163 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Configure the Video Output Format</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Configure the Video Output Format"/>
+<MSHelp:RLTitle Title="Configure the Video Output Format"/>
+<MSHelp:Keyword Index="A" Term="wce51conConfigureVideoOutputFormat"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Feature"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="directshow_concepts1.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="True"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+<MSHelp:Attr Name="PBFeature" Value="SYSGEN_DSHOW"/>
+<MSHelp:Attr Name="PBOnly" Value="False"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_1066821">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce51conconfigurevideooutputformat"></A>Configure the Video Output Format</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P><B>Applies to:</B> Devices based on Windows Mobile Version 5.0 and later</P>
+
+<P>A capture device can support a range of output formats. For example, a device might support 16-bit RGB, 32-bit RGB, and YUYV. Within each of these formats, the device can support a range of frame sizes.</P>
+
+<P>The <A HREF="wce50lrfiamstreamconfiginterface.htm">IAMStreamConfig interface</A> is used to report which formats the device supports, and to set the format. The <B>IAMStreamConfig</B> interface is exposed on the capture filter's capture pin, preview pin, or both. Use the <MSHelp:link keywords="wce51lrfICaptureGraphBuilder2FindInterface" TABINDEX="0">ICaptureGraphBuilder2::FindInterface</MSHelp:link> method to get the interface pointer:</P>
+
+<PRE class="code">IAMStreamConfig *pConfig = NULL;
+hr = pBuild-&gt;FindInterface(
+    &amp;PIN_CATEGORY_PREVIEW, // Preview pin.
+    0,    // Any media type.
+    pCap, // Pointer to the capture filter.
+    IID_IAMStreamConfig, (void**)&amp;pConfig);</PRE>
+
+<P>The device has a list of media types that it supports. For each media type, the device also provides a set of capabilities. These include the range of frame sizes that are available for that format, how well the device can stretch or shrink the image, and the range of frame rates. </P>
+
+<P>To get the number of media types, call the <A HREF="wce50lrfiamstreamconfiggetnumberofcapabilities.htm">IAMStreamConfig::GetNumberOfCapabilities</A> method. The method returns two values: 
+
+<UL type="disc">
+	<LI>The number of media types. </li>
+
+	<LI>The size of the structure that holds the capabilities information. </li>
+</UL>
+
+<P>The size value is necessary because the <B>IAMStreamConfig</B> interface is used for both audio and video (and could be extended to other media types). For video, the capabilities are described using the <A HREF="wce50lrfvideostreamconfigcaps.htm">VIDEO_STREAM_CONFIG_CAPS</A> structure, while audio uses the <A HREF="wce50lrfaudiostreamconfigcaps.htm">AUDIO_STREAM_CONFIG_CAPS</A> structure.</P>
+
+<P>To enumerate the media types, call the <A HREF="wce50lrfiamstreamconfiggetstreamcaps.htm">IAMStreamConfig::GetStreamCaps</A> method with a zero-based index. The <B>IAMStreamConfig::GetStreamCaps</B> method returns a media type and the corresponding capability structure: </P>
+
+<PRE class="code">int iCount = 0, iSize = 0;
+hr = pConfig-&gt;GetNumberOfCapabilities(&amp;iCount, &amp;iSize);
+
+// Check the size to make sure we pass in the correct structure.
+if (iSize == sizeof(VIDEO_STREAM_CONFIG_CAPS)
+{
+    // Use the video capabilities structure.
+
+    for (int iFormat = 0; iFormat &lt; iCount; iFormat++)
+    {
+        VIDEO_STREAM_CONFIG_CAPS scc;
+        AM_MEDIA_TYPE *pmtConfig;
+        hr = pConfig-&gt;GetStreamCaps(iFormat, &amp;pmtConfig, (BYTE*)&amp;scc);
+        if (SUCCEEDED(hr))
+        {
+            /* Examine the format, and possibly use it. */
+
+            // Delete the media type when you are done.
+            DeleteMediaType(pmtConfig);
+        }
+}</PRE>
+
+<P>Note how the structures are allocated for the <B>IAMStreamConfig::GetStreamCaps</B> method. The method allocates the media type structure, whereas the caller allocates the capabilities structure. Coerce the capabilities structure to a byte array pointer. After you are done with the media type, delete the <A HREF="wce50lrfammediatype.htm">AM_MEDIA_TYPE</A> structure, along with the media type's format block.</P>
+
+<P>To configure the device to use a format returned in the <B>IAMStreamConfig::GetStreamCaps</B> method, call <A HREF="wce50lrfiamstreamconfigsetformat.htm">IAMStreamConfig::SetFormat</A> with the media type:</P>
+
+<PRE class="code">hr = pConfig-&gt;SetFormat(pmtConfig);</PRE>
+
+<P>If the pin is not connected, it will attempt to use this format when it does connect. If the pin is already connected, it attempts to reconnect using the new format. In either case, it is possible that the downstream filter will reject the format. </P>
+
+<P>You can also modify the media type before passing it to the <A HREF="wce50lrfiamstreamconfigsetformat.htm">IAMStreamConfig::SetFormat</A> method. This is where the <A HREF="wce50lrfvideostreamconfigcaps.htm">VIDEO_STREAM_CONFIG_CAPS</A> structure comes in. It describes all of the valid ways to change the media type. To use this information, you must understand the details of that particular media type. </P>
+
+<P>For example, suppose that <B>IAMStreamConfig::GetStreamCaps</B> returns a 24-bit RGB format, with a frame size of 320 x 240 pixels. You can get this information by examining the major type, subtype, and format block of the media type:</P>
+
+<PRE class="code">if ((pmtConfig.majortype == MEDIATYPE_Video) &amp;&amp;
+    (pmtConfig.subtype == MEDIASUBTYPE_RGB24) &amp;&amp;
+    (pmtConfig.formattype == FORMAT_VideoInfo) &amp;&amp;
+    (pmtConfig.cbFormat &gt;= sizeof (VIDEOINFOHEADER)) &amp;&amp;
+    (pmtConfig.pbFormat != NULL))
+{
+    VIDEOINFOHEADER *pVih = (VIDEOINFOHEADER*)pmtConfig.pbFormat;
+    // pVih contains the detailed format information.
+    LONG lWidth = pVih-&gt;bmiHeader.biWidth;
+    LONG lHeight = pVih-&gt;bmiHeader.biHeight;
+}</PRE>
+
+<P>The <B>VIDEO_STREAM_CONFIG_CAPS</B> structure gives the minimum and maximum width and height that can be used for this media type. It also gives you the "step" size, which defines the increments by which you can adjust the width or height. For example, the device might return the following: 
+
+<UL type="disc">
+	<LI>MinOutputSize: 160 x 120 </li>
+
+	<LI>MaxOutputSize: 320 x 240 </li>
+
+	<LI>OutputGranularityX: 8 pixels (horizontal step size) </li>
+
+	<LI>OutputGranularityY: 8 pixels (vertical step size) </li>
+</UL>
+
+<P>Given these numbers, you could set the width to anything in the range (160, 168, 176, ... 304, 312, 320) and the height to anything in the range (120, 128, 136, ... 104, 112, 120).</P>
+
+<P class="fig"><IMG SRC="dshow_video_output_format.gif" ALT="" BORDER=0></P>
+
+<P>To set a new frame size, directly modify the <B>AM_MEDIA_TYPE</B> structure returned in <B>IAMStreamConfig::GetStreamCaps</B>:</P>
+
+<PRE class="code">pVih-&gt;bmiHeader.biWidth = 160;
+pVih-&gt;bmiHeader.biHeight = 120;
+pVih-&gt;bmiHeader.biSizeImage = DIBSIZE(pVih-&gt;bmiHeader);</PRE>
+
+<P>Then pass the media type to the <B>IAMStreamConfig::SetFormat</B> method, as described previously. </P>
+
+<P>The <B>MinFrameInterval</B> and <B>MaxFrameInterval</B> members of <B>VIDEO_STREAM_CONFIG_CAPS</B> are the minimum and maximum length of each video frame, which you can translate into frame rates as follows:</P>
+
+<PRE class="code">frames per second = 10,000,000 / frame duration</PRE>
+
+<P>To request a particular frame rate, modify the value of <B>AvgTimePerFrame</B> in the <A HREF="wce50lrfvideoinfoheader.htm">VIDEOINFOHEADER</A> or <A HREF="wce50lrfvideoinfoheader2.htm">VIDEOINFOHEADER2</A> structure in the media type. The device may not support every possible value between the minimum and maximum, so the driver will use the closest value that it can. To see what value the driver actually used, call <A HREF="wce50lrfiamstreamconfiggetformat.htm">IAMStreamConfig::GetFormat</A> after you call <B>IAMStreamConfig::SetFormat</B>. </P>
+
+<P>Some drivers may report <B>MAXLONGLONG</B> (0x7FFFFFFFFFFFFFFF) for the value of <B>MaxFrameInterval</B>, which in effect means there is no maximum duration. However, you might want to enforce a minimum frame rate in your application, such as 1 fps.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce51convideocapturetasks.htm">Video Capture Tasks</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

@@ -1,0 +1,266 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Translating Scan Codes to Virtual-Key Codes</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Translating Scan Codes to Virtual-Key Codes"/>
+<MSHelp:RLTitle Title="Translating Scan Codes to Virtual-Key Codes"/>
+<MSHelp:Keyword Index="A" Term="wce50conKeyboardLayouts"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Driver"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="False"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="keyboardmappings.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="False"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_3018160">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50conkeyboardlayouts"></A>Translating Scan Codes to Virtual-Key Codes</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>When a key is pressed, the keyboard controller writes the key's scan code into a buffer. A <I>scan code</I> is a number generated whenever a key is pressed or released. Each key on a keyboard has a unique scan code. The keyboard drivers platform development driver (PDD) relies on an interrupt to retrieve the scan code from the buffer. The keyboard drivers model device driver (MDD) converts the scan code to a virtual-key code. </P>
+
+<P>Whether a keyboard transmits AT scan codes or XT scan codes depends on the keyboard. Standard PS/2 keyboard controllers convert XT scan codes into AT scan codes. Some hardware platforms that have PS/2-compatible keyboard connectors might not have controllers that perform the XT scan code to AT scan code translation. Language-specific scan code translation in the sample keyboard drivers is implemented using libraries.</P>
+
+<P>Supporting languages on a hardware platform with a different type of keyboard controller requires that you write a new controller interface library, and, depending on your hardware, possibly an IST library. These new libraries can then be linked with the appropriate translation libraries to produce a complete keyboard driver. More extensive customization might be necessary for custom keyboards.</P>
+
+<BLOCKQUOTE class="dtBlock">
+<b class="le">Note</b>&nbsp;&nbsp;&nbsp;The <MSHelp:link keywords="wce50lrfKeyboardLayoutGeneratorTool" TABINDEX="0">Keyboard Layout Generator Tool</MSHelp:link> produces Microsoft Windows CE input language and device layout source files for any PS/2 keyboard that Microsoft Windows XP supports. If the Keyboard Layout Generator tool or the XT scan code tables provided do not provide information for your specific keyboard, see <I>Developing International Software, Second Edition</I>, by Microsoft Press.</BLOCKQUOTE>
+
+<P>The following list shows the libraries that are combined to build a keyboard driver:
+
+<UL type="disc">
+	<LI>Keyboard controller-specific library</li>
+
+	<LI>Keyboard interrupt service thread (IST)-handling library</li>
+
+	<LI>Scan code to virtual-key code translation library</li>
+
+	<LI>Virtual-key code to character translation library</li>
+
+	<LI>Virtual-key code remapping library</li>
+</UL>
+
+<H2 class="dtH2">AT Scan Code Translation Libraries</H2>
+
+<P>The following table shows the location of the AT scan code to virtual-key code translation libraries for specified keyboard layouts in the %_WINCEROOT%\Public\Common\OAK\Drivers\Keybd\DeviceLayouts\PS2_AT directory. It also shows the language identifier (LANGID) for the libraries. The names of the subdirectories are derived from the input locale (HKL) code. In most cases, the keyboard names in the table corresponds to information in <I>Developing International Software</I>. However, the Japanese keyboard names correspond to their names in the Microsoft Platform Builder Catalog.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=33%>AT keyboard layout</TH>
+<TH width=33%>Subdirectory</TH>
+<TH width=34%>LANGID</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%>Arabic 101</TD>
+<TD width=33%>00000401</TD>
+<TD width=34%>0x0401</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%>Hebrew</TD>
+<TD width=33%>0000040D</TD>
+<TD width=34%>0x040D</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%>Indic-Devanagari-INSCRIPT</TD>
+<TD width=33%>00010439</TD>
+<TD width=34%>0x0439</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%>Indic-Gujarati</TD>
+<TD width=33%>00000447</TD>
+<TD width=34%>0x0447</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%>Indic-Kannada</TD>
+<TD width=33%>0000044B</TD>
+<TD width=34%>0x044B</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%>Indic-Devanagari-Marathi</TD>
+<TD width=33%>0000044E</TD>
+<TD width=34%>0x044E</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%>Indic-Punjabi</TD>
+<TD width=33%>00000446</TD>
+<TD width=34%>0x0446</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%>Indic-Tamil</TD>
+<TD width=33%>00000449</TD>
+<TD width=34%>0x0449</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%>Indic-Telugu</TD>
+<TD width=33%>0000044A</TD>
+<TD width=34%>0x044A</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%>Japanese (IBM layout)</TD>
+<TD width=33%>00010411</TD>
+<TD width=34%>0x0411</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%>Japanese (NEC layout)</TD>
+<TD width=33%>00000411</TD>
+<TD width=34%>0x0411</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%>Korean (Hangul)</TD>
+<TD width=33%>00000412</TD>
+<TD width=34%>0x0412</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%>Thai (Kedmanee)</TD>
+<TD width=33%>0000041E</TD>
+<TD width=34%>0x041E</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%>United States 101</TD>
+<TD width=33%>00000409</TD>
+<TD width=34%>0x0409</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%>United States-Dvorak</TD>
+<TD width=33%>00010409</TD>
+<TD width=34%>0x0409</TD>
+</TR>
+</table></div>
+
+<H2 class="dtH2">XT Scan Code Translation Libraries</H2>
+
+<P>The following table provides links to Help topics for common keyboard layouts. These topics contain translations for various languages for XT scan code to virtual-key code and virtual-key code to Unicode characters. The table also provides the language identifiers (LANGIDs) and the input locale (HKL) codes for the XT scan code translation libraries. In most cases, the keyboard names in the table corresponds to information in <I>Developing International Software</I>. </P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=33%>XT keyboard layout</TH>
+<TH width=33%>LANGID</TH>
+<TH width=34%>HKL</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%><A HREF="wce50conbraziliankeyboard.htm">Brazilian (ABNT) Keyboard</A></TD>
+<TD width=33%>0x0416</TD>
+<TD width=34%>00000416</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%><A HREF="wce50condutchkeyboard.htm">Dutch Keyboard</A> </TD>
+<TD width=33%>0x0413</TD>
+<TD width=34%>00000413</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%><A HREF="wce50confrenchkeyboard.htm">French Keyboard</A></TD>
+<TD width=33%>0x040C</TD>
+<TD width=34%>0000040C</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%><A HREF="wce50congermankeyboard.htm">German Keyboard</A> </TD>
+<TD width=33%>0x0407</TD>
+<TD width=34%>00000407</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%><A HREF="wce50conitaliankeyboard.htm">Italian Keyboard</A> </TD>
+<TD width=33%>0x0410</TD>
+<TD width=34%>00000410</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%><A HREF="wce50conjapanesekeyboard.htm">Japanese Keyboard</A> </TD>
+<TD width=33%>0x0411</TD>
+<TD width=34%>E0010411</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%><A HREF="wce50conkoreankeyboard.htm">Korean Keyboard</A></TD>
+<TD width=33%>0x0412</TD>
+<TD width=34%>E0010412</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%><A HREF="wce50conportuguesekeyboard.htm">Portuguese Keyboard</A> </TD>
+<TD width=33%>0x0816</TD>
+<TD width=34%>00000816</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%><A HREF="wce50conspanishkeyboard.htm">Spanish Keyboard</A> </TD>
+<TD width=33%>0x040A</TD>
+<TD width=34%>0000040A</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%><A HREF="wce50conswedishkeyboard.htm">Swedish Keyboard</A> </TD>
+<TD width=33%>0x041D</TD>
+<TD width=34%>0000041D</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%><A HREF="wce50conunitedkingdomkeyboard.htm">United Kingdom Keyboard</A> </TD>
+<TD width=33%>0x0809</TD>
+<TD width=34%>00000809</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%><A HREF="wce50conunitedstateskeyboard.htm">United States 101 Keyboard</A></TD>
+<TD width=33%>0x0409</TD>
+<TD width=34%>00000409</TD>
+</TR>
+</table></div>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><MSHelp:link keywords="wce50conVirtualKeyCodes" TABINDEX="0">Virtual-Key Codes</MSHelp:link> | <MSHelp:link keywords="wce50lrfKeyboardLayoutGeneratorTool" TABINDEX="0">Keyboard Layout Generator Tool</MSHelp:link></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

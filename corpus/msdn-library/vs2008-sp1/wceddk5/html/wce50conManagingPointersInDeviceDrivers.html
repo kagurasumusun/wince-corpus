@@ -1,0 +1,94 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Managing Pointers in Device Drivers</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Managing Pointers in Device Drivers"/>
+<MSHelp:RLTitle Title="Managing Pointers in Device Drivers"/>
+<MSHelp:Keyword Index="A" Term="wce50conManagingPointersInDeviceDrivers"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Driver"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="False"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="driverarchitecture.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="False"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+<MSHelp:Attr Name="PBFeature" Value="CoreDriver"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_1055617">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50conmanagingpointersindevicedrivers"></A>Managing Pointers in Device Drivers</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>The operating system (OS ) manages pointers passed directly as parameters. Drivers must map all pointers contained in structures. <MSHelp:link keywords="wce50lrfDeviceIoControl" TABINDEX="0">DeviceIoControl</MSHelp:link> buffers are often structures that contain data, some of which might be pointers. </P>
+
+<P>You can map a pointer contained in a structure by calling <MSHelp:link keywords="wce50lrfMapPtrToProcess" TABINDEX="0">MapPtrToProcess</MSHelp:link>, setting the first parameter to the pointer, and then setting the second parameter to <MSHelp:link keywords="wce50lrfGetCallerProcess" TABINDEX="0">GetCallerProcess</MSHelp:link>.</P>
+
+<P>You cannot prevent one thread in an application that has called <MSHelp:link keywords="wce50lrfHeapAlloc" TABINDEX="0">HeapAlloc</MSHelp:link> from having its memory freed by a rogue thread in the same application. Although you can hide the memory pointer by making it a local variable, threads can access any memory in their process context.</P>
+
+<P>Drivers are trusted parts of the OS. You can use <B>MapCallerPtr</B> to allow drivers to verify that buffer pointers, up to a specified size, are valid in the context of the calling process. Doing so prevents you from interfering with memory space that belongs to other processes. Device Manager calls <B>MapCallerPtr</B> for parameters to all driver entry points, if the calling process is untrusted. Because trusted code should not pass malicious pointers, you must make a system call to validate the pointer, which slightly impacts performance. If an IOCTL buffer contains nested pointers, the driver must call <B>MapCallerPtr</B> to map these pointer values for Device Manager. For more information, see <MSHelp:link keywords="wce50conCreateaTrustedEnvironment" TABINDEX="0">Trusted Environment Creation</MSHelp:link>.</P>
+
+<P>You cannot page data sections to a page file. You can discard and reload read-only code pages on demand, unless they cannot be paged. Driver code pages cannot be paged. Because memory-mapped files are supported, a write to a memory-mapped data page passes through to the underlying storage. Application data is never moved or paged out. Generally, it is not necessary to lock pages unless your driver is in the critical paging path, or you are performing direct memory access (DMA) directly to or from the user's buffer.</P>
+
+<P>A device driver gains access to the data in the address space of an application by calling <B>MapPtrToProcess</B>. The following list shows how a driver gains access to memory in the address space of an application. This process is required only when you pass a pointer to a pointer, as might occur with a linked list, not when you pass a simple pointer to a device driver.
+
+<OL type="1">
+	<LI>The OS maps the application to slot 0 (zero).</li>
+
+	<LI>The application calls <B>DeviceIoControl</B>.</li>
+
+	<LI>The OS maps Device Manager to slot 0 (zero).</li>
+
+	<LI>Device Manager sets permissions to application space.
+<P>Permission is not necessary if the application space is within the same PSL call because the driver automatically gets the permission to the caller process.
+</li>
+
+	<LI>Device Manager calls <A HREF="wce50lrfxxxiocontrol16.htm">XXX_IOControl (Device Manager)</A>.</li>
+
+	<LI>The driver calls <B>MapPtrToProcess</B>.</li>
+
+	<LI>The driver returns from <B>XXX_IOControl</B>.</li>
+
+	<LI>Device Manager resets permissions to application space.
+<P>Permission is not necessary if the application space is within the same PSL call because the permission is automatically reset upon returning to the caller process.
+</li>
+
+	<LI>The OS maps the application to slot 0 (zero).</li>
+</OL>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50conmemorymanagement281.htm">Accessing Memory from a Driver</A> | <MSHelp:link keywords="wce50lrfGetCurrentProcessId" TABINDEX="0">GetCurrentProcessId</MSHelp:link> | <MSHelp:link keywords="wce50lrfGetOwnerProcess" TABINDEX="0">GetOwnerProcess</MSHelp:link> | <MSHelp:link keywords="wce50conMemoryArchitecture" TABINDEX="0">Memory Architecture</MSHelp:link></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

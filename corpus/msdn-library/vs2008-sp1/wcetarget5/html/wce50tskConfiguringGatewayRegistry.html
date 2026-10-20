@@ -1,0 +1,107 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Configuring the Gateway Registry</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Configuring the Gateway Registry"/>
+<MSHelp:RLTitle Title="Configuring the Gateway Registry"/>
+<MSHelp:Keyword Index="A" Term="wce50tskConfiguringGatewayRegistry"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Target"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="True"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbTask"/>
+<MSHelp:Attr Name="Filename" Value="gateway_registry.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="True"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="True"/>
+<MSHelp:Attr Name="DesignTemplate" Value="Gateway"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_1039749">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50tskconfiguringgatewayregistry"></A>Configuring the Gateway Registry</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>In the following procedure, modifying the project registry file makes a persistent change to your Gateway run-time image.</P>
+
+<P class="labelproc"><B>To configure the registry for your gateway</B>
+
+<OL type="1">
+	<LI>From the Workspace window, choose the <B>ParameterView</B> tab.</li>
+
+	<LI>Expand the &lt;<I>OS design name</I>&gt;<B> parameters </B>node and navigate to the <B>%_WINCEROOT%</B>\<B>CEPC</B>\<B>Project Specific Files</B> folder.</li>
+
+	<LI>Double-click <B>project.reg</B> to open the file.</li>
+
+	<LI>Add the following registry key and values to the bottom of the file:
+<PRE class="code">[HKEY_LOCAL_MACHINE\Comm\ConnectionSharing]
+"EnableAddressTranslation"=dword:1
+"EnableDhcpAllocator"=dword:1
+"EnableDnsProxy"=dword:1
+"PublicInterface"="VMINI1"
+"PrivateInterface"="PCI\\&lt;<I>private network interface</I>&gt;"
+[HKEY_LOCAL_MACHINE\Comm\PCI\&lt;<I>private network interface</I>&gt;\Parms\Tcpip]
+"IPAddress"="192.168.0.1"
+"SubnetMask"="255.255.255.0"
+"EnableDHCP"=dword:0
+"DhcpMaxRetry"=dword:ffffffff</PRE>
+
+<P>In this example, you are using the VMINI adapter for the public interface and PCI\NE20001 for the private interface. You are also assigning a static IP address of 192.168.0.1 to the private interface.
+
+<BLOCKQUOTE class="dtBlock">
+<B>Note</B>&nbsp;&nbsp;&nbsp;If you use a different adapter for your public interface, you must replace the VMINI1 value for the <B>PublicInterface</B> key with the appropriate adapter name. </BLOCKQUOTE>
+
+<BLOCKQUOTE class="dtBlock">
+The static IP address of 192.168.0.1 is also used in the Firewall rules as the default for the <B>SourcePrivate</B> registry value. If you want to use a different static address for the private interface, you must change the <B>SourcePrivate</B> registry value to match this address. For more information, see <MSHelp:link keywords="wce50conDefaultIPFirewallRules" TABINDEX="0">Default IP Firewall Rules</MSHelp:link>.</BLOCKQUOTE>
+
+<P>The &lt;<I>Private Interface Name</I>&gt; and &lt;<I>Public Interface Name</I>&gt; interface names depend on the network adapters the gateway uses. For example, if it uses an NE2000-compatible network adapter for the private interface, you would type:
+
+<PRE class="code">"PrivateInterface"="PCI\\NE20001"</PRE>
+
+<P>When configuring the registry settings for TCP/IP, you must also insert the name of the private interface, as shown in the following example:
+
+<PRE class="code">[HKEY_LOCAL_MACHINE\Comm\PCI\NE20001\Parms\Tcpip]</PRE>
+
+<P>For information about the supported network cards and interface names, see the Driver Support section under <A HREF="wce50congatewayhardwarerequirements.htm">Gateway Hardware Requirements</A>. 
+
+<BLOCKQUOTE class="dtBlock">
+<b class="le">Note</b>&nbsp;&nbsp;&nbsp;Interface or adapter names are a common source of errors when creating an OS design. To verify the interface or adapter names and the IP addresses for these adapters on your target device after downloading the image, type <B>s ipconfig /d /all</B> in the Target Control window of Platform Builder. The <B>Debug</B> output window displays the IP address of the target device and shows the interface or adapter names.</BLOCKQUOTE>
+</li>
+
+	<LI>Save and close the file.</li>
+</OL>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50concustomizingthegateway.htm">Customizing a Gateway</A> | <A HREF="wce50howhowtocreateagateway.htm">How to Develop a Gateway</A> | <A HREF="wce50tskcreatinggatewayrun-timeimageforcepc.htm">Creating a Gateway Run-time Image for a CEPC</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, July 13, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

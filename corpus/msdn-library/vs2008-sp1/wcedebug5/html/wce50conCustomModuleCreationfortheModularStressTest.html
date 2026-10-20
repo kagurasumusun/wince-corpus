@@ -1,0 +1,85 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Custom Module Creation for the Windows CE Stress Tool</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Custom Module Creation for the Windows CE Stress Tool"/>
+<MSHelp:RLTitle Title="Custom Module Creation for the Windows CE Stress Tool"/>
+<MSHelp:Keyword Index="A" Term="wce50conCustomModuleCreationfortheModularStressTest"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Debugging"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="True"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="oemstresstest.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="False"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_3013002">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50concustommodulecreationforthemodularstresstest"></A>Custom Module Creation for the Windows CE Stress Tool</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>You can create a custom test module for the Windows CE Stress tool. When you design a test module, take advantage of the capabilities of the harness and conform to established standards for the Windows CE Stress tool. The Windows CE Stress tool is only as effective as the test modules that it runs.</P>
+
+<P>A test module for the Windows CE Stress tool should have the following qualities:
+
+<UL type="disc">
+	<LI>Be duration-based. 
+<P>The test module should run for an arbitrary duration and terminate when that time expires. Each test module should be an indivisible unit of testing that is intended to be run in several iterations in a loop.
+</li>
+
+	<LI>Record test passage or failure on a per-iteration basis and report test results to the harness.</li>
+
+	<LI>Support the use of filtered logging through the use of logging functions in the StressUtils.dll module.</li>
+</UL>
+
+<P>You can implement a test module as a dynamic-link library (DLL) that is loaded by a generic Stressmod.exe container. Stressmod.exe manages command-line parsing, module duration, and results recoding and reporting for the test. </P>
+
+<P>Your DLL must export an <A HREF="wce50lrfinitializestressmodule.htm">InitializeStressModule</A> function, a <A HREF="wce50lrfdostressiteration.htm">DoStressIteration</A> function, and a <A HREF="wce50lrfterminatestressmodule.htm">TerminateStressModule</A> function. For more information about the functions that your DLL must export, see <A HREF="wce50concustomstressmodulefunctions.htm">Custom Stress Module Functions</A>.</P>
+
+<P>In your test module, use the members of the <A HREF="wce50lrfmoduleparams.htm">MODULE_PARAMS</A> structure to access information from the command line. For more information, see <A HREF="wce50lrfinitializestressmodule.htm">InitializeStressModule</A>.</P>
+
+<P>Design the test module to run for an arbitrary duration. Separate your tests into iterations that the harness can run in a loop. At the end of the duration requested by the harness, the test module should clean up, report results, and exit gracefully.</P>
+
+<P>Most test modules require a minimum amount of time to perform a single iteration. Add information about the minimum duration of the test module to the initialization file for the harness so that the harness requests the test module to run for at least the minimum amount of time required for a single iteration.</P>
+
+<P>Under most circumstances you may not want detailed comments throughout the log for a test. At other times, for example when debugging or attempting to reproduce a problem, you want detailed information to appear in the log. You can control the verbosity level of the log. The harness and associated modules provide a set of logging functions that you can use to preemptively filter the log for verbosity. For more information, see <A HREF="wce50conmodularstresstestfunctions.htm">Windows CE Stress Tool Functions</A>.</P>
+
+<P>The test module must report whether the test passed or failed. The harness gathers information about test passage or failure on a per iteration basis. Every call to the <A HREF="wce50lrfdostressiteration.htm">DoStressIteration</A> function exported by your test module is considered iteration and the harness records the return value. For information about possible return values, see <A HREF="wce50lrfcestressreturnvalue.htm">CESTRESS Return Value</A>.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50condesignconsiderationsforstressmodulecreation.htm">Design Considerations for Stress Module Creation</A> | <A HREF="wce50conmodularstresstest.htm">Windows CE Stress Tool</A> | <A HREF="wce50conmodularstresstestcommandlineoptions.htm">Options for the Windows CE Stress Tool</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

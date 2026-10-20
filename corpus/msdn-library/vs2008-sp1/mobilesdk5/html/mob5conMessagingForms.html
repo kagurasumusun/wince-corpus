@@ -1,0 +1,120 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Messaging Forms</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Messaging Forms"/>
+<MSHelp:RLTitle Title="Messaging Forms"/>
+<MSHelp:Keyword Index="A" Term="mob5conMessagingForms"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Application"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbsmartphone"/>
+<MSHelp:Attr Name="Product" Value="kbPocketPC"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="Technology" Value="kbPocketPC"/>
+<MSHelp:Attr Name="Technology" Value="kbSmartphone"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="Messaging_magneto.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="False"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="True"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_1063796">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Windows Mobile Version 5.0 SDK<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="mob5conmessagingforms"></A>Messaging Forms</H1>
+<!--Feedback Link Top Start-->
+<P CLASS="feedback"><font size="1"><a href="mailto:medfdbk&#64;microsoft.com?subject=Product: Windows Mobile | Version: 5.0 | Release: SDK | Title: Messaging Forms | Filename: mob5conmessagingforms.htm | Built on: Wednesday, September 14, 2005">Send Feedback</a> on this topic to the authors</font></p>
+<!--Feedback Link Top End-->
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>You can change the behavior of the Messaging application (or any other messaging client application) by creating customized messaging forms. They are customized read and compose forms and can be used with new and existing transports. The behavior that they provide can vary, from adding new transport types such as Multimedia Messaging Service (MMS) to adding a new message type, such as one that supports playing a game like ticktacktoe.</P>
+
+<P>A custom messaging form is a DLL that contains the customized read and compose forms, exports the <A HREF="mob5lrfformfactoryex.htm">FormFactoryEx</A> function, and supports the <A HREF="mob5lrfiformproviderex.htm">IFormProviderEx</A> and <A HREF="mob5lrfimessageformex.htm">IMessageFormEx</A> interfaces.</P>
+
+<P>To become active, the form must be registered twice. The first entry registers the form as a message class, under the following registry key: <B>HKEY_CURRENT_USER\Software\Microsoft\Inbox\MsgTypes\MessageClass</B>. The second entry specifies the message transport(s) to use, under the following registry key: <B>HKEY_LOCAL_MACHINE\Software\Microsoft\Inbox\Svc\TransportType\MsgClasses</B>.</P>
+
+<BLOCKQUOTE class="dtBlock">
+<b class="le">Note</b>&nbsp;&nbsp;&nbsp;To respond to changes in the registry, the Messaging application must be restarted after the registry has been updated.</BLOCKQUOTE>
+
+<P>When the Messaging application displays or creates a message, it searches the registry for a DLL that matches the message class of the message. When the Messaging application finds a suitable DLL, it loads it and calls the <A HREF="mob5lrfformfactoryex.htm">FormFactoryEx</A> function with the message class. The DLL responds by returning the <A HREF="mob5lrfiformproviderex.htm">IFormProviderEx</A> interface.</P>
+
+<P>The Messaging application (the host) uses the <A HREF="mob5lrfimessageformex.htm">IMessageFormEx</A> interface to communicate with the custom messaging form, which in turn uses the <A HREF="mob5lrfimessageformhostex.htm">IMessageFormHostEx</A> interface to communicate back to the Messaging application.</P>
+
+<P>When processing messages with a custom messaging form, the Messaging application uses the mechanisms described in the following table.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=7%>Action</TH>
+<TH width=93%>Mechanism</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=7%>Form creation</TD>
+<TD width=93%>Custom read and compose forms are created whenever the Messaging application calls either <A HREF="mob5lrfiformproviderexcreatecomposeform.htm">IFormProviderEx::CreateComposeForm</A> or <A HREF="mob5lrfiformproviderexcreatereadform.htm">IFormProviderEx::CreateReadForm</A>. This causes the form to create its own window as a child of the form frame. Both the handle of the child window (the <I>phwndBody </I>parameter) and the <A HREF="mob5lrfimessageformex.htm">IMessageFormEx</A> interface pointer are returned. 
+<P>The Messaging application uses the <I>phwndBody </I>parameter to pass on window messages that it does not process for the custom messaging form, and it uses the <B>IMessageFormEx </B>interface to communicate with the custom messaging form.</P>
+
+<P>When the Messaging application calls the <B>CreateComposeForm</B> and <B>CreateReadForm</B> methods, it passes in a pointer to its <A HREF="mob5lrfimessageformhostex.htm">IMessageFormHostEx</A> interface, which allows the form to communicate back to the Messaging application. </P>
+</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=7%>Displaying form menus</TD>
+<TD width=93%>When the form is initially created, the Messaging application calls <A HREF="mob5lrfimessageformexgetmenucapabilities.htm">IMessageFormEx::GetMenuCapabilities</A> to provide a way for the form to specify which optional menu commands it can process and to allow enabling or disabling of the menu items.
+<P>The commands that the form cannot process are disabled (appear grayed) on the form menu. <B>GetMenuCapabilities</B> is subsequently called each time a menu is about to appear. This allows enabling and disabling of menu commands dynamically.</P>
+</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=7%>Running the form</TD>
+<TD width=93%>For message items that the form processes, the Messaging application calls <A HREF="mob5lrfimessageformexdoaction.htm">IMessageFormEx::DoAction</A> when the menu command is selected.
+<P>When the form communicates with the Messaging application, it uses the <A HREF="mob5lrfimessageformhostex.htm">IMessageFormHostEx</A> interface (which the Messaging application makes available to it when it creates the custom read or compose form).</P>
+</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=7%>Closing the form</TD>
+<TD width=93%>The form can close itself at any point, which can be triggered by the following events: sending the message, deleting the message, clicking close on the message form, and clicking <B>OK</B> on the message form.
+<P>When the Messaging application calls <A HREF="mob5lrfimessageformexcloseform.htm">IMessageFormEx::CloseForm</A>, the form first calls <A HREF="mob5lrfimessageformhostexdoaction.htm">IMessageFormHostEx::DoAction</A> to have the Messaging application either close or delete the message, then the form calls <A HREF="mob5lrfimessageformhostexformclosing.htm">IMessageFormHostEx::FormClosing</A>.</P>
+
+<P>After calling <B>FormClosing</B>, the form posts a <B>WM_CLOSE</B> message to the parent window (which it received from the Messaging application on creation). This cleans up the handle to the window that is no longer in use.</P>
+</TD>
+</TR>
+</table></div>
+
+<P>For more information, see <A HREF="mob5tskhowtoregistercustomizedmessagingforms.htm">How to: Register Customized Messaging Forms</A>.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="mob5orimessaging.htm">Messaging</A> | <A HREF="mob5conmessagingtransports.htm">Messaging Transports</A> | <A HREF="mob5concustomizedmessagingrulesclients.htm">Customized Messaging Rules Clients</A> | <A HREF="mob5conmessagestores.htm">Message Stores</A> | <A HREF="mob5tskhowtoregistercustomizedmessagingforms.htm">How to: Register Customized Messaging Forms</A> | <A HREF="mob5conmessagingsamplecode.htm">Messaging Sample Code</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Feedback Link Bottom Start-->
+<p><font size="1"><a href="mailto:medfdbk&#64;microsoft.com?subject=Product: Windows Mobile | Version: 5.0 | Release: SDK | Title: Messaging Forms | Filename: mob5conmessagingforms.htm | Built on: Wednesday, September 14, 2005">Send Feedback</a> on this topic to the authors</font></p>
+<!--Feedback Link Bottom End-->
+<!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="mob5conCopyrightInformationForMagneto" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link></font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

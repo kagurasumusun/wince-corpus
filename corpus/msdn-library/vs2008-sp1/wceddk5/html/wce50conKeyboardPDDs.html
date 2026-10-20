@@ -1,0 +1,141 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Keyboard PDDs</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Keyboard PDDs"/>
+<MSHelp:RLTitle Title="Keyboard PDDs"/>
+<MSHelp:Keyword Index="A" Term="wce50conKeyboardPDDs"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Driver"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="False"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="keyboard_guide.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="True"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+<MSHelp:Attr Name="PBFeature" Value="KeyboardDriver"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_3018178">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50conkeyboardpdds"></A>Keyboard PDDs</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>The keyboard PDD is the platform-dependent code of the keyboard driver. Layout Manager is able to handle multiple, simultaneous keyboard PDDs, such as a PS/2 keyboard and a matrix keyboard, on the same device. The keyboard PDD contains initialization and power functions. It can use the common keyboard interrupt service thread (IST) or include its own. When the Graphics, Windowing, and Events Subsystem (GWES) initializes the keyboard driver, it initializes each PDD. </P>
+
+<P>Each keyboard PDD has an entry function that returns a data structure containing a description of the PDD and function pointers. When Layout Manager initializes the PDD, the keyboard driver passes the PDD a unique identifier that the PDD can use to identify itself. This helps when multiple devices use the same PDD. For example, two separate PS/2 controllers.</P>
+
+<P>Every PDD is in the same DLL as Layout Manager. You cannot add a PDD at run time.</P>
+
+<P>You must specify the PDDs in the keyboard driver that require initialization. The NULL terminated <B>g_rgpfnPddEntries</B> array specifies the entry point of each PDD in the keyboard driver DLL that requires initialization. Entry functions might occur multiple times in the array if multiple keyboard controllers use the same PDD. The first entry in the array is the default PDD. <MSHelp:link keywords="wce50lrfMapVirtualKey" TABINDEX="0">MapVirtualKey</MSHelp:link> uses this default PDD's device layout to convert scan codes to virtual keys. </P>
+
+<P>Microsoft recommends setting the default PDD to a PS/2 entry to support HID keyboards. If your device does not have a PS/2 port, use the stub PS/2 PDD to minimize the size of your run-time image.</P>
+
+<P>The following code example shows a declaration of a keyboard PDD entry point, and an initialized <code class="ce">g_rgpfnPddEntries</code> array.</P>
+
+<PRE class="code">typedef BOOL (*PFN_KEYBD_PDD_ENTRY)(
+  UINT uiPddId, 
+  PFN_KEYBD_EVENT pfnKeybdEvent,
+  PKEYBD_PDD *ppKeybdPdd
+);
+
+PFN_KEYBD_PDD_ENTRY g_rgpfnPddEntries[] = {
+  PS2Entry,
+  MatrixEntry,
+  NULL
+};</PRE>
+
+<P>When the PDD's IST executes, the IST sends the current keyboard event to the keyboard Layout Manager through the <A HREF="wce50lrfpfn_keybd_event.htm">PFN_KEYBD_EVENT</A> callback function that Layout Manager identifies to the PDD's entry function. The following code example shows this interface.</P>
+
+<PRE class="code">typedef struct tagKEYBD_PDD {
+  WORD wPddMask;   // Matches the keyboard layout with its PDD
+  LPCTSTR pszName; // Could be used to identify PDD to user
+  PFN_KEYBD_PDD_POWER_HANDLER pfnPowerHandler;
+  PFN_KEYBD_PDD_TOGGLE_LIGHTS pfnToggleLights;
+} KEYBD_PDD, *PKEYBD_PDD;
+
+typedef void (*PFN_KEYBD_EVENT)(
+  UINT uiPddId,
+  UINT32 uiScanCode,
+  BOOL fKeyDown
+);</PRE>
+
+<P>Setting up the keyboard IST is one of the PDD entry function's responsibilities. With a PS/2 controller, the PDD entry function also sets up the mouse IST. The IST calls the keyboard event function in Layout Manager. Layout Manager passes this function to the PDD's entry function for each keyboard event. You can set up and use the generic keyboard IST by passing the keyboard driver's IST loop function a structure containing all required information. </P>
+
+<P>The following code example shows applicable functions and structures for the generic keyboard IST.</P>
+
+<PRE class="code">typedef UINT (*PFN_KEYBD_PDD_GET_KEYBD_EVENT)(
+  UINT uiPddId,
+  UINT32 rguiScanCode[16],
+  BOOL rgfKeyUp[16]
+);
+
+typedef struct tagKEYBD_IST {
+  HANDLE hevInterrupt;
+  DWORD dwSysIntr_Keybd;
+  UINT uiPddId;
+  PFN_KEYBD_PDD_GET_KEYBD_EVENT pfnGetKeybdEvent;
+  PFN_KEYBD_EVENT pfnKeybdEvent;
+} KEYBD_IST, *PKEYBD_IST;
+
+BOOL KeybdIstLoop(
+  PKEYBD_IST pKeybdIst
+);</PRE>
+
+<P>The following list shows typical IST processing:
+
+<OL type="1">
+	<LI>When the kernel's interrupt handler signals <B>hevInterrupt</B>, the generic IST calls the PDD's <B>PFN_KEYBD_PDD_GET_KEYBD_EVENT</B> function. </li>
+
+	<LI>The IST calls Layout Manager's keyboard event function for each event returned,</li>
+
+	<LI>The IST calls <MSHelp:link keywords="wce50lrfInterruptDone" TABINDEX="0">InterruptDone</MSHelp:link> for <B>dwSystIntr_Keybd</B>.</li>
+
+	<LI>In response to calls to its keyboard event function, all auto-repeat logic occurs in Layout Manager. 
+<P>The IST and keyboard PDD are not involved with auto-repeat timings.
+</li>
+
+	<LI>Layout Manager calls the remapping function for that specific keyboard's current device layout.</li>
+</OL>
+
+<P>Layout Manager calls each PDD's <A HREF="wce50lrfpfn_keybd_pdd_toggle_lights.htm">PFN_KEYBD_PDD_TOGGLE_LIGHTS</A> function when an LED state must change. </P>
+
+<P>Additionally, Layout Manager sends any HID keyboards an I/O control code (IOCTL), IOCTL_HID_SET_MODIFIERS, when an LED event occurs so that the HID keyboard's lights match the others. This occurs when GWES calls Layout Manager's <A HREF="wce50lrfkeybddrivervkeytounicode.htm">PFN_KEYBD_DRIVER_VKEY_TO_UNICODE</A>.</P>
+
+<P>Layout Manager calls each PDD's power handler, <A HREF="wce50lrfpfn_keybd_pdd_power_handler.htm">PFN_KEYBD_PDD_POWER_HANDLER</A>, with TRUE if powering off and FALSE if powering on.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50conlayoutmanager.htm">Layout Manager</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

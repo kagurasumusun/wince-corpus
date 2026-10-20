@@ -1,0 +1,292 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>eXDI Sample Driver</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="eXDI Sample Driver"/>
+<MSHelp:RLTitle Title="eXDI Sample Driver"/>
+<MSHelp:Keyword Index="A" Term="wce50conEXDISampleDriverPlug-ins"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Debugging"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="True"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="exdi_overview.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="True"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_1056485">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50conexdisampledriverplug-ins"></A>eXDI Sample Driver</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>eXDI provides a sample eXDI driver called KdStubLite. KdStubLite is a sample eXDI2 driver. The KdStubLite sample shows how to generate a Hardware-Assisted Debugging solution for Windows CE Platform Builder 5.0 and later using the eXDI programming interfaces. In addition, the KdStubLite sample shows how to have the debugging solution hosted as a Core Connectivity infrastructure service.</P>
+
+<P>As an eXDI2 driver, KdStubLite forms an adaptation layer between the kernel debugger and the target to be debugged. While eXDI drivers are typically used to allow Platform Builder debugger to take control of a Hardware-Assisted debugger probe or ICE, this sample uses KdStub, the kernel debugger software stub, as a virtual hardware probe. No separate hardware probe is required for testing KdStubLite.</P>
+
+<P>This sample is provided for demonstration purposes. You can use the KdStubLite source code to help create new eXDI2 drivers.</P>
+
+<H2 class="dtH2">Building the sample</H2>
+
+<OL type="1">
+	<LI>Compile all the source files in the sample using a compiler such as Visual C++.
+<P>The following table provides a list of sources files and descriptions of the purpose of each:
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=50%>File</TH>
+<TH width=50%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>KdSeXdi2.idl<BR>
+KdSeXdi2_i.c</TD>
+<TD width=50%>Contains interface definitions.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>KdApi2.cpp</TD>
+<TD width=50%>Implements the kernel debugger interface stub, KDAPI.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>KdPacket.cpp</TD>
+<TD width=50%>Provides packet communications over KDBG, the KdStub KITL stream.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>KdSBP.cpp</TD>
+<TD width=50%>
+<UL type="disc">
+	<LI>Keeps track of object-encapsulating, target-side breakpoints </li>
+
+	<LI>Sets state</li>
+</UL>
+</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>KdSRegGroup.cpp</TD>
+<TD width=50%>Implements register groups.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>eXdhAuto.cpp</TD>
+<TD width=50%>Provides the automation template.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>KdSeXdi2.cpp</TD>
+<TD width=50%>
+<UL type="disc">
+	<LI>Defines Main project. </li>
+
+	<LI>Starts and stops monitoring </li>
+</UL>
+</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>KdSeXdiHnd.cpp</TD>
+<TD width=50%>Implements eXDI driver handler. 
+<UL type="disc">
+	<LI>Instantiates and manage helpers and probe handler </li>
+
+	<LI>Register SW trap opcodes for breakpoints </li>
+
+	<LI>Create default register aliases &amp; register groups </li>
+</UL>
+</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>KdSeXdi_CC.cpp</TD>
+<TD width=50%>Implements CoreCon service-specific methods 
+<UL type="disc">
+	<LI>Acquires device-specific properties from datastore </li>
+
+	<LI>Connection handling </li>
+</UL>
+</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>KdSProbHnd.cpp</TD>
+<TD width=50%>Implements the probe handler.
+<UL type="disc">
+	<LI>Initializes device and probe </li>
+
+	<LI>Transforms all low-level eXDI requests to probe-specific requests </li>
+
+	<LI>Provideds error handling </li>
+</UL>
+</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>(..\..\common\)DataStoreHelper.cpp</TD>
+<TD width=50%>Provides helper routines for High-level datastore access</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>KdSeXdi2.rc</TD>
+<TD width=50%>Resource files</TD>
+</TR>
+</table></div>
+
+<P>The <code class="ce">#include</code> files referenced in the source files listed in the previous table can be taken from the following directories:
+
+<UL type="disc">
+	<LI>..\..\helpers</li>
+
+	<LI>..\..\include</li>
+
+	<LI>..\..\idl</li>
+</UL>
+</li>
+
+	<LI>Create a file called SCID_eXDIAccess.c with the following contents:
+<PRE class="code">#include &lt;objbase.h&gt;
+// {0F20E4AD-A44D-45d3-BA05-A077C1441E90}
+const GUID SCID_eXdiAccess = { 0xf20e4ad, 0xa44d, 0x45d3, { 0xba, 0x5, 0xa0, 0x77, 0xc1, 0x44, 0x1e, 0x90 } };
+</PRE>
+
+<P>Copy this file to ..\common.
+</li>
+
+	<LI>Create a file called SCID_eXDIAccess.c with the following contents:
+<PRE class="code">#include &lt;objbase.h&gt;
+// {B538C148-D73D-498d-86CC-3201463581A2}
+const GUID SCID_OsAccess = { 0xb538c148, 0xd73d, 0x498d, { 0x86, 0xcc, 0x32, 0x1, 0x46, 0x35, 0x81, 0xa2 } };
+</PRE>
+
+<P>Copy this file to ..\common.
+</li>
+
+	<LI>Include the files for interface definitions that you created in Steps 3 and 4:
+<UL type="disc">
+	<LI>..\common\SCID_eXdiAccess.c</li>
+
+	<LI>..\common\SCID_OsAccess.c</li>
+</UL>
+</li>
+
+	<LI>Define UNICODE and _UNICODE by typing the following command at the compiler command line:
+<PRE class="code">-DUNICODE &#0150;D_UNICODE</PRE>
+</li>
+
+	<LI>Run MIDL on all IDL files in \idl and \helpers\exdihlp.idl
+<P>Make sure the MIDL compiler generates &lt;filename&gt;.h and not &lt;filename&gt;_h.h
+</li>
+
+	<LI>When using a Visual Studio workspace the TLB reference in the resource file may have to be renamed. </li>
+
+	<LI>Link the compiled source to a DLL named KdSeXdi2Lite.dll. The definition file is KdSeXdi2.def
+<P>The following libraries are required to link properly:
+
+<UL type="disc">
+	<LI>dbgutil.lib</li>
+
+	<LI>user32.lib</li>
+
+	<LI>kernel32.lib</li>
+
+	<LI>ole32.lib</li>
+
+	<LI>oleaut32.lib</li>
+
+	<LI>Advapi32.lib</li>
+
+	<LI>uuid.lib</li>
+
+	<LI>CeDiag.lib</li>
+
+	<LI>MSVCRT.lib</li>
+
+	<LI>msvcirt.lib</li>
+
+	<LI>msvcprt.lib</li>
+
+	<LI>atlmfc71.dll</li>
+
+	<LI>vccomsup.lib</li>
+</UL>
+</li>
+</OL>
+
+<H2 class="dtH2">Installing and registering the sample</H2>
+
+<OL type="1">
+	<LI>Copy the KdSeXdi2Lite.DLL to the development machine.</li>
+
+	<LI>Copy eDiag.dll, provided in ..\..\common, to the development machine..</li>
+
+	<LI>Call register.bat.</li>
+</OL>
+
+<H2 class="dtH2">Running the sample</H2>
+
+<OL type="1">
+	<LI>Open Platform Builder.</li>
+
+	<LI>Open the PB workspace you want to debug.</li>
+
+	<LI>Build the run-time OS image, with kernel debugger support (KdStub) enabled. </li>
+
+	<LI>From the <B>Target</B> menu, choose <B>Connectivity Options</B>.</li>
+
+	<LI>In the <B>Target Device Connectivity Options</B> dialog, select <B>Kernel Service Map</B>.</li>
+
+	<LI>From the <B>Download</B> box, choose a download service and configure any necessary settings.</li>
+
+	<LI>From the <B>Transport</B> box, choose a kernel transport service and configure any necessary settings.</li>
+
+	<LI>From the <B>Debugger</B> box, select "KdStubLite" </li>
+
+	<LI>Select <B>Apply</B>.</li>
+
+	<LI>Select <B>Target -&gt; Attach</B> device.
+<P>This downloads the run-time image to the target device.
+</li>
+</OL>
+
+<P>You can now start debugging.</P>
+
+<BLOCKQUOTE class="dtBlock">
+<b class="le">Note: </b>If the sample were a driver for a hardware-debugging probe, the driver would use HdStub for OS event notifications instead of KdStub.</BLOCKQUOTE>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50conexdidriverrequirements.htm">eXDI Driver Requirements</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

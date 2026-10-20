@@ -1,0 +1,106 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Logging</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Logging"/>
+<MSHelp:RLTitle Title="Logging"/>
+<MSHelp:Keyword Index="A" Term="wce51grfLoggingDATKSync"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Debugging"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="True"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="DATK_Sync.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="True"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_1076619">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce51grfloggingdatksync"></A>Logging</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>The Area Libraries should be primarily responsible for detailed logging since they are responsible for most of the UI work. Additional verbose logging that is not covered by the area library (such as the purpose of a test) should be added to the test cases themselves.</P>
+
+<P>Both the Area Libraries and test cases should use the <B>GlobalLogger</B> for all logging needs. The <B>GlobalLogger</B> will ensure that all comments logged go to the correct log file. You can use <B>GlobalLogger</B>.<B>AddComment</B> to add to the log file.</P>
+
+<P>You can use verbose logging to control how much the harness actually writes to the log file. To do this you call <B>GlobalLogger</B>.<B>AddComment</B> and pass it in an integer specifying the <I>logLevel</I> of your comment. The higher the number, the more detailed the comment. Then, you can run your test by passing the <I>&#0150;logLevel</I> parameter to the harness. For example, if you pass <code class="ce">-logLevel 4</code> to the harness, all comments that were added with a <I>logLevel</I> of 4 or less will be added to the log file. All comments added with a <I>logLevel</I> of 5 or greater will be excluded from the log file.</P>
+
+<P>There are predefined logging levels that you will likely want to use in your code. The example below shows how these predefined levels are used, and which levels are appropriate for test cases, area library methods, UIAL methods, and automation infrastructure.</P>
+
+<PRE class="code">/// &lt;summary&gt;
+/// Test cases always want logging, so they generally use the
+/// Summary level (lowest level) which is always logged.
+/// &lt;/summary&gt;
+public void TestCaseMethod()
+{
+      // This will always be logged
+      GlobalLogger.AddComment(
+            GlobalLogger.VerboseLevel.Summary, "Test case");
+
+      // This will also always be logged
+      GlobalLogger.AddComment("Test case comment");
+}
+
+/// &lt;summary&gt;
+/// Area libraries don't always need logging. You might want
+/// to use the Info level (second lowest level).
+/// &lt;/summary&gt;
+public void AreaLibraryMethod()
+{
+      GlobalLogger.AddComment(
+            GlobalLogger.VerboseLevel.Info, "Area library");
+}
+
+/// &lt;summary&gt;
+/// The UIAL doesn't usually need to log, so you might want to
+/// use the Detailed level (third lowest level).
+/// &lt;/summary&gt;
+public void UialMethod()
+{
+      GlobalLogger.AddComment(
+            GlobalLogger.VerboseLevel.Detailed, "UIAL comment");
+}
+
+/// &lt;summary&gt;
+/// Infrastructure like DATK, MobilityToolKit, and Utils should
+/// only log when they are being debugged so they will generally
+/// use the Debug level (fourth lowest level).
+/// &lt;/summary&gt;
+public void MobilityToolKitMethod()
+{
+      GlobalLogger.AddComment(
+            GlobalLogger.VerboseLevel.Debug, "MTK comment");
+}</PRE>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

@@ -1,0 +1,146 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>How to: Modify Program Key Behavior</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="How to: Modify Program Key Behavior"/>
+<MSHelp:RLTitle Title="How to: Modify Program Key Behavior"/>
+<MSHelp:Keyword Index="A" Term="mob5tskHowToModifyProgramKeyBehavior"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Application"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbsmartphone"/>
+<MSHelp:Attr Name="Product" Value="kbPocketPC"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="Technology" Value="kbPocketPC"/>
+<MSHelp:Attr Name="Technology" Value="kbSmartphone"/>
+<MSHelp:Attr Name="TopicType" Value="kbTask"/>
+<MSHelp:Attr Name="Filename" Value="Mobile_Device_Hardware_magneto.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="True"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_1063814">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Windows Mobile Version 5.0 SDK<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="mob5tskhowtomodifyprogramkeybehavior"></A>How to: Modify Program Key Behavior</H1>
+<!--Feedback Link Top Start-->
+<P CLASS="feedback"><font size="1"><a href="mailto:medfdbk&#64;microsoft.com?subject=Product: Windows Mobile | Version: 5.0 | Release: SDK | Title: How to: Modify Program Key Behavior | Filename: mob5tskhowtomodifyprogramkeybehavior.htm | Built on: Wednesday, September 14, 2005">Send Feedback</a> on this topic to the authors</font></p>
+<!--Feedback Link Top End-->
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>You can easily extend the program-key associated behavior of your application. This topic uses an example application called testkeys (<code class="ce">testkeys.exe</code>) to demonstrate the following tasks:
+
+<UL type="disc">
+	<LI>How a program key is assigned and registered.</li>
+
+	<LI>How to check whether your application is in the foreground and bring it forward if it is not.</li>
+
+	<LI>How to release the program key when the application is closed.</li>
+</UL>
+
+<P class="labelproc"><B>To determine which program key is currently assigned to testkeys and to register that keyboard shortcut when testkeys.exe starts </B>
+
+<UL type="disc">
+	<LI>The message handler for <B>WM_CREATE</B> is a convenient place for the following code.</li>
+</UL>
+
+<BLOCKQUOTE class="dtBlock">
+<b class="le">Note</b>&nbsp;&nbsp;&nbsp;The call to the Windows CE function <MSHelp:link keywords="wce50lrfRegisterHotKey" TABINDEX="0">RegisterHotKey</MSHelp:link> uses <B>MOD_WIN</B> as the keyboard shortcut modifier because the hardware keys all send <B>MOD_WIN</B> with their key code.</BLOCKQUOTE>
+
+<PRE class="code">BYTE appkey;
+appkey = SHGetAppKeyAssoc(_T("testkeys.exe"));
+if (appkey != 0)
+{
+    if (!RegisterHotKey(hWnd, 400, MOD_WIN, appkey)) 
+    {
+        // Can't register keyboard shortcut.
+        MessageBox(NULL, _T("Can't register hotkey."),
+                         _T("Warning"), MB_OK);
+        exit(0);  // Replace with specific error handling.
+    }
+}</PRE>
+
+<P class="labelproc"><B>To check whether your application is in the foreground and to bring it to the foreground if it is not </B>
+
+<UL type="disc">
+	<LI>The following example assumes you are handling the <B>WM_HOTKEY</B> message as part of the <B>WndProc</B> method used to handle Windows messages. </li>
+</UL>
+
+<BLOCKQUOTE class="dtBlock">
+<b class="le">Note</b>&nbsp;&nbsp;&nbsp;You also need code to perform any special action, such as changing views, based on pressing the keyboard shortcut.</BLOCKQUOTE>
+
+<PRE class="code">case WM_HOTKEY:
+    switch(wParam)
+    {
+        case 400:
+    // This is the keyboard shortcut you registered.
+    // Is the application in the foreground?
+    if (hWnd != GetForegroundWindow())
+    {
+    // No, bring it forward and that is all.
+    // Set focus to foremost child window.
+    // The "| 0x01" is used to bring any owned 
+    // windows to the foreground and open them.
+    SetForegroundWindow((HWND)((ULONG) hWnd | 0x00000001));
+    }
+    else
+    {
+    // Already on top, so take an action.
+    MessageBox(hWnd, _T("Hotkey Pressed"), 
+                     _T("Hotkey"), MB_OK);
+    }
+    break;</PRE>
+
+<P class="labelproc"><B>To release the program key back to the shell </B>
+
+<UL type="disc">
+	<LI>When the application closes, it should call <B>UnregisterHotkey</B> to release the program key back to the shell, as shown in the following example.</li>
+</UL>
+
+<PRE class="code">    case WM_DESTROY:
+        appkey = SHGetAppKeyAssoc(_T("testkeys.exe"));
+        if (appkey != 0)
+        {
+            if(!UnregisterHotKey(hWnd, 400)) 
+        {
+            // Can't unregister hotkey.
+            MessageBox(NULL, _T("Can't unregister hotkey"),
+                             _T("Warning"), MB_OK);
+            exit(0);  // Replace with specific error handling.
+        }
+    }</PRE>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="mob5orimobiledevicehardwareoverview.htm">Mobile Device Hardware Overview</A> | <A HREF="mob5tskhowtoprogrampress-and-holdfeature.htm">How to: Program a Press-and-Hold Feature</A> | <A HREF="mob5conprogramkeys.htm">Program Keys</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Feedback Link Bottom Start-->
+<p><font size="1"><a href="mailto:medfdbk&#64;microsoft.com?subject=Product: Windows Mobile | Version: 5.0 | Release: SDK | Title: How to: Modify Program Key Behavior | Filename: mob5tskhowtomodifyprogramkeybehavior.htm | Built on: Wednesday, September 14, 2005">Send Feedback</a> on this topic to the authors</font></p>
+<!--Feedback Link Bottom End-->
+<!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="mob5conCopyrightInformationForMagneto" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link></font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

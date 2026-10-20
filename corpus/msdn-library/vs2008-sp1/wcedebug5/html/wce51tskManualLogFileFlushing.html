@@ -1,0 +1,111 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Manual Log File Flushing</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Manual Log File Flushing"/>
+<MSHelp:RLTitle Title="Manual Log File Flushing"/>
+<MSHelp:Keyword Index="A" Term="wce51tskManualLogFileFlushing"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Debugging"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="True"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbTask"/>
+<MSHelp:Attr Name="Filename" Value="celog_event_tracking_tools.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="True"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_1073100">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce51tskmanuallogfileflushing"></A>Manual Log File Flushing</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>While automatic flushing, as done by <A HREF="wce51oricelogflushexe.htm">CeLogFlush.exe</A>, makes it easy to collect data, sometimes you want control over exactly when the flushes take place. CeLog Event Tracking supports functionality that you can use to manually flush the contents of the RAM buffer to a file, or to discard the contents of the RAM buffer.</P>
+
+<P>Typically, developers use manual flushing to clear the log immediately before running a test application, and to flush it immediately after the test is done. This method is also ideal for capturing custom events that are logged by an application.</P>
+
+<P>Unrestricted event logging can quickly accumulate a very large amount of data. Since this data is written to a fixed-size RAM buffer, logging too much data may exhaust the space in the buffer and lose the most recent events. To maximize the length of time you can collect data, you may want to reduce the number of collection zones in use, and to increase the size of the buffer. </P>
+
+<P>The following instructions use Target Control Window commands to provide an example of how to manually control data buffering and flushing. You can choose different buffer sizes or zone settings as needed.</P>
+
+<P>For more information about using the Target Control Window, see <A HREF="wce51tskusingtargetcontrolcommandswithcelog.htm">Using Target Control Commands with CeLog</A>.</P>
+
+<P class="labelproc"><B>To load CeLog manually and begin collecting data</B>
+
+<OL type="1">
+	<LI>In the <MSHelp:link keywords="wce50urfTargetControlWindow" TABINDEX="0">Target Control window</MSHelp:link>, type
+<PRE class="code">log &#0150;buf 0x400000 0x62</PRE>
+
+<P>This sets the buffer size to 4MB, and enables a minimal set of zones. 
+</li>
+
+	<LI>When the Target Control window displays a prompt asking if you want to load CeLog, type
+<PRE class="code">y</PRE>
+
+<P>This causes Platform Builder to load CeLog.dll.
+</li>
+</OL>
+
+<P>After completing these steps, CeLog.dll begins storing data in its RAM buffer, but no flushing applications have been enabled to move data from the buffer to a log file. If the buffer fills up, new data will be discarded until the older buffered data is manually cleared or flushed. </P>
+
+<P class="labelproc"><B>To manually collect data and then flush it to a file:</B>
+
+<OL type="1">
+	<LI>In the Target Control Window, type
+<PRE class="code">log &#0150;clear</PRE>
+
+<P>This discards any data that was collected since you last cleared or flushed, or since you loaded CeLog.dll.
+</li>
+
+	<LI>Perform the action you want to collect data from. For example, you might start a test application or click on some UI elements you want to measure data about.</li>
+
+	<LI>In the Target Control window, type 
+<PRE class="code">log &#0150;flush </PRE>
+
+<P>This flushes collected data to the default file, \release\celog.clg.
+
+<P>You can also choose a filename, as in this example. 
+
+<PRE class="code">log &#0150;flush \release\manual.clg</PRE>
+
+<P>This flushes the collected data to a file named manual.clg. There is no need to wait any time before flushing, because the data has already been written to the RAM buffer that you are flushing.
+
+<P>After the data is written to a log file, you can view it with the <A HREF="wce51orireadlogviewingtool.htm">Readlog Viewing Tool</A> or <A HREF="wce50conremotekerneltracker.htm">Remote Kernel Tracker</A>.
+</li>
+</OL>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><MSHelp:link keywords="wce50conTargetControlDebuggingCommands" TABINDEX="0">Target Control Debugging Commands</MSHelp:link></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

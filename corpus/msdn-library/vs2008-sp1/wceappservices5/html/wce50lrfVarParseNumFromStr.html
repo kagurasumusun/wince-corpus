@@ -1,0 +1,157 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>VarParseNumFromStr</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="VarParseNumFromStr"/>
+<MSHelp:RLTitle Title="VarParseNumFromStr"/>
+<MSHelp:Keyword Index="K" Term="VarParseNumFromStr"/>
+<MSHelp:Keyword Index="A" Term="wce50lrfVarParseNumFromStr"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Feature"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="apiref"/>
+<MSHelp:Attr Name="Filename" Value="automation_functions1.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="False"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+<MSHelp:Attr Name="APIName" Value="VarParseNumFromStr"/>
+<MSHelp:Attr Name="APIType" Value="LibDef"/>
+<MSHelp:Attr Name="APILocation" Value="Oleaut32.lib"/>
+<MSHelp:Attr Name="PBFeature" Value="SYSGEN_DCOM"/>
+<MSHelp:Attr Name="PBOnly" Value="False"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_3003118">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50lrfvarparsenumfromstr"></A>VarParseNumFromStr</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>This function parses a string and creates a type-independent description of the number it represents.</P>
+
+<PRE class="syntax"><B>HRESULT VarParseNumFromStr(</B> 
+  <B>OLECHAR* </B><I>strIn</I><B>,</B> 
+  <B>LCID</B> <I>lcid</I><B>,</B> 
+  <B>unsigned long</B> <I>dwFlags</I><B>,</B> 
+  <B>NUMPARSE* </B><I>pnumprs</I><B>,</B> 
+  <B>unsigned char* </B><I>rgbDig </I>
+<B>);</B> </PRE>
+
+<H4 class="dtH4">Parameters</H4>
+
+<DL>
+<DT><I>strIn</I></DT>
+
+<DD>[in] Input string to be converted to a number.</dd>
+
+<DT><I>lcid</I></DT>
+
+<DD>[in] Locale identifier.</dd>
+
+<DT><I>dwFlags</I></DT>
+
+<DD>[in] Enables the caller to control parsing, therefore defining the acceptable syntax of a number. 
+
+<P>If this field is set to zero, the input string must contain nothing but decimal digits. 
+
+
+<P>Setting each defined flag bit enables parsing of that syntactic feature. 
+
+
+<P>Standard Automation parsing (for example, as used by <B>VarI2FromStr</B>) has all flags set (NUMPRS_STD).
+</dd>
+
+<DT><I>pnumprs</I></DT>
+
+<DD>[in] Parsed results.</dd>
+
+<DT><I>rgbDig</I></DT>
+
+<DD>[out] Array filled in with the values for the digits in the range 0&#0150;7, 0&#0150;9, or 0&#0150;15, depending on whether the number is octal, decimal, or hexadecimal. All leading zeros are stripped off. 
+
+<P>For decimal numbers, trailing zeros are also stripped off, unless the number is zero, in which case a single zero digit is present.
+</dd>
+</DL>
+
+<H4 class="dtH4">Return Values</H4>
+
+<P>Returns the HRESULT values shown in the following table.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=29%>Value</TH>
+<TH width=71%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=29%>S_OK</TD>
+<TD width=71%>Success.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=29%>E_OUTOFMEMORY</TD>
+<TD width=71%>Internal memory allocation failed. (Used for DBCS only to create a copy with all wide characters mapped narrow.)</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=29%>DISP_E_TYPEMISMATCH</TD>
+<TD width=71%>There is no valid number in the string, or there is no closing parenthesis to match an opening one. 
+<P>In the former case, <I>cDig</I> and <I>cchUsed</I> in the <MSHelp:link keywords="wce50conProgrammingElementNotSupported" TABINDEX="0">NUMPARSE</MSHelp:link> structure will be zero. </P>
+
+<P>In the latter, the <B>NUMPARSE</B> structure and digit array are fully updated, as if the closing parenthesis was present.</P>
+</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=29%>DISP_E_OVERFLOW</TD>
+<TD width=71%>For hexadecimal and octal digits, there are more digits than will fit into the array. 
+<P>For decimal, the exponent exceeds the maximum possible. </P>
+
+<P>In both cases, the <B>NUMPARSE</B> structure and digit array are fully updated (for decimal, the <B>cchUsed</B> member excludes the entire exponent).</P>
+</TD>
+</TR>
+</table></div>
+
+<H4 class="dtH4">Remarks</H4>
+
+<P>Passing invalid (and under some circumstances NULL) pointers to this function causes an unexpected termination of the application.</P>
+
+<H4 class="dtH4">Requirements</H4>
+
+<P><B>OS Versions:</B> Windows CE 2.0 and later.<BR>
+<B>Header:</B> Oleauto.h.<BR>
+<B>Link Library:</B> Oleaut32.lib.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50grfautomationfunctions.htm">Automation Functions</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

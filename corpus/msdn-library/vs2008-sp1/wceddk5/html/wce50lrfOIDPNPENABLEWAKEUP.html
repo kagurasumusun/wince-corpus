@@ -1,0 +1,111 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>OID_PNP_ENABLE_WAKE_UP</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="OID_PNP_ENABLE_WAKE_UP"/>
+<MSHelp:RLTitle Title="OID_PNP_ENABLE_WAKE_UP"/>
+<MSHelp:Keyword Index="K" Term="OID_PNP_ENABLE_WAKE_UP"/>
+<MSHelp:Keyword Index="A" Term="wce50lrfOIDPNPENABLEWAKEUP"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Driver"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="False"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="apiref"/>
+<MSHelp:Attr Name="Filename" Value="ndis_object_identifiers.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="False"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+<MSHelp:Attr Name="APIName" Value="OID_PNP_ENABLE_WAKE_UP"/>
+<MSHelp:Attr Name="PBFeature" Value="NetworkDriver"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_3018786">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50lrfoidpnpenablewakeup"></A>OID_PNP_ENABLE_WAKE_UP</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>This object specifies which wake-up capabilities a miniport should enable in its NIC. This object can also be queried to determine which wake-up capabilities are enabled for a NIC.</P>
+
+<P>The <I>InformationBuffer</I> of an associated <A HREF="wce50lrfndisrequest.htm">NdisRequest</A> structure contains the following flags, which can be combined as a bitwise-OR to enable a combination of wake-up events: </P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=50%>Flag</TH>
+<TH width=50%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>NDIS_PNP_WAKE_UP_MAGIC_PACKET </TD>
+<TD width=50%>When set, specifies that the miniport should enable the NIC to signal a wake-up event on receipt of a Magic Packet. (A Magic Packet is a packet that contains 16 contiguous copies of the receiving NIC's Ethernet address.) When cleared, specifies that the miniport should disable the NIC from signaling such a wake-up event. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>NDIS_PNP_WAKE_UP_PATTERN_MATCH </TD>
+<TD width=50%>When set, specifies that the miniport should enable the NIC to signal a wake-up event on receipt of a packet that contains a pattern specified by the protocol with <A HREF="wce50lrfoidpnpaddwakeuppattern.htm">OID_PNP_ADD_WAKE_UP_PATTERN</A>. When cleared, specifies that the miniport should disable the NIC from signaling such a wake-up event. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>NDIS_PNP_WAKE_UP_LINK_CHANGE </TD>
+<TD width=50%>When set, specifies that the miniport should enable the NIC to signal a wake-up event in response to a link change (the connection or disconnection of the NIC's network cable). When cleared, specifies that the miniport should disable the NIC from signaling such a wake-up event. </TD>
+</TR>
+</table></div>
+
+<P>After querying a miniport's wake-up capabilities with an <A HREF="wce50lrfoidpnpcapabilities.htm">OID_PNP_CAPABILITIES</A> request, a protocol driver can use <B>OID_PNP_ENABLE_WAKE_UP</B> to enable one or more of the NIC's wake-up capabilities. A protocol driver can also query this OID to determine which wake-up capabilities are enabled for a NIC.</P>
+
+<P>NDIS does not immediately enable the wake-up capabilities specified by a protocol. Instead, NDIS keeps track of the wake-up capabilities enabled by the protocol and, just before the miniport transitions to a low-power state, sends an <B>OID_PNP_ENABLE_WAKE_UP</B> to the miniport to enable the appropriate wake-up events.</P>
+
+<P>Wake up due to a link change is enabled by default, provided that the NIC supports such a wake-up event. A protocol cannot enable or disable a link-change wake-up by setting or clearing the NDIS_PNP_WAKE_UP_LINK_CHANGE flag in <B>OID_PNP_ENABLE_WAKE_UP</B>. NDIS, however, sets or clears this flag to enable or disable link-change wake-up, as described below.</P>
+
+<P>Before the miniport transitions to a low-power state (that is, before NDIS sends the miniport an <A HREF="wce50lrfoidpnpsetpower.htm">OID_PNP_SET_POWER</A> request), NDIS sends the miniport an <B>OID_PNP_ENABLE_WAKE_UP</B> request to enable the appropriate wake-up capabilities. There are two basic scenarios: 
+
+<UL type="disc">
+	<LI>If the system is transitioning from the fully on state to a sleeping state, NDIS disables link-change wake-up. If the protocol previously enabled magic-packet wake-up and or pattern-match wake-up, NDIS also enables enable magic-packet wake-up or pattern-match wake-up. This configuration of enabled/disabled wake-up events prevents a link change from inappropriately waking the system when the system is in a sleeping state but enables the NIC to wake the system in response to a magic packet or a pattern match. </li>
+
+	<LI>If the NIC is transitioning from the fully on state to a sleeping state because of a link change (someone disconnected the cable from the NIC), NDIS enables link-change wake-up. NDIS also disables magic-packet wake-up and pattern-match wake-up. In this case, the connection of the network cable to the NIC will cause the NIC to signal a wake-up. </li>
+</UL>
+
+<P>NDIS never enables all three wake-up events for a NIC. NDIS either enables link-change wake-up and disables magic-packet and pattern-match wake-up or disables link-change wake-up and enables any wake-up capabilities (magic-packet wake-up or pattern-match wake-up) enabled by the protocol.</P>
+
+<P>The miniport must take the appropriate device-dependent steps to enable or disable wake-up events on the NIC.</P>
+
+<P>An intermediate driver whose upper edge receives this request must always propagate the request to the underlying miniport by calling <B>NdisRequest</B>.</P>
+
+<H4 class="dtH4">Requirements</H4>
+
+<P><B>OS Versions:</B> Windows CE .NET 4.0 and later.<BR>
+<B>Header:</B> Ntddndis.h.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50lrfndisrequeststructure.htm">NDIS_REQUEST</A> | <A HREF="wce50lrfndisrequest.htm">NdisRequest</A> | <A HREF="wce50lrfndispmpacketpattern.htm">NDIS_PM_PACKET_PATTERN</A> | <A HREF="wce50lrfndispnpcapabilities.htm">NDIS_PNP_CAPABILITIES</A> | <A HREF="wce50lrfoidpnpaddwakeuppattern.htm">OID_PNP_ADD_WAKE_UP_PATTERN</A> | <A HREF="wce50lrfoidpnpwakeuppatternlist.htm">OID_PNP_WAKE_UP_PATTERN_LIST</A> | <A HREF="wce50lrfoidpnpsetpower.htm">OID_PNP_SET_POWER</A> | <A HREF="wce50lrfoidpnpcapabilities.htm">OID_PNP_CAPABILITIES</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

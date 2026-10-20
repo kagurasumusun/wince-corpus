@@ -1,0 +1,171 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Boot Loader Design</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Boot Loader Design"/>
+<MSHelp:RLTitle Title="Boot Loader Design"/>
+<MSHelp:Keyword Index="A" Term="wce50conBootLoaderDesign"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Hardware"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="True"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="howto_developing_a_bootloader.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="False"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_3010326">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50conbootloaderdesign"></A>Boot Loader Design</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>The boot loader described in the topic <A HREF="wce50howhowtodevelopabootloader.htm">How to Develop a Boot Loader</A> uses Microsoft&reg; Platform Builder to download a file over Ethernet to the target device's RAM before executing it. </P>
+
+<P>The following high-level overview lists the tasks that the boot loader performs in a semi-chronological order, immediately following a CPU reset:
+
+<UL type="disc">
+	<LI>Early CPU initialization.
+<UL type="disc">
+	<LI>Enter supervisor mode.
+<BLOCKQUOTE class="dtBlock">
+<b class="le">Note</b>&nbsp;&nbsp;&nbsp;This is whatever mode specifies unrestricted access to all hardware and memory. For x86, this would be ring 0 protected mode with a flat memory model, but with memory management unit (MMU) disabled. Some CPUs reset into the correct mode; others must enter it through software initialization.</BLOCKQUOTE>
+</li>
+
+	<LI>Clear the instruction and data caches.</li>
+
+	<LI>Clear the translation look-aside buffers (TLBs).</li>
+
+	<LI>Drain the write and fill buffers.</li>
+
+	<LI>Configure and enable the RAM controller.</li>
+
+	<LI>Ensure that interrupts are cleared and masked.</li>
+
+	<LI>Initialize any required phase-locked loops (PLLs) or timebases such as RTC and tick counter.</li>
+</UL>
+</li>
+
+	<LI>Optionally relocate the run-time image to RAM. The boot loader may initially run in flash memory after reset.</li>
+
+	<LI>Optionally enable the MMU and caches.
+<BLOCKQUOTE class="dtBlock">
+<b class="le">Note</b>&nbsp;&nbsp;&nbsp;It is possible to run with the MMU and caches off, but it requires the Config.bib file of the OS to take this into consideration. This is usually a better approach if the goals are efficiency and code clarity.</BLOCKQUOTE>
+</li>
+
+	<LI>Copy the copy-section data to its final location. This instantiates initialized global data.</li>
+
+	<LI>Create and populate a reserved memory area to be shared with the OS. This boot arguments or boot args area is used to pass along various bits of information to the OS.</li>
+
+	<LI>Early board-level initialization.
+<UL type="disc">
+	<LI>Set up debug UART.</li>
+
+	<LI>Optionally provide a user menu for configuring loader options.</li>
+
+	<LI>Initialize the Ethernet controller.</li>
+</UL>
+</li>
+
+	<LI>Optionally obtain an IP address for the target from a DHCP server. An alternative would be to assign a static IP address to the device.</li>
+
+	<LI>Initialize the TFTP connection. Platform Builder uses the TFTP protocol to download .bin files from the development workstation.</li>
+
+	<LI>Download the .bin file as individual records, then verify each with a checksum, and then store the data where each record indicates it needs to be stored. The operation is slightly different if the run-time image is to be stored in flash memory.</li>
+
+	<LI>Obtain various user settings from Platform Builder, such as boot clean and whether to establish a passive KITL connection, as well as IP and port address information for various Platform Builder service connections.</li>
+
+	<LI>Execute the downloaded .bin file by ensuring the system state is configured appropriately and then jumping to the run-time image's startup address.</li>
+</UL>
+
+<P>The boot loader support libraries encapsulate many of the tasks summarized above. For more information about the support libraries, see <A HREF="wce50conbootloadersupportlibraries.htm">Boot Loader Support Libraries</A>.</P>
+
+<H2 class="dtH2">Boot Loader Binary Images</H2>
+
+<P>At the end of the boot loader development process described in the topic How to Develop a Boot Loader, you will have two different binary images for the boot loader: a .bin file and an .nb0 file. 
+
+<UL type="disc">
+	<LI>The Microsoft Windows&reg; CE binary image data format (.bin) file is the most common format for Windows CE binary images. It is a binary file that consists of a number of individual records with associated per-record bookkeeping data. 
+<P>The format is convenient for minimizing the amount of data to be downloaded to the target device by removing the need to pad between records. For more information about the .bin file format, see <MSHelp:link keywords="wce50conWindowsCEBinaryImageDataFormatbin" TABINDEX="0">Windows CE Binary Image Data Format</MSHelp:link>.
+</li>
+
+	<LI>The .nb0 file format is a raw binary image of the boot loader. The boot loader image is as it appears in the memory on the target device and does not contain the header information that the .bin file includes. The .nb0 file is typically larger than the .bin file. 
+<P>The .nb0 file is useful for placing the initial boot loader image on the target device. This is usually done with a built-in monitor program provided by the board manufacturer. You can also place the initial boot loader image on the target device through a JTAG connection using a JTAG probe. 
+
+<P>Once the .nb0 image is stored on the device, it should be able to download and update itself using the .bin file format from then on.
+</li>
+</UL>
+
+<H2 class="dtH2">Hardware Platform Description</H2>
+
+<P>The boot loader described in the topic <A HREF="wce50howhowtodevelopabootloader.htm">How to Develop a Boot Loader</A> is developed for an example platform containing the following hardware specifications:
+
+<UL type="disc">
+	<LI>ARM V4I CPU</li>
+
+	<LI>64 MB RAM</li>
+
+	<LI>32 MB Intel Strataflash (28F128)</li>
+
+	<LI>A supported Ethernet controller, such as NE2000 or SMC9000. As a simplification for the process described in the how-to topic, the controller is built-in and not a PCI or PCMCIA device.</li>
+</UL>
+
+<P>The following table shows the memory map for this hardware platform.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=33%>Physical address</TH>
+<TH width=33%>Length</TH>
+<TH width=34%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%>0000.0000 - 01FF.FFFF</TD>
+<TD width=33%>32 MB</TD>
+<TD width=34%>Flash</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%>A000.0000 - A3FF.FFFF</TD>
+<TD width=33%>64 MB</TD>
+<TD width=34%>RAM</TD>
+</TR>
+</table></div>
+
+<P>The boot loader design assumes that the CPU will begin fetching code at physical address 0 following a reset.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50howhowtodevelopabootloader.htm">How to Develop a Boot Loader</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

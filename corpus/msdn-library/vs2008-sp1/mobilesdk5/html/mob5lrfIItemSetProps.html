@@ -1,0 +1,201 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>IItem::SetProps</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="IItem::SetProps"/>
+<MSHelp:RLTitle Title="IItem::SetProps"/>
+<MSHelp:Keyword Index="K" Term="code example, IItem,SetProps"/>
+<MSHelp:Keyword Index="K" Term="IItem,SetProps"/>
+<MSHelp:Keyword Index="A" Term="mob5lrfIItemSetProps"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Application"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbsmartphone"/>
+<MSHelp:Attr Name="Product" Value="kbPocketPC"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="Technology" Value="kbPocketPC"/>
+<MSHelp:Attr Name="Technology" Value="kbSmartphone"/>
+<MSHelp:Attr Name="TopicType" Value="apiref"/>
+<MSHelp:Attr Name="Filename" Value="POOM_API_magneto.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="True"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_1067939">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Windows Mobile Version 5.0 SDK<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="mob5lrfiitemsetprops"></A>IItem::SetProps</H1>
+<!--Feedback Link Top Start-->
+<P CLASS="feedback"><font size="1"><a href="mailto:medfdbk&#64;microsoft.com?subject=Product: Windows Mobile | Version: 5.0 | Release: SDK | Title: IItem::SetProps | Filename: mob5lrfiitemsetprops.htm | Built on: Wednesday, September 14, 2005">Send Feedback</a> on this topic to the authors</font></p>
+<!--Feedback Link Top End-->
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>The <B>SetProps</B> method sets (updates) a PIM item's list of property values.</P>
+
+<H4 class="dtH4">Syntax</H4>
+
+<PRE class="syntax"><B>HRESULT SetProps(
+  ULONG </B><I>ulFlags</I><B>,
+  WORD </B><I>cProps</I><B>,
+  CEPROPVAL * </B><I>rgVals</I><B>
+);</B></PRE>
+
+<H4 class="dtH4">Parameters</H4>
+
+<DL>
+<DT><I>ulFlags</I></DT>
+
+<DD>[in] Not used. 0.</dd>
+
+<DT><I>cProps</I></DT>
+
+<DD>[in] The number of property values contained in <I>rgVals</I>.</dd>
+
+<DT><I>prgVals</I></DT>
+
+<DD>[in] Reference to an array of property ID's and their associated values.</dd>
+</DL>
+
+<H4 class="dtH4">Return Values</H4>
+
+<P>This method returns the standard values <B>HRESULT_FROM_WIN32(GetLastError())</B>, <B>E_INVALIDARG</B>, <B>E_FAIL</B>, and <B>S_FALSE</B>, as well as the following:
+
+<DL>
+<DT><B>S_OK</B></DT>
+
+<DD>The method completed successfully. All property values were set successfully.</dd>
+
+<DT><B>E_ACCESSDENIED</B></DT>
+
+<DD>Returned when you set the <MSHelp:link keywords="mob5lrfSharedPropertyIDs" TABINDEX="0">PIMPR_FOLDERNOTIFICATIONS</MSHelp:link> property on a folder object, having <MSHelp:link keywords="mob5lrfIPOutlookAppLogon" TABINDEX="0">logged onto POOM</MSHelp:link> with an invalid window handle.</dd>
+</DL>
+
+<P>You must call <A HREF="mob5lrfiappointmentsave.htm">IAppointment::Save</A> on the appointment before using <B>IItem::SetProps</B>to set either <A HREF="mob5lrfcalendarpropertyids.htm">PIMPR_MEETING_OWNER_CRITICAL_CHANGE</A> or <A HREF="mob5lrfcalendarpropertyids.htm">PIMPR_ATTENDEES_CRITICAL_CHANGE</A>.</P>
+
+<H4 class="dtH4">Remarks</H4>
+
+<P><B>S_FALSE</B> is returned if one or more of the property values could not be set, or if you attempt to set a stream property (for example, <B>PIMPR_PICTURE</B> or <B>PIMPR_BINARY_BODY</B>).</P>
+
+<H4 class="dtH4">Code Example</H4>
+
+<P>The following code example demonstrates how to use <B>SetProps</B>.</P>
+
+<BLOCKQUOTE class="dtBlock">
+<b class="le">Note</b>&nbsp;&nbsp;&nbsp;To make the following code example easier to read, security checking and error handling are not included. This code example should not be used in a release configuration unless it has been modified to include them.</BLOCKQUOTE>
+
+<PRE class="code">HRESULT SetPropsExample(IPOutlookApp2 *pPoom, OlItemType olItemType)
+{
+
+    HRESULT hr             = E_FAIL;
+    IDispatch *pDisp       = NULL;
+    IItem *pItem           = NULL;
+    CEPROPVAL rgPropval[2] = {0};
+    SYSTEMTIME st          = {0};
+
+    // Create a new PIM item.
+    hr = pPoom-&gt;CreateItem(olItemType, &amp;pDisp);
+
+    // Get the IItem interface for the newly created item.
+    hr = pDisp-&gt;QueryInterface(IID_IItem, (LPVOID*)&amp;pItem);
+
+    // Set the item properties based on the PIM item type.
+    switch(olItemType)
+
+    {
+        case olAppointmentItem:
+            rgPropval[0].propid     = PIMPR_SUBJECT;
+            rgPropval[1].propid     = PIMPR_START;
+            rgPropval[0].val.lpwstr = L"Test Appt";
+
+            // Set the start time to the current time.
+            GetLocalTime(&amp;st);
+            SystemTimeToFileTime(&amp;st, &amp;(rgPropval[1].val.filetime));
+            break;
+
+        case olContactItem:
+            rgPropval[0].propid     = PIMPR_FIRST_NAME;
+            rgPropval[1].propid     = PIMPR_EMAIL1_ADDRESS;
+            rgPropval[0].val.lpwstr = L"Test Contact";
+            rgPropval[1].val.lpwstr = L"someone@example.com";
+            break;
+        
+        case olTaskItem:
+            rgPropval[0].propid     = PIMPR_SUBJECT;
+            rgPropval[1].propid     = PIMPR_IMPORTANCE;
+            rgPropval[0].val.lpwstr = L"Test Task";
+            rgPropval[1].val.ulVal  = olImportanceHigh;
+            break;
+
+        default:
+            hr = E_INVALIDARG;
+            goto Exit;
+    }
+
+    hr = pItem-&gt;SetProps(0, 2, rgPropval);
+
+    /*
+    Expected return value:
+
+    hr = S_OK          All props were set and there was no error.
+
+    hr = S_FALSE       One or more propids passed in were either invalid or a
+                       propid for a stream prop. (eg: rgPropval[0].propid = 0 or
+                       rgPropval[0].propid = PIMPR_BINARY_BODY).
+
+    hr = E_INVALIDARG: One or more propvals were invalid. (eg: for the tasks
+                       case where the propid is PIMPR_IMPORTANCE and the
+                       rgPropval[1].val.ulVal = 100 (which is invalid).
+    */
+
+    hr = pItem-&gt;Save();
+
+Exit:
+    pDisp-&gt;Release();
+    pItem-&gt;Release();
+
+    return hr;
+
+}</PRE>
+
+<H4 class="dtH4">Requirements</H4>
+
+<P><B>Pocket&nbsp;PC:</B> Windows&nbsp;Mobile&nbsp;Version&nbsp;5.0 and later<BR>
+<B>Smartphone:</B> Windows&nbsp;Mobile&nbsp;Version&nbsp;5.0 and later<BR>
+<B>OS&nbsp;Versions:</B> Windows CE 5.01 and later<BR>
+<B>Header:</B> pimstore.h<BR>
+<B>Library:</B> pimstore.lib</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="mob5lrfiitem.htm">IItem</A> | <A HREF="mob5conpocketoutlookobjectmodelapiinterfaces.htm">Pocket Outlook Object Model API Interfaces</A> | <A HREF="mob5lrfpocketoutlookobjectmodelapienumerations.htm">Pocket Outlook Object Model API Enumerations</A> | <A HREF="mob5lrfimapipropsetprops.htm">IMAPIProp::SetProps</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Feedback Link Bottom Start-->
+<p><font size="1"><a href="mailto:medfdbk&#64;microsoft.com?subject=Product: Windows Mobile | Version: 5.0 | Release: SDK | Title: IItem::SetProps | Filename: mob5lrfiitemsetprops.htm | Built on: Wednesday, September 14, 2005">Send Feedback</a> on this topic to the authors</font></p>
+<!--Feedback Link Bottom End-->
+<!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="mob5conCopyrightInformationForMagneto" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link></font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

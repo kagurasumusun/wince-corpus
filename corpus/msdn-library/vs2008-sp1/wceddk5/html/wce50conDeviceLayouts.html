@@ -1,0 +1,92 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Device Layouts</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Device Layouts"/>
+<MSHelp:RLTitle Title="Device Layouts"/>
+<MSHelp:Keyword Index="A" Term="wce50conDeviceLayouts"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Driver"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="False"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="keyboard_guide.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="True"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+<MSHelp:Attr Name="PBFeature" Value="KeyboardDriver"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_3018184">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50condevicelayouts"></A>Device Layouts</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>A device layout is hardware-specific keyboard information, which includes the scan code to virtual-key code translations, and virtual-key remapping. For example, a Korean PS/2 keyboard has a different device layout than a Korean matrix keyboard. </P>
+
+<P>Because universal serial bus (USB) human interface device (HID) keyboard drivers convert USB keyboard scan codes to AT scan codes, there is no HID device layout. The HID driver calls <MSHelp:link keywords="wce50lrfMapVirtualKey" TABINDEX="0">MapVirtualKey</MSHelp:link> to retrieve the corresponding virtual-key code for the scan code, which uses the device layout associated with the first PDD. This sequence occurs so that the localization of scan codes to virtual-key codes only needs to exist in the device layout. Then, the HID keyboard driver calls <MSHelp:link keywords="wce50lrfkeybdevent" TABINDEX="0">keybd_event</MSHelp:link> with the virtual-key code and scan code.</P>
+
+<P>Many device layouts can correspond to one input language. For example, a standard United States 101 device layout and a United States-Dvorak device layout both use US English as the input language.</P>
+
+<P>Layout Manager performs the scan code to virtual-key code mapping. The DeviceLayout.h file describes the related data structures. Layout Manager performs the remapping after the scan code to virtual-key code conversion. Microsoft provides a numeric keypad mapping library for static linking to the device layout's remapping routine so you do not need to duplicate the numeric keypad common code. The numeric keypad library performs mappings such as VK_NUMPAD0 to VK_INSERT when NUMLOCK is off. </P>
+
+<P>The following code example shows the device layout data structures.</P>
+
+<PRE class="code">// Remapping function typedefs
+typedef UINT (*PFN_KEYBD_REMAP)(
+  const KEYBD_EVENT *pKbdEvents, 
+  UINT cKbdEvents,
+  KEYBD_EVENT *pRmpKbdEvents,  
+  UINT cMaxRmpKbdEvents 
+);
+
+typedef struct tagDEVICE_LAYOUT {
+  DWORD dwSize;
+  WORD wPddMask; // Matches the device layout with its PDD
+
+  // Scan code to virtual key
+  ScanCodeToVKeyData **rgpscvk;
+  UINT cpscvk;
+
+  // Remapping functions
+  PFN_KEYBD_REMAP pfnRemapKey;
+} DEVICE_LAYOUT, *PDEVICE_LAYOUT;
+
+typedef BOOL (*PFN_DEVICE_LAYOUT_ENTRY)(PDEVICE_LAYOUT pDeviceLayout);</PRE>
+
+<P>The <B>wPddMask</B> members of the PDD data structure and device layout data structure match the device layout to a PDD. The <B>wPddMask</B> member is a bitmask that can correlate one device layout to multiple PDD types. For example, an AT scan code device layout can correlate to both a PS/2 PDD, and to a stub PDD.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50conlayoutmanager.htm">Layout Manager</A> | <A HREF="wce50condevicelayoutdata.htm">Device Layout Data</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

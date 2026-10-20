@@ -1,0 +1,97 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Driver Initialization in Direct3D Mobile</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Driver Initialization in Direct3D Mobile"/>
+<MSHelp:RLTitle Title="Driver Initialization in Direct3D Mobile"/>
+<MSHelp:Keyword Index="A" Term="wce50conDriverInitializationInDirect3DMobile"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Driver"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="False"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="d3dm_ddk_concepts.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="True"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="True"/>
+<MSHelp:Attr Name="PBFeature" Value="Direct3DMobileDriver"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_1037542">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50condriverinitializationindirect3dmobile"></A>Driver Initialization in Direct3D Mobile</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>Display driver initialization is a complex process that involves bus enumeration, the <MSHelp:link keywords="wce50conWorkingwithGraphics" TABINDEX="0">Graphics Device Interface (GDI)</MSHelp:link> and many other Windows CE technologies. Before trying to develop a Microsoft&reg; Direct3D&reg; Mobile driver, you should already have developed a full display driver based for the Windows CE Device Driver Interface (DDI). This driver can use the Graphics Primitive Engine (GPE), but it is not required to do so. For more information, see <A HREF="wce50howhowtodecidewhethertousegpeinadisplaydriver.htm">How to Decide Whether to Use GPE in a Display Driver</A>.</P>
+
+<P>From the Direct3D Mobile middleware's perspective, initializing your driver involves finding its dynamically linked library (DLL), finding the entry point within that DLL, and then determining the driver's function names and the driver's properties.</P>
+
+<H2 class="dtH2">Driver Naming</H2>
+
+<P>Remotely hooked Direct3D Mobile drivers exist in the Graphics, Windowing, and Events Subsystem (GWES) process as a DLL. In most cases, the Direct3D Mobile driver code and all other display driver functions will be linked into the same DLL. However, this is not a requirement.&nbsp;&nbsp;&nbsp;The following list shows the procedure that Direct3D Mobile's GWES code follows to determine the driver's name. 
+
+<OL type="1">
+	<LI>It opens and reads the registry key <B>HKEY_LOCAL_MACHINE\System\GDI\Drivers\D3DMOverride</B> to see if it contains a string value that contains the driver's file name.</li>
+
+	<LI>If the previous step fails, Direct3D Mobile opens and reads the registry key <B>HKEY_LOCAL_MACHINE\System\GDI\Drivers\MainDisplay </B>to see if it contains a string value that contains the driver's file name. This string value identifies the primary display driver for the device and is populated by GWES and the bus enumerator.</li>
+
+	<LI>If the previous step fails, Direct3D Mobile assumes the driver name Ddi.dll.</li>
+</OL>
+
+<H2 class="dtH2">Direct3D Mobile Entry</H2>
+
+<P>After the Direct3D Mobile middleware has determined the name of the driver, it attempts to load the driver DLL into the GWES process space. It then attempts to use <MSHelp:link keywords="wce50lrfGetProcAddress" TABINDEX="0">GetProcAddress</MSHelp:link> to determine the entry point for <A HREF="wce50lrfd3dminitialize.htm">D3DM_Initialize</A>. </P>
+
+<BLOCKQUOTE class="dtBlock">
+<b class="le">Note</b>&nbsp;&nbsp;&nbsp;For <MSHelp:link keywords="wce50lrfIDirect3DMobileRegisterSoftwareDevice" TABINDEX="0">IDirect3DMobile::RegisterSoftwareDevice</MSHelp:link>, the application passes a pointer to the software device's <B>D3DM_Initialize</B> routine directly to the middleware.</BLOCKQUOTE>
+
+<P>The middleware assumes that the initialization has the following prototype shown in the following code example.</P>
+
+<PRE class="code">DWORD D3DM_Initialize(D3DM_INITIALIZE_DATA *);</PRE>
+
+<P>If the middleware is unable to locate the driver DLL or the driver's entry point, Direct3D Mobile will be unusable on the device.</P>
+
+<P>After the entry point is located, the middleware calls the address of a <A HREF="wce50lrfd3dm_initialize_data.htm">D3DM_INITIALIZE_DATA</A> structure. The Direct3D Mobile driver must fill out this structure with function pointers to the driver's interfacing functions. The middleware assumes that all of these pointers are valid function addresses. After the structure has been initialized, the driver should return D3DM_DRIVER_HANDLED. The driver must initialize every member of the structure.</P>
+
+<P>The Direct3D Mobile device driver has its own entry point. It is not dependent on the DirectDraw device driver interface, unlike earlier versions of Direct3D on Windows CE.</P>
+
+<H2 class="dtH2">Gathering Data</H2>
+
+<P>The Direct3D Mobile middleware uses the <A HREF="wce50lrfd3dmgetadapterinfo.htm">D3DM_GetAdapterInfo</A> function to gather information from the device. The <A HREF="wce50lrfd3dm_getadapterinfo_data.htm">D3DM_GETADAPTERINFO_DATA</A> structure defines all of the data that Direct3D Mobile will use from this call. Each time <B>D3DM_GetAdapterInfo</B> is called, the driver must provide as much information possible to the middleware, and it must provide this information as accurately as possible.</P>
+
+<P>The middleware does not cache any device information. Each time it needs a specific piece of information, the middleware makes another call to <B>D3DM_GetAdapterInfo</B>. This allows the driver to continually report the most current information to the middleware.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50condriverinteractionswithdirect3dmobilemiddleware.htm">Driver Interactions with the Direct3D Mobile Middleware</A> | <A HREF="wce50lrfd3dm_drivervalues.htm">D3DM_DRIVER Values</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

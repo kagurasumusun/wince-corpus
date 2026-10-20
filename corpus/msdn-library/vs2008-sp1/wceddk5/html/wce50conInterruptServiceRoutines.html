@@ -1,0 +1,110 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Interrupt Service Routines</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Interrupt Service Routines"/>
+<MSHelp:RLTitle Title="Interrupt Service Routines"/>
+<MSHelp:Keyword Index="A" Term="wce50conInterruptServiceRoutines"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Driver"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="False"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="driverarchitecture.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="False"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+<MSHelp:Attr Name="PBFeature" Value="CoreDriver"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_3017978">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50coninterruptserviceroutines"></A>Interrupt Service Routines</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>An interrupt service routine (ISR) is a software routine that hardware invokes in response to an interrupt. ISRs examine an interrupt and determine how to handle it. ISRs handle the interrupt, and then return a logical interrupt value. If no further handling is required because the device is disabled or data is buffered, the ISR notifies the kernel with a SYSINTR_NOP return value. An ISR must perform very fast to avoid slowing down the operation of the device and the operation of all lower priority ISRs. </P>
+
+<P>Although an ISR might move data from a CPU register or a hardware port into a memory buffer, in general it relies on a dedicated interrupt thread, called the interrupt service thread (IST), to do most of the required processing. If additional processing is required, the ISR returns a logical interrupt value, other than SYSINTR_NOP, to the kernel. It then maps a physical interrupt number to a logical interrupt value. For example, the keyboard might be associated with hardware interrupt 4 on one device and hardware interrupt 15 on another device. The ISR, which is in the OAL, translates the hardware-specific value to the Windows CE standard value of SYSINTR_KEYBOARD. In this example, SYSINTR_KEYBOARD is the return value from the ISR.</P>
+
+<P>When an ISR notifies the kernel of a specific logical interrupt value, the kernel examines an internal table to map the logical interrupt value to an event handle. The kernel wakes the IST by signaling the event. An event is a standard Microsoft&reg; Win32&reg; synchronization object that serves as an alarm clock to wake up a thread when something interesting happens.</P>
+
+<P>The following table compares hardware platforms that support a single ISR with hardware platforms that support multiple ISRs.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=34%>ISR model</TH>
+<TH width=66%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=34%>Single ISR hardware platform</TD>
+<TD width=66%>The name of the ISR is <MSHelp:link keywords="wce50lrfOEMInterruptHandler" TABINDEX="0">OEMInterruptHandler</MSHelp:link>. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=34%>Multiple ISR hardware platform</TD>
+<TD width=66%>The OAL does not provide an <B>OEMInterruptHandler</B> function. Instead, you must register ISRs for each interrupt by calling <MSHelp:link keywords="wce50lrfHookInterrupt" TABINDEX="0">HookInterrupt</MSHelp:link> function in the OAL.</TD>
+</TR>
+</table></div>
+
+<BLOCKQUOTE class="dtBlock">
+<b class="le">Note</b>&nbsp;&nbsp;&nbsp;Other than having to map from an IRQ to an interrupt service routine, handling interrupts with multiple ISRs is identical to handling interrupts when a single ISR is present. One reason not to process data in the ISR is that there is no way to access the user buffer. The user mode IST routine can access this buffer.</BLOCKQUOTE>
+
+<H4 class="dtH4">In This Section</H4>
+
+<DL>
+<DT><A HREF="wce50coninstallableisrswithdrivers.htm">Installable ISRs and Device Drivers</A></DT>
+
+<DD>Describes how installable ISRs interact with device drivers.</dd>
+
+<DT><A HREF="wce50coninstallableisrs.htm">Installable ISRs and the Kernel</A></DT>
+
+<DD>Describes how installable ISRs interact with the kernel.</dd>
+
+<DT><A HREF="wce51coninstallingisrwaitingforinterruptevents.htm">Installing an ISR and Waiting for Interrupt Events</A></DT>
+
+<DD>Describes how to install an ISR and then wait for interrupt events.</dd>
+
+<DT><A HREF="wce51tbstroubleshootingbuildingisr.htm">Troubleshooting: Building an ISR</A></DT>
+
+<DD>Describes how to resolve ISR build errors.</dd>
+</DL>
+
+<H4 class="dtH4">Related Sections</H4>
+
+<DL>
+<DT><MSHelp:link keywords="wce50conDefininganInterruptIdentifier" TABINDEX="0">Defining an Interrupt Identifier</MSHelp:link></DT>
+
+<DD>Describes how to define an interrupt identifier.</dd>
+</DL>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

@@ -1,0 +1,161 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>NDIS_TAPI_SET_CALL_PARAMS</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="NDIS_TAPI_SET_CALL_PARAMS"/>
+<MSHelp:RLTitle Title="NDIS_TAPI_SET_CALL_PARAMS"/>
+<MSHelp:Keyword Index="K" Term="NDIS_TAPI_SET_CALL_PARAMS"/>
+<MSHelp:Keyword Index="A" Term="wce50lrfNDISTAPISETCALLPARAMS"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Driver"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="False"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="apiref"/>
+<MSHelp:Attr Name="Filename" Value="ndis_structures2.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="False"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+<MSHelp:Attr Name="APIName" Value="NDIS_TAPI_SET_CALL_PARAMS"/>
+<MSHelp:Attr Name="PBFeature" Value="NetworkDriver"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_3018902">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50lrfndistapisetcallparams"></A>NDIS_TAPI_SET_CALL_PARAMS</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>The <B>NDIS_TAPI_SET_CALL_PARAMS</B> structure is used by <A HREF="wce50lrfoidtapisetcallparams.htm">OID_TAPI_SET_CALL_PARAMS</A> when it requests the miniport driver to set certain call parameters for an existing call. </P>
+
+<P>Support for this request is mandatory. </P>
+
+<PRE class="syntax"><B>typedef struct _NDIS_TAPI_SET_CALL_PARAMS { </B>
+<B>  ULONG</B> <I>ulRequestID</I><B>;</B> 
+  <B>HDRV_CALL</B> <I>hdCall</I><B>;</B> 
+  <B>ULONG</B> <I>ulBearerMode</I><B>;</B> 
+  <B>ULONG</B> <I>ulMinRate</I><B>;</B> 
+  <B>ULONG</B> <I>ulMaxRate</I><B>;</B> 
+  <B>BOOLEAN</B> <I>bSetLineDialParams</I><B>;</B> 
+  <B>LINE_DIAL_PARAMS</B> <I>LineDialParams</I><B>;</B> 
+<B>} NDIS_TAPI_SET_CALL_PARAMS, *PNDIS_TAPI_SET_CALL_PARAMS; </B></PRE>
+
+<H4 class="dtH4">Members</H4>
+
+<DL>
+<DT><B>ulRequestID </B></DT>
+
+<DD>[in] Reserved. </dd>
+
+<DT><B>hdCall </B></DT>
+
+<DD>[in] Specifies the miniport driver's handle to the call for which the remaining parameters are to be changed. </dd>
+
+<DT><B>ulBearerMode </B></DT>
+
+<DD>[in] Specifies the new bearer mode for the call. This member can have only one of the following LINEBEARERMODE flags set: 
+
+<UL type="disc">
+	<LI>LINEBEARERMODE_VOICE </li>
+
+	<LI>LINEBEARERMODE_SPEECH </li>
+
+	<LI>LINEBEARERMODE_MULTIUSE </li>
+
+	<LI>LINEBEARERMODE_DATA </li>
+
+	<LI>LINEBEARERMODE_ALTSPEECHDATA </li>
+
+	<LI>LINEBEARERMODE_NONCALLSIGNALING </li>
+</UL>
+</dd>
+
+<DT><B>ulMinRate </B></DT>
+
+<DD>[in] Specifies a lower bound for the call's new data rate. The value of this member is not validated by NDISTAPI before the miniport driver is called. 
+
+<P>This value indicates that the caller is willing to accept a new rate as low as this one. 
+</dd>
+
+<DT><B>ulMaxRate </B></DT>
+
+<DD>[in] Specifies an upper bound for the call's new data rate. The value of this member is not validated by NDISTAPI before the miniport driver is called. 
+
+<P>This value indicates the maximum data rate the caller would like. 
+
+
+<P>Equal values for the <B>ulMinRate</B> and <B>ulMaxRate</B> members indicate that the caller requires an exact rate. 
+</dd>
+
+<DT><B>bSetLineDialParams </B></DT>
+
+<DD>[in] Specifies whether the following dialing parameters should be used for the call. If this member is FALSE, the call's current dialing parameters should be used and the next member should be ignored. </dd>
+
+<DT><B>LineDialParams </B></DT>
+
+<DD>[in] This structure specifies the new dial parameters for the call. </dd>
+</DL>
+
+<H4 class="dtH4">Remarks</H4>
+
+<P>The <A HREF="wce50lrfminiportsetinformation.htm">MiniportSetInformation</A> function can return one of the following:
+
+<UL type="disc">
+	<LI>NDIS_STATUS_SUCCESS</li>
+
+	<LI>NDIS_STATUS_PENDING</li>
+
+	<LI>NDIS_STATUS_TAPI_INVALCALLHANDLE</li>
+
+	<LI>NDIS_STATUS_TAPI_INVALCALLSTATE</li>
+
+	<LI>NDIS_STATUS_TAPI_INVALBEARERMODE</li>
+
+	<LI>NDIS_STATUS_TAPI_BEARERMODEUNAVAIL</li>
+
+	<LI>NDIS_STATUS_TAPI_INVALRATE</li>
+
+	<LI>NDIS_STATUS_TAPI_RATEUNAVAIL</li>
+
+	<LI>NDIS_STATUS_TAPI_RESOURCEUNAVAIL </li>
+
+	<LI>NDIS_STATUS_FAILURE</li>
+</UL>
+
+<H4 class="dtH4">Requirements</H4>
+
+<P><B>OS Versions:</B> Windows CE .NET 4.0 and later.<BR>
+<B>Header:</B> Ntddndis.h and Ndistapi.h.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50lrfoidtapisetcallparams.htm">OID_TAPI_SET_CALL_PARAMS</A> | <A HREF="wce50lrfminiportsetinformation.htm">MiniportSetInformation</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

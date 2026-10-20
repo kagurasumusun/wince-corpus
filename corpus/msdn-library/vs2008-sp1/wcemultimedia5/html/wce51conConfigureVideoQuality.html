@@ -1,0 +1,113 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Configure the Video Quality</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Configure the Video Quality"/>
+<MSHelp:RLTitle Title="Configure the Video Quality"/>
+<MSHelp:Keyword Index="A" Term="wce51conConfigureVideoQuality"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Feature"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="directshow_concepts1.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="True"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+<MSHelp:Attr Name="PBFeature" Value="SYSGEN_DSHOW"/>
+<MSHelp:Attr Name="PBOnly" Value="False"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_1066820">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce51conconfigurevideoquality"></A>Configure the Video Quality</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P><B>Applies to:</B> Devices based on Windows Mobile Version 5.0 and later</P>
+
+<P>Video capture devices can support various properties that control the quality of the output, such as brightness, contrast, saturation, and so forth. To set these properties, do the following: 
+
+<OL type="1">
+	<LI>Query the capture filter for the <MSHelp:link keywords="wce51lrfIAMVideoProcAmpInterface" TABINDEX="0">IAMVideoProcAmp interface</MSHelp:link>. </li>
+
+	<LI>For each property that you want to control, call the <MSHelp:link keywords="wce51lrfIAMVideoProcAmpGetRange" TABINDEX="0">IAMVideoProcAmp::GetRange</MSHelp:link> method. This method returns the range of values that the device supports for that property, the default value, and the minimum increments for the settings. The <MSHelp:link keywords="wce51lrfIAMVideoProcAmpGet" TABINDEX="0">IAMVideoProcAmp::Get</MSHelp:link> method returns the current value of the property. The <MSHelp:link keywords="wce51lrfVideoProcAmpProperty" TABINDEX="0">VideoProcAmpProperty</MSHelp:link> enumeration defines flags for each of the properties. </li>
+
+	<LI>To set a property, call the <MSHelp:link keywords="wce51lrfIAMVideoProcAmpSet" TABINDEX="0">IAMVideoProcAmp::Set</MSHelp:link> method. To restore a property to its default value, use <B>IAMVideoProcAmp::GetRange</B> to find the default and pass that value to the <MSHelp:link keywords="wce51lrfIAMVideoProcAmpSet" TABINDEX="0">IAMVideoProcAmp::Set</MSHelp:link> method. You do not have to stop the filter graph when you set the properties. </li>
+</OL>
+
+<P>The following code configures a trackbar control so that it can be used to set the brightness. The range of the trackbar corresponds to the brightness range that the device supports, and position of the trackbar corresponds to the device's initial brightness setting.</P>
+
+<PRE class="code">HWND hTrackbar; // Handle to the trackbar control. 
+// Initialize hTrackbar (not shown).
+
+// Query the capture filter for the IAMVideoProcAmp interface.
+IAMVideoProcAmp *pProcAmp = 0;
+hr = pCap-&gt;QueryInterface(IID_IAMVideoProcAmp, (void**)&amp;pProcAmp);
+if (FAILED(hr))
+{
+    // The device does not support IAMVideoProcAmp, so disable 
+    // the control.
+    EnableWindow(hTrackbar, FALSE);
+}
+else
+{
+    long Min, Max, Step, Default, Flags, Val;
+
+    // Get the range and default value. 
+    hr = m_pProcAmp-&gt;GetRange(VideoProcAmp_Brightness, &amp;Min, &amp;Max, &amp;Step,
+        &amp;Default, &amp;Flags);
+    if (SUCCEEDED(hr))
+    {
+        // Get the current value.
+        hr = m_pProcAmp-&gt;Get(VideoProcAmp_Brightness, &amp;Val, &amp;Flags);
+    }
+    if (SUCCEEDED(hr))
+    {
+        // Set the trackbar range and position.
+        SendMessage(hTrackbar, TBM_SETRANGE, TRUE, MAKELONG(Min, Max));
+        SendMessage(hTrackbar, TBM_SETPOS, TRUE, Val);
+        EnableWindow(hTrackbar, TRUE);
+    }
+    else
+    {
+        // This property is not supported, so disable the control.
+        EnableWindow(hTrackbar, FALSE);
+    }
+}</PRE>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce51convideocapturetasks.htm">Video Capture Tasks</A></P>
+
+<P><BR>
+</P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

@@ -1,0 +1,99 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Compiler Warning (level 1) C4567</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Compiler Warning (level 1) C4567"/>
+<MSHelp:RLTitle Title="Compiler Warning (level 1) C4567"/>
+<MSHelp:Keyword Index="K" Term="Compiler Warning (level 1) C4567"/>
+<MSHelp:Keyword Index="A" Term="wce51lrfCompilerWarningLevel1C4567"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Guide"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="True"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="apiref"/>
+<MSHelp:Attr Name="Filename" Value="err42xx.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="True"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+<MSHelp:Attr Name="APIName" Value="Compiler"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_1073996">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce51lrfcompilerwarninglevel1c4567"></A>Compiler Warning (level 1) C4567</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<PRE class="syntax"><B>'function' : behavior change due to parameter 'parameter': calling convention incompatible with previous compiler versions</B></PRE>
+
+<P>This warning is specific to the C++ compiler for the ARM(R) Architecture. Versions of the compiler older than 14.00 use a different calling convention than 14.00, and newer compilers pass certain function parameters by value. The two calling conventions are not compatible, and linking object files from an older compiler with newer object files can result in unpredictable behavior and crashes if such a parameter is passed by value between the old and new object files.</P>
+
+<P>An object of class, struct, or union type with a user-defined copy constructor is subject to this calling convention change if it is passed by value. Objects passed by reference are not affected.</P>
+
+<P>Use this warning to find places in your code where the calling convention has changed. If objects with user-defined copy constructors are passed by value between old and new object files, the old object files must be recompiled with a compiler version 14.00 or greater.</P>
+
+<P>This warning is off by default. </P>
+
+<P>The following sample generates C4567:</P>
+
+<P class="normal"></P>
+
+<PRE class="code">// C4567.cpp
+// (optional) compile with: -w14567 instead of using #pragma warning
+#pragma warning(default : 4567)
+#pragma inline_depth(0) // disable function inlining
+
+#include &lt;cstdio&gt;
+
+struct S {
+   S () { self = this; }
+   S (S&amp; that) { self = this; }
+   ~S() {  // older compilers will fail this test
+      if ( self != this ) {
+         printf ("s passed incorrectly\n");
+      }
+   }
+   S* self;
+};
+
+void func ( S s ) // C4567 at definition
+{
+   // s destructor is called here
+}
+
+int main()
+{
+   S s;
+   func (s); // C4567 at call site
+   return 0;
+}</PRE>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

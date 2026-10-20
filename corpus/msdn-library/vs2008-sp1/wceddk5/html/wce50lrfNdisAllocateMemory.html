@@ -1,0 +1,142 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>NdisAllocateMemory</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="NdisAllocateMemory"/>
+<MSHelp:RLTitle Title="NdisAllocateMemory"/>
+<MSHelp:Keyword Index="K" Term="NdisAllocateMemory"/>
+<MSHelp:Keyword Index="A" Term="wce50lrfNdisAllocateMemory"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Driver"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="False"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="apiref"/>
+<MSHelp:Attr Name="Filename" Value="ndis_library_functions1.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="False"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+<MSHelp:Attr Name="APIName" Value="NdisAllocateMemory"/>
+<MSHelp:Attr Name="APIType" Value="LibDef"/>
+<MSHelp:Attr Name="APILocation" Value="Ndis.lib"/>
+<MSHelp:Attr Name="PBFeature" Value="NetworkDriver"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_3018414">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50lrfndisallocatememory"></A>NdisAllocateMemory</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>This function allocates resident system-space memory. The memory can be allocated within a specified address limit and, if necessary, can be uncached as well.</P>
+
+<PRE class="syntax"><B>NDIS_STATUS NdisAllocateMemory(</B>
+  <B>PVOID* </B><I>VirtualAddress</I><B>,</B>
+  <B>UINT</B> <I>Length</I><B>,</B>
+  <B>UINT</B> <I>MemoryFlags</I><B>,</B>
+  <B>NDIS_PHYSICAL_ADDRESS</B> <I>HighestAcceptableAddress</I>
+<B>);</B></PRE>
+
+<H4 class="dtH4">Parameters</H4>
+
+<DL>
+<DT><I>VirtualAddress</I></DT>
+
+<DD>[out] Pointer to a caller-supplied variable in which this function returns the base virtual address of the allocated memory or NULL if memory of the specified type is unavailable.</dd>
+
+<DT><I>Length</I></DT>
+
+<DD>[in] Specifies the size, in bytes, to be allocated.</dd>
+
+<DT><I>MemoryFlags</I></DT>
+
+<DD>[in] Specifies 0 or a bitmask designating the types of memory to allocate. The following table shows valid Memory Flag values.
+
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=37%>Value</TH>
+<TH width=63%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=37%>0</TD>
+<TD width=63%>Allocate system-space memory.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=37%>NDIS_MEMORY_CONTIGUOUS</TD>
+<TD width=63%>Not supported. Using this flag will cause <B>NdisAllocateMemory</B> to return NDIS_STATUS_FAILURE. This flag is ignored by <B>NdisAllocateMemory</B> in Windows CE 3.0 and earlier.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=37%>NDIS_MEMORY_NONCACHED</TD>
+<TD width=63%>Allocate noncached memory.</TD>
+</TR>
+</table></div>
+
+</dd>
+
+<DT><I>HighestAcceptableAddress</I></DT>
+
+<DD>[in] Specifies &#0150;1.</dd>
+</DL>
+
+<H4 class="dtH4">Return Values</H4>
+
+<P>NDIS_STATUS_SUCCESS indicates that the caller can use the allocated memory range starting at the value returned at the <I>VirtualAddress</I> parameter. NDIS_STATUS_FAILURE indicates that the attempt to allocate the requested memory failed. This does not necessarily mean that a subsequent call will fail.</P>
+
+<H4 class="dtH4">Remarks</H4>
+
+<P>If the NDIS_MEMORY_NONCACHED flag is specified, Windows CE NDIS uses the <MSHelp:link keywords="wce50lrfVirtualAlloc" TABINDEX="0">VirtualAlloc</MSHelp:link> function to allocate the memory; otherwise, it uses the <MSHelp:link keywords="wce50lrfLocalAlloc" TABINDEX="0">LocalAlloc</MSHelp:link> function.</P>
+
+<P>Any NDIS driver might call this function with the <I>MemoryFlags</I> set to 0. For example, NDIS drivers that export a set of NDIS upper-edge (miniport) functions can call this function to allocate a context area in which the driver maintains per-NIC or per-virtual-NIC run-time state information and pass the pointer returned at <I>VirtualAddress</I> to the <A HREF="wce50lrfndismsetattributes.htm">NdisMSetAttributes</A> or the <A HREF="wce50lrfndismsetattributesex.htm">NdisMSetAttributesEx</A> function. NDIS drivers that export a set of NDIS lower-edge (protocol) functions can also call this function whenever such a driver needs to allocate buffer space.</P>
+
+<P>Only NIC miniports set the <I>MemoryFlags</I> with either or both of the flags when they make initialization-time calls to this function. During initialization, miniport drivers allocate these types of memory to be shared with their NICs.</P>
+
+<P>If such a miniport specifies physically contiguous memory in a call to this function, the virtual memory allocation maps to a single physically contiguous region. If a miniport specifies noncached memory, the allocated virtual range is not cached. An NIC driver can access noncached memory without flushing cache buffers during DMA operations.</P>
+
+<P>Whatever the value of the input <I>MemoryFlags</I>, a successful caller to this function uses a range of virtual addresses to access the allocated memory. Depending on the size of the allocation and on the type of memory requested, one or more physical memory ranges (pages) back this single virtual range.</P>
+
+<P>An NIC driver should never request more noncached memory than it needs.</P>
+
+<P>If an initialization-time call fails, an NIC driver can attempt to allocate one or more smaller blocks of noncached memory, rather than failing to initialize if it cannot allocate a large block.</P>
+
+<H4 class="dtH4">Requirements</H4>
+
+<P><B>OS Versions:</B> Windows CE .NET 4.0 and later.<BR>
+<B>Header:</B> Ndis.h.<BR>
+<B>Link Library:</B> Ndis.lib</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><MSHelp:link keywords="wce50lrfLocalAlloc" TABINDEX="0">LocalAlloc</MSHelp:link> | <A HREF="wce50lrfndisfreememory.htm">NdisFreeMemory</A> | <A HREF="wce50lrfndismsetattributes.htm">NdisMSetAttributes</A> | <A HREF="wce50lrfndismsetattributesex.htm">NdisMSetAttributesEx</A> | <MSHelp:link keywords="wce50lrfVirtualAlloc" TABINDEX="0">VirtualAlloc</MSHelp:link></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

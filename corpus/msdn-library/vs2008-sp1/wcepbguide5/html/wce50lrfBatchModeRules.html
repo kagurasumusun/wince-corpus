@@ -1,0 +1,131 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Batch-Mode Rules</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Batch-Mode Rules"/>
+<MSHelp:RLTitle Title="Batch-Mode Rules"/>
+<MSHelp:Keyword Index="A" Term="wce50lrfBatchModeRules"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Guide"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="True"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="nmake.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="True"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_3012992">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50lrfbatchmoderules"></A>Batch-Mode Rules</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>Batch-mode inference rules provide only one invocation of the inference rule when <I>n</I> commands go through this inference rule. </P>
+
+<P>Without batch-mode inference rules, it requires <I>n</I> commands to be invoked. The <I>n</I> is the number of dependents that trigger the inference rule.</P>
+
+<P>Any .mak files that contain batch-mode inference rules must use Nmake.exe version 1.62 or later. </P>
+
+<P>To check the Nmake.exe version, run the <B>_NMAKE_VER</B> macro that is available with Nmake.exe version 1.62 or later. This macro returns an integer representing the Nmake.exe version. For example, the macro returns 162 for Nmake.exe version 1.62.</P>
+
+<P>The following example shows the syntax for a batch-mode inference rule.</P>
+
+<PRE class="code">{<I>FromPath</I>}<B>.</B><I>FromExt</I>{<I>ToPath</I>}<B>.</B><I>ToExt</I><B>::</B>
+<I>commands</I></PRE>
+
+<P>The only syntactical difference from the standard inference rule is that the batch-mode inference rule is terminated with a double colon (<B>::</B>).</P>
+
+<P>The tool being invoked must be able to handle multiple files. </P>
+
+<P>The batch-mode inference rule must use <B>$&lt;</B> as the macro to access dependent files.</P>
+
+<P>The batch-mode inference rules can speed up the build process. It is faster to supply files to the compiler in batch mode, because the compiler driver is invoked only once. For example, the C and C++ compiler performs better when handling a set of files because it can remain in memory during the process.</P>
+
+<P>The following code example shows how to use batch-mode inference rules.</P>
+
+<PRE class="code">#
+# sample makefile to illustrate batch-mode inference rules
+#
+O = .
+S = .
+Objs = $O/foo1.obj $O/foo2.obj $O/foo2.obj $O/foo3.obj $O/foo4.obj
+CFLAGS = -nologo
+
+all : $(Objs)
+
+!ifdef NOBatch
+{$S}.cpp{$O}.obj:
+!else
+{$S}.cpp{$O}.obj::
+!endif
+   $(CC) $(CFLAGS) -Fd$O\ -c $&lt;
+
+$(Objs) :
+
+#end of makefile</PRE>
+
+<P>NMAKE produces the following output without batch-mode inference rules:</P>
+
+<PRE class="code">E:\tmp&gt; nmake -f test.mak -a NOBatch=1
+
+Microsoft (R) Program Maintenance Utility   Version 1.62.6200
+Copyright (C) Microsoft Corp 1988-1996. All rights reserved.
+
+        cl -nologo -Fd.\ -c .\foo1.cpp
+foo1.cpp
+        cl -nologo -Fd.\ -c .\foo2.cpp
+foo2.cpp
+        cl -nologo -Fd.\ -c .\foo3.cpp
+foo3.cpp
+        cl -nologo -Fd.\ -c .\foo4.cpp
+foo4.cpp</PRE>
+
+<P>Nmake.exe produces the result shown in the following code example with the batch-mode inference rules.</P>
+
+<PRE class="code">E:\tmp&gt; nmake -f test.mak -a
+
+Microsoft &reg; Program Maintenance Utility   Version 1.62.6200
+Copyright &copy; Microsoft Corp 1988-1996. All rights reserved.
+
+        Cl -nologo -Fd.\ -c .\foo1.cpp .\foo2.cpp .\foo3.cpp .\foo4.cpp
+foo1.cpp
+foo2.cpp
+foo3.cpp
+foo4.cpp
+Generating Code...</PRE>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50lrftargets.htm">Targets</A> | <A HREF="wce50lrfdependents.htm">Dependents</A> | <A HREF="wce50coninferencerules.htm">Inference Rules</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

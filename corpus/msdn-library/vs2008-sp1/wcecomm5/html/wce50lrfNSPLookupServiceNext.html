@@ -1,0 +1,250 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>NSPLookupServiceNext</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="NSPLookupServiceNext"/>
+<MSHelp:RLTitle Title="NSPLookupServiceNext"/>
+<MSHelp:Keyword Index="K" Term="NSPLookupServiceNext"/>
+<MSHelp:Keyword Index="A" Term="wce50lrfNSPLookupServiceNext"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Feature"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="apiref"/>
+<MSHelp:Attr Name="Filename" Value="winsock2spi_functions.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="False"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+<MSHelp:Attr Name="APIName" Value="NSPLookupServiceNext"/>
+<MSHelp:Attr Name="APIType" Value="LibDef"/>
+<MSHelp:Attr Name="APILocation" Value="Ws2.lib"/>
+<MSHelp:Attr Name="PBFeature" Value="SYSGEN_WINSOCK"/>
+<MSHelp:Attr Name="PBOnly" Value="False"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_3008258">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50lrfnsplookupservicenext"></A>NSPLookupServiceNext</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>This function is called after obtaining a handle from a previous call to <A HREF="wce50lrfnsplookupservicebegin.htm">NSPLookupServiceBegin</A> in order to retrieve the requested service information.</P>
+
+<P>The provider will pass back a <A HREF="wce50lrfwsaquerysetwindowssockets.htm">WSAQUERYSET</A> structure in the <I>lpqsResults </I>buffer. The client should continue to call this function until it returns WSA_E_NOMORE, indicating that all the <B>WSAQUERYSET</B> have been returned.</P>
+
+<PRE class="syntax"><B>int NSPAPI WSALookupServiceNext(</B>
+  <B>HANDLE</B><I> hLookup</I><B>,</B>
+  <B>DWORD </B><I>dwControlFlags</I><B>,</B>
+  <B>LPDWORD</B><I> lpdwBufferLength</I><B>,</B>
+  <B>LPWSAQUERYSET</B><I> lpqsResults</I> 
+<B>);</B></PRE>
+
+<H4 class="dtH4">Parameters</H4>
+
+<DL>
+<DT><I>hLookup</I></DT>
+
+<DD>[in] Handle returned from the previous call to <A HREF="wce50lrfwsalookupservicebeginwindowssockets.htm">WSALookupServiceBegin</A>.</dd>
+
+<DT><I>dwControlFlags</I></DT>
+
+<DD>[in] Flags to control the next operation. Currently only LUP_FLUSHPREVIOUS is defined as a means to cope with a result set that is too large. If an application does not supply a large enough buffer, setting LUP_FLUSHPREVIOUS instructs the provider to discard the last result set, which was too large, and move to the next set for this call.</dd>
+
+<DT><I>lpdwBufferLength</I></DT>
+
+<DD>[in, out] On input, the number of bytes contained in the buffer pointed to by <I>lpqsResults</I>. On output, if the function fails and the error is WSAEFAULT, then it contains the minimum number of bytes to pass for the <I>lpqsResults</I> to retrieve the record.</dd>
+
+<DT><I>lpqsResults</I></DT>
+
+<DD>[out] Pointer to a block of memory that will contain one result set in a <A HREF="wce50lrfwsaquerysetwindowssockets.htm">WSAQUERYSET</A> structure on return.</dd>
+</DL>
+
+<H4 class="dtH4">Return Values</H4>
+
+<P>The function should return NO_ERROR (zero) if the routine succeeds. It should return SOCKET_ERROR (&#0150;1) if the routine fails and it must set the appropriate error code using <MSHelp:link keywords="wce50lrfSetLastError" TABINDEX="0">SetLastError</MSHelp:link>.</P>
+
+<P>The following table shows the possible error codes.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=45%>Error value</TH>
+<TH width=55%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=45%>WSA_E_NO_MORE</TD>
+<TD width=55%>There is no more data available.
+<P>In Winsock, conflicting error codes are defined for WSAENOMORE (10102) and WSA_E_NO_MORE (10110). The error code WSAENOMORE will be removed in a future version and only WSA_E_NO_MORE will remain. Name space providers should switch to using the WSA_E_NO_MORE error code as soon as possible to maintain compatibility with the widest possible range of applications.</P>
+</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=45%>WSA_E_CANCELLED</TD>
+<TD width=55%>Call to <A HREF="wce50lrfnsplookupserviceend.htm">NSPLookupServiceEnd</A> was made while this call was still processing. The call has been canceled. The data in the <I>lpqsResults </I>buffer is undefined.
+<P>In Winsock, conflicting error codes are defined for WSAECANCELLED (10103) and WSA_E_CANCELLED (10111).The error code WSAECANCELLED will be removed in a future version and only WSA_E_CANCELLED will remain. Name space providers should switch to using the WSA_E_CANCELLED error code as soon as possible to maintain compatibility with the widest possible range of applications.</P>
+</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=45%>WSAEFAULT</TD>
+<TD width=55%>The <I>lpqsResults</I> buffer was too small to contain a <A HREF="wce50lrfwsaquerysetwindowssockets.htm">WSAQUERYSET</A> set.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=45%>WSAEINVAL</TD>
+<TD width=55%>One or more parameters were invalid or missing for this provider. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=45%>WSA_INVALID_HANDLE</TD>
+<TD width=55%>Specified lookup handle is invalid.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=45%>WSANO_DATA</TD>
+<TD width=55%>The name was found in the database but no data matching the given restrictions was located.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=45%>WSASERVICE_NOT_FOUND</TD>
+<TD width=55%>No such service is known. The service cannot be found in the specified name space.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=45%>WSA_NOT_ENOUGH_MEMORY</TD>
+<TD width=55%>Not enough free memory available to perform this operation.</TD>
+</TR>
+</table></div>
+
+<H4 class="dtH4">Remarks</H4>
+
+<P>The <I>dwControlFlags</I> specified in this function and the ones specified at the time of <A HREF="wce50lrfnsplookupservicebegin.htm">NSPLookupServiceBegin</A> are treated as "restrictions" for the purpose of combination. The restrictions are combined between the ones at <B>NSPLookupServiceBegin</B> time and the ones at <B>NSPLookupServiceNext</B> time. Therefore, the flags at <B>NSPLookupServiceNext</B> can never increase the amount of data returned beyond what was requested at <B>NSPLookupServiceBegin</B>, although it is <I>not </I>an error to specify more or less flags. The flags specified at a given <B>NSPLookupServiceNext</B> apply only to that call.</P>
+
+<P>The <I>dwControlFlags</I> LUP_FLUSHPREVIOUS and LUP_RES_SERVICE are exceptions to the combined restrictions rule because they are behavior flags instead of restriction flags. If either of these flags is used in <B>NSPLookupServiceNext</B>, they have their defined effect regardless of the setting of the same flags at <B>NSPLookupServiceBegin</B>.</P>
+
+<P>For example, if LUP_RETURN_VERSION is specified at <B>NSPLookupServiceBegin</B>, the service provider retrieves records including the version. If LUP_RETURN_VERSION is <I>not </I>specified at <B>NSPLookupServiceNext</B>, the returned information does not include the version, even though it was available. No error is generated.</P>
+
+<P>Also for example, if LUP_RETURN_BLOB is <I>not </I>specified at <B>NSPLookupServiceBegin</B> but is specified at <B>NSPLookupServiceNext</B>, the returned information does not include the private data. No error is generated.</P>
+
+<P>The following table describes how the query results are represented in the <B>WSAQUERYSET</B> structure.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=45%>WSAQUERYSET member name</TH>
+<TH width=55%>Result interpretation</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=45%><B>dwSize</B></TD>
+<TD width=55%>Will be set to sizeof(<B>WSAQUERYSET</B>). This is used as a versioning mechanism.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=45%><B>dwOuputFlags </B></TD>
+<TD width=55%>RESULT_IS_ALIAS flag indicates this is an alias result.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=45%><B>lpszServiceInstanceName</B></TD>
+<TD width=55%>References the string that contains the service name.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=45%><B>lpServiceClassId</B></TD>
+<TD width=55%>GUID corresponding to the service class.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=45%><B>lpVersion</B></TD>
+<TD width=55%>References version number of the particular service instance.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=45%><B>lpszComment</B></TD>
+<TD width=55%>Optional comment string supplied by service instance.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=45%><B>dwNameSpace</B></TD>
+<TD width=55%>Name space in which the service instance was found.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=45%><B>lpNSProviderId</B></TD>
+<TD width=55%>Identifies the specific name-space provider that supplied this query result.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=45%><B>lpszContext</B></TD>
+<TD width=55%>Specifies the context point in a hierarchical name space at which the service is located.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=45%><B>dwNumberOfProtocols</B></TD>
+<TD width=55%>Undefined for results.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=45%><B>lpafpProtocols</B></TD>
+<TD width=55%>Undefined for results, all needed protocol information is in the <A HREF="wce50lrfcsaddrinfo.htm">CSADDR_INFO</A> structures.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=45%><B>lpszQueryString</B></TD>
+<TD width=55%>When <I>dwControlFlags</I> includes LUP_RETURN_QUERY_STRING, this member returns the unparsed remainder of the <I>lpszServiceInstanceName</I> specified in the original query. For example, in a name space that identifies services by hierarchical names that specify a host name and a file path within that host, the address returned might be the host address and the unparsed remainder might be the file path. If the <I>lpszServiceInstanceName</I> is fully parsed and LUP_RETURN_QUERY_STRING is used, this member is NULL or points to a zero-length string.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=45%><B>dwNumberOfCsAddrs</B></TD>
+<TD width=55%>Indicates the number of elements in the array of <B>CSADDR_INFO</B> structures.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=45%><B>lpcsaBuffer</B></TD>
+<TD width=55%>Pointer to an array of <B>CSADDR_INFO</B> structures, with one complete transport address contained within each element.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=45%><B>lpBlob</B></TD>
+<TD width=55%>(Optional) Pointer to a provider-specific entity.</TD>
+</TR>
+</table></div>
+
+<H4 class="dtH4">Requirements</H4>
+
+<P><B>OS Versions:</B> Windows CE .NET 4.0 and later.<BR>
+<B>Header:</B> Ws2spi.h.<BR>
+<B>Link Library:</B> Ws2.lib.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50lrfwsaquerysetwindowssockets.htm">WSAQUERYSET</A> | <A HREF="wce50lrfnsplookupservicebegin.htm">NSPLookupServiceBegin</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

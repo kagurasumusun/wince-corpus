@@ -1,0 +1,111 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>USB Function Controller Driver MDD</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="USB Function Controller Driver MDD"/>
+<MSHelp:RLTitle Title="USB Function Controller Driver MDD"/>
+<MSHelp:Keyword Index="A" Term="wce50conUSBFunctionControllerDriverMDD"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Driver"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="False"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="usbfunction_guide.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="False"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+<MSHelp:Attr Name="PBFeature" Value="USBFunctionDriver"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_1035463">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50conusbfunctioncontrollerdrivermdd"></A>USB Function Controller Driver MDD</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>The model device driver (MDD) exposes a stream driver interface. The platform dependent driver (PDD) returns a PDD context variable to the MDD that is passed back to the PDD in all <B>pfn<I>XXX</I></B> calls to enable multiple function controllers on the same host. The <B>UFN_IOControl</B> function in the MDD passes all unhandled IOCTLs, including power IOCTLs, to the <B>pfnIOControl</B> in the PDD. To simplify the PDD, the MDD must guarantee that all parameters passed to the PDD are valid. Then, the PDD must use <B>DEBUGCHK</B> to check the parameters. For more information on <B>DEBUGCHK</B>, see <MSHelp:link keywords="wce50conDebuggingMacros" TABINDEX="0">Debugging Macros</MSHelp:link>.</P>
+
+<P>The following table shows the requirements of the USB function controller MDD.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=50%>Requirement</TH>
+<TH width=50%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>Support the registration of a USB descriptor set.</TD>
+<TD width=50%>Provides a mounted function driver with the ability to assign a USB descriptor set to the underlying USB function controller. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>Provide pipe access and maintain pipe-to-endpoint mapping.</TD>
+<TD width=50%>Specifies an endpoint address that is specified with the <B>bEndpointAddress</B> field of an endpoint descriptor. This endpoint descriptor does not strictly correspond to a physical endpoint. The MDD must provide a function driver with the ability to read data from and write data to a logical pipe. For more information, see the <I>Universal Serial Bus Specification</I>.</TD>
+</TR>
+</table></div>
+
+<H2 class="dtH2">Device Registration</H2>
+
+<P>USB function clients have pre-populated descriptors that they pass to the MDD through a call to <B>lpRegisterDevice</B>. These descriptors contain the maximum desired packet sizes for their endpoint packets. The MDD and PDD coordinate which endpoint sizes to use under the maximum constraints specified by the client. The MDD and PDD can use a smaller value than supplied, but not a larger value. The client is responsible for opening pipes to the endpoints using the adjusted packet lengths. The function <B>lpRegisterDevice</B> returns FALSE if there is no way for the PDD to support the client. This could be because there are not enough available endpoints or because there is no way to satisfy the maximum packet size constraint.</P>
+
+<P>If the packet sizes that return from <B>lpRegisterDevice</B> are not acceptable to the client, the client should fail gracefully.</P>
+
+<P>To handle this registration process, the client supplies the maximum possible endpoint sizes for the bus speed. For example, with USB 1.1, the bulk endpoint maximum is 64 bytes, but for USB 2.0 the bulk endpoint maximum is 512 bytes. This allows flexibility within the MDD and PDD when assigning values.</P>
+
+<H2 class="dtH2">Handling Enumeration</H2>
+
+<P>For USB 1.1 and USB 2.0, the client driver passes all of its descriptors to the MDD and PDD. The MDD handles the standard enumeration requests, unless the PDD handles them first. When enumeration completes, the MDD or PDD passes an enumeration complete event to the client. Then, the client initializes the endpoints appropriately.</P>
+
+<P>The following list shows the setup requests that the MDD is required to handle:
+
+<UL type="disc">
+	<LI>Get device descriptor</li>
+
+	<LI>Get device qualifier</li>
+
+	<LI>Get high speed configuration descriptor, if the MDD is on a high speed bus</li>
+
+	<LI>Get Full Speed Configuration Descriptor, if the MDD is on a full speed bus</li>
+
+	<LI>Get string descriptor</li>
+
+	<LI>Set address</li>
+</UL>
+
+<P>The function controller or the PDD might intercept and process setup requests before they get to the MDD. If that occurs, the PDD should notify the MDD of any of setup requests before the MDD is required to process a transfer.</P>
+
+<P>For more information about setup requests, see the <I>Universal Serial Bus Specification</I>.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50lrfusbfunctioncontrollerdriverreference.htm">USB Function Controller Driver Reference</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

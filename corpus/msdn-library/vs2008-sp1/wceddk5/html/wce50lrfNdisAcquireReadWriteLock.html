@@ -1,0 +1,106 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>NdisAcquireReadWriteLock</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="NdisAcquireReadWriteLock"/>
+<MSHelp:RLTitle Title="NdisAcquireReadWriteLock"/>
+<MSHelp:Keyword Index="K" Term="NdisAcquireReadWriteLock"/>
+<MSHelp:Keyword Index="A" Term="wce50lrfNdisAcquireReadWriteLock"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Driver"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="False"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="apiref"/>
+<MSHelp:Attr Name="Filename" Value="ndis_library_functions1.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="False"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+<MSHelp:Attr Name="APIName" Value="NdisAcquireReadWriteLock"/>
+<MSHelp:Attr Name="APIType" Value="LibDef"/>
+<MSHelp:Attr Name="APILocation" Value="Ndis.lib"/>
+<MSHelp:Attr Name="PBFeature" Value="NetworkDriver"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_3018494">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50lrfndisacquirereadwritelock"></A>NdisAcquireReadWriteLock</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>This function acquires a lock that the caller uses for either write or read access to the resources that are shared among driver threads.</P>
+
+<PRE class="syntax"><B>VOID NdisAcquireReadWriteLock(</B>
+  <B>PNDIS_RW_LOCK</B> <I>Lock</I><B>,</B>
+  <B>BOOLEAN</B> <I>fWrite</I><B>,</B>
+  <B>PLOCK_STATE</B> <I>LockState</I>
+<B>);</B></PRE>
+
+<H4 class="dtH4">Parameters</H4>
+
+<DL>
+<DT><I>Lock</I></DT>
+
+<DD>[in] Points to an opaque variable that represents a lock. The caller can use this lock to access shared resources.</dd>
+
+<DT><I>fWrite</I></DT>
+
+<DD>[in] Specifies a Boolean value. If the value is TRUE, this function is provided with write access to shared resources. If the value is FALSE, this function is provided with read access.</dd>
+
+<DT><I>LockState</I></DT>
+
+<DD>[in] Points to an opaque variable that tracks the state of the lock. This variable exists in the interval between the time the caller acquires and releases the lock. The caller must use a different variable of type <B>LOCK_STATE</B> for each attempt it makes to acquire the lock from the same non-ISR driver thread.</dd>
+</DL>
+
+<H4 class="dtH4">Return Values</H4>
+
+<P>None.</P>
+
+<H4 class="dtH4">Remarks</H4>
+
+<P>The driver must initialize a variable of type <B>NDIS_RW_LOCK</B> using <A HREF="wce50lrfndisinitializereadwritelock.htm">NdisInitializeReadWriteLock</A> before the driver calls any other <B>Ndis<I>XXX</I>ReadWriteLock</B> function. The driver must provide resident storage for the locks it uses.</P>
+
+<P>After acquiring a lock by using <B>NdisAcquireReadWriteLock</B>, the caller must release that lock by calling <A HREF="wce50lrfndisreleasereadwritelock.htm">NdisReleaseReadWriteLock</A>. To decrement the reference count of the lock, a driver must call <B>NdisReleaseReadWriteLock</B> once for each call to <B>NdisAcquireReadWriteLock</B>.</P>
+
+<P>To modify resources shared among driver threads, a driver thread must acquire a write lock. To simply monitor those resources, a driver thread must acquire a read-only lock. Read access does not require interlocked operations or contention for spin locks. Using read-only access helps to maintain good operating system and driver performance.</P>
+
+<P>A driver thread should never hold a write lock for more than 25 microseconds. Holding a write lock for a prolonged period degrades both operating system and driver performance.</P>
+
+<H4 class="dtH4">Requirements</H4>
+
+<P><B>OS Versions:</B> Windows CE .NET 4.0 and later.<BR>
+<B>Header:</B> Ndis.h.<BR>
+<B>Link Library:</B> Ndis.lib</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50lrfndisinitializereadwritelock.htm">NdisInitializeReadWriteLock</A> | <A HREF="wce50lrfndismsynchronizewithinterrupt.htm">NdisMSynchronizeWithInterrupt</A> | <A HREF="wce50lrfndisreleasereadwritelock.htm">NdisReleaseReadWriteLock</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

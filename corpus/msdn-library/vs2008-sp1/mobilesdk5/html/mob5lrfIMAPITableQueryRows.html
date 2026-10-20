@@ -1,0 +1,141 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>IMAPITable::QueryRows</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="IMAPITable::QueryRows"/>
+<MSHelp:RLTitle Title="IMAPITable::QueryRows"/>
+<MSHelp:Keyword Index="K" Term="IMAPITable,QueryRows"/>
+<MSHelp:Keyword Index="A" Term="mob5lrfIMAPITableQueryRows"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Application"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbsmartphone"/>
+<MSHelp:Attr Name="Product" Value="kbPocketPC"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="Technology" Value="kbPocketPC"/>
+<MSHelp:Attr Name="Technology" Value="kbSmartphone"/>
+<MSHelp:Attr Name="TopicType" Value="apiref"/>
+<MSHelp:Attr Name="Filename" Value="CE_MAPI_iFace_magneto.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="False"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_1064720">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Windows Mobile Version 5.0 SDK<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="mob5lrfimapitablequeryrows"></A>IMAPITable::QueryRows</H1>
+<!--Feedback Link Top Start-->
+<P CLASS="feedback"><font size="1"><a href="mailto:medfdbk&#64;microsoft.com?subject=Product: Windows Mobile | Version: 5.0 | Release: SDK | Title: IMAPITable::QueryRows | Filename: mob5lrfimapitablequeryrows.htm | Built on: Wednesday, September 14, 2005">Send Feedback</a> on this topic to the authors</font></p>
+<!--Feedback Link Top End-->
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>The <B>QueryRows</B> method returns one or more rows from a table, beginning at the current cursor position.</P>
+
+<H4 class="dtH4">Syntax</H4>
+
+<PRE class="syntax"><B>HRESULT QueryRows (</B>
+<B>  LONG </B><I>lRowCount</I><B>,</B>
+<B>  ULONG </B><I>ulFlags</I><B>,</B>
+<B>  LPSRowSet FAR * </B><I>lppRows</I>
+<B>);</B></PRE>
+
+<H4 class="dtH4">Parameters</H4>
+
+<DL>
+<DT><I>lRowCount</I></DT>
+
+<DD>[in] The number of rows you want; must be greater than zero (scrolling backward through a table is not supported). A maximum of 10 rows is returned per call.</dd>
+
+<DT><I>ulFlags</I></DT>
+
+<DD>[in] Not used; must be zero.</dd>
+
+<DT><I>lppRows</I></DT>
+
+<DD>[out] Reference to an <A HREF="mob5lrfsrowset.htm">SRowSet</A> structure holding the table rows.</dd>
+</DL>
+
+<H4 class="dtH4">Return Values</H4>
+
+<P>This method returns the standard values <B>E_INVALIDARG</B>, <B>E_OUTOFMEMORY</B>, <B>E_UNEXPECTED</B>, and <B>E_FAIL</B>, as well as the following:
+
+<DL>
+<DT><B>S_OK</B></DT>
+
+<DD>Indicates success.</dd>
+
+<DT><B>MAPI_E_BUSY</B></DT>
+
+<DD>Another operation is in progress that prevents the row retrieval operation from starting. Either the operation in progress should be allowed to complete or it should be stopped.</dd>
+</DL>
+
+<H4 class="dtH4">Remarks</H4>
+
+<P>The <B>cRows </B>member in the <A HREF="mob5lrfsrowset.htm">SRowSet</A> structure pointed to by the <I>lppRows</I> parameter indicates the number of rows returned. If zero rows are returned, the cursor was already positioned at the end of the table. </P>
+
+<P>The number of columns and their ordering are the same for each row. If a property does not exist for a row or there is an error reading a property, the <A HREF="mob5lrfspropvalue.htm">SPropValue</A> structure for the property in the row contains the following values:
+
+<UL type="disc">
+	<LI><B>PT_ERROR</B> for the property type in the <B>ulPropTag</B> member.</li>
+
+	<LI><B>MAPI_E_NOT_FOUND</B> for the <B>Value</B> member.</li>
+</UL>
+
+<P>Memory used for the <A HREF="mob5lrfspropvalue.htm">SPropValue</A> structures in the row set pointed to by the <I>lppRows</I> parameter must be separately allocated and freed for each row. Use <A HREF="mob5lrffreeprows.htm">FreeProws</A> to free the property value structures and to free the row set. When a call to <B>QueryRows </B>returns zero, however, indicating the end of the table, only the <A HREF="mob5lrfsrowset.htm">SRowSet</A> structure needs to be freed. </P>
+
+<P>The rows that are returned and the order in which they are returned depend on whether or not successful calls have been made to <A HREF="mob5lrfimapitablerestrict.htm">IMAPITable::Restrict</A> and <A HREF="mob5lrfimapitablesorttable.htm">IMAPITable::SortTable</A>. <B>Restrict </B>filters rows from the view, causing <B>QueryRows</B> to return only the rows that match the criteria specified in the restriction. <B>SortTable</B> establishes a standardized or categorized sort order that affects the sequence of rows returned by <B>QueryRows</B>. The returned rows are in the order specified in the <A HREF="mob5lrfssortorderset.htm">SSortOrderSet</A> structure passed to <B>SortTable</B>.</P>
+
+<P>The columns returned for each row and the order in which they are returned depend on whether or not a successful call has been made to <A HREF="mob5lrfimapitablesetcolumns.htm">IMAPITable::SetColumns</A>. <B>SetColumns </B>establishes a column set, specifying the properties to be included in columns in the table and the order in which they should be included. If a <B>SetColumns</B> call has been made, the particular columns in each row and the order of those columns match the column set specified in the call. If no <B>SetColumns</B> call has been made, the table returns its default column set. </P>
+
+<P>When the column set established in a call to <A HREF="mob5lrfimapitablesetcolumns.htm">SetColumns</A> includes columns set to <B>PR_NULL</B>, the <A HREF="mob5lrfspropvalue.htm">SPropValue</A> array within the row set returned in <I>lppRows </I>contains empty slots. </P>
+
+<P>If none of these calls has been made, <B>QueryRows</B> returns all of the requested rows in the table. Each row contains the default column set in default order. </P>
+
+<P>Usually, you receive as many rows as you specified in the <I>lRowCount</I> parameter. However, when memory or implementation limits (10 rows maximum are returned) are an issue or when the operation reaches the end of the table prematurely, <B>QueryRows </B>returns fewer rows than requested. </P>
+
+<P>If <B>QueryRows</B> returns <B>MAPI_E_BUSY</B>, retry the call to <B>QueryRows</B> when the asynchronous operation is complete. </P>
+
+<P>When calling <B>QueryRows</B>, the timing of asynchronous notifications can potentially cause the row set that you get back from <B>QueryRows</B> not to accurately represent the underlying data. For example, a call to <B>QueryRows</B> to a folder's contents table following the deletion of a message but prior to the receipt of the corresponding notification causes the deleted row to be returned in the row set. Always wait for a notification to arrive before updating the user's view of the data. </P>
+
+<H4 class="dtH4">Requirements </H4>
+
+<P><B>Pocket&nbsp;PC:</B> Pocket&nbsp;PC&nbsp;2002 and later<BR>
+<B>Smartphone:</B> Smartphone&nbsp;2002 and later<BR>
+<B>OS&nbsp;Versions:</B> Windows&nbsp;CE&nbsp;3.0 and later<BR>
+<B>Header:</B> mapidefs.h<BR>
+<B>Library:</B> cemapi.lib</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="mob5lrfadrentry.htm">ADRENTRY</A> | <A HREF="mob5lrffreeprows.htm">FreeProws</A> | <A HREF="mob5lrfimapipropgetprops.htm">IMAPIProp::GetProps</A> | <A HREF="mob5lrfimapitable.htm">IMAPITable</A> | <A HREF="mob5lrfimapitablesetcolumns.htm">IMAPITable::SetColumns</A> | <A HREF="mob5lrfmapifreebuffer.htm">MAPIFreeBuffer</A> | <A HREF="mob5orimessaging.htm">Messaging</A> | <A HREF="mob5lrfsrow.htm">SRow</A> | <A HREF="mob5lrfsrowset.htm">SRowSet</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Feedback Link Bottom Start-->
+<p><font size="1"><a href="mailto:medfdbk&#64;microsoft.com?subject=Product: Windows Mobile | Version: 5.0 | Release: SDK | Title: IMAPITable::QueryRows | Filename: mob5lrfimapitablequeryrows.htm | Built on: Wednesday, September 14, 2005">Send Feedback</a> on this topic to the authors</font></p>
+<!--Feedback Link Bottom End-->
+<!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="mob5conCopyrightInformationForMagneto" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link></font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

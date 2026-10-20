@@ -1,0 +1,87 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Authenticating 802.1x</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Authenticating 802.1x"/>
+<MSHelp:RLTitle Title="Authenticating 802.1x"/>
+<MSHelp:Keyword Index="A" Term="wce50conAuthenticating8021x"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Driver"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="False"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="8021x_guide.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="False"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+<MSHelp:Attr Name="PBFeature" Value="NetworkDriver"/>
+<MSHelp:Attr Name="Technology" Value="Security"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_3017135">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50conauthenticating8021x"></A>Authenticating 802.1x</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>Following authentication, the 802.1x protocol should be configured to request the supplicant to periodically re-authenticate. </P>
+
+<P class="labelproc"><B>To authenticate 802.1x</B>
+
+<OL type="1">
+	<LI>The authenticator should be configured to inhibit data traffic from being forwarded either to a wired network or to another wireless supplicant unless a valid authentication key is used.</li>
+
+	<LI>The authenticator and supplicant must be configured to support a multicast/global authentication key or per-station unicast session key.</li>
+
+	<LI>If the authenticator observes a new supplicant, the authenticator transmits an EAP request to the new supplicant. If the authenticator receives an EAP start message from a supplicant, it sends an EAP request back to the supplicant. The supplicant then transmits an EAP start message upon associating with a new authenticator.</li>
+
+	<LI>A supplicant transmits an EAP response containing the device name in response to an EAP request.</li>
+
+	<LI>The authenticator forwards the EAP response message to a RADIUS server. The RADIUS server sends an EAP request in response to the EAP response message from the supplicant. The authenticator forwards that EAP request from the RADIUS server to the supplicant. </li>
+
+	<LI>The supplicant transmits an EAP response containing all credentials to the RADIUS server through the wireless authenticator. The wireless authenticator then forwards the supplicant's credentials to the RADIUS server. </li>
+
+	<LI>The RADIUS server validates the credentials and generates a success message to supplicant. The RADIUS server's response to the wireless authenticator contains the supplicant's message and the encryption key derived from the EAP-TLS session key. The wireless authenticator generates the multicast/global authentication key by generating a random number or by selecting it from a set value. On receiving the RADIUS server message, the wireless authenticator forwards the success message to the supplicant.</li>
+
+	<LI>The wireless authenticator transmits an EAP-Key message to the supplicant containing the multicast/global authentication key encrypted using the per-session encryption key. If the wireless authenticator and supplicant support the per-supplicant unicast session key, the authenticator uses the encryption key sent from the radius server as the per-supplicant unicast session key. </li>
+
+	<LI>When the wireless authenticator changes the multicast/global authentication key, it generates EAP-Key messages, where each message contains the new multicast/global authentication key encrypted with the particular supplicant's session key. The wireless authenticator adds the unicast session key, if supported, to the list of unicast session keys.</li>
+
+	<LI>The supplicant, on receiving the EAP-Key message, uses the per-supplicant unicast session encryption key to decrypt the multicast/global authentication key. If the wireless authenticator and supplicant support per-supplicant unicast session keys and a multicast/global authentication key has been received, the encryption key derived from the EAP-TLS session key is passed to the wireless supplicant as the per-supplicant unicast session key. </li>
+
+	<LI>When the wireless network adapter driver receives the authentication keys, it must program the wireless supplicant's network adapter. Once the authentication keys have been programmed, the supplicant calls Dynamic Host Configuration Protocol (DHCP) to restart the DHCP process. </li>
+</OL>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50conwirelessauthenticationimplementation.htm">Wireless Authentication Implementation</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

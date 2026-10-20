@@ -1,0 +1,86 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Activity Timers</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Activity Timers"/>
+<MSHelp:RLTitle Title="Activity Timers"/>
+<MSHelp:Keyword Index="A" Term="wce50conActivityTimers"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Driver"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="False"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="powermgrdrv_guide.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="True"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="True"/>
+<MSHelp:Attr Name="PBFeature" Value="SYSGEN_PM"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_3019093">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50conactivitytimers"></A>Activity Timers</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>Upon initialization, the Power Manager reads the registry to acquire a list of activity timer names. For each timer, Power Manger checks for a time-out, in seconds, and an optional list of wake sources. It then creates the following named events:
+
+<UL type="disc">
+	<LI>A timer reset event.</li>
+
+	<LI>An active status manual-reset event.</li>
+
+	<LI>A manual-reset event.</li>
+</UL>
+
+<P>If the time-out associated with the timer expires without a reset event being signaled, the Power Manager resets the active event and sets the inactive event. If the reset event is signaled, the Power Manager resets the inactive event and sets the active event.</P>
+
+<P>The following code example is a registry setting for configuring an activity timer.</P>
+
+<PRE class="code">[HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Power\ActivityTimers\SystemActivity]
+    "Timeout"=dword:A
+    "WakeSources"=multi_sz:"0x20"</PRE>
+
+<P>This set of registry values causes the Power Manager to create three events with the following names: PowerManager/ActivityTimer/SystemActivity, PowerManager/SystemActivity_Active, and PowerManager/SystemActivity_Inactive. The first event is an auto-reset event that any driver may signal to indicate the system activity. Drivers that support resetting activity timers should read the name of the timer's reset event from the registry. The other events are manual reset events, of which only one is signaled at a time. Drivers, applications, or the Power Manager itself may open handles to these events to determine if the timer has expired. These events indicate the status of the activity timer. The reset event is an input to the activity timer system and the status events are the corresponding outputs.</P>
+
+<P>In addition to creating events, this set of registry entries associates a wake source identifier with the activity timer. If the OS resumes and the Power Manager determines that the wake source corresponding to this ID caused the system to resume, it will set the associated activity timer to<I> </I>active. The Power Manager uses the IOCTL_HAL_GET_WAKE_SOURCE kernel IOCTL to determine what woke the system. The active timer allows the development workstation that is in finite state to manage OS power state transitions to use the activity timer as input. It then uses that input to make a decision as to which system power state is the most appropriate to enter during the resume process. For example, the Power Manager might enter an OS power state in which the display and backlight are off. The Power Manager enters this state so that network synchronization can occur without disturbing the user.</P>
+
+<P>Any number of drivers may open handles to the reset event of the activity timer. Drivers can reset the activity timer when appropriate. A driver should read the name of the event from the registry. This allows OEMs to customize the registry. By customizing the registry, the OEMs decide how a driver's activity should be interpreted by the Power Manager. Potential sources of activity include all drivers that open handles to the reset event of the activity timer.</P>
+
+<P>Any number of threads may open handles to the manual-reset activity/inactivity events and wait on them to determine the status of the OS. For example, a backlight driver may use the pair of manual-reset events created for an activity timer to decide how to control backlight power and intensity.</P>
+
+<P>When the system suspends, the Power Manager resets the active manual-reset events associated with activity timers. On a resume event, it scans the timers to see if any are associated with the wake source that caused the system to resume. If it finds a match, that activity event is signaled. This allows the Power Manager to resume in the system power state associated with that activity timer.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50conpowermanagement.htm">Power Management</A> | <A HREF="wce50conactivitytimerbehavior.htm">Activity Timer Behavior</A> | <A HREF="wce50conactivitytimertimeoutsandthepowercontrolpanelutility.htm">Activity Timer Time-outs and the Power Control Panel Utility</A> | <A HREF="wce50conactivitytimerevents.htm">Activity Timer Events</A> | <A HREF="wce50conactivitytimerresets.htm">Activity Timer Resets</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

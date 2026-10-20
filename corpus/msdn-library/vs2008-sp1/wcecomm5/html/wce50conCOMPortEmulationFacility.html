@@ -1,0 +1,194 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Creating a Connection to a Remote Device Using a Virtual COM Port</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Creating a Connection to a Remote Device Using a Virtual COM Port"/>
+<MSHelp:RLTitle Title="Creating a Connection to a Remote Device Using a Virtual COM Port"/>
+<MSHelp:Keyword Index="A" Term="wce50conCOMPortEmulationFacility"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Feature"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="bluetooth_concepts.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="True"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+<MSHelp:Attr Name="PBFeature" Value="SYSGEN_BTH"/>
+<MSHelp:Attr Name="PBOnly" Value="False"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_3001407">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50concomportemulationfacility"></A>Creating a Connection to a Remote Device Using a Virtual COM Port</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>You can create a connection between two Bluetooth devices by using the Microsoft Windows CE COM Port emulator facility. The COM Port emulator is the top most layer of the <MSHelp:link keywords="wce50conBluetoothProtocolStack" TABINDEX="0">Bluetooth Protocol Stack</MSHelp:link> and provides access to RFCOMM based on a virtual COM port. It does not expose stack interfaces but provides an API layer for opening connections to remote Bluetooth devices.</P>
+
+<P>Microsoft&reg; Windows&reg; CE implementation of Bluetooth allows you to create a piconet. As per the Bluetooth specification, a master device can connect with seven active slave devices. For more information about piconet, see the <I>Bluetooth Core Specification</I> at this <A HREF="http://go.microsoft.com/fwlink/?LinkId=19901">Official Bluetooth Wireless Info Web site</A>.</P>
+
+<P>When this layer is present in the Bluetooth stack, a virtual server or client COM port can be created to accept incoming or create outgoing RFCOMM connections.</P>
+
+<BLOCKQUOTE class="dtBlock">
+<b class="le">Note</b>&nbsp;&nbsp;&nbsp;Microsoft recommends that you use Winsock APIs to create connections. For more information, see <A HREF="wce50concreatingconnectionusingwinsockextensions.htm">Creating a Connection to a Remote Device Using Winsock</A>.</BLOCKQUOTE>
+
+<P>Before you create a connection between two Bluetooth devices, you must have the following information:
+
+<UL type="disc">
+	<LI>Address of the Bluetooth device to connect to, stored as a <B>BT_ADDR</B> type (for client ports). </li>
+
+	<LI>RFCOMM channel number (between 1 and 31).</li>
+
+	<LI>COM port number (between 0 and 9) to be assigned for Bluetooth operations. </li>
+</UL>
+
+<P>The Comtest sample that ships with Windows CE, contains source code for creating a Bluetooth connection by using a COM port. For more information about this sample, see<A HREF="wce50convirtualcomportcreationsample.htm"> Virtual COM Port Creation Sample</A>.</P>
+
+<P class="labelproc"><B>To create a virtual COM port</B>
+
+<OL type="1">
+	<LI>Configure the <A HREF="wce50lrfportemuportparams.htm">PORTEMUPortParams</A> structure to specify attributes for the virtual COM port. This structure stores Bluetooth specific information, such as the channel and Bluetooth address information.
+<UL type="disc">
+	<LI>For a server port, set <B>flocal</B> and <B>channel</B>, as the following example shows.
+<PRE class="code">PORTEMUPortParams pp;
+memset (&amp;pp, 0, sizeof(pp));
+pp.flocal = TRUE;
+pp.channel = channel &amp; 0xff;</PRE>
+
+<P>The preceding example configures a server port by setting <B>flocal</B> to TRUE. This enables a server COM port to accept incoming connections at the specified channel.
+
+<BLOCKQUOTE class="dtBlock">
+<b class="le">Note</b>&nbsp;&nbsp;&nbsp;To avoid conflicts, when you are selecting the server channel, it is recommended that you set <B>channel</B> to RFCOMM_CHANNEL_MULTIPLE (0xfe). This configures RFCOMM to use the next available channel.</BLOCKQUOTE>
+</li>
+
+	<LI>For a client port, set the <B>device</B>, <B>channel</B>, and the <B>uiportflags</B> members of <B>PORTEMUPortParams</B> as the following example shows.
+<PRE class="code">PORTEMUPortParams pp;
+memset (&amp;pp, 0, sizeof(pp));
+pp.device = ba;
+pp.channel = channel &amp; 0xff;</PRE>
+
+<P>In the preceding example, <B>device</B> is set to a <B>BT_ADDR</B> type that stores the remote device to initiate a remote connection over the RFCOMM layer.
+
+<P>If the server channel is not known then the client can specify the UUID of the server in the <B>uuidService</B> member. In this case, an SDP query is performed automatically to retrieve the target channel number used on the remote device based on the service UUID. 
+</li>
+</UL>
+</li>
+
+	<LI>Register the device by calling the <MSHelp:link keywords="wce50lrfRegisterDevice" TABINDEX="0">RegisterDevice</MSHelp:link> function, as the following example shows.
+<PRE class="code">HANDLE h = RegisterDevice (L"COM", index, L"btd.dll", (DWORD)&amp;pp);</PRE>
+
+<P>The preceding example specifies the port type as COM, port number, and the name of the device driver DLL, as parameters to <B>RegisterDevice</B>. Also, pass the address of <B>PORTEMUPortParams</B> structure, created in step 1, in the <I>dwInfo</I> parameter. <B>RegisterDevice</B> registers the <MSHelp:link keywords="wce50conBluetoothProtocolStack" TABINDEX="0">Bluetooth Protocol stack</MSHelp:link> with the virtual COM port.
+</li>
+
+	<LI>Create a null-terminated string to store the name of the COM port. You must include a colon after the port name, as the following example shows.
+<PRE class="code">WCHAR szComPort[30];
+wsprintf (szComPort, L"COM%d:", index);</PRE>
+</li>
+
+	<LI>Open the COM port by calling the <MSHelp:link keywords="wce50lrfCreateFile" TABINDEX="0">CreateFile</MSHelp:link> function.
+<PRE class="code">HANDLE hCommPort = CreateFile (szComPort, GENERIC_READ | GENERIC_WRITE,
+                               0, NULL, OPEN_EXISTING, 0, NULL);</PRE>
+
+<P>To specify the port name, pass the string created in step 3, in the <I>lpFileName</I> parameter of <B>CreateFile</B>.
+
+<P>For client ports, the physical connection is created only when the device is open with read or write access by using <B>CreateFile</B>. The physical connection is terminated for both server and client ports when the first handle with read or write access is closed.
+
+<P>Up to four open handles can be outstanding for each virtual port created. Every handle maintains its own set of communication event masks. If a file is open with a 0 access mask, it can only be used for <B>WaitCommEvent</B>, but not with <B>ReadFile</B> and <B>WriteFile</B> APIs.
+</li>
+</OL>
+
+<P>Once the COM port is created, it is a functional equivalent of a serial port. The same APIs can be used to access it.</P>
+
+<P class="labelproc"><B>To remove an existing virtual COM port</B>
+
+<OL type="1">
+	<LI>Call the <MSHelp:link keywords="wce50lrfCloseHandle" TABINDEX="0">CloseHandle</MSHelp:link> function and pass the handle returned by <B>CreateFile</B>, as the following example code shows.
+<PRE class="code">CloseHandle (hCommPort);</PRE>
+</li>
+
+	<LI>To deregister the device, call the <MSHelp:link keywords="wce50lrfDeregisterDevice" TABINDEX="0">DeregisterDevice</MSHelp:link> function and pass the handle returned by <B>RegisterDevice</B>, as the following example code shows.
+<PRE class="code">DeregisterDevice (h);</PRE>
+</li>
+</OL>
+
+<P class="labelproc"><B>To use auto-bound channel in port emulation</B>
+
+<OL type="1">
+	<LI>Set the <B>channel</B> member of <B>PORTEMUPortParams</B> to RFCOMM_CHANNEL_MULTIPLE.
+<PRE class="code">PORTEMUPortParams pp;
+memset (&amp;pp, 0, sizeof(pp));
+pp.channel = RFCOMM_CHANNEL_MULTIPLE;</PRE>
+</li>
+
+	<LI>Create the virtual COM port by using <B>RegisterDevice</B> and <B>CreateFile</B>.</li>
+
+	<LI>Determine the assigned RFCOMM channel by using the IOCTL, <A HREF="wce50lrfioctl_bluetooth_get_rfcomm_channel.htm">IOCTL_BLUETOOTH_GET_RFCOMM_CHANNEL</A>.
+<PRE class="code">DWORD port = 0;
+DWORD dwSizeOut = 0;
+HANDLE hFile;
+if (!DeviceIoControl (hFile, IOCTL_BLUETOOTH_GET_RFCOMM_CHANNEL, NULL, 0, &amp;port, sizeof(port), &amp;dwSizeOut, NULL)) 
+{
+  // Perform error handling
+}</PRE>
+</li>
+</OL>
+
+<P>The following functions are supported:
+
+<UL type="disc">
+	<LI><MSHelp:link keywords="wce50lrfClearCommError" TABINDEX="0">ClearCommError</MSHelp:link></li>
+
+	<LI><MSHelp:link keywords="wce50lrfEscapeCommFunction" TABINDEX="0">EscapeCommFunction</MSHelp:link></li>
+
+	<LI><MSHelp:link keywords="wce50lrfGetCommMask" TABINDEX="0">GetCommMask</MSHelp:link></li>
+
+	<LI><MSHelp:link keywords="wce50lrfGetCommModemStatus" TABINDEX="0">GetCommModemStatus</MSHelp:link></li>
+
+	<LI><MSHelp:link keywords="wce50lrfGetCommProperties" TABINDEX="0">GetCommProperties</MSHelp:link></li>
+
+	<LI><MSHelp:link keywords="wce50lrfGetCommState" TABINDEX="0">GetCommState</MSHelp:link></li>
+
+	<LI><MSHelp:link keywords="wce50lrfGetCommTimeouts" TABINDEX="0">GetCommTimeouts</MSHelp:link></li>
+
+	<LI><MSHelp:link keywords="wce50lrfSetCommMask" TABINDEX="0">SetCommMask</MSHelp:link></li>
+
+	<LI><MSHelp:link keywords="wce50lrfSetCommState" TABINDEX="0">SetCommState</MSHelp:link></li>
+
+	<LI><MSHelp:link keywords="wce50lrfSetCommTimeouts" TABINDEX="0">SetCommTimeouts</MSHelp:link></li>
+
+	<LI><MSHelp:link keywords="wce50lrfWaitCommEvent" TABINDEX="0">WaitCommEvent</MSHelp:link></li>
+</UL>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50conbluetoothapplicationdevelopment.htm">Bluetooth Application Development</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

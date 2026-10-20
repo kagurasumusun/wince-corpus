@@ -1,0 +1,91 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Fatal Error C1017</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Fatal Error C1017"/>
+<MSHelp:RLTitle Title="Fatal Error C1017"/>
+<MSHelp:Keyword Index="A" Term="wce50errFatalErrorC1017"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Guide"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="True"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbRef"/>
+<MSHelp:Attr Name="Filename" Value="err1xxx.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="True"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_3024359">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50errfatalerrorc1017"></A>Fatal Error C1017</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<PRE class="syntax"><B>invalid integer constant expression</B></PRE>
+
+<P>The expression in an <B>#if</B> directive did not exist or did not evaluate to a constant.</P>
+
+<P>Constants defined using <B>#define</B> must have values that evaluate to an integer constant if they are used in an <B>#if</B>, <B>#elif</B>, or <B>#else</B> directive. </P>
+
+<P>For example, the following code produces error C1017:</P>
+
+<PRE class="code">#define CONSTANT_NAME "YES"
+#if CONSTANT_NAME
+...
+#endif</PRE>
+
+<P>Because <code class="ce">CONSTANT_NAME</code> evaluates to a string and not an integer, the <B>#if</B> directive generates fatal error C1017.</P>
+
+<P>In other cases, the preprocessor evaluates an undefined constant as zero. </P>
+
+<P>This can cause unintended results, as shown in the following example. </P>
+
+<PRE class="code">#define CONSTANT_NAME YES
+#if CONSTANT_NAME
+   // Code to use on YES...
+#elif CONSTANT_NAME==NO
+   // Code to use on NO...
+#endif</PRE>
+
+<P>In the example, the following occur:
+
+<UL type="disc">
+	<LI><code class="ce">YES</code> is undefined, so it evaluates to zero. </li>
+
+	<LI>The expression <B>#if</B> <code class="ce">CONSTANT_NAME</code> evaluates to false and the code to be used on <code class="ce">YES</code> is removed by the preprocessor. </li>
+
+	<LI><code class="ce">NO</code> is also undefined (zero), so <B>#elif</B> <code class="ce">CONSTANT_NAME==NO</code> evaluates to true (<code class="ce">0 == 0</code>), causing the preprocessor to leave the code in the <B>#elif</B> portion of the statement &#0151; exactly the opposite of the intended behavior.</li>
+</UL>
+
+<P>To see how the compiler handles preprocessor directives, use /P, /E, or /EP.</P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

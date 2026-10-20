@@ -1,0 +1,88 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Buffered and Unbuffered Profiling</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Buffered and Unbuffered Profiling"/>
+<MSHelp:RLTitle Title="Buffered and Unbuffered Profiling"/>
+<MSHelp:Keyword Index="A" Term="wce50conBufferedUnbufferedProfiling"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Debugging"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="True"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="kernel_profiler.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="False"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_1036617">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50conbufferedunbufferedprofiling"></A>Buffered and Unbuffered Profiling</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>The kernel profiler provides buffered and unbuffered data storage options. In buffered mode, symbols are looked up when the kernel profiler stops. In buffered mode, the kernel profiler requires little time to capture a sample, but the kernel profiler can capture only a limited number of samples. Buffered profiling has little effect on the performance of the target device and is therefore less intrusive than unbuffered profiling. If the buffer is full, the sample is discarded. For information about specifying the size of the buffer for the kernel profiler, see <A HREF="wce50tskchangingsizeofbufferforkernelprofiler.htm">Changing the Size of the Buffer for the Kernel Profiler</A>.</P>
+
+<P>In unbuffered mode, the symbol corresponding to a sample is looked up while the kernel profiler captures the sample. The time required to capture a sample in unbuffered mode is therefore much greater than the time required to capture a sample in buffered mode. However, in unbuffered mode, the kernel profiler can capture an unlimited number of samples. Unbuffered profiling can have a noticeable effect on the performance of the target device.</P>
+
+<P>You may want to compare the results of buffered and unbuffered profiling on the same test. By comparing the results of buffered and unbuffered profiling, you may learn whether the overhead associated with unbuffered profiling skews the results reported by the kernel profiler.</P>
+
+<P>The kernel profiler uses the address of each sample to look up the module and function that the sample is within. The table of contents lists all modules in the MODULES section of ROM, and all functions within those modules. When you build a run-time image, for each module Romimage.exe uses the associated .map file from the release directory to create the list of functions for that module in the table of contents. If a module does not have a .map file in the release directory, that module is listed in the table of contents but no functions are listed for it.</P>
+
+<P>For each sample that is not discarded, the kernel profiler increments the following three counters:
+
+<UL type="disc">
+	<LI>A counter of the total samples recorded.</li>
+
+	<LI>A counter for the module that the sample is inside.
+<BLOCKQUOTE class="dtBlock">
+<b class="le">Note</b>&nbsp;&nbsp;&nbsp;The kernel profiler increments a counter for the UNKNOWN module if the module containing the sample is not listed in the table of contents. An example of a module not listed in the table of contents is a module that is not within the MODULES section of ROM.</BLOCKQUOTE>
+</li>
+
+	<LI>A counter for the function that the sample was inside.
+<BLOCKQUOTE class="dtBlock">
+<b class="le">Note</b>&nbsp;&nbsp;&nbsp;The kernel profiler increments a counter for the UNKNOWN function if the module lists no functions. An example of a module that lists no functions is a module that has no .map file in the release directory. Another example of a module that lists no functions is a module that is not listed in the table of contents.</BLOCKQUOTE>
+</li>
+</UL>
+
+<P>When the kernel profiler operates in buffered mode, the process of looking up symbols and incrementing counters occurs during the call to the <MSHelp:link keywords="wce50lrfProfileStop" TABINDEX="0">ProfileStop</MSHelp:link> function at the end of profiling. When the kernel profiler operates in unbuffered mode, the process of looking up symbols and incrementing counters occurs during each call to the <MSHelp:link keywords="wce50lrfProfilerHit" TABINDEX="0">ProfilerHit</MSHelp:link> function.</P>
+
+<P>In choosing a mode of data storage for the kernel profiler, consider the amount of system memory available, the length of time for which you need to run the profiler, and the performance implications of the mode that you choose.</P>
+
+<BLOCKQUOTE class="dtBlock">
+<b class="le">Note</b>&nbsp;&nbsp;&nbsp;You can insert the data collected by the kernel profiler into a CeLog data stream instead of buffering the data. Microsoft does not recommend inserting profiler data into a CeLog data stream because Windows CE does not currently provide a way to view the data captured with CeLog.</BLOCKQUOTE>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50oricontrollingkernelprofiler.htm">Controlling the Kernel Profiler</A> | <A HREF="wce50coninstrumentedkernelprofilingandmontecarloprofiling.htm">Kernel Profiler Modes</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

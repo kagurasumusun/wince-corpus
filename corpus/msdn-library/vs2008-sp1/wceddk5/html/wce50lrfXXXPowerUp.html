@@ -1,0 +1,140 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>XXX_PowerUp (Device Manager)</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="XXX_PowerUp (Device Manager)"/>
+<MSHelp:RLTitle Title="XXX_PowerUp (Device Manager)"/>
+<MSHelp:Keyword Index="K" Term="XXX_PowerUp (Device Manager)"/>
+<MSHelp:Keyword Index="A" Term="wce50lrfXXXPowerUp"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Driver"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="False"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="apiref"/>
+<MSHelp:Attr Name="Filename" Value="stream_reference.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="True"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+<MSHelp:Attr Name="APIName" Value="XXX_PowerUp"/>
+<MSHelp:Attr Name="APIType" Value="IDLDef"/>
+<MSHelp:Attr Name="APILocation" Value="Developer implemented"/>
+<MSHelp:Attr Name="PBFeature" Value="StreamDriver"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_3019299">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50lrfxxxpowerup"></A><I>XXX</I>_PowerUp (Device Manager)</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>This function restores power to a device.</P>
+
+<PRE class="syntax"><B>void</B> <B><I>XXX</I>_PowerUp(</B>
+  <B>DWORD</B> <I>hDeviceContext</I> 
+<B>);</B></PRE>
+
+<H4 class="dtH4">Parameters</H4>
+
+<DL>
+<DT><I>hDeviceContext</I></DT>
+
+<DD>[in] Handle to the device context. The call to the <A HREF="wce50lrfxxxinit15.htm">XXX_Init (Device Manager)</A> function returns this identifier.</dd>
+</DL>
+
+<H4 class="dtH4">Return Values</H4>
+
+<P>None.</P>
+
+<H4 class="dtH4">Remarks</H4>
+
+<P>The power handler functions, <A HREF="#wce50lrfxxxpowerup">XXX_PowerUp (Device Manager)</A> and <A HREF="wce50lrfxxxpowerdown.htm">XXX_PowerDown (Device Manager)</A>, execute in kernel mode, and they cannot be pre-empted.</P>
+
+<P>Most function calls are not allowed in this mode. In general, the power handler functions are not allowed to make system calls. The following list shows how the operating system (OS) handles a system call from the <B>XXX_PowerUp</B> function or the <B>XXX_PowerDown</B> function:
+
+<OL type="1">
+	<LI>The OS outputs the following to the kernel debug port.
+<PRE class="code">!Unrecoverable Error: Exception or calling API inside Power Handler</PRE>
+</li>
+
+	<LI>The OS calls the <MSHelp:link keywords="wce50lrflpNKHaltSystem" TABINDEX="0">lpNKHaltSystem</MSHelp:link> function. 
+<P>By default, <B>lpNKHaltSystem</B> halts the system. You can override this default behavior by initializing <B>lpNKHaltSystem </B>to point to your own function.
+</li>
+</OL>
+
+<P>You can optionally use <B>DEBUGMSG</B>, <B>RETAILMSG</B>, <MSHelp:link keywords="wce50lrfCeSetPowerOnEvent" TABINDEX="0">CeSetPowerOnEvent</MSHelp:link>, and <MSHelp:link keywords="wce50lrfSetInterruptEvent" TABINDEX="0">SetInterruptEvent</MSHelp:link> from the power handler functions. For more information about the <B>DEBUGMSG</B> and <B>RETAILMSG</B> macros, see <MSHelp:link keywords="wce50conDebuggingMacros" TABINDEX="0">Debugging Macros</MSHelp:link>.</P>
+
+<P>Use the <MSHelp:link keywords="wce50lrfLockPages" TABINDEX="0">LockPages</MSHelp:link> function to lock in memory all code and data pages accessed by a power handler function. For example, if your device driver executes from RAM that has been paged from NAND flash or decompressed from storage, do not use the DEVFLAGS_LOADLIBRARY flag. This flag allows the code pages of your device driver to be discarded from RAM and paged in as needed. If you are accessing a memory-mapped file, make sure that those data pages have been locked into RAM with the <B>LockPages</B> function.</P>
+
+<P>The power handler functions should never generate an exception. The following list shows some ways that exceptions can be generated:
+
+<UL type="disc">
+	<LI>Dereferencing a null pointer.</li>
+
+	<LI>Dividing by zero. This generates an exception on most microprocessors.</li>
+
+	<LI>Explicitly raising an SEH or C++ exception.</li>
+
+	<LI>A page-fault.</li>
+</UL>
+
+<P>The following list shows how the OS handles an exception generated from a power handler function. 
+
+<OL type="1">
+	<LI>The OS outputs the following string to the kernel debug port.
+<PRE class="code">!Unrecoverable Error: Exception or calling API inside Power Handler</PRE>
+</li>
+
+	<LI>The OS calls the <B>lpNKHaltSystem</B> function. 
+<P>By default, <B>lpNKHaltSystem</B> halts the system. You can override this default behavior by initializing <B>lpNKHaltSystem </B>to point to your own function.
+</li>
+</OL>
+
+<P>The OS invokes this function to restore power to a device. The OS might call this function when it is about to leave a power-save mode. The driver might also receive a separate power-up request from the Power Manager before the <B><I>XXX</I>_PowerUp</B> function executes. For example, <A HREF="wce50lrfioctlpowerset.htm">IOCTL_POWER_SET</A> might request a D3 or D4 power state. </P>
+
+<P>Microsoft recommends using Power Manager and the power management IOCTLs to manage power to your device. For more information, see <A HREF="wce50grfpowermanagementioctls.htm">Power Management IOCTLs</A>.</P>
+
+<P>If you do not use Power Manager, this function should only perform the required hardware-level recovery. <B><I>XXX</I>_PowerUp</B> should not call any functions that might cause it to block, and it should return as quickly as possible. One strategy for returning quickly is to have <B><I>XXX</I>_PowerUp</B> set a global variable to indicate that a power loss occurred. If full recovery is time consuming or requires OS services that are not available in power callbacks, this function should signal a driver thread to complete the process. <B><I>XXX</I>_PowerUp</B> and <B>XXX_PowerDown</B> callbacks can use <B>CeSetPowerOnEvent</B> to signal to arbitrary driver threads that a suspend or resume cycle has occurred. To signal the driver's interrupt service thread, use <B>SetInterruptEvent</B> instead.</P>
+
+<P>Device Manager uses the <B><I>XXX</I></B> prefix as a placeholder. When implementing the stream interface, replace <B><I>XXX</I></B> with a prefix appropriate for your implementation or use undecorated entry point names in conjunction with DEVFLAGS_NAKEDENTRIES. For more information about other valid <B>Flags</B> values, see <A HREF="wce50lrfactivatedeviceex.htm">ActivateDeviceEx</A>.</P>
+
+<P>By default, interrupts are on during stream interface driver entry points.</P>
+
+<H4 class="dtH4">Requirements</H4>
+
+<P><B>OS Versions:</B> Windows CE 1.0 and later.<BR>
+<B>Header:</B> Developer implemented.<BR>
+<B>Link Library:</B> Developer implemented.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><MSHelp:link keywords="wce50conDebuggingMacros" TABINDEX="0">Debugging Macros</MSHelp:link> | <MSHelp:link keywords="wce50conDeviceFileNames" TABINDEX="0">Device File Names</MSHelp:link> | <A HREF="wce50conpowermanagement.htm">Power Management</A> | <A HREF="wce50lrfactivatedeviceex.htm">ActivateDeviceEx</A> | <MSHelp:link keywords="wce50lrfCeSetPowerOnEvent" TABINDEX="0">CeSetPowerOnEvent</MSHelp:link> | <A HREF="wce50lrfioctlpowerset.htm">IOCTL_POWER_SET</A> | <MSHelp:link keywords="wce50lrfLockPages" TABINDEX="0">LockPages</MSHelp:link> | <MSHelp:link keywords="wce50lrflpNKHaltSystem" TABINDEX="0">lpNKHaltSystem</MSHelp:link> | <A HREF="wce50grfpowermanagementioctls.htm">Power Management IOCTLs</A> | <MSHelp:link keywords="wce50lrfSetInterruptEvent" TABINDEX="0">SetInterruptEvent</MSHelp:link> | <A HREF="wce50lrfxxxinit15.htm">XXX_Init (Device Manager)</A> | <A HREF="wce50lrfxxxpowerdown.htm">XXX_PowerDown (Device Manager)</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

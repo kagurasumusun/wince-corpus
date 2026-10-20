@@ -1,0 +1,144 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>CopyFileEx</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="CopyFileEx"/>
+<MSHelp:RLTitle Title="CopyFileEx"/>
+<MSHelp:Keyword Index="K" Term="CopyFileEx"/>
+<MSHelp:Keyword Index="A" Term="wce50lrfCopyFileEx"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Feature"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="apiref"/>
+<MSHelp:Attr Name="Filename" Value="fileio_functions.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="False"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+<MSHelp:Attr Name="APIName" Value="CopyFileEx"/>
+<MSHelp:Attr Name="APIType" Value="LibDef"/>
+<MSHelp:Attr Name="APILocation" Value="Coredll.lib"/>
+<MSHelp:Attr Name="PBFeature" Value="FILESYSTEM"/>
+<MSHelp:Attr Name="PBOnly" Value="False"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_1039492">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50lrfcopyfileex"></A>CopyFileEx</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>This function copies an existing file to a new file.</P>
+
+<PRE class="syntax"><B>BOOL</B> <B>CopyFileEx(</B>
+  <B>LPCTSTR</B> <I>lpExistingFileName</I><B>, </B>
+  <B>LPCTSTR</B> <I>lpNewFileName</I><B>,</B>
+<B>  LPPROGRESS_ROUTINE </B><I>lpProgressRoutine</I><B>,</B>
+<B>  LPVOID </B><I>lpData</I><B>,</B>
+<B>  LPBOOL </B><I>pbCancel</I><B>,</B>
+<B>  DWORD </B><I>dwCopyFlags</I>
+<B>);</B> </PRE>
+
+<H4 class="dtH4">Parameters</H4>
+
+<DL>
+<DT><I>lpExistingFileName</I></DT>
+
+<DD>[in] Pointer to a null-terminated string that specifies the name of an existing file.</dd>
+
+<DT><I>lpNewFileName</I></DT>
+
+<DD>[in] Pointer to a null-terminated string that specifies the name of the new file.</dd>
+
+<DT><I>lpProgressRoutine</I></DT>
+
+<DD>[in] Address of a callback function that is called each time another portion of the file has been copied. This parameter can be NULL.</dd>
+
+<DT><I>lpData</I></DT>
+
+<DD>[in] Argument to be passed to the callback function. This parameter can be NULL.</dd>
+
+<DT><I>pbCancel</I></DT>
+
+<DD>[in] If this parameter is set to TRUE during the copy operation, the operation is canceled. Otherwise, the copy operation continues to completion.</dd>
+
+<DT><I>dwCopyFlags</I></DT>
+
+<DD>[in] Flags that specify how the file is to be copied. This parameter can be set to any combination of the following values.
+
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=50%>Value</TH>
+<TH width=50%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>COPY_FILE_ALLOW_DECRYPTED_DESTINATION</TD>
+<TD width=50%>An attempt to copy an encrypted file will succeed even if the destination copy cannot be encrypted.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>COPY_FILE_FAIL_IF_EXISTS</TD>
+<TD width=50%>The copy operation fails immediately if the target file already exists.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>COPY_FILE_RESTARTABLE</TD>
+<TD width=50%>Progress of the copy is tracked in the target file in case the copy fails. The failed copy can be restarted at a later time by specifying the same values for <I>lpExistingFileName</I> and <I>lpNewFileName</I> as those used in the call that failed.</TD>
+</TR>
+</table></div>
+
+</dd>
+</DL>
+
+<H4 class="dtH4">Return Values</H4>
+
+<P>If the function succeeds, the return value is nonzero. If the function fails, the return value is zero. To get extended error information, call <MSHelp:link keywords="wce50lrfGetLastError" TABINDEX="0">GetLastError</MSHelp:link>.</P>
+
+<H4 class="dtH4">Remarks</H4>
+
+<P>This function fails with ERROR_ACCESS_DENIED if the destination file already exists and has the FILE_ATTRIBUTE_HIDDEN or FILE_ATTRIBUTE_READONLY set.</P>
+
+<P>If <I>lpProgressRoutine</I> returns PROGRESS_CANCEL due to the user canceling the operation, <B>CopyFileEx</B> will return zero and <B>GetLastError</B> will return ERROR_REQUEST_ABORTED. In this case, the partially copied destination file is deleted.</P>
+
+<P>If <I>lpProgressRoutine</I> returns PROGRESS_STOP due to the user stopping the operation, <B>CopyFileEx</B> will return zero and <B>GetLastError</B> will return ERROR_REQUEST_ABORTED. In this case, the partially copied destination file is left intact.</P>
+
+<H4 class="dtH4">Requirements</H4>
+
+<P><B>OS Versions:</B> Windows CE 5.0 and later<BR>
+<B>Header:</B> Winbase.h.<BR>
+<B>Link Library:</B> Coredll.lib.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50lrfcopyfile.htm">CopyFile</A> | <A HREF="wce50lrfcreatefile.htm">CreateFile</A> | <A HREF="wce50lrfmovefile.htm">MoveFile</A> | <A HREF="wce50lrfdeleteandrenamefile.htm">DeleteAndRenameFile</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

@@ -1,0 +1,65 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Maintaining DWORD Alignment</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Maintaining DWORD Alignment"/>
+<MSHelp:RLTitle Title="Maintaining DWORD Alignment"/>
+<MSHelp:Keyword Index="A" Term="wce51grfMaintainingDWORDAlignment"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Debugging"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="True"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="celog_event_tracking_customization.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="False"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_1073136">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce51grfmaintainingdwordalignment"></A>Maintaining DWORD Alignment</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>The <MSHelp:link keywords="wce50lrfCeLogData" TABINDEX="0">CeLogData</MSHelp:link> function that your DLL implements receives a data buffer that might not be a DWORD-aligned size. However, the log file format requires all events to begin on 4-byte, DWORD-sized boundaries. You might need to insert one or more bytes of padding between events to achieve 4-byte alignment. </P>
+
+<P>The event header should still contain the unaligned size, but the next event header should begin on the next 4-byte boundary following the end of the event.</P>
+
+<P>For example, if your <B>CeLogData</B> function is passed a <I>wLen</I> value of 6, then the <MSHelp:link keywords="wce50lrfCELHEADER" TABINDEX="0">CEL_HEADER</MSHelp:link> that you write should contain a <I>Length</I> value of 6. After the header, write 8 bytes of data, because 8 is the next 4-byte boundary after 6. </P>
+
+<P>Viewing tools such as Remote Kernel Tracker and Readlog.exe do not use the remaining 2 bytes of data. Those tools skip the pad bytes, and jump to the 4-byte boundary to read the next event.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><MSHelp:link keywords="wce50conWorkingWithDataAlignmentIssues" TABINDEX="0">Working with Data Alignment Issues</MSHelp:link> | <A HREF="wce50concelogbufferingscheme.htm">CeLog Buffering Scheme</A> | <A HREF="wce51conimplementingeventtrackinglibrary.htm">Implementing an Event Tracking Library</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

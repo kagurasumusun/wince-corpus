@@ -1,0 +1,256 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Developing the Keyboard PDD Entry Point</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Developing the Keyboard PDD Entry Point"/>
+<MSHelp:RLTitle Title="Developing the Keyboard PDD Entry Point"/>
+<MSHelp:Keyword Index="A" Term="wce50tskDevelopingtheKeyboardPDDEntryPoint"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Driver"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="False"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbTask"/>
+<MSHelp:Attr Name="Filename" Value="howto_migkbddrvrlayoutmgr.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="True"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+<MSHelp:Attr Name="PBFeature" Value="KeyboardDriver"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_3017586">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50tskdevelopingthekeyboardpddentrypoint"></A>Developing the Keyboard PDD Entry Point</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>In Windows CE .NET 4.1 or earlier operating systems (OSs), keyboard drivers used the <MSHelp:link keywords="wce50lrfDllMain" TABINDEX="0">DllMain</MSHelp:link> function as the platform-dependent driver (PDD) entry point to initialize the keyboard hardware and to start the keyboard driver interrupt service thread (IST). In Windows CE .NET 4.2 or later, implement this new entry point to initialize the keyboard hardware and start the keyboard driver IST.</P>
+
+<P>Perform all of the following steps in the file that contains the Windows CE .NET 4.1 or earlier implementation of the <B>DllMain</B> entry point. </P>
+
+<P>The name of the file representing the PDD for each hardware platform can vary; usually the name is Kbdmouse.cpp. The PDD is not contained in the PDDList directory.</P>
+
+<P>The keyboard driver directory, which is immediately subordinate to the Drivers directory, contains the dirs file that the build system uses to build the entire keyboard driver.</P>
+
+<P class="labelproc"><B>To develop the keyboard PDD entry point</B>
+
+<OL type="1">
+	<LI>Rename <B>DllMain</B> to conform to the <B>PFN_KEYBD_PDD_ENTRY</B> function <code class="ce">typedef</code>. 
+<P>You can use any name, as long as it is globally unique in the Kbdmouse.dll that you will link. Microsoft recommends using a name based on your hardware platform. 
+
+<P>The following code example shows the <B>PFN_KEYBD_PDD_ENTRY</B> <code class="ce">typedef</code> from Keybdpdd.h.
+
+<PRE class="code">typedef BOOL (*PFN_KEYBD_PDD_ENTRY)(UINT uiPddId, PFN_KEYBD_EVENT pfnKeybdEvent, PKEYBD_PDD *ppKeybdPdd);</PRE>
+</li>
+
+	<LI>From the function definition, remove the line with the <code class="ce">switch</code> statement, the line with the <code class="ce">case</code> statement, and the brackets associated with the <code class="ce">switch</code> and <code class="ce">case</code> statements. (Do not remove the code within the <code class="ce">switch</code> and <code class="ce">case</code> statements.) 
+<P>The following code example shows an updated function definition, which was renamed <B>TGTPLAT_Entry</B>.
+
+<PRE class="code">BOOL
+WINAPI
+TGTPLAT_Entry(
+    UINT uiPddId,
+    PFN_KEYBD_EVENT pfnKeybdEvent,
+    PKEYBD_PDD *ppKeybdPdd
+    )
+{
+
+    BOOL  bRet = FALSE;
+
+    if (v_pp2p) {
+      bRet = TRUE;
+      goto leave;
+    }
+    v_pp2p = new Ps2Port;
+    if (!v_pp2p-&gt;Initialize()) {
+      ERRORMSG(1,(TEXT("Could not initialize ps2 port.\r\n")));
+      goto leave;
+    }
+    //  We always assume that there is a keyboard.
+    v_pp2k = new Ps2Keybd;
+    if (v_pp2k-&gt;Initialize(v_pp2p)) {
+      v_pp2k -&gt;IsrThreadStart();
+    } else {
+      ERRORMSG(1,(TEXT("Could not initialize ps2 keyboard.\r\n")));
+      delete v_pp2k;
+      v_pp2k = NULL;
+    }
+    if (v_pp2p-&gt;MOUSE_PRESENT()) {
+      v_pp2m = new Ps2Mouse;
+      if ( v_pp2m -&gt; Initialize(v_pp2p) ) {
+        v_pp2m -&gt; IsrThreadStart();
+      } else {
+        ERRORMSG(1,(TEXT("Could not initialize ps2 mouse\r\n")));
+        delete v_pp2m;
+        v_pp2m = NULL;
+      }
+    }
+    bRet = TRUE;
+
+    leave:
+      return bRet;
+}</PRE>
+</li>
+
+	<LI>Add the Keybdpdd.h file and the LayMgr.h file to the list of <code class="ce">#include</code> files.</li>
+
+	<LI>Add a <B><I>PowerHandler</I></B> function, which must adhere to the <A HREF="wce50lrfpfn_keybd_pdd_power_handler.htm">PFN_KEYBD_PDD_POWER_HANDLER</A> function pointer. The Layout Manager calls the <B><I>PowerHandler </I></B>function when the hardware is powered up and powered down, if you want to support power handling in the PDD and decoupling the power state of a device from suspend or resume states of the system.
+<P>To do this, in the <B><I>PowerHandler</I></B> function, call the <B>KeybdPdd_PowerHandler</B> function. 
+
+<P>The following code example shows an example <B><I>PowerHandler</I></B> function. In the file representing the PDD, place this function before the entry point.
+
+<PRE class="code">static
+void
+TGTPLAT_PowerHandler(
+  UINT uiPddId,
+  BOOL fTurnOff
+  )
+{
+  KeybdPdd_PowerHandler(fTurnOff);
+}</PRE>
+
+<P>For more information about the keyboard driver power handler function pointers, see <A HREF="wce50lrfkeybddriverpowerhandler.htm">PFN_KEYBD_DRIVER_POWER_HANDLER</A> and <A HREF="wce50lrfpfn_keybd_pdd_power_handler.htm">PFN_KEYBD_PDD_POWER_HANDLER</A>.
+</li>
+
+	<LI>If your keyboard has CAPS LOCK, NUM LOCK, and SCROLL LOCK LEDs, and you want to support those LEDs, create a function that adheres to the <A HREF="wce50lrfpfn_keybd_pdd_toggle_lights.htm">PFN_KEYBD_PDD_TOGGLE_LIGHTS</A> function pointer. The Layout Manager calls the <B><I>ToggleLights </I></B>function when the user presses or releases these keys. 
+<P>To do this, in the <B>PFN_KEYBD_PDD_TOGGLE_LIGHTS </B>function, call the <B>KeybdPdd_ToggleKeyNotification</B> function. You can optimize the <B><I>ToggleLights</I></B> function by calling <B>KeybdPdd_ToggleKeyNotification</B> only when the state of the LEDs changes. 
+
+<P>The following code example shows an example <B>PFN_KEYBD_PDD_TOGGLE_LIGHTS</B> function with this optimization. In the file representing the PDD, place this function before the entry point.
+
+<PRE class="code">static
+void
+TGTPLAT_ToggleLights(
+  UINT uiPddId,
+  KEY_STATE_FLAGS KeyStateFlags
+  )
+{
+  static const KEY_STATE_FLAGS ksfLightMask = KeyShiftCapitalFlag | 
+KeyShiftNumLockFlag | KeyShiftScrollLockFlag; 
+  static KEY_STATE_FLAGS ksfCurr;
+
+  SETFNAME(_T("PS2_ToggleLights"));
+
+  KEY_STATE_FLAGS ksfNewState = (ksfLightMask &amp; KeyStateFlags);
+
+  if (ksfNewState != ksfCurr) 
+  {
+    DEBUGMSG(ZONE_PDD, (_T("%s: PDD %u: Changing light state\r\n"), pszFname, uiPddId));
+    KeybdPdd_ToggleKeyNotification(ksfNewState);
+    ksfCurr = ksfNewState;
+  }
+
+  return;
+}</PRE>
+</li>
+
+	<LI>Create a <A HREF="wce50lrfkeybd_pdd.htm">KEYBD_PDD</A><B> </B>structure to describe the PDD. 
+<P>This is a parameter in the Layout Manager's entry point. Place this structure after the <B><I>PowerHandler</I></B> and <B><I>ToggleLights</I></B> function definitions, but before the <B>TGTPLAT_Entry</B> function. 
+
+<P>The following code example shows a <B>KEYBD_PDD</B> structure.
+
+<PRE class="code">static KEYBD_PDD PS28042Pdd = {
+  PS2_AT_PDD,
+  _T("PS/2 TGTPLAT"),
+  TGTPLAT_PowerHandler,
+  TGTPLAT_ToggleLights
+};</PRE>
+
+<P>The following table shows the members of this structure.
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=26%>Member</TH>
+<TH width=74%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=26%><B>wPddMask</B></TD>
+<TD width=74%>Bit value or combination of bit values that describe the device layouts that work with this PDD. 
+<P>The device layout is the grouping of PDD-specific scan-code-to-virtual-key tables and a mapping function that are specific to that PDD, but change based on the input locale. </P>
+
+<P>If the PDD is an OEM-specific matrix keyboard, it could use an OEM-defined bit mask. </P>
+
+<P>The SA11X1 driver uses AT keyboard scan codes, so it uses the PS2_AT_PDD mask value.</P>
+</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=26%><B>pszName</B></TD>
+<TD width=74%>Description of the PDD.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=26%><B>pfnPowerHandler</B></TD>
+<TD width=74%>Pointer to the <B><I>PowerHandler</I></B> function. 
+<P>If your PDD does not support the <B><I>PowerHandler</I></B> function, set this member to NULL.</P>
+
+<P>For more information about this function pointer, see <A HREF="wce50lrfpfn_keybd_pdd_power_handler.htm">PFN_KEYBD_PDD_POWER_HANDLER</A>.</P>
+</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=26%><B>pfnToggleLights</B></TD>
+<TD width=74%>Pointer to the <B><I>ToggleLights</I></B> function.
+<P>If your PDD does not support the <B><I>ToggleLights</I></B> function, set this member to NULL.</P>
+
+<P>For more information about this function pointer, see <A HREF="wce50lrfpfn_keybd_pdd_toggle_lights.htm">PFN_KEYBD_PDD_TOGGLE_LIGHTS</A>.</P>
+</TD>
+</TR>
+</table></div>
+</li>
+
+	<LI>Declare two global variables to save the identifier and callback function parameters. 
+<P>The following code example shows a way to declare these global variables.
+
+<PRE class="code">UINT            v_uiPddId;
+PFN_KEYBD_EVENT v_pfnKeybdEvent;</PRE>
+</li>
+
+	<LI>In the entry function, which a previous code sample renamed <B>TGTPLAT_Entry</B>, save the identifier and callback function parameters into the global variables. 
+<P>The following code example shows a way to save the identifier and callback function parameters into global variables.
+
+<PRE class="code">v_uiPddId = uiPddId;
+v_pfnKeybdEvent = pfnKeybdEvent;</PRE>
+</li>
+
+	<LI>In the entry function, which you previously renamed <B>TGTPLAT_Entry</B>, save the address of the <B>KEYBD_PDD</B> structure to the <I>ppKeybdPdd</I> parameter. 
+<P>The following code example shows how to save the address of the <B>KEYBD_PDD</B> structure to the <I>ppKeybdPdd</I> parameter.
+
+<PRE class="code">*ppKeybdPdd = &amp;PS28042Pdd;</PRE>
+</li>
+
+	<LI>Save your progress.</li>
+</OL>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50conlayoutmanager.htm">Layout Manager</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

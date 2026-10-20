@@ -1,0 +1,158 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>fMerge Tool</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="fMerge Tool"/>
+<MSHelp:RLTitle Title="fMerge Tool"/>
+<MSHelp:Keyword Index="A" Term="wce50confMergeTool"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Guide"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="True"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="tools_2.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="True"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_3014179">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50confmergetool"></A>fMerge Tool</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>The FMerge tool (FMerge.exe) is an application that Makeimg.exe calls to combine files in the following manner: 
+
+<UL type="disc">
+	<LI>It combines binary image builder (.bib) files into a file called Ce.bib. </li>
+
+	<LI>It also combines registry (.reg) files into a file called Reginit.ini. </li>
+</UL>
+
+<P>Each of the following sections describes the keywords that are used in .bib files and are recognized by FMerge.</P>
+
+<P>The following table shows keywords that you can use with FMerge.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=18%>Keyword</TH>
+<TH width=82%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=18%><A HREF="wce50lrfdefinefmergeexe.htm">#define (FMerge.exe)</A></TD>
+<TD width=82%>Specifies the value of a variable.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=18%><A HREF="wce50lrfundeffmergeexe.htm">#undef (FMerge.exe)</A></TD>
+<TD width=82%>Resets a variable to its original value.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=18%><A HREF="wce50lrfincludefmergeexe.htm">#include (FMerge.exe)</A></TD>
+<TD width=82%>Specifies a file to be included in the build.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=18%><A HREF="wce50lrferrorfmergeexe.htm">#error (FMerge.exe)</A></TD>
+<TD width=82%>Generates an error message to stderr and stops execution of FMerge.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=18%><A HREF="wce50lrfmessagefmergeexe.htm">#message (FMerge.exe)</A></TD>
+<TD width=82%>Generates an output message to stdout.</TD>
+</TR>
+</table></div>
+
+<H2 class="dtH2">Decision Statements and Operators</H2>
+
+<P>You can use several standard decision statements and operators with the fMerge application. </P>
+
+<P>The following standard expressions are available.</P>
+
+<PRE class="syntax">#if <I>expression_list</I>
+#elif <I>expression_list</I>
+#else
+#endif</PRE>
+
+<DL>
+<DT><I>expression_list</I></DT>
+
+<DD>An expression that is evaluated by the application.</dd>
+</DL>
+
+<P>Standard join operators and conditional operators are supported. The following operators can be used with the fMerge application: <CODE>&amp;&amp;</CODE>, <CODE>||</CODE>, <CODE>==</CODE> and <CODE>!=</CODE>.</P>
+
+<H4 class="dtH4">Example Code</H4>
+
+<P>The following code example shows how the <CODE>#if</CODE> statement is used.</P>
+
+<PRE class="code">#if ! defined DRIVER_DIRECTORY
+#define DRIVER_DIRECTORY $(_PUBLICROOT)\oak\common\drivers
+#endif</PRE>
+
+<P>The following code example shows how the <CODE>#else </CODE>statement is used.</P>
+
+<PRE class="code">#if $(LOCALE)==0409
+; do something
+#elif $(LOCALE)==0411
+; do something else
+#else
+#error LOCALE $(LOCALE) is unsupported.
+#endif</PRE>
+
+<P>The following code example shows how the <code class="ce">&amp;&amp;</code> join operator is used.</P>
+
+<PRE class="code">#if ! defined BSP_NOUSB &amp;&amp; defined BSP_USB_OHCI
+; do something
+#endif</PRE>
+
+<H4 class="dtH4">Variable Substitution</H4>
+
+<P>You can substitute variables by using the <CODE>$() </CODE>operator. However, variables are not substituted in comments or in <CODE>#define </CODE>statements. </P>
+
+<P>When using a variable for substitution, variables defined in the active files are checked first, followed by environment variables. If the variable is not found in either place, execution will fail. The exception to this is in conditional expressions where you can use a variable that is undefined. </P>
+
+<P>Nested variables are resolved when the containing variable is used. For example, if the variable <CODE>varone</CODE> contains the variable <CODE>$(vartwo)</CODE>, when <CODE>$(varone)</CODE> is used, <CODE>$(vartwo)</CODE> is resolved to its last defined value prior to the use of <CODE>$(varone)</CODE>. When a variable is resolved, its value is checked for nested variables up to a nested depth of 10 variables.</P>
+
+<H4 class="dtH4">Example Code</H4>
+
+<P>The following code example shows how variable substitution is used.</P>
+
+<PRE class="code">#include "$(_PROJECTOAKROOT)\drivers\keybd\$(keyboard_type)\keybd.reg"; Includes the registry file for the keyboard</PRE>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50conbuilddemotool.htm">Build Demo Tool</A> | <MSHelp:link keywords="wce50conBinaryImageBuilderFile" TABINDEX="0">Binary Image Builder File</MSHelp:link> | <A HREF="wce50conbuildreleasedirectorytool.htm">Build Release Directory Tool</A> | <A HREF="wce50conmakebinaryimagetool.htm">Make Binary Image Tool</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

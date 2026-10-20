@@ -1,0 +1,167 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>SHNotificationGetData</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="SHNotificationGetData"/>
+<MSHelp:RLTitle Title="SHNotificationGetData"/>
+<MSHelp:Keyword Index="K" Term="SHNotificationGetData"/>
+<MSHelp:Keyword Index="A" Term="wce50lrfSHNotificationGetData"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Feature"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="apiref"/>
+<MSHelp:Attr Name="Filename" Value="aygshell_reference.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="True"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+<MSHelp:Attr Name="APIName" Value="SHNotificationGetData"/>
+<MSHelp:Attr Name="PBFeature" Value="SYSGEN_AYGSHELL"/>
+<MSHelp:Attr Name="PBOnly" Value="False"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_3021366">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50lrfshnotificationgetdata"></A>SHNotificationGetData</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>This function gets the data for a notification. It is available for querying back the data to another application.</P>
+
+<H4 class="dtH4">Syntax</H4>
+
+<PRE class="syntax"><B>LRESULT SHNotificationGetData(</B>
+<B>  const CLSID * </B><I>pclsid</I><B>,</B>
+<B>  DWORD </B><I>dwID</I><B>,</B>
+<B>  SHNOTIFICATIONDATA* </B><I>pndBuffer</I>
+<B>);</B></PRE>
+
+<H4 class="dtH4">Parameters</H4>
+
+<DL>
+<DT><I>pclsid</I></DT>
+
+<DD>[in] Pointer to the class ID of the notification.</dd>
+
+<DT><I>dwID</I></DT>
+
+<DD>[in] Specifies the unique identifier for the notification.</dd>
+
+<DT><I>pndBuffer</I></DT>
+
+<DD>[out] Pointer to an <B>SHNOTIFICATIONDATA</B> buffer to receive the notification data.</dd>
+</DL>
+
+<H4 class="dtH4">Return Values</H4>
+
+<P>This function returns ERROR_SUCCESS when successful.</P>
+
+<H4 class="dtH4">Remarks</H4>
+
+<P>Upon successful return from this function, <I>pndBuffer-&gt;pszHTML</I> and <I>pndBuffer-&gt;pszTitle</I> are owned by and must be freed by the caller.</P>
+
+<H4 class="dtH4">Windows Mobile Remarks</H4>
+
+<P>SHNotificationGetData cannot be used for notifications without a CLSID. ERROR_INVALID_PARAMETER is returned when a NULL CLSID is given. To create a classless notification, use a CLSID of {0000-0000-...-00000000}.</P>
+
+<P>SHNotificationGetData (&amp;CLSID_x, dwID, NULL) doesn't return whether a particular notification is present or not. The return value is 0x491.</P>
+
+<H4 class="dtH4">Code Example</H4>
+
+<P>The following code example demonstrates how to use <B>SHNotificationGetData</B>.</P>
+
+<BLOCKQUOTE class="dtBlock">
+<b class="le">Note</b>&nbsp;&nbsp;&nbsp;To make the following code example easier to read, security checking and error handling are not included. This code example should not be used in a release configuration unless it has been modified to include them.</BLOCKQUOTE>
+
+<PRE class="code">static const GUID CLSID_SHNAPI_Test = { 0x33765136, 0x8cb9, 0x449a, { 0xb0, 0x20, 0x43, 0xed, 0x40, 0xa, 0xb8, 0xfc } };
+
+void SHNotificationExample()
+{
+    // This code will add an SHNotificaion notificaion (PocketPC only)
+    SHNOTIFICATIONDATA sn  = {0};
+    SHNOTIFICATIONDATA sn2 = {0};
+
+    sn.cbStruct = sizeof(sn);
+    sn.dwID = 1;
+    sn.npPriority = SHNP_INFORM;
+    sn.csDuration = 15;
+    sn.hicon = LoadIcon(g_hInstance, MAKEINTRESOURCE(IDI_SAMPLEICON));
+    sn.clsid = CLSID_SHNAPI_Test;
+    sn.grfFlags = 0;
+    sn.pszTitle = TEXT("Sample Notification");
+    sn.pszHTML = TEXT("&lt;html&gt;&lt;body&gt;This is &lt;b&gt;sample html&lt;/b&gt; in a notification!&lt;/body&gt;&lt;/html&gt;");
+    sn.rgskn[0].pszTitle = TEXT("Dismiss");
+    sn.rgskn[0].skc.wpCmd = 100;
+
+    //Add the notification to the tray
+    SHNotificationAdd(&amp;sn);
+
+    //Put the data from an existing notification into a second SHNOTIFICATIONDATA struct
+    sn2.cbStruct = sizeof(sn2);
+<code><b class="cfe">    SHNotificationGetData(&amp;CLSID_SHNAPI_Test, 1, &amp;sn2);</b></code>
+
+    //Update the title, HTML, icon, and softkeys of the notification
+    sn2.pszTitle = TEXT("Updated - Sample Notification");
+    sn2.pszHTML = TEXT("&lt;html&gt;&lt;body&gt;This notification has been &lt;b&gt;updated!&lt;/b&gt;&lt;/body&gt;&lt;/html&gt;");
+    sn2.hicon = LoadIcon(g_hInstance, MAKEINTRESOURCE(IDI_SAMPLEICON2));
+    sn2.rgskn[0].pszTitle = TEXT("Disabled");
+    sn2.rgskn[0].skc.wpCmd = 100;
+    sn2.rgskn[0].skc.grfFlags = NOTIF_SOFTKEY_FLAGS_DISABLED;
+    SHNotificationUpdate(SHNUM_TITLE | SHNUM_HTML | SHNUM_ICON | SHNUM_SOFTKEYCMDS | SHNUM_SOFTKEYS, &amp;sn2);
+
+    //Remove the notification from the tray
+    SHNotificationRemove(&amp;CLSID_SHNAPI_Test, 1);
+
+    //Add a new notification that utilizes the MRE functionality
+    sn.cbStruct = sizeof(sn);
+    sn.dwID = 1;
+    sn.npPriority = SHNP_INFORM;
+    sn.csDuration = 15;
+    sn.hicon = LoadIcon(g_hInstance, MAKEINTRESOURCE(IDI_SAMPLEICON));
+    sn.clsid = CLSID_SHNAPI_Test;
+    sn.grfFlags = SHNF_STRAIGHTTOTRAY;
+    sn.pszTodaySK = TEXT("New Task");
+    sn.pszTodayExec = TEXT("\\windows\\tasks.exe");
+
+    //Add the notification to the tray
+    SHNotificationAdd(&amp;sn);
+
+    //Remove the notification from the tray
+    SHNotificationRemove(&amp;CLSID_SHNAPI_Test, 1);
+}</PRE>
+
+<H4 class="dtH4">Requirements</H4>
+
+<P><B>Pocket&nbsp;PC:</B> Windows&nbsp;Mobile&nbsp;2002 and later<BR>
+<B>OS Versions:</B> Windows&nbsp;CE&nbsp;3.0 and later<BR>
+<B>Header:</B> aygshell.h<BR>
+<B>Library:</B> aygshell.lib</P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

@@ -1,0 +1,121 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Linker Tools Warning LNK4098</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Linker Tools Warning LNK4098"/>
+<MSHelp:RLTitle Title="Linker Tools Warning LNK4098"/>
+<MSHelp:Keyword Index="A" Term="wce50errLinkerToolsWarningLNK4098"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Guide"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="True"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbRef"/>
+<MSHelp:Attr Name="Filename" Value="errlink.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="True"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_3026057">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50errlinkertoolswarninglnk4098"></A>Linker Tools Warning LNK4098</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<PRE class="syntax"><B>defaultlib "<I>library</I>" conflicts with use of other libs; </B>
+<B>use /NODEFAULTLIB:library</B></PRE>
+
+<P>You are trying to link with incompatible libraries.</P>
+
+<BLOCKQUOTE class="dtBlock">
+<b class="le">Note</b>&nbsp;&nbsp;&nbsp;The run-time libraries now contain directives to prevent mixing different types. You'll receive this warning if you try to use different types or debug and non-debug versions of the run-time library in the same program. For example, if you compiled one file to use one kind of run-time library and another file to use another kind (for example, single-threaded versus multithreaded) and tried to link them, you'll get this warning. You should compile all source files to use the same run-time library.  </BLOCKQUOTE>
+
+<P>You can use the linker's /VERBOSE:LIB switch to determine which libraries the linker is searching. </P>
+
+<P>If you receive LNK4098 and want to create an executable file that uses, for example, the single-threaded, non-debug run-time libraries, use the /VERBOSE:LIB option to find out which libraries the linker is searching. </P>
+
+<P>The linker should print LIBC.lib and not LIBCMT.lib, MSVCRT.lib, LIBCD.lib, LIBCMTD.lib, or MSVCRTD.lib as the libraries searched. </P>
+
+<P>You can tell the linker to ignore the incorrect run-time libraries by doing the following:
+
+<UL type="disc">
+	<LI>Opening the <B>Project Settings</B> dialog box (<B>Project</B> menu), clicking the <B>Link</B> tab, selecting the <B>Input</B> category, then typing the incorrect libraries in the <B>Ignore Libraries</B> text box. 
+<P>- or - 
+</li>
+
+	<LI>Using the /NODEFAULTLIB:<I>library</I> option with LINK for each library to ignore.</li>
+</UL>
+
+<P>The table below shows which libraries should be ignored depending on which run-time library you want to use.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=50%>To use this run-time library</TH>
+<TH width=50%>Ignore these libraries</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>Single-threaded (libc.lib)</TD>
+<TD width=50%>libcmt.lib, msvcrt.lib, libcd.lib, libcmtd.lib, msvcrtd.lib</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>Multithreaded (libcmt.lib)</TD>
+<TD width=50%>libc.lib, msvcrt.lib, libcd.lib, libcmtd.lib, msvcrtd.lib</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>Multithreaded using DLL (msvcrt.lib)</TD>
+<TD width=50%>libc.lib, libcmt.lib, libcd.lib, libcmtd.lib, msvcrtd.lib</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>Debug Single-threaded (libcd.lib)</TD>
+<TD width=50%>libc.lib, libcmt.lib, msvcrt.lib, libcmtd.lib, msvcrtd.lib</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>Debug Multithreaded (libcmtd.lib)</TD>
+<TD width=50%>libc.lib, libcmt.lib, msvcrt.lib, libcd.lib, msvcrtd.lib</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>Debug Multithreaded using DLL (msvcrtd.lib)</TD>
+<TD width=50%>libc.lib, libcmt.lib, msvcrt.lib, libcd.lib, libcmtd.lib</TD>
+</TR>
+</table></div>
+
+<P>For example, if you received this warning and you want to create an executable file that uses the non-debug, single-threaded version of the run-time libraries, you could use the following options with the linker:</P>
+
+<PRE class="code">/NODEFAULTLIB:libcmt.lib /NODEFAULTLIB:msvcrt.lib /NODEFAULTLIB:libcd.lib 
+/NODEFAULTLIB:libcmtd.lib /NODEFAULTLIB:msvcrtd.lib</PRE>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

@@ -1,0 +1,150 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Configurable EDB Volume Options</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Configurable EDB Volume Options"/>
+<MSHelp:RLTitle Title="Configurable EDB Volume Options"/>
+<MSHelp:Keyword Index="A" Term="wce50conConfigurableEDBVolumeOptions"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Feature"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="edb_concepts.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="False"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_1044857">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50conconfigurableedbvolumeoptions"></A>Configurable EDB Volume Options</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>EDB allows you to set various options on each EDB volume. These options are set using the <A HREF="wce50grfcevolumeoptionsedb.htm">CEVOLUMEOPTIONS</A> structure and the <A HREF="wce50lrfcemountdbvolexedb.htm">CeMountDBVolEx</A> function.</P>
+
+<P>Once a volume has been mounted, you cannot change the volume options. Therefore, the volume options are considered only once, when the volume is first mounted.</P>
+
+<P>The following table shows the settings you can adjust on an EDB volume. The paragraphs that follow the table provide further information on each of the settings.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=25%>EDB volume setting</TH>
+<TH width=52%>Description</TH>
+<TH width=23%>Default value (and range)</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=25%>BufferPoolSize</TD>
+<TD width=52%>Specifies the size, in bytes, of the buffer pool.</TD>
+<TD width=23%>640 KB</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=25%>AutoShrinkPercent</TD>
+<TD width=52%>Specifies the amount of free space (an integer from 0 to 100) to allow before automatically shrinking the database. </TD>
+<TD width=23%>60
+<P>(0-100)</P>
+</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=25%>FlushInterval</TD>
+<TD width=52%>Specifies the interval (in seconds) in which the dirty pages in a volume are flushed to disk.</TD>
+<TD width=23%>10 seconds
+<P>(1-1000 seconds)</P>
+</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=25%>MaxNotifyChanges</TD>
+<TD width=52%>Specifies the maximum number of changes to queue during a transaction.</TD>
+<TD width=23%>1000</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=25%>DefaultTimeout</TD>
+<TD width=52%>Specifies the number of milliseconds a transaction waits before abandoning the wait on a lock.</TD>
+<TD width=23%>2000</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=25%>Password</TD>
+<TD width=52%>Password-protects and encrypts the volume.</TD>
+<TD width=23%>(no password)</TD>
+</TR>
+</table></div>
+
+<UL type="disc">
+	<LI>BufferPoolSize
+<P>The buffer pool is used to cache pages and to manage transactions. The larger the buffer pool size, the better performance becomes, but the buffer pool consumes memory and so you need to adjust the BufferPoolSize setting for your specific needs.
+</li>
+
+	<LI>AutoShrinkPercent
+<P>The value assigned to AutoShrinkPercent represents the percentage of the database that is free space. For example, a setting of 70 causes EDB to shrink the database automatically when the free space exceeds 70% of the database size. A value of 0 disables automatic shrinking. 
+
+<BLOCKQUOTE class="dtBlock">
+<b class="le">Note</b>&nbsp;&nbsp;&nbsp;Automatic shrinking does not affect the OIDs of the database.</BLOCKQUOTE>
+</li>
+
+	<LI>FlushInterval
+<P>You can change the FlushInterval setting to determine how often EDB writes changes to disk. The shorter you set the flush interval, the more often EDB writes to disk. The longer you set the flush interval, the fewer the disk writes. However, if the application crashes before changes have been flushed, the changes are lost (but no corruption occurs).
+
+<BLOCKQUOTE class="dtBlock">
+<b class="le">Note</b>&nbsp;&nbsp;&nbsp;A flush occurs only if the data in the volume has changed.</BLOCKQUOTE>
+</li>
+
+	<LI>MaxNotifyChanges
+<P>You use this setting to improve performance during long-running transactions. When the MaxNotifyChanges threshold is exceeded, notification clients do not receive insert, update, and delete notifications. Instead, they receive only DB_NOTIFY_VOLUME_CHANGED notifications.
+
+<P>For more information on notifications, see <A HREF="wce50conusingnotificationswithedb.htm">Using Notifications with EDB</A>.
+</li>
+
+	<LI>DefaultTimeout
+<P>This setting specifies the time (in milliseconds) that a transaction will wait for another transaction to release a lock. If the timeout time elapses, the transaction fails. When choosing a setting for DefaultTimeout, consider your concurrency scenario on the volume. If your application requires data to be flushed immediately, you should set DefaultTimeout to a low value or call the <A HREF="wce50lrfceflushdbvoledb.htm">CeFlushDBVol</A> function. However, flushing is a resource-intensive operation and may affect performance. 
+
+<BLOCKQUOTE class="dtBlock">
+<b class="le">Note</b>&nbsp;&nbsp;&nbsp;EDB flushes data only after modifications have occurred.</BLOCKQUOTE>
+</li>
+
+	<LI>Password
+<P>In addition to providing password protection, this setting also encrypts the data in the volume. The maximum password length is 40 characters.
+
+<BLOCKQUOTE class="dtBlock">
+<b class="le">Note</b>&nbsp;&nbsp;&nbsp;EDB does not support a shared volume.</BLOCKQUOTE>
+</li>
+</UL>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50grfcevolumeoptionsedb.htm">CEVOLUMEOPTIONS</A> | <A HREF="wce50lrfcemountdbvolexedb.htm">CeMountDBVolEx</A> | <A HREF="wce50conusingnotificationswithedb.htm">Using Notifications with EDB</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

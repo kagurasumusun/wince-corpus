@@ -1,0 +1,141 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Build Release Directory Tool</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Build Release Directory Tool"/>
+<MSHelp:RLTitle Title="Build Release Directory Tool"/>
+<MSHelp:Keyword Index="A" Term="wce50conBuildReleaseDirectoryTool"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Guide"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="True"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="tools.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="True"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_3014195">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50conbuildreleasedirectorytool"></A>Build Release Directory Tool</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>Use the Build Release Directory tool (Buildrel.bat) to copy files for a run-time image to the %_FLATRELEASEDIR% directory. </P>
+
+<P>Buildrel.bat copies files from the following directories:
+
+<UL type="disc">
+	<LI>%_PROJECTROOT%\Cesysgen\Oak\Files</li>
+
+	<LI>%_PROJECTROOT%\Oak\Files</li>
+
+	<LI>%_PLATFORMROOT%\%_TGTPLAT%\Files</li>
+
+	<LI>%_PROJECTROOT%\Cesysgen\Oak\Target\%_TGTCPU%\%WINCEDEBUG%</li>
+
+	<LI>%_PROJECTROOT%\Oak\Target\%_TGTCPU%\%WINCEDEBUG%</li>
+
+	<LI>%_PLATFORMROOT%\%_TGTPLAT%\Target\%_TGTCPU%\%WINCEDEBUG%</li>
+</UL>
+
+<P>All files and binaries must reside in %_FLATRELEASEDIR% before Makeimg.exe is called. </P>
+
+<PRE class="syntax"><B>buildrel </B>[<B>-h</B>] [<B>-u</B>] [<B>-f</B>] [<I>BuildRoot</I>]</PRE>
+
+<H4 class="dtH4">Parameters</H4>
+
+<DL>
+<DT><B>-h</B></DT>
+
+<DD>Displays the command-line syntax.</dd>
+
+<DT><B>-u</B></DT>
+
+<DD>Updates the release. This parameter does not allow Buildrel.bat to clean the release directory before copying files. 
+
+<P>This option is not recommended.
+</dd>
+
+<DT><B>-f</B></DT>
+
+<DD>Refreshes the release. Buildrel.bat does not copy any binaries that would be copied due to the setting of the WINCEREL environment variable. 
+
+<P>This option is not recommended.
+</dd>
+
+<DT><I>BuildRoot</I></DT>
+
+<DD>Specifies the root directory for the build. This can be Local for your own build, or it can be a fully qualified path. The default is Local.</dd>
+</DL>
+
+<H4 class="dtH4">Error Messages</H4>
+
+<DL>
+<DT>ERROR - you are trying to update your release directory with an incompatible build. Either the target CPU, OS, Platform, or Project does not match the release directory. Please run without the [-u] flag to clean the current release directory.</DT>
+
+<DD>This message occurs when you run Buildrel.bat with the <B>-u</B> parameter. Buildrel.bat compares existing build information files (.bif) in %_FLATRELEASEDIR% against the environment variables you set through Wince.bat. 
+
+<P>If any .bif file does not match the build environment, Buildrel.bat determines an incompatible build. 
+
+
+<P>To troubleshoot, run Buildrel.bat without <B>-u</B>.
+</dd>
+
+<DT>ERROR: You cannot build a release or an image in a build window for the COMMON project.</DT>
+
+<DD>This message occurs if you set the %_TGTPROJ% environment variable to COMMON. 
+
+<P>The %_PROJECTROOT%\Common directory contains functionality that is common to all Windows CE OS designs. The tools in Platform Builder automatically take the Catalog items that are required for your Windows CE OS design. 
+
+
+<P>To troubleshoot, set %_TGTPROJ% by using only the options that are listed for Wince.bat.
+</dd>
+</DL>
+
+<H4 class="dtH4">Example</H4>
+
+<P>The following code example shows how to use Buildrel.bat to copy all files to the default directory, %_FLATRELEASEDIR%, on the development workstation.</P>
+
+<PRE class="code">buildrel </PRE>
+
+<H4 class="dtH4">Remarks</H4>
+
+<P>Because the build tree can contain binaries for more than one microprocessor, Buildrel.bat uses the defined environment variables to determine the directories from which it copies files.</P>
+
+<P>If sharing violations occur when BuildRel.bat tries to copy files into your flat release directory, set the environment variable <B>BUILDREL_USE_COPY=1</B>. This will instruct BuildRel.bat to use xcopy instead of copylink to copy files.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><MSHelp:link keywords="wce50tskCreatingaProfileEnabledOSImageforaCEPC" TABINDEX="0">Building a Run-Time Image That Supports the Kernel Profiler</MSHelp:link> | <A HREF="wce50conwindowscebuildenvironmenttool.htm">Windows CE Build Environment Tool</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

@@ -1,0 +1,140 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>COMMTIMEOUTS</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="COMMTIMEOUTS"/>
+<MSHelp:RLTitle Title="COMMTIMEOUTS"/>
+<MSHelp:Keyword Index="K" Term="COMMTIMEOUTS"/>
+<MSHelp:Keyword Index="A" Term="wce50lrfCOMMTIMEOUTS"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Feature"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="apiref"/>
+<MSHelp:Attr Name="Filename" Value="serial_structures.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="False"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+<MSHelp:Attr Name="APIName" Value="COMMTIMEOUTS"/>
+<MSHelp:Attr Name="PBFeature" Value="CORE"/>
+<MSHelp:Attr Name="PBOnly" Value="False"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_3005368">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50lrfcommtimeouts"></A>COMMTIMEOUTS</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>This structure is used in the <A HREF="wce50lrfsetcommtimeouts.htm">SetCommTimeouts</A> and <A HREF="wce50lrfgetcommtimeouts.htm">GetCommTimeouts</A> functions to set and query the timeout parameters for a communication device. </P>
+
+<P>The members determine the behavior of the <MSHelp:link keywords="wce50lrfReadFile" TABINDEX="0">ReadFile</MSHelp:link> and <MSHelp:link keywords="wce50lrfWriteFile" TABINDEX="0">WriteFile</MSHelp:link> function operations on the device.</P>
+
+<PRE class="syntax"><B>typedef struct _COMMTIMEOUTS { </B>
+  <B>DWORD </B><I>ReadIntervalTimeout</I><B>; </B>
+  <B>DWORD </B><I>ReadTotalTimeoutMultiplier</I><B>; </B>
+  <B>DWORD </B><I>ReadTotalTimeoutConstant</I><B>; </B>
+  <B>DWORD </B><I>WriteTotalTimeoutMultiplier</I><B>; </B>
+  <B>DWORD </B><I>WriteTotalTimeoutConstant</I><B>; </B>
+<B>} COMMTIMEOUTS,*LPCOMMTIMEOUTS; </B></PRE>
+
+<H4 class="dtH4">Members</H4>
+
+<DL>
+<DT><B>ReadIntervalTimeout</B></DT>
+
+<DD>Specifies the maximum acceptable time, in milliseconds, to elapse between the arrival of two characters on the communication line. 
+
+<P>In Windows CE, during a <B>ReadFile</B> operation, the time period begins immediately. 
+
+
+<P>If the interval between the arrivals of two characters exceeds the time amount specified in <B>ReadIntervalTimeout</B>, the <B>ReadFile</B> operation is completed and buffered data is returned. 
+
+
+<P>A value of zero indicates that interval timeouts are not used. 
+</dd>
+
+<DT><B>ReadTotalTimeoutMultiplier</B></DT>
+
+<DD>Specifies the multiplier, in milliseconds, used to calculate the total timeout period for read operations. 
+
+<P>For each read operation, this value is multiplied by the requested number of bytes to be read. 
+</dd>
+
+<DT><B>ReadTotalTimeoutConstant</B></DT>
+
+<DD>Specifies the constant, in milliseconds, used to calculate the total timeout period for read operations. 
+
+<P>For each read operation, this value is added to the product of the <B>ReadTotalTimeoutMultiplier</B> member and the requested number of bytes. 
+
+
+<P>A value of zero for the <B>ReadTotalTimeoutMultiplier</B> and <B>ReadTotalTimeoutConstant</B> members indicates that total timeouts are not used for read operations. 
+</dd>
+
+<DT><B>WriteTotalTimeoutMultiplier</B></DT>
+
+<DD>Specifies the multiplier, in milliseconds, used to calculate the total timeout period for write operations. 
+
+<P>For each write operation, this value is multiplied by the number of bytes to be written. 
+</dd>
+
+<DT><B>WriteTotalTimeoutConstant</B></DT>
+
+<DD>Specifies the constant, in milliseconds, used to calculate the total timeout period for write operations. 
+
+<P>For each write operation, this value is added to the product of the <B>WriteTotalTimeoutMultiplier</B> member and the number of bytes to be written. 
+
+
+<P>A value of zero for the <B>WriteTotalTimeoutMultiplier</B> and <B>WriteTotalTimeoutConstant</B> members indicates that total timeouts are not used for write operations. 
+</dd>
+</DL>
+
+<H4 class="dtH4">Remarks</H4>
+
+<P>If an application sets <B>ReadIntervalTimeout</B> and <B>ReadTotalTimeoutMultiplier</B> to <B>MAXDWORD</B> and sets <B>ReadTotalTimeoutConstant</B> to a value greater than zero and less than <B>MAXDWORD</B>, one of the following occurs when the <B>ReadFile</B> function is called:
+
+<UL type="disc">
+	<LI>If there are characters in the input buffer, <B>ReadFile</B> returns immediately with the characters in the buffer.</li>
+
+	<LI>If there are no characters in the input buffer, <B>ReadFile</B> waits until a character arrives and then returns immediately. </li>
+
+	<LI>If no characters arrive within the time specified by <B>ReadTotalTimeoutConstant</B>, <B>ReadFile</B> times out. </li>
+</UL>
+
+<H4 class="dtH4">Requirements</H4>
+
+<P><B>OS Versions:</B> Windows CE 1.0 and later.<BR>
+<B>Header:</B> Winbase.h.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50lrfgetcommtimeouts.htm">GetCommTimeouts</A> | <MSHelp:link keywords="wce50lrfReadFile" TABINDEX="0">ReadFile</MSHelp:link> | <A HREF="wce50lrfsetcommtimeouts.htm">SetCommTimeouts</A> | <MSHelp:link keywords="wce50lrfWriteFile" TABINDEX="0">WriteFile</MSHelp:link></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

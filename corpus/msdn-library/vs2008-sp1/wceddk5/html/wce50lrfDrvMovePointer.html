@@ -1,0 +1,107 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>DrvMovePointer</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="DrvMovePointer"/>
+<MSHelp:RLTitle Title="DrvMovePointer"/>
+<MSHelp:Keyword Index="K" Term="DrvMovePointer"/>
+<MSHelp:Keyword Index="A" Term="wce50lrfDrvMovePointer"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Driver"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="False"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="apiref"/>
+<MSHelp:Attr Name="Filename" Value="display_reference.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="False"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+<MSHelp:Attr Name="APIName" Value="DrvMovePointer"/>
+<MSHelp:Attr Name="APIType" Value="LibDef"/>
+<MSHelp:Attr Name="APILocation" Value="Ddi_ati_lib.lib, Ddi_flat_lib.lib, Ddi_gx_lib.lib, Ddi_mq200_lib.lib, Ddi_nop_lib.lib, Ddi_rflat_lib.lib, Ddi_rgx_lib.lib, or Ddi_tvia5_lib.lib"/>
+<MSHelp:Attr Name="PBFeature" Value="DisplayDriver"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_3017937">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50lrfdrvmovepointer"></A>DrvMovePointer</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>This function moves the pointer to a new position and ensures that GDI does not interfere with the display of the pointer.</P>
+
+<PRE class="syntax"><B>VOID DrvMovePointer(</B>
+<B>  SURFOBJ* </B><I>pso</I><B>,</B>
+<B>  LONG </B><I>x</I><B>,</B>
+<B>  LONG </B><I>y</I><B>,</B>
+<B>  RECTL* </B><I>prcl</I>
+<B>);</B></PRE>
+
+<H4 class="dtH4">Parameters</H4>
+
+<DL>
+<DT><I>pso</I> </DT>
+
+<DD>[in] Pointer to a <B>SURFOBJ</B> structure that describes the surface of a display device. </dd>
+
+<DT><I>x</I></DT>
+
+<DD>[in] X coordinate on the display where the driver should position the hot spot of the pointer. A negative x value indicates that the driver should remove the pointer from the display because drawing is about to occur where it is presently located. If the pointer has been removed from the display and the <I>x</I> value is nonnegative, the driver should restore the pointer. </dd>
+
+<DT><I>y</I></DT>
+
+<DD>[in] Y coordinate on the display where the driver should position the hot spot of the pointer. When the driver has set the GCAPS_PANNING flag in the <B>DEVINFO</B> structure, a negative <I>y</I> value indicates that GDI is calling this function only to notify the driver of the cursor's current position. You can compute the current position as <I>x</I> + <I>pso</I>-&gt;<B>sizlBitmap</B>.<B>cy</B>. A driver that does not set the GCAPS_PANNING flag will never receive a negative y coordinate</dd>
+
+<DT><I>prcl</I> </DT>
+
+<DD>[in] Pointer to a <MSHelp:link keywords="wce50lrfRECTL" TABINDEX="0">RECTL</MSHelp:link> structure defining an area that bounds all pixels affected by the pointer on the display. GDI will not draw in this rectangle without first removing the pointer from the screen. You can compute the current position <I>y</I> + <I>pso</I>-&gt;<B>sizlBitmap</B>.<B>cy</B>. This parameter can be NULL. </dd>
+</DL>
+
+<H4 class="dtH4">Return Values</H4>
+
+<P>None.</P>
+
+<H4 class="dtH4">Remarks</H4>
+
+<P><B>DrvMovePointer</B> is not called while any thread is drawing in the display driver.</P>
+
+<P>If a driver has registered the specified pointer using <A HREF="wce50lrfdrvsetpointershape.htm">DrvSetPointerShape</A>, <B>DrvMovePointer</B> must not fail.</P>
+
+<H4 class="dtH4">Requirements</H4>
+
+<P><B>OS Versions:</B> Windows CE 1.0 and later.<BR>
+<B>Header:</B> Winddi.h.<BR>
+<B>Link Library:</B> Ddi_ati_lib.lib, Ddi_flat_lib.lib, Ddi_gx_lib.lib, Ddi_mq200_lib.lib, Ddi_nop_lib.lib, Ddi_rflat_lib.lib, Ddi_rgx_lib.lib, or Ddi_tvia5_lib.lib.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50condisplaydrivers.htm">Display Drivers</A> | <A HREF="wce50lrfdrvsetpointershape.htm">DrvSetPointerShape</A> | <MSHelp:link keywords="wce50lrfRECTL" TABINDEX="0">RECTL</MSHelp:link></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

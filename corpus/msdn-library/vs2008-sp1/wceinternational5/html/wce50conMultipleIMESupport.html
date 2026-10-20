@@ -1,0 +1,123 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Multiple IME Support</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Multiple IME Support"/>
+<MSHelp:RLTitle Title="Multiple IME Support"/>
+<MSHelp:Keyword Index="A" Term="wce50conMultipleIMESupport"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Feature"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="user_input_language.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="True"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="True"/>
+<MSHelp:Attr Name="PBOnly" Value="True"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_1054741">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50conmultipleimesupport"></A>Multiple IME Support</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>Windows CE includes predefined HKL values for the East Asian IMEs and keyboards. For Japanese and Korean, only one HKL value has been defined, therefore only one IME can be installed. For Simplified Chinese and Traditional Chinese multiple HKL values have been defined for each locale to accommodate multiple IME types. For example, you can include both the Pinyin IME and the Shuang Pin IME in the same run-time image.</P>
+
+<BLOCKQUOTE class="dtBlock">
+<b class="le">Note</b>&nbsp;&nbsp;&nbsp;You cannot include two Pinyin IMEs in a run-time image because one IME will overwrite the other in the registry.</BLOCKQUOTE>
+
+<P>In Windows CE, only one IME can be preloaded at all times with the exception of the Simplified Chinese Pocket IME and Traditional Chinese Pocket IME. Users can only toggle between one IME and additional keyboards at device runtime.</P>
+
+<P>If your OS design includes more than one IME, you must update platform.reg with the required preload information, including the data for the default IME. </P>
+
+<P class="labelproc"><B>To implement multiple IMEs for a run-time image</B>
+
+<OL type="1">
+	<LI>In Platform Builder, add the appropriate Catalog item for each IME to your OS design. For more information, see <A HREF="wce50grfinternationalcatalogitems.htm">International Catalog Items</A>. </li>
+
+	<LI>In your OS design, modify the platform.reg file and add the HKL value for each preload under the <B>[HKEY_CURRENT_USER\Keyboard Layout\Preload</B> key using the following syntax:
+<PRE class="code">[HKEY_CURRENT_USER\Keyboard Layout\Preload]
+   @="&lt;<I>HKL value</I>&gt;"
+[HKEY_CURRENT_USER\Keyboard Layout\Preload\1]
+   @="&lt;<I>HKL value</I>&gt;"
+[HKEY_CURRENT_USER\Keyboard Layout\Preload\2]
+   @="&lt;<I>HKL value</I>&gt;"</PRE>
+
+<BLOCKQUOTE class="dtBlock">
+<b class="le">Note</b>&nbsp;&nbsp;&nbsp;A value for the <B>[HKEY_CURRENT_USER\Keyboard Layout\Preload\2 </B>key should only be defined for Simplified Chinese Pocket IME and Traditional Chinese Pocket IME, or if the OS design includes additional keyboard layouts that are not associated with an IME. </BLOCKQUOTE>
+</li>
+</OL>
+
+<H4 class="dtH4">Locale-Specific Considerations</H4>
+
+<P>If the preloaded IME is changed for a device, the control panel will update the registry with the new information.</P>
+
+<BLOCKQUOTE class="dtBlock">
+<b class="le">Note</b>&nbsp;&nbsp;&nbsp;If you want to add a third-party IME, or if you want to set the Japanese Edit Control level to 3 by default, you must modify Control Panel source code directly. For more information about Japanese Edit Control, see <A HREF="wce50conjapaneseeditcontrol.htm">Japanese Edit Control</A>. </BLOCKQUOTE>
+
+<P>When building a run-time image with a preloaded IME, ensure that the registry settings for your OS design match the default preload IME. You can verify that the registry settings are accurate by opening the wceshellfe.reg file, which is located in the release directory for your OS design.</P>
+
+<P>The following scenarios are possible:
+
+<UL type="disc">
+	<LI>If IME97 is set as the default input language for your OS design, verify that the following settings are present in wceshellfe.reg:
+<PRE class="code">[HKEY_LOCAL_MACHINE\System\Ime]
+"Settings"=dword:2c
+[HKEY_LOCAL_MACHINE\SYSTEM\GWE\EDIT]
+"IMELEVEL"=dword:3</PRE>
+</li>
+
+	<LI>If MSPY 3.0 is set as the default input language for your OS design, verify that the following settings are present in wceshellfe.reg:
+<PRE class="code">HKEY_LOCAL_MACHINE\SYSTEM\GWE\EDIT]
+"IMELEVEL"=dword:3</PRE>
+</li>
+
+	<LI>If one of the following IMEs is set as the default input language for your OS design, remove the [<B>HKEY_LOCAL_MACHINE\SYSTEM\GWE\EDIT\IMELEVEL</B> and the <B>[HKEY_LOCAL_MACHINE\System\Ime\Settings</B> keys from wceshellfe.reg:
+<UL type="disc">
+	<LI>IME 3.1</li>
+
+	<LI>Japanese TESTIME</li>
+
+	<LI>Pocket IME for Japanese</li>
+
+	<LI>Pocket IME for Simplified Chinese</li>
+
+	<LI>Pocket IME for traditional Chinese</li>
+</UL>
+</li>
+</UL>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50coninternationalization271.htm">International</A> | <MSHelp:link keywords="wce50conInputLanguages" TABINDEX="0">Input Languages</MSHelp:link> | <MSHelp:link keywords="wce50conKeyboardDrivers" TABINDEX="0">Keyboard Drivers</MSHelp:link> | <MSHelp:link keywords="wce50conDeviceLayoutData" TABINDEX="0">Device Layout Data</MSHelp:link></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

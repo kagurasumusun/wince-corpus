@@ -1,0 +1,124 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Sample ATADISK Driver</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Sample ATADISK Driver"/>
+<MSHelp:RLTitle Title="Sample ATADISK Driver"/>
+<MSHelp:Keyword Index="A" Term="wce50conSampleATADISKDriver"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Driver"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="False"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="block_guide.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="True"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="True"/>
+<MSHelp:Attr Name="PBFeature" Value="BlockDriver"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_3017307">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50consampleatadiskdriver"></A>Sample ATADISK Driver</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>The sample ATADISK driver is in the %_WINCEROOT%\Public\Common\OAK\Drivers\Block\ATADisk directory. </P>
+
+<P>In addition to the standard stream interface functions, the ATADISK driver also exports a PC Card Plug and Play detection function, <B>DetectATADisk</B>. </P>
+
+<P>The detection function only reads the attribute space of the PC Card; it does not read any data or perform any write operations on the PC Card. </P>
+
+<P>The function looks for disk device type 4 in the PC Card's <B>CISTPL_FUNCID</B> tuple, and for ATA device type 1 in the type 1 <B>CISTPL_FUNCE</B> tuple.</P>
+
+<P>The presence of the <B>HKEY_LOCAL_MACHINE\Drivers\PCMCIA\ATADisk</B> registry key causes the Device Manager to call the driver's <B>DetectATADisk</B> function when you insert a PC Card and there is no driver that is associated with the card's Plug and Play identifier. For more information about the Device Manager, see <MSHelp:link keywords="wce50conDeviceManager" TABINDEX="0">Device Manager</MSHelp:link>. </P>
+
+<P>The following registry key example shows this:</P>
+
+<PRE class="code">[HKEY_LOCAL_MACHINE\Drivers\PCMCIA\Detect\50]
+    "Dll"="ATADISK.DLL"
+    "Entry"="DetectATADisk"</PRE>
+
+<P>When <B>DetectATADisk</B> detects an ATA-compatible PC Card, it causes the Device Manager to load the driver listed in the <B>HKEY_LOCAL_MACHINE\Drivers\PCMCIA\ATADisk</B> registry key. </P>
+
+<P>The following registry key example shows this:</P>
+
+<PRE class="code">[HKEY_LOCAL_MACHINE\Drivers\PCMCIA\ATADisk]
+    "Dll"="ATADISK.DLL"
+    "Prefix"="DSK"
+    "Ioctl"=dword:4
+    "Profile"="PCMCIA"
+    "IClass"=multi_sz:"{A32942B7-920C-486b-B0E6-92A702A99B35}","{A4E7EDDA-E575-4252-9D6B-4195D48BB865}"</PRE>
+
+<P>The following table shows optional values that can go under <B>HKEY_LOCAL_MACHINE\Drivers\PCMCIA\ATADisk</B>; these values affect all devices that the ATADISK driver effects.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=15%>Key</TH>
+<TH width=85%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=15%><B>Cylinders</B></TD>
+<TD width=85%>A value of<I> <B>xxx</B></I> causes the ATADISK driver to not rely on the number of cylinders that the ATA device reports in response to the ATA IDENTIFY command. 
+<P>The number specified by the <B>Cylinders</B> registry value is used.</P>
+</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=15%><B>Heads</B></TD>
+<TD width=85%>A value of<I> <B>hh</B></I> causes the ATADISK driver to not rely on the number of heads that the ATA device reports in response to the ATA IDENTIFY command. 
+<P>The number specified by the <B>Heads</B> registry value is used.</P>
+</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=15%><B>Sectors</B></TD>
+<TD width=85%>A value of <B><I>ss</I></B> causes the ATADISK driver to not rely on the number of sectors per track reported by the ATA device in response to the ATA IDENTIFY command. 
+<P>The number specified by the <B>Sectors</B> registry value is used.</P>
+</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=15%><B>CHSMode</B></TD>
+<TD width=85%>A value of 1 forces the ATADISK driver to use Cylinder/Head/Sector (CHS) addressing mode. 
+<P>If the <B>CHSMode</B> value is 0 or the value is not present, the ATADISK driver uses the addressing mode reported by the ATA device in response to the ATA IDENTIFY command. </P>
+
+<P>The ATADISK driver uses logical block address (LBA) mode when available.</P>
+</TD>
+</TR>
+</table></div>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50conblockdriverarchitecture.htm">Block Driver Architecture</A> | <A HREF="wce50conblockdriverregistrysettings.htm">Block Driver Registry Settings</A> | <A HREF="wce50oripcmciadeprecateddriversupport.htm">Legacy PCMCIA Driver Support</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

@@ -1,0 +1,104 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>System Power State to Device Power State Mapping</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="System Power State to Device Power State Mapping"/>
+<MSHelp:RLTitle Title="System Power State to Device Power State Mapping"/>
+<MSHelp:Keyword Index="A" Term="wce50conSystemPowerStatetoDevicePowerStateMapping"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Driver"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="False"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="powermgrdrv_guide.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="True"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="True"/>
+<MSHelp:Attr Name="PBFeature" Value="SYSGEN_PM"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_3019098">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50consystempowerstatetodevicepowerstatemapping"></A>System Power State to Device Power State Mapping</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>You explicitly define system power state names as registry keys in the system configuration. The system-state-to-device-state mappings are enumerated as values under each power state name key in the registry as shown in the following code example.</P>
+
+<PRE class="code">[HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Power\State\Example]
+    Default=dword:0; D0
+    Flags=dword:10000; POWER_STATE_ON
+    COM1:=dword1; D1</PRE>
+
+<P>This registry fragment defines the example system power state, in which all devices are allowed to go as high as D0 in their device power states, except for COM1:, which is limited to D1. The <B>Flags</B> field is a bitmask representing the POWER_STATE_XXX settings in Pm.h. OEMs may define their own power state flags if they desire.</P>
+
+<P>The following table shows the values and their descriptions.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=18%>Value</TH>
+<TH width=82%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=18%><B>Name</B></TD>
+<TD width=82%>Name of the system power state.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=18%><B>Flags</B></TD>
+<TD width=82%>Bitmask representing POWER_STATE_XXX values from Pm.h and/or OEM-defined power state flags. For more information on the power state flags see <A HREF="wce50lrfpowerbroadcast.htm">POWER_BROADCAST</A>.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=18%><B>Default</B></TD>
+<TD width=82%>Default device power setting for all devices while at system power state <B>Name</B>. This is a number representing the Dx value. A 0 (zero) represents D0, a 1 represents D1, and so on.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=18%><B><I>DeviceName</I></B></TD>
+<TD width=82%>Any number of named devices may be included with a system power state definition. The value associated with the device name represents the maximum device power state for that system power state.</TD>
+</TR>
+</table></div>
+
+<P>The Power Manager supports the managing of multiple device classes. For example, NDIS miniports and block device drivers are assigned their own class GUIDs in Pm.h. Default values for devices of other managed classes can be specified in the registry as well. For example:</P>
+
+<PRE class="code">[HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Power\State\Example\{98C5250D-C29A-4985-AE5F-AFE5367E5006}]
+    Default=dword:1; D1
+    "CISCO1<I>"=</I>dword:0; D0</PRE>
+
+<P>This registry fragment configures the Power Manager to restrict all NDIS miniport devices to run at or below device power state D1 in system power state example, except for CISCO1, which can go as high as D0.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50consystempowerstates.htm">System Power States</A> | <A HREF="wce50lrfpowerbroadcast.htm">POWER_BROADCAST</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

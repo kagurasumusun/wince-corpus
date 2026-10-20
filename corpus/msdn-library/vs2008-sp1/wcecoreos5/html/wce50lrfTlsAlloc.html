@@ -1,0 +1,114 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>TlsAlloc</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="TlsAlloc"/>
+<MSHelp:RLTitle Title="TlsAlloc"/>
+<MSHelp:Keyword Index="K" Term="TlsAlloc"/>
+<MSHelp:Keyword Index="A" Term="wce50lrfTlsAlloc"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Feature"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="apiref"/>
+<MSHelp:Attr Name="Filename" Value="process_threads_reference.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="False"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+<MSHelp:Attr Name="APIName" Value="TlsAlloc"/>
+<MSHelp:Attr Name="APIType" Value="LibDef"/>
+<MSHelp:Attr Name="APILocation" Value="Coredll.lib"/>
+<MSHelp:Attr Name="PBFeature" Value="CORE"/>
+<MSHelp:Attr Name="PBOnly" Value="False"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_3002595">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50lrftlsalloc"></A>TlsAlloc</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>This function allocates a thread local storage (TLS) index. </P>
+
+<P>Any thread of the process can subsequently use this index to store and retrieve values that are local to the thread. </P>
+
+<PRE class="syntax"><B>DWORD TlsAlloc(void); </B></PRE>
+
+<H4 class="dtH4">Parameters</H4>
+
+<P>None.</P>
+
+<H4 class="dtH4">Return Values</H4>
+
+<P>A TLS index indicates success. </P>
+
+<P>0xFFFFFFFF indicates failure. </P>
+
+<P>To get extended error information, call <A HREF="wce50lrfgetlasterror.htm">GetLastError</A>. </P>
+
+<H4 class="dtH4">Remarks</H4>
+
+<P>The threads of the process can use the TLS index in subsequent calls to the <A HREF="wce50lrftlsfree.htm">TlsFree</A>, <A HREF="wce50lrftlssetvalue.htm">TlsSetValue</A>, or <A HREF="wce50lrftlsgetvalue.htm">TlsGetValue</A> functions. </P>
+
+<P>TLS indexes are typically allocated during process or DLL initialization. When allocated, each thread of the process can use a TLS index to access its own TLS storage slot. To store a value in its slot, a thread specifies the index in a call to <B>TlsSetValue</B>. </P>
+
+<P>The thread specifies the same index in a subsequent call to <B>TlsGetValue</B>, to retrieve the stored value. </P>
+
+<P>The constant TLS_MINIMUM_AVAILABLE defines the minimum number of TLS indexes available in each process. This minimum is guaranteed to be at least 64 for all systems. </P>
+
+<P>TLS indexes are not valid across process boundaries. A DLL cannot assume that an index assigned in one process is valid in another process. </P>
+
+<P>The following list shows how a DLL might use <B>TlsAlloc</B>, <B>TlsSetValue</B>, <B>TlsGetValue</B>, and <B>TlsFree</B>: 
+
+<UL type="disc">
+	<LI>When a DLL attaches to a process, the DLL uses <B>TlsAlloc</B> to allocate a TLS index. The DLL then allocates dynamic storage and uses the TLS index in a call to <B>TlsSetValue</B> to store the address in the TLS slot. 
+<P>This concludes the per-thread initialization for the initial thread of the process. The TLS index is stored in a global or static variable of the DLL. 
+</li>
+
+	<LI>Each time the DLL attaches to a new thread of the process, the DLL allocates dynamic storage for the new thread and uses the TLS index in a call to <B>TlsSetValue</B> to store the address in the TLS slot. 
+<P>This concludes the per-thread initialization for the new thread. 
+</li>
+
+	<LI>Each time an initialized thread makes a DLL call requiring the data in its dynamic storage, the DLL uses the TLS index in a call to <B>TlsGetValue</B> to retrieve the address of the dynamic storage for that thread. </li>
+</UL>
+
+<P>For additional information on thread local storage, see <A HREF="wce50conkernel.htm">Kernel Overview</A>.</P>
+
+<H4 class="dtH4">Requirements</H4>
+
+<P><B>OS Versions:</B> Windows CE 1.0 and later.<BR>
+<B>Header:</B> Winuser.h.<BR>
+<B>Link Library:</B> Coredll.lib.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50lrftlsfree.htm">TlsFree</A> | <A HREF="wce50lrftlsgetvalue.htm">TlsGetValue</A> | <A HREF="wce50lrftlssetvalue.htm">TlsSetValue</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

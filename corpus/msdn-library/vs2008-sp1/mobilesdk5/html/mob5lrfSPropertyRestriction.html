@@ -1,0 +1,150 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>SPropertyRestriction</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="SPropertyRestriction"/>
+<MSHelp:RLTitle Title="SPropertyRestriction"/>
+<MSHelp:Keyword Index="K" Term="SPropertyRestriction"/>
+<MSHelp:Keyword Index="A" Term="mob5lrfSPropertyRestriction"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Application"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbsmartphone"/>
+<MSHelp:Attr Name="Product" Value="kbPocketPC"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="Technology" Value="kbPocketPC"/>
+<MSHelp:Attr Name="Technology" Value="kbSmartphone"/>
+<MSHelp:Attr Name="TopicType" Value="apiref"/>
+<MSHelp:Attr Name="Filename" Value="CE_MAPI_FuncStrucEnum_magneto.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="False"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_1064605">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Windows Mobile Version 5.0 SDK<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="mob5lrfspropertyrestriction"></A>SPropertyRestriction</H1>
+<!--Feedback Link Top Start-->
+<P CLASS="feedback"><font size="1"><a href="mailto:medfdbk&#64;microsoft.com?subject=Product: Windows Mobile | Version: 5.0 | Release: SDK | Title: SPropertyRestriction | Filename: mob5lrfspropertyrestriction.htm | Built on: Wednesday, September 14, 2005">Send Feedback</a> on this topic to the authors</font></p>
+<!--Feedback Link Top End-->
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>The <B>SPropertyRestriction</B> structure describes a property restriction, which is used to match a constant with the value of a property.</P>
+
+<H4 class="dtH4">Syntax</H4>
+
+<PRE class="syntax"><B>struct { </B>
+  <B>ULONG </B><I>relop</I><B>;</B> 
+  <B>ULONG </B><I>ulPropTag</I><B>;</B> 
+  <B>LPSPropValue </B><I>lpProp</I><B>;</B> 
+<B>} SPropertyRestriction; </B></PRE>
+
+<H4 class="dtH4">Members</H4>
+
+<DL>
+<DT><B>relop</B></DT>
+
+<DD>Relational operator to be used in the search. Possible values are as follows:
+
+<P><B>RELOP_GE</B>
+
+
+<P>The comparison is made based on a greater or equal first value.
+
+
+<P><B>RELOP_GT</B>
+
+
+<P>The comparison is made based on a greater first value.
+
+
+<P><B>RELOP_LE</B>
+
+
+<P>The comparison is made based on a lesser or equal first value.
+
+
+<P><B>RELOP_LT</B>
+
+
+<P>The comparison is made based on a lesser first value.
+
+
+<P><B>RELOP_NE</B>
+
+
+<P>The comparison is made based on unequal values.
+
+
+<P><B>RELOP_RE</B>
+
+
+<P>The comparison is made based on <B>LIKE</B> (regular expression) values.
+
+
+<P><B>RELOP_EQ</B>
+
+
+<P>The comparison is made based on equal values.
+</dd>
+
+<DT><B>ulPropTag</B></DT>
+
+<DD>Property tag identifying the property to be compared. </dd>
+
+<DT><B>lpProp</B></DT>
+
+<DD>Pointer to an <A HREF="mob5lrfspropvalue.htm">SPropValue</A> structure containing the constant value to be used in the comparison.</dd>
+</DL>
+
+<H4 class="dtH4">Remarks</H4>
+
+<P>An <B>SPropertyRestriction</B> structure contains two property tags: one in the <B>ulPropTag</B> member and the other in the <B>ulPropTag</B> member of the <A HREF="mob5lrfspropvalue.htm">SPropValue</A> structure pointed to by <B>lpProp</B>. In both tags, MAPI requires only the property type field and ignores the property identifier field. However, the two property types must match or else the error value <B>MAPI_E_TOO_COMPLEX</B> is returned when the restriction is used in a call to <A HREF="mob5lrfimapitablerestrict.htm">IMAPITable::Restrict</A>. </P>
+
+<P>The comparison order is (<I>property value</I>) (<I>relational operator</I>) (<I>constant value</I>).</P>
+
+<P>When a property restriction is passed to <B>IMAPITable::Restrict</B> and the target property does not exist, the results of the restriction are undefined. By creating an <B>AND</B> restriction that joins the property restriction with an existence restriction, a caller can be guaranteed accurate results. Use an <A HREF="mob5lrfsexistrestriction.htm">SExistRestriction</A> structure to define the existence restriction and an <A HREF="mob5lrfsandrestriction.htm">SAndRestriction</A> structure to define the <B>AND</B> restriction.</P>
+
+<P>Multivalued properties can be used in property restrictions if the service provider implementing the table supports them. If supported, multivalued property tags can be used anywhere single-valued property tags can be used. They can be used in <A HREF="mob5lrfimapipropsetprops.htm">IMAPIProp::SetProps</A>, <A HREF="mob5lrfimapipropgetprops.htm">IMAPIProp::GetProps</A>, <A HREF="mob5lrfimapitablesetcolumns.htm">IMAPITable::SetColumns</A>, <A HREF="mob5lrfimapitablesorttable.htm">IMAPITable::SortTable</A>, and <A HREF="mob5lrfimapitablerestrict.htm">IMAPITable::Restrict</A>. </P>
+
+<H4 class="dtH4">Requirements</H4>
+
+<P><B>Pocket&nbsp;PC:</B> Pocket&nbsp;PC&nbsp;2002 and later<BR>
+<B>Smartphone:</B> Smartphone&nbsp;2002 and later<BR>
+<B>OS&nbsp;Versions:</B> Windows&nbsp;CE&nbsp;3.0 and later<BR>
+<B>Header:</B> mapidefs.h</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="mob5grfmapistructures.htm">MAPI Structures</A> | <A HREF="mob5orimessaging.htm">Messaging</A> | <A HREF="mob5lrfspropvalue.htm">SPropValue</A> | <A HREF="mob5lrfsrestriction.htm">SRestriction</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Feedback Link Bottom Start-->
+<p><font size="1"><a href="mailto:medfdbk&#64;microsoft.com?subject=Product: Windows Mobile | Version: 5.0 | Release: SDK | Title: SPropertyRestriction | Filename: mob5lrfspropertyrestriction.htm | Built on: Wednesday, September 14, 2005">Send Feedback</a> on this topic to the authors</font></p>
+<!--Feedback Link Bottom End-->
+<!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="mob5conCopyrightInformationForMagneto" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link></font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

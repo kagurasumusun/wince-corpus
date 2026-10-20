@@ -1,0 +1,213 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>IItem::GetProps</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="IItem::GetProps"/>
+<MSHelp:RLTitle Title="IItem::GetProps"/>
+<MSHelp:Keyword Index="K" Term="code example, IItem,GetProps"/>
+<MSHelp:Keyword Index="K" Term="IItem,GetProps"/>
+<MSHelp:Keyword Index="A" Term="mob5lrfIItemGetProps"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Application"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbsmartphone"/>
+<MSHelp:Attr Name="Product" Value="kbPocketPC"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="Technology" Value="kbPocketPC"/>
+<MSHelp:Attr Name="Technology" Value="kbSmartphone"/>
+<MSHelp:Attr Name="TopicType" Value="apiref"/>
+<MSHelp:Attr Name="Filename" Value="POOM_API_magneto.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="True"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_1067938">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Windows Mobile Version 5.0 SDK<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="mob5lrfiitemgetprops"></A>IItem::GetProps</H1>
+<!--Feedback Link Top Start-->
+<P CLASS="feedback"><font size="1"><a href="mailto:medfdbk&#64;microsoft.com?subject=Product: Windows Mobile | Version: 5.0 | Release: SDK | Title: IItem::GetProps | Filename: mob5lrfiitemgetprops.htm | Built on: Wednesday, September 14, 2005">Send Feedback</a> on this topic to the authors</font></p>
+<!--Feedback Link Top End-->
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>The <B>GetProps</B> method gets a PIM item's list of property values.</P>
+
+<H4 class="dtH4">Syntax</H4>
+
+<PRE class="syntax"><B>HRESULT GetProps(
+  const CEPROPID * </B><I>rgPropID</I><B>,
+  ULONG </B><I>ulFlags</I><B>,
+  WORD </B><I>cProps</I><B>,
+  CEPROPVAL ** </B><I>prgVals</I><B>,
+  ULONG * </B><I>pcbBuffer</I><B>,
+  HANDLE </B><I>hHeap</I><B>
+);</B></PRE>
+
+<H4 class="dtH4">Parameters</H4>
+
+<DL>
+<DT><I>rgPropID</I></DT>
+
+<DD>[in] An array of property ID's.</dd>
+
+<DT><I>ulFlags</I></DT>
+
+<DD>[in] Flag specifying memory allocation for <I>prgVals</I>. To allocate memory for <I>prgVals</I>, set to <B>CEDB_ALLOWREALLOC</B>. Set to zero if already allocated.</dd>
+
+<DT><I>cProps</I></DT>
+
+<DD>[in] The number of property values contained in <I>rgPropID</I>.</dd>
+
+<DT><I>prgVals</I></DT>
+
+<DD>[out] Reference to an array used to return the list of property values if you allocate memory (i.e., set <I>ulFlags</I> to <B>CEDB_ALLOWREALLOC</B>). If you do not allocate memory, then <I>prgVals</I> is NULL, and <B>GetProps</B> allocates the memory for you. If there is insufficient memory, <B>E_OUTOFMEMORY</B> is returned.</dd>
+
+<DT><I>pcbBuffer</I></DT>
+
+<DD>[in/out] Reference to the count of bytes passed in <I>prgVals</I> if you allocate memory. If you do not allocate memory, then <I>pcbBuffer</I> is the size of the buffer that <B>GetProps</B> allocated instead.</dd>
+
+<DT><I>hHeap</I></DT>
+
+<DD>[in] Handle to the heap memory to allocate prgVals (if you allocate memory). If you do not allocate memory, then <I>hHeap</I> must be NULL.</dd>
+</DL>
+
+<H4 class="dtH4">Return Values</H4>
+
+<P>This method returns the standard values <B>HRESULT_FROM_WIN32(GetLastError())</B>, <B>E_INVALIDARG</B>, <B>E_OUTOFMEMORY</B>, and <B>E_FAIL</B>, as well as the following:
+
+<DL>
+<DT><B>S_OK</B></DT>
+
+<DD>The method completed successfully.</dd>
+</DL>
+
+<H4 class="dtH4">Remarks</H4>
+
+<P>This method supports the allocation of heap memory. This allows you to allocate a single block of memory for efficiency. If you do not allocate memory with <I>prgVals</I>, you must free *<I>prgVals</I> with <B>HeapFree</B>.</P>
+
+<P>Be aware that getting properties of default Appointment and Contact items yields dissimilar types of results. If you create a new Contact item and then query its properties with <B>IItem::GetProps</B>, it's Source ID will be a random number, and each of its property values will be CEDB_PROPNOTFOUND (wFlags = <B>CEDB_PROPNOTFOUND</B>). If you create a new Appointment item and then query its properties, it's Source ID and each of its property values will be zero (srcID = 0 and wFlags = 0).</P>
+
+<H4 class="dtH4">Code Example</H4>
+
+<P>The following code example demonstrates how to use <B>GetProps</B>.</P>
+
+<BLOCKQUOTE class="dtBlock">
+<b class="le">Note</b>&nbsp;&nbsp;&nbsp;To make the following code example easier to read, security checking and error handling are not included. This code example should not be used in a release configuration unless it has been modified to include them.</BLOCKQUOTE>
+
+<PRE class="code">HRESULT GetPropsExample(IItem *pItem, OlItemType olItemType)
+{
+
+    HRESULT hr                = E_FAIL;
+    int cProps                = 3;
+    CEPROPID rgPropId[3]      = {0};
+    CEPROPVAL *prgPropvalPoom = NULL;
+    CEPROPVAL *prgPropvalUser = NULL;
+    ULONG cbBuffer            = 0;
+    HANDLE hHeap              = GetProcessHeap(); 
+
+    // Get properties based on item type.
+    switch(olItemType)
+
+    {
+        case olAppointmentItem:
+            rgPropId[0] = PIMPR_SUBJECT;
+            rgPropId[1] = PIMPR_START;
+            rgPropId[2] = PIMPR_BUSY_STATUS;
+            break;
+
+        case olContactItem:
+            rgPropId[0] = PIMPR_FIRST_NAME;
+            rgPropId[1] = PIMPR_LAST_NAME;
+            rgPropId[2] = PIMPR_EMAIL1_ADDRESS;
+            break;
+
+        case olTaskItem:
+            rgPropId[0] = PIMPR_SUBJECT;
+            rgPropId[1] = PIMPR_TEAM_TASK;
+            rgPropId[2] = PIMPR_IMPORTANCE;
+            break;
+
+        default:
+            hr = E_INVALIDARG;
+            goto Exit;
+    }
+
+    // Allocate memory, then get item properties.
+    cbBuffer = 0;
+    hr       = pItem-&gt;GetProps(rgPropId, 0, cProps, &amp;prgPropvalUser, &amp;cbBuffer, NULL);
+
+    if(HRESULT_FROM_WIN32(ERROR_INSUFFICIENT_BUFFER) == hr)
+    {
+        prgPropvalUser = (CEPROPVAL *) LocalAlloc(0, cbBuffer); 
+    }
+
+    // cbBuffer is set to the number of bytes required to hold the data.
+    hr = pItem-&gt;GetProps(rgPropId, 0, cProps, (CEPROPVAL **)&amp;prgPropvalUser, &amp;cbBuffer, NULL);
+
+    if(FAILED(hr) || 0 == cbBuffer)
+     {
+         goto Exit;
+     }
+
+    // Alternately, you can let Outlook Mobile allocate memory, then get item properties.
+    cbBuffer = 0;
+    hr = pItem-&gt;GetProps(rgPropId, CEDB_ALLOWREALLOC, cProps, &amp;prgPropvalPoom, &amp;cbBuffer, hHeap);
+
+    if(FAILED(hr) || NULL == prgPropvalPoom || 0 == cbBuffer)
+    {
+        goto Exit;
+    }
+
+    hr = S_OK;
+
+Exit:
+    // Free memory.
+    LocalFree(prgPropvalUser); 
+    HeapFree(hHeap, 0, prgPropvalPoom);
+
+    return hr;
+
+}</PRE>
+
+<H4 class="dtH4">Requirements</H4>
+
+<P><B>Pocket&nbsp;PC:</B> Windows&nbsp;Mobile&nbsp;Version&nbsp;5.0 and later<BR>
+<B>Smartphone:</B> Windows&nbsp;Mobile&nbsp;Version&nbsp;5.0 and later<BR>
+<B>OS&nbsp;Versions:</B> Windows CE 5.01 and later<BR>
+<B>Header:</B> pimstore.h<BR>
+<B>Library:</B> pimstore.lib</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="mob5lrfiitem.htm">IItem</A> | <A HREF="mob5conpocketoutlookobjectmodelapiinterfaces.htm">Pocket Outlook Object Model API Interfaces</A> | <A HREF="mob5lrfpocketoutlookobjectmodelapienumerations.htm">Pocket Outlook Object Model API Enumerations</A> | <A HREF="mob5lrfipolitems2getprops.htm">IPOlItems2::GetProps</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Feedback Link Bottom Start-->
+<p><font size="1"><a href="mailto:medfdbk&#64;microsoft.com?subject=Product: Windows Mobile | Version: 5.0 | Release: SDK | Title: IItem::GetProps | Filename: mob5lrfiitemgetprops.htm | Built on: Wednesday, September 14, 2005">Send Feedback</a> on this topic to the authors</font></p>
+<!--Feedback Link Bottom End-->
+<!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="mob5conCopyrightInformationForMagneto" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link></font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

@@ -1,0 +1,101 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>NdisCancelSendPackets</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="NdisCancelSendPackets"/>
+<MSHelp:RLTitle Title="NdisCancelSendPackets"/>
+<MSHelp:Keyword Index="K" Term="NdisCancelSendPackets"/>
+<MSHelp:Keyword Index="A" Term="wce50lrfNdisCancelSendPackets"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Driver"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="False"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="apiref"/>
+<MSHelp:Attr Name="Filename" Value="ndis_library_functions1.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="False"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+<MSHelp:Attr Name="APIName" Value="NdisCancelSendPackets"/>
+<MSHelp:Attr Name="APIType" Value="LibDef"/>
+<MSHelp:Attr Name="APILocation" Value="Ndis.lib"/>
+<MSHelp:Attr Name="PBFeature" Value="NetworkDriver"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_3018500">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50lrfndiscancelsendpackets"></A>NdisCancelSendPackets</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>This function cancels transmission of all packets marked with the specified cancellation identifier on the miniport identified by the binding handle.</P>
+
+<PRE class="syntax"><B>VOID NdisCancelSendPackets(</B>
+  <B>NDIS_HANDLE </B><I>NdisBindingHandle</I><B>,</B>
+  <B>ULONG_PTR </B><I>CancelId</I>
+<B>);</B></PRE>
+
+<H4 class="dtH4">Parameters</H4>
+
+<DL>
+<DT><I>NdisBindingHandle</I></DT>
+
+<DD>[in] Specifies the handle returned by <A HREF="wce50lrfndisopenadapter.htm">NdisOpenAdapter</A> that identifies the network interface card (NIC) or virtual adapter to which the cancellation applies.</dd>
+
+<DT><I>CancelId</I></DT>
+
+<DD>[in] The cancellation identifier. This identifier specifies the packet or group of packets for which transmission is being canceled.</dd>
+</DL>
+
+<H4 class="dtH4">Return Values</H4>
+
+<P>None.</P>
+
+<H4 class="dtH4">Remarks</H4>
+
+<P>The <B>NdisCancelSendPackets</B> function cancels packet transmissions on a single binding. To cancel packet transmissions on more than one binding, a protocol or intermediate driver must call the <B>NdisCancelSendPackets</B> function once for each binding.</P>
+
+<P>The protocol or intermediate driver must ensure that <I>NdisBindingHandle</I>, which represents the driver's binding to the adapter, remains valid for the duration of the call to <B>NdisCancelSendPackets</B>. That is, the protocol or intermediate driver must not call the <A HREF="wce50lrfndiscloseadapter.htm">NdisCloseAdapter</A> function to close the binding before <B>NdisCancelSendPackets</B> returns.</P>
+
+<P>There is no guarantee that calling <B>NdisCancelSendPackets</B> will cancel the pending transmission of all packets with the specified cancellation identifier. For example, if the next-lower driver to which the protocol or intermediate driver is bound does not provide a <A HREF="wce50lrfminiportcancelsendpackets.htm">MiniportCancelSendPackets</A> function, a call to <B>NdisCancelSendPackets</B> does nothing.</P>
+
+<P>In all cases, packets submitted for transmission are returned to the originating protocol or intermediate driver through a call to the driver's <A HREF="wce50lrfprotocolsendcomplete.htm">ProtocolSendComplete</A> function. Canceled send packets are returned with a completion status of NDIS_STATUS_ABORTED. The delay between calling <B>NdisCancelSendPackets</B> and the return of the canceled packets can vary and therefore cannot be exactly specified.</P>
+
+<H4 class="dtH4">Requirements</H4>
+
+<P><B>OS Versions:</B> Windows CE .NET 4.0 and later.<BR>
+<B>Header:</B> Ndis.h.<BR>
+<B>Link Library:</B> Ndis.lib</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50lrfminiportcancelsendpackets.htm">MiniportCancelSendPackets</A> | <A HREF="wce50lrfndisgetpacketcancelidmacro.htm">NDIS_GET_PACKET_CANCEL_ID</A> | <A HREF="wce50lrfndiscloseadapter.htm">NdisCloseAdapter</A> | <A HREF="wce50lrfndisgeneratepartialcancelid.htm">NdisGeneratePartialCancelId</A> | <A HREF="wce50lrfndisopenadapter.htm">NdisOpenAdapter</A> | <A HREF="wce50lrfprotocolsendcomplete.htm">ProtocolSendComplete</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

@@ -1,0 +1,104 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>NdisAllocateSpinLock</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="NdisAllocateSpinLock"/>
+<MSHelp:RLTitle Title="NdisAllocateSpinLock"/>
+<MSHelp:Keyword Index="K" Term="NdisAllocateSpinLock"/>
+<MSHelp:Keyword Index="A" Term="wce50lrfNdisAllocateSpinLock"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Driver"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="False"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="apiref"/>
+<MSHelp:Attr Name="Filename" Value="ndis_library_functions1.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="False"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+<MSHelp:Attr Name="APIName" Value="NdisAllocateSpinLock"/>
+<MSHelp:Attr Name="APIType" Value="LibDef"/>
+<MSHelp:Attr Name="APILocation" Value="Ndis.lib"/>
+<MSHelp:Attr Name="PBFeature" Value="NetworkDriver"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_3018417">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50lrfndisallocatespinlock"></A>NdisAllocateSpinLock</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>This function initializes a variable of type NDIS_SPIN_LOCK, used to synchronize access to resources shared among driver functions not related to interrupts.</P>
+
+<PRE class="syntax"><B>VOID NdisAllocateSpinLock(</B>
+  <B>PNDIS_SPIN_LOCK</B> <I>SpinLock</I>
+<B>);</B></PRE>
+
+<H4 class="dtH4">Parameters</H4>
+
+<DL>
+<DT><I>SpinLock</I></DT>
+
+<DD>[in] Pointer to an opaque variable that represents a spin lock.</dd>
+</DL>
+
+<H4 class="dtH4">Return Values</H4>
+
+<P>None.</P>
+
+<H4 class="dtH4">Remarks</H4>
+
+<P>Before a driver calls <A HREF="wce50lrfndisacquirespinlock.htm">NdisAcquireSpinLock</A>, <A HREF="wce50lrfndisdpracquirespinlock.htm">NdisDprAcquireSpinLock</A>, or any of the <B>NdisInterlocked<I>XXX</I></B> functions, it must call this function to initialize the spin lock passed as a required parameter to these <B>Ndis<I>XXX</I></B> functions. The caller must provide storage for the variable at <I>SpinLock</I>.</P>
+
+<P>After calling this function, the driver can call <B>NdisAcquireSpinLock</B> to obtain exclusive use of the resources that the spin lock protects. When resource access is complete, the driver calls <A HREF="wce50lrfndisreleasespinlock.htm">NdisReleaseSpinLock</A> so that other driver functions can access the resources protected by that spin lock.</P>
+
+<P>In general, a driver should not pass the same spin lock to every <B>Ndis<I>XXX</I>SpinLock</B> and <B>NdisInterlocked<I>XXX</I></B> that it calls subsequently. In this way, any driver might initialize more than one spin lock with this function.</P>
+
+<P>Each spin lock that a driver allocates protects a discrete set of shared resources from simultaneous access. For example, a driver that maintains an internal queue of packets might initialize one spin lock to protect its queue and another to protect a set of state variables that several driver functions, not including the <A HREF="wce50lrfminiportisr.htm">MiniportISR</A> or <A HREF="wce50lrfminiportdisableinterrupt.htm">MiniportDisableInterrupt</A> function, access while the driver is processing packets.</P>
+
+<P>A driver should never use two spin locks to protect the same resources because nested spin-lock acquisitions frequently cause deadlocks. Even if a driver could be designed to prevent deadlocks, nested spin-lock acquisitions have an adverse effect on driver performance and I/O throughput.</P>
+
+<P>A miniport driver cannot use a spin lock to protect resources that its non-ISR functions share with its <B>MiniportISR</B> or the <B>MiniportDisableInterrupt</B> function. To access resources shared with a <B>MiniportISR</B> or <B>MiniportDisableInterrupt</B> function, a miniport must call <A HREF="wce50lrfndismsynchronizewithinterrupt.htm">NdisMSynchronizeWithInterrupt</A> to have its <A HREF="wce50lrfminiportsynchronizeisr.htm">MiniportSynchronizeISR</A> function access those resources.</P>
+
+<P>When a driver no longer requires resource protection, for example, when an NIC is being removed and the driver is releasing the resources that it allocated for that NIC, the driver calls <A HREF="wce50lrfndisfreespinlock.htm">NdisFreeSpinLock</A>.</P>
+
+<P>Freeing a spin lock and releasing a spin lock must be distinguished. <B>NdisFreeSpinLock</B> clears the memory at <I>SpinLock</I> so it no longer represents a spin lock. Releasing an acquired spin lock with <B>NdisReleaseSpinLock</B> allows another thread of execution to acquire that spin lock.</P>
+
+<H4 class="dtH4">Requirements</H4>
+
+<P><B>OS Versions:</B> Windows CE .NET 4.0 and later.<BR>
+<B>Header:</B> Ndis.h.<BR>
+<B>Link Library:</B> Ndis.lib</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50lrfminiportdisableinterrupt.htm">MiniportDisableInterrupt</A> | <A HREF="wce50lrfminiportisr.htm">MiniportISR</A> | <A HREF="wce50lrfminiportsynchronizeisr.htm">MiniportSynchronizeISR</A> | <A HREF="wce50lrfndisacquirespinlock.htm">NdisAcquireSpinLock</A> | <A HREF="wce50lrfndisdpracquirespinlock.htm">NdisDprAcquireSpinLock</A> | <A HREF="wce50lrfndisdprreleasespinlock.htm">NdisDprReleaseSpinLock</A> | <A HREF="wce50lrfndisfreespinlock.htm">NdisFreeSpinLock</A> | <A HREF="wce50lrfndismsynchronizewithinterrupt.htm">NdisMSynchronizeWithInterrupt</A> | <A HREF="wce50lrfndisreleasespinlock.htm">NdisReleaseSpinLock</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

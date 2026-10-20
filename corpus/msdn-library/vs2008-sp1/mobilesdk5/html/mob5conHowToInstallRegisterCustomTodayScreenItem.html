@@ -1,0 +1,129 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>How to: Install and Register a Custom Today Screen Item</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="How to: Install and Register a Custom Today Screen Item"/>
+<MSHelp:RLTitle Title="How to: Install and Register a Custom Today Screen Item"/>
+<MSHelp:Keyword Index="A" Term="mob5conHowToInstallRegisterCustomTodayScreenItem"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Application"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbsmartphone"/>
+<MSHelp:Attr Name="Product" Value="kbPocketPC"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="Technology" Value="kbPocketPC"/>
+<MSHelp:Attr Name="Technology" Value="kbSmartphone"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="Custom_Today_Screen_Items_magneto.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="True"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="True"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_1063722">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Windows Mobile Version 5.0 SDK<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="mob5conhowtoinstallregistercustomtodayscreenitem"></A>How to: Install and Register a Custom Today Screen Item</H1>
+<!--Feedback Link Top Start-->
+<P CLASS="feedback"><font size="1"><a href="mailto:medfdbk&#64;microsoft.com?subject=Product: Windows Mobile | Version: 5.0 | Release: SDK | Title: How to: Install and Register a Custom Today Screen Item | Filename: mob5conhowtoinstallregistercustomtodayscreenitem.htm | Built on: Wednesday, September 14, 2005">Send Feedback</a> on this topic to the authors</font></p>
+<!--Feedback Link Top End-->
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>To install a custom Today item, you need to copy the DLL file for the Today component and register the component. For information about writing a custom DLL, see <A HREF="mob5conwritingcustomtodayscreenitem.htm">Writing a Custom Today Screen Item</A>.</P>
+
+<P class="labelproc"><B>To register a "My Today Item" component implemented in a file called Sample.dll </B>
+
+<OL type="1">
+	<LI>Create a new key called <B>"My Today Item"</B> in <B>HKEY_LOCAL_MACHINE\Software\Microsoft\Today\Items</B>.</li>
+
+	<LI>Under <B>HKEY_LOCAL_MACHINE\Software\Microsoft\Today\Items\My Today Item</B>, add the values listed in the following table.<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=18%>Value name</TH>
+<TH width=14%>Type</TH>
+<TH width=34%>Data</TH>
+<TH width=34%>Comments</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=18%>Type</TD>
+<TD width=14%>DWORD</TD>
+<TD width=34%>4</TD>
+<TD width=34%>All custom items use a Type of 4.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=18%>Enabled</TD>
+<TD width=14%>DWORD</TD>
+<TD width=34%>1</TD>
+<TD width=34%>0 or 1; indicates whether the item is displayed on the Today screen. If Enabled=0, the user can cause the Today item to appear by selecting the box in the list of items on the <B>Items</B> tab of the Today application in Settings.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=18%>Options</TD>
+<TD width=14%>DWORD</TD>
+<TD width=34%>1</TD>
+<TD width=34%>0 or 1; indicates whether the item has an <B>Options</B> dialog.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=18%>DLL</TD>
+<TD width=14%>String</TD>
+<TD width=34%>"\Windows\Sample.DLL"</TD>
+<TD width=34%>The full path and name of the DLL.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=18%>Selectability</TD>
+<TD width=14%>DWORD</TD>
+<TD width=34%>1</TD>
+<TD width=34%>0, 1, or 2; 0 indicates it is not selectable, 1 indicates the item is selectable and the shell will handle Up/Down messages, 2 indicates the item is selectable and the plug-in handles the Up/Down messages</TD>
+</TR>
+</table></div>
+</li>
+</OL>
+
+<P>You would most likely use a .cab file created by CabWiz to install your Today items, and the following example shows how the registry information would look in the .inf file:</P>
+
+<PRE class="code">[Reg.All]
+HKLM,Software\Microsoft\Today\Items\My Today Item,Type,0x00010001,4
+HKLM,Software\Microsoft\Today\Items\My Today Item,Enabled,0x00010001,1
+HKLM,Software\Microsoft\Today\Items\My Today Item,Options,0x00010001,1
+HKLM,Software\Microsoft\Today\Items\My Today Item,Selectability,0x00010001,2
+HKLM,Software\Microsoft\Today\Items\My Today Item,DLL,0x00000000,"\Windows\Sample.DLL"</PRE>
+
+<P>For an example of how to create a Today screen item, refer to the Win32 sample MemWatcher.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="mob5contodayscreenapi.htm">Today Screen Reference</A> | <A HREF="mob5conwritingcustomtodayscreenitem.htm">Writing a Custom Today Screen Item</A> | <MSHelp:link keywords="wce51conTodayScreenPlug-inRegistrySettingsPPCOnly" TABINDEX="0">Today Screen Plug-in Registry Settings (PPC Only)</MSHelp:link></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Feedback Link Bottom Start-->
+<p><font size="1"><a href="mailto:medfdbk&#64;microsoft.com?subject=Product: Windows Mobile | Version: 5.0 | Release: SDK | Title: How to: Install and Register a Custom Today Screen Item | Filename: mob5conhowtoinstallregistercustomtodayscreenitem.htm | Built on: Wednesday, September 14, 2005">Send Feedback</a> on this topic to the authors</font></p>
+<!--Feedback Link Bottom End-->
+<!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="mob5conCopyrightInformationForMagneto" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link></font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

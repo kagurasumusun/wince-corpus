@@ -1,0 +1,98 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Power Manager Suspend Time-outs</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Power Manager Suspend Time-outs"/>
+<MSHelp:RLTitle Title="Power Manager Suspend Time-outs"/>
+<MSHelp:Keyword Index="A" Term="wce50conPowerManagerSuspendTimeouts"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Driver"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="False"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="powermgrdrv_guide.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="True"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="True"/>
+<MSHelp:Attr Name="PBFeature" Value="SYSGEN_PM"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_3019104">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50conpowermanagersuspendtimeouts"></A>Power Manager Suspend Time-outs</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>The sample Power Manager implementation maintains a development workstation based on the system power source, user activity, and system activity. The sample Power Manager implements configurable time-outs for transitioning between OS power states. Because the Power Manager is designed to be customized by the OEM, the following description may not apply to all Windows CE-based devices. OEMs control how and when the Power Manager decides to change system power states.</P>
+
+<P>The following list shows the registry values that control system power state transitions for the sample Power Manager:
+
+<UL type="disc">
+	<LI><B>ACUserIdle</B></li>
+
+	<LI><B>ACSystemIdle</B></li>
+
+	<LI><B>ACSuspend</B></li>
+
+	<LI><B>BattUserIdle</B></li>
+
+	<LI><B>BattSystemIdle</B></li>
+
+	<LI><B>BattSuspend</B></li>
+
+	<LI><B>BatteryPoll</B></li>
+</UL>
+
+<P>These <B>DWORD</B> values are stored in the <B>HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Power\Timeouts</B> registry key. A value of 0 indicates that no time-out will occur. The sample implementation does not provide a method for bypassing OS power states; however, OEMs may choose to do so.</P>
+
+<P>For the Power Manager to actively manage system power states, these settings need to be present in the registry. The actual decision to manage system power is based on the presence of <B>ACUserIdle</B>.</P>
+
+<BLOCKQUOTE class="dtBlock">
+<b class="le">Note</b>&nbsp;&nbsp;&nbsp;To prevent conflicts between GWES and the Power Manager, you need to disable GWES power management as described previously. When the Power Manager is actively managing system power, it may restrict applications from entering arbitrary system power states.</BLOCKQUOTE>
+
+<P>You can reset the system state transition timers by creating a named auto-reset event called _T("PowerManager/ReloadActivityTimeouts") and calling <MSHelp:link keywords="wce50lrfSetEvent" TABINDEX="0">SetEvent</MSHelp:link> on the handle of that event. This informs the Power Manager to read transition timer settings again from the Timeouts registry key.</P>
+
+<H4 class="dtH4">Registry Settings</H4>
+
+<PRE class="code">[HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Power\Timeouts]
+    "ACUserIdle"=dword:3c; in seconds
+    "ACSystemIdle"=dword:12c; in seconds
+    "ACSuspend"=dword:0; in seconds
+    "BattUserIdle"=dword:3c; in seconds
+    "BattSystemIdle"=dword:b4; in seconds
+    "BattSuspend"=dword:12c; in seconds
+    "BatteryPoll"=dword:1f4; battery polling interval, in milliseonds</PRE>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50consuspendtimeoutsupport.htm">Suspend Time-out Support</A> | <MSHelp:link keywords="wce50lrfSetEvent" TABINDEX="0">SetEvent</MSHelp:link></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

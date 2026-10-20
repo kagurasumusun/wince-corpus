@@ -1,0 +1,121 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>/callcap -Enable callcap profiling</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="/callcap -Enable callcap profiling"/>
+<MSHelp:RLTitle Title="/callcap -Enable callcap profiling"/>
+<MSHelp:Keyword Index="A" Term="wce50concallcapEnablecallcapprofiling"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Guide"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="True"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="comp_compiler_linker.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="True"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_3023403">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50concallcapenablecallcapprofiling"></A>/callcap -Enable callcap profiling</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>This option causes the compiler to insert calls to profiling hooks at the beginning and end of each function. </P>
+
+<P>You must compile profiling hooks without the <B>callcap</B> switch. If you compile the profiling hook functions with the <B>callcap</B> switch, the functions will perform infinite recursive calls to themselves.</P>
+
+<P>The following code example, callcaphooks.c, shows a profiling hook function,<B> _CAP_Enter_Function</B>, for compilation without <B>callcap</B>. </P>
+
+<PRE class="code">// File: callcaphooks.c
+
+#include &lt;stdio.h&gt;
+int main();
+
+void _CAP_Enter_Function(void *p) 
+{
+    if (p != main) 
+        printf("Enter function   (at address %p) at %d\n", 
+            p, GetTickCount());
+        return;
+}
+void _CAP_Exit_Function(void *p) 
+{
+    if (p != main) 
+        printf("Leaving function (at address %p) at %d\n", 
+            p, GetTickCount());
+    return;
+}</PRE>
+
+<P>The next example shows how <B>callcap</B> inserts calls to profiling hooks. To enable this, compile main with the <B>callcap</B> switch and link with the object file that contains the callcap hooks that compiled without <B>callcap</B>.</P>
+
+<PRE class="code">// File: main.c
+#include &lt;stdio.h&gt;
+double mul(double a, double b, int count)
+{
+    // The profiling hook, _CAP_Enter_Function() function, 
+    // is called here with the address of this function.
+
+    double r;
+
+    // Simulate a long operation
+    while (count-- &gt; 0) 
+        r = a * b;
+
+    return a * b;
+
+    // The profiling hook, _CAP_Exit_Function() function,
+    // is called here with the address of this function.
+}</PRE>
+
+<P>The <B>callcap</B> switch inserts calls to the profiling hooks for all functions compiled with the <B>callcap</B> compiler switch.</P>
+
+<PRE class="code">int main()
+{
+    double d0 = 2.0, d1 = 4.0, result;
+
+    // No profiling for printf, because the library function is not compiled with /callcap.
+    printf("\n");     </PRE>
+
+<P><B>Callcap</B> profiling hooks are called after the function is entered and before leaving it. In contrast, the <B>fastcap</B> switch inserts calls to profiling hooks before calling the function and after returning the call.</P>
+
+<PRE class="code">    result = mul(d0, d1, 10000);
+    return 0;
+}</PRE>
+
+<P>This form of profiling has lower overhead than the<B> </B><A HREF="wce50confastcapenablefastcapprofiling.htm">/fastcap - Enable fastcap profiling</A> form but will not provide profiling information for external functions that have not been compiled with profiling enabled.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50congeneralpurposecompileroptions.htm">Compiler Options</A> | <A HREF="wce50confastcapenablefastcapprofiling.htm">/fastcap - Enable fastcap profiling</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

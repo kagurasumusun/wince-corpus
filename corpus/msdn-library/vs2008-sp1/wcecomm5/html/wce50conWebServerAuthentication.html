@@ -1,0 +1,86 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Web Server Authentication</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Web Server Authentication"/>
+<MSHelp:RLTitle Title="Web Server Authentication"/>
+<MSHelp:Keyword Index="A" Term="wce50conWebServerAuthentication"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Feature"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="webserver_app_development.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="False"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="True"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_3006060">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50conwebserverauthentication"></A>Web Server Authentication</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>The authentication level for a virtual directory can be set to zero (0), 1, or 2. The following table describes each value. The values are set in the registry in <B>HKEY_LOCAL_MACHINE\COMM\HTTPD\VROOTS\&lt;/<I>Vroot Name&gt;</I></B> subkeys. For more information, see <A HREF="wce51convirtualpathregistrysettings.htm">Virtual Path Registry Settings</A>.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=26%>Value : type</TH>
+<TH width=74%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=26%><B>A</B>=0</TD>
+<TD width=74%>Anonymous users can access the virtual directory and may have permission to read and execute scripts, depending on the P value for the virtual directory. With A=0, anyone who can access the Web Server can access files in that virtual directory.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=26%><B>A</B>=1</TD>
+<TD width=74%>A valid user identifier and password are required to access a virtual directory with authentication that is set to A=1.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=26%><B>A</B>=2</TD>
+<TD width=74%>Virtual directories with an authentication value set to A=2 require the browser user to have Administrator privileges. A valid user identifier and password are required to gain access to this virtual directory.</TD>
+</TR>
+</table></div>
+
+<P>The first attempt by a user to access a virtual directory that has an authentication value of 1 or 2 results in a 401 - Unauthorized status code that is sent back to the browser. The forms of acceptable authentication are sent to the browser in the Httpd header fields of the message. The authentication types that are sent depend on the values that are set for <B>Basic</B> and <B>NTLM</B> under the <B>HKEY_LOCAL_MACHINE\COMM\HTTPD</B> protected registry key described in <A HREF="wce50conbaseregistrysettings.htm">Base Registry Settings</A>. By setting both <B>Basic</B> and <B>NTLM</B> values to 1, the Web Server sends both authentication types in response to the same request, allowing the client browser to select the authentication method. A script can also include an authentication scheme by setting the WWW-Authenticate field and the desired value in the Httpd headers.</P>
+
+<P>If Basic authentication is used, the client browser sends the user name and password over the network in plain text unless SSL is enabled for the connection. If the client uses NTLM authentication, the Web Server and the client browser negotiate a means through which the client browser can send credentials to the Web Server without using a cleartext password. Regardless of how the user's credentials are sent to the Web Server, the mechanism for checking whether the password entered is valid is the same. If the registry value <B>HKEY_LOCAL_MACHINE\COMM\Redir\DefaultDomain</B> is specified, the Web Server will only act as a middle man. It will rely upon a domain controller on the DefaultDomain registry value to determine whether the credentials provided are valid for that domain. If this registry value is not indicated, the Web Server will check the local user database to see if the credentials are valid. New users can be programatically added to the local user database via a call to <MSHelp:link keywords="wce50lrfNTLMSetUserInfo" TABINDEX="0">NTLMSetUserInfo</MSHelp:link>.</P>
+
+<P>If the user name and password are not valid, the Web Server sends another 401 - Unauthorized status code to the browser.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50conwebserverauthenticationandpermissions.htm">Web Server Authentication and Permissions</A> | <A HREF="wce50conbaseregistrysettings.htm">Base Registry Settings</A> | <A HREF="wce51convirtualpathregistrysettings.htm">Virtual Path Registry Settings</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

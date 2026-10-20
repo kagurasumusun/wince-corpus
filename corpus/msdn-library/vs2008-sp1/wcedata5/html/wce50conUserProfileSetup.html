@@ -1,0 +1,84 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>User Profile Setup</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="User Profile Setup"/>
+<MSHelp:RLTitle Title="User Profile Setup"/>
+<MSHelp:Keyword Index="A" Term="wce50conUserProfileSetup"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Feature"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="registry_overview.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="True"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="True"/>
+<MSHelp:Attr Name="PBFeature" Value="REGISTRY"/>
+<MSHelp:Attr Name="PBOnly" Value="True"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_1055685">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50conuserprofilesetup"></A>User Profile Setup</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>User profile support is present in all file system configurations. No components need to be added to use user profiles. However, the choice of registry type and registry settings can affect the behavior of user profiles.</P>
+
+<P>With the RAM-based registry, every user shares the same settings. All data under <B>HKEY_CURRENT_USER</B> registry key pertains to all users.</P>
+
+<P>The case is different with the hive-based registry. When a new user is logged on, a new hive is created for that user with a separate file for the user profile. This is called the user profile hive. A user's hive contains specific registry information pertaining to that user's applications, desktop, environment, network connections, and printer settings. The user profile hive contains all data under the <B>HKEY_CURRENT_USER</B> key. When the current user is logged off and another user is logged on, the new user's hive is mounted and the data under <B>HKEY_CURRENT_USER</B> changes.</P>
+
+<P>With both registry types, a directory is created for each user that contains the files that pertain to that user, including, if applicable, the user hive. For more information, see <A HREF="wce50conuserprofilestorage.htm">User Profile Storage</A>.</P>
+
+<P>The OEM can start the system with a default user or with no current user. This supports OEMs who need the hive-based registry but who do not need separate user profiles. </P>
+
+<P>The default user is a user with the name default that is logged on when the target device boots. The default user can be logged off and another user logged on, depending on the type of registry used. The new user may or may not share data with the default user. Typically, a default user is used only in a single-user environment.</P>
+
+<P>OEMs can set the following registry value so that the system will boot with no user logged on.</P>
+
+<PRE class="code">[HKEY_LOCAL_MACHINE\init\BootVars]
+    "NoDefaultUser"=dword:1</PRE>
+
+<P>If the hive-based registry is used, <B>HKEY_CURRENT_USER</B> will be empty. After booting with no user, you can call <B>SetCurrentUser</B> to log on a user. The default user hive to load is determined by the value of <B>DefaultUser</B>, a REG_SZ value in <B>HKEY_LOCAL_MACHINE\init\BootVars</B>. The <B>DefaultUser</B> is set to the name of the user to use as the default profile when the system boots. If it is an existing user, the appropriate user hive is loaded. If it is a new user, the user profile is created. If <B>DefaultUser</B> is not set, the default user profile is loaded. It does not block future calls to <B>SetCurrentUser</B>.</P>
+
+<P>OEMs can set the following value so that the system will boot with a default user already logged on.</P>
+
+<PRE class="code">[HKEY_LOCAL_MACHINE\init\BootVars]
+    "DefaultUser"=&lt;username&gt;</PRE>
+
+<P>The user will be named default, but there will be no user data BLOB associated with the default user. </P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50conuserprofiles.htm">User Profiles</A> | <A HREF="wce50conuserprofilestorage.htm">User Profile Storage</A> | <A HREF="wce50conusermanagement.htm">User Management</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

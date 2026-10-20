@@ -1,0 +1,121 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Socket Class</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Socket Class"/>
+<MSHelp:RLTitle Title="Socket Class"/>
+<MSHelp:Keyword Index="A" Term="wce51conSocketClass"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Driver"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="False"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="pccard_sharedcode.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="True"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_1070164">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce51consocketclass"></A>Socket Class</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>The socket class for the PC Card socket service shared code library can be found in %_WINCEROOT%\Public\Common\Oak\Drivers\PCCard\Common\Pcmciacardlib.h. This class template is used as a base for the socket class.</P>
+
+<P>The socket class is a set of software that implements a socket service for an inserted PC Card. This class should be created by the PC Card bridge base class when a card is inserted. It should also be deleted once the card has been removed from the socket. Since a card can be removed and then re-instered quickly, the socket class should use a unique reference number when a new socket class is created.</P>
+
+<P>The <B>CPCMCIASocketBase</B> template class is responsible for implementing the socket class. The following table shows the class template parameters for the socket class.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=50%>Parameter</TH>
+<TH width=50%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><B>TPcmciaMemWindowClass</B></TD>
+<TD width=50%>Memory window class</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><B>TPcmciaIOWindowClass</B></TD>
+<TD width=50%>I/O window class</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><B>TBridgeClass</B></TD>
+<TD width=50%>Bridge class</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><B>TBaseClass</B></TD>
+<TD width=50%>Base class for the <B>CPCMCIASocketBase</B> template class.</TD>
+</TR>
+</table></div>
+
+<P>The <B>TBaseClass</B> parameter is useful for hardware that supports various socket types. For example, the TI1250 platform dependent driver (PDD) has two socket classes. The first class is for 16-bit PCMCIA cards, while the second class is for 32-bit CardBus cards. Both sockets are manipulated by the same bridge class. In order to simplify the design, the classes derive from a common base class that is used as the interface. This is accomplished using virtual functions that are implemented in the derived classes. Since the implementation of the two socket classes may be completely different, the <B>CPCMCIASocketBase</B> class will derive from the <B>TBaseClass</B>, where the <B>TBaseClass</B> is the common base class.</P>
+
+<P>The CPCMCIASocketBase template also implements the <B>CardSetWindow</B>, <B>CardGetWindow</B>, <B>CardInquireWindow</B> and <B>CardInitWindow</B> socket service functions. This template creates and manages instances for memory or I/O window classes athrough the <B>CPcmciaMemWindowImpl</B> and <B>CPcmciaIoWindowImpl</B> classes.</P>
+
+<P>In case a common base class is not needed, an example base class template is provided in %_WINCEROOT%\Public\Common\Oak\Drivers\PCCard\Common\Pcmciacardlibex.h. The following code example shows the example base class template.</P>
+
+<PRE class="code">template &lt;class TBridgeClass&gt;
+class CStaticWindowBridgeContainer : public CRefObject, public ClockObject
+{
+protected:
+     CStaticWindowBridgeContainer(TBridgeClass* pBridge)
+     {
+          m_pBridge=pBridge;
+     }
+     TBridgeClass* m_pBridge;
+};</PRE>
+
+<P>The only requirement for the base class is that the constructor must take a parameter of type <B>TBridgeClass*</B> and store it in the <I>m_pBridge</I> member. The <B>CPCMCIASocketBase</B> class can then access the bridge object using the <I>m_pBridge</I> pointer.</P>
+
+<P>The <B>CPCMCIASocketBase</B> class creates and initializes memory and I/O windows. The initialization parameters are typically read from the registry. The <B>CPCMCIASocketBaseClass</B> accesses those parameters by calling the following <B>TBridgeClass</B> member functions. The following code example shows the <B>TBridgeClass</B> member functions.</P>
+
+<PRE class="code">BOOL LoadWindowsSettings ();
+DWORD GetMemWindowCount() const{return m_nMemWindowCount;}
+DWORD GetIoWindowCount() const{return m_nIoWindowCount;}
+DWORD GetEntriesCount() const{return m_dwCount;}
+DWORD GetEntryRepeatCount(DWORD dwEntry) const
+const SS_Window_INFO* GetEntryWindowInfo(DWORD dwEntry) const
+const SS_WINDOW_STATE* GetEntryWindowState(DWORD dwEntry) const</PRE>
+
+<P>The <B>TBridgeClass</B> member functions are provided in the <B>CPCCardBusBridgeClass</B>. For more information, see <A HREF="wce51conbridgebaseclass.htm">Bridge Base Class</A>.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce51conpccardsocketservicesharedcodelibrary.htm">PC Card Socket Service Shared Code Library</A> | <A HREF="wce51conwindowclasses.htm">Window Classes</A> | <A HREF="wce51conbridgebaseclass.htm">Bridge Base Class</A> | <A HREF="wce51constaticwindowclasses.htm">Static Window Classes</A> | <A HREF="wce51conpccardsocketservicesharedcodelibraryregistrysettings.htm">PC Card Socket Service Shared Code Library Registry Settings</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

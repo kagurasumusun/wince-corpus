@@ -1,0 +1,71 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Injecting a DLL into a Process Space</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Injecting a DLL into a Process Space"/>
+<MSHelp:RLTitle Title="Injecting a DLL into a Process Space"/>
+<MSHelp:Keyword Index="A" Term="wce50conInjectingaDLLintoaProcessSpace"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Feature"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="kernel_overview.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="True"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="True"/>
+<MSHelp:Attr Name="PBFeature" Value="CORE"/>
+<MSHelp:Attr Name="PBOnly" Value="True"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_3009755">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50coninjectingadllintoaprocessspace"></A>Injecting a DLL into a Process Space</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>There are times when a dynamic-link library (DLL) must be automatically added to a process space to perform some required action. This could be a debugging tool that wants to track some actions. If neither the source code nor the ability to build the code is available, you are limited in the kinds of debugging you can perform. The kernel has the ability to load a DLL into every process space. </P>
+
+<P>To enable this process, you can add the name of the DLL to the following registry key.</P>
+
+<PRE class="code">HKEY_LOCAL_MACHINE\SYSTEM\KERNEL
+    "InjectDLL" = REG_MULTI_SZ : "MyDLL1.DLL","MyDLL2.DLL", ...</PRE>
+
+<P>The data type is a REG_MULTI_SZ or an array of strings, which can list more than one DLL. The name of the DLL can contain the full path and file name or just the file name.</P>
+
+<P>Applications that install DLLs to be injected into a process should only append or remove their specific DLL from the registry.</P>
+
+<P>When a process is created and all implicitly-linked DLLs are loaded, the kernel loads each DLL listed in "InjectDLL". Failure to load the DLL will not result in a failure of the application to launch. A DLL could fail to load if the DLL returns FALSE in <A HREF="wce50lrfdllmain.htm">DllMain</A> or if the application is trusted and the DLL being loaded is not. DLLs can check in <B>DLLMain</B> to determine what process they are being loaded into by calling <A HREF="wce50lrfgetmodulefilename.htm">GetModuleFileName</A>. The values you need to pass are <B>(</B>NULL, <I>&amp;Filename</I>, <I>nSize</I><B>)</B>.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50conloader.htm">Loader</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

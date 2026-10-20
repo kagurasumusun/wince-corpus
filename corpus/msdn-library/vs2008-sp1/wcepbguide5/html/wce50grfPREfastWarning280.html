@@ -1,0 +1,78 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>PREfast Warning 280</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="PREfast Warning 280"/>
+<MSHelp:RLTitle Title="PREfast Warning 280"/>
+<MSHelp:Keyword Index="A" Term="wce50grfPREfastWarning280"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Guide"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="True"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="prefast_warnings2.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="True"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_1053671">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50grfprefastwarning280"></A>PREfast Warning 280</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<PRE class="syntax">280 - Allocation/free mismatch.
+Additional Information: &lt;variable&gt; is allocated with &lt;function&gt;, but deleted with &lt;function&gt; (see allocation at &lt;location&gt;).</PRE>
+
+<P>This warning indicates that the calling function has inconsistently allocated memory with a function from one memory allocation family and freed it with a function from another memory allocation family. </P>
+
+<P>For example, this warning would be produced if memory is allocated with <B>malloc</B> but freed with <B>GlobalFree</B> or <B>delete</B>. In the specific cases of mismatches between array and scalar variations of <B>new</B> and <B>delete</B>, PREfast reports the more precise warnings 278, 279, or 283.</P>
+
+<P>Different API definitions can use different heaps (for example, <B>GlobalAlloc</B> uses the system heap, and <B>free</B> uses the C heap) and the allocation/free routines on Windows NT and later do not do validation of pointers/handles for performance reasons. This defect can result in memory corruptions and crashes.</P>
+
+<H4 class="dtH4">Example</H4>
+
+<P class="label"><B>Defective Source</B></P>
+
+<PRE class="code">int *pInt= (int *)calloc(arraySize,
+                         sizeof (int));
+
+delete pInt;</PRE>
+
+<P class="label"><B>Corrected Source</B></P>
+
+<PRE class="code">int *pInt= (int *)calloc(arraySize,
+                         sizeof (int));
+
+free(pInt);</PRE>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

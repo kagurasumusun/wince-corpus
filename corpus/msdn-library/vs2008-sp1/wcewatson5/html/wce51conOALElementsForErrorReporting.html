@@ -1,0 +1,110 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>OAL Elements for Error Reporting</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="OAL Elements for Error Reporting"/>
+<MSHelp:RLTitle Title="OAL Elements for Error Reporting"/>
+<MSHelp:Keyword Index="A" Term="wce51conOALElementsForErrorReporting"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Feature"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="True"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="PBFeature" Value="SYSGEN_WATSON"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="error_reporting_overview.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="False"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_1072532">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce51conoalelementsforerrorreporting"></A>OAL Elements for Error Reporting</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>OEMs can use programming elements in the OEM Adaptation Layer (OAL) to enable Error Reporting, and to customize Error Reporting functionality.</P>
+
+<P>By default, Error Reporting will create a dump file using reserved memory. The amount of reserved memory to be used is set by <B>dwNKDrWatsonSize</B>. </P>
+
+<P>There are also a number of APIs that are used to access the reserved memory. The reserved memory is in RAM, and will not persist if the device is turned off.</P>
+
+<P>To implement the Error Reporting dump in real persistent storage, which can persist the Error Reporting dump file even after a complete power loss, OEMs can override certain function pointers to OEM-specific Error Reporting support functions. </P>
+
+<P>The following table shows function pointers and OS APIs that can be used by OEMs. These function pointers call the default implementation each associated API. </P>
+
+<P>The function pointers can be overridden to point to new OEM functions that implement OEM-specific persistent storage for dump files. In this case, the OEM functions must <I>not</I> make use of any system APIs, because using these APIs in this way may make the system hang. </P>
+
+<P>If the OEM chooses to override these functions, they should not set <MSHelp:link keywords="wce50lrfDwNKDrWatsonSize" TABINDEX="0">dwNKDrWatsonSize</MSHelp:link>; <B>dwNKDrWatsonSize</B> reserves RAM only for the default implementation of these functions.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=33%>Function pointer</TH>
+<TH width=33%>OS API</TH>
+<TH width=34%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%><MSHelp:link keywords="wce50lrfPfnNKDrWatsonFlush" TABINDEX="0">pfnNKDrWatsonFlush</MSHelp:link> </TD>
+<TD width=33%><MSHelp:link keywords="wce50lrfDrWatsonFlush" TABINDEX="0">DrWatsonFlush</MSHelp:link></TD>
+<TD width=34%>Flushes the Error Reporting dump data to the underlining storage.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%><MSHelp:link keywords="wce50lrfPfnNKDrWatsonClear" TABINDEX="0">pfnNKDrWatsonClear</MSHelp:link> </TD>
+<TD width=33%><MSHelp:link keywords="wce50lrfDrWatsonClear" TABINDEX="0">DrWatsonClear</MSHelp:link></TD>
+<TD width=34%>Clears the Error Reporting dump storage by zeroing the whole Windows CE Error Reporting dump area.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%><MSHelp:link keywords="wce50lrfPfnNKDrWatsonRead" TABINDEX="0">pfnNKDrWatsonRead</MSHelp:link> </TD>
+<TD width=33%><MSHelp:link keywords="wce50lrfDrWatsonReadData" TABINDEX="0">DrWatsonReadData</MSHelp:link></TD>
+<TD width=34%>Reads data from the Error Reporting dump area.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%><MSHelp:link keywords="wce50lrfPfnNKDrWatsonWrite" TABINDEX="0">pfnNKDrWatsonWrite</MSHelp:link> </TD>
+<TD width=33%><MSHelp:link keywords="wce50lrfDrWatsonWriteData" TABINDEX="0">DrWatsonWriteData</MSHelp:link></TD>
+<TD width=34%>Writes data to the Error Reporting dump area.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%>none</TD>
+<TD width=33%><MSHelp:link keywords="wce50lrfDrWatsonGetSize" TABINDEX="0">DrWatsonGetSize</MSHelp:link></TD>
+<TD width=34%>Retrieves the size of the dump area.</TD>
+</TR>
+</table></div>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><MSHelp:link keywords="wce50oriDevelopingOEMAdaptationLayer" TABINDEX="0">Developing an OEM Adaptation Layer</MSHelp:link></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

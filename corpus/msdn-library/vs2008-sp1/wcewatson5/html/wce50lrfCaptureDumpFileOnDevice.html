@@ -1,0 +1,157 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>CaptureDumpFileOnDevice</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="CaptureDumpFileOnDevice"/>
+<MSHelp:RLTitle Title="CaptureDumpFileOnDevice"/>
+<MSHelp:Keyword Index="K" Term="CaptureDumpFileOnDevice"/>
+<MSHelp:Keyword Index="A" Term="wce50lrfCaptureDumpFileOnDevice"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Feature"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="True"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="PBFeature" Value="SYSGEN_WATSON"/>
+<MSHelp:Attr Name="TopicType" Value="apiref"/>
+<MSHelp:Attr Name="Filename" Value="error_reporting_generator.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="False"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+<MSHelp:Attr Name="APIName" Value="CaptureDumpFileOnDevice"/>
+<MSHelp:Attr Name="APIType" Value="LibDef"/>
+<MSHelp:Attr Name="APILocation" Value="Coredll.lib"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_1049122">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50lrfcapturedumpfileondevice"></A>CaptureDumpFileOnDevice</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>This function captures a dump file on the device.</P>
+
+<PRE class="syntax"><B>BOOL CaptureDumpFileOnDevice(</B>
+  <B>DWORD</B> <I>dwProcessId</I><B>,</B>
+  <B>DWORD</B> <I>dwThreadId</I><B>,</B> 
+  <B>LPCWSTR</B> <I>pwzExtraFilesPath</I>
+<B>);</B></PRE>
+
+<H4 class="dtH4">Parameters</H4>
+
+<DL>
+<DT><I>dwProcessId</I></DT>
+
+<DD>[in] ID of the process to capture. Forced to 0 if the application is not trusted. 
+
+<P>The following table explains the relationship between values for <I>dwProcessId</I> and <I>dwThreadId</I>, and the thread context for capture.
+
+
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=19%>dwProcessId</TH>
+<TH width=18%>dwThreadId</TH>
+<TH width=63%>Thread Context for capture</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=19%>0</TD>
+<TD width=18%>0</TD>
+<TD width=63%>Current process, current thread.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=19%>0</TD>
+<TD width=18%>&gt;0</TD>
+<TD width=63%>Current process, specified thread. 
+<P>The specified thread must be owned by the current process, whether trusted or untrusted, or be running in the current trusted process. </P>
+</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=19%>&gt;0</TD>
+<TD width=18%>0</TD>
+<TD width=63%>Specified process, last created thread.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=19%>&gt;0</TD>
+<TD width=18%>&gt;0</TD>
+<TD width=63%>Specified process, specified thread.
+<P>The specified thread must be owned by or running in the specified process.</P>
+</TD>
+</TR>
+</table></div>
+
+</dd>
+
+<DT><I>dwThreadId</I></DT>
+
+<DD>[in] ID of the thread to capture.</dd>
+
+<DT><I>pwzExtraFilesPath</I></DT>
+
+<DD>[in] Optional. Path to a temporary directory of additional files that should be included with the dump when uploaded to the Watson web site. 
+
+<P>Ownership of the temporary directory transfers to the Error Report Generator after <B>CaptureDumpFileOnDevice</B> returns success. 
+
+
+<P>The calling function 
+
+
+<UL type="disc">
+	<LI>Should not use the directory again if this method is successful. </li>
+
+	<LI>Should always create a directory with a unique name, and the directory must be a subfolder within the directory specified in the <B>ExtraFilesDirectory</B> value of the <B>DumpSettings</B> registry key. </li>
+</UL>
+</dd>
+</DL>
+
+<H4 class="dtH4">Return Values</H4>
+
+<P>Returns TRUE if the function was successful. </P>
+
+<P>If <B>CaptureDumpFileOnDevice</B> returns FALSE, use <MSHelp:link keywords="wce50lrfGetLastError" TABINDEX="0">GetLastError</MSHelp:link> to discover more information.</P>
+
+<H4 class="dtH4">Remarks</H4>
+
+<P>To use <B>CaptureDumpFileOnDevice</B>, set WINCEOEM=1. </P>
+
+<H4 class="dtH4">Requirements</H4>
+
+<P><B>OS Versions:</B> Windows CE 5.0 and later.<BR>
+<B>Header:</B> Pkfuncs.h.<BR>
+<B>Link Library:</B> Coredll.lib.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><MSHelp:link keywords="wce50lrfReportFault" TABINDEX="0">ReportFault</MSHelp:link></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

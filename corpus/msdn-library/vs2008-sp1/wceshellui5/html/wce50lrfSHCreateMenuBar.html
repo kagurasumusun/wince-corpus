@@ -1,0 +1,187 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>SHCreateMenuBar</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="SHCreateMenuBar"/>
+<MSHelp:RLTitle Title="SHCreateMenuBar"/>
+<MSHelp:Keyword Index="K" Term="SHCreateMenuBar"/>
+<MSHelp:Keyword Index="A" Term="wce50lrfSHCreateMenuBar"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Feature"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="apiref"/>
+<MSHelp:Attr Name="Filename" Value="aygshell_reference.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="True"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+<MSHelp:Attr Name="APIName" Value="SHCreateMenuBar"/>
+<MSHelp:Attr Name="PBFeature" Value="SYSGEN_AYGSHELL"/>
+<MSHelp:Attr Name="PBOnly" Value="False"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_3021347">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50lrfshcreatemenubar"></A>SHCreateMenuBar</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>This function creates a menu or softkey bar, as appropriate, to be associated with a specified window.</P>
+
+<H4 class="dtH4">Syntax</H4>
+
+<PRE class="syntax"><B>BOOL SHCreateMenuBar(</B>
+<B>  SHMENUBARINFO * </B><I>pmb</I>
+<B>);</B></PRE>
+
+<H4 class="dtH4">Parameters</H4>
+
+<DL>
+<DT><I>pmb</I></DT>
+
+<DD>[in] Pointer to an <A HREF="wce50lrfshmenubarinfo.htm">SHMENUBARINFO</A> structure.</dd>
+</DL>
+
+<H4 class="dtH4">Return Values</H4>
+
+<P>This function returns TRUE if it is successful and FALSE if it fails.</P>
+
+<H4 class="dtH4">Remarks</H4>
+
+<P>When successful, the newly created menu bar or soft key bar is positioned at the bottom of the specified window.</P>
+
+<P>An application must resize its main window to accommodate the size of the menu bar. The following code shows how to programmatically determine the size of the menu bar.</P>
+
+<PRE class="code">hMenuBar = SHFindMenuBar( MyMainWindow);
+GetWindowRect(hMenuBar, &amp;MyRect);</PRE>
+
+<H4 class="dtH4">Windows Mobile Remarks</H4>
+
+<P>In Windows Mobile 5.0, a soft key bar will be automatically created if the specification passed to <B>SHCreateMenuBar</B> function contains 2 or less top level menu items and those menu items do not contain images.</P>
+
+<P>If the specification passed to <B>SHCreateMenuBar</B> function contains images or more than 2 top level menu items, the behavior is as follows.
+
+<UL type="disc">
+	<LI><B>SHCreateMenuBar</B> will fail for a Windows Mobile 5.0-based Smartphone</li>
+
+	<LI><B>SHCreateMenuBar</B> will create a traditional style menu bar for a Windows Mobile 5.0-based Pocket PC</li>
+</UL>
+
+<H4 class="dtH4">Code Example</H4>
+
+<P>The following code example demonstrates how to use <B>SHCreateMenuBar</B>.</P>
+
+<BLOCKQUOTE class="dtBlock">
+<b class="le">Note</b>&nbsp;&nbsp;&nbsp;To make the following code example easier to read, security checking and error handling are not included. This code example should not be used in a release configuration unless it has been modified to include them.</BLOCKQUOTE>
+
+<PRE class="code">#include &lt;aygshell.h&gt;
+
+extern HINSTANCE g_hInstance;
+HWND g_hwndMb;
+HMENU g_hMenu;
+#define IDM_HELLO_MENU 100
+
+LRESULT CALLBACK SHCreateMenuBarWndProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
+{
+
+    static fDisableSK = FALSE;
+
+    switch(message)
+    {
+        case WM_CREATE:
+            {
+                SHMENUBARINFO mbi;
+                ZeroMemory(&amp;mbi, sizeof(SHMENUBARINFO));
+
+                mbi.cbSize     = sizeof(SHMENUBARINFO);
+                mbi.hwndParent = hwnd;
+                mbi.nToolBarId = IDM_HELLO_MENU;
+                mbi.hInstRes   = g_hInstance;
+                mbi.dwFlags    = SHCMBF_HMENU;
+
+                if(SHCreateMenuBar(&amp;mbi))
+                {
+                    g_hwndMb          = mbi.hwndMB;
+                    TBBUTTONINFO tbbi = {0};
+                    tbbi.cbSize       = sizeof(tbbi);
+                    tbbi.dwMask       = TBIF_LPARAM | TBIF_BYINDEX;
+
+                    SendMessage(g_hwndMb, TB_GETBUTTONINFO,0, (LPARAM)&amp;tbbi);
+                    g_hMenu           = (HMENU)tbbi.lParam;
+                }
+
+                else
+                {
+                    DestroyWindow(hwnd);
+                    PostQuitMessage(1);
+                    return(-1);
+                }
+
+                break;
+            }
+
+        case WM_KEYDOWN:
+            {
+                // When the user presses the space key, toggle between full screen and normal mode.
+                if (VK_SPACE == wParam)
+                {
+
+                    if(fDisableSK)
+                    {
+                        SHEnableSoftkey(g_hwndMb, /*uid*, 0 for SK1, 1 for SK2*/1, /*bByIndex*/TRUE, TRUE);
+                    }
+
+                    else
+                    {
+                        SHEnableSoftkey(g_hwndMb, /*uid*, 0 for SK1, 1 for SK2*/1, /*bByIndex*/TRUE, FALSE);
+                    }
+
+                }
+                break;
+            }
+    }
+
+    return DefWindowProc(hwnd, message, wParam, lParam);
+
+}</PRE>
+
+<H4 class="dtH4">Requirements</H4>
+
+<P><B>OS Versions: </B>Windows CE .NET 4.2 and later<BR>
+<B>Pocket&nbsp;PC:</B> Windows&nbsp;Mobile&nbsp;2000 and later<BR>
+<B>Smartphone:</B> Windows&nbsp;Mobile&nbsp;2002 and later<BR>
+<B>Header:</B> aygshell.h<BR>
+<B>Library:</B> aygshell.lib</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50lrfshmenubarinfo.htm">SHMENUBARINFO</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

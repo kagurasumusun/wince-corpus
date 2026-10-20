@@ -1,0 +1,93 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>ARM Stack Frame Layout</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="ARM Stack Frame Layout"/>
+<MSHelp:RLTitle Title="ARM Stack Frame Layout"/>
+<MSHelp:Keyword Index="A" Term="wce50conARMStackFrameLayout"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Guide"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="True"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="comp_arm_callspec.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="False"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_3023280">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50conarmstackframelayout"></A>ARM Stack Frame Layout</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>The following illustration shows the stack frame layout.</P>
+
+<P class="fig"><IMG SRC="arccall1.gif" ALT="" BORDER=0></P>
+
+<P>The following list gives more information about the stack frame layout.
+
+<UL type="disc">
+	<LI>The Register Save Area (RSA) holds the preserved values of permanent registers used by the function. It also contains the function return address.</li>
+
+	<LI>The Locals and Temporaries area represents the stack space allocated for local variables and compiler-generated temporaries.</li>
+
+	<LI>The first four words at the top of the stack can contain the values passed in <B>R0-R3</B>. Any of these values could be missing. The values should be stored in the <B>R0-R3</B> if registers cannot hold the arguments for the entire function, or if the addresses for the arguments are in use. </li>
+
+	<LI>If a routine needs storage space for the first four words of arguments, it creates and initializes the storage at the top of the called function stack. 
+<P>If a register keeps an argument for the argument live range, the argument has no associated storage in the stack frame.
+</li>
+
+	<LI>If a routine has <B>alloca()</B> locals, the ARM specification requires a separate frame pointer register to access incoming arguments and locals. 
+<P><B>R11</B> is the assigned frame pointer<B> </B>for ARM, and <B>R7</B> is the assigned frame pointer for THUMB. 
+
+<P>A leaf routine can use any free integer register as the frame pointer. A nonleaf routine must use a permanent register. The routine must not modify the frame pointer register between the prolog and epilog.
+</li>
+
+	<LI>In a routine that uses <B>alloca()</B>, everything in the frame at a lower address than the <B>alloca()</B> area is referenced relative to <B>R13</B> and never contains a defined value at the time of an <B>alloca()</B> call. Thus, the <B>alloca()</B> operation never needs to copy this part of the stack frame, and no data relocation problems arise. 
+<P>Everything in the frame at an address higher than the <B>alloca()</B> area is referenced relative to the frame pointer, <B>R11</B> for ARM or <B>R7</B> for THUMB.
+</li>
+
+	<LI>To more efficiently access data in large stack frames, a routine can establish another frame pointer. 
+<P>A frame pointer helps mitigate problems with the limited size of the bit field that specifies register-displacement-addressing offset. The frame pointer typically points to a fixed frame offset in the RSA or Local and Temporaries areas of the stack frame, but the pointer can point to other offsets within the frame.
+</li>
+
+	<LI>A routine does not need to set up a stack frame unless it needs to save permanent registers, or to allocate space for locals or outgoing argument areas that are bigger than four words.</li>
+
+	<LI>The stack pointer and frame pointer addresses align on 4-byte boundaries.</li>
+</UL>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50conarmregisters.htm">ARM Registers</A> </P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

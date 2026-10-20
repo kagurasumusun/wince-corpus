@@ -1,0 +1,137 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>CardGetParsedTuple</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="CardGetParsedTuple"/>
+<MSHelp:RLTitle Title="CardGetParsedTuple"/>
+<MSHelp:Keyword Index="K" Term="CardGetParsedTuple"/>
+<MSHelp:Keyword Index="A" Term="wce50lrfCardGetParsedTuple"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Driver"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="False"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="apiref"/>
+<MSHelp:Attr Name="Filename" Value="pccardnew_reference.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="False"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+<MSHelp:Attr Name="APIName" Value="CardGetParsedTuple"/>
+<MSHelp:Attr Name="APIType" Value="DLLExport"/>
+<MSHelp:Attr Name="APILocation" Value="Pcc_serv.dll"/>
+<MSHelp:Attr Name="PBFeature" Value="PCCardDriver"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_1043831">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50lrfcardgetparsedtuple"></A>CardGetParsedTuple</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>This function reads and decodes the CISTPL_CONFIG and CISTPL_CFTABLE_ENTRY tuples. These tuples are both complex and difficult to decode. This function stores the information in those tuples in data structures that are easier to access.</P>
+
+<PRE class="syntax"><B>STATUS CardGetParsedTuple(</B>
+  <B>CARD_SOCKET_HANDLE</B> <I>hSocket</I><B>,</B>
+  <B>UINT8</B> <I>uDesiredTuple</I><B>,</B>
+  <B>PVOID</B> <I>pBuf</I><B>,</B>
+  <B>PUINT32 </B><I>pnItems</I> 
+<B>);</B></PRE>
+
+<H4 class="dtH4">Parameters</H4>
+
+<DL>
+<DT><I>hSocket</I></DT>
+
+<DD>[in] Handle to a socket and function pair.</dd>
+
+<DT><I>uDesiredTuple</I></DT>
+
+<DD>[in] Specifies the desired tuple to parse. Currently, only the CISTPL_CONFIG or CISTPL_CFTABLE_ENTRY tuples are supported for parsing.</dd>
+
+<DT><I>pBuf</I></DT>
+
+<DD>[out] Pointer to the buffer to contain the parsed tuple information. Points to the <A HREF="wce50lrfparsedconfig.htm">PARSED_CONFIG</A> or the <A HREF="wce50lrfparsedcftable.htm">PARSED_CFTABLE</A> structure.</dd>
+
+<DT><I>pnItems</I></DT>
+
+<DD>[in, out] Pointer, on entry, to the number of entries in the buffer pointed to by <I>pBuf</I>. On exit, this parameter specifies how many entries of <I>pBuf</I> are needed to store the results or how many entries are required if the buffer is not large enough.</dd>
+</DL>
+
+<H4 class="dtH4">Return Values</H4>
+
+<P>CERR_SUCCESS indicates success. One of the following values indicates failure:
+
+<DL>
+<DT>CERR_BAD_ARG_LENGTH</DT>
+
+<DD>Indicates that the buffer specified by the <I>pnItems</I> pointer is not large enough.</dd>
+
+<DT>CERR_BAD_ARGS</DT>
+
+<DD>Indicates that the pointer specified by<I> pBuf </I>is not valid.</dd>
+
+<DT>CERR_BAD_SOCKET</DT>
+
+<DD>Indicates that an <I>hSocket</I> socket identifier is not valid or that a PC Card is not inserted.</dd>
+
+<DT>CERR_NO_MORE_ITEMS</DT>
+
+<DD>Indicates that the end of card information structure (CIS) is reached or that the requested tuple is not found.</dd>
+
+<DT>CERR_OUT_OF_RESOURCE</DT>
+
+<DD>Indicates that card services is unable to set up a memory window to read the CIS.</dd>
+
+<DT>CERR_READ_FAILURE</DT>
+
+<DD>Indicates that no PC Card is inserted or that the PC Card is unreadable.</dd>
+</DL>
+
+<H4 class="dtH4">Remarks</H4>
+
+<P>This function reads the CIS data from the specified PC Card of the specified tuple code and formats the encoded data into an easily accessed structure. This function reduces code size by eliminating the extra processing required to parse some variable-length tuples, which reduces duplication of the code required to process these tuples.</P>
+
+<P>Currently, only the CISTPL_CONFIG and CISTPL_CFTABLE_ENTRY tuples are supported for parsing.</P>
+
+<P>When this function is called with CISTPL_CONFIG, it retrieves a <B>PARSED_CONFIG</B> structure. When it is called with CISTPL_CFTABLE_ENTRY, it retrieves a <B>PARSED_CFTABLE</B> structure. Therefore, the <I>pBuf</I> pointer points to either <B>PARSED_CONFIG</B> or <B>PARSED_CFTABLE</B>.</P>
+
+<P>If there are multiple CISTPL_CFTABLE_ENTRY tuples, this function retrieves the required number of <B>PARSED_CFTABLE</B> structures.</P>
+
+<H4 class="dtH4">Requirements</H4>
+
+<P><B>OS Versions:</B> Windows CE 1.0 and later.<BR>
+<B>Header:</B> Cardsv2.h. <BR>
+<B>Link Library:</B> Pcc_serv.dll</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50lrfparsedcftable.htm">PARSED_CFTABLE</A> | <A HREF="wce50lrfparsedconfig.htm">PARSED_CONFIG</A> | <A HREF="wce50lrfpowerdescr.htm">POWER_DESCR</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

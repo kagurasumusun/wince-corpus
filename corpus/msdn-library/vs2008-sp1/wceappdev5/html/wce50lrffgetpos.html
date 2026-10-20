@@ -1,0 +1,150 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>fgetpos</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="fgetpos"/>
+<MSHelp:RLTitle Title="fgetpos"/>
+<MSHelp:Keyword Index="K" Term="fgetpos"/>
+<MSHelp:Keyword Index="A" Term="wce50lrffgetpos"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Application"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="False"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="Technology" Value="CRT"/>
+<MSHelp:Attr Name="TechnologyVers" Value="kbCRT"/>
+<MSHelp:Attr Name="TopicType" Value="apiref"/>
+<MSHelp:Attr Name="Filename" Value="crt2.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="True"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+<MSHelp:Attr Name="APIName" Value="fgetpos"/>
+<MSHelp:Attr Name="APIType" Value="DLLExport"/>
+<MSHelp:Attr Name="APILocation" Value="coredll.dll"/>
+<MSHelp:Attr Name="PBFeature" Value="SYSGEN_FULL_CRT"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_3026860">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50lrffgetpos"></A>fgetpos</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>Gets a stream's file-position indicator.</P>
+
+<PRE class="syntax"><B>int fgetpos( </B>
+<B>&nbsp;&nbsp;&nbsp;FILE</B> *<I>stream</I>, 
+   <B>fpos_t</B> *<I>pos</I> 
+<B>);</B></PRE>
+
+<H4 class="dtH4">Parameters</H4>
+
+<DL>
+<DT><I>stream</I></DT>
+
+<DD>Target stream.</dd>
+
+<DT><I>pos</I></DT>
+
+<DD>Position-indicator storage.</dd>
+</DL>
+
+<H4 class="dtH4">Return Values</H4>
+
+<P>If successful, <B>fgetpos</B> returns 0. </P>
+
+<P>On failure, it returns a nonzero value.</P>
+
+<H4 class="dtH4">Remarks</H4>
+
+<P>The <B>fgetpos</B> function gets the current value of the stream argument's file-position indicator and stores it in the object pointed to by pos. </P>
+
+<P>The <B>fsetpos</B> function can later use information stored in <B>pos</B> to reset the stream argument's pointer to its position at the time <B>fgetpos</B> was called. </P>
+
+<P>The <B>pos</B> value is stored in an internal format and is intended for use only by <B>fgetpos</B> and <B>fsetpos</B>.</P>
+
+<P class="label"><B>Example</B></P>
+
+<PRE class="code">/* FGETPOS.C: This program opens a file and reads
+ * bytes at several different locations.
+ *
+ * Place this code in a file called FGETPOS.C and then 
+ * put the file in your project directory.
+ */
+
+#include &lt;stdio.h&gt;
+
+void main( void )
+{
+   FILE   *stream;
+   fpos_t pos;
+   char   buffer[20];
+
+   if( (stream = fopen( "fgetpos.c", "rb" )) == NULL )
+      printf( "Trouble opening file\n" );
+   else
+   {
+      /* Read some data and then check the position. */
+      fread( buffer, sizeof( char ), 10, stream );
+      if( fgetpos( stream, &amp;pos ) != 0 )
+         printf( "fgetpos error" );
+      else
+      {
+         fread( buffer, sizeof( char ), 10, stream );
+         printf( "10 bytes at byte %I64d: %.10s\n", pos, buffer );
+      }
+
+   /* Set a new position and read more data */
+   pos = 140;
+   if( fsetpos( stream, &amp;pos ) != 0 )
+      printf( "fsetpos error" );
+
+   fread( buffer, sizeof( char ), 10, stream );
+   printf( "10 bytes at byte %I64d: %.10s\n", pos, buffer );
+   fclose( stream );
+   }
+}</PRE>
+
+<P class="label"><B>Output</B></P>
+
+<PRE class="code">10 bytes at byte 10: .C: This p
+10 bytes at byte 140: .C and the</PRE>
+
+<H4 class="dtH4">Requirements</H4>
+
+<P><B>OS Versions: </B>Windows CE 2.0 and later.<BR>
+<B>Header: </B>stdlib.h.<BR>
+<B>Link Library: </B>coredll.dll.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50lrffsetpos.htm">fsetpos</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

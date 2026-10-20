@@ -1,0 +1,116 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Registration Format for Application Shortcut Menu Extensions</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Registration Format for Application Shortcut Menu Extensions"/>
+<MSHelp:RLTitle Title="Registration Format for Application Shortcut Menu Extensions"/>
+<MSHelp:Keyword Index="A" Term="mob5conRegistrationFormatForApplicationShortcutMenuExtensions"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Application"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbsmartphone"/>
+<MSHelp:Attr Name="Product" Value="kbPocketPC"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="Technology" Value="kbPocketPC"/>
+<MSHelp:Attr Name="Technology" Value="kbSmartphone"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="Shortcut_Menus_magneto.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="True"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="True"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_1063852">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Windows Mobile Version 5.0 SDK<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="mob5conregistrationformatforapplicationshortcutmenuextensions"></A>Registration Format for Application Shortcut Menu Extensions</H1>
+<!--Feedback Link Top Start-->
+<P CLASS="feedback"><font size="1"><a href="mailto:medfdbk&#64;microsoft.com?subject=Product: Windows Mobile | Version: 5.0 | Release: SDK | Title: Registration Format for Application Shortcut Menu Extensions | Filename: mob5conregistrationformatforapplicationshortcutmenuextensions.htm | Built on: Wednesday, September 14, 2005">Send Feedback</a> on this topic to the authors</font></p>
+<!--Feedback Link Top End-->
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>The registration format for application shortcut menu extensions is as follows:</P>
+
+<PRE class="code">HKLM\SOFTWARE\Microsoft\Shell\Extensions\ContextMenus\<I>Context</I>\<I>Class</I>\<I>CLSID</I>
+   @ = "<I>DefaultStringVal</I>"
+   DelayLoad = dword:<I>DLoad</I></PRE>
+
+<DL>
+<DT><I>Context</I></DT>
+
+<DD>The application you want to add the shortcut menu extension to. For details, see the Context column in each of the tables in <A HREF="mob5orishortcutmenuoverview.htm">Shortcut Menu Overview</A>.</dd>
+
+<DT><I>Class</I></DT>
+
+<DD>The type of object the shortcut menu extension is for. For details, see the Class column in each of the tables in <A HREF="mob5orishortcutmenuoverview.htm">Shortcut Menu Overview</A>.</dd>
+
+<DT><I>CLSID</I></DT>
+
+<DD>The Class Identifier (CLSID) of your shortcut menu extension component.</dd>
+
+<DT><I>DefaultStringVal</I></DT>
+
+<DD>A string used as the registry key place holder for the default value.</dd>
+</DL>
+
+<BLOCKQUOTE class="dtBlock">
+<b class="le">Note</b>&nbsp;&nbsp;&nbsp;This string value is not used as the menu text, and can be anything at all. It is important that a string value exists for this registry key.</BLOCKQUOTE>
+
+<DL>
+<DT><I>Dload</I></DT>
+
+<DD>Specifies whether to delay-load the shortcut menu extension. When delay-loaded, the <MSHelp:link keywords="mob5lrfIContextMenu" TABINDEX="0">IContextMenu</MSHelp:link> object is neither initialized nor called until the menu item is invoked. Only one shortcut menu extension can be delay-loaded at a time.
+
+<P>To delay-load the shortcut menu extension, include the <I>DelayLoad</I> value name and give it the value <I>DelayLoad=dword:1</I>. If <I>DelayLoad</I> is missing or set to 0, the shell calls <MSHelp:link keywords="mob5lrfIContextMenuQueryContextMenu" TABINDEX="0">IContextMenu::QueryContextMenu</MSHelp:link> during the call to <MSHelp:link keywords="wce50lrfSHLoadContextMenuExtensions" TABINDEX="0">SHLoadContextMenuExtensions</MSHelp:link> and enumerates the shortcut menu items to add.
+</dd>
+</DL>
+
+<H4 class="dtH4">Remarks</H4>
+
+<P>The default value of an InprocServer32 registry key contains the name of the DLL file that implements the menu extension. For example:</P>
+
+<PRE class="code">HKEY_CLASSES_ROOT\CLSID\{D25FCDF9-6FD9-48fd-83E4-6ABA454300F4}\InprocServer32
+   @=menuext.dll</PRE>
+
+<P>The menu extension itself is defined using a second registry key. For example:</P>
+
+<PRE class="code">HKEY_LOCAL_MACHINE\Software\Microsoft\Shell\Extensions\ContextMenus\Tasks\Main_ContextMenu\{D25FCDF9-6FD9-48fd-83E4-6ABA454300F4}
+   @=necessary_placeholder_value</PRE>
+
+<P>!ALink("mob5lrfIContextMenuInvokeCommand")</P>
+
+<P>Backward compatibility issues exist for Outlook Mobile menu extensions registered using the older registration format. In some instances, the new menu items are prevented from appearing in the user interface. In others, the menu extension is unable to retrieve the correct <A HREF="mob5lrfiitemget_defaultitemtype.htm">Item Type</A> or <A HREF="mob5lrfiitemget_oid.htm">OID</A> &#0151; which can result in <A HREF="mob5lrfsharedpropertyids.htm">Shared Property ID's</A> not being returned from <A HREF="mob5lrfiitemgetprops.htm">IItem::GetProps</A> on the items returned from <A HREF="mob5lrfipoutlookappgetitemfromoid.htm">IPOutlookApp::GetItemFromOid</A>. For information on the deprecated registration format, see the topic <A HREF="http://msdn.microsoft.com/library/default.asp?url=/library/en-us/wcepoom/html/ceconmenuextensibility.asp">Menu Extensibility</A> in the Microsoft Windows CE .NET 4.2 documentation on MSDN.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="mob5tskhowtoextendshortcutmenus.htm">How to: Extend Shortcut Menus</A> | <A HREF="mob5tskhowtoregisterfilesystemshortcutmenu.htm">How to: Register a File System Shortcut Menu</A> | <A HREF="mob5conregistrationformatforfilesystemshortcutmenuextensions.htm">Registration Format for File System Shortcut Menu Extensions</A> | <A HREF="mob5orishortcutmenuoverview.htm">Shortcut Menu Overview</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Feedback Link Bottom Start-->
+<p><font size="1"><a href="mailto:medfdbk&#64;microsoft.com?subject=Product: Windows Mobile | Version: 5.0 | Release: SDK | Title: Registration Format for Application Shortcut Menu Extensions | Filename: mob5conregistrationformatforapplicationshortcutmenuextensions.htm | Built on: Wednesday, September 14, 2005">Send Feedback</a> on this topic to the authors</font></p>
+<!--Feedback Link Bottom End-->
+<!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="mob5conCopyrightInformationForMagneto" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link></font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

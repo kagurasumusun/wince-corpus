@@ -1,0 +1,66 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Data Persistence with the RAM-based Registry Using the OAL</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Data Persistence with the RAM-based Registry Using the OAL"/>
+<MSHelp:RLTitle Title="Data Persistence with the RAM-based Registry Using the OAL"/>
+<MSHelp:Keyword Index="A" Term="wce50tskDataPersistenceWithRAM-basedRegistryUsingOAL"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Feature"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="registry_overview.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="False"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+<MSHelp:Attr Name="PBFeature" Value="REGISTRY"/>
+<MSHelp:Attr Name="PBOnly" Value="True"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_1055683">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50tskdatapersistencewithram-basedregistryusingoal"></A>Data Persistence with the RAM-based Registry Using the OAL</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>The RAM-based registry supports two OAL-based save-and-restore methods. OEMs can use these methods to persist registry data when the RAM, which contains the object store, is not being powered. In addition, the methods can also be used to provide protection against invalid data configurations. The preferred method for persisting data with the RAM-based registry is to include the OEMRegistry.dll sample file in your OS image. For more information, see <A HREF="wce50conpersistingdatawiththerambasedregistry.htm">Persisting Data with the RAM-Based Registry</A>.</P>
+
+<P>The first method is based on the <A HREF="wce50lrfregcopyfile.htm">RegCopyFile</A> and <A HREF="wce50lrfregrestorefile.htm">RegRestoreFile</A> functions. <B>RegCopyFile</B> saves the entire registry to a file, and <B>RegRestoreFile</B> sets up the registry to be replaced with the data in the given file on the next boot. To persist the registry when a device is turned off, an OEM would first use <B>RegCopyFile</B> to save the data to a persistent file. On the next cold boot, the OEM would call <B>RegRestoreFile</B> to prepare the registry to be replaced with data in the file, and perform a warm reboot to complete the registry replacement. This manner of registry persistence is easy to implement, but because it requires a dual boot to restore the registry after a device was turned off, it is relatively slow. The <B>RegCopyFile</B> and <B>RegRestoreFile</B> method is better suited to providing backup to protect against errors than it is to providing registry persistence.</P>
+
+<P>The second method gives the OEM responsibility for persisting the data. An OEM can implement the <MSHelp:link keywords="wce50lrfWriteRegistryToOEM" TABINDEX="0">WriteRegistryToOEM</MSHelp:link> and <MSHelp:link keywords="wce50lrfReadRegistryFromOEM" TABINDEX="0">ReadRegistryFromOEM</MSHelp:link> functions in the OAL. These functions, if implemented, are called by the registry code to save and restore the data. When an application calls the <A HREF="wce50lrfregflushkey.htm">RegFlushKey</A> function, the OS makes a series of calls to <B>WriteRegistryToOEM</B> to pass the entire registry to the OEM, which stores the data on any persistent media. Then while the OS is booting, it makes another series of calls to <B>ReadRegistryFromOEM</B> to receive the data from wherever the OEM stored it. The difficulty in using this mechanism is that file system calls, such as <A HREF="wce50lrfcreatefile.htm">CreateFile</A>, <A HREF="wce50lrfreadfile.htm">ReadFile</A>, and <A HREF="wce50lrfwritefile.htm">WriteFile</A>, cannot be used to read the data from storage during <B>ReadRegistryFromOEM</B>. While they can be used during <B>WriteRegistryToOEM</B>, the block and file system drivers needed to read from external media are not started until after the registry is initialized. Therefore, implementing <B>ReadRegistryFromOEM</B> is difficult; code to read from the persistent media must be added to the OAL. But this mechanism has the benefit of requiring only a single boot to restore the registry, as opposed to the dual boot required by the <B>RegCopyFile</B> and <B>RegRestoreFile</B> mechanism.</P>
+
+<P>The following pairs of functions cannot be intermixed: <B>RegCopyFile</B> and <B>RegRestoreFile</B>, and <B>WriteRegistryToOEM</B> and <B>ReadRegistryFromOEM</B>. The file produced by <B>RegCopyFile</B> is not the same as that produced by <B>WriteRegistryToOEM</B>.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50conrambasedregistry.htm">RAM-Based Registry</A> | <A HREF="wce50conrambasedregistrysetup.htm">RAM-Based Registry Setup</A> | <A HREF="wce50lrfregcopyfile.htm">RegCopyFile</A> | <A HREF="wce50lrfregrestorefile.htm">RegRestoreFile</A> | <MSHelp:link keywords="wce50lrfWriteRegistryToOEM" TABINDEX="0">WriteRegistryToOEM</MSHelp:link> | <MSHelp:link keywords="wce50lrfReadRegistryFromOEM" TABINDEX="0">ReadRegistryFromOEM</MSHelp:link> | <A HREF="wce50lrfregflushkey.htm">RegFlushKey</A> | <A HREF="wce50conpersistingdatawiththerambasedregistry.htm">Persisting Data with the RAM-Based Registry</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

@@ -1,0 +1,106 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>HcdMdd_CreateMemoryObject</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="HcdMdd_CreateMemoryObject"/>
+<MSHelp:RLTitle Title="HcdMdd_CreateMemoryObject"/>
+<MSHelp:Keyword Index="K" Term="HcdMdd_CreateMemoryObject"/>
+<MSHelp:Keyword Index="A" Term="wce50lrfHcdMddCreateMemoryObject"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Driver"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="False"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="apiref"/>
+<MSHelp:Attr Name="Filename" Value="usbhost_reference.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="False"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+<MSHelp:Attr Name="APIName" Value="HcdMdd_CreateMemoryObject"/>
+<MSHelp:Attr Name="PBFeature" Value="USBHostDriver"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_3019421">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50lrfhcdmddcreatememoryobject"></A>HcdMdd_CreateMemoryObject</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>This function creates the host controller interface shared memory area.</P>
+
+<PRE class="syntax"><B>LPVOID</B> <B>HcdMdd_CreateMemoryObject(</B>
+  <B>DWORD</B> <I>cbSize</I><B>,</B>
+  <B>DWORD</B> <I>cbHighPrioritySize</I><B>,</B>
+  <B>PUCHAR</B> <I>pVirtAddr</I><B>,</B>
+  <B>PUCHAR</B> <I>pPhysAddr</I> 
+<B>);</B></PRE>
+
+<H4 class="dtH4">Parameters</H4>
+
+<DL>
+<DT><I>cbSize</I></DT>
+
+<DD>[in] Total size of the host controller device shared memory area.</dd>
+
+<DT><I>cbHighPrioritySize</I></DT>
+
+<DD>[in] Specifies the bytes reserved for high-priority isochronous or interrupt transfers and the host controller interface (HCI) communication area.</dd>
+
+<DT><I>pVirtAddr</I></DT>
+
+<DD>[in] Pointer to the virtual address of a memory area, which might be NULL.</dd>
+
+<DT><I>pPhysAddr</I></DT>
+
+<DD>[in] Pointer to the physical address of a memory area, which might be NULL.</dd>
+</DL>
+
+<H4 class="dtH4">Return Values</H4>
+
+<P>A pointer to a host controller driver memory object indicates success. NULL indicates failure.</P>
+
+<H4 class="dtH4">Remarks</H4>
+
+<P>This HC driver platform-dependent driver (PDD) calls this function to initialize the shared memory area used by the HCI driver. This memory contains data structures shared by the driver and the host controller hardware. This memory is used to allocate DMA buffers for USB driver data transfers. Two options are available. If a platform has an area of memory set aside that can be used by an HCI, as specified in the Config.bib file, it can pass the virtual and physical address pointers to this function. This is the recommended method. Alternatively, the PDD can pass NULL for the physical and virtual address pointers, in which case the <B>HcdMdd_CreateMemoryObject</B> function attempts to allocate a suitable memory buffer from system RAM.</P>
+
+<P>The HCI shared memory area has two separate areas: a high-priority pool of buffers for the host controller communications area and for isochronous client buffers, and a low-priority pool of buffers for other client transfers. The size of the shared memory area depends on the use of USB within the platform. A recommended value for general-purpose USB operation is 64 KB, with 20 KB reserved for high-priority isochronous transfers. If you anticipate less demand on the USB subsystem, you can safely reduce this or change the split between low and high-priority buffer pools. Reducing the size of the high-priority buffer can cause isochronous transfers to fail if memory cannot be allocated, whereas reducing the size of the low priority buffer reduces performance on bulk interrupt and control transfers. However, reducing the size of the low priority buffer does not cause failures, because bulk transfers can block to wait for memory to become available.</P>
+
+<P>If possible, you should consider placing the HC driver shared memory area in high-speed memory, particularly to support streaming, isochronous, data transfers.</P>
+
+<H4 class="dtH4">Requirements</H4>
+
+<P><B>OS Versions:</B> Windows CE 1.0 and later.<BR>
+<B>Header:</B> Hcdddsi.h or Ohcdddsi.h.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50lrfhcdmdddestroymemoryobject.htm">HcdMdd_DestroyMemoryObject</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

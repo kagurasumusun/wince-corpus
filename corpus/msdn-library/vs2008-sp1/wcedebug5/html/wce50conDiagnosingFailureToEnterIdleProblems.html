@@ -1,0 +1,89 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Diagnosing Idle Mode Problems</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Diagnosing Idle Mode Problems"/>
+<MSHelp:RLTitle Title="Diagnosing Idle Mode Problems"/>
+<MSHelp:Keyword Index="A" Term="wce50conDiagnosingFailureToEnterIdleProblems"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Debugging"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="True"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="debugging_batterylife.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="False"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_1057362">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50condiagnosingfailuretoenteridleproblems"></A>Diagnosing Idle Mode Problems</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>Problems with idle mode can be caused by one of the following reasons:
+
+<UL type="disc">
+	<LI><MSHelp:link keywords="wce50lrfOEMIdle" TABINDEX="0">OEMIdle</MSHelp:link> is not being called.</li>
+
+	<LI><B>OEMIdle</B> is being called, but is not putting the CPU and peripherals in idle mode.</li>
+</UL>
+
+<P>First determine if <B>OEMIdle</B> is being called. You can do this by setting a breakpoint in <B>OEMIdle</B> and verifying that it causes execution to stop, or by having the <B>OEMIdle</B> implementation output a debug message.</P>
+
+<H4 class="dtH4">OEMIdle is not being called</H4>
+
+<P>The most common cause of <B>OEMIdle</B> not being called is a thread that runs in a loop and never sleeps. The performance of the target device can be satisfactory even in this case, if the thread is running at a low priority level. You can determine which thread is not sleeping by:
+
+<UL type="disc">
+	<LI>Using the debugger to stop execution and examining the state of all threads. Then examine the call stacks of threads that have high CPU usage to determine what these threads are doing.</li>
+
+	<LI>Running the Platform Builder Target Control <B>gi delta</B> command twice in short succession. The first time you run this command, it prints the CPU time of each thread and then resets the CPU time to zero. The second time you run the command, you can examine its CPU usage output to determine which threads are running and preventing <B>OEMIdle</B> from being called. For more information about <B>gi delta</B>, see <MSHelp:link keywords="wce50conTargetControlDebuggingCommands" TABINDEX="0">Target Control Debugging Commands</MSHelp:link>.</li>
+</UL>
+
+<H4 class="dtH4">OEMIdle is being called, the CPU is entering idle mode, but power usage is still high</H4>
+
+<P>If <B>OEMIdle</B> is being called and the CPU is transitioning between idle and active modes, but power consumption is still high, verify the following:
+
+<UL type="disc">
+	<LI>The frequency at which the CPU becomes active is not higher than expected. Also verify that the CPU is becoming active due to an expected interrupt or software polling requirement, not for some other, unknown, reason. If this is not the case, use the Platform Builder debugger and call profiler functionality to determine why the CPU is active more than you expect. </li>
+
+	<LI>The amount of power used in both idle and active modes is not higher than expected. If the power usage is higher than expected, review the source code and use the debugger to determine if the CPU is actually entering the expected sleep mode, and that peripherals are actually powered down as expected.</li>
+</UL>
+
+<P>If the target device's CPU is active too often, or the target device stays active for too long, you can use <MSHelp:link keywords="wce50lrfCeLogData" TABINDEX="0">CeLogData</MSHelp:link> and the call profiler to determine which code is running when the target device transitions out of idle. Specifically, you can use the event tracking functionality to determine which threads are running, how much time each thread takes, and how the threads interact. After you locate the issue, use the debugger to step through the code and understand the source of the issue.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50conbatterylifedebuggingtechniques.htm">Battery Life Debugging Techniques</A> | <A HREF="wce50oridebuggingtesting.htm">Debugging and Testing</A> | <MSHelp:link keywords="wce50grfCELogEventLoggingReference" TABINDEX="0">CeLog Event Logging Reference</MSHelp:link> | <A HREF="wce51orieventtrackinglibraryimplementation.htm">Implementing a Custom Event Tracking Library</A> | <A HREF="wce50conremotecallprofiler.htm">Remote Call Profiler</A> | <A HREF="wce50conremotekerneltracker.htm">Remote Kernel Tracker</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

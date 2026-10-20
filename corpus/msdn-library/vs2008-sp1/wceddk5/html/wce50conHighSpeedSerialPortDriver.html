@@ -1,0 +1,101 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>High Speed Serial Port Driver</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="High Speed Serial Port Driver"/>
+<MSHelp:RLTitle Title="High Speed Serial Port Driver"/>
+<MSHelp:Keyword Index="A" Term="wce50conHighSpeedSerialPortDriver"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Driver"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="False"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="serial_guide.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="True"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="True"/>
+<MSHelp:Attr Name="PBFeature" Value="SerialDriver"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_3019167">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50conhighspeedserialportdriver"></A>High Speed Serial Port Driver</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>The sample installable interrupt service routine (ISR) allows you to capture data from the serial port at a higher rate than with a regular serial port driver. This ISR, which is also referred to as ISR16550.dll, is in %_WINCEROOT%\Public\Common\Oak\Drivers\Serial\ISR16550. Any serial driver that links with the SER16550 serial library located in %_WINCEROOT%\Public\Common\Oak\Drivers\Serial\SER16550 can use this installable ISR.</P>
+
+<P>ISR16550.dll minimizes the time to signal the interrupt service thread (IST). This allows faster data transfer because there is a penalty for the system to schedule the IST. ISR16550.dll buffers data from the hardware to receive first-in, first-out (FIFO) data and fills up hardware transmit FIFO data from the software buffer without IST involvement. The IST is signaled only when the receiving buffer reaches its threshold and the transmitting buffer is empty. The IST is also signaled when the incoming data stream times out, which is same condition as hardware FIFO. This allows less frequent signals to the IST and SER16550 or the driver using the installable ISR can handle high throughput.</P>
+
+<P>ISR16550.dll is loaded and enabled when <B>HKEY_LOCAL_MACHINE\Drivers\BuiltIn\Serial</B> registry key contains certain subkeys and values. The following table shows the specific subkeys and values to include with the <B>HKEY_LOCAL_MACHINE\Drivers\BuiltIn\Serial</B> registry key.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=50%>Subkey</TH>
+<TH width=50%>Value</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><B>"Irq"</B></TD>
+<TD width=50%><B>DWORD:3</B></TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><B>"IsrDll"</B></TD>
+<TD width=50%><B>"isr16550.dll"</B></TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><B>"IsrHandler"</B></TD>
+<TD width=50%><B>"ISRHandler"</B></TD>
+</TR>
+</table></div>
+
+<P>If the SER16550 driver does not find any of these registry subkeys and their correct values, or the SER16550 driver cannot load the installable ISR, the installable ISR does not load and soft FIFO is disabled for the SER16550 driver or the driver that is trying to use the installable ISR.</P>
+
+<P>The following registry key example shows the entire <B>HKEY_LOCAL_MACHINE\Drivers\BuiltIn\Serial</B> registry key:</P>
+
+<PRE class="code">[HKEY_LOCAL_MACHINE\Drivers\BuiltIn\Serial]
+    "SysIntr"=dword:13
+    "Irq"=dword:3
+    "IoBase"=dword:02F8
+    "IoLen"=dword:8
+    "DeviceArrayIndex"=dword:0
+    "Prefix"="COM"
+    "Dll"="Com16550.Dll"
+    "Order"=dword:0
+    "Priority"=dword:0
+    "IsrDll"="isr16550.dll"
+    "IsrHandler"="ISRHandler"</PRE>
+
+<P>In this example, the value for the <B>Irq</B> registry key is <B>DWORD:3</B>, which means that the driver uses IRQ line 3. If you are using a PCI device, the PCI bus driver generates this entry automatically. If you are using this driver for an ISA or built-in device, this value must be in the registry entry for the driver to use the installable ISR.</P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

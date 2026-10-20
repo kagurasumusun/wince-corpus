@@ -1,0 +1,79 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>CeLog Event Format</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="CeLog Event Format"/>
+<MSHelp:RLTitle Title="CeLog Event Format"/>
+<MSHelp:Keyword Index="A" Term="wce51conCeLogEventFormat"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Debugging"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="True"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="celog_event_tracking_customization.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="False"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_1073579">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce51concelogeventformat"></A>CeLog Event Format</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>Every CeLog event in the log is preceded by a CEL_HEADER structure that describes the event. This header contains a length, an event identifier, and a flag indicating whether a time stamp follows the header.</P>
+
+<P>The following list shows the elements included in the amount of space taken up in the log by an event.
+
+<UL type="disc">
+	<LI>4-byte CEL_HEADER structure, and the size of the data as indicated in CEL_HEADER</li>
+
+	<LI>4-byte timestamp, if present</li>
+
+	<LI>4 bytes of flag data, if present</li>
+
+	<LI>0-3 bytes of fill space to pad up to the next DWORD boundary.</li>
+</UL>
+
+<P>If the time stamp flag is set in the event header, then the next 4 bytes following the header contain a time stamp value. The size of the time stamp data is not included in the size value that is stored in the event header, so if the time stamp flag is set in the event header, then the event actually takes up 4 bytes more space in the log than the event header indicates. The time stamp must be interpreted based on the timer frequency indicated by the CELID_LOG_MARKER event. </P>
+
+<P>Event flags also modify the event format. If the event identifier is equal to CELID_FLAGGED, then the header and time stamp (if present) are followed by a 2-byte value with the actual identifier of the event, and a 2-byte flag value. For example, if an application calls CeLogData with <I>wID</I>=CELID_RAW_ULONG, <I>fFlagged</I>=TRUE and <I>wFlag</I>=3, then the event identifier in the event header is CELID_FLAGGED, the event identifier following the time stamp is CELID_RAW_ULONG, and the flag value is 3. The size of the additional event identifier and flag are not included in the size value that is stored in the event header. So, if the event contains a flag, then the event actually takes up 4 bytes more space in the log than the event header indicates</P>
+
+<P>The buffer of event data is stored after the header and, if present, the timestamp and flag data. The size of the buffer is equal to the size value stored in the event header.</P>
+
+<P>All events must be stored on DWORD-aligned boundaries. Hence, the buffer of event data can be followed by up to 3 bytes of unused space that fills to the next 4-byte boundary. This fill space is not included in the size value that is stored in the event header. For more information, see <A HREF="wce51grfmaintainingdwordalignment.htm">Maintaining DWORD Alignment</A>.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce51conimplementingeventtrackinglibrary.htm">Implementing an Event Tracking Library</A> | <A HREF="wce51grfmaintainingdwordalignment.htm">Maintaining DWORD Alignment</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

@@ -1,0 +1,90 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Implementing Save and Restore Coprocessor Register Support</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Implementing Save and Restore Coprocessor Register Support"/>
+<MSHelp:RLTitle Title="Implementing Save and Restore Coprocessor Register Support"/>
+<MSHelp:Keyword Index="A" Term="wce50conImplementingSaveandRestoreCoprocessorRegisterSupport"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Feature"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="kernel_overview.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="False"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+<MSHelp:Attr Name="PBFeature" Value="CORE"/>
+<MSHelp:Attr Name="PBOnly" Value="True"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_3009757">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50conimplementingsaveandrestorecoprocessorregistersupport"></A>Implementing Save and Restore Coprocessor Register Support</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>You can use a single set of variables and functions to save and restore coprocessor registers from a number of coprocessors at the same time. You must coordinate the single set of functions and variables to ensure that the proper state is saved and restored when the coprocessor is active and must have its state saved. The following procedure shows how to save and restore debug registers.</P>
+
+<P class="labelproc"><B>To save and restore debug registers</B>
+
+<OL type="1">
+	<LI>During <MSHelp:link keywords="wce50lrfOEMInit" TABINDEX="0">OEMInit</MSHelp:link>, set <MSHelp:link keywords="wce50lrfcbNKCoProcRegSize" TABINDEX="0">cbNKCoProcRegSize</MSHelp:link> to be the maximum size buffer that will be required to save and restore the state of all coprocessor registers.</li>
+
+	<LI>Set <MSHelp:link keywords="wce50lrffNKSaveCoProcReg" TABINDEX="0">fNKSaveCoProcReg</MSHelp:link> to 0 until the coprocessor state has been saved.</li>
+
+	<LI>Set the function pointers to point to OAL functions that will be used to initialize, save, and restore the coprocessor state.
+<P>If you intend to save debug registers, the kernel should call the save and restore functions only when necessary.
+</li>
+
+	<LI>In <MSHelp:link keywords="wce50lrfOEMKDIoControl" TABINDEX="0">OEMKDIoControl</MSHelp:link>, use the following IOCTLs to set and clear data and code hardware breakpoints.
+<UL type="disc">
+	<LI><MSHelp:link keywords="wce50lrfKDIOCTLSETCBP" TABINDEX="0">KD_IOCTL_SET_CBP</MSHelp:link></li>
+
+	<LI><MSHelp:link keywords="wce50lrfKDIOCTLCLEARCBP" TABINDEX="0">KD_IOCTL_CLEAR_CBP</MSHelp:link></li>
+
+	<LI><MSHelp:link keywords="wce50lrfKDIOCTLSETDBP" TABINDEX="0">KD_IOCTL_SET_DBP</MSHelp:link></li>
+
+	<LI><MSHelp:link keywords="wce50lrfKDIOCTLCLEARDBP" TABINDEX="0">KD_IOCTL_CLEAR_DBP</MSHelp:link> </li>
+</UL>
+
+<P>When a breakpoint is set, you can increment <I>fNKSaveCoProcReg</I> by one. When a break point is cleared, you can decrement <I>fNKSaveCoProcReg</I>.
+</li>
+
+	<LI>In addition to the <I>fNKSaveCoProcReg</I> value, you must track the location of the debug register data in the buffer area. 
+<P>You can track the location of the debug register data by defining a structure that is static, but encompasses all the data that will be stored in the buffer.
+</li>
+</OL>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50conadditionalkernelfeatures.htm">Additional Kernel Functionality</A> | <MSHelp:link keywords="wce50lrfOEMSaveCoProcRegister" TABINDEX="0">OEMSaveCoProcRegister</MSHelp:link> | <MSHelp:link keywords="wce50lrfOEMRestoreCoProcRegister" TABINDEX="0">OEMRestoreCoProcRegister</MSHelp:link> | <MSHelp:link keywords="wce50lrfOEMInitCoProcRegisterSavedArea" TABINDEX="0">OEMInitCoProcRegisterSavedArea</MSHelp:link></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

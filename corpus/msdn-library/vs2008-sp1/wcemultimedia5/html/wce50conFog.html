@@ -1,0 +1,98 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Fog</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Fog"/>
+<MSHelp:RLTitle Title="Fog"/>
+<MSHelp:Keyword Index="A" Term="wce50conFog"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Feature"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="d3dm_concepts.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="False"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+<MSHelp:Attr Name="PBFeature" Value="SYSGEN_D3DM"/>
+<MSHelp:Attr Name="PBOnly" Value="False"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_1032108">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50confog"></A>Fog</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>The rasterizer is capable of adding a fog value to the output color. Applications typically use this effect to obscure objects near the far clipping so they do not suddenly pop into view when they cross that plane's boundary.</P>
+
+<P>Microsoft&reg; Direct3D Mobile&reg; supports two separate fogging modes, vertex fog and pixel fog. Each mode computes a fog value that is used to blend between the computed color and the fog color. You can control fog effects with a variety of render states. </P>
+
+<P>You can enable or disable fog blending by setting the D3DMRS_FOGENABLE render state to either TRUE or FALSE respectively. When fog blending is disabled, pixel processing is just performed on the input color, which is the sum of the texture pass and the specular color for the pixel. When fog blending is enabled the input color is blended with the fog color according to the fog value at that pixel. </P>
+
+<P>The fog color is controlled by the D3DMRS_FOGCOLOR render state. Set this render state to be the fog's 32 bit ARGB color value. </P>
+
+<P>You can enable fog blending without using either vertex or pixel fog. To make use of this, you must pass a fog value for each vertex and then implement your own interpolation and blending algorithms. The fog value is passed in the vertex's specular component's alpha value, where a value of 0xFF is no fog and a value of 0x00 is complete fog (100%).</P>
+
+<P>It is not possible for an application to enable both vertex and pixel fog simultaneously. If the application attempts this, a blend error of D3DMERR_DRIVERINVALIDCALL is set.</P>
+
+<P>Direct3D Mobile uses the values in the <A HREF="wce50lrfd3dmfogmode.htm">D3DMFOGMODE</A> enumeration to identify the fog equations used in various render states. Both types of fog support all of the fog equation in the enumeration.</P>
+
+<H2 class="dtH2">Vertex Fog</H2>
+
+<P>When using vertex fog, the fog blending value is computed for each vertex and then interpolated across the primitive. You can enable vertex fog by setting a value for the D3DMRS_FOGVERTEXMODE render state (see <A HREF="wce50lrfd3dmrenderstatetype.htm">D3DMRENDERSTATETYPE</A>).</P>
+
+<P>A driver indicates that it supports vertex fog by exposing the D3DMPRASTERCAPS_FOGVERTEX capability bit (see <A HREF="wce50lrfd3dmprastercapsvalues.htm">D3DMPRASTERCAPS Values</A>). A driver that exposes D3DMPRASTERCAPS_FOGVERTEX is always capable of rendering fog based on the following methods:
+
+<UL type="disc">
+	<LI>It can generate coefficients for linear interpolation during transformation and lighting and then perform the actual interpolation during rasterization. </li>
+
+	<LI>It can use alpha values during rasterization that have been calculated by the application's fog algorithm and sent to the driver in a flexible vertex format (FVF). </li>
+</UL>
+
+<P>If a driver supports the higher order fog equations, it will indicate that support by exposing the D3DMPRASTERCAPS_EXPFOG and D3DMPRASTERCAPS_EXP2FOG capability bits, as applicable. A driver cannot expose these bits for higher-order fog without also exposing D3DMPRASTERCAPS_FOGVERTEX because this would imply that the driver is capable of generating the interpolation coefficients at each vertex but incapable of calculating the interpolated fog values during rasterization.</P>
+
+<P>You can use the D3DMRS_RANGEFOGENABLE render state to control whether Microsoft&reg; Direct3D&reg; Mobile uses range-based or depth-based fog. With the range-based method, fog effects are computed based on the distance of an object from the viewer. With the depth-based method, fog effects are computed based on an object's z-coordinate in the scene. In range-based fog, all fog methods work as usual, except that they use range instead of depth in the computations. </P>
+
+<P>Range-based fog is the visually accurate method to use for fog computations, however it is more computationally expensive than depth-based fog. Depth-based fog is often used because the common availability of z-coordinate values makes it convenient to do so. The major disadvantage of using depth-based fog is that the level of fog for peripheral objects changes as the viewer's eye changes direction. In these cases the world distance from the viewer to the object does not change, but the scene depth of the object does, resulting in a change in the fog level. </P>
+
+<P>For vertex fog computations the depth values of D3DMRS_FOGSTART and D3DMRS_FOGEND are specified in world space. </P>
+
+<H2 class="dtH2">Pixel Fog</H2>
+
+<P>When using pixel fog, the fog blending value calculated for each pixel. You can enable pixel fog by setting a value for the D3DMRS_FOGTABLEMODE render state (see <A HREF="wce50lrfd3dmrenderstatetype.htm">D3DMRENDERSTATETYPE</A>).</P>
+
+<P>For pixel fog calculations the depth values D3DMRS_FOGSTART and D3DMRS_FOGEND are specified in either device space (0.0, 1.0) or world space. Device space is used when the system uses z for fog calculations (depth-based fog) and world space is used when the system is using eye-relative fog (w-fog, or range-based fog).</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50conrasterization.htm">Rasterization</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

@@ -1,0 +1,129 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>PFN_KEYBD_DRIVER_VKEY_TO_UNICODE</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="PFN_KEYBD_DRIVER_VKEY_TO_UNICODE"/>
+<MSHelp:RLTitle Title="PFN_KEYBD_DRIVER_VKEY_TO_UNICODE"/>
+<MSHelp:Keyword Index="K" Term="PFN_KEYBD_DRIVER_VKEY_TO_UNICODE"/>
+<MSHelp:Keyword Index="A" Term="wce50lrfKeybdDriverVKeyToUnicode"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Driver"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="False"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="apiref"/>
+<MSHelp:Attr Name="Filename" Value="keyboard_reference.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="False"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+<MSHelp:Attr Name="APIName" Value="PFN_KEYBD_DRIVER_VKEY_TO_UNICODE"/>
+<MSHelp:Attr Name="APIType" Value="LibDef"/>
+<MSHelp:Attr Name="APILocation" Value="LayoutManager.lib"/>
+<MSHelp:Attr Name="PBFeature" Value="KeyboardDriver"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_3018192">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50lrfkeybddrivervkeytounicode"></A>PFN_KEYBD_DRIVER_VKEY_TO_UNICODE</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>This function generates the appropriate Unicode characters and SHIFT state flags for a specified virtual-key code, key state array, and driver state.</P>
+
+<PRE class="syntax"><B>typedef UINT32 (*PFN_KEYBD_DRIVER_VKEY_TO_UNICODE)(
+  UINT32 </B><I>VKey</I><B>,
+  KEY_STATE_FLAGS </B><I>KeyEventFlags</I><B>,
+  KEY_STATE </B><I>KeyState</I><B>,
+  void *</B><I>KeybdDriverState</I><B>,
+  UINT32 </B><I>cBufferSize</I><B>,
+  UINT32 *</B><I>pcCharacters</I><B>,
+  KEY_STATE_FLAGS *</B><I>pShiftStateBuffer</I><B>,
+  UINT32 *</B><I>pCharacterBuffer</I><B>
+);</B></PRE>
+
+<H4 class="dtH4">Parameters</H4>
+
+<DL>
+<DT><I>VKey</I></DT>
+
+<DD>[in] Virtual-key code that causes the event.</dd>
+
+<DT><I>KeyEventFlags</I></DT>
+
+<DD>[in] KeyStateDownFlag flag that is set or cleared.</dd>
+
+<DT><I>KeyState</I></DT>
+
+<DD>[in] Key state.</dd>
+
+<DT><I>KeybdDriverState</I></DT>
+
+<DD>[in] Driver-specific TO_UNICODE_STATE.</dd>
+
+<DT><I>cBufferSize</I></DT>
+
+<DD>[in] Count of 32-bit entries in each buffer.</dd>
+
+<DT><I>pcCharacters</I></DT>
+
+<DD>[out] Pointer to a count of characters generated.</dd>
+
+<DT><I>pShiftStateBuffer</I></DT>
+
+<DD>[out] Pointer to a buffer to put the SHIFT state information.</dd>
+
+<DT><I>pCharacterBuffer</I></DT>
+
+<DD>[out] Pointer to a buffer to put the characters.</dd>
+</DL>
+
+<H4 class="dtH4">Return Values</H4>
+
+<P>Windows&#0150;based desktop platforms error code.</P>
+
+<H4 class="dtH4">Remarks</H4>
+
+<P>This function must be re-entrant because the input system exposes it through the <MSHelp:link keywords="wce50lrfMapVirtualKey" TABINDEX="0">MapVirtualKey</MSHelp:link> function and multiple threads can call it.</P>
+
+<P>This function converts a virtual-key code to Unicode and updates the system <I>KeyState</I>. Within Layout Manager, it also performs ALT + numeric keypad logic. Pressing ALT in conjunction with certain numeric keypad keys inputs a special character. If dead keys are used, it might return up to two characters. If <I>KeyState </I>is NULL, the driver must fill in the character corresponding to the unshifted state for the virtual-key code and return. In all other cases, the <B>KeybdDriverVKeyToUnicode</B> function must update the key state array, fill in the SHIFT state determined from the key state array, and, if necessary, update TO_UNICODE_STATE. This means that the count of characters generated is always at least 1, because the SHIFT state is always returned. For information about generating the SHIFT state without a corresponding character, see <A HREF="wce50lrfkeystateflags.htm">KEY_STATE_FLAGS</A>.</P>
+
+<P>Each character should have a corresponding SHIFT state entered into the SHIFT state buffer, even if it is the same as the preceding SHIFT state. Each entry in the character buffer is 32 bits, whereas a Unicode character is 16 bits. The driver assigns characters to the buffer to clear the high-order 16 bits.</P>
+
+<H4 class="dtH4">Requirements</H4>
+
+<P><B>OS Versions:</B> Windows CE 1.0 and later.<BR>
+<B>Header:</B> Keybddr.h.<BR>
+<B>Link Library:</B> LayoutManager.lib.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50lrfkeystateflags.htm">KEY_STATE_FLAGS</A> | <MSHelp:link keywords="wce50lrfMapVirtualKey" TABINDEX="0">MapVirtualKey</MSHelp:link> | <A HREF="wce50lrfkeybddrivergetinfo.htm">PFN_KEYBD_DRIVER_GET_INFO</A> | <A HREF="wce50lrfkeybddriverinitstates.htm">PFN_KEYBD_DRIVER_INIT_STATES</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

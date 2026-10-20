@@ -1,0 +1,95 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Video Previews</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Video Previews"/>
+<MSHelp:RLTitle Title="Video Previews"/>
+<MSHelp:Keyword Index="A" Term="wce51conVideoPreviews"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Feature"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="directshow_concepts1.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="True"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+<MSHelp:Attr Name="PBFeature" Value="SYSGEN_DSHOW"/>
+<MSHelp:Attr Name="PBOnly" Value="False"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_1066808">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce51convideopreviews"></A>Video Previews</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P><B>Applies to:</B> Devices based on Windows Mobile Version 5.0 and later</P>
+
+<P>To build a video preview graph, call the <MSHelp:link keywords="wce51lrfICaptureGraphBuilder2RenderStream" TABINDEX="0">ICaptureGraphBuilder2::RenderStream</MSHelp:link> method as follows:</P>
+
+<PRE class="code">ICaptureGraphBuilder2 *pBuild; // Capture Graph Builder
+// Initialization of pBuild (not shown).
+
+IBaseFilter *pCap; // Video capture filter.
+// Initialize pCap and add it to the filter graph (not shown).
+
+hr = pBuild-&gt;RenderStream(&amp;PIN_CATEGORY_PREVIEW, &amp;MEDIATYPE_Video, 
+    pCap, NULL, NULL);</PRE>
+
+<P>This example assumes the following: 
+
+<UL type="disc">
+	<LI><I>pBuild</I> was initialized as described in the topic <A HREF="wce51concapturegraphbuilder.htm">Capture Graph Builder</A>. </li>
+
+	<LI><I>pCap </I>was initialized, by creating an instance of the capture filter and adding it to the filter graph, as described in <A HREF="wce51concapturedeviceselection.htm">Capture Device Selection</A>. </li>
+</UL>
+
+<P>The first parameter to the <B>ICaptureGraphBuilder2::RenderStream</B> method specifies a pin category; for a preview graph, use PIN_CATEGORY_PREVIEW (see <A HREF="wce51conpinpropertyset.htm">Pin Property Set</A>). The second parameter specifies a media type, as a major type GUID. For video, use MEDIATYPE_Video (see <A HREF="wce50lrfmediatypes.htm">Media Types</A>). DV devices deliver interleaved audio and video, for which the media type is MEDIATYPE_Interleaved.</P>
+
+<P>The third parameter is a pointer to the capture filter's <A HREF="wce50lrfibasefilterinterface.htm">IBaseFilter</A> interface. The next two parameters are not needed in this example. They are used to specify additional filters that might be needed to render the stream. Setting the last parameter to NULL causes the Capture Graph Builder to select a default renderer for the stream, based on the media type. For video, the Capture Graph Builder always uses the <A HREF="wce50lrfvideorendererfilter.htm">DirectShow Video Renderer Filter</A> as the default renderer. </P>
+
+<P>Although the pin category is given as PIN_CATEGORY_PREVIEW, it does not matter whether the filter actually has a preview pin; it could just have a capture pin. In either case, the Capture Graph Builder automatically builds the correct graph. </P>
+
+<P>The following diagram shows the simplest possible graph for previewing video.</P>
+
+<P class="fig"><IMG SRC="dshow_video_preview.gif" ALT="" BORDER=0></P>
+
+<P>In this diagram, the capture filter has a preview pin, which connects directly to the video renderer.</P>
+
+<P>If the capture filter has only a capture pin, the Capture Graph Builder inserts a <A HREF="wce51consmartteefilter.htm">Smart Tee Filter</A>, which splits the stream into a capture stream and a preview stream. This is described in more detail in <A HREF="wce51concombiningvideocapturepreview.htm">Combining Video Capture and Preview</A>.</P>
+
+<P>In some cases, the video stream must go through the <A HREF="wce50lrfoverlaymixerfilter.htm">Overlay Mixer</A> filter. If so, the <B>ICaptureGraphBuilder2::RenderStream</B> method adds it to the graph automatically. </P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce51convideocapture.htm">Video Capture</A> </P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

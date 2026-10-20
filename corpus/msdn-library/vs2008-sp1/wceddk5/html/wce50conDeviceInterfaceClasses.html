@@ -1,0 +1,190 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Device Interfaces</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Device Interfaces"/>
+<MSHelp:RLTitle Title="Device Interfaces"/>
+<MSHelp:Keyword Index="A" Term="wce50conDeviceInterfaceClasses"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Driver"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="False"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="driverarchitecture.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="True"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+<MSHelp:Attr Name="PBFeature" Value="CoreDriver"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_3017955">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50condeviceinterfaceclasses"></A>Device Interfaces</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>Device interface classes are the methods available to applications for accessing the capabilities of a device driver. They indicate to whatever receives notifications that a particular interface is present. A device driver can have multiple device interface classes, or it can have no device interface classes. </P>
+
+<P><B>IClass</B> registry subkeys reference device interfaces and their associated GUIDs. The header (.h) file that declares the interface typically defines the GUID and associates the GUID with the interface. The header file associates the interface with the GUID by defining the GUID. You must expose the interface classes through the <B>IClass</B> registry values or by calling <MSHelp:link keywords="wce50lrfAdvertiseInterface" TABINDEX="0">AdvertiseInterface</MSHelp:link>. You can also define your own interface classes.</P>
+
+<P>There are no restrictions on the device interface. The means of accessing it is dependent on the interface. </P>
+
+<P>The following code example shows how a header file typically defines a device interface GUIDs using a sample GUID.</P>
+
+<PRE class="code">#define DEVCLASS_<I>IFCNAME</I>_STRING TEXT("{12345678-1234-1234-1122334455667788}")
+#define DEVCLASS_<I>IFCNAME</I>_GUID { 0x12345678, 0x1234, 0x1234, { 0x11, 0x22, 0x33, 0x44, 0x55, 0x66, 0x77, 0x88 } }</PRE>
+
+<P>A driver in Device Manager that exposes an interface publicizes this by setting the <B>IClass</B> value set appropriately in the registry key passed into <MSHelp:link keywords="wce50lrfActivateDeviceEx" TABINDEX="0">ActivateDeviceEx</MSHelp:link>. With <B>AdvertiseInterface</B>, a device driver announces what device interfaces it exposes in the registry. This announcement is available to any application or driver that calls <MSHelp:link keywords="wce50lrfRequestDeviceNotifications" TABINDEX="0">RequestDeviceNotifications</MSHelp:link>. An application or driver can stop receiving device notifications by calling <MSHelp:link keywords="wce50lrfStopDeviceNotifications" TABINDEX="0">StopDeviceNotifications</MSHelp:link>. These functions allow you to access the device interface's GUID and name. The GUID describes the device interface and the name disambiguates multiple instances of that device interface. For example, there is a GUID for the generic stream interface, and the names "COM1:" and "DSK1:" refer to two distinct instances of the generic stream interface.</P>
+
+<P>It is possible for two different device interface classes GUIDs to have instances with the same name. The name has meaning only in the context of the access methods of the device interface named by the device interface class GUID.</P>
+
+<P>A device driver should only export a device interface if it implements that device interface entirely. Any interaction with a driver will expect full support of the device interface it advertises.</P>
+
+<P>By calling <B>AdvertiseInterface</B>, device drivers can explicitly send notifications. This is primarily for removable-media storage devices and other drivers that have not determined at load-time exactly which interfaces they will expose. </P>
+
+<P>Device drivers should explicitly indicate that they can accept device handle access requests. If a device driver exposes a device handle-based interface, the driver should be able to accept an <I>hOpenContext </I>value of zero in the device driver's other functions. An <I>hOpenContext</I> value of zero indicates that the access is being requested on a device level and possibly with different OS level security. Device drivers that read <I>AccessCode </I>and <I>ShareMode</I> in their <A HREF="wce50lrfxxxopen17.htm">XXX_Open (Device Manager)</A> function should treat device handle access requests appropriately. GUIDs are used to indicate support for device-based access and for individual device handle-based interfaces.</P>
+
+<P>For information about finding interfaces exposes by name or file handle by a particular device, see <A HREF="wce50condevicefilenames.htm">Device File Names</A>.</P>
+
+<P>The following table shows the predefined interfaces and the header file under %_WINCEROOT% in which the interfaces are defined.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=50%>Interface</TH>
+<TH width=50%>Header file</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>BATTERY_DRIVER_CLASS</TD>
+<TD width=50%>Public\Common\OAK\Inc\Battery.h</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>BLOCK_DRIVER_GUID</TD>
+<TD width=50%>Public\Common\SDK\Inc\Storemgr.h</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>CDDA_MOUNT_GUID</TD>
+<TD width=50%>Public\Common\SDK\Inc\Storemgr.h</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>CDFS_MOUNT_GUID</TD>
+<TD width=50%>Public\Common\SDK\Inc\Storemgr.h</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>DEVCLASS_CARDSERV_GUID</TD>
+<TD width=50%>Public\Common\DDK\Inc\Cardserv.h
+<P>Public\Common\DDK\Inc\Cardsv2.h</P>
+</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>DEVCLASS_DISPLAY_GUID</TD>
+<TD width=50%>Public\Common\OAK\Inc\Winddi.h</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>DEVCLASS_KEYBOARD_GUID</TD>
+<TD width=50%>Public\Common\SDK\Inc\Keybd.h</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>DEVCLASS_STREAM_GUID</TD>
+<TD width=50%>Public\Common\SDK\Inc\Pnp.h</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>DMCLASS_PROTECTEDBUSNAMESPACE</TD>
+<TD width=50%>Public\Common\DDK\Inc\Devload.h</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>FATFS_MOUNT_GUID</TD>
+<TD width=50%>Public\Common\SDK\Inc\Storemgr.h</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>FSD_MOUNT_GUID</TD>
+<TD width=50%>Public\Common\SDK\Inc\Storemgr.h</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>NLED_DRIVER_CLASS</TD>
+<TD width=50%>Public\Common\SDK\Inc\NLED.h</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>PMCLASS_BLOCK_DEVICE</TD>
+<TD width=50%>Public\Common\SDK\Inc\Pm.h</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>PMCLASS_DISPLAY</TD>
+<TD width=50%>Public\Common\SDK\Inc\Pm.h</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>PMCLASS_GENERIC_DEVICE</TD>
+<TD width=50%>Public\Common\SDK\Inc\Pm.h</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>PMCLASS_NDIS_MINIPORT</TD>
+<TD width=50%>Public\Common\SDK\Inc\Pm.h</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>STORE_MOUNT_GUID</TD>
+<TD width=50%>Public\Common\SDK\Inc\Storemgr.h</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>STOREMGR_DRIVER_GUID</TD>
+<TD width=50%>Public\Common\SDK\Inc\Storemgr.h</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>UDFS_MOUNT_GUID</TD>
+<TD width=50%>Public\Common\SDK\Inc\Storemgr.h</TD>
+</TR>
+</table></div>
+
+<BLOCKQUOTE class="dtBlock">
+<b class="le">Note</b>&nbsp;&nbsp;&nbsp;Other predefined GUIDs for device interfaces are contained in various registry files. To find the other predefined GUIDs, search for the IClass values in the %_WINCEROOT%\Public\Common\OAK\Files\Common.reg file or in a driver-specific registry file. Driver-specific registry files are contained in the same directory as the device driver. For information about where drivers are in the source code, see <A HREF="wce50condriversourcecode.htm">Device Driver Source Code</A>.</BLOCKQUOTE>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50condriverloadingprocess.htm">Loading Device Drivers</A> | <A HREF="wce50conregistryenumerator.htm">Bus Enumerator</A> | <A HREF="wce50condeviceinterfacenotifications.htm">Device Interface Notifications</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

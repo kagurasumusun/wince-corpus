@@ -1,0 +1,83 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Filtered File Storage Redirection</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Filtered File Storage Redirection"/>
+<MSHelp:RLTitle Title="Filtered File Storage Redirection"/>
+<MSHelp:Keyword Index="A" Term="wce50conFileRedirectionFilter"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Feature"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="rdp_os_development.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="True"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="True"/>
+<MSHelp:Attr Name="PBFeature" Value="SYSGEN_RDP"/>
+<MSHelp:Attr Name="PBOnly" Value="True"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_1034470">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50confileredirectionfilter"></A>Filtered File Storage Redirection</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>Windows CE supports local drive redirection so that, during a Remote Desktop Protocol (RDP) session, server applications can use the file system of a client device. Enabling drive redirection for a session allows you to view and manage folders on your local drives in a remote session. If drive redirection is enabled, you can use filtered file storage redirection to specify the directories that are shared. Like other redirectors, file redirection works by using an internal virtual channel. </P>
+
+<P>You can configure the redirection filter to expose only specific directories. For example, you can hide system files from the view of someone who uses RDP to connect a Windows CE-based device to a Terminal Server by filtering all ROM subdirectories. </P>
+
+<P>If you specify that only external storage, such as Compact Flash or USB storage, be exposed through the redirected drive, information is saved only to the redirected drive. The external media can then be removed and carried to another computer for further work. For example, a student could borrow a Windows CE-based device and run applications from a Terminal Server during class. The student could save the work to the redirected drive while still in session. The file would be redirected and saved on external media on the Thin Client. The student could then remove the media and take it with them. </P>
+
+<P>Filtered file storage redirection is implemented by using a file system driver. A sample driver, Filterfsd.dll, containing an implementation that limits file redirection to external storage is provided in public code. You can customize this sample driver to filter the file system in a manner that suits your needs.</P>
+
+<P>The following example shows how you must specify the root of the file system to which the redirection filter applies.</P>
+
+<PRE class="code"><code class="ce">[HKEY_LOCAL_MACHINE\System\StorageManager\AutoLoad\FilterFsd]
+ "RootPath"="\\"</code></PRE>
+
+<P>This registry entry also determines the root of the filter driver. If you set <code class="ce">RootPath</code> to <code class="ce">"\\"</code>, the entire file system comes under the scope of this filter. You can change this registry entry if you want to reduce the scope of the redirection filter.</P>
+
+<P>Once filtered file storage redirection is installed, it applies to all sessions started from the client. To hide the internal file system, you must change the <B>DisableFileAccess</B> value. This value indicates whether the user has access to the local file system. The default value of 1 indicates that access to the local file system is disabled and the <B>Save As</B> and <B>Open</B> buttons are not available in the UI. A value of zero (0) indicates that the user has access to the local file system.</P>
+
+<P>The <B>DisableFileAccess</B> value is stored in either the registry or the .rdp file, depending on the shell that is used.</P>
+
+<P>To redirect multiple directories under the root, you must redirect the entire root folder specified under "RootPath," and then modify the source code to filter out the unwanted directories. An example of this is provided in the filterfs sample at public\rdp\oak\uit\filterfs\main.cpp, in the <B>IsFileNameAllowed</B> function.</P>
+
+<P>For more information about how to set the HKEY_LOCAL_MACHINE\System\StorageManager\AutoLoad\FilterFsd registry key on a device that uses the Windows Thin Client Shell, see <MSHelp:link keywords="wce50grfConfiguringTerminalServicesClient" TABINDEX="0">Configuring the Terminal Services Client</MSHelp:link>. For more information about a device that uses the CETSC shell, see <A HREF="wce50conterminalservicesclientconfigurationthroughrdpfile.htm">Terminal Services Client Configuration through the .rdp File</A>.</P>
+
+<P>For more information about drive redirection, see <MSHelp:link keywords="wce50conRDPRegistrySettings" TABINDEX="0">RDP Registry Settings</MSHelp:link>.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50orirdposdesigndevelopment.htm">RDP OS Design Development</A> | <A HREF="wce50conremotedesktopprotocolfeatures.htm">RDP Support in Windows CE</A> | <MSHelp:link keywords="wce50tskModifyingtheRegistrybyEditingProjectreg" TABINDEX="0">Modifying the Registry by Editing Project.reg</MSHelp:link> | <MSHelp:link keywords="wce50tskOpeningRemoteRegistryEditor" TABINDEX="0">Opening Remote Registry Editor</MSHelp:link>| <A HREF="wce50conrdpregistrysettings.htm">RDP Registry Settings</A> | <MSHelp:link keywords="wce50conRemoteRegistryEditor" TABINDEX="0">Remote Registry Editor</MSHelp:link></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

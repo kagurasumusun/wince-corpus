@@ -1,0 +1,386 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Modifying the File System Driver Test</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Modifying the File System Driver Test"/>
+<MSHelp:RLTitle Title="Modifying the File System Driver Test"/>
+<MSHelp:Keyword Index="A" Term="wce50tskModifyingtheFileSystemDriverTest"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Debugging"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="True"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbTask"/>
+<MSHelp:Attr Name="Filename" Value="fsdtest.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="True"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="True"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_3012655">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50tskmodifyingthefilesystemdrivertest"></A>Modifying the File System Driver Test</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>The File System Driver Test executes the <code class="ce">tux -o -d fsdtst</code> command line on default execution. </P>
+
+<BLOCKQUOTE class="dtBlock">
+<b class="le">Warning</b>&nbsp;&nbsp;&nbsp;Prior to running this test, be aware that all information on the storage device is destroyed. The test writes to and reads from sectors on the storage device without preserving the contents of the sectors. Microsoft recommends that you back up data on all cards and disks that are attached to the tested device before running the test.</BLOCKQUOTE>
+
+<P>You can modify the test by editing the command line. For information about how to edit the command line for a test, see <A HREF="wce50coneditingthecommandlineforatest.htm">Editing the Command Line for a Test</A>. The following table shows the modifications you can make to the test.</P>
+
+<P class="labelproc"><B>To modify the File System Driver Test</B></P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=41%>To</TH>
+<TH width=59%>Add this command-line parameter</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=41%>Run all test cases, destroying all information on the storage device. Test cases write to and read from sectors on the storage device without preserving the contents of the sectors.</TD>
+<TD width=59%>
+<PRE class="code">-zorch</PRE>
+</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=41%>Specify the storage profile to which to restrict testing, found in the registry under the <B>HKEY_LOCAL_MACHINE\System\StorageManager\Profiles</B> key.
+<P>The default storage profile is PCMCIA.</P>
+</TD>
+<TD width=59%>
+<PRE class="code">-p &lt;<I>profile</I>&gt;</PRE>
+</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=41%>Specify the file system to which to restrict testing.
+<P>The default file system is Fatfs.dll. You only need to specify a file system when testing a new FSD.</P>
+</TD>
+<TD width=59%>
+<PRE class="code">-s &lt;<I>filesystem</I>&gt;</PRE>
+</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=41%>Specify the root directory in which to run the test. If you provide this option, the test only runs in the specified directory and ignores the <code class="ce">&#0150;s</code> and <code class="ce">&#0150;p</code> options.
+<P>This flag is useful for a file system driver that does not use storage profiles such as a network file system driver. If the name of the root directory includes spaces, surround the name of the directory with single quotation marks; for example, <code class="ce">-r '\Storage Card'</code>.</P>
+</TD>
+<TD width=59%>
+<PRE class="code">-r \&lt;<I>root</I>&gt;</PRE>
+</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=41%>Specify the size of a cluster used by the FSD. You can use this option to specify the size of a cluster for a file system that is not a FAT file system.
+<P>Specifying this option does not affect the cluster size for a FAT volume. By default, the test uses a cluster size of 4096 bytes. You can use the default value if the file system being tested does not have a cluster-like data structure.</P>
+</TD>
+<TD width=59%>
+<PRE class="code">-c &lt;<I>clusterbytes</I>&gt;</PRE>
+</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=41%>Specify the maximum number of directory entries that the test attempts to create in the root directory. Specifying this option does not affect the number of directory entries for a FAT volume.
+<P>The default value is 255 directory entries. You can use the default value if the file system being tested does not limit the number of directory entries that can exist in the root directory.</P>
+</TD>
+<TD width=59%>
+<PRE class="code">-d &lt;<I>maxrootdirs</I>&gt;</PRE>
+</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=41%>Disable automatic formatting of each mounted partition before testing.
+<P>Automatic formatting is enabled by default and each mounted partition is formatted as a FAT volume before each test case runs. If you specify this option, the test does not automatically format each mounted partition.</P>
+</TD>
+<TD width=59%>
+<PRE class="code">-f</PRE>
+</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=41%>Disable quick filling of partitions.
+<P>Quick filling is enabled by default and, for a test case that requires the creation of a large file to fill the partition, a large filler file is artificially created by calling the <B>SetFilePointer</B> and <B>SetEndOfFile</B> functions. If you specify this option, disabling quick filling, a large file is created by repeated calls to the <B>WriteFile</B> function.</P>
+</TD>
+<TD width=59%>
+<PRE class="code">-q</PRE>
+</TD>
+</TR>
+</table></div>
+
+<P>The following table shows the test cases for the File System Driver Test.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=41%>Test case</TH>
+<TH width=59%>Result</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=41%>1001</TD>
+<TD width=59%>Creates, writes to, verifies, and then deletes a 256-byte file. This test fails if the <B>CreateDirectory</B>, <B>WriteFile</B>, or <B>SetFilePointer</B> function calls fail. This test also fails if the data written to the file does not match the data read from the file.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=41%>1002</TD>
+<TD width=59%>Creates, copies, and then deletes a file. This test fails if the <B>CreateDirectory</B>, <B>CreateFile</B>, <B>CopyFile</B>, or <B>DeleteFile</B> function calls fail.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=41%>1003</TD>
+<TD width=59%>Creates, moves, and then deletes a file. This test fails if the <B>CreateDirectory</B>, <B>CreateFile</B>, <B>MoveFile</B>, or <B>DeleteFile</B> function calls fail.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=41%>1004</TD>
+<TD width=59%>Creates, enumerates, and deletes two files. This test fails if the <B>CreateDirectory</B>, <B>CreateFile</B>, <B>FindFirstFile</B>, <B>FindNextFile</B>, <B>FindClose</B>, or <B>DeleteFile</B> function calls fail.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=41%>1005</TD>
+<TD width=59%>Creates multiple files, finds the first file, and then deletes all files. This test fails if the <B>CreateDirectory</B>, <B>CreateFile</B>, <B>FindFirstFile</B>, <B>FindNextFile</B>, <B>FindClose</B>, or <B>DeleteFile</B> function calls fail.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=41%>1006</TD>
+<TD width=59%>Creates, gets attributes for, and then deletes a file. This test fails if the <B>CreateDirectory</B>, <B>CreateFile</B>, <B>GetFileAttributes</B>, or <B>DeleteFile</B> function calls fail.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=41%>1007</TD>
+<TD width=59%>Creates, gets information by handle for, and then deletes a file. This test fails if the <B>CreateFile</B>, <B>GetFileInformationByHandle</B>, or <B>DeleteFile</B> function calls fail.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=41%>1008</TD>
+<TD width=59%>Creates 32 empty files in a directory. This test fails if it cannot create 32 empty files in the directory.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=41%>1009</TD>
+<TD width=59%>Creates 128 empty files in a directory. This test fails if it cannot create 128 empty files in the directory.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=41%>1010</TD>
+<TD width=59%>Creates a file and then writes data to the file. The test then maps the file to memory and verifies that the data read from mapped memory is correct. This test fails if the storage device does not support paging on demand or if the FSD does not export a <B>ReadFileWithSeek</B> or <B>WriteFileWithSeek</B> function. This test also fails if the operation that maps the file to memory fails or if the data read from mapped memory is not the same as the data written to the file.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=41%>5001</TD>
+<TD width=59%>Creates, modifies, and deletes a file that is the same size as a cluster. The test performs this operation with every possible combination of attributes. This test fails if it is unable to set or retrieve the attributes of a file for any combination of attributes.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=41%>5002</TD>
+<TD width=59%>Creates, modifies, and deletes a file that is one byte smaller than the size of a cluster. The test performs this operation with every possible combination of attributes. This test fails if it is unable to set or retrieve the attributes of a file for any combination of attributes.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=41%>5003</TD>
+<TD width=59%>Creates, modifies, and deletes a file that is one byte larger than the size of a cluster. The test performs this operation with every possible combination of attributes. This test fails if it is unable to set or retrieve the attributes of a file for any combination of attributes.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=41%>5004</TD>
+<TD width=59%>Creates, modifies, and deletes a file that is one byte in size. The test performs this operation with every possible combination of attributes. This test fails if it is unable to set or retrieve the attributes of a file for any combination of attributes.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=41%>5005</TD>
+<TD width=59%>Creates, modifies, and deletes a file that is zero bytes in size. The test performs this operation with every possible combination of attributes. This test fails if it is unable to set or retrieve the attributes of a file for any combination of attributes</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=41%>5006</TD>
+<TD width=59%>Creates single directories with names that have a lengths varying from MAX_PATH-10 to MAX_PATH+10 characters. This test fails if a directory with a name longer than MAX_PATH characters is successfully created. The test also fails if it cannot create a directory with a name that contains MAX_PATH or fewer characters.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=41%>5007</TD>
+<TD width=59%>Creates nested directories with one-character names and complete paths that have lengths varying from MAX_PATH-10 to MAX_PATH+10 characters. This test fails if a directory with a path longer than MAX_PATH characters is successfully created. The test also fails if it cannot create a directory with a name that contains MAX_PATH or fewer characters. The test may fail if the FSD imposes a limit on the depth of nested directories.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=41%>5008</TD>
+<TD width=59%>Attempts to create a file in a directory that does not exist. This test fails if it successfully creates the file.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=41%>5009</TD>
+<TD width=59%>Creates subdirectories within a directory and then creates one file in each subdirectory. This test fails if it cannot create a subdirectory or file.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=41%>5010</TD>
+<TD width=59%>Creates files within a directory and then copies the files to a second directory. The test then moves the second directory to another directory. Finally, the test deletes the files from the original directory and deletes the files from the second directory. This test fails if it cannot copy or move files to a directory. The test also fails if the copied or moved files do not match the original files.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=41%>5011</TD>
+<TD width=59%>Tests the <B>FileTimeToLocalTime</B>, <B>FileTimeToSystemTime</B>, and <B>LocalTimeToFileTime</B> functions. This test fails if it cannot set file times properly or if it cannot convert a time to system time.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=41%>5012</TD>
+<TD width=59%>Fills the drive with four-byte files and then deletes every other file. This test fails if it cannot fill the drive with files, if it cannot delete a file, or if the files do not enumerate properly after every other file is deleted.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=41%>5013</TD>
+<TD width=59%>Fills the drive with cluster-sized files and then deletes every other file. This test fails if it cannot fill the drive with files, if it cannot delete a file, or if the files do not enumerate properly after every other file is deleted.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=41%>5014</TD>
+<TD width=59%>Creates files in a directory, copies the files to a different directory, copies the files back to the original directory, and then moves the directory. This test fails if it cannot copy or move files to a directory. The test also fails if the copied or moved files do not match the original files.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=41%>5015</TD>
+<TD width=59%>Creates files on the drive, copies the files to the object store, and then moves the files back to the drive. This test fails if it cannot copy or move files from the drive to the object store. The test also fails if the copied or moved files do not match the original files.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=41%>5016</TD>
+<TD width=59%>Creates files on the object store, copies the files to the drive, and then moves the files back to the object store. This test fails if it cannot copy or move files from the object store to the drive. The test also fails if the copied or moved files do not match the original files.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=41%>5017</TD>
+<TD width=59%>Attempts to call the <B>CreateFile</B>, <B>CreateDirectory</B>, and <B>RemoveDirectory</B> functions using the name of the root directory. This test fails if it successfully calls the <B>CreateFile</B>, <B>CreateDirectory</B>, or <B>RemoveDirectory</B> function using the name of the root directory.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=41%>5018</TD>
+<TD width=59%>Creates a 100-KB file, truncates 10 KB from the end of the file, and then truncates 10 KB from the beginning of the file using the <B>SetFilePointer</B> function. This test fails if the <B>SetFilePointer</B> or <B>SetEndOfFile</B> function calls fail.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=41%>5019</TD>
+<TD width=59%>Creates the maximum number of entries in the root directory. This test fails if it cannot create the maximum number of entries in the root directory.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=41%>5020</TD>
+<TD width=59%>Attempts to create a file that has the same name as an existing directory. This test fails if it successfully creates a file with the same name as an existing directory.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=41%>5021</TD>
+<TD width=59%>Attempts to create a directory that has the same name as an existing file. This test fails if it successfully creates a directory with the same name as an existing file.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=41%>5022</TD>
+<TD width=59%>Attempts to create more than 999 files with the same file name extension and the same first 8 characters in the file name. This test fails if it creates more than 999 files or creates fewer than 999 files. If this test fails on a volume that is not a FAT volume, failure does not necessarily indicate that the implementation of the file system is faulty.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=41%>5023</TD>
+<TD width=59%>Creates a 100-byte file on a volume that has only two clusters available. This test fails if it cannot create the 100-byte file. If this test fails on a volume that is not a FAT volume, failure does not necessarily indicate that the implementation of the file system is faulty.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=41%>5024</TD>
+<TD width=59%>Creates a directory on a volume that has only one cluster available. This test fails if it cannot create the directory. If this test fails on a volume that is not a FAT volume, failure does not necessarily indicate that the implementation of the file system is faulty.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=41%>5025</TD>
+<TD width=59%>Creates a 100-byte file on a volume that has only one cluster available. This test fails if it cannot create the 100-byte file. If this test fails on a volume that is not a FAT volume, failure does not necessarily indicate that the implementation of the file system is faulty.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=41%>5026</TD>
+<TD width=59%>Creates directories on a volume that has only one cluster available. This test fails if it cannot create at least one directory. If this test fails on a volume that is not a FAT volume, failure does not necessarily indicate that the implementation of the file system is faulty.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=41%>5027</TD>
+<TD width=59%>Attempts to create a directory on a volume that has no clusters available. This test fails if it successfully creates a directory. If this test fails on a volume that is not a FAT volume, failure does not necessarily indicate that the implementation of the file system is faulty.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=41%>5028</TD>
+<TD width=59%>Attempts to create an empty file on a volume that has no clusters available. This test fails if it cannot create an empty file. If this test fails on a volume that is not a FAT volume, failure does not necessarily indicate that the implementation of the file system is faulty.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=41%>5029</TD>
+<TD width=59%>Attempts to create a 100-byte file on a volume that has no clusters available. This test fails if it successfully creates a 100-byte file. If this test fails on a volume that is not a FAT volume, failure does not necessarily indicate that the implementation of the file system is faulty.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=41%>5030</TD>
+<TD width=59%>Attempts to write a file using the <B>WriteFileWithSeek</B> function, if the function is supported by the file system, when there is only one cluster available on the drive. This test fails if the <B>WriteFileWithSeek</B> function writes no data to the file. If this test fails on a volume that is not a FAT volume, failure does not necessarily indicate that the implementation of the file system is faulty.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=41%>5031</TD>
+<TD width=59%>Writes data to and reads data from the volume using the <B>WriteFileWithSeek</B> and <B>ReadFileWithSeek</B> functions. This test fails if the data written does not match the data read. This test is skipped if the file system does not support these operations.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=41%>6001</TD>
+<TD width=59%>Creates and formats a single partition on a drive before running tests. This test fails if it cannot partition or format the media using the <B>DismountStore</B>, <B>FormatStore</B>, <B>GetStoreInfo</B>, and <B>CreatePartition</B> functions.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=41%>6002</TD>
+<TD width=59%>Creates and formats two partitions on a drive before running tests. This test fails if it cannot partition or format the media using the <B>DismountStore</B>, <B>FormatStore</B>, <B>GetStoreInfo</B>, and <B>CreatePartition</B> functions.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=41%>6003</TD>
+<TD width=59%>Creates and formats three partitions on a drive before running tests. This test fails if it cannot partition or format the media using the <B>DismountStore</B>, <B>FormatStore</B>, <B>GetStoreInfo</B>, and <B>CreatePartition</B> functions.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=41%>8001</TD>
+<TD width=59%>Creates, writes, reads, and verifies files in multiple directories using a separate thread for each directory. This test fails if it cannot create, write to, or read from a file using multiple threads.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=41%>9001</TD>
+<TD width=59%>Formats each partition of the specified storage profile. This test fails if it cannot format a FAT partition or if Fatutil.dll is not available. This test does not format volumes that are not FAT volumes and automatically passes.</TD>
+</TR>
+</table></div>
+
+<H4 class="dtH4">Remarks</H4>
+
+<P>This test library can have one or more optional command-line entries to change the behavior of the test. To specify one or more optional command-line entries to the test library, you must use the <CODE>&#0150;c</CODE> command-line option. This option forces Tux to pass the specified string into the test library.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50confilesystemdrivertest.htm">File System Driver Test</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

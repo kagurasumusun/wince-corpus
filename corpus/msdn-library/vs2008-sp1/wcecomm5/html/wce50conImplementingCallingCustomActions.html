@@ -1,0 +1,90 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Implementing and Calling Custom Actions</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Implementing and Calling Custom Actions"/>
+<MSHelp:RLTitle Title="Implementing and Calling Custom Actions"/>
+<MSHelp:Keyword Index="A" Term="wce50conImplementingCallingCustomActions"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Feature"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="upnpav_appdev.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="False"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+<MSHelp:Attr Name="PBFeature" Value="UPNP"/>
+<MSHelp:Attr Name="PBOnly" Value="False"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_1053047">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50conimplementingcallingcustomactions"></A>Implementing and Calling Custom Actions</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>The UPnP AV Framework supports the addition of custom actions to the services defined by the UPnP AV DCP.</P>
+
+<P>To implement a custom action in a device, perform the tasks in the following list.
+
+<OL type="1">
+	<LI>Modify the XML service description document to include the action and any required state variables. By convention, all custom actions should start with the string X_. For example, the demonstration custom actions in the AV Renderer sample are called X_VendorExtensionExample.</li>
+
+	<LI>Implement the functionality in the action by overriding the <B>InvokeVendorAction</B> method defined in the service interface. For example, to provide custom action processing in AVTransport, override <A HREF="wce50lrfiavtransportinvokevendoraction.htm">IAVTransport::InvokeVendorAction</A> (each of the four UPnP AV services has an <B>InvokeVendorAction</B> method).</li>
+</OL>
+
+<P>To call a custom action from a control point, call <B>InvokeVendorAction</B>. As it does with predefined actions, the UPnP AV Framework packages the <B>InvokeVendorAction </B>parameters, sends them to the service using UPnP, and calls the <B>InvokeVendorAction</B> method on the appropriate device service class.</P>
+
+<P>For sample code that demonstrates how to implement and call custom actions using the UPnP AV Framework, see <A HREF="wce50lrfupnpavcontrolpointsample.htm">UPnP AV Control Point Sample</A> and <A HREF="wce50lrfupnpavrenderersample.htm">UPnP AV Renderer Sample</A>.</P>
+
+<P>For more information about custom actions, see <A HREF="wce50conupnpavdcpdocumentation.htm">UPnP AV DCP Documentation</A>.</P>
+
+<H4 class="dtH4">Custom Action Parameters</H4>
+
+<P>To support the passing of varying numbers of parameters in custom actions, the <B>InvokeVendorAction </B>method signature uses an instance of the COM <MSHelp:link keywords="wce50lrfDISPPARAMS" TABINDEX="0">DISPPARAMS</MSHelp:link> structure. <B>DISPPARAMS</B> can contain an arbitrary number of parameters. </P>
+
+<P>For more information about using <B>DISPPARAMS </B>instances, see <MSHelp:link keywords="wce50lrfPassingParameters" TABINDEX="0">Passing Parameters</MSHelp:link>.</P>
+
+<H4 class="dtH4">Virtual Services and the First Custom Action Parameters</H4>
+
+<P>The AVTransport and RenderingControl services can support multiple virtual services. At the UPnP network level, each service is identified by an instance ID that is passed to all actions. The UPnP AV Framework hides this detail and enables device implementers to handle virtual instances by creating instances of classes that derive from the top-level interface classes, like <A HREF="wce50lrfiavtransport.htm">IAVTransport</A>, and so do not require the use of instance IDs.</P>
+
+<P>A control point that calls a custom action does not need to do anything with instance IDs. The UPnP AV Framework automatically adds the instance ID as the first parameter of the <B>DISPPARAMS</B> structure before it sends the action invocation request to the device.</P>
+
+<P>The UPnP AV Framework ensures that action invocations are routed to the appropriate device instance and does not require processing the instance ID. However, it does not remove the instance ID from the <B>DISPPARAMS</B> structure. Therefore, device implementation code in virtual services should ignore the first parameter in the <B>DISPPARAMS</B> structure. </P>
+
+<P>The UPnP AV renderer sample includes code that demonstrates ignoring the first parameter. For more information, examine the <B>CAVTransport::InvokeVendorAction</B> method implementation in AVTransport.cpp in the UPnP AV renderer sample. For more information about this sample, see <A HREF="wce50lrfupnpavrenderersample.htm">UPnP AV Renderer Sample</A>.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50oriusingupnpavframework.htm">Using the UPnP AV Framework</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

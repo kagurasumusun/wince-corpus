@@ -1,0 +1,93 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Data Flow</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Data Flow"/>
+<MSHelp:RLTitle Title="Data Flow"/>
+<MSHelp:Keyword Index="A" Term="wce50conDataFlow"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Feature"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="directshow_concepts3_dmo.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="False"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+<MSHelp:Attr Name="PBFeature" Value="SYSGEN_DSHOW"/>
+<MSHelp:Attr Name="PBOnly" Value="False"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_3020585">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50condataflow"></A>Data Flow</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>This topic describes how data moves between the application and the DMO.</P>
+
+<P>An application alternates between delivering input buffers and requesting output. It delivers input buffers by calling the <A HREF="wce50lrfimediaobjectprocessinput.htm">IMediaObject::ProcessInput</A> method on the DMO. It requests output by calling the <A HREF="wce50lrfimediaobjectprocessoutput.htm">IMediaObject::ProcessOutput</A> method. </P>
+
+<P>The following list shows the two ways to stop the flow of input data:
+
+<UL type="disc">
+	<LI>Discontinuity. When the application reaches the end of the input data, or there is a break in the data, the application signals a <I>discontinuity</I>. A discontinuity informs the DMO that no further input is expected. At that point, the DMO might still have data to process, so the application should request output until the DMO signals there is none left. </li>
+
+	<LI>Flushing. The application can interrupt the data flow by <I>flushing</I> the DMO. If the DMO was buffering data internally, it releases that data. </li>
+</UL>
+
+<P>Streaming begins when the application first calls <B>IMediaObject::ProcessInput</B> on the DMO. A DMO will not begin streaming until the application sets media types for all the streams. (Optional streams are an exception; see <A HREF="wce50condiscardableandoptionalstreams.htm">Discardable and Optional Streams</A>.) </P>
+
+<P>Streaming stops when the application flushes the DMO or signals a discontinuity on every input stream and then processes all of the output. These actions return the DMO to a nonstreaming state. The DMO retains all of its media type settings, but it releases all <A HREF="wce50lrfimediabuffer.htm">IMediaBuffer</A> pointers. At that point, it cannot generate output until the application calls <B>ProcessInput</B> at least once.</P>
+
+<P class="labelproc"><B>To stream data</B>
+
+<OL type="1">
+	<LI>Query the DMO for the number of streams it supports and the preferred media types for each stream. </li>
+
+	<LI>Set media types for all the streams. </li>
+
+	<LI>Allocate input buffers and output buffers. </li>
+
+	<LI>Fill the input buffers with data and call <B>ProcessInput</B>. </li>
+
+	<LI>Call <B>ProcessOutput</B> and retrieve the output data. Repeat steps 4 and 5 until all of the input data is processed. </li>
+
+	<LI>Signal a discontinuity and process any remaining output. 
+<BLOCKQUOTE class="dtBlock">
+<b class="le">Note</b>&nbsp;&nbsp;&nbsp;You can interrupt steps 4&#0150;6 by flushing the data.</BLOCKQUOTE>
+</li>
+</OL>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50conusingdirectxmediaobjects.htm">Using DirectX Media Objects</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

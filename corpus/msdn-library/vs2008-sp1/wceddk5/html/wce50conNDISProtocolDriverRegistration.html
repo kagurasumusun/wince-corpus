@@ -1,0 +1,153 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>NDIS Protocol Driver Registration</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="NDIS Protocol Driver Registration"/>
+<MSHelp:RLTitle Title="NDIS Protocol Driver Registration"/>
+<MSHelp:Keyword Index="A" Term="wce50conNDISProtocolDriverRegistration"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Driver"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="False"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="ndis_guide2.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="False"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+<MSHelp:Attr Name="PBFeature" Value="NetworkDriver"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_3018321">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50conndisprotocoldriverregistration"></A>NDIS Protocol Driver Registration</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>A driver registers its <B>ProtocolXxx</B> functions with NDIS in the context of the <A HREF="wce50coninitializationofndisprotocoldrivers.htm">Initialization of NDIS Protocol Drivers</A> functions by calling <A HREF="wce50lrfndisregisterprotocol.htm">NdisRegisterProtocol</A>.</P>
+
+<P>The <I>NdisProtocolHandle</I> returned by this call is opaque to a protocol driver. The handle must be retained by the protocol driver and provided as an input parameter in future calls to NDIS, for example, to open an adapter.</P>
+
+<P>Before making this call, the initialization functions must complete the following procedure: 
+
+<OL type="1">
+	<LI>Zero-initialize a structure of type <A HREF="wce50lrfndisprotocolcharacteristics.htm">NDIS_PROTOCOL_CHARACTERISTICS</A>, for example, with a call to <A HREF="wce50lrfndiszeromemory.htm">NdisZeroMemory</A>. This assures that unused members for optional entry points are set to NULL. If the structure is not zeroed, any unused members must be set to NULL before calling <B>NdisRegisterProtocol</B>. </li>
+
+	<LI>Specify in the <B>NDIS_PROTOCOL_CHARACTERISTICS</B> structure the NDIS version with which the protocol is compatible.</li>
+
+	<LI>Store the addresses of the mandatory <B>ProtocolXxx</B> functions, as well as any optional <B>ProtocolXxx</B><I> </I>functions the driver exports, in the <B>NDIS_PROTOCOL_CHARACTERISTICS</B> structure.</li>
+</OL>
+
+<P>The following table shows the required and optional protocol functions that a protocol driver can export. </P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=50%>Function</TH>
+<TH width=50%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><B>BindAdapterHandler </B></TD>
+<TD width=50%>This is a required function. NDIS calls this function to request that the protocol driver bind to an underlying network interface card (NIC) or virtual NIC. For more information on dynamic binding, see <A HREF="wce50condynamicadapterbinding.htm">Dynamic Adapter Binding</A>.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><B>UnbindAdapterHandler </B></TD>
+<TD width=50%>This is a required function. <A HREF="wce50lrfprotocolunbindadapter.htm">ProtocolUnbindAdapter</A> is called by NDIS to close a binding to the underlying NIC or virtual NIC. <B>ProtocolUnbindAdapter</B> calls <A HREF="wce50lrfndiscloseadapter.htm">NdisCloseAdapter</A> and deallocates resources when the binding is successfully closed. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><B>OpenAdapterCompleteHandler </B></TD>
+<TD width=50%>This is a required function. If a protocol driver's call to <A HREF="wce50lrfndisopenadapter.htm">NdisOpenAdapter</A> returns NDIS_STATUS_PENDING, <A HREF="wce50lrfprotocolopenadaptercomplete.htm">ProtocolOpenAdapterComplete</A> is subsequently called to complete the binding operation. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><B>CloseAdapterCompleteHandler </B></TD>
+<TD width=50%>This is a required function. If a protocol driver's call to <A HREF="wce50lrfndiscloseadapter.htm">NdisCloseAdapter</A> returns NDIS_STATUS_PENDING, <A HREF="wce50lrfprotocolcloseadaptercomplete.htm">ProtocolCloseAdapterComplete</A> is subsequently called to complete the unbinding operation. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><B>ReceiveHandler </B></TD>
+<TD width=50%>This is a required function. <A HREF="wce50lrfprotocolreceive.htm">ProtocolReceive</A><B> </B>is called with a pointer to a lookahead buffer. If this buffer contains less than the received network packet, <B>ProtocolReceive</B> calls <A HREF="wce50lrfndistransferdata.htm">NdisTransferData</A> with a protocol-allocated packet descriptor specifying protocol-allocated buffers to obtain the remainder of the received packet. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><B>ReceiveCompleteHandler </B></TD>
+<TD width=50%>This is a required function. <A HREF="wce50lrfprotocolreceivecomplete.htm">ProtocolReceiveComplete</A> is called to indicate that any received packets previously indicated to <B>ProtocolReceive</B> can now be post-processed. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><B>TransferCompleteHandler </B></TD>
+<TD width=50%>This is a required function. <A HREF="wce50lrfprotocoltransferdatacomplete.htm">ProtocolTransferDataComplete</A> is called when a previous call to <B>NdisTransferData</B> returned NDIS_STATUS_PENDING and the remaining data has been copied into the protocol-supplied buffers chained to a given packet descriptor. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><B>ReceivePacketHandler </B></TD>
+<TD width=50%>This is an optional function. Microsoft recommends that protocols provide this function to obtain better performance from miniport drivers that indicate receive packets by calling <A HREF="wce50lrfndismindicatereceivepacket.htm">NdisMIndicateReceivePacket</A>. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><B>SendCompleteHandler </B></TD>
+<TD width=50%>This is a required function. <A HREF="wce50lrfprotocolsendcomplete.htm">ProtocolSendComplete</A> is called for each packet transmitted with a call to NdisSend that returned NDIS_STATUS_PENDING as the status of the send operation. If an array of packets is sent, <B>ProtocolSendComplete</B> is called once for each packet passed to <A HREF="wce50lrfndissendpackets.htm">NdisSendPackets</A>, whether or not it returned pending. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><B>ResetCompleteHandler </B></TD>
+<TD width=50%>This is a required function. <A HREF="wce50lrfprotocolresetcomplete.htm">ProtocolResetComplete</A> is called when a protocol-initiated reset operation that beganwith a call to <A HREF="wce50lrfndisreset.htm">NdisReset</A> that returned NDIS_STATUS_PENDING, is completed. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><B>RequestCompleteHandler </B></TD>
+<TD width=50%>This is a required function. <A HREF="wce50lrfprotocolrequestcomplete.htm">ProtocolRequestComplete</A> is called when a protocol-initiated query or set operation that began with a call to <A HREF="wce50lrfndisrequest.htm">NdisRequest</A> that returned NDIS_STATUS_PENDING, is completed. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><B>StatusHandler </B></TD>
+<TD width=50%>This is a required function. The underlying NDIS driver calls<A HREF="wce50lrfprotocolstatus.htm"> ProtocolStatus</A> to handle the status changes indicated. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><B>StatusCompleteHandler </B></TD>
+<TD width=50%>This is a required function. <A HREF="wce50lrfprotocolstatuscomplete.htm">ProtocolStatusComplete</A> is called by NDIS, along with <B>ProtocolStatus</B>, to report the start and end of an NDIS-initiated or NIC-initiated reset operation. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><B>PnPEventHandler </B></TD>
+<TD width=50%>This is a required function. NDIS calls <A HREF="wce50lrfprotocolpnpevent.htm">ProtocolPnPEvent</A> to indicate a Plug and Play event or a power management event. </TD>
+</TR>
+</table></div>
+
+<P>A protocol driver should set the NDIS_PROTOCOL_CHARACTERISTICS <B>TranslateHandler</B> member to NULL. The <B>TranslateHandler</B> member is reserved for future use.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50conprotocoldriverentryandinitialization.htm">Protocol Driver Entry and Initialization</A> | <A HREF="wce50condynamicadapterbinding.htm">Dynamic Adapter Binding</A> | <A HREF="wce50coninitializationofndisprotocoldrivers.htm">Initialization of NDIS Protocol Drivers</A> | <A HREF="wce50lrfndisregisterprotocol.htm">NdisRegisterProtocol</A> | <A HREF="wce50lrfndisprotocolcharacteristics.htm">NDIS_PROTOCOL_CHARACTERISTICS</A> | <A HREF="wce50lrfndiszeromemory.htm">NdisZeroMemory</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

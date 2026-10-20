@@ -1,0 +1,90 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>SEH in RISC Environments</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="SEH in RISC Environments"/>
+<MSHelp:RLTitle Title="SEH in RISC Environments"/>
+<MSHelp:Keyword Index="A" Term="wce50conSEHInRISCEnvironments"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Guide"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="True"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="comp_eh.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="False"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_1045225">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50consehinriscenvironments"></A>SEH in RISC Environments</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>In a RISC environment, data structures associated with exception processing are calculated at compile time, and written to the data sections of the module being built.</P>
+
+<P>To locate appropriate handlers when an exception occurs in Win32 environments other than x86, the system first determines the frames that reside on the callstack, along with their associated functions in code. </P>
+
+<P>Any function can have a handler associated with it. If so, the system gives the handler associated with the function an opportunity to handle the exception. </P>
+
+<P>As with x86, the system invokes handlers in reverse order; that is, it first invokes the handler whose corresponding frames were most recently pushed onto the stack.</P>
+
+<P>To determine the frames on the stack, the system simulates the execution of a portion of each function's code in reverse. This simulation creates a CPU context similar to the state the real CPU context held at the point of entry to that function. </P>
+
+<P>This process of reverse execution is known as Virtual Unwinding, because the stack unwind is only being simulated, not actually performed. </P>
+
+<P>The portion of the code that is reversed is known as the prolog of the function. It consists of instructions that modify the stack pointer and set up the stack frame immediately upon entry to the function. </P>
+
+<P>When a frame has been virtually unwound, the virtual context contains the stack pointer for the previous frame and the return address for the current function. The return address is very near the place where control left the previous function, so it corresponds to the program counter of the previous frame. </P>
+
+<P>With each successive program counter and stack pointer, the unwind process can iterate until there are no frames left on the stack.</P>
+
+<P>To virtually unwind, the system needs a small amount of information about each function. This information is contained in data structures called <A HREF="wce50conpdatastructures.htm">PDATA structures</A>. </P>
+
+<P>A PDATA structure marks where a function begins and ends in the code stream, as well as the location of the function prolog. </P>
+
+<P>Given a program counter associated with a specific stack frame, the Unwinder searches the table of PDATA for the entry corresponding to the containing function. When found, the Unwinder can unwind the function frame. </P>
+
+<P>The PDATA structure also locates an exception handling routine associated with the function, if one exists.</P>
+
+<BLOCKQUOTE class="dtBlock">
+<b class="le">Note</b>&nbsp;&nbsp;&nbsp;The compiler generates correct prolog and epilog sequences and PDATA for functions that it compiles, but you must create appropriate code and PDATA for functions you write in assembly language. <BR>
+<BR>
+The prolog and epilog sequence must adhere to strict guidelines for Virtual Unwinding to work. <BR>
+<BR>
+For details on acceptable prologs and epilogs, see the documentation for your target platform.</BLOCKQUOTE>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50conprolog.htm">Prolog</A> | <A HREF="wce50conepilog.htm">Epilog</A> | <A HREF="wce50conprolog-epilogexample.htm">Prolog-Epilog Example</A> | <A HREF="wce50convirtualunwinding.htm">Virtual Unwinding</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

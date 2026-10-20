@@ -1,0 +1,113 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>IBindStatusCallback::GetBindInfo</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="IBindStatusCallback::GetBindInfo"/>
+<MSHelp:RLTitle Title="IBindStatusCallback::GetBindInfo"/>
+<MSHelp:Keyword Index="K" Term="IBindStatusCallback::GetBindInfo"/>
+<MSHelp:Keyword Index="A" Term="mob5lrfIBindStatusCallbackGetBindInfo"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Application"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbsmartphone"/>
+<MSHelp:Attr Name="Product" Value="kbPocketPC"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="Technology" Value="kbPocketPC"/>
+<MSHelp:Attr Name="Technology" Value="kbSmartphone"/>
+<MSHelp:Attr Name="TopicType" Value="apiref"/>
+<MSHelp:Attr Name="Filename" Value="htmlCtrl_API_iFace1_magneto.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="False"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_1077003">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Windows Mobile Version 5.0 SDK<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="mob5lrfibindstatuscallbackgetbindinfo"></A>IBindStatusCallback::GetBindInfo</H1>
+<!--Feedback Link Top Start-->
+<P CLASS="feedback"><font size="1"><a href="mailto:medfdbk&#64;microsoft.com?subject=Product: Windows Mobile | Version: 5.0 | Release: SDK | Title: IBindStatusCallback::GetBindInfo | Filename: mob5lrfibindstatuscallbackgetbindinfo.htm | Built on: Wednesday, September 14, 2005">Send Feedback</a> on this topic to the authors</font></p>
+<!--Feedback Link Top End-->
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>Provides information about how the bind operation should be handled when called by an asynchronous moniker.</P>
+
+<H4 class="dtH4">Syntax</H4>
+
+<PRE class="syntax"><B>HRESULT GetBindInfo(</B>
+<B>  DWORD * </B><I>grfBINDF</I><B>,</B>
+<B>  BINDINFO * </B><I>pbindinfo</I>
+<B>);</B></PRE>
+
+<H4 class="dtH4">Parameters</H4>
+
+<DL>
+<DT><I>grfBINDF</I></DT>
+
+<DD>[out]&nbsp;Address of an unsigned integer value that contains a combination of values taken from the <B>BINDF</B> enumeration indicating how the bind process should be handled. </dd>
+
+<DT><I>pbindinfo</I></DT>
+
+<DD>[in, out]&nbsp;Address of the <B>BINDINFO</B> structure, which describes the client application's requirements for binding. </dd>
+</DL>
+
+<H4 class="dtH4">Return Values</H4>
+
+<P>Returns S_OK if successful, or E_INVALIDARG if one or more parameters are invalid.</P>
+
+<H4 class="dtH4">Remarks</H4>
+
+<P>The moniker calls this method in its implementations of the <B>IMoniker::BindToObject</B> and <B>IMoniker::BindToStorage</B> methods to obtain information about the specific bind operation.</P>
+
+<P>Asynchronous moniker clients should be aware that a moniker might call this method more than once during a bind operation. A proper implementation of <B>IBindStatusCallback::GetBindInfo</B> should prepare for this possibility. If returning data in the <I>pbindinfo</I> parameter, the implementation should allocate the appropriate data (<I>szExtraInfo</I> and/or <I>stgmedData</I>) at the time of each call. In this way, if the callback is never called, data is never allocated; if the callback is called more than once, it will work correctly. The first time this callback is received by the asynchronous moniker client is before the call to <B>IMoniker::BindToStorage</B> or <B>IMoniker::BindToObject</B>.</P>
+
+<P>Even when the value of <I>grfBindInfoF</I> is BINDF_ASYNCHRONOUS, it is possible that the original call to <B>IMoniker::BindToStorage</B> or <B>IMoniker::BindToObject</B> might return synchronously rather than returning the MK_S_ASYNCHRONOUS flag. Clients of asynchronous monikers should always prepare for this possibility. Specifically, to avoid memory leaks, it is important to make sure to release the pointer returned by a call to either method.</P>
+
+<P>One way to deal with this case is to call your own implementation of <B>IBindStatusCallback::OnDataAvailable</B> or <B>IBindStatusCallback::OnObjectAvailable</B> in order to use the same code path (regardless of whether you bind synchronously or asynchronously).</P>
+
+<P>If the BINDF_PULLDATA value is not set in the <I>grfBindInfoF</I> parameter, Urlmon.dll sets the BINDF_NEEDFILE value. If BINDF_NEEDFILE is set, binding of resources that cannot be cached (such as an HTTPS resource) will fail.</P>
+
+<BLOCKQUOTE class="dtBlock">
+<b class="le">Warning</b>&nbsp;&nbsp;&nbsp;The size of the <B>BINDINFO</B> structure changed with the release of Microsoft&reg; Internet Explorer 4.0. Developers must write code that checks the size of the <B>BINDINFO</B> structure that is passed into their implementation of this method before writing to members of the structure. For more information, see Handling BINDINFO Structures in the <B>URL Monikers</B> section of Microsoft MSDN&reg; Online.</BLOCKQUOTE>
+
+<H4 class="dtH4">Requirements</H4>
+
+<P><B>Pocket&nbsp;PC:</B> Pocket&nbsp;PC&nbsp;2000 and later<BR>
+<B>Smartphone:</B> Smartphone&nbsp;2002 and later<BR>
+<B>OS&nbsp;Versions:</B> Windows&nbsp;CE&nbsp;3.0 and later<BR>
+<B>Header:</B> urlmon.h<BR>
+<B>Library:</B> urlmon.lib</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="mob5lrfibindstatuscallback.htm">IBindStatusCallback</A> | <A HREF="mob5lrfregisterbindstatuscallback.htm">RegisterBindStatusCallback</A> | <MSHelp:link keywords="wce50lrfBINDF" TABINDEX="0">BINDF</MSHelp:link> |  <MSHelp:link keywords="wce50lrfBINDINFO" TABINDEX="0">BINDINFO</MSHelp:link></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Feedback Link Bottom Start-->
+<p><font size="1"><a href="mailto:medfdbk&#64;microsoft.com?subject=Product: Windows Mobile | Version: 5.0 | Release: SDK | Title: IBindStatusCallback::GetBindInfo | Filename: mob5lrfibindstatuscallbackgetbindinfo.htm | Built on: Wednesday, September 14, 2005">Send Feedback</a> on this topic to the authors</font></p>
+<!--Feedback Link Bottom End-->
+<!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="mob5conCopyrightInformationForMagneto" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link></font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

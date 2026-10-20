@@ -1,0 +1,282 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Microsoft Extensions to C and C++</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Microsoft Extensions to C and C++"/>
+<MSHelp:RLTitle Title="Microsoft Extensions to C and C++"/>
+<MSHelp:Keyword Index="A" Term="wce50conMicrosoftExtensionstoCandC"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Guide"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="True"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="comp_compiler_linker.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="True"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_3023418">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50conmicrosoftextensionstocandc"></A>Microsoft Extensions to C and C++</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>The following are Visual C++ extensions to the ANSI C and ANSI C++ standards:</P>
+
+<P class="label"><B>Keywords</B></P>
+
+<P>Microsoft extends the C++ language with several additional keywords. For a complete list, see <I>The C++ Language Reference</I>. Keywords with two leading underscores are Microsoft extensions.</P>
+
+<P>Windows CE supports the <B>__based</B>, <B>__finally</B>, and <B>__try</B> keywords.</P>
+
+<P class="label"><B>Out of Class Definition of static const Integral (or enum) Members</B></P>
+
+<P>Under the standard <A HREF="wce50conzadisablelanguageextensions.htm">/Za - Disable Language Extensions</A>, you need to make an out-of-class definition for data members. For example,</P>
+
+<PRE class="code">class CMyClass {
+   static const int max = 5;
+   int m_array[max];
+   }
+...
+const int CMyClass::max;   // out of class definition</PRE>
+
+<P>Under <A HREF="wce50conzeenablelanguageextensions.htm">/Ze - Enable Language Extensions</A>, the out-of-class definition is optional for <B>static</B>, <B>const</B> <B>integral</B>, and <B>const</B> <B>enum</B> data members. Only <B>integrals</B> and <B>enums</B> that are <B>static</B> and <B>const</B> can have initializers inside a class; the initializing expression must be a <B>const</B> expression.</P>
+
+<P>To avoid errors when a header file provides an out-of-class definition and when multiple source files include the header file, you should use <B>selectany</B>. For example:</P>
+
+<PRE class="code">__declspec(selectany) const int CMyClass::max = 5;</PRE>
+
+<P class="label"><B>Casts</B></P>
+
+<P>The compiler supports the following two non-ANSI casts: 
+
+<UL type="disc">
+	<LI>Non-ANSI casts to produce l-values: 
+<PRE class="code">char *p;
+(( int * ) p )++;</PRE>
+</li>
+
+	<LI>Non-ANSI casting of a function pointer to a data pointer: 
+<PRE class="code">int ( * pfunc ) (); 
+int *pdata;
+pdata = ( int * ) pfunc;</PRE>
+
+<P>To perform the same cast while maintaining ANSI compatibility, you must cast the function pointer to an int before casting it to a data pointer: 
+
+<PRE class="code">pdata = ( int * ) (int) pfunc;</PRE>
+</li>
+</UL>
+
+<P class="label"><B>Variable-Length Argument Lists</B></P>
+
+<P>The compiler supports use of a function declarator that specifies a variable number of arguments, followed by a function definition that provides a type instead:</P>
+
+<PRE class="code">void myfunc( int x, ... );
+void myfunc( int x, char * c )
+{ }</PRE>
+
+<P class="label"><B>Single-Line Comments</B></P>
+
+<P>The C compiler supports single-line comments introduced with two forward slash (//) characters:</P>
+
+<PRE class="code">// This is a single-line comment.</PRE>
+
+<P class="label"><B>Scope</B></P>
+
+<P>The C compiler supports the following scope-related elements: 
+
+<UL type="disc">
+	<LI>Redefinitions of <B>extern</B> items as <B>static</B>: 
+<PRE class="code">extern int clip();
+static int clip()
+{}</PRE>
+</li>
+
+	<LI>Use of benign <B>typedef</B> redefinitions within the same scope: 
+<PRE class="code">typedef int INT;
+typedef int INT;</PRE>
+</li>
+
+	<LI>File scope for function declarators: 
+<PRE class="code">void func1()
+{
+    extern int func2( double );
+}
+void main( void )
+{
+    func2( 4 );    //  /Ze passes 4 as type double
+}                  //  /Za passes 4 as type int</PRE>
+</li>
+
+	<LI>Use of block-scope variables initialized with nonconstant expressions: 
+<PRE class="code">int clip( int );
+int bar( int );
+void main( void )
+{
+    int array[2] = { clip( 2 ), bar( 4 ) };
+}
+int clip( int x )
+{
+    return x;
+}
+int bar( int x )
+{
+    return x;
+}</PRE>
+</li>
+</UL>
+
+<P class="label"><B>Data Declarations and Definitions</B></P>
+
+<P>The C compiler supports the following functionality for data declaration and definition: 
+
+<UL type="disc">
+	<LI>Mixed character and string constants in an initializer: 
+<PRE class="code">char arr[5] = {'a', 'b', "cde"};</PRE>
+</li>
+
+	<LI>Bit fields with base types other than unsigned int or signed int. </li>
+
+	<LI>Declarators without either a storage class or a type: 
+<PRE class="code">x;
+void main( void )
+{
+    x = 1;
+}</PRE>
+</li>
+
+	<LI>Unsized arrays as the last field in structures and unions: 
+<PRE class="code">struct zero
+{
+    char *c;
+    int zarray[];
+};</PRE>
+</li>
+
+	<LI>Unnamed, anonymous structures: 
+<PRE class="code">struct
+{
+    int i;
+    char *s;
+};</PRE>
+</li>
+
+	<LI>Unnamed, anonymous unions: 
+<PRE class="code">union
+{
+    int i;
+    float fl;
+};</PRE>
+</li>
+
+	<LI>Unnamed members: 
+<PRE class="code">struct s
+{
+   unsigned int flag : 1;
+   unsigned int : 31;
+}</PRE>
+</li>
+</UL>
+
+<P class="label"><B>Intrinsic Floating-Point Functions</B></P>
+
+<P>The compiler supports inline generation of the atan, atan2, cos, exp, log, log10, sin, sqrt, and tan functions. Function generation is specific with <A HREF="wce50conoigenerateintrinsicfunctions.htm">/Oi - Generate Intrinsic Functions</A>. For C, ANSI conformance is lost when these intrinsics are used.</P>
+
+<P class="label"><B>Passing a Non-Const Pointer Parameter to a Function that Expects a Reference to a Const Pointer Parameter</B></P>
+
+<P>This is an extension to C++. The following code will compile with <B>/Ze</B>:</P>
+
+<PRE class="code">typedef   int   T;
+
+const T  acT = 9;      // A constant of type 'T'
+const T* pcT = &amp;acT;   // A pointer to a constant of type 'T'
+
+void func2 ( const T*&amp; rpcT )   // A reference to a pointer to a constant of type 'T'
+{
+   rpcT = pcT;
+}
+
+T*   pT;               // A pointer to a 'T'
+
+void func ()
+{
+   func2 ( pT );      // Should be an error, but isn't detected
+   *pT   = 7;         // Invalidly overwrites the constant 'acT'
+}</PRE>
+
+<P class="label"><B>new Operator Does Not Throw Exception</B></P>
+
+<P>If the <B>new</B> operator fails to allocate requested memory, no exception will be thrown; a null pointer is returned instead.</P>
+
+<P class="label"><B>Scope of Variable in for Loop Stays in Effect After Loop</B></P>
+
+<P>The following code will compile under <B>/Za</B>. However, to keep compatibility with older code bases, it will not compile under <B>/Ze</B>:</P>
+
+<PRE class="code">int main () {
+   for (int i = 0; i&lt;1; ++i);
+   for (int i = 0; i&lt;1; ++i);
+   return 0;
+}</PRE>
+
+<P class="label"><B>ISO646.H Not Enabled</B></P>
+
+<P>Under <B>/Ze</B>, you must include iso646.h to use text forms of the following operators: 
+
+<UL type="disc">
+	<LI>&amp;&amp; (and) </li>
+
+	<LI>&amp;= (and_eq) </li>
+
+	<LI>&amp; (bitand) </li>
+
+	<LI>| (bitor) </li>
+
+	<LI>~ (compl) </li>
+
+	<LI>! (not) </li>
+
+	<LI>!= (not_eq) </li>
+
+	<LI>|| (or) </li>
+
+	<LI>|= (or_eq) </li>
+
+	<LI>^ (xor) </li>
+
+	<LI>^= (xor_eq) </li>
+</UL>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50conzadisablelanguageextensions.htm">/Za - Disable Language Extensions</A> | <A HREF="wce50conzeenablelanguageextensions.htm">/Ze - Enable Language Extensions</A> | <A HREF="wce50congeneralpurposecompileroptions.htm">Compiler Options</A> | <A HREF="wce50concompilersetupmechanisms.htm">Compiler and Linker Build Options</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

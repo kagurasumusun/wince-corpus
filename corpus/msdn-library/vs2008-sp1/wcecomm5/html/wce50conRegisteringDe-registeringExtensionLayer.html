@@ -1,0 +1,107 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Registering and Deregistering the Extension Layer</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Registering and Deregistering the Extension Layer"/>
+<MSHelp:RLTitle Title="Registering and Deregistering the Extension Layer"/>
+<MSHelp:Keyword Index="A" Term="wce50conRegisteringDe-registeringExtensionLayer"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Feature"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="bluetooth_stack.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="True"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+<MSHelp:Attr Name="PBFeature" Value="SYSGEN_BTH"/>
+<MSHelp:Attr Name="PBOnly" Value="True"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_1052278">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50conregisteringde-registeringextensionlayer"></A>Registering and Deregistering the Extension Layer</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>You can use functions that enable the extension layer to connect and disconnect from the protocol stack.</P>
+
+<BLOCKQUOTE class="dtBlock">
+<b class="le">Note</b>&nbsp;&nbsp;&nbsp;The terms <B><I>LAYER_</I></B> and <B><I>layer_</I></B> are generic placeholders and are used in this section instead of real stack layer prefixes such as <B>HCI_</B>, <B>L2CAP_</B>, <B>SDP_</B>, <B>RFCOMM_</B>, <B>hci_</B>, <B>l2cap</B>_, <B>sdp</B>_, <B>rfcomm</B>_ prefixes that are part of real names.</BLOCKQUOTE>
+
+<P>Register the extension layer with the layer it extends, by calling <B><I>Layer</I>_EstablishDeviceContext</B>.</P>
+
+<P>When the extension layer makes a call to <B><I>Layer</I>_EstablishDeviceContext</B>, it must pass pointers to <B><I>LAYER</I>_EVENT_INDICATION</B> and <B><I>LAYER</I>_CALLBACKS</B>. In addition, it must receive a pointer to <B><I>LAYER</I>_INTERFACE</B>. </P>
+
+<P>The following code example shows the <B><I>Layer</I>_EstablishDeviceContext</B> function signature.</P>
+
+<PRE class="code">int <I>Layer</I>_EstablishDeviceConnect(
+  void*                   <I>pUserContext</I>,     /*IN*/
+  //<I>Layer specific filtering </I>parameters     /*IN*/
+  ...                                       
+  LAYER_EVENT_INDICATION* <I>pInd</I>,             /*IN*/
+  LAYER_CALLBACKS*        <I>pCall</I>,            /*IN*/
+  LAYER_INTERFACE*        <I>pInt</I>,             /*OUT*/
+  int*                    <I>pcDataHeaders</I>,    /*OUT*/
+  int*                    <I>pcDataTrailers</I>,   /*OUT*/
+  HANDLE*                 <I>phDeviceContext</I>   /*OUT*/
+);</PRE>
+
+<P>The *<I>pcDataHfeaders</I> and *<I>pcDataTrailers</I> parameters are used to indicate how many bytes the extension layer must pre-allocate for extended-layer headers in the packet.</P>
+
+<P><B><I>Layer</I>_EstablishDeviceContext</B> accepts <I>layer specific filtering </I>parameters, to filter incoming connections. This parameter is different for different layers and its value does not intersect for multiple clients of the same layer. For example, in <B>RFCOMM_EstablishDeviceContext</B>, the filtering parameter is <I>channel</I>. Passing a non-zero value to <I>channel</I> enables RFCOMM clients to listen only on the specified channel. </P>
+
+<BLOCKQUOTE class="dtBlock">
+<b class="le">Note</b>&nbsp;&nbsp;&nbsp;One and only one general-purpose stack (<I>channel</I>=0) can be installed. Multiple stacks can accept connections based on some parameter, such as address or connection type.</BLOCKQUOTE>
+
+<P>Another example of a filtering parameter is <I>psm</I> that specifies the Protocol/Service Multiplexer (PSM). Every stack maintains one and only one general client that accepts all incoming connections. For example, for L2CAP, PSM is set to zero (0) to listen to all the incoming connections. </P>
+
+<P>Only the connection-oriented L2CAP channels are implemented. CLT-related functions are stubbed with NULL values. L2CAP accepts all negotiation parameters, but passes it to the user without attempting to enforce or even store it. For more information, see <MSHelp:link keywords="wce50conBluetoothStackImplementationConsiderations" TABINDEX="0">Bluetooth Stack Implementation Considerations</MSHelp:link> and the Bt_ddi.h file for complete specifications of the L2CAP interface.</P>
+
+<P>Alternatively, a layer can restrict incoming connections. For example, RFCOMM restricts connections to ones received on PSM 3. RFCOMM passes negotiated parameters to the top level of the stack, but neither enforces nor stores them. </P>
+
+<P>The same is true for model commands and statuses that are used by a port emulation entity. RFCOMM uses <B>RFCOMM_StackEvent</B> to pass flow control status to every client. It also enforces aggregate, but not connection-based flow control. For complete specifications of the RFCOMM interface, see the Bt_ddi.h file.</P>
+
+<BLOCKQUOTE class="dtBlock">
+<b class="le">Note</b>&nbsp;&nbsp;&nbsp;SDP restricts connections to ones those received on PSM 1, and the SCO stack restricts connections to all incoming SCO connections. </BLOCKQUOTE>
+
+<P>Each incoming connection is checked to match restrictions against existing clients with connection restrictions. If no matching client exists, the generic upper-layer handler is executed.</P>
+
+<P>When the extension layer is ready to shutdown, call the <B><I>Layer</I>_CloseDeviceContext</B> function. All calls that were placed by the extension layer are terminated and the connections, owned by the layer, are closed.</P>
+
+<P>The following code example shows how to declare the <B><I>Layer</I>_CloseDeviceContext</B> function.</P>
+
+<PRE class="code">int <I>Layer</I>_CloseDeviceContext ( HANDLE hDeviceContext );</PRE>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50concreatingbluetoothstackextensionlayer.htm">Creating a Bluetooth Stack Extension Layer</A> | <A HREF="wce50oribluetoothosdesign.htm">Bluetooth OS Design Development</A> | <A HREF="wce50conhostcontrollerinterface.htm">Host Controller Interface</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

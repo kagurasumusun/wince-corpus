@@ -1,0 +1,97 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>OID_TCP_TASK_OFFLOAD</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="OID_TCP_TASK_OFFLOAD"/>
+<MSHelp:RLTitle Title="OID_TCP_TASK_OFFLOAD"/>
+<MSHelp:Keyword Index="K" Term="OID_TCP_TASK_OFFLOAD"/>
+<MSHelp:Keyword Index="A" Term="wce50lrfOIDTCPTASKOFFLOAD"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Driver"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="False"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="apiref"/>
+<MSHelp:Attr Name="Filename" Value="ndis_object_identifiers.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="False"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+<MSHelp:Attr Name="APIName" Value="OID_TCP_TASK_OFFLOAD"/>
+<MSHelp:Attr Name="PBFeature" Value="NetworkDriver"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_3018734">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50lrfoidtcptaskoffload"></A>OID_TCP_TASK_OFFLOAD</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>The TCP/IP transport queries <B>OID_TCP_TASK_OFFLOAD</B> to determine the task-offload capabilities of a miniport driver's NIC. After determining which task-offload capabilities a NIC supports, the TCP/IP transport protocol sets this object to enable the reported capabilities. The TCP/IP protocol can also disable all of a NIC's task-offload capabilities by setting this object. Only one protocol at a time can enable the task-offload capabilities of a particular NIC. </P>
+
+<H4 class="dtH4">Querying a NIC's Task-Offload Capabilities</H4>
+
+<P>When the TCP/IP transport queries <B>OID_TCP_TASK_OFFLOAD</B>, it supplies in the <B>InformationBuffer</B> an <A HREF="wce50lrfndistaskoffloadheader.htm">NDIS_TASK_OFFLOAD_HEADER</A> structure. This structure specifies the task-offload version supported by the TCP/IP transport, the encapsulation format for send and receives packets processed by the TCP/IP transport, and the size of the encapsulation header in such packets. With this information, the miniport driver or its NIC can locate the beginning of the first IP header in a transmit packet, which is a prerequisite for performing an offload task.</P>
+
+<P>In response to a query of <B>OID_TCP_TASK_OFFLOAD</B>, a miniport driver returns, in the InformationBuffer, the <B>NDIS_TASK_OFFLOAD_HEADER</B> structure followed immediately by one or more <A HREF="wce50lrfndistaskoffload.htm">NDIS_TASK_OFFLOAD</A> structure describes a task-offload capability supported by the miniport driver's NIC. If the miniport driver's NIC supports multiple versions of a particular task-offload capability, it should return one <B>NDIS_TASK_OFFLOAD</B> structure for each version.</P>
+
+<P>Each <B>NDIS_TASK_OFFLOAD</B> structure has a <B>Task</B> member that specifies the particular offload task to which the structure applies. Each <B>NDIS_TASK_OFFLOAD</B> structure also has a <B>TaskBuffer</B> that contains information pertinent to the specified offload task. The information in the <B>TaskBuffer</B> is formatted as one of the following structures: 
+
+<UL type="disc">
+	<LI><A HREF="wce50lrfndistasktcpipchecksum.htm">NDIS_TASK_TCP_IP_CHECKSUM</A> 
+<P>Specifies checksum offload capabilities 
+</li>
+
+	<LI><B>NDIS_TASK_IPSEC</B>
+<P>This structure is not supported.
+</li>
+
+	<LI><A HREF="wce50lrfndistasktcplargesend.htm">NDIS_TASK_TCP_LARGE_SEND</A> 
+<P>Specifies large-TCP-packet segmentation capabilities 
+
+<BLOCKQUOTE class="dtBlock">
+<b class="le">Note</b>&nbsp;&nbsp;&nbsp;If an intermediate driver modifies the contents of TCP packets that it forwards down to an underlying miniport driver such that TCP offload functions cannot be performed on the packets, the intermediate driver should respond to <B>OID_TCP_TASK_OFFLOAD</B> queries with a status of NDIS_STATUS_NOT_SUPPORTED instead of passing the request down to the underlying miniport.</BLOCKQUOTE>
+</li>
+</UL>
+
+<H4 class="dtH4">Enabling a NIC's Task-Offload Capabilities</H4>
+
+<P>After querying a NIC's task-offload capabilities, the TCP/IP transport enables one or more of these capabilities by setting <B>OID_TCP_TASK_OFFLOAD</B>. When setting <B>OID_TCP_TASK_OFFLOAD</B>, the TCP/IP transport supplies in the InformationBuffer an <B>NDIS_TASK_OFFLOAD_HEADER</B> structure, followed immediately by an <B>NDIS_TASK_OFFLOAD </B>structure for each task-offload capability that the transport is enabling.</P>
+
+<P>The Task in each <B>NDIS_TASK_OFFLOAD</B> structure indicates the offload task that the TCP/IP transport is enabling. The TCP/IP transport also enables capabilities for a particular offload task by setting members of the structure (<B>NDIS_TASK_TCP_IP_CHECKSUM</B> or <B>NDIS_TASK_TCP_LARGE_SEND) </B>in the<B> TaskBuffer </B>of each<B> NDIS_TASK_OFFLOAD</B> structure.</P>
+
+<H4 class="dtH4">Changing a NIC's Task-Offload Capabilities</H4>
+
+<P>To change which task-offload capabilities are enabled for a NIC, the TCP/IP transport sets <B>OID_TCP_TASK_OFFLOAD</B>. The miniport driver must enable only those task-offload capabilities specified by the most recent set of <B>OID_TCP_TASK_OFFLOAD</B>. The miniport driver must disable all other task-offload capabilities.</P>
+
+<H4 class="dtH4">Disabling a NIC's Task-Offload Capabilities</H4>
+
+<P>To disable all task-offload capabilities supported by a NIC, the TCP/IP transport sets <B>OID_TCP_TASK_OFFLOAD</B>, passing in the InformationBuffer only an <B>NDIS_TASK_OFFLOAD_HEADER</B> structure with the <B>OffsetFirstTask</B> member of this structure set to 0.</P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

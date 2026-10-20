@@ -1,0 +1,132 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Vertex and Index buffers</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Vertex and Index buffers"/>
+<MSHelp:RLTitle Title="Vertex and Index buffers"/>
+<MSHelp:Keyword Index="A" Term="wce50conVertexIndexBuffers"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Driver"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="False"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="d3dm_ddk_concepts.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="False"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+<MSHelp:Attr Name="PBFeature" Value="Direct3DMobileDriver"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_1052723">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50convertexindexbuffers"></A>Vertex and Index Buffers</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>Vertex and index buffers are created similarly: The middleware calls <A HREF="wce50lrfd3dmcreatesurface.htm">D3DM_CreateSurface</A> with <I>D3DM_CREATESURFACE_DATA-&gt;SurfaceType</I> set to D3DMRTYPE_VERTEXBUFFER (for vertex buffers) or D3DMRTYPE_INDEXBUFFER (for index buffers). Each of these buffer types is serviced with its own description structure, either <MSHelp:link keywords="wce50lrfD3DMVERTEXBUFFER_DESC" TABINDEX="0">D3DMVERTEXBUFFER_DESC</MSHelp:link> or <MSHelp:link keywords="wce50lrfD3DMINDEXBUFFER_DESC" TABINDEX="0">D3DMINDEXBUFFER_DESC</MSHelp:link>, to instruct the driver how it should create the buffer. The middleware only validates these descriptions in the debug version of the run-time image. The driver is not expected to populate any members of the description structures when it creates the surface.</P>
+
+<P>For a vertex buffer, the <B>D3DMVERTEXBUFFER_DESC.Format</B> member is always D3DMFMT_VERTEXDATA (see <MSHelp:link keywords="wce50lrfD3DMFORMAT" TABINDEX="0">D3DMFORMAT</MSHelp:link>) and the <B>D3DMVERTEXBUFFER_DESC.Usage</B> member always contains at least the D3DMUSAGE_LOCKABLE (see <MSHelp:link keywords="wce50lrfD3DMUSAGEValues" TABINDEX="0">D3DMUSAGE Values</MSHelp:link>) bit. The value in <B>D3DMVERTEXBUFFER_DESC.Pool</B> may specify either system or video memory. The <B>D3DMVERTEXBUFFER_DESC.Size</B> member contains the number of bytes that should be allocated for the vertex buffer and the <B>D3DMVERTEXBUFFER_DESC.FVF</B> member identifies the format of the vertices that will reside in this buffer.</P>
+
+<P>Index buffers are similar. The usage bits will still always contain at least the D3DMUSAGE_LOCKABLE bit. The index buffer may reside in either the video or system memory pool. The driver must support at least one type of index buffer. The only major difference is that the index buffer may only be one of two formats: D3DMFMT_INDEX16 or D3DMFMT_INDEX32. These indicate the size of the indices that the application will write into the buffer.</P>
+
+<H3 class="dtH3">Vertex Data Order</H3>
+
+<P>The following list shows the order that the flexible vertex format (FVF) properties appear in the vertex buffer.</P>
+
+<P>1.&nbsp;&nbsp;&nbsp;Position data</P>
+
+<P>2.&nbsp;&nbsp;&nbsp;Normal vector (if present)</P>
+
+<P>3.&nbsp;&nbsp;&nbsp;Diffuse color (if present)</P>
+
+<P>4.&nbsp;&nbsp;&nbsp;Specular color (if present)</P>
+
+<P>5.&nbsp;&nbsp;&nbsp;Texture coordinates, in order from first to fourth. (if present)</P>
+
+<P>When a vertex buffer is made into the active vertex buffer by means of the <MSHelp:link keywords="wce50lrfIDirect3DMobileDeviceSetStreamSource" TABINDEX="0">IDirect3DMobileDevice::SetStreamSource</MSHelp:link> method, the FVF of the vertex buffer should be used to do initial setup on the transformation pipeline. </P>
+
+<H3 class="dtH3">Vertex Buffer Optimization</H3>
+
+<P>An optimized Direct3D&reg; Mobile&reg; driver should arrange its vertex buffers into the best possible format for its internal use. The driver should also control where the buffer is allocated to best suit the its internal operations. The driver's <A HREF="wce50lrfd3dmlocksurface.htm">D3DM_LockSurface</A> and <A HREF="wce50lrfd3dmunlocksurface.htm">D3DM_UnlockSurface</A> functions implement these types of optimizations. There are flags to help control the optimization process in both the <A HREF="wce50lrfd3dmcreatesurface.htm">D3DM_CreateSurface</A> call and the <B>D3DM_LockSurface</B> call.</P>
+
+<P>The following table provides information on handling <MSHelp:link keywords="wce50lrfD3DMUSAGEValues" TABINDEX="0">D3DMUSAGE Values</MSHelp:link> within the implementation of <B>D3DM_CreateSurface</B>.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=50%>D3DMUSAGE Value</TH>
+<TH width=50%>Action</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>D3DMUSAGE_DYNAMIC</TD>
+<TD width=50%>This flag indicates to the driver that the application intends to lock the vertex buffer frequently. When a vertex buffer is created using D3DMUSAGE_DYNAMIC, the driver should not do any internal optimizations during calls to <B>D3DM_LockSurface</B> and <B>D3DM_UnlockSurface</B>, and instead do the necessary work when the buffer is used in a drawing operation.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>D3DMUSAGE_DONOTCLIP</TD>
+<TD width=50%>This flag indicates that the vertex buffer content will never require clipping. When rendering with buffers that have this flag set, the D3DMRS_CLIPPING (see <MSHelp:link keywords="wce50lrfD3DMRENDERSTATETYPE" TABINDEX="0">D3DMRENDERSTATETYPE</MSHelp:link>)render state must be set to FALSE.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>D3DMUSAGE_WRITEONLY</TD>
+<TD width=50%>This flag indicates that the buffer will never be read. Consequently, the driver will never have to prepare a sub-buffer of the vertex buffer for applications to read back from. Additionally, if a write-only buffer is used as the target of a <MSHelp:link keywords="wce50lrfIDirect3DMobileDeviceProcessVertices" TABINDEX="0">IDirect3DMobileDevice::ProcessVertices</MSHelp:link> operation, the driver does not need to prepare anything for the application to read back. The driver can leave the data in any intermediate format that it chooses.</TD>
+</TR>
+</table></div>
+
+<P>The following table provides information on handling D3DMUSAGE values within the implementation of <B>D3DM_LockSurface</B>.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=50%>D3DMUSAGE Value</TH>
+<TH width=50%>Action</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>D3DMLOCK_DISCARD</TD>
+<TD width=50%>This flag indicates that the application overwrites every location within the buffer with a write-only operation. This is a valid option when using dynamic vertex buffers. A pointer to a new memory area is returned so that dynamic memory access (DMA) or rendering from the previous area do not stall.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>D3DMLOCK_NOOVERWRITE</TD>
+<TD width=50%>This flag indicates that the application will not need to overwrite any data in the vertex buffer. Therefore, the driver can return immediately and continue rendering using this buffer. If this flag is not used, the driver must finish rendering before returning from locking.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>D3DMLOCK_READONLY</TD>
+<TD width=50%>This flag indicates that the application will not write to the buffer. This enables vertex buffers stored in non-native formats to save the step of converting the data in the non-native format back into the application's format when unlocking.</TD>
+</TR>
+</table></div>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50conresourcesindirect3dmobiledrivers.htm">Resources in Direct3D Mobile Drivers</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

@@ -1,0 +1,138 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Bootstrapping To Use an OMA Client Provisioning Server</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Bootstrapping To Use an OMA Client Provisioning Server"/>
+<MSHelp:RLTitle Title="Bootstrapping To Use an OMA Client Provisioning Server"/>
+<MSHelp:Keyword Index="A" Term="wce51conBootstrappingWithBasicDataConnectionInformationSettingTPSForContinuousProvisioning"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Application"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbsmartphone"/>
+<MSHelp:Attr Name="Product" Value="kbPocketPC"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="Technology" Value="kbPocketPC"/>
+<MSHelp:Attr Name="Technology" Value="kbSmartphone"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="bootstrap_provisioning_mo.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="True"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_1060696">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Windows Mobile Version 5.0 SDK<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce51conbootstrappingwithbasicdataconnectioninformationsettingtpsforcontinuousprovisioning"></A>Bootstrapping To Use an OMA Client Provisioning Server</H1>
+<!--Feedback Link Top Start-->
+<P CLASS="feedback"><font size="1"><a href="mailto:medfdbk&#64;microsoft.com?subject=Product: Windows Mobile | Version: 5.0 | Release: SDK | Title: Bootstrapping To Use an OMA Client Provisioning Server | Filename: wce51conbootstrappingwithbasicdataconnectioninformationsettingtpsforcontinuousprovisioning.htm | Built on: Wednesday, September 14, 2005">Send Feedback</a> on this topic to the authors</font></p>
+<!--Feedback Link Top End-->
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>The mobile operator can provision the device with a OMA Client Provisioning Trusted Provisioning Server (TPS) and a trusted Push Proxy Gateway (PPG) used by the TPS for continuous provisioning. The XML example in this section can be used as a template. After the device is bootstrapped, the message coming from the TPS will be granted the Manager role, and WAP push will still be the mechanism for continuous provisioning.</P>
+
+<P>A mobile operator can also set other data connectivity information in the device's configurable settings in this bootstrap message.</P>
+
+<P>For the default parms that can be changed by TPS and the manager, see the <a href="http://go.microsoft.com/fwlink/?LinkId=36158" TARGET="_blank">Smartphone SDK Developer's Reference</A> and the <a href="http://go.microsoft.com/fwlink/?LinkId=36152" TARGET="_blank">Pocket PC SDK Developer's Reference</A> on MSDN. To enable the device to accept a message from the TPS. The TPS must use a provisioned, trusted PPG to push continuous provisioning XML to the device through Short Message Service (SMS). Also, the PPG should authenticate the push initiator (TPS) and inform the device by using a Push-Flag header. The push initiator header should be used to provide the URL of the TPS.</P>
+
+<BLOCKQUOTE class="dtBlock">
+<b class="le">Note</b>&nbsp;&nbsp;&nbsp;After this bootstrap process, user-PIN-signed WAP push messages will be accepted if they originate from a trusted PPG and the PPG authenticated the push initiator.</BLOCKQUOTE>
+
+<P>The user authenticated message can be:
+
+<UL type="disc">
+	<LI>Input from the user interface.</li>
+
+	<LI>Data sent through RAPI if the default RAPI policy is not changed.</li>
+
+	<LI>WAP push messages that are signed with a user PIN.</li>
+</UL>
+
+<P>The device can be bootstrapped with this provisioning document through any of the following methods:
+
+<UL type="disc">
+	<LI><A HREF="wce51conbootstrappingsmartphonethroughromconfigurationxmlfile.htm">Provisioning Using a ROM Configuration XML File</A> </li>
+
+	<LI><A HREF="wce51conotabootstrappingthroughwappush.htm">Provisioning OTA Through a WAP Push</A> once OTA bootstrap is enabled.</li>
+
+	<LI><A HREF="wce51conbootstrappingfromdesktopcomputer.htm">Provisioning From a Desktop Computer Using Remote API and ActiveSync</A> once RAPI bootstrap is enabled.</li>
+</UL>
+
+<P>The following XML example bootstraps the device with a WAP push gateway, a Trusted Provisioning Server URL for continuous provisioning. The message coming from the OMA Client Provisioning TPS will be granted the Manager role after the device is bootstrapped. </P>
+
+<PRE class="code">&lt;wap-provisioningdoc&gt;
+&lt;!-- The following XML is needed ONLY if the bootstrap message is sent over the air over WAP push --&gt; 
+   &lt;characteristic type="BOOTSTRAP"&gt;
+      &lt;parm name="PROVURL" value="http://www.thephone-company.com/TPS" /&gt;
+   &lt;/characteristic&gt;
+
+&lt;!-- Provide a trusted WAP push gateway's SMS address --&gt;
+   &lt;characteristic type="PXLOGICAL"&gt;
+      &lt;parm name="NAME" value="WAP Push Gateway"/&gt;
+      &lt;parm name="PROXY-ID" value="163.187.21.3"/&gt;
+      &lt;parm name="TRUST"/&gt;
+      &lt;characteristic type="PXPHYSICAL"&gt;
+         &lt;parm name="PHYSICAL-PROXY-ID" value="Push Gateway 1"/&gt;
+         &lt;!-- The push gateway's SMS address --&gt;
+         &lt;parm name="PXADDR" value="9201612"/&gt;
+         &lt;parm name="PXADDRTYPE" value="E164"/&gt;
+         &lt;parm name="PUSHENABLED" value="1"/&gt;
+         &lt;parm name="TO-NAPID" value="SMS NAP"/&gt;
+      &lt;/characteristic&gt;
+   &lt;/characteristic&gt;
+
+&lt;!--Provide the NAPDEF for the PPG. This will be ignored by the device though because the default SMSC number stored in a SIM card will be used for all incoming SMS messages. --&gt;
+   &lt;characteristic type="NAPDEF"&gt;
+      &lt;parm name="NAPID" value="SMS NAP"/&gt;
+      &lt;parm name="NAME" value="SMS Connection"/&gt;
+      &lt;parm name="NAP-ADDRESS" value="+12345550150"/&gt;
+      &lt;parm name="BEARER" value="GSM-SMS"/&gt;
+   &lt;/characteristic&gt;
+
+&lt;!-- Must change grant manager policy (4119) if the message is sent over RAPI so that the message that is assigned the TPS role will be granted as the device manager by updating the following policy. After bootstrapping must change the grant manager policy so that RAPI messsage no longer has the device manager role --&gt; 
+   &lt;characteristic type="SecurityPolicy"&gt;
+      &lt;parm name="4119" value="128"/&gt;
+   &lt;/characteristic&gt;
+
+&lt;!-- The following xml is only required when the bootstrap message is sent over RAPI.Must change manager policy (4119) and WAP Signed Message policy (4107) if the message is sent OTA through WAP Push so that the message that is assigned TPS role will be granted as the device manager and pure user pin signed or network pin signed WAP push provisioning message from unknown source is disallowed --&gt; 
+   &lt;characteristic type="SecurityPolicy"&gt;
+      &lt;parm name="4119" value="128"/&gt;
+      &lt;parm name="4107" value="3200"/&gt;
+   &lt;/characteristic&gt;
+
+&lt;!-- Any other configuration data put in a bootstrap message such as HTTP proxy, synchronization settings, e-mail settings, etc. See the SDK API Reference for a complete list. --&gt;
+&lt;/wap-provisioningdoc&gt;</PRE>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce51conbootstrap.htm">Bootstrapping Windows Mobile-Based Devices</A> | <A HREF="wce51grfnapdefcsp.htm">NAPDEF Configuration Service Provider</A> | <A HREF="wce51grfpxlogicalcsp.htm">PXLOGICAL Configuration Service Provider</A> | <A HREF="wce51grfsecuritypolicycsp.htm">SecurityPolicy Configuration Service Provider</A> | <A HREF="wce51grfbootstrapcsp.htm">BOOTSTRAP Configuration Service Provider</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Feedback Link Bottom Start-->
+<p><font size="1"><a href="mailto:medfdbk&#64;microsoft.com?subject=Product: Windows Mobile | Version: 5.0 | Release: SDK | Title: Bootstrapping To Use an OMA Client Provisioning Server | Filename: wce51conbootstrappingwithbasicdataconnectioninformationsettingtpsforcontinuousprovisioning.htm | Built on: Wednesday, September 14, 2005">Send Feedback</a> on this topic to the authors</font></p>
+<!--Feedback Link Bottom End-->
+<!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="mob5conCopyrightInformationForMagneto" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link></font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

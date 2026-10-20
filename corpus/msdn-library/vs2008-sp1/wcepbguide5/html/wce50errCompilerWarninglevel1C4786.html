@@ -1,0 +1,140 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Compiler Warning (level 1) C4786</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Compiler Warning (level 1) C4786"/>
+<MSHelp:RLTitle Title="Compiler Warning (level 1) C4786"/>
+<MSHelp:Keyword Index="A" Term="wce50errCompilerWarninglevel1C4786"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Guide"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="True"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbRef"/>
+<MSHelp:Attr Name="Filename" Value="err46xx.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="True"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_3025677">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50errcompilerwarninglevel1c4786"></A>Compiler Warning (level 1) C4786</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<PRE class="syntax"><B>'<I>identifier</I>' : identifier was truncated to '<I>number</I>' characters in the debug information</B></PRE>
+
+<P>The identifier string exceeded the maximum allowable length and was truncated.</P>
+
+<P>The debugger cannot debug code with symbols longer than 255 characters. In the debugger, you cannot view, evaluate, update, or watch the truncated symbols.</P>
+
+<P>This limitation can be overcome by shortening identifier names. The example code below demonstrates this method.</P>
+
+<P>A trace mechanism can also be used to solve this problem. A trace mechanism is like the <B>printf</B> statements in the code. It keeps track of what is going on in an application during the debugging process. </P>
+
+<P>The <B>_ASSERT</B>, <B>_ASSERTE</B>, <B>_RPTn</B> and <B>_RPTFn</B> macros provide concise and flexible ways to perform the trace. These macros are not defined when <B>_DEBUG</B> is not defined. </P>
+
+<P>The example below demonstrates a situation that would cause this compiler warning to occur, and the solution to this problem.</P>
+
+<PRE class="code"> //sample1.cpp
+ //In this program we have a class of a very long name.
+ //We instantiate an object of that class type. We will
+ //get multiple C4786 warnings. The comments below
+ //demonstrate the solution to this problem.
+
+ #define a_really_long_class_name 
+a_really_really_really_really_really_really_really_really_really_really_
+really_really_really_really_really_really_really_really_really_really_
+really_really_really_really_really_really_really_really_really_really_
+really_really_really_really//_really_long_class_name
+
+ //SOLUTION: Uncomment the lines below
+
+ //#ifdef _DEBUG
+ //#define a_really_long_class_name A_SHORT_CLASS_NAME
+ //#endif
+
+ class a_really_long_class_name
+ {
+ public:
+a_really_long_class_name() {};
+int m_data;
+ };
+
+ void main()
+ {
+ a_really_long_class_name test_obj;
+ test_obj.m_data = 12;
+ }</PRE>
+
+<P>The following example demonstrates that templates with some long class names as their parameters can easily exceed the 255 character limit. Solutions to the problem are also provided.</P>
+
+<PRE class="code"> //sample2.cpp
+ //SOLUTION1: uncomment the next 4 lines
+ //#ifdef _DEBUG
+ //#define VeryLongClassNameA A
+ //#define VeryLongClassNameB B
+ //#endif
+
+ //SOLUTION2: An alternative solution:
+ //uncomment the next 3 lines.
+ //#ifdef _DEBUG
+ //#define SomeRandomClass SRC
+ //#endif
+
+ template &lt;class A1, class A2, class A3, class A4&gt;
+ class VeryLongClassNameA{};
+
+ template &lt;class B1, class B2, class B3&gt;
+ class VeryLongClassNameB{};
+
+ template &lt;class C1, class C2&gt;
+ class VeryLongClassNameC{};
+
+ template &lt;class D1&gt;
+ class VeryLongClassNameD{};
+
+ class SomeRandomClass{};
+
+ typedef VeryLongClassNameD&lt;SomeRandomClass&gt; ClassD ;
+ typedef VeryLongClassNameC&lt;SomeRandomClass, ClassD&gt; ClassC;
+ typedef VeryLongClassNameB&lt;SomeRandomClass, ClassC, ClassD&gt; ClassB;
+ typedef VeryLongClassNameA&lt;SomeRandomClass, ClassB, ClassC, ClassD&gt; ClassA;
+
+ void SomeRandomFunction(ClassA aobj){}
+
+ void main()
+ {
+ClassA AObj ;
+SomeRandomFunction(AObj) ;
+ }</PRE>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

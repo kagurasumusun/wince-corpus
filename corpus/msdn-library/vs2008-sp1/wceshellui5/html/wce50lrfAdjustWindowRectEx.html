@@ -1,0 +1,133 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>AdjustWindowRectEx</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="AdjustWindowRectEx"/>
+<MSHelp:RLTitle Title="AdjustWindowRectEx"/>
+<MSHelp:Keyword Index="K" Term="AdjustWindowRectEx"/>
+<MSHelp:Keyword Index="A" Term="wce50lrfAdjustWindowRectEx"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Feature"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="apiref"/>
+<MSHelp:Attr Name="Filename" Value="windows_mwmgr.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="True"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+<MSHelp:Attr Name="APIName" Value="AdjustWindowRectEx"/>
+<MSHelp:Attr Name="PBFeature" Value="UI"/>
+<MSHelp:Attr Name="PBOnly" Value="False"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_3023169">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50lrfadjustwindowrectex"></A>AdjustWindowRectEx</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>This function calculates the required size of the rectangle of a window with extended style based on the desired client-rectangle size. The window rectangle can then be passed to the <A HREF="wce50lrfcreatewindowex.htm">CreateWindowEx</A> function to create a window whose client area is the desired size. </P>
+
+<PRE class="syntax"><B>BOOL</B> <B>AdjustWindowRectEx( </B>
+<B>  LPRECT</B> <I>lpRect</I><B>, </B>
+<B>  DWORD</B> <I>dwStyle</I><B>, </B>
+<B>  BOOL</B> <I>bMenu</I><B>,</B><I> </I>
+<I>  </I><B>DWORD</B> <I>dwExStyle </I>
+<B>);</B> </PRE>
+
+<H4 class="dtH4">Parameters</H4>
+
+<DL>
+<DT><I>lpRect</I></DT>
+
+<DD>[in] Long pointer to a <A HREF="wce50lrfrect.htm">RECT</A> structure that contains the coordinates of the top-left and bottom-right corners of the desired client area. When the function returns, the structure contains the coordinates of the top-left and bottom-right corners of the window to accommodate the desired client area.</dd>
+
+<DT><I>dwStyle</I></DT>
+
+<DD>[in] Specifies the window styles of the window whose required size is to be calculated. </dd>
+
+<DT><I>bMenu</I></DT>
+
+<DD>[in] Boolean that specifies whether the window has a menu. </dd>
+
+<DT><I>dwExStyle</I></DT>
+
+<DD>[in] Specifies the extended style of the window whose required size is to be calculated. </dd>
+</DL>
+
+<H4 class="dtH4">Return Values</H4>
+
+<P>Nonzero indicates success. Zero indicates failure. To get extended error information, call <MSHelp:link keywords="wce50lrfGetLastError" TABINDEX="0">GetLastError</MSHelp:link>.</P>
+
+<H4 class="dtH4">Code Example</H4>
+
+<P>Here is source code for the function <B>OomUI_CreateOomWindow</B>, which creates and returns a handle to the Out of Memory Window, calling <B>AdjustWindowRectEx</B> in the process.</P>
+
+<PRE class="code">HWND 
+OomUI_CreateOomWindow (void)
+{
+  DWORD grfStyle, grfExStyle;
+  RECT rc;
+  grfStyle = WS_BORDER | WS_POPUP | WS_CAPTION | WS_SYSMENU;
+  grfExStyle = WS_EX_NODRAG | WS_EX_CAPTIONOKBTN | WS_EX_WINDOWEDGE;
+  SetRect (&amp;rc, 0, 0, CX_WINDOW, 194);
+  AdjustWindowRectEx (&amp;rc, grfStyle, FALSE, grfExStyle);
+  oomui.hwnd = CreateWindowEx (
+  grfExStyle,
+  v_szClass,
+  v_szTitle,
+  grfStyle,
+  12, 7, 
+  rc.right - rc.left, rc.bottom - rc.top, NULL, NULL,
+  s_hinst, NULL);
+  ASSERT (oomui.hwnd);
+  return oomui.hwnd;
+}</PRE>
+
+<H4 class="dtH4">Remarks</H4>
+
+<P>The <I>bMenu</I> parameter must be FALSE; menu bars are not supported.</P>
+
+<P>A client rectangle is the smallest rectangle that completely encloses a client area. A window rectangle is the smallest rectangle that completely encloses the window, which includes the client area and the nonclient area. </P>
+
+<P>When an invalid window style is specified in the <I>dwStyle</I> parameter, the WS_POPUP style is assumed and used for the window calculation. For a description of supported window styles, see <B>CreateWindowEx</B>. </P>
+
+<P>The <B>AdjustWindowRectEx</B> function does not add extra space when a menu bar wraps to two or more rows. </P>
+
+<H4 class="dtH4">Requirements</H4>
+
+<P><B>OS Versions:</B> Windows CE 1.0 and later.<BR>
+<B>Header:</B> Winuser.h.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50lrfrect.htm">RECT</A> | <A HREF="wce50grfwindowsfunctions.htm">Windows Functions</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

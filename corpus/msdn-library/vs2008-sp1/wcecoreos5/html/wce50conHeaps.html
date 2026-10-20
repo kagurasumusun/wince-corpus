@@ -1,0 +1,79 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Heaps</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Heaps"/>
+<MSHelp:RLTitle Title="Heaps"/>
+<MSHelp:Keyword Index="A" Term="wce50conHeaps"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Feature"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="kernel_memory_architecture.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="False"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+<MSHelp:Attr Name="PBFeature" Value="CORE"/>
+<MSHelp:Attr Name="PBOnly" Value="True"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_3009657">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50conheaps"></A>Heaps</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>A heap is a portion of memory reserved for an application to use to allocate and free memory on a per-byte, or at least a per-4-byte basis. In addition to optimizing memory use, a heap can isolate an application from having to allow for the differing page sizes of the microprocessors that Microsoft&reg; Windows CE supports. An application can simply allocate a block in a heap, and then leave it to the OS to determine the number of pages necessary for the allocation. </P>
+
+<P>Windows CE only supports allocating non-movable blocks in a heap. This simplifies the handling of blocks in the heap, but it can lead to the heaps becoming fragmented over time as blocks are allocated and freed. The result can be a heap that is almost empty, but still requires a large number of virtual pages because the system cannot reclaim a page from the heap unless it is completely free. </P>
+
+<P>In a Windows CE OS design, each application has a default, or local, heap created by the OS when an application launches. An application can also create any number of separate heaps. These heaps have the same properties as the local heap but are managed through a separate set of heap functions. </P>
+
+<P>Windows CE uses a singly-linked list for all heap blocks and uses a first-fit algorithm. Free heap blocks are merged forward on every allocation or free cycle, and new allocation always starts with the last allocated or freed item. This implementation favors small allocations, as it is more likely to find the free block on the first try. Re-using freed blocks usually works better if the allocation or free cycle comes in as first-in, last-out because free blocks will be combined better. Using a large heap conserves virtual memory, but is likely to have a negative performance impact. A small heap is better, if you have a size limit.</P>
+
+<P>By default, Windows CE initially reserves 192 KB of virtual memory, but only commits the pages as they are allocated. If the application allocates more than the 192 KB in the local heap, the system allocates more virtual memory by using <A HREF="wce50lrfvirtualalloc.htm">VirtualAlloc</A> to fulfill the request for memory. You can specify the maximum or initial size while creating the heap. However, you cannot make the heap larger if you specify the maximum size. Making the heap larger might require a separate, disjointed address space reserved for the additional space on the heap. Your application code must not depend on the local heap being contained in a single block of virtual address space.</P>
+
+<P>To avoid fragmenting the local heap, might be better to create a separate heap, if you need a series of memory blocks to use for a specified time. An example of this is a text editor that manages a file by creating a separate heap for each file it is editing. As files are opened and closed, the heaps are created and destroyed. </P>
+
+<BLOCKQUOTE class="dtBlock">
+<b class="le">Note</b>&nbsp;&nbsp;&nbsp;Windows CE supports the same application programming interface (API) set for heaps as many Windows-based desktop platforms. The only noticeable difference is a lack of support for the HEAP_GENERATE_ EXCEPTIONS flag. </BLOCKQUOTE>
+
+<P>The next level above virtual memory is heap memory and its associated APIs. The heap APIs rely on the low-level services that virtual memory APIs use for support. Memory allocations in a heap are not made on a 64 KB boundary and are meant for allocations smaller than 96 KB. Anything higher then 96 KB causes the Heap Management System to use virtual memory directly to create a separate heap for the allocation. When a process is created, a default heap is also created for the process. An application can use the process heap for its memory allocations and the heap grows and shrinks accordingly. However, you can incur a performance penalty if the amount and type of memory allocations in the default heap cause the heap to become fragmented. When a heap becomes fragmented, it spends more time trying to find a hole for a new memory allocation, which can impact performance. To prevent fragmentation from occurring in your process, create separate heaps for similar objects. If a heap exists that contains same-sized objects, the Heap Manager can more easily find a free block large enough to hold a new allocation. However, even if fragmentation is manageable through separate heaps, there is still a cost associated with allocating memory.</P>
+
+<P>To reduce the impact on allocating heap memory, a process should allocate heap memory before proceeding with normal processing.</P>
+
+<P>Windows CE heaps work best for fixed-size items. To optimize heap usage, make your heap allocation as uniform as possible. If not, you can create heaps for different size ranges.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50grfmemorymanagementreference.htm">Memory Management Reference</A> | <A HREF="wce50conmemoryarchitecture.htm">Memory Architecture</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

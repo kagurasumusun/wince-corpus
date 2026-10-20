@@ -1,0 +1,148 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>EM_STREAMIN</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="EM_STREAMIN"/>
+<MSHelp:RLTitle Title="EM_STREAMIN"/>
+<MSHelp:Keyword Index="K" Term="EM_STREAMIN"/>
+<MSHelp:Keyword Index="A" Term="mob5lrfEM_STREAMIN"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Application"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbsmartphone"/>
+<MSHelp:Attr Name="Product" Value="kbPocketPC"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="Technology" Value="kbPocketPC"/>
+<MSHelp:Attr Name="Technology" Value="kbSmartphone"/>
+<MSHelp:Attr Name="TopicType" Value="apiref"/>
+<MSHelp:Attr Name="Filename" Value="RichInkCtrl_API_magneto.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="False"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_1065270">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Windows Mobile Version 5.0 SDK<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="mob5lrfem_streamin"></A>EM_STREAMIN</H1>
+<!--Feedback Link Top Start-->
+<P CLASS="feedback"><font size="1"><a href="mailto:medfdbk&#64;microsoft.com?subject=Product: Windows Mobile | Version: 5.0 | Release: SDK | Title: EM_STREAMIN | Filename: mob5lrfem_streamin.htm | Built on: Wednesday, September 14, 2005">Send Feedback</a> on this topic to the authors</font></p>
+<!--Feedback Link Top End-->
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>The EM_STREAMIN message replaces the contents of a RichInk control with a stream of data provided by an application-defined <B>EditStreamCallback</B> callback function.</P>
+
+<PRE class="syntax"><B>EM_STREAMIN</B>
+  <B>wParam = (WPARAM) (UINT) </B><I>uFormat</I><B>;</B>
+  <B>lParam = (LPARAM) (EDITSTREAM FAR *) </B><I>lpStream</I><B>;</B></PRE>
+
+<H4 class="dtH4">Parameters</H4>
+
+<DL>
+<DT><I>uFormat </I></DT>
+
+<DD>A set of bit flags that indicate the data format and replacement options.
+
+<P>This value must specify one of the following data formats.
+
+
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=31%>Flag</TH>
+<TH width=69%>Data format</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=31%>SF_TEXT</TD>
+<TD width=69%>ASCII Text</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=31%>SF_RTF</TD>
+<TD width=69%>Rich Text Format (RTF)</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=31%>SF_UTEXT</TD>
+<TD width=69%>Unicode text</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=31%>SF_PWI</TD>
+<TD width=69%>Word Mobile (was Pocket Word) Ink (PWI)</TD>
+</TR>
+</table></div>
+
+</dd>
+
+<DT><I>lpStream </I></DT>
+
+<DD>Pointer to an <B>EDITSTREAM</B> structure. On input, the <I>pfnCallback</I> member of this structure must point to an application-defined <B>EditStreamCallback</B> function. On output, the <I>dwError</I> member can contain a nonzero error code if an error occurred. 
+
+<P>When this DLL is used on the desktop, it is assumed that the <B>EDITSTREAM</B> structure contains a <I>dwCookie</I> of the following type:
+</dd>
+</DL>
+
+<PRE class="syntax"><B>typedef struct {</B>
+  <B>IStream</B> <B>*</B> <I>pstm</I>;
+  <B>BOOL</B> <I>bValue</I>;
+  <B>VOID</B> <B>*</B> <I>pData</I>;
+  <B>BOOL</B> <I>bLoss</I>;
+<B>} COOKIE;</B></PRE>
+
+<P>The RichInk control may then modify the value to indicate whether any data loss occurs during the input conversion.</P>
+
+<H4 class="dtH4">Return Values</H4>
+
+<P>Returns zero if there are no errors.</P>
+
+<H4 class="dtH4">Remarks</H4>
+
+<P>#define EM_STREAMIN (WM_USER + 73)</P>
+
+<P>When you send an EM_STREAMIN message, the RichInk Control makes repeated calls to the <B>EditStreamCallback</B> function specified by the <B>pfnCallback</B> member of the <B>EDITSTREAM</B> structure. Each time the callback function is called, it fills a buffer with data to read into the control. This continues until the callback function indicates that the stream-in operation has been completed or an error occurs.</P>
+
+<P>The <B>EditStreamCallback</B> function returns the number of bytes processed. If this is not the same as the number of bytes requested, then the caller assumes an end-of-file condition has occurred.</P>
+
+<H4 class="dtH4">Requirements</H4>
+
+<P><B>Pocket&nbsp;PC:</B> Pocket&nbsp;PC&nbsp;2000 and later<BR>
+<B>Smartphone:</B> None<BR>
+<B>OS&nbsp;Versions:</B> Windows&nbsp;CE&nbsp;3.0 and later<BR>
+<B>Header:</B> richink.h<BR>
+<B>Library:</B> richink.lib</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="mob5conrichinkcontrolmessages.htm">RichInk Control Messages</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Feedback Link Bottom Start-->
+<p><font size="1"><a href="mailto:medfdbk&#64;microsoft.com?subject=Product: Windows Mobile | Version: 5.0 | Release: SDK | Title: EM_STREAMIN | Filename: mob5lrfem_streamin.htm | Built on: Wednesday, September 14, 2005">Send Feedback</a> on this topic to the authors</font></p>
+<!--Feedback Link Bottom End-->
+<!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="mob5conCopyrightInformationForMagneto" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link></font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

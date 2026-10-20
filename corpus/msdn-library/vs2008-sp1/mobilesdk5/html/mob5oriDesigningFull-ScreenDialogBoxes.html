@@ -1,0 +1,111 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Designing Full-Screen Dialog Boxes</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Designing Full-Screen Dialog Boxes"/>
+<MSHelp:RLTitle Title="Designing Full-Screen Dialog Boxes"/>
+<MSHelp:Keyword Index="A" Term="mob5oriDesigningFull-ScreenDialogBoxes"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Application"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbsmartphone"/>
+<MSHelp:Attr Name="Product" Value="kbPocketPC"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="Technology" Value="kbPocketPC"/>
+<MSHelp:Attr Name="Technology" Value="kbSmartphone"/>
+<MSHelp:Attr Name="TopicType" Value="kbOrient"/>
+<MSHelp:Attr Name="Filename" Value="Dialog_Boxes_magneto.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="True"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_1063729">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Windows Mobile Version 5.0 SDK<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="mob5oridesigningfull-screendialogboxes"></A>Designing Full-Screen Dialog Boxes</H1>
+<!--Feedback Link Top Start-->
+<P CLASS="feedback"><font size="1"><a href="mailto:medfdbk&#64;microsoft.com?subject=Product: Windows Mobile | Version: 5.0 | Release: SDK | Title: Designing Full-Screen Dialog Boxes | Filename: mob5oridesigningfull-screendialogboxes.htm | Built on: Wednesday, September 14, 2005">Send Feedback</a> on this topic to the authors</font></p>
+<!--Feedback Link Top End-->
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>On Windows Mobile-based devices, you can easily create full-screen top-level windows, with or without title bar icons, as well as full-screen dialog boxes for your application. When designing dialog boxes for your Windows Mobile-based device application, the following guidelines can help improve the usability of your application:
+
+<UL type="disc">
+	<LI><B>Use simple and natural dialog boxes.</B> Dialog boxes should not contain irrelevant or rarely needed information. Every extraneous unit of information competes with the relevant information and diminishes their relative visibility. All information should appear in a natural and logical order. </li>
+
+	<LI><B>Speak the user's language.</B> The dialog box should be expressed clearly in words, phrases, and concepts familiar to the user rather than in system-oriented terms. </li>
+
+	<LI><B>Simplify complicated instructions.</B> The user should not have to remember information from one part of the dialog box to another. Instructions for use of the system should be visible or easily retrievable whenever appropriate. </li>
+
+	<LI><B>Dialog boxes for Windows Mobile-based devices should be displayed full screen. </B>By utilizing all available screen space, you can incorporate more functionality within the same window, making it easier for the user to complete a task.</li>
+
+	<LI><B>Use multiple screens for Windows Mobile-based Smartphones. </B>To allow sufficient room for all of the dialog box content, you can extend the dialog box over multiple screens.
+<BLOCKQUOTE class="dtBlock">
+<b class="le">Note</b>&nbsp;&nbsp;&nbsp;The user presses the Up and Down controls to move between dialog box controls.</BLOCKQUOTE>
+</li>
+
+	<LI>For Windows Mobile-based Smartphones, you should not specify <B>WS_POPUP</B> style and a <B>NULL</B> owner when the dialog box is a main window. Otherwise, the dialog box is briefly hidden when the user presses the Home key.</li>
+</UL>
+
+<P>To create a full-screen dialog box, you call the <MSHelp:link keywords="wce50lrfSHInitDialog" TABINDEX="0">SHInitDialog</MSHelp:link> function during the handling of the <B>WM_INITDIALOG</B> message, as shown in the following example. The <MSHelp:link keywords="wce50lrfSHINITDLGINFO" TABINDEX="0">SHINITDLGINFO</MSHelp:link> structure sets members for the <B>SHInitDialog</B> function. </P>
+
+<P>On Windows Mobile-based Smartphones, you must also override the Back key if the dialog box contains edit controls and you must create soft keys. For information about the Back key, see <A HREF="mob5connavigationkeys.htm">Navigation Keys</A>. For information about creating soft keys, see <A HREF="mob5orihowtocreatesoftkeybar.htm">How to: Create a Soft Key Bar</A>.</P>
+
+<P>The following code example shows how to use the <B>SHInitDialog</B> function and <B>SHINITDLGINFO</B> structure to create a full-screen dialog box:</P>
+
+<PRE class="code">case WM_INITDIALOG:
+{
+    BOOL rb;
+    int rc;
+    <code><b class="cfe">SHINITDLGINFO sid;</b></code>
+
+    sid.dwMask = SHIDIM_FLAGS;  // This is the only allowed value.
+    sid.dwFlags = SHIDIF_SIZEDLGFULLSCREEN;  // Make the DB full screen.
+    sid.hDlg = hwnd;  // Handle to the dialog box.
+
+    <code><b class="cfe">rb = SHInitDialog(&amp;sid);</b></code>
+    if (rb == FALSE)  // SHInitDialog failed.
+    {
+        rc = MessageBox(NULL, _T(Could not create dialog box.),
+                        _T(Error), MB_OK);
+        if (rc == 0)  // Not enough memory to create MessageBox.
+            return E_OUTOFMEMORY;
+        return E_FAIL;  // Replace with specific error handling.
+    }
+    break;  // From case WM_INITDIALOG.
+}</PRE>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="mob5tskhowtocallsystem-defineddialogbox.htm">How to: Call a System-Defined Dialog Box</A> | <A HREF="mob5tskhowtocreatefull-screenwindow.htm">How to: Create a Full-Screen Window</A> | <A HREF="mob5orihowtocreatesoftkeybar.htm">How to: Create a Soft Key Bar</A> | <A HREF="mob5tskhowtoenablesystem-definedfiledialogboxes.htm">How to: Enable System-Defined File Dialog Boxes</A> | <A HREF="mob5tskhowtopreventdisplayofsmartminimizeokbuttonsindialogboxes.htm">How to: Prevent Display of Smart Minimize and OK Buttons in Dialog Boxes</A> | <A HREF="mob5tskhowtoprogramscrollingcontrolsforsmartphonedialogboxes.htm">How to: Program Scrolling Controls for Smartphone Dialog Boxes</A> | <A HREF="mob5connavigationkeys.htm">Navigation Keys</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Feedback Link Bottom Start-->
+<p><font size="1"><a href="mailto:medfdbk&#64;microsoft.com?subject=Product: Windows Mobile | Version: 5.0 | Release: SDK | Title: Designing Full-Screen Dialog Boxes | Filename: mob5oridesigningfull-screendialogboxes.htm | Built on: Wednesday, September 14, 2005">Send Feedback</a> on this topic to the authors</font></p>
+<!--Feedback Link Bottom End-->
+<!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="mob5conCopyrightInformationForMagneto" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link></font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

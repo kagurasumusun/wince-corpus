@@ -1,0 +1,174 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>ChooseContact</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="ChooseContact"/>
+<MSHelp:RLTitle Title="ChooseContact"/>
+<MSHelp:Keyword Index="K" Term="ChooseContact"/>
+<MSHelp:Keyword Index="K" Term="ChooseContact, Pocket Outlook Object Model API Functions"/>
+<MSHelp:Keyword Index="K" Term="code example, ChooseContact"/>
+<MSHelp:Keyword Index="K" Term="Contact Chooser"/>
+<MSHelp:Keyword Index="K" Term="functions"/>
+<MSHelp:Keyword Index="K" Term="Pocket Outlook Object Model API Functions"/>
+<MSHelp:Keyword Index="K" Term="Pocket Outlook Object Model API Functions, ChooseContact"/>
+<MSHelp:Keyword Index="A" Term="mob5lrfChooseContactFn"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Application"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbsmartphone"/>
+<MSHelp:Attr Name="Product" Value="kbPocketPC"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="Technology" Value="kbPocketPC"/>
+<MSHelp:Attr Name="Technology" Value="kbSmartphone"/>
+<MSHelp:Attr Name="TopicType" Value="apiref"/>
+<MSHelp:Attr Name="Filename" Value="POOM_API_magneto.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="True"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_1068337">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Windows Mobile Version 5.0 SDK<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="mob5lrfchoosecontactfn"></A>ChooseContact</H1>
+<!--Feedback Link Top Start-->
+<P CLASS="feedback"><font size="1"><a href="mailto:medfdbk&#64;microsoft.com?subject=Product: Windows Mobile | Version: 5.0 | Release: SDK | Title: ChooseContact | Filename: mob5lrfchoosecontactfn.htm | Built on: Wednesday, September 14, 2005">Send Feedback</a> on this topic to the authors</font></p>
+<!--Feedback Link Top End-->
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>The <B>ChooseContact</B> function launches the Contact Chooser control, which provides access to the Contact application interface for selecting Contacts in your application.</P>
+
+<H4 class="dtH4">Syntax</H4>
+
+<PRE class="syntax"><B>HRESULT ChooseContact(
+  LPCHOOSECONTACT </B><I>lpcc</I><B>
+);</B></PRE>
+
+<H4 class="dtH4">Parameters</H4>
+
+<DL>
+<DT><I>lpcc</I></DT>
+
+<DD>[in/out] Reference to a CHOOSECONTACT structure. It contains information used to initialize the Contact Chooser control, and return information about the user's Contact and property selection. See <A HREF="mob5lrfchoosecontact.htm">CHOOSECONTACT</A> for more details.</dd>
+</DL>
+
+<H4 class="dtH4">Return Values</H4>
+
+<P>This method returns the standard values <B>HRESULT_FROM_WIN32(GetLastError())</B>, <B>E_INVALIDARG</B>, and <B>S_FAIL</B>, as well as the following:
+
+<DL>
+<DT><B>S_OK</B></DT>
+
+<DD>The method completed successfully, and the Contact Chooser control was successfully launched.
+
+<P>The buffer pointed to by the <B>oidContactID</B> member of the <A HREF="mob5lrfchoosecontact.htm">CHOOSECONTACT</A> structure contains the OID of the Contact, the <B>ContactName</B> member contains the name of the selected Contact, the <B>pridPropertyID</B> member contains the name of the property selected, and the <B>lpstrPropertyValue</B> member contains the string value of the data in the selected property. 
+</dd>
+
+<DT><B>S_FALSE</B></DT>
+
+<DD>The Contact Chooser control successfully displayed, and <B>propidSelected</B> was set, but there was insufficient memory to allocate <B>bstrPropertyValueSelected</B> and <B>bstrContactName</B>. This suggests that the user chose a Contact, but no information was written to the <B>bstrPropertyValueSelected</B> and <B>bstrContactName properties</B>.</dd>
+
+<DT><B>E_ABORT</B></DT>
+
+<DD>The user canceled out of the Contact Chooser control.</dd>
+
+<DT><B>E_INVALIDARG</B></DT>
+
+<DD>An invalid argument was passed to the <B>ChooseContact</B> function.</dd>
+</DL>
+
+<H4 class="dtH4">Remarks</H4>
+
+<P>The Contact Chooser control is a system-defined modal dialog box. It provides the user interface that allows the user to select a single Contact and a single property of that Contact. It is used by Inbox for selecting email recipients, by Calendar for selecting Meeting attendees, and by the Pictures application to associate a picture with a Contact.</P>
+
+<P>The client is blocked while this dialog is showing.</P>
+
+<P>You must have <B>RequiredProperties</B> set to choose a property.</P>
+
+<P><B>SelectContact</B> must contain a valid Contact item when <B>ChoosePropertyOnly</B> is TRUE.</P>
+
+<P>Setting <B>ChooseContactOnly</B> to TRUE automatically sets <B>ChoosePropertyOnly</B> to FALSE.</P>
+
+<P>By default, <B>ChooseContactOnly</B> is set to TRUE. This allows you to call <B>ShowDialog</B> without setting any properties, and still get a reasonable default behavior.</P>
+
+<P><B>ChooseContact</B> fails when <B>CCF_CHOOSECONTACTONLY</B> is FALSE and <B>rgpropidRequiredProperties</B> is NULL.</P>
+
+<H4 class="dtH4">Code Example</H4>
+
+<P>The following code example demonstrates how to use <B>ChooseContact</B>.</P>
+
+<BLOCKQUOTE class="dtBlock">
+<b class="le">Note</b>&nbsp;&nbsp;&nbsp;To make the following code example easier to read, security checking and error handling are not included. This code example should not be used in a release configuration unless it has been modified to include them.</BLOCKQUOTE>
+
+<PRE class="code">HRESULT ContactChooserExample()
+{
+
+    HRESULT hr                      = E_FAIL;    
+    const CEPROPID c_propidAllEmail = PIMPR_ALL_EMAIL; 
+    CHOOSECONTACT cc                = {0};
+
+    // Setup the CHOOSECONTACT structure.
+    cc.cbSize                     = sizeof (cc);
+    cc.dwFlags                    = CCF_RETURNCONTACTNAME | CCF_RETURNPROPERTYVALUE | CCF_HIDENEW;
+    cc.rgpropidRequiredProperties = &amp;c_propidAllEmail;
+
+    // The mumber of properties specified in the c_propidAllEmail array.
+    cc.cRequiredProperties = 1;
+    cc.hwndOwner           = NULL;
+
+    // Display the Contact Chooser control, and prompt the user to choose a contact.
+    hr = ChooseContact(&amp;cc);
+
+    // The name, and a string representation of the property, is returned according to 
+    // the flags set in the CHOOSECONTACT structure above.
+    DEBUGMSG(TRUE, (L"%s's email address is %s", cc.bstrContactName, cc.bstrPropertyValueSelected));
+
+    // Free memory.
+    SysFreeString(cc.bstrContactName);
+    SysFreeString(cc.bstrPropertyValueSelected);
+
+    return hr;
+
+}</PRE>
+
+<H4 class="dtH4">Requirements</H4>
+
+<P><B>Pocket&nbsp;PC:</B> Pocket&nbsp;PC&nbsp;2000 and later<BR>
+<B>Smartphone:</B> Smartphone&nbsp;2002 and later<BR>
+<B>OS&nbsp;Versions:</B> Windows&nbsp;CE&nbsp;3.0 and later<BR>
+<B>Header:</B> pimstore.h<BR>
+<B>Library:</B> pimstore.lib</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="mob5oripocketoutlookobjectmodelapifunctions.htm">Pocket Outlook Object Model API Functions</A> | <A HREF="mob5lrfchoosecontact.htm">CHOOSECONTACT structure</A> | <A HREF="mob5lrfcontactchooserflags.htm">Contact Chooser Flags</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Feedback Link Bottom Start-->
+<p><font size="1"><a href="mailto:medfdbk&#64;microsoft.com?subject=Product: Windows Mobile | Version: 5.0 | Release: SDK | Title: ChooseContact | Filename: mob5lrfchoosecontactfn.htm | Built on: Wednesday, September 14, 2005">Send Feedback</a> on this topic to the authors</font></p>
+<!--Feedback Link Bottom End-->
+<!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="mob5conCopyrightInformationForMagneto" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link></font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

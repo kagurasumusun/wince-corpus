@@ -1,0 +1,108 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Defining the DOM Context for XPath Expressions</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Defining the DOM Context for XPath Expressions"/>
+<MSHelp:RLTitle Title="Defining the DOM Context for XPath Expressions"/>
+<MSHelp:Keyword Index="A" Term="wce50conHowtheDOMDefinestheContextforXPathExpressions"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Feature"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="XSLpg02.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="True"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+<MSHelp:Attr Name="PBFeature" Value="SYSGEN_MSXML"/>
+<MSHelp:Attr Name="PBOnly" Value="False"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_3024113">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50conhowthedomdefinesthecontextforxpathexpressions"></A>Defining the DOM Context for XPath Expressions</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>The MSXML implementation contains methods that accept an XPath string to conveniently identify nodes within the XML tree. The <A HREF="wce50lrfselectnodesmethod.htm">selectNodes</A> method returns a node list pointing to each of the selected nodes, as in the following example.</P>
+
+<PRE class="code">items = xmldoc.selectNodes("invoices/invoice/items/item");</PRE>
+
+<P>It would take a substantial amount of code to retrieve the "item" nodes by walking the tree. With the <B>selectNodes</B> method and XPath expressions, nodes can be retrieved through a single line of code.</P>
+
+<P>In most cases, the returned set of nodes will be iterated over to perform further manipulations. The following example illustrates how you can calculate a total price for an "invoice" element.</P>
+
+<PRE class="code">function invoiceTotal(invoice)
+{
+  invoice = invoice.nextNode()
+  items = invoice.selectNodes("items/item");
+  var sum = 0;
+  for (var item = items.nextNode(); item; item = items.nextNode())
+  {
+    var price = item.selectSingleNode("price").nodeTypedValue;
+    var qty = item.selectSingleNode("qty").nodeTypedValue;
+    if (qty &gt;= 10)
+      price = 0.9*price;
+    sum += price * qty;
+  }
+  return sum;
+}</PRE>
+
+<P>This example contains two query contexts. The first query is performed from the context of the invoice element (invoice), and the query string reflects this by beginning with the document element items. The <B>for...</B> loop iterates through the returned nodes and uses each as a context for further queries. These query strings are relative to item elements, and look within them for the price and qty children. This illustrates that the node upon which the <B>selectNodes</B> is performed defines the context for the query.</P>
+
+<P>Performing queries from the document root versus the document element can be confusing. These two nodes are different in the XML tree and thus require different query strings. The following three statements will yield identical results for the sample document, although only the last two are logically equivalent.</P>
+
+<PRE class="code">items = xmldoc.selectNodes("invoices/invoice");
+items = xmldoc.selectNodes("*/invoice");
+items = xmldoc.documentElement.selectNodes("invoice");</PRE>
+
+<P>The <A HREF="wce50lrfselectsinglenodemethod.htm">selectSingleNode</A> method returns the first node that matches the query, providing a convenient way to return a node directly without extracting it from a NodeList. It is equivalent to "selectNodes(<I>pattern</I>).item(0)". The preceding example could simplify the code by using the <B>selectSingleNode</B> method.</P>
+
+<PRE class="code">function invoiceTotal(invoice)
+{
+  invoice = invoice.nextNode()
+  items = invoice.selectNodes("items/item");
+  var sum = 0;
+  for (var item = items.nextNode(); item; item = items.nextNode())
+  {
+    var price = item.selectSingleNode("price").nodeTypedValue;
+    var qty = item.selectSingleNode("qty").nodeTypedValue;
+    sum += price * qty;
+  }
+  return sum;
+}</PRE>
+
+<P>In this example, <B>selectNodes</B> is still used to select a set of item elements. When only a single node is expected, such as the price and qty elements, <B>selectSingleNode</B> can be used.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50conxpath.htm">XPath</A> | <A HREF="wce50lrfselectnodesmethod.htm">selectNodes Method</A> | <A HREF="wce50lrfselectsinglenodemethod.htm">selectSingleNode Method</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

@@ -1,0 +1,135 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Implementing the OEMWriteFlash Function</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Implementing the OEMWriteFlash Function"/>
+<MSHelp:RLTitle Title="Implementing the OEMWriteFlash Function"/>
+<MSHelp:Keyword Index="A" Term="wce50tskImplementingtheOEMWriteFlashFunction"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Hardware"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="True"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbTask"/>
+<MSHelp:Attr Name="Filename" Value="howto_developing_a_bootloader.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="True"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_3010340">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50tskimplementingtheoemwriteflashfunction"></A>Implementing the OEMWriteFlash Function</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>The <A HREF="wce50lrfoemwriteflash.htm">OEMWriteFlash</A> function writes the data temporarily cached in RAM to its final location in flash memory. </P>
+
+<P>This function should also verify that the write operation occurred successfully. </P>
+
+<P>Following the write operation, the <B>OEMWriteFlash</B> function can also be implemented to lock the flash memory blocks to protect against accidental erasure.</P>
+
+<P class="labelproc"><B>To implement the OEMWriteFlash function</B>
+
+<UL type="disc">
+	<LI>Edit the file Flash.c by adding the code necessary to fully implement the <B>OEMWriteFlash</B> function.
+<P>The following code example shows the implementation of the <B>OEMWriteFlash</B> function for the hardware platform used in this boot loader example.
+
+<PRE class="code">BOOL OEMWriteFlash(DWORD dwImageStart, DWORD dwImageLength)
+{
+    DWORD dwFlashAddr, dwExtraBytes = 0;
+    LPBYTE pbCache = NULL;
+    UCHAR nNumBlocks = 0;
+
+    //
+    // Make sure the start and end addresses are in flash.
+    //
+    if (!OEMIsFlashAddr(dwImageStart) || !OEMIsFlashAddr(dwImageStart + dwImageLength - 1))
+    {
+        EdbgOutputDebugString("ERROR: OEMWriteFlash - not a flash address (0x%x or 0x%x).\r\n", dwImageStart, (dwImageStart + dwImageLength - 1));
+        return(FALSE);
+    }
+
+    //
+    // Make sure image start is on a block boundary.
+    //
+    if (dwImageStart % FLASH_BLOCK_SIZE)
+    {
+        EdbgOutputDebugString("ERROR: OEMWriteFlash - image start address isn't on a flash block boundary (0x%x).\r\n", dwImageStart);
+        return(FALSE);
+    }
+
+    EdbgOutputDebugString ("INFO: Writing to FLASH: Start = 0x%X  Length = 0x%X...\r\n", dwImageStart, dwImageLength);
+
+    nNumBlocks   = (UCHAR)(dwImageLength / FLASH_BLOCK_SIZE);
+    dwExtraBytes = (dwImageLength % FLASH_BLOCK_SIZE);
+    dwFlashAddr  = dwImageStart;
+    pbCache      = OEMMapMemAddr (dwImageStart, dwFlashAddr);
+
+    //
+    // Write flash blocks.
+    // 
+    while(nNumBlocks)
+    { 
+        EdbgOutputDebugString("Writing to Block %d of %d:\r\n", BLOCK_NUM(dwFlashAddr), gnBlocks);
+
+        if (CFI_Write_Block((unsigned32*)dwFlashAddr, (unsigned32*)pbCache, FLASH_BLOCK_SIZE, NULL) != PASS)
+        {
+            EdbgOutputDebugString("ERROR: OEMWriteFlash - unable to write to block (block address=0x%x).\r\n", dwFlashAddr);
+            return(FALSE);
+        }
+
+        dwFlashAddr += FLASH_BLOCK_SIZE;
+        pbCache = OEMMapMemAddr (dwImageStart, dwFlashAddr);
+        --nNumBlocks;
+    }
+
+    //
+    // If a partial block remains, write it to memory.
+    //
+    if (dwExtraBytes)
+    {
+        if (CFI_Write_Block((unsigned32*)dwFlashAddr, (unsigned32*)pbCache, dwExtraBytes, NULL) != PASS)
+        {
+            EdbgOutputDebugString("ERROR: OEMWriteFlash - unable to write to block (block address=0x%x).\r\n", dwFlashAddr);
+            return(FALSE);
+        }
+    }
+
+    return(TRUE);
+}</PRE>
+</li>
+</UL>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50howhowtodevelopabootloader.htm">How to Develop a Boot Loader</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

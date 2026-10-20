@@ -1,0 +1,323 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Test Cases for the OAL Cache Test</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Test Cases for the OAL Cache Test"/>
+<MSHelp:RLTitle Title="Test Cases for the OAL Cache Test"/>
+<MSHelp:Keyword Index="A" Term="wce50conTestCasesForOALCacheTest"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Debugging"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="True"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="oalcachetest.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="False"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_1054731">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50contestcasesforoalcachetest"></A>Test Cases for the OAL Cache Test</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>Each test case for the OAL Cache Test allocates an array of memory by using the <MSHelp:link keywords="wce50lrfVirtualAlloc" TABINDEX="0">VirtualAlloc</MSHelp:link> function. The array might or might not be contiguous in memory. The test case writes and then reads values from the array, verifying that each value matches the value written to the location.</P>
+
+<P>Each test case derives values to store in the array from a hash of the array index and the current iteration of the test. The test uses the iteration value so that stale data does not mask an error in the cache. With hashed values, the test does not need to set values in memory to zero before each test pass.</P>
+
+<P>If a test case that calls the <MSHelp:link keywords="wce50lrfCeGetCacheInfo" TABINDEX="0">CeGetCacheInfo</MSHelp:link> function passes, but the cache size seems incorrect, investigate further. The <B>CeGetCacheInfo </B>function might return incorrect information because this function queries constants in the OAL. If the <B>CeGetCacheInfo</B> function returns incorrect information, test cases might fail.</P>
+
+<P>The following table shows test cases for the OAL Cache Test.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=50%>Test case</TH>
+<TH width=50%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>200: Cache Tests Usage / Help</TD>
+<TD width=50%>Displays information about the OAL Cache Test.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>201: Print Cache Info</TD>
+<TD width=50%>Displays the information returned by the <B>CeGetCacheInfo</B> function.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>Write Boundaries Read Everything (array = cache size)
+<P>210: No caching</P>
+
+<P>240: Write-through cache mode</P>
+
+<P>270: Write-back cache mode</P>
+</TD>
+<TD width=50%>This test case searches for errors in consistency between data stored in the L1 data cache and data stored in main memory. By default, this test case runs for 10 minutes.
+<P>This test case writes data near the boundaries of the cache into an array that is the size of the L1 data cache as reported by the <B>CeGetCacheInfo</B> function. If the <B>CeGetCacheInfo</B> function reports that the size of the cache is zero, this test case uses a 4-MB array.</P>
+
+<P>After the test case reaches steady state, each memory access is a cache hit. The test case verifies the accuracy of write operations by reading back the data. The test case also verifies that values surrounding the changed values are not changed.</P>
+
+<P>This test case writes values to array indexes that surround multiples of eight. For each multiple of eight, the test case writes a value into the array at the following array indexes:
+
+<UL type="disc">
+	<LI>One greater than the multiple of eight</li>
+
+	<LI>One less than the multiple of eight</li>
+
+	<LI>Equal to the multiple of eight</li>
+</UL>
+
+<P>The test case then reads and verifies the values.</P>
+</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>Write Boundaries Read Everything (array = twice cache size)
+<P>211: No caching</P>
+
+<P>241: Write-through cache mode</P>
+
+<P>271: Write-back cache mode</P>
+</TD>
+<TD width=50%>This test case searches for errors in consistency between data stored in the L1 data cache and data stored in main memory. By default, this test case runs for 10 minutes.
+<P>This test case writes data near the boundaries of the cache into an array that is twice the size of the L1 data cache as reported by the <B>CeGetCacheInfo</B> function. If the <B>CeGetCacheInfo</B> function reports that the size of the cache is zero, this test case uses a 4-MB array.</P>
+
+<P>After the test case reaches steady state, each memory access is a cache miss. The test case verifies the accuracy of write operations by reading back the data. The test case also verifies that values surrounding the changed values are not changed.</P>
+
+<P>This test case writes values to array indexes that surround multiples of eight. For each multiple of eight, the test case writes a value into the array at the following array indexes:
+
+<UL type="disc">
+	<LI>One greater than the multiple of eight</li>
+
+	<LI>One less than the multiple of eight</li>
+
+	<LI>Equal to the multiple of eight</li>
+</UL>
+
+<P>The test case then reads and verifies the values.</P>
+</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>Write Boundaries Read Everything (array = user defined)
+<P>212: No caching</P>
+
+<P>242: Write-through cache mode</P>
+
+<P>272: Write-back cache mode</P>
+</TD>
+<TD width=50%>This test case searches for errors in consistency between data stored in the L1 data cache and data stored in main memory. By default, this test case runs for 10 minutes.
+<P>This test case writes data near the boundaries of the cache into an array of a size that you specify by using the <code class="ce">ct_al &lt;length&gt;</code> command-line parameter. For more information, see <A HREF="wce50concommand-lineparametersforoalcachetest.htm">Command-Line Parameters for the OAL Cache Test</A>. If you do not specify the <code class="ce">ct_al &lt;length&gt;</code> command-line parameter, this test case uses a 4-MB array.</P>
+
+<P>After the test case reaches steady state, each memory access is a cache miss. The test case verifies the accuracy of write operations by reading back the data. The test case also verifies that values surrounding the changed values are not changed.</P>
+
+<P>This test case writes values to array indexes that surround multiples of eight. For each multiple of eight, the test case writes a value into the array at the following array indexes:
+
+<UL type="disc">
+	<LI>One greater than the multiple of eight</li>
+
+	<LI>One less than the multiple of eight</li>
+
+	<LI>Equal to the multiple of eight</li>
+</UL>
+
+<P>The test then reads and verifies the values.</P>
+</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>Write Everything Read Everything (array = cache size)
+<P>213: No caching</P>
+
+<P>243: Write-through cache mode</P>
+
+<P>273: Write-back cache mode</P>
+</TD>
+<TD width=50%>This test case searches for errors in consistency between data stored in the L1 data cache and data stored in main memory. By default, this test case runs for 10 minutes.
+<P>This test case sequentially writes data into an array that is the size of the L1 data cache as reported by the <B>CeGetCacheInfo</B> function. If the <B>CeGetCacheInfo</B> function reports that the size of the cache is zero, this test case uses a 4-MB array.</P>
+
+<P>After the test case reaches steady state, the write operations force a cache hit each time a memory value is accessed. The test case verifies the accuracy of write operations by reading back the data. The read operations also force cache misses.</P>
+
+<P>The test case assigns each array index a unique identifier. The test case references this unique identifier when it compares data read to data written.</P>
+</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>Write Everything Read Everything (array = twice cache size)
+<P>214: No caching</P>
+
+<P>244: Write-through cache mode</P>
+
+<P>274: Write-back cache mode</P>
+</TD>
+<TD width=50%>This test case searches for errors in consistency between data stored in the L1 data cache and data stored in main memory. By default, this test case runs for 10 minutes.
+<P>This test case sequentially writes data into an array that is twice the size of the L1 data cache as reported by the <B>CeGetCacheInfo</B> function. If the <B>CeGetCacheInfo</B> function reports that the size of the cache is zero, this test case uses a 4-MB array.</P>
+
+<P>After the test case reaches steady state, the write operations force a cache miss each time a memory value is accessed. The test case verifies the accuracy of write operations by reading back the data. The read operations also force cache misses.</P>
+
+<P>The test case assigns each unit of data a unique identifier. The test case references this unique identifier when it compares data read to data written.</P>
+</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>Write Everything Read Everything (array = user defined)
+<P>215: No caching</P>
+
+<P>245: Write-through cache mode</P>
+
+<P>275: Write-back cache mode</P>
+</TD>
+<TD width=50%>This test case searches for errors in consistency between data stored in the L1 data cache and data stored in main memory. By default, this test case runs for 10 minutes.
+<P>This test case sequentially writes data into an array that is of a size that you specify by using the <code class="ce">ct_al &lt;length&gt;</code> command-line parameter. For more information, see <A HREF="wce50concommand-lineparametersforoalcachetest.htm">Command-Line Parameters for the OAL Cache Test</A>. If you do not specify the <code class="ce">ct_al &lt;length&gt;</code> command-line parameter, this test case uses a 4-MB array.</P>
+
+<P>After the test case reaches steady state, the write operations force a cache miss each time a memory value is accessed. The test case verifies the accuracy of write operations by reading back the data. The read operations also force cache misses.</P>
+
+<P>The test case assigns each array index a unique identifier. The test case references this unique identifier when it compares data read to data written.</P>
+</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>Verify Near Powers of Two (array = cache size)
+<P>216: No caching</P>
+
+<P>246: Write-through cache mode</P>
+
+<P>276: Write-back cache mode</P>
+</TD>
+<TD width=50%>This test case searches for errors in consistency between data stored in the L1 data cache and data stored in main memory. With a cache, errors generally fall on powers of two. This test case might expose errors not exposed by a test case that performs sequential write operations. By default, this test case runs for 10 minutes.
+<P>This test case writes data into values that are close to a power of two in an array that is the size of the L1 data cache as reported by the <B>CeGetCacheInfo</B> function. This test case exercises the cache rather than the underlying memory subsystem because in steady state, each memory access should be a cache hit. If the <B>CeGetCacheInfo</B> function reports that the size of the cache is zero, this test case uses a 4-MB array.</P>
+
+<P>The step size varies throughout the test case to expose errors that might occur only during a similar access sequence. The smallest step size is 16 bytes. For each power of two, the test case writes a value into the array at the following array indexes:
+
+<UL type="disc">
+	<LI>One greater than the power of two</li>
+
+	<LI>One less than the power of two</li>
+
+	<LI>Equal to the power of two</li>
+</UL>
+
+<P>The test case then reads and verifies the values in the same order that they were written.</P>
+</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>Verify Near Powers of Two (array = twice cache size)
+<P>217: No caching</P>
+
+<P>247: Write-through cache mode</P>
+
+<P>277: Write-back cache mode</P>
+</TD>
+<TD width=50%>This test case searches for errors in consistency between data stored in the L1 data cache and data stored in main memory. With a cache, errors generally fall on powers of two. This test case might expose errors not exposed by a test case that performs sequential write operations. By default, this test case runs for 10 minutes.
+<P>This test case writes data into values that are close to a power of two in an array that is twice the size of the L1 data cache as reported by the <B>CeGetCacheInfo</B> function. If the <B>CeGetCacheInfo</B> function reports that the size of the cache is zero, this test case uses a 4-MB array.</P>
+
+<P>The step size varies throughout the test case to expose errors that might occur only during a similar access sequence. The smallest step size is 16 bytes. For each power of two, the test case writes a value into the array at the following array indexes:
+
+<UL type="disc">
+	<LI>One greater than the power of two</li>
+
+	<LI>One less than the power of two</li>
+
+	<LI>Equal to the power of two</li>
+</UL>
+
+<P>The test case then reads and verifies the values in the same order that they were written.</P>
+</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>Verify Near Powers of Two (array = user defined)
+<P>218: No caching</P>
+
+<P>248: Write-through cache mode</P>
+
+<P>278: Write-back cache mode</P>
+</TD>
+<TD width=50%>This test case searches for errors in consistency between data stored in the L1 data cache and data stored in main memory. With a cache, errors generally fall on powers of two. This test case might expose errors not exposed by a test case that performs sequential write operations. By default, this test case runs for 10 minutes.
+<P>This test case writes data into values that are close to a power of two in an array of a size that you specify by using the <code class="ce">ct_al &lt;length&gt;</code> command-line parameter. For more information, see <A HREF="wce50concommand-lineparametersforoalcachetest.htm">Command-Line Parameters for the OAL Cache Test</A>. If you do not specify the <code class="ce">ct_al &lt;length&gt;</code> command-line parameter, this test case uses a 4-MB array.</P>
+
+<P>The step size varies throughout the test case to expose errors that might occur only during a similar access sequence. The smallest step size is 16 bytes. For each power of two, the test case writes a value into the array at the following array indexes:
+
+<UL type="disc">
+	<LI>One greater than the power of two</li>
+
+	<LI>One less than the power of two</li>
+
+	<LI>Equal to the power of two</li>
+</UL>
+
+<P>The test case then reads and verifies the values in the same order that they were written.</P>
+</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>Write Everything Read Everything Mixed Up (array = twice cache size)
+<P>219: No caching</P>
+
+<P>249: Write-through cache mode</P>
+
+<P>279: Write-back cache mode</P>
+</TD>
+<TD width=50%>This test case searches for errors in consistency between data stored in the L1 data cache and data stored in main memory. By default, this test case runs for 10 minutes.
+<P>This test case writes data in a semi-random way into an array that is twice the size of the L1 data cache as reported by the <B>CeGetCacheInfo</B> function. If the <B>CeGetCacheInfo</B> function reports that the size of the cache is zero, this test case uses a 4-MB array.</P>
+
+<P>This test case produces both cache misses and cache hits, thereby exercising the cache in a more random way than a sequential set of read and write operations would. The test case writes each value in the tested array once and verifies the value during a subsequent read pass.</P>
+
+<P>The sequence of write operations that this test case uses is semi-random. The sequence is not as random as a random number generator because the test case must access each value once and only once. The first 16 values in the sequence are 0, 3, 1, 2, 12, 15, 13, 14, 4, 7, 5, 6, 8, 11, 9, and 10.</P>
+</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>Write Everything Read Everything Mixed Up (array = user defined)
+<P>220: No caching</P>
+
+<P>250: Write-through cache mode</P>
+
+<P>280: Write-back cache mode</P>
+</TD>
+<TD width=50%>This test case searches for errors in consistency between data stored in the L1 data cache and data stored in main memory. By default, this test case runs for 10 minutes.
+<P>This test case writes data in a semi-random way into an array of a size that you specify by using the <code class="ce">ct_al &lt;length&gt;</code> command-line parameter. The length that you specify for the <code class="ce">ct_al &lt;length&gt;</code> command-line parameter must be a power of two. For more information, see <A HREF="wce50concommand-lineparametersforoalcachetest.htm">Command-Line Parameters for the OAL Cache Test</A>. If you do not specify the <code class="ce">ct_al &lt;length&gt;</code> command-line parameter, this test case uses a 4-MB array.</P>
+
+<P>This test case produces both cache misses and cache hits, thereby exercising the cache is a more random way than a sequential set of read and write operations would. The test case writes each value in the tested array once and verifies the value during a subsequent read pass.</P>
+
+<P>The sequence of write operations that this test case uses is semi-random. The sequence is not as random as a random number generator because the test case must access each value once and only once. The first 16 values in the sequence are 0, 3, 1, 2, 12, 15, 13, 14, 4, 7, 5, 6, 8, 11, 9, and 10.</P>
+</TD>
+</TR>
+</table></div>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50conoalcachetest.htm">OAL Cache Test</A> | <A HREF="wce50concommand-lineparametersforoalcachetest.htm">Command-Line Parameters for the OAL Cache Test</A> | <A HREF="wce50contechniquesforoalcachetest.htm">Best Practices for the OAL Cache Test</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

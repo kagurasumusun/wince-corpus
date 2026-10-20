@@ -1,0 +1,89 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>NAT Address Mapping</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="NAT Address Mapping"/>
+<MSHelp:RLTitle Title="NAT Address Mapping"/>
+<MSHelp:Keyword Index="A" Term="wce50conNATAddressMapping"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Feature"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="RTC_concepts.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="False"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+<MSHelp:Attr Name="PBFeature" Value="SYSGEN_VOIP"/>
+<MSHelp:Attr Name="PBOnly" Value="False"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_1042780">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50connataddressmapping"></A>NAT Address Mapping</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>If an RTC client is behind a NAT, make sure of the following:
+
+<UL type="disc">
+	<LI>Two ports for each audio stream are opened on the NAT so media can be forwarded to the client machine.</li>
+
+	<LI>The client IP address are mapped to an IP address on the NAT so the NAT can forward the media stream to the correct device. </li>
+</UL>
+
+<P>If the NAT supports the Universal Plug and Play (UPnP) Internet Gateway Device (IGD) device control profile (DCP), the RTC Client API provides NAT mappings. This is the default behavior of the API, and is explained in more detail in <A HREF="wce50confirewallsnats.htm">Firewalls and NATs</A> and <A HREF="wce50contraversalofupnp-enablednats.htm">Traversal of UPnP-Enabled NATs</A>. </P>
+
+<H4 class="dtH4">Implementing Port Manager Functionality</H4>
+
+<P>When the client is behind a NAT that does not support the UPnP IGD DCP, the client application must provide a means to map the IP addresses and ports on the NAT to those on the client machine. It does this by implementing a Port Manager.</P>
+
+<P>The Port Manager is a component of the application using RTC that provides the port mapping for the RTC Client API. </P>
+
+<P>To set up port mappings, an application calls <MSHelp:link keywords="wce50lrfIUnknownQueryInterface" TABINDEX="0">IUnknown::QueryInterface</MSHelp:link> on any <A HREF="wce50lrfirtcsessioniunknown.htm">IRTCSession</A> or <A HREF="wce50lrfirtcsession2irtcsession.htm">IRTCSession2</A> reference to obtain a reference to the <A HREF="wce50lrfirtcsessionportmanagementiunknown.htm">IRTCSessionPortManagement</A> interface.</P>
+
+<P>The single <B>IRTCSessionPortManagement</B> method is <A HREF="wce50lrfirtcsessionportmanagementsetportmanager.htm">IRTCSessionPortManagement::SetPortManager</A>. The client uses this method to specify a callback interface (represented by <A HREF="wce50lrfirtcportmanageriunknown.htm">IRTCPortManager</A>) that is used by the RTC Client API to obtain port mappings from the application.</P>
+
+<P>The client application must provide a port manager before it initiates the session using <A HREF="wce50lrfirtcsessionaddparticipant.htm">IRTCSession::AddParticipant</A>. If NAT mappings are not in place when a session is initiated, the desired media streams cannot be transmitted.</P>
+
+<P>Given the address of the remote endpoint and the media type, the client application's implementation of the <A HREF="wce50lrfirtcportmanagergetmapping.htm">IRTCPortManager::GetMapping</A> method must return the IP address and port on the client as well as the external IP address and port on the NAT. </P>
+
+<BLOCKQUOTE class="dtBlock">
+<B><b class="le">Note</b>&nbsp;&nbsp;&nbsp;</B>The application should be prepared to return the port mappings immediately after the application calls <B>SetPortManager</B>.</BLOCKQUOTE>
+
+<P>The external address and port on the NAT are used in the Session Description Protocol (SDP) of the SIP INVITE message generated when a participant is added to the session.</P>
+
+<P>For details about how to initiate a session using the Port Manager interfaces, see <A HREF="wce50conclientapplicationbehindnat.htm">Client Application Behind a NAT</A>.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50confirewallsnats.htm">Firewalls and NATs</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, July 13, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

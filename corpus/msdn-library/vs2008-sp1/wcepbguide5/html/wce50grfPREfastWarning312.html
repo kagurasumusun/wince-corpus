@@ -1,0 +1,89 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>PREfast Warning 312</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="PREfast Warning 312"/>
+<MSHelp:RLTitle Title="PREfast Warning 312"/>
+<MSHelp:Keyword Index="A" Term="wce50grfPREfastWarning312"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Guide"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="True"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="prefast_warnings3.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="True"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_1054058">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50grfprefastwarning312"></A>PREfast Warning 312</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<PRE class="syntax">312 - Possible infinite loop.
+Additional Information: Use of the constant EXCEPTION_CONTINUE_EXECUTION in the exception-filter expression of a try-except.</PRE>
+
+<P>This message indicates that PREfast has detected the use of the constant EXCEPTION_CONTINUE_EXECUTION (or another constant that evaluates to -1) in the filter expression of a structured exception handler. </P>
+
+<P>Use of the constant value EXCEPTION_CONTINUE_EXECUTION can lead to an infinite loop. If an exception is raised by hardware, the instruction that caused the exception is restarted. If the address that caused the exception is still bad, another exception occurs and is handled in the same way. This results in an infinite loop. </P>
+
+<P>An explicit call to RaiseException does not directly result in an infinite loop, but it continues execution of the code in the protected block. This can be unexpected and can lead to an infinite loop if RaiseException was used to avoid de-referencing an invalid pointer. </P>
+
+<P>In addition, when EXCEPTION_CONTINUE_EXECUTION is used, the handler block of the structured exception handler is not executed. </P>
+
+<P>EXCEPTION_CONTINUE_EXCEPTION should usually only be returned by a function called in the filter expression, which has a chance to fix the pointer that caused the exception or the underlying memory. </P>
+
+<H4 class="dtH4">Example</H4>
+
+<P class="label"><B>Defective Source</B></P>
+
+<PRE class="code">__try {
+    *ptr = '\0';
+} __except (EXCEPTION_CONTINUE_EXCEPTION) {
+    // This block is never executed.
+
+    ;
+}</PRE>
+
+<P class="label"><B>Corrected Source</B></P>
+
+<PRE class="code">__try {
+    *ptr = '\0';
+} __except (ExceptionFilter(ptr, GetExceptionCode())) {
+    // Block may be executed depending on result of call
+    // to ExceptionFilter.
+
+    ;
+}</PRE>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

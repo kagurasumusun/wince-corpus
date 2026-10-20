@@ -1,0 +1,104 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Intermediate Drivers</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Intermediate Drivers"/>
+<MSHelp:RLTitle Title="Intermediate Drivers"/>
+<MSHelp:Keyword Index="A" Term="wce50conIntermediateDrivers"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Driver"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="False"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="ndis_guide2.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="False"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+<MSHelp:Attr Name="PBFeature" Value="NetworkDriver"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_3018311">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50conintermediatedrivers"></A>Intermediate Drivers</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>The NDIS architecture supports intermediate drivers. An NDIS intermediate driver does not use NDIS functions to control adapter hardware. Instead, it exists on top of another driver, such as the serial driver. The layered driver model represents a special kind of intermediate driver that exists on top of an NDIS miniport driver. A layered miniport driver exposes a miniport interface to the overlying protocol driver and a protocol-driver interface to the underlying miniport. In a layered miniport driver structure, the protocol driver communicates with a miniport driver at the bottom of the layered miniport driver. A layered miniport driver exports <B>Miniport<I>XXX</I></B> functions at its upper edge and <B>Protocol<I>XXX</I></B> functions at its lower edge.</P>
+
+<P>The following illustration shows the layered NDIS miniport driver architecture.</P>
+
+<P class="fig"><IMG SRC="ndisintermediatedriver.gif" ALT="" BORDER=0></P>
+
+<P>Layered miniport drivers can be used to filter out certain packets or to perform other special functions, such as decrypting and encrypting data.</P>
+
+<P>A layered miniport driver maintains two interfaces: a miniport driver interface supplied to protocol drivers and a protocol driver interface supplied to underlying miniports. Use the NDIS protocol driver guidelines when building the layered miniport's protocol driver interface. Use the NDIS miniport driver guidelines when building the layered miniport's miniport driver interface; however, the layered miniport will generally use the intermediate driver functions, <B>NdisIM<I>XXX</I></B>, and not the standard miniport functions, <B>NdisM<I>XXX</I></B>.</P>
+
+<P>The following table shows a set of new NDIS library functions. These functions apply to intermediate drivers, as well as to layered miniport driver architectures.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=40%>Function</TH>
+<TH width=60%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=40%><A HREF="wce50lrfndisimregisterlayeredminiport.htm">NdisIMRegisterLayeredMiniport</A></TD>
+<TD width=60%>Registers an intermediate driver's <B>Miniport<I>XXX</I></B> entry points and name with the NDIS library when the driver initializes.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=40%><A HREF="wce50lrfndisiminitializedeviceinstance.htm">NdisIMInitializeDeviceInstance</A></TD>
+<TD width=60%>Calls an NDIS intermediate driver's <A HREF="wce50lrfminiportinitialize.htm">MiniportInitialize</A> function to set up the driver's virtual network adapter for I/O operations on an underlying network adapter driver to which the intermediate driver is bound.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=40%><A HREF="wce50lrfndisiminitializedeviceinstanceex.htm">NdisIMInitializeDeviceInstanceEx</A></TD>
+<TD width=60%>Calls an NDIS intermediate driver's <B>MiniportInitialize</B> function to initialize the driver's virtual network adapter and, optionally, to set up state information about the driver's virtual network adapter for subsequently bound protocols.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=40%><A HREF="wce50lrfndisimdeinitializedeviceinstance.htm">NdisIMDeInitializeDeviceInstance</A></TD>
+<TD width=60%>Calls an NDIS intermediate driver's <A HREF="wce50lrfminiporthalt.htm">MiniportHalt</A> function to tear down the driver's virtual network adapter.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=40%><A HREF="wce50lrfndisimgetdevicecontext.htm">NdisIMGetDeviceContext</A></TD>
+<TD width=60%>Allows an NDIS intermediate driver's <B>MiniportInitialize</B> function to access the device context area that is allocated by its <A HREF="wce50lrfprotocolbindadapter.htm">ProtocolBindAdapter</A> function.</TD>
+</TR>
+</table></div>
+
+<P>Any NDIS intermediate or layered miniport driver that exports both <B>Miniport<I>XXX</I></B> and <B>Protocol<I>XXX</I></B> functions usually sets up a characteristics structure and calls the <B>NdisIMRegisterLayeredMiniport</B> function from its <A HREF="wce50lrfdriverentry.htm">DriverEntry</A> function after <B>DriverEntry</B> calls the <A HREF="wce50lrfndisminitializewrapper.htm">NdisMInitializeWrapper</A> function. This structure is copied in the <B>NdisIMRegisterLayeredMiniport</B> request to the internal storage of the NDIS library. Thus, once it has registered, such a driver cannot change its handler functions. An intermediate driver can call the <A HREF="wce50lrfndismregisterminiport.htm">NdisMRegisterMiniport</A> function, instead of the <B>NdisIMRegisterLayeredMiniport</B> function, if it is prepared for an immediate call to the <B>MiniportInitialize</B> function.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50conminiportsintermediatedriversandprotocoldrivers.htm">Miniports, Intermediate Drivers, and Protocol Drivers</A> | <A HREF="wce50conndisdriverupperedgefunctions.htm">NDIS Driver Upper-Edge Functions</A> | <A HREF="wce50conndisprotocoldriverloweredgefunctions.htm">NDIS Protocol Driver Lower-Edge Functions</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

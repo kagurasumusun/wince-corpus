@@ -1,0 +1,102 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Adding Support for Multiple-BIN Image Notification</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Adding Support for Multiple-BIN Image Notification"/>
+<MSHelp:RLTitle Title="Adding Support for Multiple-BIN Image Notification"/>
+<MSHelp:Keyword Index="A" Term="wce50tskAddingSupportforMultipleRegionImageNotification"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Hardware"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="True"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbTask"/>
+<MSHelp:Attr Name="Filename" Value="howto_developing_a_bootloader.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="True"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_3010343">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50tskaddingsupportformultipleregionimagenotification"></A>Adding Support for Multiple-BIN Image Notification</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>Platform Builder and the BLCOMMON library support downloading multiple .bin files during the same download session. This is useful when developing a multi-BIN run-time image. </P>
+
+<P>The BLCOMMON library can notify third-party code about each .bin file to be downloaded, and the .bin file's address and length, through a function pointer. </P>
+
+<P>This information is useful when deciding how to temporarily cache a multi-BIN run-time image in RAM before writing it to flash memory. For more information, see <A HREF="wce50lrfoemmultibinnotify.htm">OEMMultiBINNotify</A>.</P>
+
+<P>The following code example shows an implementation of <B>OEMMultiBINNotify</B>.</P>
+
+<PRE class="code">void OEMMultiBINNotify(const PMultiBINInfo pInfo)
+{
+    BYTE nCount;
+
+    if (!pInfo || !pInfo-&gt;dwNumRegions)
+    {
+        EdbgOutputDebugString("WARNING: OEMMultiBINNotify: Invalid BIN region descriptor(s).\r\n");
+        return;
+    }
+
+    g_dwMinImageStart = pInfo-&gt;Region[0].dwRegionStart;
+
+    EdbgOutputDebugString("\r\nDownload BIN file information:\r\n");
+    EdbgOutputDebugString("-----------------------------------------------------\r\n");
+    for (nCount = 0 ; nCount &lt; pInfo-&gt;dwNumRegions ; nCount++)
+    {
+        EdbgOutputDebugString("[%d]: Base Address=0x%x  Length=0x%x\r\n" , nCount, pInfo-&gt;Region[nCount].dwRegionStart, pInfo-&gt;Region[nCount].dwRegionLength);
+        if (pInfo-&gt;Region[nCount].dwRegionStart &lt; g_dwMinImageStart)
+        {
+            g_dwMinImageStart = pInfo-&gt;Region[nCount].dwRegionStart;
+            if (g_dwMinImageStart == 0)
+            {
+                EdbgOutputDebugString("WARNING: OEMMultiBINNotify: Bad start address for region (%d).\r\n", nCount);
+                return;
+            }
+        }
+    }
+
+    memcpy((LPBYTE)&amp;g_BINRegionInfo, (LPBYTE)pInfo, sizeof(MultiBINInfo));
+}</PRE>
+
+<P>When using BLCOMMON during boot loader initialization, for example, <A HREF="wce50lrfoemdebuginit.htm">OEMDebugInit</A>, the multi-BIN notification function pointer should be assigned to the OEM's notification routine. </P>
+
+<P>For example, to have BLCOMMON call <B>OEMMultiBINNotify</B> to validate the image signature, you should do the following in <B>OEMDebugInit</B>.</P>
+
+<PRE class="code">g_pOEMMultiBINNotify = OEMMultiBINNotify;</PRE>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50howhowtodevelopabootloader.htm">How to Develop a Boot Loader</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

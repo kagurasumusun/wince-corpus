@@ -1,0 +1,106 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Implementing GPS Intermediate Driver Hardware IOCTLs</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Implementing GPS Intermediate Driver Hardware IOCTLs"/>
+<MSHelp:RLTitle Title="Implementing GPS Intermediate Driver Hardware IOCTLs"/>
+<MSHelp:Keyword Index="A" Term="wce51conImplementingGPSIntermediateDriverDeviceIOCTLs"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Application"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbsmartphone"/>
+<MSHelp:Attr Name="Product" Value="kbPocketPC"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="Technology" Value="kbPocketPC"/>
+<MSHelp:Attr Name="Technology" Value="kbSmartphone"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="gpsid_appdev_bowmore.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="False"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_1062232">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Windows Mobile Version 5.0 SDK<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce51conimplementinggpsintermediatedriverdeviceioctls"></A>Implementing GPS Intermediate Driver Hardware IOCTLs</H1>
+<!--Feedback Link Top Start-->
+<P CLASS="feedback"><font size="1"><a href="mailto:medfdbk&#64;microsoft.com?subject=Product: Windows Mobile | Version: 5.0 | Release: SDK | Title: Implementing GPS Intermediate Driver Hardware IOCTLs | Filename: wce51conimplementinggpsintermediatedriverdeviceioctls.htm | Built on: Wednesday, September 14, 2005">Send Feedback</a> on this topic to the authors</font></p>
+<!--Feedback Link Top End-->
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>There are two sets of IOCTLs defined by the GPS Intermediate Driver that manufacturers may be especially interested in implementing: IOCTLs that can shorten the time to make a GPS fix, and an IOCTL for directly returning location information.</P>
+
+<BLOCKQUOTE class="dtBlock">
+<b class="le">Note</b>&nbsp;&nbsp;&nbsp;The GPS Intermediate Driver also natively supports a series of IOCTLs, including <MSHelp:link keywords="wce50lrfIOCTLSERVICEREFRESH" TABINDEX="0">IOCTL_SERVICE_REFRESH</MSHelp:link>, that enable applications to control its execution. These IOCTLs are listed and explained in detail in <A HREF="wce51concontrollinggpsintermediatedriverexecution.htm">Controlling GPS Intermediate Driver Execution</A>.</BLOCKQUOTE>
+
+<H4 class="dtH4">Shortening GPS Fix Time</H4>
+
+<P>One downside to GPS is the amount of time it can take to make an initial fix and return location information. The first time GPS hardware is turned on, it can take many minutes before the hardware has enough information from enough GPS satellites to return accurate location information. </P>
+
+<P>Some GPS hardware can shorten this startup time by assuming that the GPS hardware is at the same (or close to the same) location as it was when it was last used. If this is the case, startup time is often reduced by orders of magnitude.</P>
+
+<P>While it's possible for GPS hardware to perform the necessary calculations to minimize startup time in a way completely transparent to the GPS Intermediate Driver, the GPS Intermediate Driver also provides the following IOCTLs to enable manufacturers to expose functionality that can minimize startup time:
+
+<UL type="disc">
+	<LI><A HREF="wce51lrfioctl_gps_read_almanac.htm">IOCTL_GPS_READ_ALMANAC</A> and <A HREF="wce51lrfioctl_gps_write_almanac.htm">IOCTL_GPS_WRITE_ALMANAC</A> - GPS almanac information.</li>
+
+	<LI><A HREF="wce51lrfioctl_gps_read_assisted.htm">IOCTL_GPS_READ_ASSISTED</A> and <A HREF="wce51lrfioctl_gps_write_assisted.htm">IOCTL_GPS_WRITE_ASSISTED</A> - Other location information, like, for example, mobile phone towers.</li>
+</UL>
+
+<P>These pairs work similarly:
+
+<OL type="1">
+	<LI>After using the GPS Intermediate Driver for some time, an application calls <B>IOCTL_GPS_READ_ALMANAC</B> and/or <B>IOCTL_GPS_READ_ASSISTED</B>. This returns an opaque data blob that the application saves using some backing store, like flash memory or the Windows CE database (CEDB) interface.</li>
+
+	<LI>When the application starts again, before it attempts to obtain location information, it calls <B>IOCTL_GPS_WRITE_ALMANAC</B> and/or <B>IOCTL_GPS_WRITE_ASSISTED</B> and provides the information it read in the previous step. The GPS hardware can use this information to minimize startup time.</li>
+</OL>
+
+<P>It is important to note that the data used by these IOCTLs is only meaningful to the GPS hardware. The data is completely opaque to an application using the GPS Intermediate Driver. The degree to which applications can interact with this information is limited to saving the results of <B>IOCTL_GPS_READ_ALMANAC</B> and <B>IOCTL_GPS_READ_ASSISTED </B>and then providing the saved results to the GPS hardware using <B>IOCTL_GPS_WRITE_ALMANAC</B> and <B>IOCTL_GPS_WRITE_ASSISTED</B>.</P>
+
+<H4 class="dtH4">Returning Location Information Directly, without NMEA strings</H4>
+
+<P>The common interchange format for location information are strings that follow the NMEA standard. For more information about the NMEA standard, see <A HREF="http://go.microsoft.com/fwlink/?linkid=35077">this NMEA Web site</A>.</P>
+
+<P>However, the use of NMEA strings results in a common scenario where the GPS hardware forms data - like latitude and longitude - into NMEA strings, only to have these NMEA strings broken down again into their component parts as soon as the application receives the data.</P>
+
+<BLOCKQUOTE class="dtBlock">
+<B>Note</B>&nbsp;&nbsp;&nbsp;The GPS Intermediate Driver does not currently use the IOCTL and registry settings described in this section, and always uses <MSHelp:link keywords="wce50lrfReadFile" TABINDEX="0">ReadFile</MSHelp:link> to interact with GPS hardware. This information is provided so that devices that implement this IOCTL can work with a possible future version of the GPS Intermediate Driver that provides direct access by not bypassing NMEA strings.</BLOCKQUOTE>
+
+<P>The GPS Intermediate Driver may in the future provide the ability to bypass NMEA strings using  <A HREF="wce51lrfioctl_gps_driver_get_location_v1.htm">IOCTL_GPS_DRIVER_GET_LOCATION_V1</A> and the Poll input source registry settings described in <A HREF="wce51congpsintermediatedriverpollregistrysettings.htm">GPS Intermediate Driver Poll Registry Settings</A>.</P>
+
+<P>If this is enabled, the GPS Intermediate Driver may use input sources of type Poll to retrieve location information directly, by enabling the GPS hardware to fill a <A HREF="wce51lrfgps_location.htm">GPS_POSITION</A> structure and to return this structure when the <B>IOCTL_GPS_DRIVER_GET_LOCATION_V1</B> IOCTL is handled. </P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce51conintegratinggpshardwarewithgpsintermediatedriver.htm">Integrating GPS Hardware with the GPS Intermediate Driver</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Feedback Link Bottom Start-->
+<p><font size="1"><a href="mailto:medfdbk&#64;microsoft.com?subject=Product: Windows Mobile | Version: 5.0 | Release: SDK | Title: Implementing GPS Intermediate Driver Hardware IOCTLs | Filename: wce51conimplementinggpsintermediatedriverdeviceioctls.htm | Built on: Wednesday, September 14, 2005">Send Feedback</a> on this topic to the authors</font></p>
+<!--Feedback Link Bottom End-->
+<!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="mob5conCopyrightInformationForMagneto" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link></font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

@@ -1,0 +1,80 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Writing a Custom Today Screen Item</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Writing a Custom Today Screen Item"/>
+<MSHelp:RLTitle Title="Writing a Custom Today Screen Item"/>
+<MSHelp:Keyword Index="A" Term="mob5conWritingCustomTodayScreenItem"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Application"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbsmartphone"/>
+<MSHelp:Attr Name="Product" Value="kbPocketPC"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="Technology" Value="kbPocketPC"/>
+<MSHelp:Attr Name="Technology" Value="kbSmartphone"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="Custom_Today_Screen_Items_magneto.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="True"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_1063724">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Windows Mobile Version 5.0 SDK<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="mob5conwritingcustomtodayscreenitem"></A>Writing a Custom Today Screen Item</H1>
+<!--Feedback Link Top Start-->
+<P CLASS="feedback"><font size="1"><a href="mailto:medfdbk&#64;microsoft.com?subject=Product: Windows Mobile | Version: 5.0 | Release: SDK | Title: Writing a Custom Today Screen Item | Filename: mob5conwritingcustomtodayscreenitem.htm | Built on: Wednesday, September 14, 2005">Send Feedback</a> on this topic to the authors</font></p>
+<!--Feedback Link Top End-->
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>A custom Today screen item is simply a DLL that implements a specific interface and is registered in such a way that the Today screen can find it. Each DLL must export one required and one optional function at specific ordinals. The <A HREF="mob5lrfinitializecustomitem.htm">InitializeCustomItem</A> function (ordinal 240), which creates the child window to display the data, is required for all Today screen items. If the Today screen item supports an options dialog box to allow the user to make changes in what content is shown or how it appears, the DLL must also export <A HREF="mob5lrfcustomitemoptionsdlgproc.htm">CustomItemOptionsDlgProc</A> as ordinal 241. The .def file for the DLL should contain the following:</P>
+
+<PRE class="code">EXPORTS
+InitializeCustomItem @ 240 NONAME
+CustomItemOptionsDlgProc @ 241 NONAME</PRE>
+
+<P>After the window is created, the Today screen sends <A HREF="mob5lrftodayscreenmessages.htm">WM_TODAYCUSTOM_QUERYREFRESHCACHE</A> to the child window every two seconds to determine whether the displaying data has changed and must be repainted. To minimize repainting of the Today screen, each item should respond <B>TRUE</B> only if the data must be repainted. This is the only time you can update the height of your window. The Today screen no longer sends <B>WM_PAINT</B> to the child window if you set the window height to zero.When the Today screen application must force all components to refresh their data, it sends the <A HREF="mob5lrftodayscreenmessages.htm">WM_TODAYCUSTOM_CLEARCACHE</A> message with a <I>wParam</I> of the <A HREF="mob5lrftodaylistitem.htm">TODAYLISTITEM</A> structure for that Today item. If your component caches data, generally pointed to by the <B>prgbCachedData</B> member of the structure, it should free this memory upon receipt of this message. For Today items that do not cache any data, the <B>WM_TODAYCUSTOM_CLEARCACHE</B> message handler can return 0.</P>
+
+<P>Users can interact with Today screen items, generally by switching to another application and displaying the data that was presented in the Today screen item in that application. The user can then edit or otherwise act upon the data. To facilitate this interaction, Today screen applications should check for the <B>WM_LBUTTONUP</B> message and act accordingly.</P>
+
+<P>In Windows Mobile 2002 software and later, <I>themes</I>, which are combinations of images and color selections, can be applied to the Today screen, so Today screen applications should include code to make their backgrounds appear transparent. You can use the <A HREF="mob5lrftodaydrawwatermarkinfo.htm">TODAYDRAWWATERMARKINFO</A> structure to do this.</P>
+
+<H4 class="dtH4">Remarks</H4>
+
+<P>The Windows Mobile Version 5.0 Pocket PC SDK ships with a code sample named <A HREF="mob5sammemorywatcher.htm">Memory Watcher</A>. It demonstrates how to create a custom Today screen item. By default, it is installed into the following folder: <code class="ce">C:\Program Files\Windows CE Tools\wce500\Windows Mobile 5.0 Pocket PC SDK\Samples\CPP\Win32\Memwatcher\memwatcher.sln</code>.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="mob5conhowtoinstallregistercustomtodayscreenitem.htm">How to: Install and Register a Custom Today Screen Item</A> | <A HREF="mob5contodayscreenapi.htm">Today Screen Reference</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Feedback Link Bottom Start-->
+<p><font size="1"><a href="mailto:medfdbk&#64;microsoft.com?subject=Product: Windows Mobile | Version: 5.0 | Release: SDK | Title: Writing a Custom Today Screen Item | Filename: mob5conwritingcustomtodayscreenitem.htm | Built on: Wednesday, September 14, 2005">Send Feedback</a> on this topic to the authors</font></p>
+<!--Feedback Link Bottom End-->
+<!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="mob5conCopyrightInformationForMagneto" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link></font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

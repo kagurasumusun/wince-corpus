@@ -1,0 +1,143 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Device-Independent Bitmaps</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Device-Independent Bitmaps"/>
+<MSHelp:RLTitle Title="Device-Independent Bitmaps"/>
+<MSHelp:Keyword Index="K" Term="code example, Device-independent bitmaps"/>
+<MSHelp:Keyword Index="A" Term="mob5conDeviceIndependentBitmaps"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Application"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbsmartphone"/>
+<MSHelp:Attr Name="Product" Value="kbPocketPC"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="Technology" Value="kbPocketPC"/>
+<MSHelp:Attr Name="Technology" Value="kbSmartphone"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="directdraw_concepts_magneto.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="True"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_1073219">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Windows Mobile Version 5.0 SDK<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="mob5condeviceindependentbitmaps"></A>Device-Independent Bitmaps</H1>
+<!--Feedback Link Top Start-->
+<P CLASS="feedback"><font size="1"><a href="mailto:medfdbk&#64;microsoft.com?subject=Product: Windows Mobile | Version: 5.0 | Release: SDK | Title: Device-Independent Bitmaps | Filename: mob5condeviceindependentbitmaps.htm | Built on: Wednesday, September 14, 2005">Send Feedback</a> on this topic to the authors</font></p>
+<!--Feedback Link Top End-->
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>Windows CE and DirectX use the device-independent bitmap (DIB) as their native graphics file format. </P>
+
+<P>A DIB is a file that contains information describing the following:
+
+<UL type="disc">
+	<LI>An image's dimensions </li>
+
+	<LI>The number of colors the image uses</li>
+
+	<LI>Values describing the colors used</li>
+
+	<LI>Data that describes each pixel </li>
+</UL>
+
+<P>A DIB also contains lesser-used parameters, like 
+
+<UL type="disc">
+	<LI>Information about file compression</li>
+
+	<LI>Significant colors (if all are not used)</li>
+
+	<LI>Physical dimensions of the image (in case it will end up in print)</li>
+</UL>
+
+<P>DIB files usually have the .bmp file extension, although they can use a .dib extension.</P>
+
+<P>Because the DIB is so pervasive in Windows programming, Windows CE contains many functions you can use with DirectX.</P>
+
+<H4 class="dtH4">Code Example</H4>
+
+<P>The following code example combines Windows CE and DirectX functions to load a DIB onto a DirectX surface.</P>
+
+<BLOCKQUOTE class="dtBlock">
+<b class="le">Note</b>&nbsp;&nbsp;&nbsp;To make the following code example easier to read, security checking and error handling are not included. This code example should not be used in a release configuration unless it has been modified to include them.</BLOCKQUOTE>
+
+<PRE class="code">extern C IDirectDrawSurface * DDLoadBitmap(IDirectDraw *pdd, 
+    LPCSTR szBitmap, int dx, int dy) 
+{ 
+    HBITMAP             hbm; 
+    BITMAP              bm; 
+    DDSURFACEDESC       ddsd; 
+    IDirectDrawSurface *pdds; 
+ 
+    // 
+    //  This is the Windows CE part. 
+    //  Try to load the bitmap as a resource.
+    // 
+    hbm = (HBITMAP)LoadImage(
+            GetModuleHandle(NULL), szBitmap, 
+            IMAGE_BITMAP, dx, dy, LR_CREATEDIBSECTION); 
+ 
+    if (hbm == NULL) 
+        return NULL; 
+ 
+    // 
+    // Get the size of the bitmap. 
+    // 
+    GetObject(hbm, sizeof(bm), &amp;bm); 
+ 
+    // 
+    // Now, return to DirectX function calls. 
+    // Create a DirectDrawSurface for this bitmap. 
+    // 
+    memset(&amp;ddsd, 0, sizeof(ddsd)); 
+    ddsd.dwSize = sizeof(ddsd); 
+    ddsd.dwFlags = DDSD_CAPS | DDSD_HEIGHT |DDSD_WIDTH; 
+    ddsd.ddsCaps.dwCaps = DDSCAPS_OFFSCREENPLAIN; 
+    ddsd.dwWidth = bm.bmWidth; 
+    ddsd.dwHeight = bm.bmHeight; 
+ 
+    if (pdd-&gt;CreateSurface(&amp;ddsd, &amp;pdds, NULL) != DD_OK) 
+        return NULL; 
+ 
+    DDCopyBitmap(pdds, hbm, 0, 0, 0, 0); 
+ 
+    DeleteObject(hbm); 
+ 
+    return pdds; 
+} </PRE>
+
+<P>For more detailed information about DIB files, see <A HREF="mob5conusingbitmaps.htm">Using Bitmaps</A>.</P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Feedback Link Bottom Start-->
+<p><font size="1"><a href="mailto:medfdbk&#64;microsoft.com?subject=Product: Windows Mobile | Version: 5.0 | Release: SDK | Title: Device-Independent Bitmaps | Filename: mob5condeviceindependentbitmaps.htm | Built on: Wednesday, September 14, 2005">Send Feedback</a> on this topic to the authors</font></p>
+<!--Feedback Link Bottom End-->
+<!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="mob5conCopyrightInformationForMagneto" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link></font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

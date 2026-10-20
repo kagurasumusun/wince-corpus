@@ -1,0 +1,157 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>PeerIdentityCreate</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="PeerIdentityCreate"/>
+<MSHelp:RLTitle Title="PeerIdentityCreate"/>
+<MSHelp:Keyword Index="K" Term="PeerIdentityCreate"/>
+<MSHelp:Keyword Index="A" Term="wce50lrfPeerIdentityCreate"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Feature"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="apiref"/>
+<MSHelp:Attr Name="Filename" Value="p2p_ref.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="False"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+<MSHelp:Attr Name="APIName" Value="PeerIdentityCreate"/>
+<MSHelp:Attr Name="APIType" Value="LibDef"/>
+<MSHelp:Attr Name="APILocation" Value="p2p.lib"/>
+<MSHelp:Attr Name="PBFeature" Value="SYSGEN_P2P_PNRP"/>
+<MSHelp:Attr Name="PBOnly" Value="False"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_1040000">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50lrfpeeridentitycreate"></A>PeerIdentityCreate</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>This function creates a new peer identity and returns its name. The name of the peer identity must be passed in all subsequent calls to the Identity Manager or Peer Name Resolution Protocol (PNRP) that operate on behalf of the peer identity. The peer identity name specifies which peer identity is being used.</P>
+
+<PRE class="syntax"><B>HRESULT WINAPI PeerIdentityCreate(</B>
+<B>  PCWSTR </B><I>pwzClassifier</I><B>,</B>
+<B>  PCWSTR </B><I>pwzFriendlyName</I><B>,</B>
+<B>  HCRYPTPROV </B><I>hCryptProv</I><B>,</B>
+<B>  PWSTR* </B><I>ppwzIdentity</I>
+<B>);</B></PRE>
+
+<H4 class="dtH4">Parameters</H4>
+
+<DL>
+<DT><I>pwzClassifier</I></DT>
+
+<DD>[in] Specifies the classifier to append to the published peer identity name. This string is a Unicode string, and can be NULL. This string can only be 150 characters long, including the NULL terminator. </dd>
+
+<DT><I>pwzFriendlyName</I></DT>
+
+<DD>[in] Specifies the friendly name of the peer identity. This is a Unicode string, and can be NULL. String length is restricted to 256 characters including the NULL terminator. If <I>pwzFriendlyName</I> is NULL, the name of the identity is the friendly name. The friendly name is optional, and it does not have to be unique. </dd>
+
+<DT><I>hCryptProv</I></DT>
+
+<DD>[in] Handle to the cryptographic service provider (CSP) that contains an AT_KEYEXCHANGE key pair of at least 1024 bits in length. This key pair is used as the basis for a new peer identity. If <I>hCryptProv</I> is zero (0), a new key pair is generated for the peer identity. 
+
+<BLOCKQUOTE class="dtBlock">
+<b class="le">Note</b>&nbsp;&nbsp;&nbsp;The Identity Manager API does not support a CSP that has user-protected keys. If a CSP that has user-protected keys is used, <B>PeerIdentityCreate</B> returns E_INVALIDARG. </BLOCKQUOTE>
+</dd>
+
+<DT><I>ppwzIdentity</I></DT>
+
+<DD>[out] Receives a pointer to the name of a peer identity that is created. This name must be used in all subsequent calls to the peer-to-peer Identity Manager or to PNRP functions that operate on behalf of the peer identity. Returns NULL if the peer identity cannot be created.</dd>
+</DL>
+
+<H4 class="dtH4">Return Values</H4>
+
+<P>The following table shows the possible return values.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=40%>Value</TH>
+<TH width=60%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=40%>S_OK</TD>
+<TD width=60%>Function call succeeded.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=40%>ERROR_INVALID_HANDLE</TD>
+<TD width=60%>The handle to the key specified by <I>hCryptProv</I> is not valid. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=40%>E_INVALIDARG</TD>
+<TD width=60%>One of the parameters is not valid.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=40%>E_OUTOFMEMORY</TD>
+<TD width=60%>There is not enough memory to perform the specified operation.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=40%>PEER_E_ALREADY_EXISTS</TD>
+<TD width=60%>The peer identity already exists. Only occurs if a peer identity based on the specified key and classifier already exists. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=40%>PEER_E_NO_KEY_ACCESS </TD>
+<TD width=60%>Access to the peer identity or peer-to-peer group keys is denied. Typically, this is caused by an incorrect access control list (ACL) for the folder that contains the user or computer keys. This can happen when the ACL has been reset manually. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=40%>PEER_E_TOO_MANY_IDENTITIES </TD>
+<TD width=60%>The peer identity cannot be created because there are too many peer identities. </TD>
+</TR>
+</table></div>
+
+<H4 class="dtH4">Remarks</H4>
+
+<P>The key pair and the classifier are used to generate the peer name of a new peer identity. After a peer identity is created, it is automatically stored on the disk.</P>
+
+<P>The name of the identity should be freed by using <A HREF="wce50lrfpeerfreedata.htm">PeerFreeData</A>. This does not delete the peer identity. To delete the identity, use <A HREF="wce50lrfpeeridentitydelete.htm">PeerIdentityDelete</A> function.</P>
+
+<P>If <I>hCryptProv</I> is not NULL, it can be released by using <MSHelp:link keywords="wce50lrfCryptReleaseContext" TABINDEX="0">CryptReleaseContext</MSHelp:link> after the call returns.</P>
+
+<P>In Windows CE 5.0, if <I>hCryptProv</I> is not NULL, then is it assumed that the associated key pair was created with the CRYPT_MACHINE_KEYSET flag set. In later releases, is it assumed that the associated key pair was created without setting the CRYPT_MACHINE_KEYSET flag.</P>
+
+<H4 class="dtH4">Requirements</H4>
+
+<P><B>OS Versions:</B> Windows CE 5.0 and later.<BR>
+<B>Header:</B> p2p.h.<BR>
+<B>Link Library:</B> p2p.lib.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50grfidentitymanagerfunctions.htm">Identity Manager Functions</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

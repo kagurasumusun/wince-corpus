@@ -1,0 +1,251 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Multi-Packet Messages</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Multi-Packet Messages"/>
+<MSHelp:RLTitle Title="Multi-Packet Messages"/>
+<MSHelp:Keyword Index="A" Term="wce50conMultiPacketMessages"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Driver"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="False"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="ndis_guide3.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="False"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+<MSHelp:Attr Name="PBFeature" Value="NetworkDriver"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_3018346">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50conmultipacketmessages"></A>Multi-Packet Messages</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>Multiple <A HREF="wce50lrfremotendispacketmsg.htm">REMOTE_NDIS_PACKET_MSG</A> messages may be sent in a single transfer, in either direction. Concatenating multiple <B>REMOTE_NDIS_PACKET_MSG</B> elements forms a multi-packet message. The <I>MaxTransferSize</I> parameter, passed in the <A HREF="wce50lrfremotendisinitializemsg.htm">REMOTE_NDIS_INITIALIZE_MSG</A> and response messages, governs the maximum length of such a transfer. The host will also limit the number of messages it bundles into a single transfer to the <I>MaxPacketsPerMessage</I> parameter returned by the device in the <A HREF="wce50lrfremotendisinitializecmplt.htm">REMOTE_NDIS_INITIALIZE_CMPLT</A> response message.</P>
+
+<P>The difference from the single-packet message case is that the <I>MessageLength</I> field in each <B>REMOTE_NDIS_PACKET_MSG</B> header includes some additional padding bytes. These padding bytes are added to all but the last <B>REMOTE_NDIS_PACKET_MSG</B> such that the succeeding <B>REMOTE_NDIS_PACKET_MSG</B> starts at an appropriate byte boundary. For messages sent from the device to the host, this padding should result in each <B>REMOTE_NDIS_PACKET_MSG</B> starting at a byte offset that is a multiple of 8 bytes starting from the beginning of the multi-packet message. When the host sends a multi-packet message to the device, it will adhere to the <I>PacketAlignmentFactor</I> specified by the device in the <B>REMOTE_NDIS_INTIALIZE_CMPLT</B> response message.</P>
+
+<P>Note that neither the combined length of a multi-packet message nor the number of <B>REMOTE_NDIS_PACKET_MSG</B> elements in a combined message is given explicitly in any RNDIS defined field. The combined length is implicit in the bus-specific transfer mechanism, and the host or device must walk the <I>MessageLength</I> fields of the combined message to determine the number of combined messages.</P>
+
+<P>The following table is an example of a multi-packet message that is made up of two <B>REMOTE_NDIS_PACKET_MSG</B> messages sent from the host to the device. During the <B>REMOTE_NDIS_INTIALIZE_MSG</B> exchange, the device requested a <I>PacketAlignmentFactor</I> of 3 (an alignment along an 8-byte boundary).</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=25%>Offset</TH>
+<TH width=20%>Size </TH>
+<TH width=30%>Field</TH>
+<TH width=25%>Value</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=25%>0</TD>
+<TD width=20%>4</TD>
+<TD width=30%><I>MessageType</I></TD>
+<TD width=25%>0x1</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=25%>4</TD>
+<TD width=20%>4</TD>
+<TD width=30%><I>MessageLength</I></TD>
+<TD width=25%>72 (includes 2 padding bytes; see below)</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=25%>8</TD>
+<TD width=20%>4</TD>
+<TD width=30%><I>DataOffset</I></TD>
+<TD width=25%>36</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=25%>12</TD>
+<TD width=20%>4</TD>
+<TD width=30%><I>DataLength</I></TD>
+<TD width=25%>26</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=25%>16</TD>
+<TD width=20%>4</TD>
+<TD width=30%><I>OOBDataOffset</I></TD>
+<TD width=25%>0</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=25%>20</TD>
+<TD width=20%>4</TD>
+<TD width=30%><I>OOBDataLength</I></TD>
+<TD width=25%>0</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=25%>24</TD>
+<TD width=20%>4</TD>
+<TD width=30%><I>NumOOBDataElements</I></TD>
+<TD width=25%>0</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=25%>28</TD>
+<TD width=20%>4</TD>
+<TD width=30%><I>PerPacketInfoOffset</I></TD>
+<TD width=25%>0</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=25%>32</TD>
+<TD width=20%>4</TD>
+<TD width=30%><I>PerPacketInfoLength</I></TD>
+<TD width=25%>0</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=25%>36</TD>
+<TD width=20%>4</TD>
+<TD width=30%><I>VcHandle</I></TD>
+<TD width=25%>0</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=25%>40</TD>
+<TD width=20%>4</TD>
+<TD width=30%><I>Reserved</I></TD>
+<TD width=25%>0</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=25%>44</TD>
+<TD width=20%>26</TD>
+<TD width=30%><I>Payload (data)</I></TD>
+<TD width=25%>Some network data of 26 bytes in length</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=25%>70</TD>
+<TD width=20%>2</TD>
+<TD width=30%><I>Padding</I></TD>
+<TD width=25%>Does not matter &#0150; unused</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=25%>72</TD>
+<TD width=20%>4</TD>
+<TD width=30%><I>MessageType</I> (start of second <B>REMOTE_NDIS_PACKET</B><BR>
+<B>_MSG</B>)</TD>
+<TD width=25%>0x1 </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=25%>76</TD>
+<TD width=20%>4</TD>
+<TD width=30%><I>MessageLength</I></TD>
+<TD width=25%>60</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=25%>80</TD>
+<TD width=20%>4</TD>
+<TD width=30%><I>DataOffset</I></TD>
+<TD width=25%>36</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=25%>84</TD>
+<TD width=20%>4</TD>
+<TD width=30%><I>DataLength</I></TD>
+<TD width=25%>16</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=25%>88</TD>
+<TD width=20%>4</TD>
+<TD width=30%><I>OOBDataOffset</I></TD>
+<TD width=25%>0</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=25%>92</TD>
+<TD width=20%>4</TD>
+<TD width=30%><I>OOBDataLength</I></TD>
+<TD width=25%>0</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=25%>96</TD>
+<TD width=20%>4</TD>
+<TD width=30%><I>NumOOBDataElements</I></TD>
+<TD width=25%>0</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=25%>100</TD>
+<TD width=20%>4</TD>
+<TD width=30%><I>PerPacketInfoOffset</I></TD>
+<TD width=25%>0</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=25%>104</TD>
+<TD width=20%>4</TD>
+<TD width=30%><I>PerPacketInfoLength</I></TD>
+<TD width=25%>0</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=25%>108</TD>
+<TD width=20%>4</TD>
+<TD width=30%><I>VcHandle</I></TD>
+<TD width=25%>0</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=25%>112</TD>
+<TD width=20%>4</TD>
+<TD width=30%><I>Reserved</I></TD>
+<TD width=25%>0</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=25%>116</TD>
+<TD width=20%>16</TD>
+<TD width=30%><I>Payload (data)</I></TD>
+<TD width=25%>Some network data of 16 bytes in length</TD>
+</TR>
+</table></div>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50lrfremotendispacketmsg.htm">REMOTE_NDIS_PACKET_MSG</A> | <A HREF="wce50lrfremotendisinitializemsg.htm">REMOTE_NDIS_INITIALIZE_MSG</A> | <A HREF="wce50lrfremotendisinitializecmplt.htm">REMOTE_NDIS_INITIALIZE_CMPLT</A> </P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

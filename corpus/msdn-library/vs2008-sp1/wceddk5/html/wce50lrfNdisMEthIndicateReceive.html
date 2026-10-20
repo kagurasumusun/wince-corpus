@@ -1,0 +1,146 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>NdisMEthIndicateReceive</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="NdisMEthIndicateReceive"/>
+<MSHelp:RLTitle Title="NdisMEthIndicateReceive"/>
+<MSHelp:Keyword Index="K" Term="NdisMEthIndicateReceive"/>
+<MSHelp:Keyword Index="A" Term="wce50lrfNdisMEthIndicateReceive"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Driver"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="False"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="apiref"/>
+<MSHelp:Attr Name="Filename" Value="ndis_library_functions2.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="False"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+<MSHelp:Attr Name="APIName" Value="NdisMEthIndicateReceive"/>
+<MSHelp:Attr Name="APIType" Value="DLLExport"/>
+<MSHelp:Attr Name="APILocation" Value="Ndis.dll"/>
+<MSHelp:Attr Name="PBFeature" Value="NetworkDriver"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_3018514">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50lrfndismethindicatereceive"></A>NdisMEthIndicateReceive</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>This function notifies NDIS that an Ethernet packet, or some initial look-ahead portion of the packet, has arrived so that NDIS can forward the packet to bound protocols.</P>
+
+<PRE class="syntax"><B>VOID NdisMEthIndicateReceive(</B>
+  <B>NDIS_HANDLE</B> <I>MiniportAdapterHandle</I><B>,</B>
+  <B>NDIS_HANDLE</B> <I>MiniportReceiveContext</I><B>,</B>
+  <B>PVOID</B> <I>HeaderBuffer</I><B>,</B>
+  <B>UINT</B> <I>HeaderBufferSize</I><B>,</B>
+  <B>PVOID</B> <I>LookaheadBuffer</I><B>,</B>
+  <B>UINT</B> <I>LookaheadBufferSize</I><B>,</B>
+  <B>UINT</B> <I>PacketSize</I>
+<B>);</B></PRE>
+
+<H4 class="dtH4">Parameters</H4>
+
+<DL>
+<DT><I>MiniportAdapterHandle</I></DT>
+
+<DD>[in] Handle originally input to the <A HREF="wce50lrfminiportinitialize.htm">MiniportInitialize</A> function.</dd>
+
+<DT><I>MiniportReceiveContext</I></DT>
+
+<DD>[in] Context handle supplied by the caller. NDIS returns this handle as an input parameter to the <A HREF="wce50lrfminiporttransferdata.htm">MiniportTransferData</A> function if it is called. The miniport can use the context area designated by this handle to determine which packet is being received on which NIC.</dd>
+
+<DT><I>HeaderBuffer</I></DT>
+
+<DD>[in] Specifies the base virtual address of the buffered packet header.</dd>
+
+<DT><I>HeaderBufferSize</I></DT>
+
+<DD>[in] Specifies the size, in bytes, of the packet header.</dd>
+
+<DT><I>LookaheadBuffer</I></DT>
+
+<DD>[in] Specifies the base virtual address of a buffer containing the initial <I>LookaheadBufferSize</I> bytes of the data in the packet.</dd>
+
+<DT><I>LookaheadBufferSize</I></DT>
+
+<DD>[in] Specifies the size, in bytes, of the look-ahead buffer. This value must be at least as large as the look-ahead size set when the <A HREF="wce50lrfminiportsetinformation.htm">MiniportSetInformation</A> function was called with <A HREF="wce50lrfoidgencurrentlookahead.htm">OID_GEN_CURRENT_LOOKAHEAD</A> or as large as the packet, whichever is smaller. When the packet is smaller than the look-ahead size, the look-ahead buffer contains the entire frame.
+
+<P>A miniport should set this parameter to something larger than the minimum required, if sufficient received data is available on its NIC.
+</dd>
+
+<DT><I>PacketSize</I></DT>
+
+<DD>[in] Specifies the size, in bytes, of the received packet data. This value does not include the <I>HeaderBufferSize</I>.
+
+<P>When this parameter is larger than the specified <I>LookaheadBufferSize</I>, a protocol driver call to the <A HREF="wce50lrfndistransferdata.htm">NdisTransferData</A> function causes a subsequent call to the <B>MiniportTransferData</B> function, which transfers the remaining data in the packet.
+</dd>
+</DL>
+
+<H4 class="dtH4">Return Values</H4>
+
+<P>None.</P>
+
+<H4 class="dtH4">Remarks</H4>
+
+<P><B>NdisMEthIndicateReceive</B> must be called from the same thread that initialized the handle to your adapter. If it is called from a different thread, the NDIS driver will experience a thread deadlock.</P>
+
+<P>When a miniport driver uses <B>NdisMEthIndicateReceive</B>, it must also call <A HREF="wce50lrfndismethindicatereceivecomplete.htm">NdisMEthIndicateReceiveComplete</A>. <B>NdisMEthIndicateReceiveComplete</B> eventually calls into the protocol stack and flushes the final packets.</P>
+
+<P>A miniport calls this function if it designates its NIC as of type NdisMedium802_3 or NdisMediumDix in response to the <A HREF="wce50lrfoidgenmediainuse.htm">OID_GEN_MEDIA_IN_USE</A> query, unless the miniport indicates receives with the <A HREF="wce50lrfndismindicatereceivepacket.htm">NdisMIndicateReceivePacket</A> function.</P>
+
+<P>When a miniport calls this function, NDIS passes a pointer to the header of the packet and a pointer to some or all of the data in the packet to the <A HREF="wce50lrfprotocolreceive.htm">ProtocolReceive</A> function of bound protocol drivers. Each protocol that receives the indication can do the following:
+
+<UL type="disc">
+	<LI>Inspect the header and data in the packet to decide whether the indication is of interest to the protocol's clients.</li>
+
+	<LI>If it is, copy as much of the header or data as is visible into protocol-allocated memory with the <A HREF="wce50lrfndismovememory.htm">NdisMoveMemory</A> function.</li>
+
+	<LI>Get the remaining data, if any, for the indication by allocating a packet descriptor with sufficient chained buffer descriptors and calling the <A HREF="wce50lrfndistransferdata.htm">NdisTransferData</A> function. The call to <B>NdisTransferData</B> causes the NIC driver's <B>MiniportTransferData</B> function to copy the data into the protocol-supplied packet.</li>
+</UL>
+
+<P>For any protocol driver that receives an indication through this function, the <I>HeaderBuffer</I> and <I>LookaheadBuffer</I> parameters are valid only during the current call to its <B>ProtocolReceive</B> function, and these buffers are read-only. A protocol driver cannot retain a pointer to the indicated packet with these associated buffers, nor can it retain any pointers to these buffers for later use. Any data that a protocol driver needs from such a packet must be copied and saved during the receive indication.</P>
+
+<P>The data in the header is the same as that received on the NIC. A miniport need not remove any headers or trailers from the data that its NIC receives.</P>
+
+<P>The transmitting driver adds padding to any packet that is too short for the requirements of the medium. The receiving miniport can include such padding in the data and length that it subsequently indicates. Each bound protocol is responsible for detecting any such padding and ignoring it.</P>
+
+<H4 class="dtH4">Requirements</H4>
+
+<P><B>OS Versions:</B> Windows CE .NET 4.0 and later.<BR>
+<B>Header:</B> Ndis.h.<BR>
+<B>Link Library:</B> Ndis.dll.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50lrfminiportinitialize.htm">MiniportInitialize</A> | <A HREF="wce50lrfminiporttransferdata.htm">MiniportTransferData</A> | <A HREF="wce50lrfminiportsetinformation.htm">MiniportSetInformation</A> | <A HREF="wce50lrfndismethindicatereceivecomplete.htm">NdisMEthIndicateReceiveComplete</A> | <A HREF="wce50lrfndismindicatereceivepacket.htm">NdisMIndicateReceivePacket</A> | <A HREF="wce50lrfndismovememory.htm">NdisMoveMemory</A> | <A HREF="wce50lrfndistransferdata.htm">NdisTransferData</A> | <A HREF="wce50lrfoidgencurrentlookahead.htm">OID_GEN_CURRENT_LOOKAHEAD</A> | <A HREF="wce50lrfoidgenmediainuse.htm">OID_GEN_MEDIA_IN_USE</A> | <A HREF="wce50lrfprotocolreceive.htm">ProtocolReceive</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

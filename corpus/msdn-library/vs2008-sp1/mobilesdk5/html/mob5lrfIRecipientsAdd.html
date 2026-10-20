@@ -1,0 +1,170 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>IRecipients::Add</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="IRecipients::Add"/>
+<MSHelp:RLTitle Title="IRecipients::Add"/>
+<MSHelp:Keyword Index="K" Term="code example, IRecipients,Add"/>
+<MSHelp:Keyword Index="K" Term="IRecipients,Add"/>
+<MSHelp:Keyword Index="A" Term="mob5lrfIRecipientsAdd"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Application"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbsmartphone"/>
+<MSHelp:Attr Name="Product" Value="kbPocketPC"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="Technology" Value="kbPocketPC"/>
+<MSHelp:Attr Name="Technology" Value="kbSmartphone"/>
+<MSHelp:Attr Name="TopicType" Value="apiref"/>
+<MSHelp:Attr Name="Filename" Value="POOM_API_magneto.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="True"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_1066066">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Windows Mobile Version 5.0 SDK<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="mob5lrfirecipientsadd"></A>IRecipients::Add</H1>
+<!--Feedback Link Top Start-->
+<P CLASS="feedback"><font size="1"><a href="mailto:medfdbk&#64;microsoft.com?subject=Product: Windows Mobile | Version: 5.0 | Release: SDK | Title: IRecipients::Add | Filename: mob5lrfirecipientsadd.htm | Built on: Wednesday, September 14, 2005">Send Feedback</a> on this topic to the authors</font></p>
+<!--Feedback Link Top End-->
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>The <B>Add</B> method adds a person to the recipient list for a meeting request. After you add the recipient, you must set the recipient's <A HREF="mob5lrfirecipientget_address.htm">Address</A> property.</P>
+
+<H4 class="dtH4">Syntax</H4>
+
+<PRE class="syntax"><B>HRESULT Add(</B>
+  <B>BSTR</B> <I>pwszName</I><B>,</B>
+  <B>IRecipient ** </B><I>pRecipient</I>
+<B>);</B></PRE>
+
+<H4 class="dtH4">Parameters</H4>
+
+<DL>
+<DT><I>pwszName</I></DT>
+
+<DD>[in] Reference to a null-terminated Unicode string with the display name for the recipient.</dd>
+
+<DT><I>pRecipient</I></DT>
+
+<DD>[out] Reference to the new recipient.</dd>
+</DL>
+
+<H4 class="dtH4">Return Values</H4>
+
+<P>This method returns the standard values <B>E_INVALIDARG</B>, <B>E_OUTOFMEMORY</B>, <B>E_UNEXPECTED</B>, and <B>E_FAIL</B>, as well as the following:
+
+<DL>
+<DT><B>S_OK</B></DT>
+
+<DD>The method completed successfully.</dd>
+</DL>
+
+<H4 class="dtH4">Code Example</H4>
+
+<P>The following code example creates a meeting and sends it to three recipients.</P>
+
+<BLOCKQUOTE class="dtBlock">
+<b class="le">Note</b>&nbsp;&nbsp;&nbsp;To make the following code example easier to read, security checking and error handling are not included. This code example should not be used in a release configuration unless it has been modified to include them.</BLOCKQUOTE>
+
+<PRE class="code">void CreateMeetingRequest(IPOutlookApp * polApp)
+{
+    IRecurrencePattern * pRec;
+    IAppointment * pAppt;
+    IRecipients * pRecipients;
+    IRecipient * pRecipient;
+    VAR_BOOL bResolved
+
+    // Add a new appointment.
+    polApp-&gt;CreateItem(olAppointmentItem, (IDispatch**)&amp;pAppt);
+
+    // Set the subject on the appointment.
+    pAppt-&gt;put_Subject(TEXT("Recurring Appointment"));
+
+    // Convert Monday, 4/5/9 at 10:00 am to a DATE.
+    SYSTEMTIME st;
+    DATE date;
+    memset(&amp;st, 0, sizeof(SYSTEMTIME));
+    st.wMonth = 4;
+    st.wDay   = 5;
+    st.wYear  = 1999;
+    st.wHour  = 10;
+    polApp-&gt;SystemTimeToVariantTime(&amp;st, &amp;date);
+
+    // Set the start date.
+    pAppt-&gt;put_Start(date);
+
+    // Add recipients.
+    pAppt-&gt;get_Recipients(&amp;pRecipients);
+<code><b class="cfe">    pRecipients-&gt;Add(TEXT("Kathryn Wilson"), &amp;pRecipient);
+    pRecipients-&gt;Add(TEXT("Blanca"), &amp;pRecipient);
+    pRecipients-&gt;Add(TEXT("Robert"), &amp;pRecipient);
+</b></code>
+    // Resolve the recipients against contacts on the device.
+    IPOlRecipient * pRecip2;
+    int iRecipientCount;
+    pRecipients-&gt;get_Count(&amp;iRecipientCount);
+    // Count down so that removing recipient does not reorder
+    // remaining unresolved recipients.
+    for (int i = iRecipientCount; i &gt; 0; i--) {
+        pRecipients-&gt;Item(i, &amp;pRecipient)
+        pRecipient-&gt;QueryInterface(IID_IPOlRecipient, (LPVOID*)&amp;pRecip2);
+        pRecip2-&gt;Resolve(TRUE, &amp;bResolved);
+        if (!bResolved)pRecipients-&gt;Remove(i);
+            pRecip2-&gt;Release();
+    }
+
+    // Send the meeting request.
+    pRecipients-&gt;get_Count(&amp;iRecipientCount);
+    if (iRecipientCount &gt; 0) pAppt-&gt;Send();
+
+    // Release objects.
+    pRec-&gt;Release();
+    pAppt-&gt;Release();
+    pRecipients-&gt;Release();
+    pRecipient-&gt;Release();
+}</PRE>
+
+<H4 class="dtH4">Requirements</H4>
+
+<P><B>Pocket&nbsp;PC:</B> Pocket&nbsp;PC&nbsp;2000 and later<BR>
+<B>Smartphone:</B> Smartphone&nbsp;2002 and later<BR>
+<B>OS&nbsp;Versions:</B> Windows&nbsp;CE&nbsp;3.0 and later<BR>
+<B>Header:</B> pimstore.h<BR>
+<B>Library:</B> pimstore.lib</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="mob5tskhowtocreatemeetingrequest.htm">How to: Create a Meeting Request</A> | <A HREF="mob5lrfirecipients.htm">IRecipients</A> | <A HREF="mob5lrfirecipient.htm">IRecipient</A> | <A HREF="mob5lrfipolrecipient.htm">IPOlRecipient</A> | <A HREF="mob5conpocketoutlookobjectmodelapiinterfaces.htm">Pocket Outlook Object Model API Interfaces</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Feedback Link Bottom Start-->
+<p><font size="1"><a href="mailto:medfdbk&#64;microsoft.com?subject=Product: Windows Mobile | Version: 5.0 | Release: SDK | Title: IRecipients::Add | Filename: mob5lrfirecipientsadd.htm | Built on: Wednesday, September 14, 2005">Send Feedback</a> on this topic to the authors</font></p>
+<!--Feedback Link Bottom End-->
+<!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="mob5conCopyrightInformationForMagneto" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link></font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

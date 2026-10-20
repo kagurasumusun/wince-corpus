@@ -1,0 +1,80 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>USB Function Controller Driver Bus Interface</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="USB Function Controller Driver Bus Interface"/>
+<MSHelp:RLTitle Title="USB Function Controller Driver Bus Interface"/>
+<MSHelp:Keyword Index="A" Term="wce50conUSBFunctionControllerDriverBusInterface"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Driver"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="False"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="usbfunction_guide.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="True"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="True"/>
+<MSHelp:Attr Name="PBFeature" Value="USBFunctionDriver"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_1054883">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50conusbfunctioncontrollerdriverbusinterface"></A>USB Function Controller Driver Bus Interface</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>The USB function controller driver MDD exposes a bus interface, which is implemented in the MDD. This allows USB function client drivers to be loaded as stream interface drivers. In response to the post-initialization IOCTL, the USB function controller driver's MDD loads the default USB function client listed in the registry under the <B>HKEY_LOCAL_MACHINE\Drivers\USB\FunctionDrivers</B> registry key. If this key does not exist, then the post-initialization IOCTL succeeds, but it will not enable the function controller. An application might add this key later, and then call the MDD with IOCTL_BUS_ACTIVATE_CHILD.</P>
+
+<P>All USB function client driver registry keys are under <B>HKEY_LOCAL_MACHINE\Drivers\USB\FunctionDrivers</B>. The last USB function client driver registry settings choose the default <B>FunctionDriver</B> at boot-time. You can override the default in Platform.reg.</P>
+
+<P>The following registry key example shows USB function client driver registry keys.</P>
+
+<PRE class="code"><code class="ce">; @CESYSGEN IF CE_MODULES_USBMSFN
+[HKEY_LOCAL_MACHINE\Drivers\USB\FunctionDrivers]
+   "DefaultClientDriver"=- ; erase previous default
+   "DefaultClientDriver"="Mass_Storage_Class
+; @CESYSGEN ENDIF CE_MODULES_USBMSFN
+
+; @CESYSGEN IF CE_MODULES_RNDISFN
+[HKEY_LOCAL_MACHINE\Drivers\USB\FunctionDrivers]
+   "DefaultClientDriver"=- ; erase previous default
+   "DefaultClientDriver"="RNDIS"
+; @CESYSGEN ENDIF CE_MODULES_RNDISFN</code></PRE>
+
+<P>Trusted applications can get a handle to the MDDs bus interface. Through <A HREF="wce50lrfdeviceiocontrol.htm">DeviceIoControl</A>, the trusted application can enumerate available clients with IOCTL_BUS_UFN_ENUMERATE_AVAILABLE_CLIENTS. It can also get the name of the current client. If the current client exists, the trusted application can unload the current client and load a new client. For more information about USB function controller driver IOCTLs, see <A HREF="wce50grfusbfunctioncontrollerdriverioctls.htm">USB Function Controller MDD IOCTLs</A>.</P>
+
+<P>The MDD supports all bus access IOCTLs except IOCTL_BUS_GET_CONFIGURE_DATA and IOCTL_BUS_SET_CONFIGURE_DATA. For more information about the bus access IOCTLs, see <A HREF="wce50grfceddkbusdriverioctls.htm">CEDDK Dynamic-Link Library Bus Access IOCTLs</A>.</P>
+
+<P>USB function clients call into the MDD through a table of function pointers. The DLL should not unload while a USB function client is calling into these function pointers. </P>
+
+<P>To facilitate loading and unloading clients, a helper library is provided in the %_WINCEROOT%\PUBLIC\COMMON\OAK\DRIVERS\USBFN\UFNCLIENTLIB directory.</P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

@@ -1,0 +1,140 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Interpretation of the Output of the Kernel Profiler</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Interpretation of the Output of the Kernel Profiler"/>
+<MSHelp:RLTitle Title="Interpretation of the Output of the Kernel Profiler"/>
+<MSHelp:Keyword Index="A" Term="wce50conInterpretationOfOutputOfKernelProfiler"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Debugging"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="True"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="kernel_profiler.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="False"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_1036671">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50coninterpretationofoutputofkernelprofiler"></A>Interpretation of the Output of the Kernel Profiler</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>The following table shows information that is reported by the kernel profiler.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=29%>Kernel profiler output</TH>
+<TH width=71%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=29%>Total Samples Dropped</TD>
+<TD width=71%>The kernel profiler discards samples during buffered profiling if the kernel profiler takes more samples than the buffer can hold. The kernel profiler should not discard samples during unbuffered profiling.
+<P>During buffered profiling, if the buffer is too full to hold all of the samples, the most recent samples are discarded. The data that is lost is data from the end of the profiler run.</P>
+
+<P>If the kernel profiler discards samples and there is plenty of system memory available, increase the size of the buffer for the kernel profiler. For more information, see <A HREF="wce50tskchangingsizeofbufferforkernelprofiler.htm">Changing the Size of the Buffer for the Kernel Profiler</A>.</P>
+
+<P>Start the kernel profiler as close to the beginning of your test as possible, and stop the kernel profiler as close to the end of your test as possible. If your test requires the collection of more samples than the kernel profiler can store in the largest possible buffer, try using the profiler in unbuffered mode, because in unbuffered mode there is no limit on the number of samples that the profiler can collect. For more information, see <A HREF="wce50conbufferedunbufferedprofiling.htm">Buffered and Unbuffered Profiling</A>.</P>
+</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=29%>UNKNOWN Modules</TD>
+<TD width=71%>The kernel profiler reports a hit in UNKNOWN if the module is not in the MODULES section of ROM. For information about adding a module to the MODULES section of ROM, see <A HREF="wce50tskcreatingaprofileenabledosimageforacepc.htm">Building a Run-Time Image That Supports the Kernel Profiler</A>.
+<P>The kernel profiler counts a hit in a function in an UNKNOWN module as &lt;UNACCOUNTED FOR&gt;.</P>
+</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=29%>&lt;UNACCOUNTED FOR&gt; Functions</TD>
+<TD width=71%>The kernel truncates its sorted list of functions at 500 functions. The truncated list of 500 functions is not the top 500 functions by time consumed. The 500 functions listed are the first 500 functions in the table of contents in ROM that have profiler hit counts that are not zero. In other words, the order of the functions in ROM determines which functions appear if there are more than 500 functions. Windows CE does not currently support a way to circumvent the 500-function limit.
+<P>It is unusual for the kernel profiler to record hits in more than 500 functions. While there are far more than 500 functions in ROM, typically there are far fewer than 500 functions with hits.</P>
+
+<P>The kernel profiler reports hits in UNKNOWN modules as unaccounted for. The kernel profiler also reports hits in modules that do not have .map files as unaccounted for. The kernel profiler reports hits that are not in the list of 500 functions as unaccounted for.</P>
+</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=29%>INTERRUPTS_ENABLE</TD>
+<TD width=71%>The kernel profiler reports hits in the <MSHelp:link keywords="wce50lrfINTERRUPTSENABLE" TABINDEX="0">INTERRUPTS_ENABLE</MSHelp:link> function in Nk.exe when interrupts are turned off. The kernel profiler takes an interrupt periodically and records the instruction pointer for the running thread. The interrupt for the kernel profiler cannot fire while interrupts are turned off.
+<P>If interrupts are disabled at the moment when a profiler interrupt is scheduled to fire, the interrupt is delayed until interrupts are enabled. In such a situation, there is a profiler hit inside the <B>INTERRUPTS_ENABLE</B> function. This hit on <B>INTERRUPTS_ENABLE</B> gives the appearance that the OS spent time in the <B>INTERRUPTS_ENABLE</B> function. The percentage of time for which you see hits in the <B>INTERRUPTS_ENABLE</B> function is the percentage of time spent with interrupts off.</P>
+
+<P>With the kernel profiler, there is no way to know which code the OS spends time inside while interrupts are turned off. If the kernel profiler reports high numbers for <B>INTERRUPTS_ENABLE</B>, use CeLog and Remote Kernel Tracker to examine which interrupts fire most often. The OS may be spending time inside the ISRs for those interrupts. For more information, see <A HREF="wce50conremotekerneltracker.htm">Remote Kernel Tracker</A>.</P>
+</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=29%>Page Faults</TD>
+<TD width=71%>The kernel profiler reports faults on code as hits in the following functions:
+<UL type="disc">
+	<LI><B>ProcessPageFault</B> in Nk.exe</li>
+
+	<LI><B>LoaderPageIn</B> in Nk.exe</li>
+
+	<LI><B>PageIn<I>XXX</I></B> in Nk.exe</li>
+
+	<LI><B>ReadFileWithSeek</B> from Filesys.exe or a file system driver</li>
+
+	<LI><B>RelocatePage</B> in Nk.exe</li>
+
+	<LI><B>DecompressROM</B> in Nk.exe</li>
+</UL>
+
+<P>The kernel profiler reports faults on data, such as memory-mapped files including database volumes and the hive-based registry, as hits in the following functions:
+
+<UL type="disc">
+	<LI><B>ProcessPageFault</B> in Nk.exe</li>
+
+	<LI><B>MappedPageIn<I>XXX</I></B> in Nk.exe</li>
+
+	<LI><B>ReadFileWithSeek</B> from a file system</li>
+
+	<LI><B>WriteFileWithSeek</B> from a file system</li>
+</UL>
+</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=29%>ObjectCall</TD>
+<TD width=71%>When an application calls a function that is exported by a system service, the <B>ObjectCall</B> function in the kernel routes the call to the appropriate system service. If a Monte Carlo profiling report contains many hits inside the <B>ObjectCall</B> function, run the kernel profiler again in system call mode to discover which system functions are called most often. For more information about system call profiling, see <A HREF="wce50conobjectcallprofiling.htm">System Call Profiling</A>.
+<P>To improve performance or reduce the number of times you call system functions, put the calling thread into kernel mode to reduce the overhead for the call. For more information, see <MSHelp:link keywords="wce50conFullKernelMode" TABINDEX="0">Full-Kernel Mode</MSHelp:link>.</P>
+</TD>
+</TR>
+</table></div>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50conplatformprofiling.htm">Kernel Profiler</A> | <A HREF="wce50coninformationnotreportedbykernelprofiler.htm">Information Not Reported by the Kernel Profiler</A> | <A HREF="wce50coninstrumentedkernelprofilingandmontecarloprofiling.htm">Kernel Profiler Modes</A> | <A HREF="wce50orisettingupkernelprofiler.htm">Setting Up the Kernel Profiler</A> | <A HREF="wce50oricontrollingkernelprofiler.htm">Controlling the Kernel Profiler</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

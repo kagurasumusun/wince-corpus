@@ -1,0 +1,158 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>NdisSend</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="NdisSend"/>
+<MSHelp:RLTitle Title="NdisSend"/>
+<MSHelp:Keyword Index="K" Term="NdisSend"/>
+<MSHelp:Keyword Index="A" Term="wce50lrfNdisSend"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Driver"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="False"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="apiref"/>
+<MSHelp:Attr Name="Filename" Value="ndis_library_functions3.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="False"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+<MSHelp:Attr Name="APIName" Value="NdisSend"/>
+<MSHelp:Attr Name="PBFeature" Value="NetworkDriver"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_3018595">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50lrfndissend"></A>NdisSend</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>This function forwards a send request to the underlying driver.</P>
+
+<PRE class="syntax"><B>VOID NdisSend(</B>
+  <B>PNDIS_STATUS </B><I>Status</I><B>,</B>
+  <B>NDIS_HANDLE </B><I>NdisBindingHandle</I><B>,</B>
+  <B>PNDIS_PACKET </B><I>Packet</I>
+<B>);</B></PRE>
+
+<H4 class="dtH4">Parameters</H4>
+
+<DL>
+<DT><I>Status</I></DT>
+
+<DD>[out] Pointer to a caller-supplied variable that is set on return from this function. The underlying driver determines which NDIS_STATUS_<I>XXX</I> is returned.</dd>
+
+<DT><I>NdisBindingHandle</I></DT>
+
+<DD>[in] Handle returned by the <A HREF="wce50lrfndisopenadapter.htm">NdisOpenAdapter</A> function that identifies the target NIC or the virtual adapter of the next-lower driver to which the caller is bound.</dd>
+
+<DT><I>Packet</I></DT>
+
+<DD>[in] Pointer to the caller-supplied packet descriptor, allocated with the <A HREF="wce50lrfndisallocatepacket.htm">NdisAllocatePacket</A> function, with chained buffer descriptors mapping buffers containing the data that the underlying NIC driver should transmit over the wire.</dd>
+</DL>
+
+<H4 class="dtH4">Return Values</H4>
+
+<P>The following table shows typical return values for this function.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=46%>Value</TH>
+<TH width=54%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=46%>NDIS_STATUS_SUCCESS</TD>
+<TD width=54%>The specified packet is being transmitted over the network.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=46%>NDIS_STATUS_PENDING</TD>
+<TD width=54%>The request is being handled asynchronously, and the caller's <A HREF="wce50lrfprotocolsendcomplete.htm">ProtocolSendComplete</A> function will be called when it is completed.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=46%>NDIS_STATUS_INVALID_PACKET</TD>
+<TD width=54%>The size of the requested transfer is too large for the NIC, or possibly the NIC indicated an erroneous packet transmission to its driver.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=46%>NDIS_STATUS_CLOSING</TD>
+<TD width=54%>The underlying driver is closing.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=46%>NDIS_STATUS_RESET_IN_PROGRESS</TD>
+<TD width=54%>The underlying driver is currently resetting the NIC. The caller's <A HREF="wce50lrfprotocolstatus.htm">ProtocolStatus</A> function was or will be called with NDIS_STATUS_RESET_START to indicate that a reset is in progress.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=46%>NDIS_STATUS_FAILURE</TD>
+<TD width=54%>This value is usually a nonspecific default returned when none of the more specific NDIS_STATUS_<I>XXX</I> caused the underlying driver to fail the request.</TD>
+</TR>
+</table></div>
+
+<P>The specific NDIS_STATUS_<I>XXX</I> returned for device I/O errors that occur during a transmit operation depends on the nature of the NIC and the discretion of the NIC driver writer. For example, a miniport might return NDIS_STATUS_NO_CABLE if its NIC indicates this condition to the driver.</P>
+
+<H4 class="dtH4">Remarks</H4>
+
+<P>Before calling this function, a protocol driver can call the <A HREF="wce50lrfndissetpacketflags.htm">NdisSetPacketFlags</A> function to set the flags in the private header, reserved for use by NDIS, of the packet descriptor that it allocated. These flags specify caller-determined information about the requested send operation that is not contained in the packet data. The underlying NIC driver's <A HREF="wce50lrfminiportsend.htm">MiniportSend</A> function is given the send flags as an input parameter. The meaning of the packet flags bits is medium-specific and defined by the pair of collaborating drivers.</P>
+
+<P>However, such a pair of collaborating drivers can use the <A HREF="wce50lrfndispacketoobdata.htm">NDIS_PACKET_OOB_DATA</A> structure associated with each packet descriptor to communicate far more information than the packet flags can convey. Before calling this function, a protocol can use the <A HREF="wce50lrfndissetpackettimetosend.htm">NDIS_SET_PACKET_TIME_TO_SEND</A> and/or <A HREF="wce50lrfndissetpacketmediaspecificinfo.htm">NDIS_SET_PACKET_MEDIA_SPECIFIC_INFO</A> macros to set up out-of-band information, if any, relevant to the underlying driver in the <B>NDIS_PACKET_OOB_DATA</B> structure associated with the protocol-allocated packet descriptor.</P>
+
+<P>When an underlying driver has insufficient resources to transmit a valid send packet, the driver has two alternatives:
+
+<UL type="disc">
+	<LI>Its <B>MiniportSend</B> function can insert the packet into an internal queue and return NDIS_STATUS_PENDING.
+<P>The driver holds the packet queued until resources become available and sends the packet when they are.
+</li>
+
+	<LI>Its <B>MiniportSend</B> function can return control with NDIS_STATUS_RESOURCES.
+<P>The NDIS library holds such a returned packet in an internal queue for resubmission to the miniport. The miniport indicates its readiness to accept send packets later by calling <A HREF="wce50lrfndismsendresourcesavailable.htm">NdisMSendResourcesAvailable</A> or <A HREF="wce50lrfndismsendcomplete.htm">NdisMSendComplete</A>, whichever call occur first.
+</li>
+</UL>
+
+<P>In either of the preceding situations, this function returns NDIS_STATUS_PENDING to the caller, and the driver's <B>ProtocolSendComplete</B> function is called when the packet is transmitted.</P>
+
+<P>As soon as a protocol calls this function, it relinquishes ownership of the packet descriptor at <I>Packet</I> of all buffers mapped by buffer descriptors that it chained to the packet and of any out-of-band information that it supplied with the packet descriptor. The protocol regains ownership of these resources when the packet is completed with a status other than NDIS_STATUS_PENDING or when its <B>ProtocolSendComplete</B> function is called.</P>
+
+<P>When either occurs, the protocol can call the <A HREF="wce50lrfndisreinitializepacket.htm">NdisReinitializePacket</A> function to prepare the packet for reuse after saving the buffer descriptors chained to the packet descriptor with calls to an <B>NdisUnchainBufferAt<I>XXX</I></B> function. Reusing such a packet descriptor yields better performance than returning the packet to driver-allocated packet pool with the <A HREF="wce50lrfndisfreepacket.htm">NdisFreePacket</A> function, and then reallocating it for another send later.</P>
+
+<P>An NDIS intermediate driver must repackage incoming sends from still higher level protocols in fresh packet descriptors before passing such a send request to the underlying miniport with this function.</P>
+
+<H4 class="dtH4">Requirements</H4>
+
+<P><B>OS Versions:</B> Windows CE .NET 4.0 and later.<BR>
+<B>Header:</B> Ndis.h.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50lrfminiportsend.htm">MiniportSend</A> | <A HREF="wce50lrfndispacketoobdata.htm">NDIS_PACKET_OOB_DATA</A> | <A HREF="wce50lrfndissetpacketmediaspecificinfo.htm">NDIS_SET_PACKET_MEDIA_SPECIFIC_INFO</A> | <A HREF="wce50lrfndissetpackettimetosend.htm">NDIS_SET_PACKET_TIME_TO_SEND</A> | <A HREF="wce50lrfndisallocatebuffer.htm">NdisAllocateBuffer</A> | <A HREF="wce50lrfndisallocatepacket.htm">NdisAllocatePacket</A> | <A HREF="wce50lrfndisfreepacket.htm">NdisFreePacket</A> | <A HREF="wce50lrfndisgetpacketflags.htm">NdisGetPacketFlags</A> | <A HREF="wce50lrfndismsendcomplete.htm">NdisMSendComplete</A> | <A HREF="wce50lrfndismsendresourcesavailable.htm">NdisMSendResourcesAvailable</A> | <A HREF="wce50lrfndisopenadapter.htm">NdisOpenAdapter</A> | <A HREF="wce50lrfndisreinitializepacket.htm">NdisReinitializePacket</A> | <A HREF="wce50lrfndisreinitializepacket.htm">NdisReinitializePacket</A> | <A HREF="wce50lrfndissetpacketflags.htm">NdisSetPacketFlags</A> | <A HREF="wce50lrfndisunchainbufferatback.htm">NdisUnchainBufferAtBack</A> | <A HREF="wce50lrfndisunchainbufferatfront.htm">NdisUnchainBufferAtFront</A> | <A HREF="wce50lrfprotocolsendcomplete.htm">ProtocolSendComplete</A> | <A HREF="wce50lrfprotocolstatus.htm">ProtocolStatus</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

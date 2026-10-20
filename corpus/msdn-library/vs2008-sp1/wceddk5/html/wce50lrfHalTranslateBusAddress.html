@@ -1,0 +1,116 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>HalTranslateBusAddress</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="HalTranslateBusAddress"/>
+<MSHelp:RLTitle Title="HalTranslateBusAddress"/>
+<MSHelp:Keyword Index="K" Term="HalTranslateBusAddress"/>
+<MSHelp:Keyword Index="A" Term="wce50lrfHalTranslateBusAddress"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Driver"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="False"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="apiref"/>
+<MSHelp:Attr Name="Filename" Value="ceddk_reference.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="False"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+<MSHelp:Attr Name="APIName" Value="HalTranslateBusAddress"/>
+<MSHelp:Attr Name="APIType" Value="LibDef"/>
+<MSHelp:Attr Name="APILocation" Value="CEDDK.lib"/>
+<MSHelp:Attr Name="PBFeature" Value="CoreDriver"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_3010132">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50lrfhaltranslatebusaddress"></A>HalTranslateBusAddress</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>This function translates a physical bus address to a physical system address.</P>
+
+<PRE class="syntax"><B>BOOL HalTranslateBusAddress(</B> 
+  <B>INTERFACE_TYPE</B> <I>InterfaceType</I><B>,</B> 
+  <B>ULONG </B><I>BusNumber</I><B>,</B> 
+  <B>PHYSICAL_ADDRESS </B><I>BusAddress</I><B>,</B> 
+  <B>PULONG</B> <I>AddressSpace</I><B>,</B> 
+  <B>PPHYSICAL_ADDRESS </B><I>TranslatedAddress </I>
+<B>);</B></PRE>
+
+<H4 class="dtH4">Parameters</H4>
+
+<DL>
+<DT><I>InterfaceType</I></DT>
+
+<DD>[in] Bus interface type. The upper bound on the types of buses supported is always MaximumInterfaceType.</dd>
+
+<DT><I>BusNumber</I></DT>
+
+<DD>[in] Zero-based and system-assigned bus number for the device, used with <I>InterfaceType</I> to identify the bus for systems with more than one bus of the same type.</dd>
+
+<DT><I>BusAddress</I></DT>
+
+<DD>[in] Bus-relative address.</dd>
+
+<DT><I>AddressSpace</I></DT>
+
+<DD>[in, out] On input, an initialized <B>PULONG</B>. On output, a port number or a memory address. <I>AddressSpace</I> 0x0 indicates memory and <I>AddressSpace</I>  0x1 indicates I/O space.</dd>
+
+<DT><I>TranslatedAddress</I></DT>
+
+<DD>[out] Pointer to the translated address.</dd>
+</DL>
+
+<H4 class="dtH4">Return Values</H4>
+
+<P>Returns TRUE if successful. Otherwise, it returns FALSE.</P>
+
+<H4 class="dtH4">Remarks</H4>
+
+<P>You must use the value returned for <I>TranslatedAddress</I> in a subsequent call to <A HREF="wce50lrfmmmapiospace.htm">MmMapIoSpace</A> if the <I>AddressSpace</I> value returns 0, which indicates that it is a memory address.</P>
+
+<P>You have many choices for connecting a peripheral bus into a system. The memory address space of the bus, or the logical address space, can directly merge with the physical address space of the host, or some mapping might be involved. In addition, some hardware platforms can have more than one bus, or a bus can have more than one address space. Also, some hardware platforms have a separate memory address space and I/O address space. Device drivers call <B>HalTranslateBusAddress</B> to perform this translation. </P>
+
+<P>The parameters to this function include a bus number to support platforms with more than one bus of the same <I>InterfaceType</I>, the bus address to translate, and an <I>AddressSpace</I> value typically used to differentiate between memory and I/O space, if these are separate.</P>
+
+<P>The <A HREF="wce50lrftransbusaddrtovirtual.htm">TransBusAddrToVirtual</A> function can be used instead of calling <B>HalTranslateBusAddress</B> and <B>MmMapIoSpace</B>. The <B>TransBusAddrToVirtual</B> function takes the necessary steps to convert a bus-relative address or I/O port into a virtual address.</P>
+
+<H4 class="dtH4">Requirements</H4>
+
+<P><B>OS Versions:</B> Windows CE 2.10 and later.<BR>
+<B>Header:</B> CEDDK.h.<BR>
+<B>Link Library:</B> CEDDK.lib.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50lrfhalgetbusdata.htm">HalGetBusData</A> | <A HREF="wce50lrfhalgetbusdatabyoffset.htm">HalGetBusDataByOffset</A> | <A HREF="wce50lrfhalsetbusdata.htm">HalSetBusData</A> | <A HREF="wce50lrfhalsetbusdatabyoffset.htm">HalSetBusDataByOffset</A> | <A HREF="wce50lrfinterfacetype.htm">INTERFACE_TYPE</A> | <A HREF="wce50lrfmmmapiospace.htm">MmMapIoSpace</A> | <A HREF="wce50lrftransbusaddrtovirtual.htm">TransBusAddrToVirtual</A> </P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

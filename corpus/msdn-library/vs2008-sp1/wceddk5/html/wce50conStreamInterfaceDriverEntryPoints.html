@@ -1,0 +1,87 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Resolving Race Conditions in Device Drivers</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Resolving Race Conditions in Device Drivers"/>
+<MSHelp:RLTitle Title="Resolving Race Conditions in Device Drivers"/>
+<MSHelp:Keyword Index="A" Term="wce50conStreamInterfaceDriverEntryPoints"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Driver"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="False"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="driverarchitecture.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="False"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+<MSHelp:Attr Name="PBFeature" Value="CoreDriver"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_1052565">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50constreaminterfacedriverentrypoints"></A>Resolving Race Conditions in Device Drivers</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>The <A HREF="wce50lrf_preclose.htm">XXX_PreClose (Device Manager)</A> and <A HREF="wce50lrf_predeinit.htm">XXX_PreDeinit (Device Manager)</A> stream interface driver entry points handle race conditions in which one thread opens or closes a device handle while another performs I/O, or in which one thread opens, closes, or performs I/O on a handle while another thread deactivates the device driver.</P>
+
+<P>Device Manager maintains a reference count of threads executing in driver entry points. When the thread reference count reaches zero, Device Manager can safely unload the driver. Device Manager uses <MSHelp:link keywords="wce50lrfInterlockedIncrement" TABINDEX="0">InterlockedIncrement</MSHelp:link> and related synchronization operations to manage reference counts.</P>
+
+<P>Device Manager maintains a global critical section for validating device handles returned from <A HREF="wce50lrfactivatedeviceex.htm">ActivateDeviceEx</A> and <A HREF="wce50lrfregisterdevice.htm">RegisterDevice</A>. This global critical section is also used for validating device file handles returned from <MSHelp:link keywords="wce50lrfCreateFile" TABINDEX="0">CreateFile</MSHelp:link>. </P>
+
+<P>In the <A HREF="wce50lrfxxxinit15.htm">XXX_Init (Device Manager)</A>, <A HREF="wce50lrfxxxdeinit14.htm">XXX_Deinit (Device Manager)</A>, <A HREF="wce50lrfxxxopen17.htm">XXX_Open (Device Manager)</A>, and <A HREF="wce50lrfxxxclose13.htm">XXX_Close (Device Manager)</A> entry points, Device Manager validates handles, releases the critical section, and then calls into the appropriate device driver entry point.</P>
+
+<P>For performance reasons, Device Manager does not take the global critical section during I/O calls such as <A HREF="wce50lrfxxxread18.htm">XXX_Read (Device Manager)</A>, <A HREF="wce50lrfxxxwrite20.htm">XXX_Write (Device Manager)</A>, <MSHelp:link keywords="wce50lrfSetFilePointer" TABINDEX="0">SetFilePointer</MSHelp:link>, and <A HREF="wce50lrfdeviceiocontrol.htm">DeviceIoControl</A>. Instead, it relies on use counts to keep the driver from unloading while threads are executing code in the driver. Threads performing device file-handle-based I/O, increment a use count in the Device Manager handle descriptor structure and in the device driver descriptor structure.</P>
+
+<P>The driver's <B>XXX_Close</B> entry point wakes any threads that are blocked on the handle specified by the <I>hOpenContext </I>parameter, and releases any resources associated with <I>hOpenContext</I>.</P>
+
+<P>The <B>XXX_Deinit</B> entry point wakes any threads blocked on I/O on all handles associated with the device instance specified by <I>hDeviceContext</I>. It then releases resources for all device file handles, which are all <I>hOpenContext </I>values returned from <B>XXX_Open</B> calls, for the device instance. Finally, it releases resources for the device instance. Once <B>XXX_Deinit</B> is called on a device, <B>XXX_Close </B>is no longer called on the open device handles.</P>
+
+<P>A race condition might occur during periods of heavy I/O for devices being loaded and unloaded. Because Device Manager releases its global critical section before calling device driver entry points, it is possible that one thread might call <B>XXX_Read</B>, <B>XXX_Write</B>, <B>XXX_Open</B>, or <B>XXX_Close</B>, and also call into the device driver's entry point, while another thread calls <B>XXX_Deinit</B> on the device instance. In this situation, it appears to the driver that <B>XXX_Read</B>, <B>XXX_Write</B>, <B>XXX_Open</B>, or <B>xxx_Close</B> has been called after the call to <B>xxx_Deinit</B>. If the driver assumes that the context parameter to <B>XXX_Read</B>, <B>XXX_Write</B>, <B>XXX_Open</B>, or <B>xxx_Close</B> is valid, the driver might dereference freed resources and cause a crash. A similar race condition exists between <B>XXX_Read</B>, <B>XXX_Write</B> operations and calls to <MSHelp:link keywords="wce50lrfCloseHandle" TABINDEX="0">CloseHandle</MSHelp:link>.</P>
+
+<P>The <B>XXX_PreClose </B>and <B>XXX_PreDeinit </B>entry points allow drivers to eliminate these race conditions. Although both entry points are optional, if you implement <B>XXX_PreClose</B>, you must implement <B>XXX_PreDeinit </B>or the driver will not load. To prevent drivers from releasing resources associated with the driver, these entry points separate waking threads and invalidating handles.</P>
+
+<P>The <B>XXX_PreClose </B>entry point allows the driver to wake sleeping threads and mark the handle as closed so that further I/O attempts fail gracefully. When Device Manager confirms that no threads are scheduled to execute in the driver, Device Manager calls the <B>XXX_Close </B>entry point so that the driver can free handle resources. </P>
+
+<P>Similarly, the <B>XXX_PreDeinit</B> entry point allows the driver to wake sleeping threads, mark all handles as closing, and mark the device itself as deinitializing so that further attempts to open handles fail gracefully. When Device Manager confirms that no threads are scheduled to execute in the driver, Device Manager calls the <B>XXX_Deinit </B>entry point so that the driver can release resources for all handles associated with the device and with the device itself.</P>
+
+<P>Drivers that implement these two entry points can expect that the handle contexts passed to their entry points will always be valid, because the handles are not released until Device Manager has confirmed that no threads are accessing them.</P>
+
+<P>It is possible that the driver will be deactivated after the call to <B>XXX_PreClose</B>, but before the call to <B>XXX_Close</B>. From the perspective of the driver in this case, <B>XXX_PreClose</B> wakes sleeping threads, but <B>XXX_Deinit</B> releases handle resources.</P>
+
+<BLOCKQUOTE class="dtBlock">
+<b class="le">Note</b>&nbsp;&nbsp;&nbsp;Without using the <B>XXX_PreClose</B> and <B>XXX_PreDeinit</B> entry points, a driver can work around this problem by creating a global critical section in its DLL entry point in conjunction with use counts on its device and handle instance structures. This method is fairly complex to implement and difficult to test.</BLOCKQUOTE>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50condevicefilenames.htm">Device File Names</A> | <MSHelp:link keywords="wce50conDeviceManager" TABINDEX="0">Device Manager</MSHelp:link> | <A HREF="wce50grfdevicemanagerreference.htm">Device Manager Reference</A> | <A HREF="wce50condevicemanagerregistrykeys.htm">Device Manager Registry Keys</A> | <A HREF="wce50conioresourcemanager.htm">I/O Resource Manager</A> | <A HREF="wce50oristreaminterfacedrivers.htm">Stream Interface Drivers</A> | <MSHelp:link keywords="wce50grfKernelSynchronizationReference" TABINDEX="0">Synchronization Reference</MSHelp:link></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

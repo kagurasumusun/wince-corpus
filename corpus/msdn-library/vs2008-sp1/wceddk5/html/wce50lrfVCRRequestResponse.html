@@ -1,0 +1,144 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>VCR_RequestResponse</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="VCR_RequestResponse"/>
+<MSHelp:RLTitle Title="VCR_RequestResponse"/>
+<MSHelp:Keyword Index="K" Term="VCR_RequestResponse"/>
+<MSHelp:Keyword Index="A" Term="wce50lrfVCRRequestResponse"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Driver"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="False"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="apiref"/>
+<MSHelp:Attr Name="Filename" Value="avcvcr_reference.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="False"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+<MSHelp:Attr Name="APIName" Value="VCR_RequestResponse"/>
+<MSHelp:Attr Name="PBFeature" Value="1394Driver"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_3017266">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50lrfvcrrequestresponse"></A>VCR_RequestResponse</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>This structure is primarily a union of the details of all the command parameters and results processed.</P>
+
+<PRE class="syntax"><B>typedef struct {</B>
+  <B>BYTE </B><I>CommandType</I><B>;</B>
+  <B>BYTE </B><I>Command</I><B>;</B>
+  <B>BYTE </B><I>ResponseCode</I><B>;</B>
+<B>  union {</B>
+ <B>   // sub-structure for each supported command</B>
+<B>  } u;</B>
+<B>} VCR_RequestResponse;</B></PRE>
+
+<H4 class="dtH4">Members</H4>
+
+<DL>
+<DT><B>CommandType</B></DT>
+
+<DD>This member must be filled in with AVC_VCR_CommandType_Status or AVC_VCR_CommandType_Control. Other types of commands, such as Notify or Inquiries are also legitimate, but undocumented and not supported. Status commands are typically those functions that obtain data from the VCR, and control commands are typically those that cause or request the VCR to perform an action.</dd>
+
+<DT><B>Command</B></DT>
+
+<DD>Caller must complete the <B>Command</B> member with the specific command they request. In general, status commands are typically those functions that obtain data from the VCR, and control commands are typically those that cause or request the VCR to perform an action.</dd>
+
+<DT><B>ResponseCode</B></DT>
+
+<DD>After the command executes, the <B>ResponseCode</B> field will contain a result value from the VCR itself. The <MSHelp:link keywords="wce50lrfDeviceIoControl" TABINDEX="0">DeviceIoControl</MSHelp:link> function succeeding does not imply that the specific command succeeded, only that the transaction with the VCR itself completed correctly. The <B>ResponseCode</B> member contains information that explains whether the VCR itself understood and processed the command. In general, if the command was unsupported, this field will return a value of AVC_RESPONSE_NOTIMPL. For Status commands, successful completion typically results in a response of AVC_RESPONSE_STABLE. For control commands, successful completion typically results in a response of AVC_RESPONSE_ACCEPTED.
+
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=45%>Response</TH>
+<TH width=55%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=45%>AVC_RESPONSE_NOTIMPL</TD>
+<TD width=55%>This VCR does not implement the command requested. This might be specific to the form of the command; that is, some commands have subparameters, of which only a subset are implemented.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=45%>AVC_RESPONSE_ACCEPTED</TD>
+<TD width=55%>The control command was completed as requested.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=45%>AVC_RESPONSE_REJECTED</TD>
+<TD width=55%>The control command was rejected and cannot be processed as requested.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=45%>AVC_RESPONSE_IN_TRANSITION</TD>
+<TD width=55%>The status value requested is in the process of changing, and should be queried again.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=45%>AVC_RESPONSE_STABLE</TD>
+<TD width=55%>The status value requested has been returned.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=45%>AVC_RESPONSE_IMPLEMENTED</TD>
+<TD width=55%>The command queried is implemented. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=45%>AVC_RESPONSE_CHANGED</TD>
+<TD width=55%>See the <I>AVC Digital Interface General Specification, Rev 3.0</I>.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=45%>AVC_RESPONSE_INTERIM</TD>
+<TD width=55%>See the <I>AVC Digital Interface General Specification, Rev 3.0</I>.</TD>
+</TR>
+</table></div>
+
+</dd>
+</DL>
+
+<P>The <I>VCR Subunit Specification</I>, mentioned above, can be a useful resource in understanding some of the intricate details in what a specific command is intended to do. However, data described within the document, especially in the topic of range values, may be overridden by this documentation. The VCR subunit driver automatically manages decimal to BCD conversion for many of the supported commands, for example.</P>
+
+<H4 class="dtH4">Requirements</H4>
+
+<P><B>OS Versions:</B> Windows CE .NET 4.0 and later.<BR>
+<B>Header:</B> Avc_vcr.h.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><MSHelp:link keywords="wce50lrfDeviceIoControl" TABINDEX="0">DeviceIoControl</MSHelp:link></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

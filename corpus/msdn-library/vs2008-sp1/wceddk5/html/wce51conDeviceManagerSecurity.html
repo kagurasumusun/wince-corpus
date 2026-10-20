@@ -1,0 +1,82 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Device Manager Security</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Device Manager Security"/>
+<MSHelp:RLTitle Title="Device Manager Security"/>
+<MSHelp:Keyword Index="A" Term="wce51conDeviceManagerSecurity"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Driver"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="False"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="device_manager.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="True"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+<MSHelp:Attr Name="PBFeature" Value="CoreDriver"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_1067123">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce51condevicemanagersecurity"></A>Device Manager Security</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<H4 class="dtH4">Input/Output Buffer Validation</H4>
+
+<P>Device Manager calls the <MSHelp:link keywords="wce50lrfMapCallerPtr" TABINDEX="0">MapCallerPtr</MSHelp:link> function to validate all input and output buffers passed to <A HREF="wce50lrfdeviceiocontrol.htm">DeviceIoControl</A>. Because Device Manager validates these buffers, individual drivers that use <B>DeviceIoControl </B>do not need to validate their input and output buffers. The following Device Manager code excerpt shows when and how Device Manager validates the input and output buffers.</P>
+
+<PRE class="code">BOOL DM_DevDeviceIoControl(
+  fsopendev_t *fsodev,
+  DWORD dwIoControlCode,
+  LPVOID lpInBuf,
+  DWORD nInBufSize,
+  LPVOID lpOutBuf,
+  DWORD nOutBufSize,
+  LPDWORD lpBytesReturned,
+  LPOVERLAPPED lpOverlapped)
+{
+  BOOL retval = FALSE;
+  DWORD dodec = 0;
+  LPEXCEPTION_POINTERS pep;
+
+  lpInBuf = MapCallerPtr(lpInBuf,nInBufSize);
+  lpOutBuf = MapCallerPtr(lpOutBuf,nOutBufSize);
+  
+  //  End of code excerpt.
+}</PRE>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50lrfactivatedeviceex.htm">ActivateDeviceEx</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

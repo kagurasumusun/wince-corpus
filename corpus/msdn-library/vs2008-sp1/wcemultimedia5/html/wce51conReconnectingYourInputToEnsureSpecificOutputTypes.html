@@ -1,0 +1,241 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Reconnecting Your Input to Ensure Specific Output Types</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Reconnecting Your Input to Ensure Specific Output Types"/>
+<MSHelp:RLTitle Title="Reconnecting Your Input to Ensure Specific Output Types"/>
+<MSHelp:Keyword Index="A" Term="wce51conReconnectingYourInputToEnsureSpecificOutputTypes"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Feature"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="directshow_concepts1.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="True"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+<MSHelp:Attr Name="PBFeature" Value="SYSGEN_DSHOW"/>
+<MSHelp:Attr Name="PBOnly" Value="False"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_1063675">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce51conreconnectingyourinputtoensurespecificoutputtypes"></A>Reconnecting Your Input to Ensure Specific Output Types</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P><B>Applies to:</B> Devices based on Windows Mobile Version 5.0 and later</P>
+
+<P>Filters implement the <A HREF="wce50lrfiamstreamconfigsetformat.htm">IAMStreamConfig::SetFormat</A> method to set the audio or video format before the filter's pins are connected. If your output pin is already connected and you can provide a new type, then reconnect your pin, but only if the other filter can accept the new type. If the other filter cannot accept the media type, fail the call to <B>IAMStreamConfig::SetFormat</B> and leave your connection alone. </P>
+
+<P>A transform filter may not have any preferred output types unless their input pin is connected. In that case, the <B>IAMStreamConfig::SetFormat</B> and <A HREF="wce50lrfiamstreamconfiggetstreamcaps.htm">IAMStreamConfig::GetStreamCaps</A> methods should return VFW_E_NOT_CONNECTED until the input pin is connected. Otherwise, these methods can function as usual.</P>
+
+<P>In certain cases it is useful to reconnect pins when you are offering a format on an established connection. For example, suppose that a filter can compress 24-bit RGB video into format X, and that it can compress 8-bit RGB video into format Y. The output pin can do either of the following: 
+
+<UL type="disc">
+	<LI>Always offer both X and Y in <B>IAMStreamConfig::GetStreamCaps</B>, and always accept both X and Y in <B>IAMStreamConfig::SetFormat</B>. </li>
+
+	<LI>Offer and accept just format X if the input type is 24-bit RGB. Offer and accept just format Y if the input type 8-bit RGB. Fail both methods if the input pin is not connected. </li>
+</UL>
+
+<P>In either case, you will need some reconnecting code that looks like this: </P>
+
+<PRE class="code">HRESULT MyOutputPin::CheckMediaType(const CMediaType *pmtOut)
+{
+    // Fail if the input pin is not connected.
+    if (!m_pFilter-&gt;m_pInput-&gt;IsConnected()) {
+        return VFW_E_NOT_CONNECTED;
+    }
+
+    // (Not shown: Reject any media types that you know in advance your 
+    // filter cannot use. Check the major type and subtype GUIDs.)
+
+    // (Not shown: If SetFormat was previously called, check whether
+    // pmtOut exactly matches the format that was specified in SetFormat.
+    // Return S_OK if they match, or VFW_E_INVALIDMEDIATYPE otherwise.)
+   
+    // Now do the normal check for this media type.
+    HRESULT hr;
+    hr = m_pFilter-&gt;CheckTransform(
+        &amp;m_pFilter-&gt;m_pInput-&gt;CurrentMediaType(),  // The input type.
+        pmtOut  // The proposed output type.
+    );
+    if (hr == S_OK)
+    {
+        // This format is compatible with the current input type.
+        return S_OK;
+    }
+ 
+    // This format is not compatible with the current input type. 
+    // Maybe we can reconnect the input pin with a new input type.
+    
+    // Enumerate the upstream filter's preferred output types, and 
+    // see if one of them will work.
+    CMediaType *pmtEnum;
+    BOOL fFound = FALSE;
+    IEnumMediaTypes *pEnum;
+    hr = m_pFilter-&gt;m_pInput-&gt;GetConnected()-&gt;EnumMediaTypes(&amp;pEnum);
+    if (hr != S_OK)
+    {
+        return E_FAIL;
+    }
+    while (hr = pEnum-&gt;Next(1, (AM_MEDIA_TYPE **)&amp;pmtEnum, NULL), hr ==
+S_OK)
+    {
+        // Check this input type against the proposed output type.
+        hr = m_pFilter-&gt;CheckTransform(pmtEnum, pmtOut);
+        if (hr != S_OK) 
+        {
+            DeleteMediaType(pmtEnum);
+            continue; // Try the next one.
+        }
+
+        // This input type is a possible candidate. But, we have to make
+        // sure that the upstream filter can switch to this type. 
+        hr = m_pFilter-&gt;m_pInput-&gt;GetConnected()-&gt;QueryAccept(pmtEnum);
+        if (hr != S_OK) 
+        {
+            // The upstream filter will not switch to this type.
+            DeleteMediaType(pmtEnum);
+            continue; // Try the next one.
+        }
+        fFound = TRUE;
+        DeleteMediaType(pmtEnum);
+        break;
+    }
+    pEnum-&gt;Release();
+
+    if (fFound)
+    {
+        // This output type is OK, but if we are asked to use it, we will
+        // need to reconnect our input pin. (See SetFormat, below.)
+        return S_OK;
+    }
+    else
+    {
+        return VFW_E_INVALIDMEDIATYPE;
+    }
+}
+
+HRESULT MyOutputPin::SetFormat(AM_MEDIA_TYPE *pmt)
+{
+    CheckPointer(pmt, E_POINTER);
+    HRESULT hr;
+
+    // Hold the filter state lock, to make sure that streaming isn't 
+    // in the middle of starting or stopping:
+    CAutoLock cObjectLock(&amp;m_pFilter-&gt;m_csFilter);
+
+    // Cannot set the format unless the filter is stopped.
+    if (m_pFilter-&gt;m_State != State_Stopped)
+    {
+        return VFW_E_NOT_STOPPED;
+    }
+
+    // The set of possible output formats depends on the input format,
+    // so if the input pin is not connected, return a failure code.
+    if (!m_pFilter-&gt;m_pInput-&gt;IsConnected())
+    {
+        return VFW_E_NOT_CONNECTED;
+    }
+
+    // If the pin is already using this format, there's nothing to do.
+    if (IsConnected() &amp;&amp; CurrentMediaType() == *pmt)
+    {
+        return S_OK;
+    }
+
+    // See if this media type is acceptable.
+    if ((hr = CheckMediaType((CMediaType *)pmt)) != S_OK) 
+    {
+        return hr;
+    }
+
+    // If we're connected to a downstream filter, we have to make
+    // sure that the downstream filter accepts this media type.
+    if (IsConnected()) 
+    {
+        hr = GetConnected()-&gt;QueryAccept(pmt);
+        if (hr != S_OK)
+        {
+            return VFW_E_INVALIDMEDIATYPE;
+        }
+    }
+
+    // Now make a note that from now on, this is the only format allowed,
+    // and refuse anything but this in the CheckMediaType code above.
+
+    // Changing the format means reconnecting if necessary.
+    if (IsConnected())
+    {
+        m_pFilter-&gt;m_pGraph-&gt;Reconnect(this);
+    }
+
+    return NOERROR;
+}
+
+
+// Override CTransformFilter::SetMediaType to reconnect the input pin. 
+// This method is called immediately after the media type is set on a pin.
+HRESULT MyFilter::SetMediaType(
+    PIN_DIRECTION direction, 
+    const CMediaType *pmt
+)
+{
+    HRESULT hr;
+    if (direction == PINDIR_OUTPUT) 
+    {
+        // Before we set the output type, we might need to reconnect 
+        // the input pin with a new type.
+        if (m_pInput &amp;&amp; m_pInput-&gt;IsConnected()) 
+        {
+            // Check if the current input type is compatible.
+            hr = CheckTransform(
+                    &amp;m_pInput-&gt;CurrentMediaType(),
+                    &amp;m_pOutput-&gt;CurrentMediaType());
+            if (SUCCEEDED(hr))
+            {
+                return S_OK;
+            }
+            // Otherwise, we need to reconnect the input pin.
+            // Note: The CheckMediaType method has already called 
+            // QueryAccept on the upstream filter. 
+            hr = m_pGraph-&gt;Reconnect(m_pInput);
+            return hr;
+        }
+    }
+    return S_OK;
+}</PRE>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce51conexposingcapturecompressionformats.htm">Exposing Capture and Compression Formats</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

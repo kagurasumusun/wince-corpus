@@ -1,0 +1,123 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Direct Memory Access</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Direct Memory Access"/>
+<MSHelp:RLTitle Title="Direct Memory Access"/>
+<MSHelp:Keyword Index="A" Term="wce50conDirectMemoryAccess"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Driver"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="False"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="driverarchitecture.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="True"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+<MSHelp:Attr Name="PBFeature" Value="CoreDriver"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_3017959">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50condirectmemoryaccess"></A>Direct Memory Access</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>Direct memory access (DMA) is a method of transferring data from a device to memory, from memory to a device, or from memory to memory, without the help of a microprocessor. You can perform common buffer and scatter/gather DMA using the CEDDK.dll or kernel functions. Common buffer DMA uses a contiguous buffer in main memory. Scatter/gather DMA uses multiple blocks at different memory addresses. For more information about the CEDDK.dll functions, see <A HREF="wce50conimplementingceddkdll.htm">CEDDK Dynamic-Link Library</A>.</P>
+
+<P>A standard DMA transfer occurs when a DMA controller performs the transfer. A DMA bus master transfer occurs when a peripheral device performs the transfer. Microsoft recommends that you use the CEDDK.dll functions for DMA. The CEDDK.dll functions call the kernel functions. The following table compares two ways to perform DMA: using CEDDK.dll functions and using kernel functions. </P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=50%>Using CEDDK.dll functions</TH>
+<TH width=50%>Using kernel functions</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>CEDDK.dll provides these functions for obtaining a buffer for DMA transfers:
+<P><MSHelp:link keywords="wce50lrfHalAllocateCommonBuffer" TABINDEX="0">HalAllocateCommonBuffer</MSHelp:link></P>
+
+<P><MSHelp:link keywords="wce50lrfHalFreeCommonBuffer" TABINDEX="0">HalFreeCommonBuffer</MSHelp:link></P>
+
+<P><MSHelp:link keywords="wce50lrfHalTranslateSystemAddress" TABINDEX="0">HalTranslateSystemAddress</MSHelp:link></P>
+</TD>
+<TD width=50%>The kernel provides these functions for obtaining a buffer for DMA transfers:
+<P><MSHelp:link keywords="wce50lrfAllocPhysMem" TABINDEX="0">AllocPhysMem</MSHelp:link></P>
+
+<P><MSHelp:link keywords="wce50lrfFreePhysMem" TABINDEX="0">FreePhysMem</MSHelp:link></P>
+</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>CEDDK.dll functions can handle bus and hardware platform-specific address translations.</TD>
+<TD width=50%>You must handle hardware platform-specific address translations. You can call <B>HalTranslateSystemAddress</B> to translate the address.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>CEDDK.dll functions are seful for common buffer DMA.</TD>
+<TD width=50%>The kernel functions may be useful for scatter/gather DMA.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>CEDDK.dll functions use a default memory alignment of 64 KB.</TD>
+<TD width=50%>The kernel functions allow you to DMA change the default memory alignment.</TD>
+</TR>
+</table></div>
+
+<P>The CEDDK.dll functions handle address translations between the system and the PCI bus or ISA bus for the DMA controller. You can support other bus types. The CEDDK.dll functions translate a physical RAM address into the corresponding bus-relative physical address for the DMA controller. To set up a common buffer for bus master DMA using the CEDDK.dll functions, a bus master DMA device driver can call <B>HalAllocateCommonBuffer</B> with the <MSHelp:link keywords="wce50lrfDMAADAPTEROBJECT" TABINDEX="0">DMA_ADAPTER_OBJECT</MSHelp:link> structure. </P>
+
+<P>The following code example shows a correct call to <B>HalAllocateCommonBuffer</B>. The code example is from the ES1371 driver located in %_WINCEROOT%\Public\Common\OAK\Drivers\WaveDev\PDD\ES1371 directory.</P>
+
+<PRE class="code">// Allocate an adapter object on the stack
+DMA_ADAPTER_OBJECT AdapterObject; 
+AdapterObject.ObjectSize = sizeof(AdapterObject); 
+AdapterObject.InterfaceType = PCIBus; 
+AdapterObject.BusNumber = 0; 
+
+// Allocate a single paged 4 KB output buffer
+dma_out_page[0] = (PUCHAR) HalAllocateCommonBuffer(&amp;AdapterObject, 4096, &amp;dma_out_logical_address, FALSE);
+
+if (!dma_out_page[0]) { 
+  ERRMSG("PDD_AudioInitialize: DMA Buffer Page Allocation Failed");
+  return FALSE;
+}</PRE>
+
+<P>If the call to <B>HalAllocateCommonBuffer</B> succeeds, it returns the allocated buffer, or NULL if the call fails. The driver can use the allocated common buffer as a storage area for DMA transfers. The function also returns the physical bus-relative address of the buffer, which the function optionally provides to the DMA controller.</P>
+
+<P>You can also use the <MSHelp:link keywords="wce50lrfAllocPhysMem" TABINDEX="0">AllocPhysMem</MSHelp:link> and <MSHelp:link keywords="wce50lrfFreePhysMem" TABINDEX="0">FreePhysMem</MSHelp:link> kernel functions for common buffer DMA transfers. If you use the kernel functions, call <MSHelp:link keywords="wce50lrfHalTranslateSystemAddress" TABINDEX="0">HalTranslateSystemAddress</MSHelp:link> to translate the address you are passing to the DMA controller to avoid a memory violation. These functions take an alignment parameter, the CEDDK.dll functions use default alignment of 64 KB. For a common buffer DMA example with the kernel functions, see the %_WINCEROOT%\Public\Common\Oak\Drivers\Usb\Hcd directory.</P>
+
+<P>To set up scatter/gather DMA, you must use multiple pairs of base addresses and lengths simultaneously. The ATAPI driver located in the %_WINCEROOT%\Public\Common\Oak\Drivers\Block\Atapi directory is an example of scatter/gather DMA implementation.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><MSHelp:link keywords="wce50conImplementingCEDDKdll" TABINDEX="0">CEDDK Dynamic-Link Library</MSHelp:link> | <MSHelp:link keywords="wce50lrfHalFreeCommonBuffer" TABINDEX="0">HalFreeCommonBuffer</MSHelp:link></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

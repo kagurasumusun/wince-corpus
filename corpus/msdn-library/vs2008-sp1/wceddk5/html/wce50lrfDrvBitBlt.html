@@ -1,0 +1,165 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>DrvBitBlt</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="DrvBitBlt"/>
+<MSHelp:RLTitle Title="DrvBitBlt"/>
+<MSHelp:Keyword Index="K" Term="DrvBitBlt"/>
+<MSHelp:Keyword Index="A" Term="wce50lrfDrvBitBlt"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Driver"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="False"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="apiref"/>
+<MSHelp:Attr Name="Filename" Value="display_reference.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="False"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+<MSHelp:Attr Name="APIName" Value="DrvBitBlt"/>
+<MSHelp:Attr Name="APIType" Value="LibDef"/>
+<MSHelp:Attr Name="APILocation" Value="Ddi_ati_lib.lib, Ddi_flat_lib.lib, Ddi_gx_lib.lib, Ddi_mq200_lib.lib, Ddi_nop_lib.lib, Ddi_rflat_lib.lib, Ddi_rgx_lib.lib, or Ddi_tvia5_lib.lib"/>
+<MSHelp:Attr Name="PBFeature" Value="DisplayDriver"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_3017930">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50lrfdrvbitblt"></A>DrvBitBlt</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>This function performs a general bit-block transfer with clipping and masking. <B>DrvBitBlt</B> provides general bit-block transfer capabilities between device-managed surfaces, between GDI-managed standard format bitmaps, or between a device-managed surface and a GDI-managed standard format bitmap.</P>
+
+<PRE class="syntax"><B>BOOL DrvBitBlt(</B>
+<B>  SURFOBJ* </B><I>psoTrg</I><B>,</B>
+<B>  SURFOBJ* </B><I>psoSrc</I><B>,</B>
+<B>  SURFOBJ* </B><I>psoMask</I><B>,</B>
+<B>  CLIPOBJ* </B><I>pco</I><B>,</B>
+<B>  XLATEOBJ* </B><I>pxlo</I><B>,</B>
+<B>  RECTL* </B><I>prclTrg</I><B>,</B>
+<B>  POINTL* </B><I>pptlSrc</I><B>,</B>
+<B>  POINTL* </B><I>pptlMask</I><B>,</B>
+<B>  BRUSHOBJ* </B><I>pbo</I><B>,</B>
+<B>  POINTL* </B><I>pptlBrush</I><B>,</B>
+<B>  ROP4 </B><I>rop4</I>
+<B>);</B></PRE>
+
+<H4 class="dtH4">Parameters</H4>
+
+<DL>
+<DT><I>psoTrg</I></DT>
+
+<DD>[in] Pointer to the <B>SURFOBJ</B> structure that describes the surface on which to draw. </dd>
+
+<DT><I>psoSrc</I></DT>
+
+<DD>[in] Pointer to a <B>SURFOBJ</B> structure that describes the source for the bit-block transfer operation, if required by the <I>rop4</I> parameter. </dd>
+
+<DT><I>psoMask</I></DT>
+
+<DD>[in] Pointer to a <B>SURFOBJ</B> structure that describes a surface to be used as a mask for the <I>rop4</I> parameter. The mask is a bitmap with 1 bit per pixel. Typically, a mask is used to limit the area to be modified in the destination surface. Masking is selected by setting the <I>rop4</I> parameter to the value 0xAACC. The destination surface is unaffected if the mask is 0x0000. 
+
+<P>The mask will be large enough to cover the destination rectangle. 
+
+
+<P>If this parameter is NULL and a mask is required by the <I>rop4</I> parameter, the implicit mask in the brush is used. 
+</dd>
+
+<DT><I>pco</I></DT>
+
+<DD>[in] Pointer to a <B>CLIPOBJ</B> structure that limits the area to be modified. The <B>CLIPOBJ_<I>XXX</I> </B>GDI functions enumerate the clip region as a set of rectangles. Whenever possible, GDI simplifies the clipping involved; for example, this function is never called with a single clipping rectangle. GDI clips the destination rectangle before calling this function, making additional clipping unnecessary. </dd>
+
+<DT><I>pxlo</I></DT>
+
+<DD>[in] Pointer to an <A HREF="wce50lrfxlateobj.htm">XLATEOBJ</A> structure that specifies how color indices should be translated between the source and destination surfaces. If <I>pxlo</I> is NULL, no translation is needed. 
+
+<P>If the source surface is palette-managed, its colors are represented by indices into a lookup table of RGB values. The <B>XLATEOBJ</B> structure can be queried for a translate vector that will allow the device driver to translate any source index into a color index for the destination. 
+
+
+<P>The situation is more complicated when, for example, the source is RGB, but the destination is palette-managed. In this case, the closest match to each source RGB value must be found in the destination palette. The driver can call the <B>XLATEOBJ_iXlate</B> function to perform this operation. 
+
+
+<P>Optionally, the device driver can match colors when the target palette is the default device palette. 
+</dd>
+
+<DT><I>prclTrg</I></DT>
+
+<DD>[in] Pointer to a <B>RECTL</B> structure that defines the area to be modified. This structure uses the coordinate system of the destination surface. The lower and right edges of this rectangle are not part of the bit-block transfer, meaning the rectangle is lower right exclusive. 
+
+<P><B>DrvBitBlt</B> is never called with an empty destination rectangle. The two points that define the rectangle are always well ordered. However, on multiple monitor systems the rectangle may define a region larger than the destination surface. Drivers should intersect this rectangle with their surface. 
+</dd>
+
+<DT><I>pptlSrc</I></DT>
+
+<DD>[in] Pointer to a <B>POINTL</B> structure that defines the upper left corner of the source rectangle, if a source exists. This parameter is ignored if there is no source. </dd>
+
+<DT><I>pptlMask</I></DT>
+
+<DD>[in] Pointer to a <B>POINTL</B> structure that defines which pixel in the mask corresponds to the upper left corner of the source rectangle, if a source exists. This parameter is ignored if the <I>psoMask</I> parameter is null. </dd>
+
+<DT><I>pbo</I></DT>
+
+<DD>[in] Pointer to the brush object that defines the pattern for the bit-block transfer. GDI's <B>BRUSHOBJ_pvGetRbrush</B> function can be used to retrieve the device's realization of the brush. This parameter is ignored if the <I>rop4</I> parameter does not require a pattern. </dd>
+
+<DT><I>pptlBrush</I></DT>
+
+<DD>[in] Pointer to a <B>POINTL</B> structure that defines the origin of the brush in the destination surface. The upper left pixel of the brush is aligned at this point, and the brush repeats according to its dimensions. This parameter is ignored if the <I>rop4</I> parameter does not require a pattern. </dd>
+
+<DT><I>rop4</I></DT>
+
+<DD>[in] Raster operation that defines how the mask, pattern, source, and destination pixels are combined to write to the destination surface. 
+
+<P>This is a quaternary raster operation, which is an extension of the ternary Rop3 operation. A Rop4 has 16 relevant bits, which are similar to the 8 defining bits of a Rop3. The simplest way to implement a Rop4 is to consider its 2 bytes separately. The low byte specifies a Rop3 that should be calculated if the mask is 1, and the high byte specifies a Rop3 that can be calculated and applied if the mask is zero. 
+</dd>
+</DL>
+
+<H4 class="dtH4">Return Values</H4>
+
+<P><B>DrvBitBlt</B> returns TRUE if the bit-block transfer operation is successful. Otherwise, the function returns FALSE, and an error code is logged.</P>
+
+<H4 class="dtH4">Remarks</H4>
+
+<P>GDI calls this function when it needs to perform a <B>BitBlt</B> operation.</P>
+
+<P>GDI's <B>CLIPOBJ_<I>XXX</I></B> functions allow the clipping to be reduced to a series of clipping rectangles. A translation vector assists in color index translation for palettes.</P>
+
+<P>Do not dereference parameter pointers unless the ROP indicates they are needed. For example, unnecessarily dereferencing <B>pbo &#0151; &gt;iSolidColor</B> for a ROP such as BLACKNESS can cause an access violation. This rule also applies to any function that includes a <B>MIX</B> parameter.</P>
+
+<H4 class="dtH4">Requirements</H4>
+
+<P><B>OS Versions:</B> Windows CE 1.0 and later.<BR>
+<B>Header:</B> Winddi.h.<BR>
+<B>Link Library:</B> Ddi_ati_lib.lib, Ddi_flat_lib.lib, Ddi_gx_lib.lib, Ddi_mq200_lib.lib, Ddi_nop_lib.lib, Ddi_rflat_lib.lib, Ddi_rgx_lib.lib, or Ddi_tvia5_lib.lib.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50condisplaydrivers.htm">Display Drivers</A> | <A HREF="wce50lrfxlateobj.htm">XLATEOBJ</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

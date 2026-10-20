@@ -1,0 +1,187 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Set Operations</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Set Operations"/>
+<MSHelp:RLTitle Title="Set Operations"/>
+<MSHelp:Keyword Index="A" Term="wce50lrfSetOperations"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Feature"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="XSLref02.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="True"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+<MSHelp:Attr Name="PBFeature" Value="SYSGEN_MSXML"/>
+<MSHelp:Attr Name="PBOnly" Value="False"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_3024194">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50lrfsetoperations"></A>Set Operations</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>XML Path Language (XPath) supports the set operation |.</P>
+
+<H2 class="dtH2">Union Operator</H2>
+
+<P>The union operator, or "|", returns the union of two queries; that is, it returns the set of nodes returned for one query combined with the set of nodes that satisfy the other query. Multiple union operators can be combined to union together the results of multiple queries. The union operator preserves document order and does not return duplicates.</P>
+
+<P>The Microsoft implementation extends the union operator to be available anywhere in a query, not just at the top level. To support this behavior, the following constraint is applied to unions: All queries combined with the union operator must be from the same subtree and have the same root.</P>
+
+<P>The following table demonstrates examples of valid and invalid queries based on these constraints.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=50%>Valid use of | (same subtree)</TH>
+<TH width=50%>Invalid use of | (different subtree)</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>a | b | c</TD>
+<TD width=50%>a | /b | c</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>/a | /b | /c</TD>
+<TD width=50%>a | /b | c</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>a | .</TD>
+<TD width=50%>a | id('C1')</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>a | b</TD>
+<TD width=50%>a | ../b</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>a | b</TD>
+<TD width=50%>a | current()/b</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>id(x | y)</TD>
+<TD width=50%>id(x) | id(y)</TD>
+</TR>
+</table></div>
+
+<H4 class="dtH4">Examples</H4>
+
+<P>Find all first-names and last-names.</P>
+
+<PRE class="code">first-name | last-name</PRE>
+
+<P>Find all books and magazines from a bookstore.</P>
+
+<PRE class="code">bookstore/(book | magazine)</PRE>
+
+<P>Find all books and all authors.</P>
+
+<PRE class="code">book | book/author</PRE>
+
+<P>Find the first-names, last-names, or degrees from authors within either books or magazines.</P>
+
+<PRE class="code">(book | magazine)/author/(first-name | last-name | degree)</PRE>
+
+<P>Find all books with author/first-name equal to "Bob" and all magazines with price less than 10.</P>
+
+<PRE class="code">book[author/first-name = "Bob"] | magazine[price &lt; 10]</PRE>
+
+<P>The following will return the first node that matches, not multiple nodes.</P>
+
+<PRE class="code">id(x | y)</PRE>
+
+<H2 class="dtH2">Precedence</H2>
+
+<P>Precedence order (from highest precedence to lowest) between Boolean and comparison operators is shown in the following table.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=28%>Operator</TH>
+<TH width=72%>Meaning</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=28%>( )</TD>
+<TD width=72%>Grouping</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=28%>[ ]</TD>
+<TD width=72%>Filters</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=28%>/ //</TD>
+<TD width=72%>Path operations</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=28%>&lt; &lt;= &gt; &gt;=</TD>
+<TD width=72%>Comparisons</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=28%>= != </TD>
+<TD width=72%>Comparisons</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=28%>|</TD>
+<TD width=72%>Union</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=28%>not()</TD>
+<TD width=72%>Boolean not</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=28%>and</TD>
+<TD width=72%>Boolean and</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=28%>or</TD>
+<TD width=72%>Boolean or</TD>
+</TR>
+</table></div>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50lrfsampledata.htm">Sample Data</A> | <A HREF="wce50lrfxpathexamples.htm">XPath Examples</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

@@ -1,0 +1,469 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>BSP and CSP Directory Layout</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="BSP and CSP Directory Layout"/>
+<MSHelp:RLTitle Title="BSP and CSP Directory Layout"/>
+<MSHelp:Keyword Index="A" Term="wce50conDirectoryLayout"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Hardware"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="True"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="PQOAL_concepts.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="False"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_1042600">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50condirectorylayout"></A>BSP and CSP Directory Layout</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>The board support package (BSP) and the chip support package (CSP) directory structures for the production-quality OAL parallel the Windows CE hardware library structure. This parallel structure makes it is easier to browse and understand what hardware platforms are supported and allows you to quickly locate code that implements a particular hardware platform.</P>
+
+<P>The following directories have been revised for the production-quality OAL model:
+
+<UL type="disc">
+	<LI><A HREF="#wce50condirectorylayoutanchor1">%_WINCEROOT%\Platform\&lt;Hardware Platform Name&gt;</A>
+<P>In the production-quality OAL model, the %_WINCEROOT%\Platform\&lt;<I>Hardware Platform Name</I>&gt; BSP directory contains only the following files and code:
+
+<UL type="disc">
+	<LI>Memory-mapped configuration files</li>
+
+	<LI>Some include files that define the memory layout for the hardware platform that matches Config.bib</li>
+
+	<LI>Some glue logic, which is board-level customization code that unites everything in the %_WINCEROOT%\Platform\Common directory</li>
+</UL>
+
+<P>The BSP directory layout is consistent for most BSPs.
+</li>
+
+	<LI><A HREF="#wce50condirectorylayoutanchor2">%_WINCEROOT%\Platform\Common</A>
+<P>The code in the %_WINCEROOT%\Platform\Common directory contains the CPU-specific OAL routines.
+
+<BLOCKQUOTE class="dtBlock">
+<b class="le">Note</b>&nbsp;&nbsp;&nbsp;Any code that must include board descriptions or the way the board itself is laid out &#0151; such as interrupts, routing to traces, or the way the board makes use of the CPU &#0151; must be in the BSP directory, not in the %_WINCEROOT%\Platform\Common directory.</BLOCKQUOTE>
+</li>
+
+	<LI><A HREF="#wce50condirectorylayoutanchor3">%_WINCEROOT%\Public\Common\Oak\CSP</A>
+<P>The chip support package (CSP) directory, %_WINCEROOT%\Public\Common\Oak\CSP, contains a collection of system-on-a-chip (SOC) and CPU or chipset-level peripheral drivers. You can port the CSP driver for a core peripheral to any new hardware platform environment that makes use of the SOC or chipset without modification.
+</li>
+</UL>
+
+<H2 class="dtH2"><A NAME="wce50condirectorylayoutanchor1"></A>\Platform\&lt;<I>Hardware Platform Name</I>&gt;</H2>
+
+<P>For the production-quality OAL, each hardware platform directory contains the code you need to build the boot loader and the three kernel images: Kern, Kernkitl, and KernKitlProf. Except for the Src directory, no hardware platform files and directories have changed from previous versions of Windows CE. This avoids backward compatibility issues and build problems.</P>
+
+<P>The following table shows the subdirectories under the %_WINCEROOT%\Platform\&lt;<I>Hardware Platform Name</I>&gt; directory.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=50%>\Platform\&lt;<I>Hardware Platform Name</I>&gt; subdirectory</TH>
+<TH width=50%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><B>Cesysgen</B></TD>
+<TD width=50%>Contains a makefile for filtering any of the configuration files in the Files directory.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><B>Files</B></TD>
+<TD width=50%>Contains project-specific files for building the run-time image, initial directory structure, initialized databases, and initialized registry.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><B>Src</B></TD>
+<TD width=50%>Contains the boot loader, OAL, and include files for the hardware platform.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>Src\Bootloader</TD>
+<TD width=50%>Contains all the boot loader specific code.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>Src\Bootloader\Eboot</TD>
+<TD width=50%>Contains the boot loader source files.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>Src\Common</TD>
+<TD width=50%>Contains all the code common to the boot loader and OAL.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>Src\Drivers</TD>
+<TD width=50%>Contains the local BSP drivers.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>Src\Inc</TD>
+<TD width=50%>Contains hardware platform-specific include files.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>Src\Kernel</TD>
+<TD width=50%>Contains device-specific source code files for building and linking the kernel and OAL.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>Src\Kernel\Kern</TD>
+<TD width=50%>Contains build files, and possibly stub functions, for building the basic kernel image.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>Src\Kernel\Kernkitl</TD>
+<TD width=50%>Contains build files, and possibly stub functions, for building a kernel with Kernel Independent Transport Layer (KITL) support.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>Src\Kernel\Kernkitlprof</TD>
+<TD width=50%>Contains build files, and possibly stub functions, for building a kernel with KITL and profiling support.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>Src\Kernel\OAL</TD>
+<TD width=50%>Contains the hardware platform-specific OAL code.</TD>
+</TR>
+</table></div>
+
+<H2 class="dtH2"><A NAME="wce50condirectorylayoutanchor2"></A>\Platform\Common</H2>
+
+<P>For the production-quality OAL, this directory contains entries for each processor family, the common OAL code, and the include files for the OAL components. The processor families are ARM, MIPS, and x86.</P>
+
+<P>The %_WINCEROOT%\Platform\Common directory is divided by CPU architecture. Each CPU architecture directory is further divided into more specific architecture information, such as the CPU family or the CPU manufacturer. As you navigate down the directory tree, the directories become more CPU architecture-specific. For example, the ARM\ARM920T tree contains cache and data abort routines for the ARM920T CPU, and the ARM\ARM926 tree contains the cache routines for the ARM926 CPU. Code can also be inherited from the directories that are further up in the tree.</P>
+
+<P>Although you might want to override some of the code in the %_WINCEROOT%\Platform\Common directory for performance reasons, overall, the code should work without modification. You do not have to copy any of the code in this directory unless necessary. Typically, you should include the library from the particular location in the %_WINCEROOT%\Platform\Common directory in your %_WINCEROOT%\Platform\&lt;<I>Hardware Platform Name</I>&gt; sources file.</P>
+
+<P>The following table shows the subdirectories under the %_WINCEROOT%\Platform\Common directory.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=50%>\Platform\Common subdirectory</TH>
+<TH width=50%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><B>Lib</B></TD>
+<TD width=50%>Contains libraries required to build your project.
+<P>The libraries are in directories with the following formats:
+
+<UL type="disc">
+	<LI><I>CPU</I>\Debug</li>
+
+	<LI><I>CPU</I>\Retail</li>
+</UL>
+
+<P>An example is: ARMV4I\Retail.</P>
+
+<BLOCKQUOTE class="dtBlock">
+<b class="le">Note</b>&nbsp;&nbsp;&nbsp;Do not include your custom libraries in this directory.</BLOCKQUOTE>
+</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><B>Src</B></TD>
+<TD width=50%>Contains header files, common OAL code, and processor specific OAL code.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><B>Src\ARM</B></TD>
+<TD width=50%>Contains the ARM processor-specific OAL code.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>Src\ARM\ARM920T</TD>
+<TD width=50%>Contains all the CPU OAL code required for the ARM920T processor.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>Src\ARM\ARM920T\Abort</TD>
+<TD width=50%>Contains the abort routines specific to the ARM920T CPU.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>Src\ARM\ARM920T\Cache</TD>
+<TD width=50%>Contains the cache routines specific to the ARM920T CPU.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>Src\ARM\ARM926</TD>
+<TD width=50%>Contains the CPU OAL code required for the ARM926 processor.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>Src\ARM\ARM926\Cache</TD>
+<TD width=50%>Contains the cache routines specific to the ARM926 CPU.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>Src\ARM\Common</TD>
+<TD width=50%>Contains routines that are generic to ARM-based hardware platforms.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>Src\ARM\Common\Cache</TD>
+<TD width=50%>Contains the cache routines that are common for all ARM CPUs.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>Src\ARM\Common\Memory</TD>
+<TD width=50%>Contains the memory translation routines that are common for all ARM CPUs.
+<P>The memory routines are used for translating physical addresses to physical addresses, and vice versa.</P>
+</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>Src\ARM\Inc</TD>
+<TD width=50%>Contains include files that are generic to all ARM CPUs.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>Src\ARM\Intel</TD>
+<TD width=50%>
+<DL>
+<DT>Contains the OAL code specific to the Intel hardware platform.</DT>
+</DL>
+</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>Src\ARM\Intel\PXA250</TD>
+<TD width=50%>
+<DL>
+<DT>Contains routines specific to the PXA250 processor.</DT>
+</DL>
+</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>Src\ARM\Intel\PXA27x</TD>
+<TD width=50%>
+<DL>
+<DT>Contains routines specific to the PXA27x processor.</DT>
+</DL>
+</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>Src\ARM\Intel\SA1100</TD>
+<TD width=50%>
+<DL>
+<DT>Contains routines specific to the SA1100 processor.</DT>
+</DL>
+</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>Src\ARM\Samsung</TD>
+<TD width=50%>Contains the OAL code specific to the Samsung hardware platform.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>Src\ARM\Samsung\S3C2410x</TD>
+<TD width=50%>Contains routines specific to the S3C2410x processor.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><B>Src\Common</B></TD>
+<TD width=50%>Contains OAL code that is generic across all CPU architectures.
+<P>For more information about each of these components, see <A HREF="wce50conproductionqualityoalcomponents.htm">Production-Quality OAL Components</A>.</P>
+</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>Src\Common\Boot</TD>
+<TD width=50%>Contains generic boot arguments.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>Src\Common\Cache</TD>
+<TD width=50%>Contains code for generic cache routines.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>Src\Common\CEDDK</TD>
+<TD width=50%>Contains code used for the Ceddk.dll library.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>Src\Common\EthDrv</TD>
+<TD width=50%>Contains code for the generic Ethernet drivers, which is used for debugging.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>Src\Common\Flash</TD>
+<TD width=50%>Contains generic flash memory code.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>Src\Common\Ilt</TD>
+<TD width=50%>Contains generic ILTiming code.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>Src\Common\Intr</TD>
+<TD width=50%>Contains interrupt code that is generic for all CPUs.
+<P>This contains code that performs translations between SYSINTRs and IRQs.</P>
+</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>Src\Common\IO</TD>
+<TD width=50%>Contains generic I/O routines for all CPUs.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>Src\Common\IOCTL</TD>
+<TD width=50%>Contains generic IOCTLs for all CPUs.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>Src\Common\KeyValue</TD>
+<TD width=50%>Contains code for maintaining key-value pairs.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>Src\Common\KITL</TD>
+<TD width=50%>Contains code for generic KITL routines.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>Src\Common\Log</TD>
+<TD width=50%>Contains code used for logging.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>Src\Common\PCI</TD>
+<TD width=50%>Contains generic PCI routines.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>Src\Common\PerReg</TD>
+<TD width=50%>Contains generic performance register code.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>Src\Common\Power</TD>
+<TD width=50%>Contains generic power management code.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>Src\Common\RTC</TD>
+<TD width=50%>Contains generic RTC code.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>Src\Common\Timer</TD>
+<TD width=50%>Contains generic timer or system tick code.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>Src\Common\Watson</TD>
+<TD width=50%>Contains generic Windows CE Error Reporting code.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><B>Src\Inc</B></TD>
+<TD width=50%>Contains all the header files that export OAL components.
+<BLOCKQUOTE class="dtBlock">
+<b class="le">Note</b>&nbsp;&nbsp;&nbsp;There is a single include file called Oal.h that includes all the other include files.</BLOCKQUOTE>
+</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><B>Src\MIPS</B></TD>
+<TD width=50%>Contains the MIPS processor-specific OAL code.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>Src\MIPS\AMD</TD>
+<TD width=50%>Contains all the CPU OAL code required for the AMD Au1<I>XXX</I> processors.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>Src\MIPS\Broadcom</TD>
+<TD width=50%>Contains all the CPU OAL code required for the Broadcom processor.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>Src\MIPS\Common</TD>
+<TD width=50%>Contains routines that are generic to MIPS-based hardware platforms.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>Src\MIPS\Inc</TD>
+<TD width=50%>Contains include files that are generic to all MIPS CPUs.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>Src\MIPS\MIPS32</TD>
+<TD width=50%>Contains all the CPU OAL code required for the MIPS32 processor.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>Src\MIPS\NEC</TD>
+<TD width=50%>Contains all the CPU OAL code required for the NEC Vr<I>XXX</I> processors.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><B>Src\x86</B></TD>
+<TD width=50%>Contains the x86 processor specific OAL code.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>Src\x86\Common</TD>
+<TD width=50%>Contains routines that are generic to x86-based hardware platforms.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>Src\x86\Inc</TD>
+<TD width=50%>Contains include files that are generic to all x86 CPUs.</TD>
+</TR>
+</table></div>
+
+<H2 class="dtH2"><A NAME="wce50condirectorylayoutanchor3"></A>\Public\Common\Oak\CSP</H2>
+
+<P>For the production-quality OAL, CSP drivers are in a common CSP directory along with an organized array of include files that describe the register layouts and common hardware definitions. CSP drivers and BSP code share the same include files, which are under the SOC or chipset model's Inc subdirectory.</P>
+
+<P>The CSP directory structure, under the %_WINCEROOT%\Public\Common\Oak directory, has the format CSP\&lt;<I>CPU Architecture</I>&gt;\&lt;<I>SOC or Chipset Model Number</I>&gt;\&lt;<I>Driver Function</I>&gt;.</P>
+
+<P>For more information, see <A HREF="wce50concspdrivers.htm">CSP Drivers</A>.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50condevicedriverlibraries.htm">Device Driver Libraries</A> | <A HREF="wce50conproductionqualityoal.htm">Production-Quality OAL</A> </P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

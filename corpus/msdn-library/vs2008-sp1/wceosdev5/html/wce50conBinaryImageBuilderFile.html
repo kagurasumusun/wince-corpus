@@ -1,0 +1,141 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Binary Image Builder File</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Binary Image Builder File"/>
+<MSHelp:RLTitle Title="Binary Image Builder File"/>
+<MSHelp:Keyword Index="A" Term="wce50conBinaryImageBuilderFile"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="OS"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="True"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="configuration_file_types.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="True"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_3012312">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50conbinaryimagebuilderfile"></A>Binary Image Builder File</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>A binary image builder (.bib) file defines which modules and files are included in a run-time image. Makeimg.exe uses .bib files to determine how to load modules and files into the memory of a target device. </P>
+
+<P>The following table shows the major sections that a .bib file can contain. </P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=15%>Section</TH>
+<TH width=85%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=15%>MEMORY</TD>
+<TD width=85%>Defines the physical memory available, including starting address, size, and type of memory. 
+<P>This section is in the Config.bib file, in the Platform\MYBSP\Files directory.</P>
+</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=15%>CONFIG</TD>
+<TD width=85%>Defines configuration options for Romimage.exe to customize its output. By default, this section is in the Config.bib file. However, you are not required to include a CONFIG section in a .bib file.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=15%>MODULES</TD>
+<TD width=85%>Specifies the object modules to be loaded into areas of memory by Romimage.exe. Object modules that are not compressed in the MODULE section execute in place.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=15%>FILES</TD>
+<TD width=85%>Reserves a section of memory for .lib files.</TD>
+</TR>
+</table></div>
+
+<P>The Platform.bib file defines
+
+<UL type="disc">
+	<LI>The hardware modules and files, such as driver files, for the target device</li>
+
+	<LI>The modules and file entries for the run-time image, such as .exe files and waveform audio (.wav) files</li>
+</UL>
+
+<P>The Config.bib file contains the MEMORY and CONFIG sections for the run-time image. The MEMORY section of Config.bib defines the memory table for the run-time image by specifying the name, address, size, and type of the MEMORY regions within the run-time image. </P>
+
+<P>When updating either Platform.bib or Project.bib to include a file, specify the following items:
+
+<UL type="disc">
+	<LI>The source and run-time image file name</li>
+
+	<LI>The region of the MEMORY section defined as RAMIMAGE type 
+<P>Each run-time image has only one RAMIMAGE region.
+</li>
+
+	<LI>The file attributes in the run-time image</li>
+</UL>
+
+<P>Use the <I>Address</I> and <I>Size</I> parameters in the memory table to define the section of memory devoted to RAM as well as ROM. The <I>Address</I> parameter specifies the address where the RAM section starts. Together, the <I>Address</I> and the <I>Size </I>parameters indicate the address where the RAM section ends. </P>
+
+<P>The run-time image must be defined as RAMIMAGE type. The RAM section must be defined as RAM type. </P>
+
+<P>The following illustration shows the relationship between the ROMSTART and ROMSIZE keywords and the memory table parameters for the run-time image section.</P>
+
+<P class="fig"><IMG SRC="ram1.gif" ALT="" BORDER=0></P>
+
+<P>The .bin files contain information about the run-time image that the boot loader uses to boot the run-time image. The .bin files are organized into logical units called records and exist only in the RAMIMAGE section of memory. </P>
+
+<P>The following code example shows an entry in Project.bib. In this example, if a user-defined environment variable, IMGINCLUDEAPPS, is defined before running Makeimg.exe, Makeimg.exe includes the MyApp1.exe input file as the MyApp.exe output file. It then loads the output file in a MEMORY region named NK as a file with system and hidden attributes. </P>
+
+<PRE class="code">MODULES
+; Name        Path                           Memory Type
+; --------------  --------------------------------------
+IF IMGINCLUDEAPPS
+  myapp.exe   $(_FLATRELEASEDIR)\myapp1.exe  NK   SH
+ENDIF</PRE>
+
+<P>The following code example shows that if IMGNODEBUGGER is not defined, Makeimg.exe includes the Myproj.exe file and loads it in the NK MEMORY region as a system file. </P>
+
+<PRE class="code">IF IMGNODEBUGGER !
+   myproj.exe  $(_FLATRELEASEDIR)\myproj.exe  NK  S
+ENDIF</PRE>
+
+<P>For more information, see <A HREF="wce50conmemorysection.htm">MEMORY Section</A>.</P>
+
+<P>To configure the .bib files, you must specify a data format for the run-time image. After you determine a data format, define this format in the CONFIG section of the Config.bib file for your run-time image. For information, see <A HREF="wce51conrun-timeimagefiles.htm">Run-Time Image Files</A> and <A HREF="wce50conconfigsection.htm">CONFIG Section</A>.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50conimageconfigurationfiles.htm">Run-Time Image Configuration Files</A> | <A HREF="wce51conrun-timeimagefiles.htm">Run-Time Image Files</A> | | <MSHelp:link keywords="wce50howHowtoConfigureandBuildanOSImageforaCEPC" TABINDEX="0">How to Configure and Build a Run-Time Image for a CEPC</MSHelp:link> | <MSHelp:link keywords="wce50howHowtoDecreaseRunTimeImageSizeonaCEPC" TABINDEX="0">How to Decrease Run-Time Image Size on a CEPC</MSHelp:link> | <MSHelp:link keywords="wce50conMakeBinaryImageTool" TABINDEX="0">Make Binary Image Tool</MSHelp:link> | <MSHelp:link keywords="wce50howHowtoCreateaDeviceDriver" TABINDEX="0">How to Create a Device Driver</MSHelp:link></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

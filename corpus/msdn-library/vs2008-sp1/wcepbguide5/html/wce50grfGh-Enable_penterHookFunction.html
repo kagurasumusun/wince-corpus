@@ -1,0 +1,106 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>/Gh - Enable _penter Hook Function</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="/Gh - Enable _penter Hook Function"/>
+<MSHelp:RLTitle Title="/Gh - Enable _penter Hook Function"/>
+<MSHelp:Keyword Index="A" Term="wce50grfGh-Enable_penterHookFunction"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Guide"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="True"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="comp_compiler_linker.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="True"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_1045233">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50grfgh-enable_penterhookfunction"></A>/Gh - Enable _penter Hook Function</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>This option causes a call to the <B>_penter</B> function at the start of every method or function. The <B>_penter </B>function is not part of any library and it is up to you to provide a definition for <B>_penter.</B></P>
+
+<PRE class="syntax">/Gh</PRE>
+
+<H4 class="dtH4">Remarks</H4>
+
+<P>The <B>/Gh</B> option is supported by x86 microprocessors only.</P>
+
+<P>Unless you plan to explicitly call <B>_penter</B>, you do not need to provide a prototype. The function must appear as if it had the following prototype, and it must push the content of all registers on entry and pop the unchanged content on exit:</P>
+
+<PRE class="code">void __declspec(naked) _cdecl _penter( void );</PRE>
+
+<H4 class="dtH4">Example</H4>
+
+<P>The following code, when compiled with <B>/Gh,</B> shows how <B>_penter</B> is called twice; once when entering function main and once when entering function x.</P>
+
+<PRE class="code">#include "stdio.h"
+
+void x(){ }
+
+int main() {
+   x();
+}
+
+extern "C" void __declspec(naked) _cdecl _penter( void ) {
+    _asm {
+        push eax
+        push ebx
+        push ecx
+        push edx
+        push ebp
+        push edi
+        push esi
+    }
+
+   printf("\nIn a function!");
+
+    _asm {
+        pop esi
+        pop edi
+        pop ebp
+        pop edx
+        pop ecx
+        pop ebx
+        pop eax
+        ret
+    }
+}</PRE>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50congeneralpurposecompileroptions.htm">Compiler Options</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

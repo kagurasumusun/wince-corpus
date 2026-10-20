@@ -1,0 +1,111 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>ARM Epilog</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="ARM Epilog"/>
+<MSHelp:RLTitle Title="ARM Epilog"/>
+<MSHelp:Keyword Index="A" Term="wce50conARMEpilog"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Guide"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="True"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="comp_arm_callspec.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="True"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_3023285">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50conarmepilog"></A>ARM Epilog</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>The ARM epilog is a contiguous sequence of instructions that does the following:
+
+<UL type="disc">
+	<LI>Restores the saved permanent registers</li>
+
+	<LI>Resets the stack pointer to its value on function entry</li>
+
+	<LI>Returns to the function's calling function</li>
+</UL>
+
+<P>The following list shows the guidelines for implementing an epilog:
+
+<UL type="disc">
+	<LI>All parts are immediately contiguous, with no intervening instructions.</li>
+
+	<LI>If a frame pointer is set up, the epilog is a single instruction that uses the frame as the base and updates all nonvolatile registers, including the Program Counter and the stack.</li>
+
+	<LI>If no frame is set up, the epilog consists of a stack unlink, if needed, followed by an instruction to restore multiple registers or to copy the link register <B>R14</B> to the program counter.</li>
+
+	<LI>In a routine that does not modify nonvolatile registers and is not interworking, the epilog contains only a copy of the link register to the program counter.</li>
+
+	<LI>A routine whose last instruction is a branch to another routine can have an empty epilog if it does not modify nonvolatile registers.</li>
+
+	<LI>If the function establishes a frame pointer (which has the value of <B>R11</B> for an ARM epilog), the function must not modify the pointer value during the interval between the completion of the prolog's last instruction and the beginning of the execution of the first instruction of the epilog.</li>
+
+	<LI>If the function does not establish a frame pointer (which has the value of <B>R13</B>), the function must not modify the stack pointer during the interval between the completion of the prolog's last instruction and the beginning of the execution of the first instruction of the epilog.</li>
+
+	<LI>The address contained in the stack pointer, which always has the value of <B>R13</B>, must never be greater than the lowest address of any unrestored register value in the Register Save Area.
+<P>This prevents the preserved values of the permanent registers from being corrupted by a context switch or any other asynchronous event that might occur during the execution of a prolog or epilog.
+</li>
+</UL>
+
+<H4 class="dtH4">Example</H4>
+
+<P>The following examples show a variety of ARM epilogs.
+
+<UL type="disc">
+	<LI>ARM Epilog with frame in R11.
+<PRE class="code">&lt;no stack unlink&gt;
+LDMDB  r11, {r4-r11, r13, r15}</PRE>
+</li>
+
+	<LI>ARM Epilog with no frame.
+<PRE class="code">&lt;stack unlink if needed&gt;
+LDMIA  r13, {r4-R11, r13, r15}</PRE>
+</li>
+
+	<LI>ARM Epilog with interworking return.
+<PRE class="code">&lt;stack unlink if needed&gt;
+LDMIA   r13, {r4-r11, r13, LR}
+BX      LR</PRE>
+</li>
+</UL>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50consehinriscenvironments.htm">SEH in RISC Environments</A> | <A HREF="wce50conarmprolog.htm">ARM Prolog</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

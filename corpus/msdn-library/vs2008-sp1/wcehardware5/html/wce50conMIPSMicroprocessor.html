@@ -1,0 +1,81 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>MIPS Microprocessor</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="MIPS Microprocessor"/>
+<MSHelp:RLTitle Title="MIPS Microprocessor"/>
+<MSHelp:Keyword Index="A" Term="wce50conMIPSMicroprocessor"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Hardware"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="True"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="howto_developing_an_OAL.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="True"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_3010396">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50conmipsmicroprocessor"></A>MIPS Microprocessor</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>All MIPS interrupt service routines (ISRs) can be written in C. Any volatile registers can be used in accordance with the C calling convention without using save/restore. Specifically, a MIPS ISR can use registers a0 through a3, t0 through t7, v0, v1, and AT.</P>
+
+<P>Use the following design principals when creating an OAL for a MIPS microprocessor:
+
+<UL type="disc">
+	<LI>The ISR must return by means of <B>j</B> <B>ra</B>.</li>
+
+	<LI>Implement a system-timer ISR that increments the variable <A HREF="wce50lrfcurmsec.htm">CurMSec</A>.</li>
+
+	<LI><A HREF="wce50lrfoeminit.htm">OEMInit</A> needs to register the system-timer ISR.</li>
+
+	<LI>Create the OAL function <MSHelp:link keywords="wce50lrfGetTickCount" TABINDEX="0">GetTickCount</MSHelp:link> to return a value from the system timer.</li>
+
+	<LI>The <B>OEMIdle</B> function takes a single parameter that is only used by the MIPS CPU. 
+<P>This parameter is undefined for other CPUs. It is the base program status register (PSR) value and sets interrupts to be enabled. The following code example shows how <B>OEMIdle</B> is defined for the MIPS microprocessor.
+
+<PRE class="code">void OEMIdle(DWORD dwIdleParam);</PRE>
+</li>
+
+	<LI>Nested interrupts.
+<P>The MIPS kernel utilizes a structure that provides information about which nested interrupts are masked while the current interrupt is being handled. To gain access to this structure, the <A HREF="wce50lrfintrprio.htm">IntrPrio</A> global variable must be declared in the OAL.
+</li>
+</UL>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50howhowtodevelopanoemadaptationlayer.htm">How to Develop an OEM Adaptation Layer</A> | <A HREF="wce50conmicroprocessorspecificissues.htm">Microprocessor-specific Issues</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

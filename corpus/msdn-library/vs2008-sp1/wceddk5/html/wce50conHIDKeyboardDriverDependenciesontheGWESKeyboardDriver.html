@@ -1,0 +1,100 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>HID Keyboard Driver Dependencies on the GWES Keyboard Driver</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="HID Keyboard Driver Dependencies on the GWES Keyboard Driver"/>
+<MSHelp:RLTitle Title="HID Keyboard Driver Dependencies on the GWES Keyboard Driver"/>
+<MSHelp:Keyword Index="A" Term="wce50conHIDKeyboardDriverDependenciesontheGWESKeyboardDriver"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Driver"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="False"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="keyboard_guide.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="False"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+<MSHelp:Attr Name="PBFeature" Value="KeyboardDriver"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_3018186">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50conhidkeyboarddriverdependenciesonthegweskeyboarddriver"></A>HID Keyboard Driver Dependencies on the GWES Keyboard Driver</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>The sample HID keyboard driver, kbdhid, requires certain support from the built-in GWES keyboard driver.</P>
+
+<P>The following table shows the support required.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=33%>Support requirement</TH>
+<TH width=67%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%><A HREF="wce50lrfkeybddrivermapvirtualkey.htm">PFN_KEYBD_DRIVER_MAP_VIRTUAL_KEY</A><B>(uCode, 3)</B> must remap the AT scan codes to virtual keys.</TD>
+<TD width=67%>The HID keyboard driver converts HID key identifiers to AT scan codes. These scan codes are converted to virtual keys through a call to <MSHelp:link keywords="wce50lrfMapVirtualKey" TABINDEX="0">MapVirtualKey</MSHelp:link><B>(&lt;scan code&gt;, 3)</B> that resolves to the built-in keyboard driver's <A HREF="wce50lrfkeybddrivermapvirtualkey.htm">PFN_KEYBD_DRIVER_MAP_VIRTUAL_KEY</A> function. The built-in keyboard driver is responsible for this conversion because it already contains the localized keyboard tables for scan code to virtual-key, virtual-key to scan code, and virtual-key to Unicode character conversions. Thus, the HID keyboard does not need to be localized because it relies on the localized tables in the built-in keyboard driver.
+<P>If your built-in keyboard driver conforms to the Layout Manager PDD model and uses AT scan codes natively, this support requirement is already satisfied. If your built-in keyboard driver conforms to Layout Manager PDD model, but does not use AT scan codes, then the stub PDD should be included in the driver to meet this support requirement. It should also be added as the first entry of Layout Manager's PDD list so that its tables are used for <B>MapVirtualKey</B>.</P>
+
+<P>Additionally, the AT device layouts for the supported locales must be included in the run-time image either in their own DLLs or built into the keyboard driver. The proper registry entries must be added to enable these device layouts. The AT device layouts are compiled into files named PS2_AT_<I>&lt;input locale&gt;</I>.lib.</P>
+
+<P>If you are using a keyboard driver from Windows CE .NET 4.1 or earlier, the AT scan code to virtual-key tables must be added to the driver and used when <B>MapVirtualKey</B> is called with 3 as the conversion code. The AT scan code tables can be taken from %_WINCEROOT%\public\common\oak\drivers\keybd\devicelayouts\ps2_at\&lt;input locale&gt;\PS2_AT_&lt;input locale&gt;.cpp. The tables differ across input locales, so the proper tables to use are the ones that conform to the desired input locale for the target keyboard.</P>
+</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%><A HREF="wce50lrfkeybddriverinitialize.htm">PFN_KEYBD_DRIVER_INITIALIZE</A> and <A HREF="wce50lrfkeybddriverinitializeex.htm">PFN_KEYBD_DRIVER_INITIALIZE_EX</A> must spawn a thread that sends the current global modifier state of CAPS LOCK, NUM LOCK, and SCROLL LOCK to the HID keyboard driver as new keyboards are attached.</TD>
+<TD width=67%>If your built-in keyboard driver conforms to the Layout Manager PDD model, this support requirement is already satisfied. For instructions about adding this support to Windows CE .NET 4.1 and earlier keyboard drivers, see <A HREF="wce50howhowtomigrateakeyboarddrivertoconformtothelayoutmanagerinterface.htm">How to Migrate a Keyboard Driver to Conform to the Layout Manager Interface</A>.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%><A HREF="wce50lrfkeybddrivervkeytounicode.htm">PFN_KEYBD_DRIVER_VKEY_TO_UNICODE</A> must send the global modifier state to all HID keyboard driver instances named KBDn: when that state changes.</TD>
+<TD width=67%>If your built-in keyboard driver conforms to the Layout Manager PDD model, this support requirement is already satisfied. For information about adding this support to Windows CE .NET 4.1 and earlier keyboard drivers, see <A HREF="wce50howhowtomigrateakeyboarddrivertoconformtothelayoutmanagerinterface.htm">How to Migrate a Keyboard Driver to Conform to the Layout Manager Interface</A>.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%>Optional. The thread spawned by <B>PFN_KEYBD_DRIVER_INITIALIZE</B> and <B>PFN_KEYBD_DRIVER_INITIALIZE_EX</B> might send the current auto-repeat timings in addition to the global keyboard state.</TD>
+<TD width=67%>If your built-in keyboard driver conforms to the Layout Manager PDD model, this support option is satisfied. To add the optional support to old-style drivers, see the <B>BroadcastAutoRepeatInfo</B>, <B>SendAutoRepeatInfo</B>, and <B>KbdNotificationThread</B> functions in %_WINCEROOT%\public\common\oak\drivers\keybd\laymgr\laymgr.cpp.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%>Optional. <A HREF="wce50lrfkeybddriversetmode.htm">PFN_KEYBD_DRIVER_SET_MODE</A><B>(iPddId, KBDI_AUTOREPEAT_INFO_ID, lpInput)</B> might send the new auto-repeat timings to all HID keyboard driver instances.</TD>
+<TD width=67%>If your built-in keyboard driver conforms to Layout Manager PDD model, this support option is satisfied. To add the optional support to old-style drivers, see the <B>BroadcastAutoRepeatInfo</B>, <B>SendAutoRepeatInfo</B>, and <B>KeybdDriverSetMode</B> functions in %_WINCEROOT%\public\common\oak\drivers\keybd\laymgr\laymgr.cpp.</TD>
+</TR>
+</table></div>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50conkeyboarddrivers.htm">Keyboard Drivers</A> | <A HREF="wce50conlayoutmanager.htm">Layout Manager</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

@@ -1,0 +1,93 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Enabling Error Reporting in the OAL</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Enabling Error Reporting in the OAL"/>
+<MSHelp:RLTitle Title="Enabling Error Reporting in the OAL"/>
+<MSHelp:Keyword Index="A" Term="wce51tskEnablingErrorReportingInOAL"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Feature"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="True"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="PBFeature" Value="SYSGEN_WATSON"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="error_reporting_overview.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="True"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_1072533">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce51tskenablingerrorreportinginoal"></A>Enabling Error Reporting in the OAL</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>The <MSHelp:link keywords="wce50lrfDwNKDrWatsonSize" TABINDEX="0">dwNKDrWatsonSize</MSHelp:link> variable sets the amount of memory needed for error reporting dump files in <MSHelp:link keywords="wce50lrfOEMInit" TABINDEX="0">OEMInit</MSHelp:link>. The default initialization of <B>dwNKDrWatsonSize</B> is 300KB.</P>
+
+<H4 class="dtH4">OEMInit Changes</H4>
+
+<P>The following snippet shows how to initialize <B>dwNKDrWatsonSize</B> to 128KB:</P>
+
+<PRE class="code">extern DWORD dwNKDrWatsonSize;
+extern DWORD dwOEMDrWatsonSize;
+
+#define NOT_FIXEDUP (DWORD)-1
+DWORD dwOEMDrWatsonSize = NOT_FIXEDUP;
+
+
+OEMInit()
+{
+... 
+ if (dwOEMDrWatsonSize != NOT_FIXEDUP) 
+ {
+         // Reserve memory for Error Reporting Dumps
+         dwNKDrWatsonSize = dwOEMDrWatsonSize;
+}
+     //rest of OemInit 
+</PRE>
+
+<H4 class="dtH4">Config.bib Changes</H4>
+
+<P>In config.bib add the following:</P>
+
+<PRE class="code">#if $(WATSONBUFFERSIZE)==$()
+    #define WATSONBUFFERSIZE     00020000
+#endif
+    dwOEMDrWatsonSize   00000000    $(WATSONBUFFERSIZE)   FIXUPVAR</PRE>
+
+<P>Using a FIXUPVAR will allow the size to be changed easily by defining the size WATSONBUFFERSIZE. If WATSONBUFFERSIZE is not defined, a default value of 300KB is used.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><MSHelp:link keywords="wce50tskImplementingtheOEMInitFunction" TABINDEX="0">Implementing the OEMInit Function</MSHelp:link></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

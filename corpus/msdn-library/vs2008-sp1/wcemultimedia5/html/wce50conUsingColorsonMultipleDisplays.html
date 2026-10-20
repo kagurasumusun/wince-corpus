@@ -1,0 +1,81 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Using Colors on Multiple Displays</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Using Colors on Multiple Displays"/>
+<MSHelp:RLTitle Title="Using Colors on Multiple Displays"/>
+<MSHelp:Keyword Index="A" Term="wce50conUsingColorsonMultipleDisplays"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Feature"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="multimon_concepts.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="True"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+<MSHelp:Attr Name="PBFeature" Value="SYSGEN_MULTIMON"/>
+<MSHelp:Attr Name="PBOnly" Value="False"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_3004976">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50conusingcolorsonmultipledisplays"></A>Using Colors on Multiple Displays</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>For a multiple screen system, all screens must have the same color depth. If the primary screen uses a palette, the <MSHelp:link keywords="wce50lrfSelectPalette" TABINDEX="0">SelectPalette</MSHelp:link> and <MSHelp:link keywords="wce50lrfRealizePalette" TABINDEX="0">RealizePalette</MSHelp:link> functions work in the same manner as those functions work on a single screen system, but across all screens. In addition, the palettes of all screens are synchronized.</P>
+
+<P>The OS automatically handles painting into a device context that spans more than one screen. Usually, allowing the OS to automatically handle the painting produces good results, but the results can sometimes be less than optimal. To get the best results for each of the screens in a device context that spans more than one screen, call <A HREF="wce50lrfenumdisplaymonitors.htm">EnumDisplayMonitors</A> to enumerate the screens that intersect your device context and paint the intersecting area in each of the screens separately, according to the display attributes for each screen. </P>
+
+<P>The following code example shows how to paint the entire virtual screen optimally for each screen.</P>
+
+<PRE class="code">hdc = GetDC(NULL);
+EnumDisplayMonitors(hdc, NULL, MyPaintScreenEnumProc, 0);
+ReleaseDC(NULL, hdc);</PRE>
+
+<P>The following code example shows how to paint the top half of a window using the capabilities of each screen.</P>
+
+<PRE class="code">GetClientRect(hwnd, &amp;rc);
+rc.bottom = (rc.bottom - rc.top) / 2;
+hdc = GetDC(hwnd);
+EnumDisplayMonitors(hdc, &amp;rc, MyPaintEnumProc, 0);
+ReleaseDC(hwnd, hdc);</PRE>
+
+<P>If you perform all of your drawing in your code for handling the <MSHelp:link keywords="wce50lrfWMPAINT" TABINDEX="0">WM_PAINT</MSHelp:link> message, you should be able to place your WM_PAINT code in the <A HREF="wce50lrfmonitorenumproc.htm">MonitorEnumProc</A> callback function with only a few modifications. </P>
+
+<P>The following code example shows how to paint in response to a WM_PAINT message using the capabilities of each screen.</P>
+
+<PRE class="code">case WM_PAINT:
+hdc = BeginPaint(hwnd, &amp;ps);
+EnumDisplayMonitors(hdc, NULL, MyPaintEnumProc, 0);
+EndPaint(hwnd, &amp;ps);</PRE>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

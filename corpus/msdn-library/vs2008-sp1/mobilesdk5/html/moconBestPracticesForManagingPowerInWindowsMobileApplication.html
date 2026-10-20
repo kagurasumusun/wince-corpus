@@ -1,0 +1,116 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Best Practices for Managing Power in a Windows Mobile-based Application</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Best Practices for Managing Power in a Windows Mobile-based Application"/>
+<MSHelp:RLTitle Title="Best Practices for Managing Power in a Windows Mobile-based Application"/>
+<MSHelp:Keyword Index="A" Term="moconBestPracticesForManagingPowerInWindowsMobileApplication"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Application"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbsmartphone"/>
+<MSHelp:Attr Name="Product" Value="kbPocketPC"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="Technology" Value="kbPocketPC"/>
+<MSHelp:Attr Name="Technology" Value="kbSmartphone"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="mem_perf_power_mgmt.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="False"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_1076674">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Windows Mobile Version 5.0 SDK<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="moconbestpracticesformanagingpowerinwindowsmobileapplication"></A>Best Practices for Managing Power in a Windows Mobile-based Application</H1>
+<!--Feedback Link Top Start-->
+<P CLASS="feedback"><font size="1"><a href="mailto:medfdbk&#64;microsoft.com?subject=Product: Windows Mobile | Version: 5.0 | Release: SDK | Title: Best Practices for Managing Power in a Windows Mobile-based Application | Filename: moconbestpracticesformanagingpowerinwindowsmobileapplication.htm | Built on: Wednesday, September 14, 2005">Send Feedback</a> on this topic to the authors</font></p>
+<!--Feedback Link Top End-->
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>Power management is most effective when you design it into the application. Poorly power managed applications may drastically and negatively affect power management for the entire device by reducing the device's standby time. There are many ways to optimize battery life. You need a way to measure how effectively you are optimizing power and battery life and whether you are getting your desired results.</P>
+
+<P>There are hardware and software tools to track performance, battery life and power consumption. You can characterize the power management of the device by examining the current state of software on device. To characterize the power management, examine what is consuming the most power, what percentage of power each application consumes, what the power management baseline is for the device, what the duty cycle is for each application, what the duty cycle is for GSM polling, and so on. Measuring power management and tracking power consumption helps you to discover areas that you can improve performance.</P>
+
+<P>Microsoft recommends using a regulated power supply that provides power to the device, captures analog data, samples the data, and then logs it to a file. To measure the voltage drop across the device, attach sense resistors in series with the battery, and then measure the current flowing through the sense resistors to measure how much current the device is using with respect to time.</P>
+
+<H4 class="dtH4">Pocket PC vs. Smartphone</H4>
+
+<UL type="disc">
+	<LI>Pocket PC implements a standby model for power management. That is, it must maintain a baseline power level because a RAM-based file system's hardware must refresh periodically to maintain its data.</li>
+
+	<LI>Smartphone implements an idle model for power management so the device can idle frequently.</li>
+</UL>
+
+<H4 class="dtH4">Optimizing Total Power (P<SUB>Total</SUB>)</H4>
+
+<P>The following equation determines the total power of the device:</P>
+
+<P>P<SUB>Total</SUB> = P<SUB>Idle</SUB>(1 &#0150; CPU Utilization) + P<SUB>Active</SUB>(CPU Utilization)</P>
+
+<P>P<SUB>Idle</SUB> represents the power used while device is idle, and P<SUB>Active</SUB> represents the power used while device is active. The operating system and any executing applications determine CPU utilization. To maximize power and battery life, minimize the CPU utilization.</P>
+
+<H4 class="dtH4">Optimizing Active Power (P<SUB>Active</SUB>)</H4>
+
+<P>Executing code consumes power; conserve P<SUB>Active</SUB> by minimizing CPU utilization. The following list shows how to conserve power and maximize battery life:
+
+<UL type="disc">
+	<LI>Close handles to peripherals when your application no longer needs the handle. When calling into device driver to operate on a peripheral, you need a handle to that device driver. When you are done operating on the peripheral, close the handle.</li>
+
+	<LI>Design protocols efficiently. Keep in mind that the device will consume more power when sending bytes as compared to receiving bytes. In any case, sending and receiving bytes consumes power.</li>
+</UL>
+
+<H4 class="dtH4">Optimizing Idle Power (P<SUB>Idle</SUB>)</H4>
+
+<P>To optimize P<SUB>Idle</SUB>, which conserves power and maximizes battery life, adhere to the best practices in the following list:
+
+<UL type="disc">
+	<LI>Design applications to be event driven. Applications should only process when they interact with the user.</li>
+
+	<LI>Execute as little code as possible.</li>
+
+	<LI>Execute code only when absolutely necessary.</li>
+
+	<LI>Avoid polling by using an event driven design.</li>
+
+	<LI>Monitor the <MSHelp:link keywords="wce50lrfWMACTIVATE" TABINDEX="0">WM_ACTIVATE</MSHelp:link> messages so you know when your application is visible. You can use <MSHelp:link keywords="wce50lrfGetClipBox" TABINDEX="0">GetClipBox</MSHelp:link> to determine if your application is partially visible.</li>
+
+	<LI>Do useful work in applications that are not visible to the user. Do not do unproductive work in applications that are not visible, for example, do not render animations in an application that is not visible to the user.</li>
+
+	<LI>Avoid using indefinite or continuous timers.</li>
+
+	<LI>Ensure that your application is not continually draining the microprocessor.</li>
+
+	<LI>Use zero microprocessor cycles if the device is not being used.</li>
+</UL>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Feedback Link Bottom Start-->
+<p><font size="1"><a href="mailto:medfdbk&#64;microsoft.com?subject=Product: Windows Mobile | Version: 5.0 | Release: SDK | Title: Best Practices for Managing Power in a Windows Mobile-based Application | Filename: moconbestpracticesformanagingpowerinwindowsmobileapplication.htm | Built on: Wednesday, September 14, 2005">Send Feedback</a> on this topic to the authors</font></p>
+<!--Feedback Link Bottom End-->
+<!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="mob5conCopyrightInformationForMagneto" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link></font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

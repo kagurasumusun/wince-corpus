@@ -1,0 +1,90 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Customizing StartUI or Control Panel to Use LASS</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Customizing StartUI or Control Panel to Use LASS"/>
+<MSHelp:RLTitle Title="Customizing StartUI or Control Panel to Use LASS"/>
+<MSHelp:Keyword Index="A" Term="wce50conCustomizingStartUIOrControlPanelToUseLASS"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Feature"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="Technology" Value="Security"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="lass_configuration.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="False"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_1056194">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50concustomizingstartuiorcontrolpaneltouselass"></A>Customizing StartUI or Control Panel to Use LASS</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>You can customize StartUI or Control Panel to use LASS to prompt the user for a password.</P>
+
+<BLOCKQUOTE class="dtBlock">
+<b class="le">Note</b>&nbsp;&nbsp;&nbsp;Remember that registry settings can only take effect when your application calls <A HREF="wce50lrflassreloadconfig.htm">LASSReloadConfig</A> or when you reboot your device. </BLOCKQUOTE>
+
+<H3 class="dtH3">Customizing StartUI to Use LASS</H3>
+
+<P class="labelproc"><B>To customize StartUI to use LASS at startup</B>
+
+<OL type="1">
+	<LI>Modify the code located at %_WINCEROOT%\Public\Common\Oak\Drivers\Startui\Startui.cpp by setting USE_LASS_AUTH=1. This causes LASS-specific code to be included in Startui.cpp. For more information about customizing StartUI, see <MSHelp:link keywords="wce50conCustomizingaUIComponent" TABINDEX="0">Customizing a UI Component</MSHelp:link>.</li>
+
+	<LI>Recompile Startui.cpp.</li>
+
+	<LI>Run the Sysgen tool to make sure that the new settings appear in GWES, which is the Catalog item that contains StartUI. </li>
+
+	<LI>Modify the registry file located at %_WINCEROOT%\Public\Common\Oak\Files\Common.reg to change the StartUI AE_STARTUI event. By default, this event is defined so that it will never authenticate.
+<P>To change the StartUI AE, search for its defining GUID, which is {1B38A686-7CDC-4017-A5E9-4C6A9DD7E5BA}. Change the default <B>AEFrequencyValue</B> setting of FFFFFFFF to 0, so that the user will be authenticated every time. For more information about this registry subkey, see <A HREF="wce50grflassregistrysettings.htm">LASS Registry Settings</A> and <A HREF="wce50grfsettingaepolicy.htm">Setting an AE Policy</A>.
+</li>
+
+	<LI>If you are using the default password LAP, all application calls to <A HREF="wce50lrfverifyuser.htm">VerifyUser</A> will return TRUE until the user enrolls. To enable enrollment with the LAP, you should use the LASSCTL utility located at %_WINCEROOT%\Public\Common\Sdk\Samples\Lassctl, and run <CODE>Lassctl enroll</CODE>. The next time you reset the device, StartUI will call <B>VerifyUser</B> instead of calling <MSHelp:link keywords="wce50lrfCheckPassword" TABINDEX="0">CheckPassword</MSHelp:link>.</li>
+</OL>
+
+<H3 class="dtH3">Customizing Control Panel to Use LASS</H3>
+
+<P class="labelproc"><B>To customize the Control Panel to use LASS at startup</B>
+
+<OL type="1">
+	<LI>Modify the code located at %_WINCEROOT%\Public\Wceshellfe\Oak\Ctlpnl\Cplmain\Cplmain.cpp by setting USE_LASS_AUTH=1. This causes LASS-specific code to be included in Cplmain.cpp. </li>
+
+	<LI>Recompile Cplmain.cpp. The next time you reset the device, Control Panel will call <A HREF="wce50lrfverifyuser.htm">VerifyUser</A> instead of calling <MSHelp:link keywords="wce50lrfCheckPassword" TABINDEX="0">CheckPassword</MSHelp:link>.</li>
+</OL>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce51grfconfiguringlass.htm">Configuring LASS</A> | <A HREF="wce50grflassregistrysettings.htm">LASS Registry Settings</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

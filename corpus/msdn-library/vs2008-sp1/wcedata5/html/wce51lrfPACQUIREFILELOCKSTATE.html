@@ -1,0 +1,129 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>PACQUIREFILELOCKSTATE</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="PACQUIREFILELOCKSTATE"/>
+<MSHelp:RLTitle Title="PACQUIREFILELOCKSTATE"/>
+<MSHelp:Keyword Index="K" Term="PACQUIREFILELOCKSTATE"/>
+<MSHelp:Keyword Index="A" Term="wce51lrfPACQUIREFILELOCKSTATE"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Feature"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="apiref"/>
+<MSHelp:Attr Name="Filename" Value="fsd_structures.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="True"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+<MSHelp:Attr Name="APIName" Value="PACQUIREFILELOCKSTATE"/>
+<MSHelp:Attr Name="APIType" Value="LibDef"/>
+<MSHelp:Attr Name="APILocation" Value="Fsdmgr.lib"/>
+<MSHelp:Attr Name="PBFeature" Value="FILESYSTEM"/>
+<MSHelp:Attr Name="PBOnly" Value="False"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_1077729">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce51lrfpacquirefilelockstate"></A>PACQUIREFILELOCKSTATE</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>This data type is a pointer to a function implemented by an FSD. Used by Lock Manager to get the file/lock state associated with the specified file when a lock is being modified.</P>
+
+<PRE class="syntax"><B>typedef VOID (*PACQUIREFILELOCKSTATE)(
+    DWORD</B> dwFile,<B>
+    PFILELOCKSTATE* </B>ppFileLockState<B>
+    );</B></PRE>
+
+<H4 class="dtH4">Parameters</H4>
+
+<DL>
+<DT>dwFile</DT>
+
+<DD>[in] File handle context passed to <B>FSDMGR_InstallFileLockState</B>. This should be the pointer to the value that the FSD passed to the <B>FSDMGR_CreateFileHandle</B> function when the file handle was created.</dd>
+
+<DT>ppFileLockState</DT>
+
+<DD>[out] Returns a pointer to a <B>pFileLockState</B> structure associated with the file referenced by the handle context, dwFile.</dd>
+</DL>
+
+<H4 class="dtH4">Return Values</H4>
+
+<P>None.</P>
+
+<H4 class="dtH4">Remarks</H4>
+
+<P>This function is required to enter the <B>PFILELOCKSTATE </B>critical section, lpcs, before returning the <B>PFILELOCKSTATE</B> structure to the caller.</P>
+
+<P>Before returning the <B>PFILELOCKSTATE</B> structure to the caller, the function should update the <I>dwPosLow/dwPosHigh and dwAccess</I> members based on the current file pointer and access mode of the handle context referenced by <I>dwFile</I>. </P>
+
+<P>The following eample shows a simple implementation:</P>
+
+<PRE class="code">
+BOOL MyAcquireFileLockState(DWORD dwPfh, PFILELOCKSTATE *ppFileLockState)
+{
+    PFILE pFileHandle = (PFILE)dwPfh;
+    PINTERNALFILE pFile = pFileHandle-&gt;pInternalFile;
+
+    if (NULL == pFile-&gt;FileLockState.lpcs) 
+    {
+        return FALSE;
+    }    
+
+    // acquire file lock state; exit in MyReleaseFileLockState
+    EnterCriticalSection(pFile-&gt;FileLockState.lpcs);
+
+    // fetch file position (64-bit offsets not supported)
+    pFile-&gt;FileLockState.dwPosLow = pFileHandle-&gt;dwCurrentFileOffset;
+    pFile-&gt;FileLockState.dwPosHigh = 0;
+
+    // fetch create access
+    pFile-&gt;FileLockState.dwAccess = pFileHandle-&gt;dwAccessMode;
+
+    // return file lock container
+    *ppFileLockState = &amp;pFile-&gt;FileLockState;
+
+    return TRUE;
+}
+</PRE>
+
+<P>This function is a Lock Manager function provided by FSDMGR to assist FSDs with implementing <A HREF="wce51lrfmyfsd_lockfileex.htm">MyFSD_LockFileEx</A> and <A HREF="wce51lrfmyfsd_unlockfileex.htm">MyFSD_UnlockFileEx</A>.</P>
+
+<H4 class="dtH4">Requirements</H4>
+
+<P><B>OS Versions:</B> Windows CE 5.0 and later.<BR>
+<B>Header:</B> lockmgrtypes.h. <BR>
+<B>Link Library:</B> Fsdmgr.lib.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50lrffsdmgrcreatefilehandle.htm">FSDMGR_CreateFileHandle</A> | <A HREF="wce50lrfmyfsdcreatefilew.htm">MyFSD_CreateFileW</A> | <A HREF="wce50lrfmyfsdfindfirstfilew.htm">MyFSD_FindFirstFileW</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

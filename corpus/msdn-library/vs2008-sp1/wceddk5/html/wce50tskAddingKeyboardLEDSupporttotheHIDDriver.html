@@ -1,0 +1,78 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Adding Keyboard LED Support to the HID Keyboard Driver</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Adding Keyboard LED Support to the HID Keyboard Driver"/>
+<MSHelp:RLTitle Title="Adding Keyboard LED Support to the HID Keyboard Driver"/>
+<MSHelp:Keyword Index="A" Term="wce50tskAddingKeyboardLEDSupporttotheHIDDriver"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Driver"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="False"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbTask"/>
+<MSHelp:Attr Name="Filename" Value="keyboard_guide.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="False"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+<MSHelp:Attr Name="PBFeature" Value="KeyboardDriver"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_3018176">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50tskaddingkeyboardledsupporttothehiddriver"></A>Adding Keyboard LED Support to the HID Keyboard Driver</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>To migrate a keyboard driver from Windows CE .NET 4.1 to Windows CE .NET 4.2, HID requires some support from the keyboard driver to support the NUM LOCK LED, CAPS LOCK LED, SCROLL LOCK LED, and numeric keypad remapping.</P>
+
+<P>An IOCTL must be sent from the GWES keyboard driver to the HID keyboards in two places for the HID keyboard drivers to get the global modifier state and to keep the HID drivers current with the other keyboard drivers in the system. The global modifier state is the state of NUM LOCK, CAPS LOCK, and SCROLL LOCK, when they are attached. Microsoft provides the code to do this, which is boilerplate. The keyboard driver must make two new function calls. Both of the functions that need to be called are declared in the included header file.</P>
+
+<P class="labelproc"><B>To add keyboard LED support to the HID keyboard driver</B>
+
+<OL type="1">
+	<LI>Examine the boilerplate code in %_WINCEROOT%\Public\Common\OAK\Drivers\Keybd\Hidioctl.</li>
+
+	<LI>Send the IOCTL whenever a new HID keyboard is attached by creating a thread during GWES keyboard initialization that waits for any keyboard IClass drivers to be attached, and then send each the current global modifier state. 
+<P>GWES keyboard initialization takes place in <A HREF="wce50lrfkeybddriverinitializeex.htm">PFN_KEYBD_DRIVER_INITIALIZE_EX</A>, which calls <B>CreateHidKbdThread </B>to create the thread that waits for new HID keyboards and sends them the initialize IOCTL.
+</li>
+
+	<LI>Send the IOCTL whenever the global modifier state changes. 
+<P>This occurs in <A HREF="wce50lrfkeybddrivervkeytounicode.htm">PFN_KEYBD_DRIVER_VKEY_TO_UNICODE</A>. After updating the <B>KeyState</B> array entry for the current virtual key, usually through a call to <B>NewKeyStateFlags</B>, it calls <B>ProcessEventForHidKbd(KeyState)</B> that sends an IOCTL to each HID keyboard if the global modifier state changed.
+</li>
+
+	<LI>Update your keyboard driver's sources file to build the included .cpp file.</li>
+</OL>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50conkeyboarddrivermigration.htm">Keyboard Driver Migration</A> | <A HREF="wce50conkeyboarddrivers.htm">Keyboard Drivers</A> | <A HREF="wce50conlayoutmanager.htm">Layout Manager</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

@@ -1,0 +1,224 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Creating a Control Panel Application</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Creating a Control Panel Application"/>
+<MSHelp:RLTitle Title="Creating a Control Panel Application"/>
+<MSHelp:Keyword Index="A" Term="wce50tskCreatingaControlPanelApplication"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Feature"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbTask"/>
+<MSHelp:Attr Name="Filename" Value="howto_ControlPanelApp.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="True"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+<MSHelp:Attr Name="PBFeature" Value="UI"/>
+<MSHelp:Attr Name="PBOnly" Value="True"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_3011122">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50tskcreatingacontrolpanelapplication"></A>Creating a Control Panel Application</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>After you create the OS design and complete the subsequent steps as described in <A HREF="wce50howhowtoimplementacontrolpanelapplication.htm">How to Implement a Control Panel Application</A>, you will create a DLL application for your Control Panel application and then add specific Control Panel code to it. When it is complete, this Control Panel application invokes a simple application called HelloWorld.exe. </P>
+
+<BLOCKQUOTE class="dtBlock">
+<b class="le">Note&nbsp;&nbsp;&nbsp;</b>Although this information is presented in terms of using the Platform Builder IDE during OS development, an application developer can use other development tools in conjunction with an SDK for a Windows CE-based platform to create Control Panel applications outside of the OS development process.</BLOCKQUOTE>
+
+<P>For more information about the general elements of a Control Panel application and how they interact, see <MSHelp:link keywords="wce50conControlPanel" TABINDEX="0">Control Panel</MSHelp:link>.</P>
+
+<P class="labelproc"><B>To create a DLL project</B>
+
+<OL type="1">
+	<LI>From the <B>File</B> menu, choose <B>New Project or File</B>.</li>
+
+	<LI>In the <B>New Project or File</B> dialog box, choose the <B>Projects</B> tab and then choose <B>WCE Dynamic-Link Library</B>.</li>
+
+	<LI>Type the name <B>HelloCPL</B> for your Control Panel application in the <B>Project name</B> field. Ensure that the <B>Workspaces project</B> radio button is selected, and choose <B>OK</B>. 
+<P>The <B>New Project Wizard - Step 1 of 3</B> appears.
+
+<P>Be sure to use the specific name <I>HelloCPL</I>. Some of the code in related steps relies on auto-generated data types that are provided by the New Project Wizard and based on this name.
+
+<BLOCKQUOTE class="dtBlock">
+<b class="le">Note&nbsp;&nbsp;&nbsp;</b>Do not add the .cpl file extension to your project name. You provide this later when you configure the build settings for your project.</BLOCKQUOTE>
+</li>
+
+	<LI>In the New Project Wizard, choose <B>A DLL that exports some symbols</B> and then choose <B>Finish</B>.</li>
+</OL>
+
+<P>As a result of these steps, the New Project Wizard creates several header, resource, and source files for your project. You may want to review the contents of these files to see the structure of your project. Specifically, the comments at the beginning of your project's header file, HelloCPL.h, explain the macros created to identify symbols exported by your DLL.</P>
+
+<P>At this point, the DLL project is simply an empty shell with the correct infrastructure and settings to compile your project into a DLL. The next step is to add the actual code for your Control Panel application.</P>
+
+<P class="labelproc"><B>To add Control Panel code to your project</B>
+
+<OL type="1">
+	<LI>In the <B>Workspace</B> view, choose the <B>FileView</B> tab, expand the <B>HelloCPL files</B> node, and then expand the <B>Source Files</B> node. Double-click <B>HelloCPL.cpp</B> to open the main source file for your project.
+<P>The file contains a small amount of code that was automatically generated by the New Project or File wizard. 
+</li>
+
+	<LI>Replace the existing code with the following code:
+<PRE class="code">//
+// HelloCPL.cpp : Defines the entry point for the DLL
+//
+
+#include "stdafx.h"    // Auto-generated by wizard.
+#include "HelloCPL.h"  // Auto-generated by wizard.
+#include "resource.h"  // Auto-generated at compile time
+
+#include &lt;tchar.h&gt;     // General text functions.
+#include "cpl.h"       // Control Panel support.
+
+// Returns the number of characters in an expression.
+#define lengthof(exp) ((sizeof((exp)))/sizeof((*(exp))))
+
+HMODULE g_hModule = NULL;   // Handle to the DLL.
+
+// =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+// Main entry point for the Control Panel DLL.
+// =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+extern "C" BOOL APIENTRY DllMain( HANDLE hModule, 
+                       DWORD  ul_reason_for_call, 
+                       LPVOID lpReserved )
+{
+  switch (ul_reason_for_call)
+  {
+    case DLL_PROCESS_ATTACH:
+    {
+      g_hModule = (HMODULE) hModule;
+    }
+    case DLL_THREAD_ATTACH:
+    case DLL_THREAD_DETACH:
+    case DLL_PROCESS_DETACH:
+       break;
+    }
+    return TRUE;
+}
+
+// =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+// The entry point to the Control Panel application.
+// =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+extern "C" HelloCPL_API LONG CALLBACK CPlApplet(HWND hwndCPL,
+                  UINT message, LPARAM lParam1, LPARAM lParam2)
+{
+  switch (message)
+  {
+    case CPL_INIT:
+      // Perform global initializations, especially memory
+      // allocations, here.
+      // Return 1 for success or 0 for failure.
+      // Control Panel does not load if failure is returned.
+      return 1;
+
+    case CPL_GETCOUNT:
+      // The number of actions supported by this Control
+      // Panel application.
+      return 1;
+
+    case CPL_NEWINQUIRE:
+      // This message is sent once for each dialog box, as
+      // determined by the value returned from CPL_GETCOUNT.
+      // lParam1 is the 0-based index of the dialog box.
+      // lParam2 is a pointer to the NEWCPLINFO structure.
+    {
+      ASSERT(0 == lParam1);
+      ASSERT(lParam2);
+
+      NEWCPLINFO* lpNewCplInfo = (NEWCPLINFO *) lParam2;
+      if (lpNewCplInfo)
+      {
+         lpNewCplInfo-&gt;dwSize = sizeof(NEWCPLINFO);
+         lpNewCplInfo-&gt;dwFlags = 0;
+         lpNewCplInfo-&gt;dwHelpContext = 0;
+         lpNewCplInfo-&gt;lData = IDI_HELLOWORLD;
+
+         // The large icon for this application. Do not free this 
+         // HICON; it is freed by the Control Panel infrastructure.
+         lpNewCplInfo-&gt;hIcon = LoadIcon(g_hModule,
+                                  MAKEINTRESOURCE(IDI_HELLOWORLD));
+
+          LoadString(g_hModule, IDS_APP_TITLE, lpNewCplInfo-&gt;szName,
+                     lengthof(lpNewCplInfo-&gt;szName));
+          LoadString(g_hModule, IDS_HELLO, lpNewCplInfo-&gt;szInfo,
+                     lengthof(lpNewCplInfo-&gt;szInfo));
+        LoadString(g_hModule, IDC_HelloWorld, lpNewCplInfo-&gt;szInfo,
+                     lengthof(lpNewCplInfo-&gt;szInfo));
+          _tcscpy(lpNewCplInfo-&gt;szHelpFile, _T(""));
+          return 0;
+      }
+      return 1;  // Nonzero value means CPlApplet failed.
+    }
+
+    case CPL_DBLCLK:
+    {
+      // The user has double-clicked the icon for the
+      // dialog box in lParam1 (zero-based).
+      PROCESS_INFORMATION pi = {0};
+      if (CreateProcess(_T("\\Windows\\HelloWorld.exe"), NULL, NULL,
+                             NULL, FALSE, 0, NULL, NULL, NULL, &amp;pi))
+      {
+        CloseHandle(pi.hThread);
+        CloseHandle(pi.hProcess);
+        return 0;
+      }
+      return 1;     // CPlApplet failed.
+    }
+
+    case CPL_STOP:
+      // Called once for each dialog box. Used for cleanup.
+    case CPL_EXIT:
+      // Called only once for the application. Used for cleanup.
+    default:
+      return 0;
+  }
+
+  return 1;  // CPlApplet failed.
+  }  // CPlApplet
+</PRE>
+</li>
+</OL>
+
+<P>In this code, the definitions for both <MSHelp:link keywords="wce50lrfDllMain" TABINDEX="0">DllMain</MSHelp:link> and <B>CPlApplet</B> are preceded with <CODE>extern "C"</CODE> declarations. This assures that they are recognized by C-style calls within the OS.</P>
+
+<P>The working code for a Control Panel application can be written into the DLL, that is, the .cpl file itself. </P>
+
+<P>However, as the previous code shows, this is not a requirement in the handling of CPL_DBLCLK. A Control Panel application can delegate the bulk of its work to another process.</P>
+
+<P>The code uses an icon resource named IDI_HELLOWORLD and three string resources named IDS_APP_TITLE, IDS_HELLO and IDC_HelloWorld. Before you can compile your application, you must add these resources to your project. For information, see <A HREF="wce50tskaddingresourcestoacontrolpanelapplication.htm">Adding Resources to a Control Panel Application</A>.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50howhowtoimplementacontrolpanelapplication.htm">How to Implement a Control Panel Application</A> | <MSHelp:link keywords="wce50lrfCloseHandle" TABINDEX="0">CloseHandle</MSHelp:link> | <MSHelp:link keywords="wce50lrfCPLDBLCLK" TABINDEX="0">CPL_DBLCLK</MSHelp:link> | <MSHelp:link keywords="wce50lrfCPLEXIT" TABINDEX="0">CPL_EXIT</MSHelp:link> | <MSHelp:link keywords="wce50lrfCPLGETCOUNT" TABINDEX="0">CPL_GETCOUNT</MSHelp:link> | <MSHelp:link keywords="wce50lrfCPLINIT" TABINDEX="0">CPL_INIT</MSHelp:link> | <MSHelp:link keywords="wce50lrfCPLNEWINQUIRE" TABINDEX="0">CPL_NEWINQUIRE</MSHelp:link> | <MSHelp:link keywords="wce50lrfCPLSTOP" TABINDEX="0">CPL_STOP</MSHelp:link> | <MSHelp:link keywords="wce50lrfCreateProcess" TABINDEX="0">CreateProcess</MSHelp:link> | <MSHelp:link keywords="wce50lrfDllMain" TABINDEX="0">DllMain</MSHelp:link> | <MSHelp:link keywords="wce50lrfLoadIcon" TABINDEX="0">LoadIcon</MSHelp:link> | <MSHelp:link keywords="wce50lrfLoadString" TABINDEX="0">LoadString</MSHelp:link> | <MSHelp:link keywords="wce50lrfNEWCPLINFO" TABINDEX="0">NEWCPLINFO</MSHelp:link> | <MSHelp:link keywords="wce50lrfPROCESSINFORMATION" TABINDEX="0">PROCESS_INFORMATION</MSHelp:link></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

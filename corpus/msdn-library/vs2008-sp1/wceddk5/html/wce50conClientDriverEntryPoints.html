@@ -1,0 +1,83 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Client Driver Entry Points</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Client Driver Entry Points"/>
+<MSHelp:RLTitle Title="Client Driver Entry Points"/>
+<MSHelp:Keyword Index="A" Term="wce50conClientDriverEntryPoints"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Driver"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="False"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="sd_guide.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="True"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+<MSHelp:Attr Name="PBFeature" Value="SecureDigitalCardDriver"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_1052868">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50conclientdriverentrypoints"></A>Client Driver Entry Points</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>A Secure Digital (SD) card client driver is a streams driver that implements the standard streams entry points. Of these entry points, only <A HREF="wce50lrfxxxinit15.htm">XXX_Init (Device Manager)</A> and <A HREF="wce50lrfxxxdeinit14.htm">XXX_Deinit (Device Manager)</A> are required. These functions are always called during device loading and unloading. Implementation of one or more of the entry points <A HREF="wce50lrfxxxopen17.htm">XXX_Open (Device Manager)</A><CODE>, </CODE><A HREF="wce50lrfxxxclose13.htm">XXX_Close (Device Manager)</A>, <A HREF="wce50lrfxxxwrite20.htm">XXX_Write (Device Manager)</A><CODE>, </CODE><A HREF="wce50lrfxxxread18.htm">XXX_Read (Device Manager)</A><CODE>, </CODE><A HREF="wce50lrfxxxseek19.htm">XXX_Seek (Device Manager)</A>, or <A HREF="wce50lrfxxxiocontrol16.htm">XXX_IOControl (Device Manager)</A> are required in order to provide an application interface to the driver.</P>
+
+<P>An SD client driver does not use the <A HREF="wce50lrfxxxpowerup.htm">XXX_PowerUp (Device Manager)</A> and <A HREF="wce50lrfxxxpowerdown.htm">XXX_PowerDown (Device Manager)</A> functions. Power management is handled using Power Manager aware IOCTLs. However, a client driver can implement these entry points to receive power up and power down notifications. The power up and power down entry points are used only to notify the driver of the event. Since these functions are called in a non-preemptible interrupt context, very little can be done other than to set notification flags in the driver.</P>
+
+<P>A DLL entry point is called by the Windows CE module loader once each time a DLL is loaded and unloaded. The client driver then initializes or deinitializes the SD card library. The following code example shows the layout of a typical DLL entry point.</P>
+
+<PRE class="code">BOOL SDMemoryDllEntry (HINSTANCE  hInstance,
+  ULONG Reason,
+  LPVOID pReserved)
+{
+  if(Reason == DLL_PROCESS_ATTACH ) {
+    if(!SDInitializeCardLib()) {
+      fRet = FALSE;
+    }
+  }
+  else if(Reason == DLL_PROCESS_DETACH ) {
+    SDDeinitializeCardLib();
+  }
+  return fRet;
+}</PRE>
+
+<P>The entry point for a client driver must also be included in the associated sources file. The following code example shows the entry point for a client driver in a sources file.</P>
+
+<PRE class="code">DLLENTRY= SDMemoryDllEntry</PRE>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50consecuredigitalcardclientdriver.htm">Secure Digital Card Client Driver</A> | <A HREF="wce50lrfxxxinit15.htm">XXX_Init (Device Manager)</A> | <A HREF="wce50lrfxxxdeinit14.htm">XXX_Deinit (Device Manager)</A> | <A HREF="wce50lrfxxxopen17.htm">XXX_Open (Device Manager)</A> | <A HREF="wce50lrfxxxclose13.htm">XXX_Close (Device Manager)</A> | <A HREF="wce50lrfxxxwrite20.htm">XXX_Write (Device Manager)</A> | <A HREF="wce50lrfxxxread18.htm">XXX_Read (Device Manager)</A> | <A HREF="wce50lrfxxxseek19.htm">XXX_Seek (Device Manager)</A> | <A HREF="wce50lrfxxxiocontrol16.htm">XXX_IOControl (Device Manager)</A> | <A HREF="wce50lrfxxxpowerup.htm">XXX_PowerUp (Device Manager)</A> | <A HREF="wce50lrfxxxpowerdown.htm">XXX_PowerDown (Device Manager)</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

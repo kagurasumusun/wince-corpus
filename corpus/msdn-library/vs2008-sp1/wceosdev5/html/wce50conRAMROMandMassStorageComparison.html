@@ -1,0 +1,202 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>RAM, ROM, and Mass Storage Comparison</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="RAM, ROM, and Mass Storage Comparison"/>
+<MSHelp:RLTitle Title="RAM, ROM, and Mass Storage Comparison"/>
+<MSHelp:Keyword Index="A" Term="wce50conRAMROMandMassStorageComparison"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="OS"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="True"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="howto_OptimizePerf.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="False"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="True"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_3011142">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50conramromandmassstoragecomparison"></A>RAM, ROM, and Mass Storage Comparison</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>The following table shows the common use of various types of memory on a target device.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=13%>Memory type</TH>
+<TH width=52%>Description</TH>
+<TH width=35%>Use</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=13%>RAM</TD>
+<TD width=52%>RAM accommodates an object store and program memory.
+<P>The object store resembles a permanent RAM disk. Data is retained when the OS suspends. A target device typically has a backup power supply for memory, which preserves data if power from the primary power supply is interrupted. For more information about the object store, see <MSHelp:link keywords="wce50conObjectStore" TABINDEX="0">Object Store</MSHelp:link>.</P>
+
+<P>Program memory is similar to RAM in a desktop computer. Program memory stores heaps and stacks for the applications that are running.</P>
+</TD>
+<TD width=35%>An application is paged to RAM and then executed.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=13%>ROM</TD>
+<TD width=52%>Stores the OS and applications that are included with the OS.</TD>
+<TD width=35%>If the data is not compressed, an application executes in place (XIP).
+<P>If the data is compressed, an application is decompressed, paged to RAM, and then executed. </P>
+</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=13%>Flash</TD>
+<TD width=52%>Typically used for data storage and can be used for program storage.</TD>
+<TD width=35%>An application is paged to RAM and then executed.
+<P>An application stored in flash memory is handled in the same manner as an application stored in ROM.</P>
+</TD>
+</TR>
+</table></div>
+
+<P>If an application runs directly from ROM, RAM is conserved. The application also runs sooner because the data does not need to be copied to RAM.</P>
+
+<P>Consider the speed of the flash memory and RAM in a target device when optimizing the target device. The following table shows ways to execute an application that is stored in flash memory.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=29%>Method of execution</TH>
+<TH width=71%>Description of process</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=29%>Application is copied to RAM and then executed</TD>
+<TD width=71%>Compress the dynamic-link library (DLL) or executable file or move the file to the MODULES section. For more information, see <A HREF="wce50conmodulessection.htm">MODULES Section</A>.
+<P>This approach introduces overhead while the module loads, but with the faster speed of RAM, the application executes more quickly after it loads.</P>
+</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=29%>Application is XIP</TD>
+<TD width=71%>XIP reduces the amount of RAM used, but the application runs more slowly than it would from RAM.</TD>
+</TR>
+</table></div>
+
+<P>When using flash memory, you should add a separate boot ROM to a release device. For more information, see <MSHelp:link keywords="wce50conBootLoaders" TABINDEX="0">Boot Loaders</MSHelp:link>. </P>
+
+<P>For a mass storage device, you should allocate an appropriate amount of RAM to the cache for the storage device. The larger the mass storage device, the larger the cache should be. The settings that determine the cache size are stored in the <B>HKEY_LOCAL_MACHINE\System\CurrentControlSet\Control\FATFS</B> registry key.</P>
+
+<P>The following table shows an appropriate amount of RAM to allocate to the cache for a storage device, and the corresponding registry entry that specifies the cache size.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=29%>Registry entry</TH>
+<TH width=31%>Number of sectors</TH>
+<TH width=40%>Cache size in kilobytes (KB)</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=29%>2</TD>
+<TD width=31%>2</TD>
+<TD width=40%>1</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=29%>4</TD>
+<TD width=31%>4</TD>
+<TD width=40%>2</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=29%>8</TD>
+<TD width=31%>8</TD>
+<TD width=40%>4</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=29%>10</TD>
+<TD width=31%>16</TD>
+<TD width=40%>8</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=29%>20</TD>
+<TD width=31%>16</TD>
+<TD width=40%>32</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=29%>40</TD>
+<TD width=31%>64</TD>
+<TD width=40%>32</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=29%>80&nbsp;</TD>
+<TD width=31%>128</TD>
+<TD width=40%>64</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=29%>100</TD>
+<TD width=31%>256</TD>
+<TD width=40%>128</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=29%>200</TD>
+<TD width=31%>512</TD>
+<TD width=40%>256</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=29%>400</TD>
+<TD width=31%>1024</TD>
+<TD width=40%>512</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=29%>800</TD>
+<TD width=31%>2048</TD>
+<TD width=40%>1024</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=29%>1000</TD>
+<TD width=31%>4096</TD>
+<TD width=40%>2048</TD>
+</TR>
+</table></div>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50tbstroubleshootingplatformperformanceinsufficient.htm">Troubleshooting: Performance Insufficient</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

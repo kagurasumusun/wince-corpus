@@ -1,0 +1,94 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Boot Loader Image Builder File</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Boot Loader Image Builder File"/>
+<MSHelp:RLTitle Title="Boot Loader Image Builder File"/>
+<MSHelp:Keyword Index="A" Term="wce50conBootLoaderImageBuilderFile"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Hardware"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="True"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="bootloader_concepts.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="True"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_3010092">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50conbootloaderimagebuilderfile"></A>Boot Loader Image Builder File</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>The Boot.bib file specifies the size, type, and location of the memory on the target device where you load the boot loader. Because the boot loader executes from ROM or flash memory, the writeable data sections in the boot loader should be relocated to RAM before using the data sections, which are global variables. This is done by BLCOMMON. The boot loader also uses some RAM for the stack. The boot loader can also copy itself from ROM to RAM during startup. In this case, the boot loader should only perform relative jumps until the image is copied to RAM and the image is should be adjusted based on the destination address in RAM.</P>
+
+<P>The RAM statement in the .bib file controls the RAM area that is used for data sections that are writeable by the boot loader. The OEM in the boot loader startup code initializes the stack.</P>
+
+<P>The start address entries in the MEMORY section of Boot.bib must be either RAM or ROM. In the MEMORY section, modify the boot and RAM entries for the target device. In the MODULES section, the name entry must be Nk.exe for the ROM image builder to correctly relocate the data section. </P>
+
+<P>The following code example shows the MODULES section of the Boot.bib file where you specify Eboot.exe.</P>
+
+<PRE class="code">MODULES 
+;  Name    Path          Memory Type 
+;  ------  ------------  ----------- 
+   nk.exe  Eboot.exe     EBOOT </PRE>
+
+<P>The following table shows the boot loader&#0150;specific entries that you can include in the CONFIG section of Boot.bib. </P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=26%>Boot loader entry</TH>
+<TH width=74%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=26%>ROMOFFSET</TD>
+<TD width=74%>Specifies the offset of the image address records. BIN file records, which are .abx files, are unaffected. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=26%>BOOTJUMP</TD>
+<TD width=74%>Specifies the address to which the boot loader jumps on startup.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=26%>X86BOOT</TD>
+<TD width=74%>Specifies an initial jump operation code for an x86 boot loader. The jump instruction is applied at x86 reset vector address. The x86 boot loader entry applies only to the startup code in the system.</TD>
+</TR>
+</table></div>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><MSHelp:link keywords="wce50conMEMORYSection" TABINDEX="0">MEMORY Section</MSHelp:link> | <MSHelp:link keywords="wce50conMODULESSection" TABINDEX="0">MODULES Section</MSHelp:link> | <MSHelp:link keywords="wce50conBinaryImageBuilderFile" TABINDEX="0">Binary Image Builder File</MSHelp:link> | <A HREF="wce50conethernetbootloader.htm">Ethernet Boot Loader</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

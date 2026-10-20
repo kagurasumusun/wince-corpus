@@ -1,0 +1,363 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>NDISUIO_OPEN_CONTEXT</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="NDISUIO_OPEN_CONTEXT"/>
+<MSHelp:RLTitle Title="NDISUIO_OPEN_CONTEXT"/>
+<MSHelp:Keyword Index="K" Term="NDISUIO_OPEN_CONTEXT"/>
+<MSHelp:Keyword Index="A" Term="wce50lrfNDISUIOOPENCONTEXT"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Driver"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="False"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="apiref"/>
+<MSHelp:Attr Name="Filename" Value="ndisuio_structures.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="False"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+<MSHelp:Attr Name="APIName" Value="NDISUIO_OPEN_CONTEXT"/>
+<MSHelp:Attr Name="PBFeature" Value="NetworkDriver"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_3018247">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50lrfndisuioopencontext"></A>NDISUIO_OPEN_CONTEXT</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>This structure represents the network device object when opened. It is allocated on processing <A HREF="wce50lrfprotocolbindadapter.htm">ProtocolBindAdapter</A> from NDIS and freed when all references to it are gone.</P>
+
+<PRE class="syntax"><B>typedef struct _NDISUIO_OPEN_CONTEXT {</B>
+  <B>LIST_ENTRY</B><I>Link</I><B>;</B>
+  <B>ULONG</B> <I>Flags</I><B>;</B>
+  <B>ULONG</B><I> RefCount</I><B>;</B>
+  <B>NUIO_LOCK </B><I>Lock</I><B>;</B>
+  <B>PFILE_OBJECT </B><I>pFileObject</I><B>;</B>
+  <B>NDIS_HANDLE </B><I>BindingHandle</I><B>;</B>
+  <B>NDIS_HANDLE</B> <I>SendPacketPool</I><B>;</B>
+  <B>NDIS_HANDLE</B><I> SendBufferPool</I><B>;</B>
+  <B>NDIS_HANDLE</B> <I>RecvPacketPool</I><B>;</B>
+  <B>NDIS_HANDLE</B><I> RecvBufferPool</I><B>;</B>
+  <B>ULONG </B><I>MacOptions</I><B>;</B>
+  <B>ULONG </B><I>MaxFrameSize</I><B>;</B>
+  <B>LIST_ENTRY </B><I>PendedWrites</I><B>;</B>
+  <B>ULONG </B><I>PendedSendCount</I><B>;</B>
+
+  <B>#ifndef UNDER_CE</B>
+  <B>LIST_ENTRY </B><I>PendedReads</I><B>;</B>
+  <B>ULONG </B><I>PendedReadCount</I><B>;</B>
+  <B>#else</B>
+  <B>NDIS_EVENT </B><I>ReadEvent</I><B>;</B>
+  <B>BOOL </B><I>bBlockingRead</I><B>;</B>
+  <B>DWORD </B><I>dwReadTimeOut</I><B>;</B>
+  <B>#endif</B>
+
+  <B>LIST_ENTRY </B><I>RecvPktQueue</I><B>;</B>
+  <B>ULONG </B><I>RecvPktCount</I><B>;</B>
+  <B>NET_DEVICE_POWER_STATE </B><I>PowerState</I><B>;</B>
+  <B>NDIS_STRING </B><I>DeviceName</I><B>;</B>
+  <B>NDIS_STRING </B><I>DeviceDescr</I><B>;</B>
+<B>NDIS_STATUS </B><I>BindStatus</I><B>;</B>
+<B>NUIO_EVENT </B><I>BindEvent</I><B>;</B>
+
+<B>#ifndef UNDER_CE</B>
+<B>BOOLEAN </B><I>bRunningOnWin9x</I><B>;</B>
+<B>#endif</B>
+
+<B>#ifdef UNDER_CE</B>
+<B>USHORT </B><I>EthType</I><B>;</B>
+<B>#endif</B>
+
+<B>ULONG </B><I>oc_sig</I><B>;</B>
+
+<B>} NDISUIO_OPEN_CONTEXT, *PNDISUIO_OPEN_CONTEXT;</B></PRE>
+
+<H4 class="dtH4">Members</H4>
+
+<DL>
+<DT><B>Link</B></DT>
+
+<DD>Link to the global list.</dd>
+
+<DT><B>Flags</B></DT>
+
+<DD>State information. The following table shows the values for <B>Flags</B>.
+
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=39%>Flag</TH>
+<TH width=61%>Value</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=39%>NUIOO_BIND_IDLE</TD>
+<TD width=61%>0x00000000</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=39%>NUIOO_BIND_OPENING</TD>
+<TD width=61%>0x00000001</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=39%>NUIOO_BIND_FAILED</TD>
+<TD width=61%>0x00000002</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=39%>NUIOO_BIND_ACTIVE</TD>
+<TD width=61%>0x00000004</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=39%>NUIOO_BIND_CLOSING</TD>
+<TD width=61%>0x00000008</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=39%>NUIOO_BIND_FLAGS</TD>
+<TD width=61%>0x0000000F</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=39%>NUIOO_OPEN_IDLE</TD>
+<TD width=61%>0x00000000</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=39%>NUIOO_OPEN_ACTIVE</TD>
+<TD width=61%>0x00000010</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=39%>NUIOO_OPEN_FLAGS</TD>
+<TD width=61%>0x000000F0</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=39%>NUIOO_RESET_IN_PROGRESS</TD>
+<TD width=61%>0x00000100</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=39%>NUIOO_NOT_RESETTING</TD>
+<TD width=61%>0x00000000</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=39%>NUIOO_RESET_FLAGS</TD>
+<TD width=61%>0x00000100</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=39%>NUIOO_MEDIA_CONNECTED</TD>
+<TD width=61%>0x00000000</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=39%>NUIOO_MEDIA_DISCONNECTED</TD>
+<TD width=61%>0x00000200</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=39%>NUIOO_MEDIA_FLAGS</TD>
+<TD width=61%>0x00000200</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=39%>NUIOO_READ_SERVICING</TD>
+<TD width=61%>0x00100000</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=39%>NUIOO_READ_FLAGS</TD>
+<TD width=61%>0x00100000</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=39%>NUIOO_UNBIND_RECEIVED</TD>
+<TD width=61%>0x10000000</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=39%>NUIOO_UNBIND_FLAGS</TD>
+<TD width=61%>0x10000000</TD>
+</TR>
+</table></div>
+
+</dd>
+
+<DT><B>RefCount</B></DT>
+
+<DD>Count of pended read IRPs, queued or incomplete write IRPs, and existence of binding.</dd>
+
+<DT><B>Lock</B></DT>
+
+<DD>Indicates an NDISUIO lock.</dd>
+
+<DT><B>pFileObject</B></DT>
+
+<DD>Pointer to the file assignment for the open device.</dd>
+
+<DT><B>BindingHandle</B></DT>
+
+<DD>File handle for NDIS binding.</dd>
+
+<DT><B>SendPacketPool</B></DT>
+
+<DD>File handle for the send packet pool.</dd>
+
+<DT><B>SendBufferPool</B></DT>
+
+<DD>File handle for the send buffer.</dd>
+
+<DT><B>RecvPacketPool</B></DT>
+
+<DD>File handle for the received packet pool.</dd>
+
+<DT><B>RecvBufferPool</B></DT>
+
+<DD>File handle for the receive buffer.</dd>
+
+<DT><B>MacOptions</B></DT>
+
+<DD>Media access options.</dd>
+
+<DT><B>MaxFrameSize</B></DT>
+
+<DD>Maximum frame size permitted, in bytes.</dd>
+
+<DT><B>PendedWrites</B></DT>
+
+<DD>Pended write IRP queue.</dd>
+
+<DT><B>PendedSendCount</B></DT>
+
+<DD>Number of pended writes.</dd>
+
+<DT><B>PendedReads</B></DT>
+
+<DD>Pended read IRP queue.</dd>
+
+<DT><B>PendedReadCount</B></DT>
+
+<DD>Number of pended reads.</dd>
+
+<DT><B>ReadEvent</B></DT>
+
+<DD>Event to trigger when <B>bBlockingRead</B> is TRUE.</dd>
+
+<DT><B>bBlockingRead</B></DT>
+
+<DD>Boolean value indicating that <B>ReadEvent</B> has occurred.</dd>
+
+<DT><B>dwReadTimeOut</B></DT>
+
+<DD>Amount of time to wait for incoming reads.</dd>
+
+<DT><B>RecvPktQueue</B></DT>
+
+<DD>Not used.</dd>
+
+<DT><B>RecvPktCount</B></DT>
+
+<DD>Not used.</dd>
+
+<DT><B>PowerState</B></DT>
+
+<DD>Indication of the device power state.</dd>
+
+<DT><B>DeviceName</B></DT>
+
+<DD>Name of the device used in <A HREF="wce50lrfndisopenadapter.htm">NdisOpenAdapter</A>.</dd>
+
+<DT><B>DeviceDescr</B></DT>
+
+<DD>Friendly name of the <B>DeviceName</B> adapter.</dd>
+
+<DT><B>BindStatus</B></DT>
+
+<DD>Existence of the bind status for the device designated by <B>NdisOpenAdapter</B> or <A HREF="wce50lrfndiscloseadapter.htm">NdisCloseAdapter</A>.</dd>
+
+<DT><B>BindEvent</B></DT>
+
+<DD>Notification event that adapter binding or unbinding is complete.</dd>
+
+<DT><B>bRunningOnWin9x</B></DT>
+
+<DD>Not used.</dd>
+
+<DT><B>EthType</B></DT>
+
+<DD>Ethernet frame type of interest, which can be tuned for each adapter context. The following table shows the valid EthType values.
+
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=40%>EthType</TH>
+<TH width=60%>Value</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=40%>NUIO_ETH_TYPE</TD>
+<TD width=60%>0x8001</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=40%>NUIO_8021P_TAG_TYPE</TD>
+<TD width=60%>0x0081</TD>
+</TR>
+</table></div>
+
+</dd>
+
+<DT><B>oc_sig</B></DT>
+
+<DD>Validation signature.</dd>
+</DL>
+
+<H4 class="dtH4">Remarks</H4>
+
+<P>While an NDIS binding exists, read I/O request packets (IRPs) are queued on this structure and processed when packets are received. If data arrives in the absence of a pended read, NDISUIO saves the contents of the latest packet received. If no binding exists, the read packet fails.</P>
+
+<P>NDISUIO uses write IRPs to send data. Each write IRP maps to a single NDIS packet. Packet send-completion is mapped to write IRP completion. If no active binding exists, write IRPs fail.</P>
+
+<H4 class="dtH4">Requirements</H4>
+
+<P><B>OS Versions:</B> Windows CE .NET 4.0 and later.<BR>
+<B>Header:</B> Nuiouser.h.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50lrfprotocolbindadapter.htm">ProtocolBindAdapter</A> | <A HREF="wce50lrfndisopenadapter.htm">NdisOpenAdapter</A> | <A HREF="wce50lrfndiscloseadapter.htm">NdisCloseAdapter</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

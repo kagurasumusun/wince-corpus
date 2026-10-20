@@ -1,0 +1,130 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Cookie Headers</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Cookie Headers"/>
+<MSHelp:RLTitle Title="Cookie Headers"/>
+<MSHelp:Keyword Index="A" Term="wce50conCookieHeaders"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Feature"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="wininet_concepts.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="True"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+<MSHelp:Attr Name="PBFeature" Value="SYSGEN_WININET"/>
+<MSHelp:Attr Name="PBOnly" Value="False"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_3007746">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50concookieheaders"></A>Cookie Headers</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>In Windows Internet Services (WinInet), there are two HTTP response headers, as follow:
+
+<UL type="disc">
+	<LI><A HREF="#wce50concookieheadersanchor1">Set-Cookie Header</A>
+<P>Sent by the server in response to an HTTP request, which is used to create a cookie on the user's system. 
+</li>
+
+	<LI><A HREF="#wce50concookieheadersanchor2">Cookie Header</A>
+<P>Included by the client application with an HTTP request sent to a server if there is a cookie that has a matching domain and path.
+</li>
+</UL>
+
+<H2 class="dtH2"><A NAME="wce50concookieheadersanchor1"></A>Set-Cookie Header</H2>
+
+<P>The Set-Cookie response header uses the following syntax:</P>
+
+<PRE class="code">Set-Cookie: &lt;name&gt;=&lt;value&gt;[; &lt;name&gt;=&lt;value&gt;]...
+[; expires=&lt;date&gt;][; domain=&lt;domain_name&gt;]
+[; path=&lt;some_path&gt;][; secure]</PRE>
+
+<P>One or more string sequences, separated by semicolons, that follow the pattern &lt;name&gt;=&lt;value&gt; must be included in the Set-Cookie response header. The server can use these string sequences to store data on the client's system.</P>
+
+<P>The expiration date is set by using the format expires=&lt;date&gt;, where &lt;date&gt; is the expiration date in Greenwich Mean Time (GMT). If the expiration date is not set, the cookie expires after the Internet session ends. Otherwise, the cookie persists in the cache until the expiration date. </P>
+
+<P>The following table shows the expiration date format.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=38%>Format</TH>
+<TH width=62%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=38%>DD-MMM-YYYY HH:MM:SS GMT</TD>
+<TD width=62%>Complete format.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=38%>DD</TD>
+<TD width=62%>DD is the day in the month &#0151; such as 01 for the first day of the month.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=38%>MMM</TD>
+<TD width=62%>MMM is the three-letter abbreviation for the month: Jan, Feb, Mar, Apr, May, Jun, Jul, Aug, Sep, Oct, Nov, Dec.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=38%>YYYY</TD>
+<TD width=62%>YYYY is the year.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=38%>HH:MM:SS GMT</TD>
+<TD width=62%>HH is the hour value, MM is the minute value, and SS is the seconds value. &#0151; On a 24-hour clock, 22 is 10:00 P.M., for example.</TD>
+</TR>
+</table></div>
+
+<P>Specifying the domain name, using the pattern domain=&lt;domain_name&gt;, is optional for persistent cookies and is used to indicate the end of the domain for which the cookie is valid. Session cookies that specify a domain are rejected. If the specified domain name ending matches the request, the cookie tries to match the path to determine if the cookie should be sent. For example, if the domain name ending is .microsoft.com, requests to home.microsoft.com and support.microsoft.com would be checked to see if the specified pattern matches the request. The domain name must have at least two or three periods in it to prevent cookies from being set for widely used domain name endings, such as .com and .edu. Acceptable domain names would be similar to .microsoft.com, .someschool.edu, and .someserver.co.jp. Only hosts within the specified domain can set a cookie for a domain.</P>
+
+<P>Setting the path, using the pattern path=&lt;some_path&gt;, is optional and can be used to specify a subset of the URLs for which the cookie is valid. If a path is specified, the cookie is considered valid for any requests that match that path. For example, if the specified path is /example, requests with the paths /examplecode and /example/code.htm would match. If no path is specified, the path is assumed to be the path of the resource associated with the Set-Cookie header.</P>
+
+<P>The cookie can also be marked as secure, which specifies that the cookie can be sent only to HTTPS servers.</P>
+
+<H2 class="dtH2"><A NAME="wce50concookieheadersanchor2"></A>Cookie Header</H2>
+
+<P>The Cookie header is included with any HTTP requests that have a cookie whose domain and path match the request. The Cookie header has the following syntax:</P>
+
+<PRE class="code">Cookie: &lt;name&gt;=&lt;value&gt; [;&lt;name&gt;=&lt;value&gt;]...</PRE>
+
+<P>One or more string sequences, using the format &lt;name&gt;=&lt;value&gt;, contain the data that was set in the cookie.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50conhttpsessions.htm">HTTP Sessions</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

@@ -1,0 +1,609 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>How to Develop an OEM Adaptation Layer</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="How to Develop an OEM Adaptation Layer"/>
+<MSHelp:RLTitle Title="How to Develop an OEM Adaptation Layer"/>
+<MSHelp:Keyword Index="A" Term="wce50howHowtoDevelopanOEMAdaptationLayer"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Hardware"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="True"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbHowTo"/>
+<MSHelp:Attr Name="Filename" Value="howto_developing_an_OAL.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="True"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_3010381">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50howhowtodevelopanoemadaptationlayer"></A>How to Develop an OEM Adaptation Layer</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>An OEM adaptation layer (OAL) is a layer of code between the Windows CE kernel and the hardware of your target device. </P>
+
+<P>You develop an OAL to communicate data between your operating system (OS) and your target device and include code to handle interrupts, timers, and so on. For more information about the OAL, see <A HREF="wce50conoemadaptationlayer.htm">OEM Adaptation Layer</A>.</P>
+
+<P>Some of the startup code for your OAL might be completed if you already implemented a boot loader. For example, you can reuse parts of the <B>StartUp</B> function and debug routines that were created during the boot loader development process. </P>
+
+<P>Conversely, if you have not developed a boot loader, the following steps cover implementation of stand-alone OAL startup code. For more information about developing a boot loader, see <A HREF="wce50howhowtodevelopabootloader.htm">How to Develop a Boot Loader</A>.</P>
+
+<H4 class="dtH4">Hardware and Software Assumptions</H4>
+
+<UL type="disc">
+	<LI>You developed and built your boot loader code; public headers and libraries have gone through the Sysgen phase. </li>
+
+	<LI>You are developing the OAL without assistance from CSP OAL code. If CSP libraries and a driver exist for your hardware, use them. The libraries and driver help shorten the time during development and test phases.</li>
+</UL>
+
+<P>If you already have an existing OAL and want to migrate from a previous version of Windows CE to the latest version, see <A HREF="wce50howhowtomigrateboardsupportpackagetomacallan.htm">How to Migrate a Board Support Package to Windows CE 5.0</A>.</P>
+
+<P>The set of procedures presented in following steps provides only a basic kernel with a file system and debug network support, and offers no support for drivers. To track your progress in the following table, select the check box next to each step.</P>
+
+<BLOCKQUOTE class="dtBlock">
+<b class="le">Note</b>&nbsp;&nbsp;&nbsp;You need to create or modify other files outside of the OAL in order to create a tiny kernel board support package (BSP). For example, you need to modify Config.bib, which contains information about the RAM regions used by the OS.</BLOCKQUOTE>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=6%>&nbsp;</TH>
+<TH width=64%>Step</TH>
+<TH width=30%>Topic</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=6%><INPUT TYPE="Checkbox" Value="ON"></TD>
+<TD width=64%>1. Create a hardware platform directory and a subdirectory for the OAL on your development workstation.
+<P>The following example shows the basic naming convention for a hardware platform called MyPlatform.
+
+<UL type="disc">
+	<LI>Hardware platform directory: %_WINCEROOT%\Platform\MyPlatform</li>
+
+	<LI>OAL directory: %_WINCEROOT%\Platform\MyPlatform\Src\Kernel\OAL</li>
+</UL>
+
+<P>You need to include the directories in the dirs file if you want the directories to build as part of a run-time image. For more information about dirs file, see <MSHelp:link keywords="wce50conDirsFile" TABINDEX="0">Dirs File</MSHelp:link>.</P>
+</TD>
+<TD width=30%>Not applicable</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=6%><INPUT TYPE="Checkbox" Value="ON"></TD>
+<TD width=64%>2. Implement the <B>Startup</B> function for the OAL.
+<BLOCKQUOTE class="dtBlock">
+<b class="le">Note</b>&nbsp;&nbsp;&nbsp;In general, <B>StartUp</B> initializes the CPU core, including the SDRAM controller, memory management unit (MMU), and caches. The function performs this in preparation for running the Windows CE kernel. </BLOCKQUOTE>
+
+<BLOCKQUOTE class="dtBlock">
+Parts of this code can be shared with your hardware platform's boot loader. </BLOCKQUOTE>
+
+<BLOCKQUOTE class="dtBlock">
+Be careful not to initialize hardware twice in this situation. OAL <B>StartUp</B> should function whether or not the boot loader has run. For example, the OAL should not attempt to enter x86-protected mode if the boot loader has already done so. </BLOCKQUOTE>
+
+<BLOCKQUOTE class="dtBlock">
+You can typically obtain this function from a sample OAL using the same CPU core.</BLOCKQUOTE>
+</TD>
+<TD width=30%><A HREF="wce50tskoalstartupfunctionimplementation.htm">OAL StartUp Function Implementation</A></TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=6%><INPUT TYPE="Checkbox" Value="ON"></TD>
+<TD width=64%>3. Create a sources file and a makefile to assemble and compile the file containing the <B>StartUp</B> function.</TD>
+<TD width=30%><A HREF="wce50tskcreatingtheoalsourcesandmakefilefiles.htm">Creating the OAL Sources and Makefile Files</A></TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=6%><INPUT TYPE="Checkbox" Value="ON"></TD>
+<TD width=64%>4. Build the <B>StartUp</B> source file.
+<P>This step verifies that the build files are correct and in place. This step creates a Hal.lib binary in your hardware platform's Lib directory.</P>
+</TD>
+<TD width=30%><A HREF="wce50tskbuildingtheoalsourcecode.htm">Building the OAL Source Code</A></TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=6%><INPUT TYPE="Checkbox" Value="ON"></TD>
+<TD width=64%>5. Create the Kernel directories and create a dirs file to direct the build process.
+<P>The Windows CE kernel, of which the OAL is a part, is an .exe file that is created as part of the BSP build process. </P>
+
+<P>There are typically three different kernel variants: basic kernel, kernel with KITL, and a profiling kernel. The focus of this OAL development process is on the kernel with KITL. </P>
+
+<P>You must create additional build directories and sources files if you want to create the remaining kernel images.</P>
+
+<BLOCKQUOTE class="dtBlock">
+<b class="le">Note</b>&nbsp;&nbsp;&nbsp;If you try to build the Kernkitl.exe image at this stage, you will receive a number of unresolved externals because a number of required functions have not yet been implemented.</BLOCKQUOTE>
+</TD>
+<TD width=30%><A HREF="wce50tskcreatingthekernelbuildexedirectory.htm">Creating the Kernel Directory</A></TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=6%><INPUT TYPE="Checkbox" Value="ON"></TD>
+<TD width=64%>6. Create stub versions of the following CPU-specific OAL functions:
+<P>For ARM-based hardware platforms only:
+
+<UL type="disc">
+	<LI><A HREF="wce50lrfoemarmcachemode.htm">OEMARMCacheMode</A></li>
+
+	<LI><A HREF="wce50lrfoemdataaborthandler.htm">OEMDataAbortHandler</A></li>
+
+	<LI><A HREF="wce50lrfoeminterrupthandler.htm">OEMInterruptHandler</A></li>
+
+	<LI><A HREF="wce50lrfoeminterrupthandlerfiq.htm">OEMInterruptHandlerFIQ</A></li>
+</UL>
+
+<P>For MIPS-based hardware platforms only:
+
+<UL type="disc">
+	<LI><A HREF="wce50lrfcacheerrorhandler.htm">CacheErrorHandler</A></li>
+
+	<LI><B>CacheErrorHandler_End</B></li>
+</UL>
+
+<P>For x86-based hardware platforms only:
+
+<UL type="disc">
+	<LI><A HREF="wce50lrfoemnmihandler.htm">OEMNMIHandler</A></li>
+</UL>
+
+<P>For SHx-based hardware platforms only:
+
+<UL type="disc">
+	<LI>Not applicable</li>
+</UL>
+
+<BLOCKQUOTE class="dtBlock">
+<b class="le">Note</b>&nbsp;&nbsp;&nbsp;Create the source file with these stub routines in the %_WINCEROOT%\Platform\MyPlatform\Src\Kernel\OAL directory.</BLOCKQUOTE>
+
+<BLOCKQUOTE class="dtBlock">
+In this step and in the following steps, you will need to create stub versions to resolve link-time dependencies, and thus allow for an OAL and a kernel image to be built. </BLOCKQUOTE>
+
+<BLOCKQUOTE class="dtBlock">
+You can then add implementation details to each of the functions in an ordered approach. The routines that follow are roughly divided into functional areas. </BLOCKQUOTE>
+
+<BLOCKQUOTE class="dtBlock">
+These areas may lend themselves to being organized into different source files. </BLOCKQUOTE>
+
+<BLOCKQUOTE class="dtBlock">
+Any new source files should be added to the sources file to ensure that they are compiled and included in the OAL library.</BLOCKQUOTE>
+</TD>
+<TD width=30%><A HREF="wce50tskcreatingstubsforoalfunctions.htm">Creating Stubs for OAL Functions</A></TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=6%><INPUT TYPE="Checkbox" Value="ON"></TD>
+<TD width=64%>7. Create stub versions of the following required OAL functions:
+<UL type="disc">
+	<LI><A HREF="wce50lrfinitclock.htm">InitClock</A></li>
+
+	<LI><A HREF="wce50lrfoeminit.htm">OEMInit</A></li>
+
+	<LI><A HREF="wce50lrfoemcacherangeflush.htm">OEMCacheRangeFlush</A></li>
+
+	<LI><A HREF="wce50lrfoemgetextensiondram.htm">OEMGetExtensionDRAM</A></li>
+</UL>
+</TD>
+<TD width=30%><A HREF="wce50tskcreatingstubsforoalfunctions.htm">Creating Stubs for OAL Functions</A></TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=6%><INPUT TYPE="Checkbox" Value="ON"></TD>
+<TD width=64%>8. Create stub versions of the following functions:
+<UL type="disc">
+	<LI><A HREF="wce50lrfoemdebuginit.htm">OEMDebugInit</A></li>
+
+	<LI><A HREF="wce50lrfoeminitdebugserial.htm">OEMInitDebugSerial</A></li>
+
+	<LI><A HREF="wce50lrfoemreaddebugbyte.htm">OEMReadDebugByte</A></li>
+
+	<LI><A HREF="wce50lrfoemwritedebugbyte.htm">OEMWriteDebugByte</A></li>
+
+	<LI><A HREF="wce50lrfoemwritedebugstring.htm">OEMWriteDebugString</A></li>
+
+	<LI><B>OEMParallelPortGetByte</B></li>
+
+	<LI><B>OEMParallelPortSendByte</B>
+<BLOCKQUOTE class="dtBlock">
+<b class="le">Note</b>&nbsp;&nbsp;&nbsp;The <B>OEMParallelPort<I>XXX</I></B> functions are obsolete. You do not need to implement them, but stub versions must be created to build a Kernkitl image.</BLOCKQUOTE>
+</li>
+</UL>
+</TD>
+<TD width=30%><A HREF="wce50tskcreatingstubsforoalfunctions.htm">Creating Stubs for OAL Functions</A></TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=6%><INPUT TYPE="Checkbox" Value="ON"></TD>
+<TD width=64%>9. Create stub versions of the following functions:
+<UL type="disc">
+	<LI><A HREF="wce50lrfoemidle.htm">OEMIdle</A></li>
+
+	<LI><A HREF="wce50lrfoempoweroff.htm">OEMPowerOff</A></li>
+</UL>
+</TD>
+<TD width=30%><A HREF="wce50tskcreatingstubsforoalfunctions.htm">Creating Stubs for OAL Functions</A></TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=6%><INPUT TYPE="Checkbox" Value="ON"></TD>
+<TD width=64%>10. Create stub versions of the following interrupt functions:
+<UL type="disc">
+	<LI><A HREF="wce50lrfoeminterruptdisable.htm">OEMInterruptDisable</A></li>
+
+	<LI><A HREF="wce50lrfoeminterruptdone.htm">OEMInterruptDone</A></li>
+
+	<LI><A HREF="wce50lrfoeminterruptenable.htm">OEMInterruptEnable</A></li>
+
+	<LI><A HREF="wce50lrfscgettickcount.htm">SC_GetTickCount</A></li>
+</UL>
+</TD>
+<TD width=30%><A HREF="wce50tskcreatingstubsforoalfunctions.htm">Creating Stubs for OAL Functions</A></TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=6%><INPUT TYPE="Checkbox" Value="ON"></TD>
+<TD width=64%>11. Create stub versions of the following real-time clock (RTC) functions:
+<UL type="disc">
+	<LI><A HREF="wce50lrfoemgetrealtime.htm">OEMGetRealTime</A></li>
+
+	<LI><A HREF="wce50lrfoemsetalarmtime.htm">OEMSetAlarmTime</A></li>
+
+	<LI><A HREF="wce50lrfoemsetrealtime.htm">OEMSetRealTime</A></li>
+</UL>
+</TD>
+<TD width=30%><A HREF="wce50tskcreatingstubsforoalfunctions.htm">Creating Stubs for OAL Functions</A></TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=6%><INPUT TYPE="Checkbox" Value="ON"></TD>
+<TD width=64%>12. Create a stub versions of the following function:
+<UL type="disc">
+	<LI><A HREF="wce50lrfoemiocontrol.htm">OEMIoControl</A></li>
+</UL>
+</TD>
+<TD width=30%><A HREF="wce50tskcreatingstubsforoalfunctions.htm">Creating Stubs for OAL Functions</A></TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=6%><INPUT TYPE="Checkbox" Value="ON"></TD>
+<TD width=64%>13. Define the following global variables required by Nk.lib.
+<P>Additional variable for ARM-based and x86-based hardware platforms only:
+
+<UL type="disc">
+	<LI><A HREF="wce50conoemaddresstable.htm">OEMAddressTable</A></li>
+</UL>
+
+<P>Additional variable for MIPS-based hardware platforms only:
+
+<UL type="disc">
+	<LI><A HREF="wce50lrfoemtlbsize.htm">OEMTLBSize</A></li>
+</UL>
+
+<P>Additional variables for SHx-based hardware platforms only:
+
+<UL type="disc">
+	<LI><A HREF="wce50lrfsh4cachelines.htm">SH4CacheLines</A></li>
+</UL>
+</TD>
+<TD width=30%>Not applicable</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=6%><INPUT TYPE="Checkbox" Value="ON"></TD>
+<TD width=64%>14. Build the kernel executable image, Kernkitl.exe, when stub versions of all the functions and global variables are defined.
+<BLOCKQUOTE class="dtBlock">
+<b class="le">Note</b>&nbsp;&nbsp;&nbsp;At this point, the kernel image is not yet very useful, but if you successfully create the resulting Kernkitl.exe image, this establishes the OAL framework and verifies that the build-related files are configured properly.</BLOCKQUOTE>
+</TD>
+<TD width=30%><A HREF="wce50tskbuildingthekernelexecutableimage.htm">Building the Kernel Executable Image</A></TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=6%><INPUT TYPE="Checkbox" Value="ON"></TD>
+<TD width=64%>15. After creating Kernkitl.exe, you can start adding functionality to the run-time image in stages.
+<P>For the remainder of the OAL development process, each stage is implemented incrementally. </P>
+
+<P>However, because there is no support for the kernel debugger, you must perform debugging and verification at this point using any of the following forms of debugging: a hardware probe or debugger, serial prints, LED blinks, or another form of debugging.</P>
+</TD>
+<TD width=30%>Not applicable</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=6%><INPUT TYPE="Checkbox" Value="ON"></TD>
+<TD width=64%>16. Implement the following CPU-specific pre-<B>OEMInitDebugSerial</B> functions and global variables:
+<P>For ARM-based hardware platforms only:
+
+<UL type="disc">
+	<LI><A HREF="wce50conoemaddresstable.htm">OEMAddressTable</A></li>
+
+	<LI><A HREF="wce50lrfoemarmcachemode.htm">OEMARMCacheMode</A></li>
+
+	<LI><A HREF="wce50lrfoemdataaborthandler.htm">OEMDataAbortHandler</A></li>
+</UL>
+
+<P>For MIPS-based hardware platforms only:
+
+<UL type="disc">
+	<LI><A HREF="wce50lrfoemtlbsize.htm">OEMTLBSize</A></li>
+
+	<LI><A HREF="wce50lrfcacheerrorhandler.htm">CacheErrorHandler</A></li>
+
+	<LI><B>CacheErrorHandler_End</B></li>
+</UL>
+
+<P>For x86-based hardware platforms only:
+
+<UL type="disc">
+	<LI><A HREF="wce50conoemaddresstable.htm">OEMAddressTable</A></li>
+
+	<LI><A HREF="wce50lrfoemnmihandler.htm">OEMNMIHandler</A></li>
+</UL>
+
+<P>For SHx-based hardware platforms only:
+
+<UL type="disc">
+	<LI><A HREF="wce50lrfsh4cachelines.htm">SH4CacheLines</A></li>
+</UL>
+
+<P>The code for these functions can be copied from the OAL for a hardware platform that uses the same CPU, or by linking in the CSP library for your CPU.</P>
+</TD>
+<TD width=30%><A HREF="wce50conmicroprocessorspecificissues.htm">Microprocessor-specific Issues</A></TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=6%><INPUT TYPE="Checkbox" Value="ON"></TD>
+<TD width=64%>17. Implement the <A HREF="wce50lrfoemcacherangeflush.htm">OEMCacheRangeFlush</A> function.
+<P>The code for this function can be copied from the OAL for a hardware platform that uses the same CPU, or by linking in the CSP library for your CPU.</P>
+</TD>
+<TD width=30%><A HREF="wce50tskoemcacherangeflushfunctionimplementation.htm">OEMCacheRangeFlush Function Implementation</A></TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=6%><INPUT TYPE="Checkbox" Value="ON"></TD>
+<TD width=64%>18. Stop and ensure that the run-time image builds. </TD>
+<TD width=30%>Not applicable</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=6%><INPUT TYPE="Checkbox" Value="ON"></TD>
+<TD width=64%>19. Create a %_WINCEROOT%\Platform\MyPlatform\Files directory and create the following empty files in the new directory: Platform.bib, Platform.reg, Platform.db, and Platform.dat.
+<P>Copy and edit a Config.bib file from a similar hardware platform, and then specify the MEMORY and CONFIG section information for your hardware platform.</P>
+
+<P>Config.bib should minimally specify the NK and RAM section address information. Romimage.exe uses this address information to know how to organize the OS to fit the hardware resources available on your standard development board (SDB).</P>
+
+<BLOCKQUOTE class="dtBlock">
+<b class="le">Note</b>&nbsp;&nbsp;&nbsp;The addresses in Config.bib must be virtual, not physical. ROMOFFSET should be used to ensure that the run-time image downloads to the correct physical RAM or flash memory location.</BLOCKQUOTE>
+
+<P>For more information, see the following topics:
+
+<UL type="disc">
+	<LI><MSHelp:link keywords="wce50conMEMORYSection" TABINDEX="0">MEMORY Section</MSHelp:link></li>
+
+	<LI><MSHelp:link keywords="wce50conCONFIGSection" TABINDEX="0">CONFIG Section</MSHelp:link></li>
+
+	<LI><MSHelp:link keywords="wce50conBinaryImageBuilderFile" TABINDEX="0">Binary Image Builder File</MSHelp:link></li>
+
+	<LI><MSHelp:link keywords="wce50lrfRomimage" TABINDEX="0">Romimage</MSHelp:link></li>
+</UL>
+</TD>
+<TD width=30%>Not applicable</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=6%><INPUT TYPE="Checkbox" Value="ON"></TD>
+<TD width=64%>20. Create a %_WINCEROOT%\Platform\MyPlatform\Cesysgen directory and copy the makefile file from a similar hardware platform into that directory.
+<P>For more information about makefile files, see <MSHelp:link keywords="wce50conMakefileFile" TABINDEX="0">Makefile File</MSHelp:link>.</P>
+</TD>
+<TD width=30%>Not applicable</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=6%><INPUT TYPE="Checkbox" Value="ON"></TD>
+<TD width=64%>21. Ensure that all appropriate hardware platform directories have dirs files.
+<P>For more information, see <MSHelp:link keywords="wce50conDirsFile" TABINDEX="0">Dirs File</MSHelp:link>.</P>
+</TD>
+<TD width=30%>Not applicable</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=6%><INPUT TYPE="Checkbox" Value="ON"></TD>
+<TD width=64%>22.From the command line, build an Nk.bin image by entering the following command.
+<PRE class="code">blddemo clean -q</PRE>
+
+<P>The .bin file contains the Windows CE kernel, and depending on the build flags, it can also contain other executables and support files.</P>
+
+<P>For more information about the Windows CE build tool, see <MSHelp:link keywords="wce50conBuildTool" TABINDEX="0">Build Tool</MSHelp:link>.</P>
+</TD>
+<TD width=30%>Not applicable</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=6%><INPUT TYPE="Checkbox" Value="ON"></TD>
+<TD width=64%>23. Verify that you can download the Nk.bin image and that you can boot up to at least the <B>OEMInitDebugSerial</B> function in the OAL using any of the following debugging tools: hardware debugger or probe, LED write, or serial debug prints.
+<P>Put <CODE>while(1);</CODE> in your code to stop the boot.</P>
+
+<BLOCKQUOTE class="dtBlock">
+<b class="le">Note</b>&nbsp;&nbsp;&nbsp;After <B>OEMInitDebugSerial</B> is reached, the CPU is executing in virtual address mode. Do not use physical addresses from this point forward, for example, when writing to the debug serial port or LEDs.</BLOCKQUOTE>
+
+<BLOCKQUOTE class="dtBlock">
+If <B>OEMInitDebugSerial</B> is never reached, you may have incorrectly specified <B>OEMAddressTable</B> or are otherwise causing unmapped memory to be accessed, triggering an abort or exception.</BLOCKQUOTE>
+
+<P>After completing this step, you have confirmed that the kernel has set up its virtual memory structures or tables and that caches, translation look-aside buffers (TLBs), and write buffers are enabled.</P>
+</TD>
+<TD width=30%>Not applicable</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=6%><INPUT TYPE="Checkbox" Value="ON"></TD>
+<TD width=64%>24. Implement the following serial debug functions. These are the same routines used by the boot loader so you can share the code with the OAL.
+<UL type="disc">
+	<LI><A HREF="wce50lrfoeminitdebugserial.htm">OEMInitDebugSerial</A></li>
+
+	<LI><A HREF="wce50lrfoemreaddebugbyte.htm">OEMReadDebugByte</A></li>
+
+	<LI><A HREF="wce50lrfoemwritedebugbyte.htm">OEMWriteDebugByte</A></li>
+
+	<LI><A HREF="wce50lrfoemwritedebugstring.htm">OEMWriteDebugString</A></li>
+</UL>
+
+<BLOCKQUOTE class="dtBlock">
+<b class="le">Note</b>&nbsp;&nbsp;&nbsp;Sharing these functions between the boot loader and OAL may require minor changes. For more information, see <A HREF="wce50tsksharingcodebetweenthebootloaderandtheoal.htm">Sharing Code Between the Boot Loader and the OAL</A>.</BLOCKQUOTE>
+</TD>
+<TD width=30%><A HREF="wce50conenablingthedebugserialport.htm">Enabling the Debug Serial Port</A>
+<P><A HREF="wce50tskimplementingtheserialdebugfunctions.htm">Implementing the Serial Debug Functions</A></P>
+</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=6%><INPUT TYPE="Checkbox" Value="ON"></TD>
+<TD width=64%>25. Rebuild Nk.bin and verify that the boot process proceeds through <B>OEMInit</B>.
+<P>You should also verify that the kernel calls <B>OEMInitDebugSerial</B> before it calls <B>OEMInit</B> and that serial text is written to the initialized UART.</P>
+</TD>
+<TD width=30%>Not applicable</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=6%><INPUT TYPE="Checkbox" Value="ON"></TD>
+<TD width=64%>26. Implement the <A HREF="wce50lrfoeminit.htm">OEMInit</A> function.</TD>
+<TD width=30%><A HREF="wce50tskimplementingtheoeminitfunction.htm">Implementing the OEMInit Function</A></TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=6%><INPUT TYPE="Checkbox" Value="ON"></TD>
+<TD width=64%>27. Implement the interrupt-related code.
+<P>For all hardware platforms:
+
+<UL type="disc">
+	<LI><A HREF="wce50lrfoeminterruptenable.htm">OEMInterruptEnable</A></li>
+
+	<LI><A HREF="wce50lrfoeminterruptdisable.htm">OEMInterruptDisable</A></li>
+
+	<LI><A HREF="wce50lrfoeminterruptdone.htm">OEMInterruptDone</A></li>
+</UL>
+
+<P>For ARM-based hardware platforms only:
+
+<UL type="disc">
+	<LI><A HREF="wce50lrfoeminterrupthandler.htm">OEMInterruptHandler</A></li>
+
+	<LI><A HREF="wce50lrfoeminterrupthandlerfiq.htm">OEMInterruptHandlerFIQ</A></li>
+</UL>
+
+<P>For non-ARM hardware platforms:
+
+<UL type="disc">
+	<LI>An interrupt service routine (ISR) that handles the 1-millisecond (ms) system tick interrupt</li>
+</UL>
+</TD>
+<TD width=30%><A HREF="wce50conimplementinganisr.htm">Implementing an ISR</A></TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=6%><INPUT TYPE="Checkbox" Value="ON"></TD>
+<TD width=64%>28. Implement the power management functions:
+<UL type="disc">
+	<LI><A HREF="wce50lrfoemidle.htm">OEMIdle</A></li>
+
+	<LI><A HREF="wce50lrfoempoweroff.htm">OEMPowerOff</A>
+<BLOCKQUOTE class="dtBlock">
+<b class="le">Note</b>&nbsp;&nbsp;&nbsp;Implementation of the <B>OEMPowerOff</B> function is highly device-dependent and often requires changes to the boot loader to resume from the suspend state. Implementing suspend and resume is beyond the scope of this how-to topic. You may leave the <B>OEMPowerOff</B> function stubbed out.</BLOCKQUOTE>
+</li>
+</UL>
+</TD>
+<TD width=30%><A HREF="wce50conenablingpowermanagement.htm">Enabling Power Management</A></TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=6%><INPUT TYPE="Checkbox" Value="ON"></TD>
+<TD width=64%>29. Rebuild the Nk.bin image and verify that it boots successfully.
+<P>Using a hardware debugger or probe, serial prints, or LEDS, verify that <B>OEMInit</B> returns and that <B>OEMIdle</B> is eventually called.</P>
+</TD>
+<TD width=30%>Not applicable</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=6%><INPUT TYPE="Checkbox" Value="ON"></TD>
+<TD width=64%>30. Add KITL initialization code to <B>OEMInit</B>.</TD>
+<TD width=30%><A HREF="wce50tskaddingkitlinitializationcode.htm">Adding KITL Initialization Code</A></TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=6%><INPUT TYPE="Checkbox" Value="ON"></TD>
+<TD width=64%>31. Add the Windows CE Target Control Shell to your run-time image. At the build shell prompt, enter the following command:
+<PRE class="code">set SYSGEN_SHELL=1</PRE>
+</TD>
+<TD width=30%>Not applicable</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=6%><INPUT TYPE="Checkbox" Value="ON"></TD>
+<TD width=64%>32. Rebuild the Nk.bin image and verify that it boots successfully. Ensure that Platform Builder can connect over KITL to the target using the Windows CE Target Control.
+<P>Verify that the <B>gi</B> [<B>proc</B> | <B>thrd</B> | <B>mod</B> | <B>delta</B> | <B>all</B>] commands work.</P>
+
+<P>After this step, you have the basic kernel in place. The basic kernel has interrupts enabled and uses virtual memory, caches, TLB, and write buffers, which make up most of the tiny kernel or minkern functionality.</P>
+</TD>
+<TD width=30%>Not applicable</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=6%><INPUT TYPE="Checkbox" Value="ON"></TD>
+<TD width=64%>33. Implement the following RTC functions:
+<UL type="disc">
+	<LI><A HREF="wce50lrfoemgetrealtime.htm">OEMGetRealTime</A></li>
+
+	<LI><A HREF="wce50lrfoemsetalarmtime.htm">OEMSetAlarmTime</A></li>
+
+	<LI><A HREF="wce50lrfoemsetrealtime.htm">OEMSetRealTime</A></li>
+</UL>
+</TD>
+<TD width=30%><A HREF="wce50tskimplementingtherealtimeclockandsystemtimer.htm">Implementing the Real-Time Clock and System Timer</A></TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=6%><INPUT TYPE="Checkbox" Value="ON"></TD>
+<TD width=64%>34. Customize memory usage by doing the following tasks:
+<UL type="disc">
+	<LI>Override <A HREF="wce50lrfmainmemoryendaddress.htm">MainMemoryEndAddress</A> if you want to include additional contiguous memory than is described in Config.bib.</li>
+
+	<LI>Implement <A HREF="wce50lrfoemgetextensiondram.htm">OEMGetExtensionDRAM</A> if you want to include additional noncontiguous memory.</li>
+</UL>
+</TD>
+<TD width=30%><A HREF="wce50concustomizingmemory.htm">Customizing Memory</A></TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=6%><INPUT TYPE="Checkbox" Value="ON"></TD>
+<TD width=64%>35. Implement the <A HREF="wce50lrfoemiocontrol.htm">OEMIoControl</A> function.</TD>
+<TD width=30%><A HREF="wce50tskimplementingtheoemiocontrolfunction.htm">Implementing the OEMIoControl Function</A></TD>
+</TR>
+</table></div>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50concompletinganoal.htm">Completing an OAL</A> | <A HREF="wce50howhowtocreateaboardsupportpackage.htm">How to Create a Board Support Package</A> | <A HREF="wce50howhowtobringupadevicebycreatinganewbsp.htm">How to Bring Up a Hardware Platform by Creating a New BSP</A> | <MSHelp:link keywords="wce50oriHowtoTopics" TABINDEX="0">How-to Topics</MSHelp:link></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

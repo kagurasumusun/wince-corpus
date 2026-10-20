@@ -1,0 +1,89 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Logging</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Logging"/>
+<MSHelp:RLTitle Title="Logging"/>
+<MSHelp:Keyword Index="A" Term="wce51grfLogging"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Debugging"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="True"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="TuxNet.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="True"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_1076541">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce51grflogging"></A>Logging</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>By default, all Tux.Net output gets logged to the file <B>Results.log</B>, which is created either in the Platform Builder release directory (which is mapped to \release on the device, if available) or else in the same directory Tux.Net is run from on the device.</P>
+
+<P>Logging facilities are provided via the <B>GlobalLogger</B> class. Tux.Net uses and configures <B>GlobalLogger</B> for structure output during test execution, so test cases should also use it in order to take full advantage of the Tux.Net framework. <B>GlobalLogger</B> is actually independent of Tux.Net, and as such can be configured and used separately, which is a great advantage when code must be shared between Tux.Net test cases and stand-alone tools.</P>
+
+<P>The primary GlobalLogger method to be Aware of is <B>GlobalLogger.AddComment. </B>This method simply adds a comment to the log file in the appropriate format. The method also accepts a "detail" level, which can be used to tune the amount of logging data that gets output to the log file. Here is a simplified example without the attributes normally seen on a test case:</P>
+
+<PRE class="code">/// &lt;summary&gt;
+/// Test cases always want logging, so they generally use the
+/// Summary level (lowest level) which is always logged.
+/// &lt;/summary&gt;
+public void TestCaseMethod()
+{
+      // This will always be logged
+      GlobalLogger.AddComment(
+            GlobalLogger.VerboseLevel.Summary, "Test case");
+
+      // This will also always be logged
+      GlobalLogger.AddComment("Test case comment");
+}</PRE>
+
+<P>You can use the verbosity parameter to control how much the harness actually writes to the log file. To do this you call GlobalLogger.AddComment() and pass it in an integer specifying the log level of your comment. The higher the number, the more detailed the comment. Then, when you run TuxNet.exe, you can specify the &#0150;logLevel parameter to indicate how detailed you want your log to be. For example, if you pass "-logLevel 4" to the harness then all comments that were added with a LogLevel of 4 or less will be added to the log file. All comments added with a LogLevel of 5 or greater will be excluded from the log file.</P>
+
+<P>The pre-defined log levels are:
+
+<UL type="disc">
+	<LI>Summary (level 0)</li>
+
+	<LI>Info (level 1)</li>
+
+	<LI>Detailed (level 2)</li>
+
+	<LI>Debug (level 3)</li>
+</UL>
+
+<P>Using these pre-defined levels is a simple way to express the log-level and intent of the comment in a readable fashion. For more advanced logging techniques, see the sections below on <B>TestStep</B> and <B>GlobalLogResultsManager.</B></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

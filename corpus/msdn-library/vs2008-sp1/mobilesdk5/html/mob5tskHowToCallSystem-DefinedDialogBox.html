@@ -1,0 +1,130 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>How to: Call a System-Defined Dialog Box</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="How to: Call a System-Defined Dialog Box"/>
+<MSHelp:RLTitle Title="How to: Call a System-Defined Dialog Box"/>
+<MSHelp:Keyword Index="A" Term="mob5tskHowToCallSystem-DefinedDialogBox"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Application"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbsmartphone"/>
+<MSHelp:Attr Name="Product" Value="kbPocketPC"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="Technology" Value="kbPocketPC"/>
+<MSHelp:Attr Name="Technology" Value="kbSmartphone"/>
+<MSHelp:Attr Name="TopicType" Value="kbTask"/>
+<MSHelp:Attr Name="Filename" Value="Dialog_Boxes_magneto.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="True"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_1063731">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Windows Mobile Version 5.0 SDK<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="mob5tskhowtocallsystem-defineddialogbox"></A>How to: Call a System-Defined Dialog Box</H1>
+<!--Feedback Link Top Start-->
+<P CLASS="feedback"><font size="1"><a href="mailto:medfdbk&#64;microsoft.com?subject=Product: Windows Mobile | Version: 5.0 | Release: SDK | Title: How to: Call a System-Defined Dialog Box | Filename: mob5tskhowtocallsystem-defineddialogbox.htm | Built on: Wednesday, September 14, 2005">Send Feedback</a> on this topic to the authors</font></p>
+<!--Feedback Link Top End-->
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>The following code sample shows how to call the common dialog boxes on a Windows Mobile-based Pocket PC.</P>
+
+<PRE class="code">LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wp, LPARAM lp)
+{
+    LRESULT   lResult = TRUE;
+    TCHAR   szFile[MAX_PATH] = TEXT("\0");
+    OPENFILENAME   ofn;
+    
+    memset( &amp;(ofn), 0, sizeof(ofn));
+    ofn.lStructSize   = sizeof(ofn);
+    ofn.hwndOwner = hwnd;
+    ofn.lpstrFile = szFile;
+    ofn.nMaxFile = MAX_PATH;   
+      
+    switch(msg)
+    {
+    case WM_COMMAND:
+    switch (GET_WM_COMMAND_ID(wp, lp))
+    {
+    case IDM_OPENPRJ:
+        ofn.lpstrTitle = TEXT("Open Folder");
+        // Open project dialog for Pocket PC.
+        ofn.Flags = OFN_PROJECT;      
+        if (GetOpenFileName(&amp;ofn))   
+           MessageBox(NULL, ofn.lpstrFile, TEXT("Info"), MB_OK);
+        // Add the opening project code here.
+        break;
+
+    case IDM_OPENFILE:
+        ofn.lpstrFilter = TEXT("All (*.*)\0*.*\0");   
+        ofn.lpstrTitle = TEXT("Open File");
+        ofn.Flags = OFN_EXPLORER;
+        if (GetOpenFileName(&amp;ofn))   
+            MessageBox(NULL, ofn.lpstrFile, TEXT("Info"), MB_OK);
+        // Add the opening file code here.
+        break;
+
+    case IDM_SAVEFILE:
+        ofn.lpstrFilter = TEXT("Text (*.txt)\0*.txt\0");   
+        ofn.lpstrTitle = TEXT("Save File As");
+        ofn.Flags = OFN_HIDEREADONLY; 
+        ofn.lpstrDefExt = TEXT("txt");
+        if (GetSaveFileName(&amp;ofn))   
+            MessageBox(NULL, ofn.lpstrFile, TEXT("Info"), MB_OK);
+        // Add saving file code here.
+        break;
+
+    case IDM_PROPERTY:
+        // Use GetOpenFileName to choose a file, and then use 
+        // GetSaveFileName to display its properties. 
+        ofn.lpstrFilter = TEXT("All (*.*)\0*.*\0");   
+        ofn.lpstrTitle = TEXT("File Property");
+        ofn.Flags = OFN_EXPLORER;
+        if (GetOpenFileName(&amp;ofn))   {
+            ofn.lpstrTitle = TEXT("Property");
+            // Open property dialog for Pocket PC.
+            ofn.Flags = OFN_PROPERTY;   
+            GetSaveFileName(&amp;ofn);
+        }
+        break;
+
+    default:
+        return DefWindowProc(hwnd, msg, wp, lp);
+    }
+    break; </PRE>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="mob5oridesigningfull-screendialogboxes.htm">Designing Full-Screen Dialog Boxes</A> | <A HREF="mob5tskhowtoenablesystem-definedfiledialogboxes.htm">How to: Enable System-Defined File Dialog Boxes</A> | <A HREF="mob5tskhowtopreventdisplayofsmartminimizeokbuttonsindialogboxes.htm">How to: Prevent Display of Smart Minimize and OK Buttons in Dialog Boxes</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Feedback Link Bottom Start-->
+<p><font size="1"><a href="mailto:medfdbk&#64;microsoft.com?subject=Product: Windows Mobile | Version: 5.0 | Release: SDK | Title: How to: Call a System-Defined Dialog Box | Filename: mob5tskhowtocallsystem-defineddialogbox.htm | Built on: Wednesday, September 14, 2005">Send Feedback</a> on this topic to the authors</font></p>
+<!--Feedback Link Bottom End-->
+<!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="mob5conCopyrightInformationForMagneto" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link></font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

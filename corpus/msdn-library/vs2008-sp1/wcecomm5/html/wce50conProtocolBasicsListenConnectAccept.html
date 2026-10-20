@@ -1,0 +1,70 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Protocol Basics: Listen, Connect, Accept</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Protocol Basics: Listen, Connect, Accept"/>
+<MSHelp:RLTitle Title="Protocol Basics: Listen, Connect, Accept"/>
+<MSHelp:Keyword Index="A" Term="wce50conProtocolBasicsListenConnectAccept"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Feature"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="winsock2spi_concepts.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="False"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+<MSHelp:Attr Name="PBFeature" Value="SYSGEN_WINSOCK"/>
+<MSHelp:Attr Name="PBOnly" Value="False"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_3008215">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50conprotocolbasicslistenconnectaccept"></A>Protocol Basics: Listen, Connect, Accept</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>The basic operations involved with establishing a socket connection can be most conveniently explained in terms of the client-server paradigm. </P>
+
+<P>The server side will first create a socket, bind it to a well known local address (so that the client can find it), and put the socket in listening mode, through <A HREF="wce50lrfwsplisten.htm">WSPListen</A>, in order to prepare for any incoming connection requests and to specify the length of the connection backlog queue. Service providers hold pending connection requests in a backlog queue until they are acted on by the server or are withdrawn (due to time-out) by the client. A service provider may silently ignore requests to extend the size of the backlog queue beyond a provider-defined upper limit. </P>
+
+<P>At this point, if a blocking socket is being used, the server side may immediately call <A HREF="wce50lrfwspaccept.htm">WSPAccept</A> that will block until a connection request is pending. Conversely, the server may also use one of the network event indication mechanisms discussed previously to arrange for notification of incoming connection requests. Depending on the notification mechanism selected, the provider will then issue a Windows message or signal an event object when connection requests arrive.</P>
+
+<P>The client side will create an appropriate socket, and initiate the connection by calling <A HREF="wce50lrfwspconnect.htm">WSPConnect</A>, specifying the known server address. Clients usually do not perform an explicit <A HREF="wce50lrfbindwindowssockets.htm">bind</A> operation prior to initiating a connection, allowing the service provider to perform an implicit bind on their behalf. If the socket is in blocking mode, <B>WSPConnect</B> will block until the server has received and acted on the connection request, or until a time-out occurs. Otherwise, the client should use one of the network event indication mechanisms discussed previously to arrange for notification of a new connection being established.</P>
+
+<P>When the server side invokes <A HREF="wce50lrfwspaccept.htm">WSPAccept</A>, the service provider calls the application-supplied condition function, using function parameters to pass into the server information from the top entry in the connection request backlog queue. This information includes such things as address of connecting host and any available user data. Using this information the server's condition function determines whether to accept the request, reject the request, or defer making a decision until later. This decision is indicated through the return value of the condition function. See section <I>Notification of Network Events</I> for how to register for the FD_CONNECT network event. </P>
+
+<P>If the server decides to accept the request, the provider must create a new socket with all of the same attributes and event registrations as the listening socket. The original socket remains in the listening state so that subsequent connection requests can be received. Through output parameters of the condition function, the server may also supply any response user data.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50consocketconnectionsonconnectionorientedprotocols.htm">Socket Connections on Connection-Oriented Protocols</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

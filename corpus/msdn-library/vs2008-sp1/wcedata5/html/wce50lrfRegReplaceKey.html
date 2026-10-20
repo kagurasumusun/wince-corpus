@@ -1,0 +1,117 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>RegReplaceKey</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="RegReplaceKey"/>
+<MSHelp:RLTitle Title="RegReplaceKey"/>
+<MSHelp:Keyword Index="K" Term="RegReplaceKey"/>
+<MSHelp:Keyword Index="A" Term="wce50lrfRegReplaceKey"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Feature"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="apiref"/>
+<MSHelp:Attr Name="Filename" Value="registry_os_functions.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="False"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="True"/>
+<MSHelp:Attr Name="APIName" Value="RegReplaceKey"/>
+<MSHelp:Attr Name="APIType" Value="LibDef"/>
+<MSHelp:Attr Name="APILocation" Value="Coredll.lib"/>
+<MSHelp:Attr Name="PBFeature" Value="REGISTRY"/>
+<MSHelp:Attr Name="PBOnly" Value="True"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_1042007">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50lrfregreplacekey"></A>RegReplaceKey</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>This function replaces the file backing a registry key and all its subkeys with another file, so that when the system is next started, the key and subkeys will have the values stored in the new file.</P>
+
+<PRE class="syntax"><B>LONG</B> <B>RegReplaceKey(</B> 
+  <B>HKEY</B> <I>hKey</I><B>,</B>
+  <B>LPCTSTR</B> <I>lpSubKey</I><B>,</B>
+  <B>LPCTSTR</B> <I>lpNewFile</I><B>,</B>
+  <B>LPCTSTR</B> <I>lpOldFile</I>
+<B>)</B>;</PRE>
+
+<H4 class="dtH4">Parameters</H4>
+
+<DL>
+<DT><I>hKey</I></DT>
+
+<DD>[in] The hKey parameter must be <B>HKEY_LOCAL_MACHINE</B>.</dd>
+
+<DT><I>lpSubKey</I></DT>
+
+<DD>[in] Must be NULL.</dd>
+
+<DT><I>lpNewFile</I></DT>
+
+<DD>[in] Pointer to a null-terminated string containing the name of the file with registration information. This file is typically created by using the <A HREF="wce50lrfregsavekey.htm">RegSaveKey</A> function. This value can be set to NULL.</dd>
+
+<DT><I>lpOldFile</I></DT>
+
+<DD>[in] Pointer to a null-terminated string containing the name of a file that receives a backup copy of the registry information being replaced. This value can be set to NULL.</dd>
+</DL>
+
+<H4 class="dtH4">Return Values</H4>
+
+<P>The function may fail with <MSHelp:link keywords="wce50lrfGetLastError" TABINDEX="0">GetLastError</MSHelp:link> returning the value of the function because it is not supported on the object store-based registry.</P>
+
+<P>The function may fail with <B>GetLastError</B> returning ERROR_ACCESS_DENIED because only trusted application are allowed to call <B>RegReplaceKey</B>.</P>
+
+<P>The function may fail with <B>GetLastError</B> returning ERROR_NOT_SUPPORTED because it is not supported on the object store-based registry.</P>
+
+<H4 class="dtH4">Remarks</H4>
+
+<P>This function can only be used to restore a backup copy of the system registry hive, which contains all data under <B>HKEY_LOCAL_MACHINE</B>, <B>HKEY_CLASSES_ROOT</B>, and <B>HKEY_USERS</B>. To restore a saved user hive, move the file into the user's profile directory while the user is not logged in. Subsequent calls to <A HREF="wce50lrfsetcurrentuser.htm">SetCurrentUser</A> will use the restored hive.</P>
+
+<P>The system hive is unmounted and will not be remounted until the system is restarted. This means the system registry becomes unusable. Both files will remain closed after this call. The current registry hive is moved to <I>lpOldFile</I>. </P>
+
+<P>If <I>lpNewFile</I> is non-NULL, that file is renamed to be the registry hive, and will be mounted on the next boot. </P>
+
+<P>If <I>lpNewFile</I> is NULL, a default hive will be loaded from ROM on the next boot.</P>
+
+<P>The <B>RegReplaceKey</B> API is only supported by the hive-based registry. To save and restore data in the object store-based registry, see <A HREF="wce50lrfregcopyfile.htm">RegCopyFile</A> and <A HREF="wce50lrfregrestorefile.htm">RegRestoreFile</A>.</P>
+
+<H4 class="dtH4">Requirements</H4>
+
+<P><B>OS Versions:</B> Windows CE .NET 4.0 and later.<BR>
+<B>Header:</B> Pwinreg.h.<BR>
+<B>Link Library:</B> Coredll.lib.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50lrfregsavekey.htm">RegSaveKey</A> | <A HREF="wce50lrfregcopyfile.htm">RegCopyFile</A> | <A HREF="wce50lrfregrestorefile.htm">RegRestoreFile</A> | <A HREF="wce50lrfsetcurrentuser.htm">SetCurrentUser</A> | <MSHelp:link keywords="wce50conPersistingDatawiththeHiveBasedRegistry" TABINDEX="0">Persisting Data with the Hive-Based Registry</MSHelp:link></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

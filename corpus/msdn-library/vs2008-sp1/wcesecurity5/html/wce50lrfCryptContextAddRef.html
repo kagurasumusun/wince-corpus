@@ -1,0 +1,133 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>CryptContextAddRef</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="CryptContextAddRef"/>
+<MSHelp:RLTitle Title="CryptContextAddRef"/>
+<MSHelp:Keyword Index="K" Term="CryptContextAddRef"/>
+<MSHelp:Keyword Index="A" Term="wce50lrfCryptContextAddRef"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Feature"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="Technology" Value="Security"/>
+<MSHelp:Attr Name="TopicType" Value="apiref"/>
+<MSHelp:Attr Name="Filename" Value="crypto1_functions.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="True"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+<MSHelp:Attr Name="APIName" Value="CryptContextAddRef"/>
+<MSHelp:Attr Name="APIType" Value="LibDef"/>
+<MSHelp:Attr Name="APILocation" Value="Coredll.lib"/>
+<MSHelp:Attr Name="PBFeature" Value="SYSGEN_CRYPTO"/>
+<MSHelp:Attr Name="PBOnly" Value="False"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_3002287">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50lrfcryptcontextaddref"></A>CryptContextAddRef</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>This function adds one to the reference count of an <A HREF="wce50lrfhcryptprov.htm">HCRYPTPROV</A> handle. </P>
+
+<PRE class="syntax"><B>BOOL WINAPI CryptContextAddRef( </B>
+  <B>HCRYPTPROV </B><I>hProv</I><B>,</B>
+  <B>DWORD* </B><I>pdwReserved</I><B>, </B>
+  <B>DWORD </B><I>dwFlags</I>
+<B>);</B></PRE>
+
+<H4 class="dtH4">Parameters</H4>
+
+<DL>
+<DT><I>hProv</I></DT>
+
+<DD>[in] <A HREF="wce50lrfhcryptprov.htm">HCRYPTPROV</A> handle to a cryptographic service provider (CSP) created by a call to the <A HREF="wce50lrfcryptacquirecontext.htm">CryptAcquireContext</A> function for which the reference count is being incremented. </dd>
+
+<DT><I>pdwReserved</I></DT>
+
+<DD>[in] Reserved for future use and must be set to NULL.</dd>
+
+<DT><I>dwFlags</I></DT>
+
+<DD>[in] Reserved for future use and must be set to zero.</dd>
+</DL>
+
+<H4 class="dtH4">Return Values</H4>
+
+<P>TRUE indicates success. FALSE indicates failure. To get extended error information, call the <MSHelp:link keywords="wce50lrfGetLastError" TABINDEX="0">GetLastError</MSHelp:link> function. </P>
+
+<P>A common value for <B>GetLastError</B> is ERROR_INVALID_PARAMETER. It means that one of the parameters contain an invalid value, which is often an illegal pointer.</P>
+
+<H4 class="dtH4">Remarks</H4>
+
+<P>This function should be used if the CSP handle is included as a member of any structure passed to another function. The <A HREF="wce50lrfcryptreleasecontext.htm">CryptReleaseContext</A> function should be called when the CSP handle is no longer needed. </P>
+
+<P>This function increases the reference count of a <B>HCRYPTPROV</B> handle; therefore, multiple calls to the <A HREF="wce50lrfcryptreleasecontext.htm">CryptReleaseContext</A> function are required to actually free the handle.</P>
+
+<H4 class="dtH4">Example Code</H4>
+
+<PRE class="code">HCRYPTPROV hProv = 0;
+
+// Acquire a context handle using CryptAcquireContext
+// For sample code, see <A HREF="wce50lrfcryptacquirecontext.htm">CryptAcquireContext</A>.
+...
+
+if (!CryptContextAddRef(&amp;hProv, NULL, 0)) {
+ printf("Error %x during CryptContextAddRef!\n", GetLastError);
+ return;
+}
+
+...
+
+// The first call to CryptReleaseContext will not free the provider 
+// handle because the reference count has been bumped up.
+if (!CryptReleaseContext(hProv, 0)) {
+ printf("Error %x during CryptReleaseContext!\n", GetLastError);
+ return;
+}
+
+// Free the provider handle.
+if (!CryptReleaseContext(hProv, 0)) {
+ printf("Error %x during CryptReleaseContext!\n", GetLastError);
+ return;
+}</PRE>
+
+<H4 class="dtH4">Requirements</H4>
+
+<P><B>OS Versions:</B> Windows CE 2.10 and later.<BR>
+<B>Header:</B> Wincrypt.h.<BR>
+<B>Link Library:</B> Coredll.lib.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50lrfcryptacquirecontext.htm">CryptAcquireContext</A> | <A HREF="wce50lrfcryptreleasecontext.htm">CryptReleaseContext</A> | <A HREF="wce50lrfhcryptprov.htm">HCRYPTPROV</A> </P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

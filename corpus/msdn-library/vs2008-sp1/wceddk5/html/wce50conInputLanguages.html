@@ -1,0 +1,102 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Input Languages</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Input Languages"/>
+<MSHelp:RLTitle Title="Input Languages"/>
+<MSHelp:Keyword Index="A" Term="wce50conInputLanguages"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Driver"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="False"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="keyboard_guide.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="True"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+<MSHelp:Attr Name="PBFeature" Value="KeyboardDriver"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_3018180">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50coninputlanguages"></A>Input Languages</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>Unlike the device layout, the input language is not hardware-specific. The input language contains the virtual-key code to Unicode translations and virtual-key code to XT scan code translations. The Remote Desktop Protocol (RDP) requires the virtual-key code to XT scan code mapping. For more information, see <A HREF="wce50conremotedesktopprotocolsupport.htm">Remote Desktop Protocol Support</A>.</P>
+
+<P>The low word of an input locale identifies an input language. </P>
+
+<P>InputLang.h describes the complex relationship between the modifier keys and the virtual-key code to Unicode conversion. Layout Manager maps the current modifier keys, such as SHIFT, CTRL, and so on, to an index into the virtual-key code to Unicode tables. Then, it searches the tables for the virtual key and uses the index of the modifier keys to determine its Unicode value.</P>
+
+<P>The following code example shows the input language data structures; these are declared in InputLang.h.</P>
+
+<PRE class="code">typedef struct _INPUT_LANGUAGE {
+  DWORD dwSize;
+  DWORD dwType;
+  DWORD dwSubType;
+
+  // Modifier keys
+  const MODIFIERS *pCharModifiers;
+
+  // Optional shift key table
+  const VK_TO_SHIFT *pVkToShiftState;
+
+  // Optional toggle key table
+  const VK_TO_SHIFT *pVkToToggledState;
+
+  // Virtual key to Unicode
+  const VK_TO_WCHAR_TABLE *pVkToWcharTable;//ptr to tbl of ptrs to tbl
+
+  // Dead keys
+  const DEADKEY *pDeadKey;
+
+  // Virtual key to XT scan code
+  const VKEY_TO_SCANCODE *pVkToScanCodeTable;
+
+  // Locale-specific special processing    
+  DWORD fLocaleFlags;
+
+  // Ligatures (Not currently supported. Here for compatibility only.)
+  BYTE nLgMax;
+  BYTE cbLgEntry;
+  const LIGATURE1 *pLigature;
+
+  BYTE bcFnKeys;
+} INPUT_LANGUAGE, *PINPUT_LANGUAGE;
+
+typedef BOOL (*PFN_INPUT_LANGUAGE_ENTRY)(PINPUT_LANGUAGE pInputLanguage);</PRE>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50conlayoutmanager.htm">Layout Manager</A> | <A HREF="wce50coninputlanguagedata.htm">Input Language Data</A> | <A HREF="wce50conkeyboardidentification.htm">Keyboard Identification</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

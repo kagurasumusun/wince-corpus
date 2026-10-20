@@ -1,0 +1,143 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>/RTC - Run-Time Error Checks</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="/RTC - Run-Time Error Checks"/>
+<MSHelp:RLTitle Title="/RTC - Run-Time Error Checks"/>
+<MSHelp:Keyword Index="A" Term="wce50grfRTC-Run-TimeErrorChecks"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Guide"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="True"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="comp_compiler_linker.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="False"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_1045236">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50grfrtc-run-timeerrorchecks"></A>/RTC - Run-Time Error Checks</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>This option enables run-time error checks.</P>
+
+<PRE class="syntax">/RTC1
+/RTCc
+/RTCs
+/RTCu</PRE>
+
+<H4 class="dtH4">Remarks</H4>
+
+<P>The <B>/RTC</B> option is supported by x86 microprocessors only.</P>
+
+<P>The run-time error checks feature is enabled and disabled by the /RTC group of compiler options and the <B>runtime_checks</B> pragma.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=16%>Option</TH>
+<TH width=84%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=16%>/RTC1</TD>
+<TD width=84%>Is equivalent to <B>/RTCsu</B>.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=16%>/RTCc</TD>
+<TD width=84%>Reports when a value is assigned to a smaller data type that results in a data loss. For example, if a value of type short 0x101 is assigned to a variable of type char. 
+<P>This option reports situations where you intend to truncate, as in a situation where you want the first eight bits of an int returned as a char. </P>
+
+<P>Because <B>/RTCc</B> causes a run-time error if information will be lost as a result of the assignment, you can mask off the information you need to avoid a run-time error as a result of <B>/RTCc</B>. For example:</P>
+
+<P><code class="ce">#include &lt;crtdbg.h&gt;</code><BR>
+<BR>
+<code class="ce">char get8bits(int value, int position)</code><BR>
+<code class="ce">{</code><BR>
+<code class="ce">   _ASSERT(position &lt; 32);</code><BR>
+<code class="ce">   return (char)(value &gt;&gt; position);</code><BR>
+<code class="ce">   // try the following line instead</code><BR>
+<code class="ce">   // return (char)((value &gt;&gt; position) &amp;&amp; 0xff);</code><BR>
+<code class="ce">}</code><BR>
+<BR>
+<code class="ce">int main()</code><BR>
+<code class="ce">{</code><BR>
+<code class="ce">   get8bits(12341235,3);</code><BR>
+<code class="ce">}</code></P>
+</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=16%>/RTCs</TD>
+<TD width=84%>Enables stack frame run-time error checking: 
+<UL type="disc">
+	<LI>Initialization of local variables to a nonzero value. This helps identify bugs that do not appear when running in debug mode. 
+<P>There is a greater chance that stack variables will still be zero in a debug build compared to a release build because of compiler optimizations of stack variables in a release build. 
+
+<P>After a program uses an area of its stack, it is not reset to 0 by the compiler. Therefore, subsequent, uninitialized stack variables that use the same stack area can return values left over from the prior use of this stack memory. 
+</li>
+
+	<LI>Detection of overruns and underruns of local variables such as arrays. <B>/RTCs</B> will not detect overruns when accessing memory that results from compiler padding within a structure. 
+<P>Padding could occur by using <A HREF="wce50conalign.htm">align</A>, <A HREF="wce50conzppackstructuremembers.htm">/Zp - Pack Structure Members</A><B>,</B> or the <B>pack</B> pragma, or if you order structure elements in such a way as to require the compiler to add padding. 
+</li>
+
+	<LI>Stack pointer verification, which detects stack pointer corruption. Stack pointer corruption can be caused by a calling convention mismatch. For example, using a function pointer, you call a function in a DLL that is exported as <B>__stdcall</B> but you declare the pointer to the function as <B>__cdecl</B>. </li>
+</UL>
+</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=16%>/RTCu</TD>
+<TD width=84%>Reports when a variable is used without having been initialized. For example, an instruction that generates <A HREF="wce50errcompilerwarninglevel4c4701.htm">Compiler Warning C4701</A> may also generate a run-time error under <B>/RTCu</B>. Any instruction that generates <A HREF="wce50errcompilerwarninglevel1c4700.htm">Compiler Warning C4700</A> will generate a run-time error under <B>/RTCu.</B> <BR>
+However, consider the following code fragment:
+<P><code class="ce">int a, *b, c;</code><BR>
+<code class="ce">if ( 1 )</code><BR>
+<code class="ce">b = &amp;a;</code><BR>
+<code class="ce">c = a;  // no run-time error with /RTCu</code></P>
+
+<P>If a variable could have been initialized, it will not be reported at run time by <B>/RTCu</B>. For example, after a variable is aliased through a pointer, the compiler will not track the variable and report uninitialized uses. In effect, you can initialize a variable by taking its address. The <B>&amp;</B> operator works like an assignment operator in this situation.</P>
+</TD>
+</TR>
+</table></div>
+
+<BLOCKQUOTE class="dtBlock">
+<b class="le">Note</b>&nbsp;&nbsp;&nbsp;If you compile your program at the command line using any of the /RTC compiler options, any pragma optimize instructions in your code will silently fail. This is because run-time error checks are not valid in a release (optimized) build.</BLOCKQUOTE>
+
+<P>The __MSVC_RUNTIME_CHECKS preprocessor directive will be defined when you use any /RTC option or <A HREF="wce50congzcatchreleaseerrorsindebugbuild.htm">/GZ - Catch Release Errors in Debug Build</A>.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50congeneralpurposecompileroptions.htm">Compiler Options</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

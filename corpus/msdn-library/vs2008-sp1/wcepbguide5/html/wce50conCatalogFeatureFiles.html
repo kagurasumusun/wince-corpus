@@ -1,0 +1,146 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Catalog Item Files</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Catalog Item Files"/>
+<MSHelp:RLTitle Title="Catalog Item Files"/>
+<MSHelp:Keyword Index="A" Term="wce50conCatalogFeatureFiles"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Guide"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="True"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="adding_features.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="True"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_3012174">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50concatalogfeaturefiles"></A>Catalog Item Files</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>After you create a project, you can use a Catalog item (.cec) file to associate it with a Catalog item that you can display in the Catalog. For more information about sample .cec files, see <A HREF="wce50samsamplececfiles.htm">Sample .cec Files</A>.</P>
+
+<P>After the Catalog item is displayed in the Catalog, you can add the associated project to other OS designs you create on the same development workstation. To do this, you must first create a .cec file and then import the file into the Catalog. </P>
+
+<P>A .cec file consists of blocks and subblocks that describe metadata about Catalog items and their relationships. The following table shows the blocks in a .cec file and the order they appear in.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=21%>Block name</TH>
+<TH width=79%>Content</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=21%><A HREF="wce50concecinfoblock.htm">CECInfo Block</A></TD>
+<TD width=79%>Basic information about the .cec file, such as the name, description, vendor, and version of the .cec file. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=21%><A HREF="wce50concomponenttypeblock.htm">ComponentType Block</A></TD>
+<TD width=79%>Catalog item groups or a generalized Catalog item that might have many different implementations.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=21%><A HREF="wce50conimplementationblock.htm">Implementation Block</A></TD>
+<TD width=79%>Definition of an implementation for a component type.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=21%><A HREF="wce50conbuildmethodblock.htm">BuildMethod Block</A></TD>
+<TD width=79%>Information about which CPUs support your Catalog item and, if applicable, links to source files, Help documentation (.chm) files, and user-created projects.
+<BLOCKQUOTE class="dtBlock">
+<b class="le">Note</b>&nbsp;&nbsp;&nbsp;Build-specific information in custom CEC files is not supported in Windows CE 5.0. Although this does not prevent CEC files from earlier versions of Platform Builder from being used, the information that is no longer supported, such as custom build steps, is ignored. </BLOCKQUOTE>
+</TD>
+</TR>
+</table></div>
+
+<P>When you create a .cec file and want to add an implementation or ComponentType defined in another .cec file, use the existing Globally unique identifier (GUID) rather than creating a new GUID.</P>
+
+<P>When modifying an existing component type, specify only the Name and GUID fields. </P>
+
+<P>The following code example shows the ComponentType block that specifies a new display driver (an implementation of the Display component type).</P>
+
+<PRE class="code">ComponentType
+(
+  Name ( "Display")
+..
+..
+  Implementations
+..
+)</PRE>
+
+<P>When adding to an existing implementation, use the same Implementation version number as the one you want to extend.</P>
+
+<P>When the data for a field contains a space, enclose the data in quotes. Tokens are separated by spaces and lines are ignored. If you enter a comment line, include a space after // to avoid a syntax error. </P>
+
+<P>For examples of the grammar used in .cec files, examine the default .cec files that are installed with Platform Builder. These default .cec files are installed in the %_WINCEROOT%\Public\Common\Oak\Catalog\Cec directory.</P>
+
+<P>The Platform Builder import parser adheres to the following rules when importing a .cec file:
+
+<UL type="disc">
+	<LI>GUIDs are generated for any structure that does not supply one, including component types, implementations, and build methods. 
+<BLOCKQUOTE class="dtBlock">
+<b class="le">Note</b>&nbsp;&nbsp;&nbsp;To ensure consistency, supply your own GUIDs for your Catalog items. You can use the GUIDGEN tool to create a GUID. GUIDGEN.exe is in the %_WINCEROOT%\SDK\BIN\i386 directory. For more information, see <A HREF="wce50conguidgentool.htm">Guidgen Tool</A>.</BLOCKQUOTE>
+</li>
+
+	<LI>GUIDs are specified in the following standard format:
+<P>{<I>xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx</I>}
+</li>
+
+	<LI>A .cec file can reference other structures by name instead of GUID only if the structures are defined in the same .cec file.</li>
+
+	<LI>If the information for a field requires more than one value, such as Children(), quotes are not needed. However, if your value has a space in the string, such as "My Catalog item," include double quotes around the string.</li>
+
+	<LI>Modifications to .cec files are not incorporated if another .cec file references the same Catalog item group. To incorporate the changes to a Catalog item, all .cec files containing references to the specified Catalog item group must be removed from the Catalog and imported again.</li>
+</UL>
+
+<P>A utility is included with Platform Builder that you can use to create and modify .cec files. For more information, see <A HREF="wce50conceceditor.htm">CEC Editor</A>.</P>
+
+<P>BSP .cec files contain data describing your device drivers and your OEM adaptation layer (OAL). </P>
+
+<P>The following code example shows a BSP .cec file that contains a GUID identifying the file as an OAL in the Catalog.</P>
+
+<PRE class="code"><code class="ce">ComponentType (
+    Name( BSPs )
+    GUID( {3CABD6DA-B577-4a87-9490-9432E80DC2F1} )
+    Description( "Board Support Packages" )
+    Implementations(
+        Implementation(</code></PRE>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><MSHelp:link keywords="wce50oriDevelopingBoardSupportPackage" TABINDEX="0">Developing a Board Support Package</MSHelp:link> | <A HREF="wce50concecinfoblock.htm">CECInfo Block</A> | <A HREF="wce50concomponenttypeblock.htm">ComponentType Block</A> | <A HREF="wce50conimplementationblock.htm">Implementation Block</A> | <A HREF="wce50conbuildmethodblock.htm">BuildMethod Block</A> </P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

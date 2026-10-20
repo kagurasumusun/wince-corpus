@@ -1,0 +1,116 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>PC Card Bus Driver</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="PC Card Bus Driver"/>
+<MSHelp:RLTitle Title="PC Card Bus Driver"/>
+<MSHelp:Keyword Index="A" Term="wce50oriPCCardServicesDefaultEnablerDriver"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Driver"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="False"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbOrient"/>
+<MSHelp:Attr Name="Filename" Value="pccardnew.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="False"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+<MSHelp:Attr Name="PBFeature" Value="PCCardDriver"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_1035163">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50oripccardservicesdefaultenablerdriver"></A>PC Card Bus Driver</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>The PC Card bus driver consists of several technologies: the card manager, the bus-agnostic interface, and the auto-enabler.</P>
+
+<P>The card manager keeps track of each card object. Card function objects are created for each instance of a card insertion and are destroyed when the card is removed. A card function object controls memory and I/O window allocation and destruction. Each card function object reads the configuration information space (CIS) of the card to determine the number of supported functions. It then creates one card function object for each supported function.</P>
+
+<P>Card function objects control the configuration of a function and handle client callbacks from card status change events. A tuple object provides an interface for reading tuples from the configuration information space of the card. It then uses window allocation routines for a card function object to gain access to the configuration information space of the card and handle the parsing of the tuples.</P>
+
+<P>The bus-agnostic interface allows the PC Card bus driver to support a bus-agnostic PC Card driver, which includes PC Card client drivers. The PC Card bus driver also supports legacy PCMCIA drivers developed prior to Windows CE 5.0, allowing legacy PCMCIA drivers to function correctly. The PC Card bus driver can also handle multiple PC Card readers and allows installable interrupt service routines (ISRs) for client drivers. </P>
+
+<P>The PC Card bus driver also supports a CardBus driver. CardBus is a hardware standard that facilitates streamlined configuration and automatic, dynamic recognition and of busses. CardBus cards, bridges, drivers, and so on, adhere to the CardBus hardware standard. Because Windows CE supports this standard, devices that are combined legacy PCMCIA card readers and CardBus bridges can use a single device driver. </P>
+
+<P>The auto-enabler is the default handler for PC Card configuration, if the enabler is not disabled in the registry. PC Card card services is initialized only once. It is then ready to accept platform dependent driver (PDD) binding and PC Card card services from the client driver.</P>
+
+<P>After the PC Card card service receives a card-insertion notification from the socket driver, the following tasks must be completed by the PC Card bus driver:
+
+<UL type="disc">
+	<LI>Create a card service object for function zero.</li>
+
+	<LI>Call <A HREF="wce50lrfss_resetsocket.htm">SS_ResetSocket</A> to reset the card to its initial power-on voltage.</li>
+
+	<LI>Send a CE_CARD_INSERTION event code to the default card enabler.</li>
+
+	<LI>Scan for a multi-function PC Card and, if one is found, create a child card service for the remaining function cards.</li>
+</UL>
+
+<P>When a card event occurs, all registered clients that have matched interface types and the same event mask are notified. The notification sequence is first in, last called. Because the default card enabler client is registered first in the PC Card bus driver, it should be called last.</P>
+
+<P>The default card enabler is registered as a standard client. When it receives a CE_CARD_INSERTION notification, it attempts to call <A HREF="wce50lrfcardrequestexclusive.htm">CardRequestExclusive</A> to receive exclusive access to the card. After it succeeds, the following processes occur:
+
+<OL type="1">
+	<LI>The default enabler reads the Plug and Play identification value from the tuple.</li>
+
+	<LI>The default enabler reads and parses each configuration entry.</li>
+
+	<LI>If a Plug and Play entry exists, the default enabler attempts to match it to the correct configuration entries. 
+<P>The configuration entry is pre-qualified by a successful return on a call to <A HREF="wce50lrfcardrequestconfiguration.htm">CardRequestConfiguration</A>. For 16-bit legacy PCMCIA cards, the Plug and Play entry is <CODE>HKLM\Drivers\PCCARD\PCMCIA\PNP\[PNP-ID]</CODE>.<CODE> </CODE>For 32-bit CardBus cards, the Plug and Play entry is <CODE>HKLM\Drivers\PCCARD\CARDBUS\PNP\[PNP-ID]</CODE>.
+</li>
+
+	<LI>If a Plug and Play entry does not exist, for a 16-bit PCMCIA card, the default enabler attempts to match all pre-qualified configuration entries with the registry keys under <CODE>HKLM\Drivers\PCCARD\PCMCIA\TEMPLATE</CODE>. 
+<P>For 32-bit CardBus cards, the configuration space is used to find a match on any registry entry under <CODE>HKLM\Drivers\BuiltIn\PCI\TEMPLATE</CODE>.
+</li>
+
+	<LI>If an entry is found, the default enabler configures the card if the <CODE>NoConfig</CODE> registry entry is not set. 
+<P>Configuration sets voltage, memory or I/O windows, and IRQ requested by the configuration entry.
+</li>
+
+	<LI>An instance registry is created and any registry keys that are found are copied to the instance registry. 
+<P>For 16-bit PCMCIA cards, the instance key is located under <CODE>HKLM\Drivers\PCCARD\PCMCIA\INSTANCE</CODE>. For 32-bit CardBus cards, the instance key is located under <CODE>HKLM\Drivers\PCCARD\CARDBUS\INSTANCE</CODE>.
+</li>
+
+	<LI>The client driver is loaded using the <MSHelp:link keywords="wce50lrfActivateDeviceEx" TABINDEX="0">ActivateDeviceEx</MSHelp:link> function.</li>
+
+	<LI>If no match is found, the default enabler attempts to force the socket to perform an eject operation.</li>
+
+	<LI>If the <CODE>NoConfig</CODE> registry value is set, the default enabler assumes that the driver will configure the card by itself. It then releases the configuration and then performs steps 6 and 7.</li>
+
+	<LI>The default enabler calls the configuration routine from the configuration DLL, if the configuration routine and the DLL are specified in the registry.</li>
+</OL>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50oripccarddrivers.htm">PC Card Drivers</A> | <A HREF="wce50lrfss_resetsocket.htm">SS_ResetSocket</A> | <A HREF="wce50lrfcardrequestexclusive.htm">CardRequestExclusive</A> | <A HREF="wce50lrfcardrequestconfiguration.htm">CardRequestConfiguration</A> | <A HREF="wce50lrfactivatedeviceex.htm">ActivateDeviceEx</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

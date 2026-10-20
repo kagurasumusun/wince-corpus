@@ -1,0 +1,84 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Interrupt Latencies</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Interrupt Latencies"/>
+<MSHelp:RLTitle Title="Interrupt Latencies"/>
+<MSHelp:Keyword Index="A" Term="wce50conInterruptLatencies"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Feature"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="kernel_realtime_performance.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="False"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+<MSHelp:Attr Name="PBFeature" Value="CORE"/>
+<MSHelp:Attr Name="PBOnly" Value="True"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_3009777">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50coninterruptlatencies"></A>Interrupt Latencies</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>One of the most important aspects of kernel real-time performance is the ability to service an IRQ within a specified amount of time. Interrupt latency refers primarily to the software interrupt handling latencies; that is, the amount of time that elapses from the time that an external interrupt arrives at the processor until the time that the interrupt processing begins. If paging does not occur, Windows CE interrupt latency times are bounded for threads locked in memory. This makes it possible to test for the worst-case latencies &#0151; the total times to the start of the ISR and to the start of the IST. The total amount of time until the interrupt is handled can then be determined by calculating the amount of time needed within the ISR and IST. </P>
+
+<P>The servicing of an IRQ in Windows CE begins with the kernel, which traps all exceptions and then determines the appropriate action. In the case of an IRQ, the kernel traps the IRQ, saves the registers supported for the ISR, and calls the ISR you specified. The saving and restoring of registers is required to support nested interrupts. Because the time delay from IRQ to ISR is bounded, the only way to affect this delay is to turn off interrupts, which the kernel does periodically for a limited time.</P>
+
+<P>ISR latency is the interval that begins when an IRQ is set in the CPU and ends when the ISR begins to run. The start of the ISR that is being measured can be calculated based on the current status of other interrupts in the system. If an interrupt is in progress, calculating the start of the new ISR to be measured must account for two factors: the number of higher-priority interrupts that will occur after the interrupt of interest has occurred and the amount of time spent executing an ISR.</P>
+
+<P>At the ISR level, you can perform limited functionality. The ISR runs in a special context in which memory is characterized as statically mapped virtual addresses. That is, the OEM specially maps the physical addresses used by an ISR. There is no access to any of the Microsoft Win32&reg; APIs and only one way to signal another thread. This prevents the OEM from performing tasks in the ISR that can adversely affect the real-time capabilities of the OS. However, even with this limitation, the OEM should always be concerned with the amount of time spent in the ISR. The longer the time spent in the ISR, the longer it will take to call the IST, should further processing be required. All of the work required to service the interrupt should be completed in the ISR, if the time required is minimal and if it does not influence the rest of the system. As long as an ISR is running, no threads will be scheduled in the system. The OS supports nested interrupts based on the hardware's support for this functionality, and will nest interrupts based on their priority, which is determined by the hardware or the OEM.</P>
+
+<P>IST latency is the interval that begins when an ISR finishes execution and signals a thread, and ends when the IST begins execution. The start time of the highest-priority IST begins after all ISRs have returned to the kernel and the kernel has performed some amount of work to begin the execution of the IST. The IST start time is affected by the total time spent in all ISRs after the ISR returns and signals the IST to run. Windows CE adds a restriction to ISTs: The event handle that links the ISR and IST can only be used in the <A HREF="wce50lrfwaitforsingleobject.htm">WaitForSingleObject</A> function. Windows CE prevents this event handle from being used in a <A HREF="wce50lrfwaitformultipleobjects.htm">WaitForMultipleObjects</A> function. This means that the kernel can guarantee an upper bound on the time to trigger the event and time to release the IST.</P>
+
+<P>There are several factors that can interrupt latencies, some of which are controlled by the OEM and others by the kernel. The kernel can affect interrupt latencies in the following ways:
+
+<UL type="disc">
+	<LI>Interrupts can be turned off. </li>
+
+	<LI>On the return from an ISR, a portion of the kernel that cannot be preempted might need to complete before information returned from the ISR is acted upon or before the highest-priority thread can be scheduled.</li>
+</UL>
+
+<P>An OEM can affect real-time performance by doing the following:
+
+<UL type="disc">
+	<LI>Turning off interrupts</li>
+
+	<LI>Spending too much time processing an ISR</li>
+</UL>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50conrealtimeperformancefunctionality.htm">Real-Time Performance Functionality</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

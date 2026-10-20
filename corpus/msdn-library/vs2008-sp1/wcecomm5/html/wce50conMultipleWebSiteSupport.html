@@ -1,0 +1,177 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Supporting Multiple Web Sites</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Supporting Multiple Web Sites"/>
+<MSHelp:RLTitle Title="Supporting Multiple Web Sites"/>
+<MSHelp:Keyword Index="A" Term="wce50conMultipleWebSiteSupport"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Feature"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="webserver_app_development.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="True"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="True"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_3006081">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50conmultiplewebsitesupport"></A>Supporting Multiple Web Sites</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>The Web Server supports the ability to run multiple Web sites. A Web site is defined as the basic settings that apply to the session for a user depending on what IP address they connect to the Web Server on or which host name they are requesting.</P>
+
+<P>For example, if a home gateway is being used it may be desirable to allow access to administrative ISAPI extensions to all users on the private network, but to disable any access from the Internet. In this scenario the OEM would create two Web sites on the device. One would have virtual roots mapped to the administrative utility and would not require authentication, while the other would have a virtual roots that only had information that was publicly available or would use Secure Sockets Layer (SSL) and/or authentication on sensitive pages.</P>
+
+<P>Each Web site is its own subkey under <B>HKEY_LOCAL_MACHINE\COMM\HTTPD\Websites</B>. Each Web site contains most, but not all, of the configuration options that the Web Server base registry key <B>HKEY_LOCAL_MACHINE\COMM\HTTPD</B> specifies. These options include the virtual roots that the Web site hosts, what types of authentication are being used, and whether directory browsing is allowed. For information about setting up the registry to indicate which requests Web sites should accept and which they should reject, see <A HREF="wce51conmultiplewebsiteregistrysettings.htm">Multiple Web Site Registry Settings</A>.</P>
+
+<P>Each subkey also contains information about the network interface on which the Web Server should listen, and which HTTP host fields it should accept. When a new connection arrives at the Web Server, it will read the HTTP headers first. Once the HTTP headers have been read, the server will use the "Host" HTTP header (if sent by the Web client) and the network interface on which the request arrived to determine the appropriate Web site to which to map the request. If there is no Web site mapping found under <B>HKEY_LOCAL_MACHINE\COMM\HTTPD\Websites</B>, and the<B> AllowDefaultSite</B> registry value is not set to zero (0)<B>,</B> the Web Server will map the request to the default Web site. If there is no Web site mapping found and the <B>AllowDefaultSite</B> registry value is set to zero (0)<B>,</B>, the Web Server will immediately close the HTTP session.</P>
+
+<BLOCKQUOTE class="dtBlock">
+<B><b class="le">Note</b>&nbsp;&nbsp;&nbsp;</B>This Web site mapping is handled within the Web Server itself. No re-direct pointers are sent to the client.</BLOCKQUOTE>
+
+<P>The following list shows the parameters that are configured per Web site, using the same format as described in <A HREF="wce50conbaseregistrysettings.htm">Base Registry Settings</A>.
+
+<UL type="disc">
+	<LI>Basic </li>
+
+	<LI>NTLM</li>
+
+	<LI>Dir Browse</li>
+
+	<LI>Default Page</li>
+
+	<LI>AdminUsers</li>
+
+	<LI>PostReadSize</li>
+
+	<LI>MaxLogSize</li>
+
+	<LI>ASP default settings</li>
+
+	<LI>Virtual Root settings</li>
+</UL>
+
+<P>The following parameters are configured globally for the entire Web Server. These parameters cannot be set per individual Web site. The following list shows where these parameters should be specified in <B>HKEY_LOCAL_MACHINE\COMM\HTTPD</B>:
+
+<UL type="disc">
+	<LI>MaxConnections</li>
+
+	<LI>Filter DLLs</li>
+
+	<LI>PostReadSize</li>
+
+	<LI>Logging</li>
+
+	<LI>SSL Configuration</li>
+
+	<LI>ISAPI extension script caching mechanism</li>
+</UL>
+
+<P class="label"><B>Example of Multiple Web Sites</B></P>
+
+<P>The following example shows the Web Server configuration on a hypothetical Internet gateway device. This device will have some pages viewable only from the private (internal/intranet) network and some that are accessible from the public (external/Internet).</P>
+
+<P>The default Web site is what will be viewable by general users. Note the use of SSL and authentication for sensitive pages. This example uses Basic over NTLM because pages that require authentication need SSL anyway.</P>
+
+<PRE class="code">[HKEY_LOCAL_MACHINE\COMM\HTTPD]
+    "DirBrowse"=dword:0
+    "Basic"=dword:1
+    "NTLM"=dword:0
+    "LogFileDirectory"="\windows\www\"
+    ; No HostedSites or NetworkInterfaces values are required
+    ; because this is the default site, and will serve as a catch-all
+    ; for unmapped Web sites.
+[HKEY_LOCAL_MACHINE\COMM\HTTPD\VROOTS\/Admin]
+    @="\windows\admin.dll"
+    "a"=dword:0x1
+    ;p = HSE_URL_FLAGS(READ, EXECUTE, SCRIPT, SSL128)
+    "p"=dword:0x00000305
+[HKEY_LOCAL_MACHINE\COMM\HTTPD\VROOTS\/PicturesReadOnly]
+    @="\pictures\"
+    "a"=dword:0
+[HKEY_LOCAL_MACHINE\COMM\HTTPD\SSL]
+    "IsEnabled"=dword:1
+    "CertificateSubject"="Certificate Name"</PRE>
+
+<P>The following example shows the private interface. Requiring authentication for all administrative pages is recommended, but is omitted in this example. The name of the Web site, that is, the registry key under <B>Websites</B> is arbitrary and can be any registry key name.</P>
+
+<PRE class="code">[HKEY_LOCAL_MACHINE\COMM\HTTPD\Websites\1]
+    "DirBrowse"=dword:1
+    "Basic"=dword:1
+    "NTLM"=dword:0
+    "LogFileDirectory"="\windows\www\PrivateLogs"
+    "PrivateInterface"=dword:1
+    "NetworkInterfaces"="$PRIVATE"
+    "HostedSites"="*"
+[HKEY_LOCAL_MACHINE\COMM\HTTPD\Websites\1\VROOTS\/Admin]
+    @="\windows\admin.dll"
+    "a"=dword:0
+[HKEY_LOCAL_MACHINE\COMM\HTTPD\Websites\1\VROOTS\/PicturesReadOnly]
+    @="\pictures\"
+    "a"=dword:0
+[HKEY_LOCAL_MACHINE\COMM\HTTPD\Websites\1\VROOTS\/PicturesWrite]
+    ; ISAPI extension to help update pictures, private side only.
+    @="\windows\pictures.dll"</PRE>
+
+<BLOCKQUOTE class="dtBlock">
+<B><b class="le">Note</b>&nbsp;&nbsp;&nbsp;</B>In this example, the virtual root <B>PicturesReadOnly</B> is duplicated on both the default Web site and the private interface VROOTs subkeys. This is a requirement if <B>PicturesReadOnly</B> is to be shared on both network interfaces. Virtual roots among different Web sites are not shared; therefore, if the Web Server cannot map the virtual root <B>PicturesReadOnly</B> on the private interface, it will not attempt to perform the mapping on the default Web site. </BLOCKQUOTE>
+
+<BLOCKQUOTE class="dtBlock">
+When adding new Web sites to a device, care must be taken to ensure that all virtual roots that should be available to clients using the Web site are copied into the registry.</BLOCKQUOTE>
+
+<P>The following example shows how to restrict Web site access, leaving out the details that make up the Web site itself, such as Vroot tables.</P>
+
+<PRE class="code">[HKEY_LOCAL_MACHINE\COMM\HTTPD]
+    ; Turn off default Web site.  Must map to one of Web sites that follow.
+    "AllowDefaultSite"=dword:0
+[HKEY_LOCAL_MACHINE\COMM\HTTPD\Websites\Website1]
+    ; All requests to host name "MyHost" will go to this
+    ; site, regardless of network interface on which they come in.
+    "HostedSites"=" MyHost"
+[HKEY_LOCAL_MACHINE\COMM\HTTPD\Websites\Website2]
+    ; All requests on interface NE20001 will be directed to this site,
+    ; unless they are to host MyHost.
+    "NetworkInterfaces"="NE20001"
+    "HostedSites"="- MyHost;*"
+[HKEY_LOCAL_MACHINE\COMM\HTTPD\Websites\Website3]
+    ; Serves as default site: if request is not coming on NE20001 or
+    ; to host MyHost, or to both, this Web site will handle the request.
+    "NetworkInterfaces"="-NE20001;*"
+    "HostedSites"="- MyHost;*"</PRE>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50conbaseregistrysettings.htm">Base Registry Settings</A> | <A HREF="wce50conwebserverrequirements.htm">Web Server Requirements</A> | <A HREF="wce50conwebserverimplementationdetails.htm">Web Server Implementation Details</A> | <A HREF="wce51conmultiplewebsiteregistrysettings.htm">Multiple Web Site Registry Settings</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

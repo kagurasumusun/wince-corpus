@@ -1,0 +1,94 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Display Driver Performance</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Display Driver Performance"/>
+<MSHelp:RLTitle Title="Display Driver Performance"/>
+<MSHelp:Keyword Index="A" Term="wce50conDisplayDriverPerformance"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Driver"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="False"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="display_guide.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="False"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+<MSHelp:Attr Name="PBFeature" Value="DisplayDriver"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_3017897">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50condisplaydriverperformance"></A>Display Driver Performance</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>The following factors affect the graphics performance of your platform:
+
+<UL type="disc">
+	<LI>The usage scenario for your device.</li>
+
+	<LI>The graphics hardware on your device.</li>
+
+	<LI>The design of your driver code.</li>
+</UL>
+
+<P>Assuming that your hardware design is fixed and the usage scenarios for your device cannot be changed, the challenge is then to find ways to improve your driver's code.</P>
+
+<P>Before you take steps to improve your driver's performance, get an objective measure what its current performance is. You can use the DispPerf tool to create a performance profile for your platform's display system. </P>
+
+<P>For the best profiling results, run DispPerf on a release build of your run-time image while running a graphically intensive scenario for your device. For more information about DispPerf, see <A HREF="wce50condisplaydriverperformanceprofiling.htm">Display Driver Performance Profiling</A>.</P>
+
+<P>When an application sends a graphics command to the OS, the OS processes the high-level command into more discrete graphics operations, which are then sent down to the display driver. When the display driver receives these operations, it attempts to find the most efficient way to render them. </P>
+
+<P>First, the driver checks to see if the operation is supported directly by the graphics hardware. </P>
+
+<P>If the operation is not supported directly by the graphics hardware, the driver tries to find a function among the BitBlT emulation library functions to handle the operation. </P>
+
+<P>If this is also unsuccessful, the driver defaults to using one of the standard Graphics Primitive Engine (GPE) functions.</P>
+
+<P>You can analyze the output from DispPerf to see which functions are being called within your driver and where the most time is spent. Look for any use of the <B>EmultedBlt</B> family of functions. These functions indicate that your driver is using software-based rendering in its code path rather than hardware-based rendering. </P>
+
+<P>The first and best step toward optimizing your driver's performance is to try to convert such operations to hardware-based operations if at all possible. For details, see <A HREF="wce50conbitblocktransfersandlinedrawingacceleration.htm">Bit Block Transfers and Line Drawing Acceleration</A>.</P>
+
+<P>If your hardware does not support the operations you need to replace an emulated graphics operation, write your own emulation function to perform the graphics operation, or optimize an existing function to fit your specific hardware and scenario. </P>
+
+<P>This allows you to take advantage of specialized knowledge you have about your device or scenario, rather than relying on the generalized emulation functions exported by Emul.lib. </P>
+
+<P>The source code for Emul.lib is in the %_WINCEROOT%\Public\Common\OAK\Drivers\Display\Emul directory.</P>
+
+<P>When reviewing the results from DispPerf, also look for functions that inherently use large amounts of CPU time, such as <B>WaitForNotBusy</B>. For more information, see <A HREF="wce50howhowtoprofileandoptimizeadisplaydriver.htm">How to Profile and Optimize a Display Driver</A>. </P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50condisplaydrivers.htm">Display Drivers</A> | <A HREF="wce50condisplaydriversamples.htm">Display Driver Samples</A> | <MSHelp:link keywords="wce50oriHowtoTopics" TABINDEX="0">How-to Topics</MSHelp:link> | <A HREF="wce50lrfbitbltemulationlibraryfunctions.htm">BitBlT Emulation Library Functions</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

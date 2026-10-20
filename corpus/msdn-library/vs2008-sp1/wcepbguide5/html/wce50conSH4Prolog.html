@@ -1,0 +1,98 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>SH-4 Prolog</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="SH-4 Prolog"/>
+<MSHelp:RLTitle Title="SH-4 Prolog"/>
+<MSHelp:Keyword Index="A" Term="wce50conSH4Prolog"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Guide"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="True"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="comp_sh4_callspec.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="True"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_3023843">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50consh4prolog"></A>SH-4 Prolog</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>The SH-4 prolog contains four parts that are immediately contiguous with no intervening instructions. The following list shows the required parts.
+
+<OL type="1">
+	<LI>A sequence of zero or more instructions that save the incoming argument values from <B>R4</B> - <B>R7</B> and <B>FR4</B> - <B>FR11</B> to the argument home locations. 
+<P>This sequence typically uses the <B>fmov</B> instruction with <B>R15</B> as the base address register. This sequence will not change the stack pointer, <B>R15</B>.
+
+<P>In addition, floating-point argument registers can be stored onto the stack using the <B>fmov</B> instruction with the register-indirect and register-indirect-pre-decrement addressing modes. 
+
+<P>A sequence of one or more such <B>fmov</B> instructions may be preceded by a two-instruction address register setup sequence composed of a constant move to a general register, followed by an add of the <B>sp</B> to the register. For example:
+
+<PRE class="code">mov #36, r0
+add sp, r0
+fmov fr5, @r0
+fmov fr4, @-r0</PRE>
+</li>
+
+	<LI>A sequence of zero or more instructions that push all permanent registers to be saved and the return address (<B>PR</B>), if it is to be saved, onto the stack using the pre-decrement indirect register addressing mode with <B>R15</B> as the address register. 
+<P>If a permanent register such as <B>R14</B> is to be used as the frame pointer, it is pushed first. 
+
+<P>If the <B>PR</B> is to be saved, it is pushed last. 
+
+<P>The prolog uses <B>mov.l</B> instructions to save registers other than the return address, and the <B>sts.l</B> instruction to save the return address. 
+
+<P>The prolog also uses the <B>fmov.s</B> instruction to save floating-point registers, and may invoke double-precision and move-extension <B>fmov</B> instructions by first setting the <B>SZ</B> bit in the FPSCR.
+</li>
+
+	<LI>A sequence of one or more instructions that set up the frame pointer, if one is to be established. 
+<P>To set up the frame pointer, the step 3 sequence first copies the contents of <B>R15</B> to the frame pointer register, then adds or subtracts the amount of offset to the frame pointer address from the frame pointer register.
+
+<P>If the frame pointer address is less than the current value in <B>R15</B>, the prolog subtracts the offset to the frame pointer address from <B>R15</B>, and copies <B>R15</B> to the frame pointer register. If this method is used, the routine must later take the size of the decrement to <B>R15</B> into account.
+
+<P>If the routine is not a leaf routine, the function must use a permanent register, typically <B>R14</B>, as the frame pointer. 
+</li>
+
+	<LI>A sequence of zero or more instructions that allocate the remaining stack frame space for local variables, compiler-generated temporaries, and the argument-build area by subtracting a 4-byte aligned offset from <B>R15</B>.</li>
+</OL>
+
+<P>The <B>Virtual Unwinder</B> considers the last instruction in this sequence the last instruction of the prolog.</P>
+
+<P>If necessary, the temporary register <B>R1</B> holds an offset too large to be represented in the immediate field of an add instruction.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50consh4prologandepilog.htm">SH-4 Prolog and Epilog</A> | <A HREF="wce50consh4epilog.htm">SH-4 Epilog</A> | <A HREF="wce50samsh4prologandepilogexamples.htm">SH-4 Prolog and Epilog Code Examples</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

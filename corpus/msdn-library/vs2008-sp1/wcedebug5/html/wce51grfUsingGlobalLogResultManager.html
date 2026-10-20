@@ -1,0 +1,93 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Using GlobalLogResultManager</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Using GlobalLogResultManager"/>
+<MSHelp:RLTitle Title="Using GlobalLogResultManager"/>
+<MSHelp:Keyword Index="A" Term="wce51grfUsingGlobalLogResultManager"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Debugging"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="True"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="TuxNet.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="True"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_1076546">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce51grfusinggloballogresultmanager"></A>Using GlobalLogResultManager</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>A test case often needs to perform several operations in succession, where each operation has its own success value. The test needs to track these multiple values in order to make a final pass/fail determination, resulting in multiple points of complexity where bugs can crop up in the test case itself. For example, misuse of Boolean or bit-wise operators can result in loss of a valid failure, which inadvertently ends up being a pass. Tracking all these results can also become so confusing that the wrong result is returned.</P>
+
+<P>The <B>GlobalLogResultManager</B> is to results management what <B>GlobalLogger</B> is to logging: a one-stop utility that manages results for you. Keeping track of a <B>LogResult</B> over the course of your test case can be error-prone. Allowing the <B>GlobalLogResultManager</B> to keep track of results allows you to forgo logical processing of multiple result steps for verification or determination of a final result. You can simply trust the manager instead.</P>
+
+<P>The example below demonstrates use of the Add, Pass, Fail, and Clear methods of the GlobalLogResultManager. It also shows how to return the <B>LogResult</B> that <B>GlobalLogResultManager</B> has been tracking for you.</P>
+
+<PRE class="code">using Manager = Microsoft.MobileDevices.Utils.GlobalLogResultManager;
+
+/// &lt;summary&gt;
+/// Example: Using GlobalLogResultManager to manager results
+/// &lt;/summary&gt;
+public LogResult TestCase()
+{
+    // You can add results based on a boolean expression
+    // This addition will add a pass result, since the boolean
+    // expression is true.  Use this for calls to methods
+    // that return a bool for pass/fail
+    Manager.Results.Add("Add passed result", (1 &lt; 2));
+
+    // Before this call the overall result is pass, but after
+    // this call it will be fail, since the test is false
+    Manager.Results.Add("Add failed result", (1 &gt; 2));
+
+    // You can clear the results at any time and this will put
+    // you back in a passing state - use this carefully
+    Manager.Results.Clear();
+
+    // If you know that a result is pass as a result of your
+    // own check you can call Pass to log the passed result
+    Manager.Results.Pass("Add a known passed result");
+
+    // Similarly, you can call Fail to log failed results
+    Manager.Results.Fail("Add a known failed result");
+
+    // When you are done with your test return Summary - this
+    // will aggregate all the results you have added such that
+    // any failure will result in an overall fail result
+    return Manager.Results.Summary;
+}</PRE>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

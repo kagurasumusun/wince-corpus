@@ -1,0 +1,132 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Creating Stubs for the Boot Loader OEM Functions</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Creating Stubs for the Boot Loader OEM Functions"/>
+<MSHelp:RLTitle Title="Creating Stubs for the Boot Loader OEM Functions"/>
+<MSHelp:Keyword Index="A" Term="wce50tskCreatingStubsfortheBootLoaderOEMFunctions"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Hardware"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="True"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbTask"/>
+<MSHelp:Attr Name="Filename" Value="howto_developing_a_bootloader.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="True"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_3010332">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50tskcreatingstubsforthebootloaderoemfunctions"></A>Creating Stubs for the Boot Loader OEM Functions</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>Stubs are routines that do not contain executable code. They act as placeholders for functions that need to be fully implemented later. When implementing stubs, you can leave comments that describe what you eventually need to do to add functionality to your function.</P>
+
+<P>You need to create stubs for some generic hardware platform routines and flash memory operations because BLCOMMON expects to call these functions, but they have not yet been implemented. You can revisit these functions and then fully implement them later.</P>
+
+<P class="labelproc"><B>To create stubs for boot loader OEM functions</B>
+
+<OL type="1">
+	<LI>Edit the file Main.c.</li>
+
+	<LI>Add stubs for the generic hardware platform routines in the file Main.c.
+<P>The following code example shows the stub versions of the generic hardware platform routines:
+
+<PRE class="code">#include &lt;windows.h&gt;
+#include &lt;blcommon.h&gt;
+BOOL OEMDebugInit(void) { return(TRUE); }
+BOOL OEMPlatformInit(void) { return(TRUE); }
+DWORD OEMPreDownload(void) { return(0); }
+void OEMLaunch (DWORD dwImageStart, DWORD dwImageLength, DWORD dwLaunchAddr, const ROMHDR *pRomHdr) {}
+BOOL OEMReadData (DWORD cbData, LPBYTE pbData) { return(TRUE); }
+void OEMShowProgress (DWORD dwPacketNum) {}
+void OEMWriteDebugByte(unsigned char c) {}</PRE>
+
+<P>The stub versions added to Main.c are for the following generic hardware platform routines:
+
+<UL type="disc">
+	<LI><A HREF="wce50lrfoemdebuginit.htm">OEMDebugInit</A></li>
+
+	<LI><A HREF="wce50lrfoemplatforminit.htm">OEMPlatformInit</A></li>
+
+	<LI><A HREF="wce50lrfoempredownload.htm">OEMPreDownload</A></li>
+
+	<LI><A HREF="wce50lrfoemlaunch.htm">OEMLaunch</A></li>
+
+	<LI><A HREF="wce50lrfoemreaddata.htm">OEMReadData</A></li>
+
+	<LI><A HREF="wce50lrfoemshowprogress.htm">OEMShowProgress</A></li>
+
+	<LI><A HREF="wce50lrfoemwritedebugbyte.htm">OEMWriteDebugByte</A></li>
+</UL>
+</li>
+
+	<LI>Create a file called Flash.c.</li>
+
+	<LI>Add stubs for the flash memory-related functions in the file Flash.c.
+<P>The following code example shows the stub versions of the flash memory-related functions:
+
+<PRE class="code">#include &lt;windows.h&gt;
+#include &lt;blcommon.h&gt;
+BOOL OEMStartEraseFlash (DWORD dwStartAddr, DWORD dwLength) { return(FALSE); }
+void OEMContinueEraseFlash (void) {}
+BOOL OEMFinishEraseFlash (void) {return(FALSE); }
+BOOL OEMIsFlashAddr (DWORD dwAddr) { return(FALSE); }
+BOOL OEMWriteFlash(DWORD dwStartAddr, DWORD dwLength) { return(FALSE); }
+LPBYTE OEMMapMemAddr (DWORD dwImageStart, DWORD dwAddr) { return((LPBYTE)dwAddr); }</PRE>
+
+<P>The stub versions added to Flash.c are for the following flash memory-related functions:
+
+<UL type="disc">
+	<LI><A HREF="wce50lrfoemstarteraseflash.htm">OEMStartEraseFlash</A></li>
+
+	<LI><A HREF="wce50lrfoemcontinueeraseflash.htm">OEMContinueEraseFlash</A></li>
+
+	<LI><A HREF="wce50lrfoemfinisheraseflash.htm">OEMFinishEraseFlash</A></li>
+
+	<LI><A HREF="wce50lrfoemisflashaddr.htm">OEMIsFlashAddr</A></li>
+
+	<LI><A HREF="wce50lrfoemwriteflash.htm">OEMWriteFlash</A></li>
+
+	<LI><A HREF="wce50lrfoemmapmemaddr.htm">OEMMapMemAddr</A></li>
+</UL>
+
+<P>If the boot loader being developed does not need to erase or write to flash memory on your device, the flash memory routines can remain as stub versions and do not have to be fully implemented later.
+</li>
+</OL>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50howhowtodevelopabootloader.htm">How to Develop a Boot Loader</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

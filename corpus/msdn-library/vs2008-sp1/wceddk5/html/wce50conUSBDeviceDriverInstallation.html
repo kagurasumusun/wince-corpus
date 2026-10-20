@@ -1,0 +1,132 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Installing, Attaching, and Detaching USB Drivers</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Installing, Attaching, and Detaching USB Drivers"/>
+<MSHelp:RLTitle Title="Installing, Attaching, and Detaching USB Drivers"/>
+<MSHelp:Keyword Index="A" Term="wce50conUSBDeviceDriverInstallation"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Driver"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="False"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="usbhost_guide.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="True"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="True"/>
+<MSHelp:Attr Name="PBFeature" Value="USBHostDriver"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_3019343">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50conusbdevicedriverinstallation"></A>Installing, Attaching, and Detaching USB Drivers</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>The <B>HKEY_LOCAL_MACHINE\Drivers\USB\LoadClients</B> key must be set up correctly so that the USB driver module can load the appropriate driver for a device when a device is attached to the bus. Each installed USB device driver must have a subkey within the <B>LoadClients</B> key for the USB driver module to load it.</P>
+
+<P>If you supply a USB device driver, you should configure the hardware platform's <B>LoadClients</B> key in the registry to include subkeys for the driver. For third-party peripherals, the driver does not have appropriate subkeys when it is first connected to the hardware platform. In this case, the USB driver module fails to locate an appropriate USB device driver when the peripheral is attached to the bus. The USB driver module instead displays a dialog box prompting a user to enter the name of the appropriate USB device driver DLL. The USB driver then loads the specified driver to control the peripheral and calls the driver's <A HREF="wce50lrfusbinstalldriver.htm">USBInstallDriver</A> function.</P>
+
+<P>The USB device driver's <B>USBInstallDriver</B> function sets up the driver's subkey correctly within the <B>LoadClients</B> key so that the USB driver module can load the driver the next time that the peripheral is attached to the bus. The driver does this by creating a <A HREF="wce50lrfusbdriversettings.htm">USB_DRIVER_SETTINGS</A> structure and passing it to the <A HREF="wce50lrfregisterclientsettings.htm">LPREGISTER_CLIENT_SETTINGS</A> function. The format of the <B>USB_DRIVER_SETTINGS</B> structure parallels that of the <B>LoadClients</B> key. If all the fields in a group have <B>USB_NO_INFO</B> value, the corresponding <B>Group<I>X</I>_ID</B> is set to <B>Default</B> in the registry. For example, the following example shows the <B>USB_DRIVER_SETTINGS</B> for the HID class sample driver.</P>
+
+<PRE class="code">USB_DRIVER_SETTINGS DriverSettings;
+DriverSettings-&gt;dwVendorId          = USB_NO_INFO;
+DriverSettings-&gt;dwProductId         = USB_NO_INFO;
+DriverSettings-&gt;dwReleaseNumber     = USB_NO_INFO;
+
+DriverSettings-&gt;dwDeviceClass       = USB_NO_INFO;
+DriverSettings-&gt;dwDeviceSubClass    = USB_NO_INFO;
+DriverSettings-&gt;dwDeviceProtocol    = USB_NO_INFO;
+
+DriverSettings-&gt;dwInterfaceClass    = USB_DEVICE_CLASS_HUMAN_INTERFACE;
+DriverSettings-&gt;dwInterfaceSubClass = USB_NO_INFO;
+DriverSettings-&gt;dwInterfaceProtocol = USB_NO_INFO;</PRE>
+
+<P>The following example shows how calling <B>RegisterClientSettings</B> with this <B>USB_DRIVER_SETTINGS</B> structure is equivalent to having set up this registry key.</P>
+
+<PRE class="code">[HKEY_LOCAL_MACHINE\Drivers\USB\LoadClients]
+  [Default]
+    [Default]
+      [3]
+         [Generic_Sample_Hid_Class_Driver]
+           "DLL"="USBHID.dll"</PRE>
+
+<P>In general, the client driver performs the following operations in <B>USBInstallDriver</B>:
+
+<OL type="1">
+	<LI>Registers a unique client driver identifier string by calling the <A HREF="wce50lrfregisterclientdriverid.htm">LPREGISTER_CLIENT_DRIVER_ID</A> function.</li>
+
+	<LI>Sets up the <B>LoadClients</B> registry key correctly by calling the <B>RegisterClientSettings</B> function.</li>
+
+	<LI>Creates any driver-specific registry keys under the registry key that is returned by the <A HREF="wce50lrfopenclientregistrykey.htm">LPOPEN_CLIENT_REGISTRY_KEY</A> function. 
+<P>This is optional because many client drivers might not have any driver-specific registry settings. The registry key for driver-specific settings is <B>HKEY_LOCAL_MACHINE\Drivers\USB\ClientDrivers\<I>Client Driver Id String</I></B>. <B><I>Client Driver ID String</I></B> is the same string that was registered using <A HREF="wce50lrfregisterclientdriverid.htm">LPREGISTER_CLIENT_DRIVER_ID</A>. <B>OpenClientRegistryKey</B> and <B>RegisterClientDriverID</B> work together to enable USB drivers to have custom purpose registry keys. USB device drivers should always use <B>OpenClientRegistryKey</B> to manipulate the settings, rather than opening the registry key directly, to avoid the problems if the location for driver-specific keys ever changes.
+</li>
+
+	<LI>The <B>USBInstallDriver</B> returns control to the USB driver module. </li>
+
+	<LI>The USB driver module once again attempts to load a driver for the device, using the algorithm described in <A HREF="wce50conusbdevicedriverloadprocess.htm">Loading USB Device Drivers</A>.</li>
+
+	<LI>The USB driver module calls the USB device driver's attach routine. </li>
+</OL>
+
+<H2 class="dtH2">Attaching USB Drivers</H2>
+
+<P>After the USB driver module loads a USB device driver for a peripheral, it calls the driver's <A HREF="wce50lrfusbdeviceattach.htm">USBDeviceAttach</A> function. In this function, the USB device driver performs the following operations:
+
+<OL type="1">
+	<LI>The driver determines whether it can control the peripheral. </li>
+
+	<LI>If the driver can control the peripheral, the driver returns TRUE to accept control or FALSE to decline control. 
+<P>In the latter case, the USB driver module continues to search for other drivers to control the peripheral.
+</li>
+
+	<LI>The driver loads additional USB device drivers for other interfaces that might be present on the peripheral by calling the <A HREF="wce50lrfloadgenericinterfacedriver.htm">LPLOAD_GENERIC_INTERFACE_DRIVER</A> function. </li>
+
+	<LI>If the driver accepts control of a peripheral, the USB driver module stops searching for drivers to control the peripheral. 
+<P>The driver that accepts control must then load any other USB device drivers for other interfaces present on the peripheral.
+</li>
+
+	<LI>The driver registers a callback function that is called when the peripheral is disconnected from the bus. 
+<P>USB device drivers use the <A HREF="wce50lrfregisternotificationroutine.htm">LPREGISTER_NOTIFICATION_ROUTINE</A> function to register callback functions.
+</li>
+</OL>
+
+<H2 class="dtH2">Detaching USB Drivers</H2>
+
+<P>While attaching a USB driver, the driver might register a callback function. When a user detaches a peripheral from the bus, the USB driver module calls the callback function.</P>
+
+<P>The callback function also has the option of calling other functions in the USB device driver, such as <A HREF="wce50lrfusbuninstalldriver.htm">USBUnInstallDriver</A>. <B>USBUnInstallDriver</B> removes all registry keys that were created by the driver's <A HREF="wce50lrfusbinstalldriver.htm">USBInstallDriver</A> function and releases any other resources that are held by the driver. In this way, a user can remove any old registry settings for a particular device when a new or updated driver for that device is available. The USB driver module never calls <B>USBUnInstallDriver</B> directly.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50conusbdevicedriverimplementation.htm">USB Device Driver Implementation</A> | <A HREF="wce50conusbdevicedriverloadprocess.htm">Loading USB Device Drivers</A> | <A HREF="wce50conhcdmoduleimplementation.htm">Implementing USB Host Controller Drivers</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

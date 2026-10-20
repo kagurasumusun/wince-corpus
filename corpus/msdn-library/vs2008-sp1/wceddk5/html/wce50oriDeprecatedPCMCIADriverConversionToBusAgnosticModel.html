@@ -1,0 +1,157 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Converting a Legacy PCMCIA Driver to a Bus-Agnostic Driver</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Converting a Legacy PCMCIA Driver to a Bus-Agnostic Driver"/>
+<MSHelp:RLTitle Title="Converting a Legacy PCMCIA Driver to a Bus-Agnostic Driver"/>
+<MSHelp:Keyword Index="A" Term="wce50oriDeprecatedPCMCIADriverConversionToBusAgnosticModel"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Driver"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="False"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbOrient"/>
+<MSHelp:Attr Name="Filename" Value="pccardnew.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="True"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="True"/>
+<MSHelp:Attr Name="PBFeature" Value="PCCardDriver"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_1035182">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50orideprecatedpcmciadriverconversiontobusagnosticmodel"></A>Converting a Legacy PCMCIA Driver to a Bus-Agnostic Driver</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>Although the PC Card bus driver supports all legacy PCMCIA drivers. Microsoft recommends that you convert legacy PCMCIA drivers to bus-agnostic PC Card drivers. A bus-agnostic driver is a standard driver that is relatively simple to implement and can be shared by various bus implementations for the same hardware chipset. For example, the bus-agnostic PCI NE2000 driver works correctly for the NE2000 PCMCIA card. The NE2000 PCMCIA card functions the same with the PCI NE2000 driver as it would with the PCMCIA NE2000 driver. </P>
+
+<P>Although the legacy PCMCIA driver is still supported, Microsoft recommends that you migrate a PCMCIA driver to the bus-agnostic driver model. For information on the bus-agnostic driver model, see <A HREF="wce50oripccardclientdrivers.htm">PC Card Bus-Agnostic Client Drivers</A>.</P>
+
+<P>Unlike the legacy PCMCIA driver, the PC Card bus driver does not use the <B>Detect</B> function for a class-specific driver, such as an NE2000 driver. Instead, it uses a registry template to implement a match mechanism introduced by PCI. Unlike PCI, which uses Class ID to locate an entry, the PC Card bus driver uses a deprecated ISA address to locate an entry. For example, an NE2000 driver supports the deprecated PCMCIA address on 0x300, 0x320, and 0x340. Another example is the COM16550 driver, which supports the deprecated address 0x3f8, 0x2f8, 0x3e8, and 0x2e8. Also, an additional value, such as the function ID number, is used for matching. If a card-specific driver uses the same address as a PCMCIA-class driver, it can implement the Plug and Play ID to load a specified driver.</P>
+
+<P>The 16-bit PC Card match template is located at <B>HKEY_LOCAL_MACHINE\Drivers\PCCARD\PCMCIA\TEMPLATE.</B> The 32-bit PC Card match template is located at <B>HKEY_LOCAL_MACHINE\Drivers\BuiltIn\PCI\Template.</B> A 32-bit PC Card has the same match template as a PCI bus driver.</P>
+
+<P>The 16-bit Plug and Play D entry is located at <B>HKEY_LOCAL_MACHINE\Drivers\PCCARD\PCMCIA\PNP</B>. The 32-bit Plug and Play ID entry is located at <B>HKEY_LOCAL_MACHINE\Drivers\PCCARD\CARDBUS\PNP</B>.</P>
+
+<P>A Plug and Play registry entry appears in a search before a template registry entry. If a device has a PCMCIA ISA address that conflicts with an existing template, use the Plug and Play ID registry entry instead of the template registry entry. If you develop a driver for a specific PCMCIA card, use the Plug and Play ID registry entry to prevent future conflicts.</P>
+
+<P>The following registry entry must be created to support a deprecated PC Card driver. Pcc_pcm.dll is renamed to Pcmcia.dll during the make image process.</P>
+
+<PRE class="code">[HKEY_LOCAL_MACHINE\Drivers\PCCARD\PCMCIA\TEMPLATE\PCMCIA]
+  "Dll"="pcmcia.dll"
+  "NoConfig"=dword:1
+  "IClass"=multi_sz:"{6BEAB08A-8914-42fd-B33F-61968B9AAB32}=PCMCIA Card Services"</PRE>
+
+<P>The following registry example shows the implementation of a bus-agnostic driver for a NE2000 PCMCIA driver.</P>
+
+<PRE class="code">[HKEY_LOCAL_MACHINE\Drivers\PCCARD\PCMCIA\TEMPLATE\NE2000A]
+  "Dll"="ndis.dll"
+  "Prefix"="NDS"
+  "Miniport"="NE2000"
+  "FUNCTION_ID"=dword:6
+  "INTERRUPT_MASK"=dword:ffff
+  "IoBase"=dword:300
+  "IoLen"=dword:20
+[HKEY_LOCAL_MACHINE\Drivers\PCCARD\PCMCIA\TEMPLATE\NE2000B]
+  "Dll"="ndis.dll"
+  "Prefix"="NDS"
+  "Miniport"="NE2000"
+  "FUNCTION_ID"=dword:6
+  "INTERRUPT_MASK"=dword:ffff
+  "IoBase"=dword:320
+  "IoLen"=dword:20
+[HKEY_LOCAL_MACHINE\Drivers\PCCARD\PCMCIA\TEMPLATE\NE2000C]
+  "Dll"="ndis.dll"
+  "Prefix"="NDS"
+  "Miniport"="NE2000"
+  "FUNCTION_ID"=dword:6
+  "INTERRUPT_MASK"=dword:ffff
+  "IoBase"=dword:340
+  "IoLen"=dword:20</PRE>
+
+<P>The following registry example shows the implementation of a bus-agnostic driver for a COM 16550 driver.</P>
+
+<PRE class="code">[HKEY_LOCAL_MACHINE\Drivers\PCCARD\PCMCIA\TEMPLATE\COM_CARDA]
+  "FUNCTION_ID"=dword:2
+  "IoBase"=dword:3f8
+  "IoLen"=dword:8
+  "INTERRUPT_MASK"=dword:ffff
+  "DeviceArrayIndex"=dword:0
+  "Prefix"="COM"
+  "Dll"="com16550.dll"
+; Turn on follows for Installable ISR (isr16550 supporting SOFTWARE FIFO
+  "IsrDll"="isr16550.dll"
+  "IsrHandler"="ISRHandler"
+[HKEY_LOCAL_MACHINE\Drivers\PCCARD\PCMCIA\TEMPLATE\COM_CARDB]
+  "FUNCTION_ID"=dword:2
+  "IoBase"=dword:2f8
+  "IoLen"=dword:8
+  "INTERRUPT_MASK"=dword:ffff
+  "DeviceArrayIndex"=dword:0
+  "Prefix"="COM"
+  "Dll"="com16550.dll"
+; Turn on follows for Installable ISR (isr16550 supporting SOFTWARE FIFO
+  "IsrDll"="isr16550.dll"
+  "IsrHandler"="ISRHandler"
+[HKEY_LOCAL_MACHINE\Drivers\PCCARD\PCMCIA\TEMPLATE\COM_CARDC]
+  "FUNCTION_ID"=dword:2
+  "IoBase"=dword:3e8
+  "IoLen"=dword:8
+  "INTERRUPT_MASK"=dword:ffff
+  "DeviceArrayIndex"=dword:0
+  "Prefix"="COM"
+  "Dll"="com16550.dll"
+; Turn on follows for Installable ISR (isr16550 supporting SOFTWARE FIFO
+  "IsrDll"="isr16550.dll"
+  "IsrHandler"="ISRHandler"
+[HKEY_LOCAL_MACHINE\Drivers\PCCARD\PCMCIA\TEMPLATE\COM_CARDD]
+  "FUNCTION_ID"=dword:2
+  "IoBase"=dword:2e8
+  "IoLen"=dword:8
+  "INTERRUPT_MASK"=dword:ffff
+  "DeviceArrayIndex"=dword:0
+  "Prefix"="COM"
+  "Dll"="com16550.dll"
+; Turn on follows for Installable ISR (isr16550 supporting SOFTWARE FIFO
+  "IsrDll"="isr16550.dll"
+  "IsrHandler"="ISRHandler"</PRE>
+
+<P>If your PC Card requires additional functionality that the default enabler cannot handle, you can insert the following registry value:</P>
+
+<PRE class="code">"NoConfig" = dword:1</PRE>
+
+<P>Then, configure the PC Card using card services, which is similar to legacy PCMCIA card services. It has been modified, however, to adapt to current requirements. For more information on card services, see <A HREF="wce50oripccardservicesdefaultenablerdriver.htm">PC Card Bus Driver</A>.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50oripccarddrivers.htm">PC Card Drivers</A> | <A HREF="wce50oripccardservicesdefaultenablerdriver.htm">PC Card Bus Driver</A> | <A HREF="wce50oripcmciadeprecateddriversupport.htm">Legacy PCMCIA Driver Support</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

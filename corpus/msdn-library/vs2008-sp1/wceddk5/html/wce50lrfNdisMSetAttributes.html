@@ -1,0 +1,155 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>NdisMSetAttributes</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="NdisMSetAttributes"/>
+<MSHelp:RLTitle Title="NdisMSetAttributes"/>
+<MSHelp:Keyword Index="K" Term="NdisMSetAttributes"/>
+<MSHelp:Keyword Index="A" Term="wce50lrfNdisMSetAttributes"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Driver"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="False"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="apiref"/>
+<MSHelp:Attr Name="Filename" Value="ndis_library_functions2.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="False"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+<MSHelp:Attr Name="APIName" Value="NdisMSetAttributes"/>
+<MSHelp:Attr Name="APIType" Value="DLLExport"/>
+<MSHelp:Attr Name="APILocation" Value="Ndis.dll"/>
+<MSHelp:Attr Name="PBFeature" Value="NetworkDriver"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_3018536">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50lrfndismsetattributes"></A>NdisMSetAttributes</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>This function informs the NDIS library about significant features of the caller's NIC during initialization.</P>
+
+<PRE class="syntax"><B>VOID NdisMSetAttributes(</B>
+  <B>NDIS_HANDLE </B><I>MiniportAdapterHandle</I><B>,</B>
+  <B>NDIS_HANDLE</B> <I>MiniportAdapterContext</I><B>,</B>
+  <B>BOOLEAN </B><I>BusMaster</I><B>,</B>
+  <B>NDIS_INTERFACE_TYPE</B> <I>AdapterType</I>
+<B>);</B></PRE>
+
+<H4 class="dtH4">Parameters</H4>
+
+<DL>
+<DT><I>MiniportAdapterHandle</I></DT>
+
+<DD>[in] Handle input to the <A HREF="wce50lrfminiportinitialize.htm">MiniportInitialize</A> function.</dd>
+
+<DT><I>MiniportAdapterContext</I></DT>
+
+<DD>[in] Handle to a resident context area allocated by <B>MiniportInitialize</B>.</dd>
+
+<DT><I>BusMaster</I></DT>
+
+<DD>[in] Specifies TRUE if the caller's NIC is a bus master DMA device.</dd>
+
+<DT><I>AdapterType</I></DT>
+
+<DD>[in] Specifies the I/O bus interface type of the caller's NIC, which usually is the type of I/O bus on which the NIC is connected, as one of the following.
+
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=28%>Value</TH>
+<TH width=72%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=28%>NdisInterfaceInternal</TD>
+<TD width=72%>Specifies a host-specific internal interface.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=28%>NdisInterfaceIsa</TD>
+<TD width=72%>Specifies the ISA interface.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=28%>NdisInterfacePci</TD>
+<TD width=72%>Specifies the Peripheral Component Interconnect (PCI) interface.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=28%>NdisInterfacePCMcia</TD>
+<TD width=72%>Specifies the Personal Computer Memory Card International Association (PCMCIA) interface.</TD>
+</TR>
+</table></div>
+
+</dd>
+</DL>
+
+<H4 class="dtH4">Return Values</H4>
+
+<P>None.</P>
+
+<H4 class="dtH4">Remarks</H4>
+
+<P>A <B>MiniportInitialize</B> function must call this function or <A HREF="wce50lrfndismsetattributesex.htm">NdisMSetAttributesEx</A> before calling any other <B>NdisMRegister<I>XXX</I></B> or <B>Ndis<I>XXX</I></B><I> </I>function that depends on the information supplied to this function or <B>NdisMSetAttributesEx</B>.</P>
+
+<P>In general, an NIC driver must call this function or <B>NdisMSetAttributesEx</B> before it calls any <B>Ndis<I>XXX</I></B> function that claims hardware resources in the registry for its NIC because NDIS must have the <I>BusMaster</I> or <I>AttributeFlags</I> value, respectively, before such a call is made and because the driver usually needs the memory at <I>MiniportAdapterContext</I> to store information for these calls. This restriction implies that an NIC driver's <B>MiniportInitialize</B> function cannot call the following <B>Ndis<I>XXX</I></B> functions before it calls this function or <B>NdisMSetAttributesEx</B>:
+
+<UL type="disc">
+	<LI><A HREF="wce50lrfndismpciassignresources.htm">NdisMPciAssignResources</A></li>
+
+	<LI><A HREF="wce50lrfndismallocatesharedmemory.htm">NdisMAllocateSharedMemory</A></li>
+
+	<LI><A HREF="wce50lrfndismmapiospace.htm">NdisMMapIoSpace</A></li>
+
+	<LI><A HREF="wce50lrfndismregisterinterrupt.htm">NdisMRegisterInterrupt</A></li>
+
+	<LI><A HREF="wce50lrfndismregisterioportrange.htm">NdisMRegisterIoPortRange</A> and, consequently, the <B>NdisRaw<I>XXX</I>Port<I>XXX</I></B> functions</li>
+</UL>
+
+<P>However, before calling this function or <B>NdisMSetAttributesEx</B>, an NIC driver can call the NDIS configuration functions to retrieve configuration information installed in the registry. <B>MiniportInitialize</B> can also call the bus-type-specific <B>NdisRead<I>XXX</I></B> functions, such as <A HREF="wce50lrfndisreadpcislotinformation.htm">NdisReadPciSlotInformation</A>, as long as the installed registry entry for the driver's interface type matches the bus-type-specific <B>NdisRead<I>XXX</I></B> <B>MiniportInitialize</B> calls.</P>
+
+<P>The <I>MiniportAdapterContext</I> handle supplied to this function or <B>NdisMSetAttributesEx</B> becomes an input parameter to all <B>Miniport<I>XXX</I></B> functions that were registered, along with <B>MiniportInitialize</B>, in the call to <A HREF="wce50lrfndismregisterminiport.htm">NdisMRegisterMiniport</A>. Usually, this handle is a pointer to resident memory, allocated by <B>MiniportInitialize</B>, in which the driver maintains NIC-specific run-time state.</P>
+
+<P>Intermediate drivers must call <B>NdisMSetAttributesEx</B>, rather than this function. NIC drivers can call either of these functions, but <B>NdisMSetAttributesEx</B> allows a miniport to adjust the intervals at which its <A HREF="wce50lrfminiportcheckforhang.htm">MiniportCheckForHang</A> and <A HREF="wce50lrfminiportreset.htm">MiniportReset</A> functions are called.</P>
+
+<H4 class="dtH4">Requirements</H4>
+
+<P><B>OS Versions:</B> Windows CE .NET 4.0 and later.<BR>
+<B>Header:</B> Ndis.h.<BR>
+<B>Link Library:</B> Ndis.dll.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50lrfminiportcheckforhang.htm">MiniportCheckForHang</A> | <A HREF="wce50lrfminiportinitialize.htm">MiniportInitialize</A> | <A HREF="wce50lrfminiportreset.htm">MiniportReset</A> | <A HREF="wce50lrfndismallocatesharedmemory.htm">NdisMAllocateSharedMemory</A> | <A HREF="wce50lrfndismmapiospace.htm">NdisMMapIoSpace</A> | <A HREF="wce50lrfndismpciassignresources.htm">NdisMPciAssignResources</A> | <A HREF="wce50lrfndismregisterinterrupt.htm">NdisMRegisterInterrupt</A> | <A HREF="wce50lrfndismregisterioportrange.htm">NdisMRegisterIoPortRange</A> | <A HREF="wce50lrfndisreadpcislotinformation.htm">NdisReadPciSlotInformation</A> | <A HREF="wce50lrfndismregisterminiport.htm">NdisMRegisterMiniport</A> | <A HREF="wce50lrfndismsetattributesex.htm">NdisMSetAttributesEx</A> | <A HREF="wce50lrfndisopenconfiguration.htm">NdisOpenConfiguration</A> | <A HREF="wce50lrfndiswritepcislotinformation.htm">NdisWritePciSlotInformation</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

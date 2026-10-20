@@ -1,0 +1,277 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>CoInitializeSecurity</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="CoInitializeSecurity"/>
+<MSHelp:RLTitle Title="CoInitializeSecurity"/>
+<MSHelp:Keyword Index="K" Term="CoInitializeSecurity"/>
+<MSHelp:Keyword Index="A" Term="wce50lrfCoInitializeSecurity"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Feature"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="apiref"/>
+<MSHelp:Attr Name="Filename" Value="com_functions2.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="False"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+<MSHelp:Attr Name="APIName" Value="CoInitializeSecurity"/>
+<MSHelp:Attr Name="APIType" Value="LibDef"/>
+<MSHelp:Attr Name="APILocation" Value="Ole32.lib"/>
+<MSHelp:Attr Name="PBFeature" Value="SYSGEN_DCOM"/>
+<MSHelp:Attr Name="PBOnly" Value="False"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_3003528">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50lrfcoinitializesecurity"></A>CoInitializeSecurity</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>This function registers security and sets the default security values for the process. This function is called exactly once per process, either explicitly or implicitly. It can be called by the client or the server, or both. </P>
+
+<P>For legacy applications and other applications that do not explicitly call <B>CoInitializeSecurity</B>, COM calls this function implicitly with values from the registry. </P>
+
+<P>If your application sets process-wide security using the registry and then calls <B>CoInitializeSecurity</B>, the <B>AppID</B> registry values will be ignored, and the <B>CoInitializeSecurity</B> values will be used.</P>
+
+<PRE class="syntax"><B>HRESULT CoInitializeSecurity(</B>
+<B> </B> <B>PSECURITY_DESCRIPTOR </B><I>pVoid</I><B>,</B>
+<B> </B> <B>LONG </B><I>cAuthSvc</I><B>,</B>
+<B> </B> <B>SOLE_AUTHENTICATION_SERVICE* </B><I>asAuthSvc</I><B>, </B>
+<B> </B> <B>void* </B><I>pReserved1</I><B>,</B>
+<B> </B> <B>DWORD </B><I>dwAuthnLevel</I><B>,</B>
+<B> </B> <B>DWORD </B><I>dwImpLevel</I><B>,</B>
+<B> </B> <B>SOLE_AUTHENTICATION_LIST* </B><I>pAuthList</I><B>,</B>
+<B> </B> <B>DWORD </B><I>dwCapabilities</I><B>,</B>
+<B> </B> <B>void* </B><I>pReserved3</I><B> </B>
+<B>);</B></PRE>
+
+<H4 class="dtH4">Parameters</H4>
+
+<DL>
+<DT><I>pVoid</I></DT>
+
+<DD>[in] Defines the access permissions. 
+
+<P>This parameter is used when the process calling <B>CoInitializeSecurity</B> acts as a server. Its value can be NULL or a pointer to one of three types: 
+
+
+<UL type="disc">
+	<LI>An AppID</li>
+
+	<LI>An <B>IAccessControl</B> object</li>
+
+	<LI>A Win32 security descriptor</li>
+</UL>
+
+
+<P>The type of data that <I>pVoid</I> points to is indicated by a flag set in the <I>dwCapabilities</I> parameter. 
+
+
+<P>If EOAC_APPID is specified, <I>pVoid</I> must be a pointer to a GUID that specifies the AppID of the process. In this case, all other parameters of the call are ignored, and registry values are used for security checks. 
+
+
+<P>If EOAC_ACCESS_CONTROL is specified, <I>pVoid</I> must be a pointer to an <B>IAccessControl</B> object, which determines who can call the process. 
+
+
+<P>If the capability flags (<I>dwCapabilities</I>) do not include either EOAC_APPID or EOAC_ACCESS_CONTROL, <I>pVoid</I> must be a pointer to a Win32 security descriptor. 
+
+
+<P>If pVoid is NULL, no ACL checking will be done. 
+
+
+<P>If it is not NULL, COM will check ACLs on calls and <I>dwAuthnLevel</I> cannot be RPC_C_AUTHN_LEVEL_NONE. See the Remarks section for more information.
+</dd>
+
+<DT><I>cAuthSvc</I></DT>
+
+<DD>[in] Count of entries in <I>asAuthSvc</I>. This value is used by COM when the process acts as a server. 
+
+<P>A value of zero indicates that the function should register no authentication services. Your application should supply a value of zero if it cannot receive secure calls. 
+
+
+<P>A value of -1 tells the function to choose which authentication services to register. In this case, the <I>asAuthSvc</I> parameter must be zero. 
+</dd>
+
+<DT><I>asAuthSvc</I></DT>
+
+<DD>[in] Array of authentication service information used by COM to choose the authentication service for the process when it acts as a server. 
+
+<P>These values control which security providers are used for incoming calls. Outgoing calls may use any security provider installed on the machine. 
+
+
+<P>The entries for NTLMSSP, Kerberos, and Snego must have the <B>pPrincipalName</B> member set to NULL. 
+</dd>
+
+<DT><I>pReserved1</I></DT>
+
+<DD>[in] Reserved for future use; this value must be NULL.</dd>
+
+<DT><I>dwAuthnLevel</I></DT>
+
+<DD>[in] The default authentication level for the process. COM will fail calls that arrive with a lower authentication level. 
+
+<P>By default, all proxies will use at least this authentication level. 
+
+
+<P>This value should contain one of the flags from the <B>RPC_C_AUTHN_LEVEL_<I>XXX</I></B> enumeration. By default, all calls to <A HREF="wce50lrfiunknown.htm">IUnknown</A> are made at this level.
+</dd>
+
+<DT><I>dwImpLevel</I></DT>
+
+<DD>[in] The default impersonation level for proxies. 
+
+<P>The value of this parameter applies when the process is the client. It should be a value from the <B>RPC_C_IMP_LEVEL_<I>XXX </I></B>enumeration. 
+
+
+<P>Outgoing calls from the client always use the impersonation level as specified (it is not negotiated). 
+
+
+<P>Incoming calls to the client can be at any impersonation level. 
+
+
+<P>By default, all <B>IUnknown</B> calls are made with this impersonation level so even security-aware applications should set this level carefully. 
+</dd>
+
+<DT><I>pAuthList</I></DT>
+
+<DD>[in] This parameter is a pointer to a <B>SOLE_AUTHENTICATION_LIST</B>, which is an array of <B>SOLE_AUTHENTICATION_INFO</B> structures. 
+
+<P>This list indicates the default authentication information to use for each authentication service. It applies only to clients. 
+
+
+<P>When DCOM negotiates the default authentication service for a proxy, it picks the default authentication information from this list. 
+
+
+<P>If the <B>pAuthInfo</B> member of the <B>SOLE_AUTHENTICATION_INFO</B> structure representing the chosen authentication service is NULL, DCOM will use the process identity to represent the client. 
+
+
+<P>If both <I>pAuthList</I> and one of the cloaking flags are set, <B>CoInitializeSecurity</B> will return an error. 
+
+
+<P>The NTLMSSP and Kerberos entries in the list should each contain a pointer to a <MSHelp:link keywords="wce50lrfSECWINNTAUTHIDENTITY" TABINDEX="0">SEC_WINNT_AUTH_IDENTITY</MSHelp:link> structure containing the user name and password. 
+
+
+<P>For Snego, the <B>pAuthInfo</B> member should be NULL or point to a <B>SEC_WINNT_AUTH_IDENTITY_EXW</B> structure. 
+
+
+<P>If non-NULL, the structure's <B>PackageList</B> member must point to a string containing a comma-separated list of authentication service names, and the <B>PackageListLength</B> member must give the number of bytes in the <B>PackageList</B> string. 
+
+
+<P>If <B>pAuthInfo</B> is NULL, Snego will pick a list of authentication services to try based on those available on the client machine. 
+
+
+<P>For more information, see the Remarks section. 
+</dd>
+
+<DT><I>dwCapabilities</I> </DT>
+
+<DD>[in] Additional capabilities of the client or server. 
+
+<P>If a flag other than one of the following <B>EOLE_AUTHENTICATION_CAPABILITIES</B> flags is specified, <B>CoInitializeSecurity</B> will return an error: EOAC_APPID, EOAC_ACCESS_CONTROL, EOAC_STATIC_CLOAKING, EOAC_DYNAMIC_CLOAKING, EOAC_AUTO_IMPERSONATION, EOAC_SECURE_REFS, EOAC_REQUIRE_FULLSIC, EOAC_MAKE_FULLSIC, EOAC_ANY_AUTHORITY, or EOAC_MUTUAL_AUTH. Some of these flags cannot be set simultaneously. 
+</dd>
+
+<DT><I>pReserved3</I></DT>
+
+<DD>[in] Reserved for future use; it must be set to NULL.</dd>
+</DL>
+
+<H4 class="dtH4">Return Values</H4>
+
+<P>This function supports the standard return value E_INVALIDARG, as well as the following:
+
+<DL>
+<DT>S_OK </DT>
+
+<DD>Indicates success.</dd>
+
+<DT>RPC_E_TOO_LATE</DT>
+
+<DD><B>CoInitializeSecurity</B> has already been called.</dd>
+
+<DT>RPC_E_NO_GOOD_SECURITY_PACKAGES</DT>
+
+<DD><I>asAuthSvc</I> was not NULL and none of the authentication services in the list could be registered. 
+
+<P>Check the results saved in <I>asAuthSvc</I> for authentication service specific error codes.
+</dd>
+
+<DT>E_OUT_OF_MEMORY</DT>
+
+<DD>Not enough memory to complete the requested operation.</dd>
+</DL>
+
+<H4 class="dtH4">Remarks</H4>
+
+<P>The <B>CoInitializeSecurity</B> function initializes the security layer and sets the specified values as the security default. </P>
+
+<P>If the process does not call <B>CoInitializeSecurity</B>, COM calls it automatically the first time an interface is marshaled or unmarshaled, registering the system default security. No default security packages are registered until then.</P>
+
+<P>When the EOAC_APPID flag is set in <I>dwCapabilities</I>, <I>pVoid</I> points to an AppID and all other parameters to <B>CoInitializeSecurity</B> are ignored (and must be zero). </P>
+
+<P><B>CoInitializeSecurity</B> looks for the authentication level under the AppID key in the registry and uses it to determine the default security. If <I>pVoid</I> is NULL, </P>
+
+<P><B>CoInitializeSecurity</B> will look up the application .exe name in the registry and use the AppID stored there. This gives the same security settings as if the process had not called <B>CoInitializeSecurity</B>. </P>
+
+<P>Before Windows NT&reg; version 4.0 SP 4, <B>CoInitializeSecurity</B> returned an error if it did not find the specified AppID in the registry. </P>
+
+<P>For more information on how the AppID key is used to set security, see Setting Process-wide Security Through the Registry and the <B>EOLE_AUTHENTICATION_CAPABILITIES</B> enumeration.</P>
+
+<P>If the EOAC_ACCESS_CONTROL flag is set, <I>pVoid</I> is a pointer to an <B>IAccessControl</B> object, which determines who can call the process. DCOM will AddRef the <B>IAccessControl</B> and will Release it when <A HREF="wce50lrfcouninitialize.htm">CoUninitialize</A> is called. </P>
+
+<P>The state of the <B>IAccessControl</B> object should not be changed. If EOAC_ACCESS_CONTROL is specified, the <I>dwAuthnLevel</I> cannot be none.</P>
+
+<P>The <B>CoInitializeSecurity</B> function returns an error if both the EOAC_APPID and EOAC_ACCESS_CONTROL flags are set.</P>
+
+<P>If neither the EOAC_APPID nor the EOAC_ACCESS_CONTROL flag is specified in <I>dwCapabilities</I>, <I>pVoid</I> must be a pointer to a Win32 SECURITY_DESCRIPTOR. A security descriptor contains two ACLs: 
+
+<UL type="disc">
+	<LI>The discretionary ACL (DACL) indicates who is (and who is not) allowed to call the process.</li>
+
+	<LI>The system ACL (SACL) contains audit information. </li>
+</UL>
+
+<P>DCOM looks for the COM_RIGHTS_EXECUTE flag in the DACL to find out which callers are permitted to connect to the process's objects. Until DCOM supports auditing, the SACL must be NULL. A DACL with no ACEs allows no access. A NULL DACL will allow calls from anyone. </P>
+
+<P>DCOM will copy the specified security descriptor. If the application passes a NULL security descriptor, COM will construct one that allows calls from anyone. </P>
+
+<P>To determine whether the platform supports this function, see <A HREF="wce50condeterminingsupportedcomapis.htm">Determining Supported COM APIs</A>.</P>
+
+<H4 class="dtH4">Requirements</H4>
+
+<P><B>OS Versions:</B> Windows CE 3.0 and later.<BR>
+<B>Header:</B> Objbase.h.<BR>
+<B>Link Library:</B> Ole32.lib.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50grfcomfunctions.htm">COM Functions</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

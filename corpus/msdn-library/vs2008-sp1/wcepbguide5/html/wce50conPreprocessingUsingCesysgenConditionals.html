@@ -1,0 +1,107 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Preprocessing Using Cesysgen Conditionals</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Preprocessing Using Cesysgen Conditionals"/>
+<MSHelp:RLTitle Title="Preprocessing Using Cesysgen Conditionals"/>
+<MSHelp:Keyword Index="A" Term="wce50conPreprocessingUsingCesysgenConditionals"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Guide"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="True"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="tools.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="True"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_1052609">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50conpreprocessingusingcesysgenconditionals"></A>Preprocessing Using Cesysgen Conditionals</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>You can use Cesysgen conditional statements to selectively compile source code during the Sysgen phase of the build process. </P>
+
+<P>Platform Builder uses these statements, inserted as comments in the source files, to filter files from include directories in the OS tree. Cesysgen conditionals are also used to filter binary image builder (.bib) files, registry (.reg), database (.db), and file system (.dat) files in the OS tree, typically located in Oak\Files directories. </P>
+
+<P>When the Sysgen tool calls Cefilter.exe for preprocessing, it processes the conditionals in these types of source files to create filtered versions of the original files. </P>
+
+<P>The following code example shows the syntax you can use in Cesysgen conditional statements: </P>
+
+<PRE class="code">// @CESYSGEN IF [!]&lt;<I>Component</I>&gt; [[OR | || | AND | &amp;&amp;] [!]<I>Component</I>]
+// @CESYSGEN ELSE
+// @CEYSSGEN ELSE IF [!]&lt;<I>Component</I>&gt; [[OR | || | AND | &amp;&amp;] [!]<I>Component</I>]
+// @CESYSGEN ELSEIF [!]&lt;<I>Component</I>&gt; [[OR | || | AND | &amp;&amp;] [!]<I>Component</I>]
+// @CESYSGEN ENDIF</PRE>
+
+<H4 class="dtH4">Parameters</H4>
+
+<DL>
+<DT><I>Component</I></DT>
+
+<DD>Specifies a component name, using one of the two following formats:
+
+<UL type="disc">
+	<LI>If it is a module, the format used is &lt;<I>OS tree name</I>&gt;_MODULES_&lt;<I>module_name</I>&gt;.
+<P>For example, DCOM_MODULES_OLE32 is the OLE32 module located in %_WINCEROOT%\Public\DCOM.
+</li>
+
+	<LI>If it is a component, the format used is &lt;<I>module_name</I>&gt;_&lt;<I>component_name</I>&gt;.
+<P>For example, GWES_ACCESSIB is the accessib component, contained in the GWES module.
+</li>
+</UL>
+</dd>
+</DL>
+
+<P>If the source file is not a C header file, replace the forward slash (/) characters with the appropriate type of comment character. For example, if the source file is a dirs file located in %_WINCEROOT%\Platform or its subdirectories, use the pound (#) character instead.</P>
+
+<H4 class="dtH4">Remarks</H4>
+
+<P>Driver dependences that you specify in the Platform.bib file must have matching relationships specified in the DIRS file that builds the driver. </P>
+
+<P>You can use Cesysgen conditional preprocessing to ensure that the driver DIRS file matches the driver dependencies defined in the Platform.bib file. </P>
+
+<P>The following code example shows a segment of a Platform.bib file that specifies a dependency between the ddi_gx.dll driver for a target device and the CE_MODULES_DEVICE sysgen.</P>
+
+<PRE class="code">; @CESYSGEN IF CE_MODULES_DEVICE
+   ddi_gx.dll      $(_FLATRELEASEDIR)\ddi_gx.dll     NK  SH
+; @CESYSGEN ENDIF CE_MODULES_DEVICE
+</PRE>
+
+<P>The DIRS file that points to the ddi_gx.dll driver must contain the same CESYSGEN IF logic.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50concesysgenbatchfile.htm">Cesysgen Batch File</A> | <MSHelp:link keywords="wce50conWindowsCEModulesandComponents" TABINDEX="0">Windows CE Modules and Components</MSHelp:link> | <A HREF="wce50concommandlinetools.htm">Utilities</A> | <MSHelp:link keywords="wce50conBuildSystem" TABINDEX="0">Build System</MSHelp:link></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

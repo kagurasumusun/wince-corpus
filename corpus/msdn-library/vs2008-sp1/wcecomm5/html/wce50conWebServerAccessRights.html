@@ -1,0 +1,80 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Web Server Access Rights</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Web Server Access Rights"/>
+<MSHelp:RLTitle Title="Web Server Access Rights"/>
+<MSHelp:Keyword Index="A" Term="wce50conWebServerAccessRights"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Feature"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="webserver_app_development.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="False"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="True"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_3006061">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50conwebserveraccessrights"></A>Web Server Access Rights</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>A Web page requires authentication when the authorization level set in <B>A</B> value in the registry in <B>HKEY_LOCAL_MACHINE\COMM\HTTPD\VROOTS\&lt;/<I>Vroot Name&gt;</I></B> subkey is greater than zero (0). For more information, see <A HREF="wce51convirtualpathregistrysettings.htm">Virtual Path Registry Settings</A>.</P>
+
+<P>The following steps must be performed sequentially to gain access to a Web page that requires authentication:
+
+<OL type="1">
+	<LI>The user must be authenticated for the given virtual path by using NTLM authentication or Basic authentication. If this step fails, the user is denied access to the page.</li>
+
+	<LI>If NTLM authentication is used, the Web Server requests information regarding the groups in which the user has membership. If this step fails, the user is assumed to not have membership in any group.</li>
+
+	<LI>If 0&lt;<B>A</B>&lt;3 and the name of the authenticated user (or a group containing the user) is listed in the <B>HKEY_LOCAL_MACHINE\COMM\HTTPD\AdminUsers</B> registry key, the user is granted access to the page as an Administrator. For more information about the registry setting, see <A HREF="wce50conbaseregistrysettings.htm">Base Registry Settings</A>.
+<BLOCKQUOTE class="dtBlock">
+<B>Note</B>&nbsp;&nbsp;&nbsp;Users that are members of this list have access to all virtual roots on the device, even if they have been explicitly denied access in the <B>UserList</B> registry value for a specific virtual root.</BLOCKQUOTE>
+</li>
+
+	<LI>If <B>A</B>=1 and the name of the authenticated user (or a group containing the user) is listed in the <B>HKEY_LOCAL_MACHINE\COMM\HTTPD\VROOTS\&lt;/<I>Vroot Name&gt;</I>\UserList</B> registry key, the user is granted access to the Web page.If the previous conditions fail, the user is denied access to the Web page.
+<BLOCKQUOTE class="dtBlock">
+<b class="le">Note</b>&nbsp;&nbsp;&nbsp;In the Web Server version that shipped with Windows CE 3.0, if no <B>AdminUsers</B> registry value is set, any user granted <B>A</B>=1 access was automatically promoted to <B>A</B>=2 access. This behavior has been changed for the Windows CE&#0150;based Web Server to enhance the default security infrastructure. If no <B>AdminUsers</B> registry value is set, no one can gain access to pages with <B>A</B>&gt;=2.</BLOCKQUOTE>
+</li>
+</OL>
+
+<P>The Administrative group check is performed only when using NTLM authentication. The user name check is done for both types of authentication.</P>
+
+<P>The authentication registry keys support individual users and groups, as well as the ability to exclude specific users and groups. For more information, see <A HREF="wce50conwebserveruserlists.htm">Web Server User Lists</A>.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50conwebserveruserlists.htm">Web Server User Lists</A> | <A HREF="wce50conwebserverauthenticationandpermissions.htm">Web Server Authentication and Permissions</A> | <A HREF="wce50conbaseregistrysettings.htm">Base Registry Settings</A> | <A HREF="wce51convirtualpathregistrysettings.htm">Virtual Path Registry Settings</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

@@ -1,0 +1,178 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>OMA Device Management Security Best Practices</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="OMA Device Management Security Best Practices"/>
+<MSHelp:RLTitle Title="OMA Device Management Security Best Practices"/>
+<MSHelp:Keyword Index="A" Term="wce51conOMADeviceManagementV112SecurityBestPractices"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Application"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbsmartphone"/>
+<MSHelp:Attr Name="Product" Value="kbPocketPC"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="Technology" Value="kbPocketPC"/>
+<MSHelp:Attr Name="Technology" Value="kbSmartphone"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="device_mgmt_mo.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="False"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_1070126">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Windows Mobile Version 5.0 SDK<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce51conomadevicemanagementv112securitybestpractices"></A>OMA Device Management Security Best Practices</H1>
+<!--Feedback Link Top Start-->
+<P CLASS="feedback"><font size="1"><a href="mailto:medfdbk&#64;microsoft.com?subject=Product: Windows Mobile | Version: 5.0 | Release: SDK | Title: OMA Device Management Security Best Practices | Filename: wce51conomadevicemanagementv112securitybestpractices.htm | Built on: Wednesday, September 14, 2005">Send Feedback</a> on this topic to the authors</font></p>
+<!--Feedback Link Top End-->
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>Windows Mobile&trade; Version 5.0 uses the OMA Device Management (DM). The DM client in the device supports the following security features:
+
+<UL type="disc">
+	<LI>Secure HTTP transport over SSL. The SSL includes server certificate based authentication, data integrity check, and encrypted transport channel</li>
+
+	<LI>Device management application level Basic and MD5 client authentication</li>
+
+	<LI>Device management application level MD5 server authentication</li>
+
+	<LI>Authenticating server notification trigger</li>
+
+	<LI>Windows Mobile security role-based access control </li>
+</UL>
+
+<P>The security roles of the DM server account are the same as the bootstrap message unless they are explicitly set by using Role parameters. </P>
+
+<BLOCKQUOTE class="dtBlock">
+<b class="le">Note</b>&nbsp;&nbsp;&nbsp;The DM server account cannot have more roles than those of the bootstrap message, and it cannot configure a role that it doesn't have.<B><I> </I></B></BLOCKQUOTE>
+
+<P>The security roles for the DM server are assigned as follows:
+
+<UL type="disc">
+	<LI>If the DM server is bootstrapped at manufacture, the server is assigned all roles implicitly.</li>
+
+	<LI>When bootstrapping a DM server account over the air (OTA) or through Remote API (RAPI), the DM server roles are set to the Role parameter of the server account, as described in <A HREF="wce51grfdmaccconfigurationserviceprovider.htm">DMAcc Configuration Service Provider</A> and the <A HREF="wce51lrfw7applicationconfigurationserviceprovider.htm">w7 APPLICATION Configuration Service Provider</A>.</li>
+</UL>
+
+<H3 class="dtH3">Security Best Practices</H3>
+
+<DL>
+<DT><B>Transport over Secure Socket Layers (SSL).</B></DT>
+
+<DD>The OMA DM implementation requires SSL transport over HTTP with the OMA DM server. Without SSL, information on the device that the OMA DM server can access is vulnerable to interception from a malicious party.
+
+<P>The SSL must provide server certificate-based authentication, data integrity check, and encrypted transport channel authentication.
+
+
+<P>OMA device management transport client will enforce using SSL transport connecting to the server).
+</dd>
+
+<DT><B>The OMA DM server should authenticate the DM client using either Basic or MD5 authentication at the application level.</B></DT>
+
+<DD>The following table shows the ways OMA DM server can authentication the client.
+
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=28%>Authentication type</TH>
+<TH width=72%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=28%>MD5</TD>
+<TD width=72%>A MD5 one-way hashing algorithm used for authentication.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=28%>Basic </TD>
+<TD width=72%>Based on the model that a client must authenticate itself with a user name and password for each realm. 
+<BLOCKQUOTE class="dtBlock">
+<b class="le">Security Note</b>&nbsp;&nbsp;&nbsp;Basic authentication provides weak security unless the channel is first link-encrypted with SSL or Transport Layer Security (TLS) 1.0. </BLOCKQUOTE>
+</TD>
+</TR>
+</table></div>
+
+</dd>
+
+<DT><B>For the server notification trigger, use MD5 hashed with the DM server credential.</B></DT>
+
+<DD>The server notification Short Message Service (SMS) message that is sent from the server to initiate a DM session is signed with MD5 server credential. The DM client authenticates the server notification message by calculating the message's MD5 digest using the configured server credential, and then compares it with the MD5 hash received in the message.</dd>
+
+<DT><B>Renew the server MD5 nonce in each DM session.</B></DT>
+
+<DD>To ensure that the nonce is renewed for each DM session, the DM client sends the new server nonce for the next session to the server over a Status element in every DM session.
+
+<P>The device does not challenge the server if the server does not send MD5 credentials. In this case, the next nonce is sent to the server using a success SyncHdr Status element.
+</dd>
+
+<DT><B>Use role-based access control.</B></DT>
+
+<DD>Access control&nbsp;is done using the Windows Mobile 2003 role-base access control. It only applies to OTA provisioning. The settings exposed in device user interface (UI) does not conform with these controls.
+
+<P>In the standard DM account object, you should use the Role setting to specify the <MSHelp:link keywords="wce51conSecurityRoles" TABINDEX="0">Security Roles</MSHelp:link> for the DM server. If the role is not configured explicitly over provisioning XML, the default security role is the one assigned to the DM account object configuration message. The role specified in this setting is a subset of configuration message roles. 
+
+
+<P>Read-Write permission and access security roles for each configurable setting can be managed over the Microsoft custom properties RWAccess and AccessRole in an OMA DM session. For more information about these settings, see <A HREF="wce51conmetabaseomadm.htm">Metabase and OMA DM</A>.
+
+
+<P>The following list shows the control:
+
+
+<UL type="disc">
+	<LI>Remotely, if the device is bootstrapped to allow OMA DM server as the device manager, TPS server has the MANAGER role. For more information, see <A HREF="wce51conomadmbootstrapping.htm">Bootstrapping To Use An OMA DM Server</A>.</li>
+
+	<LI>Locally, RAPI through desktop depends on the RAPI setting:
+<P>0 = Blocked
+
+<P>1 = Open; A request over MAPI has the MANAGER role.
+
+<P>2 = A request has USER_AUTH role
+</li>
+
+	<LI>The role for DMProcessConfigXML API depends on the application that calls it and security model. In two tier device, Trusted has the MANAGER role. NORMAL has USER_AUTH role. In a one tier device, application that is allowed to be run at the device has MANAGER.</li>
+
+	<LI>For cab provisioning file (.cpf file), it depends on the signature of cab file. The SPC store is used to assign security roles to certificates.</li>
+
+	<LI>During the boot process, provxml is interpreted with the MANAGER role</li>
+</UL>
+
+
+<P>For information about Security roles, see <MSHelp:link keywords="wce51conSecurityRoles" TABINDEX="0">Security Roles</MSHelp:link>.
+</dd>
+</DL>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="grfdevicemanagementpoliciesforpocketpc.htm">Security and Device Management</A> | <A HREF="wce51conomadevicemanagement.htm">OMA Device Management</A> | <MSHelp:link keywords="wce51conSecurityRoles" TABINDEX="0">Security Roles</MSHelp:link></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Feedback Link Bottom Start-->
+<p><font size="1"><a href="mailto:medfdbk&#64;microsoft.com?subject=Product: Windows Mobile | Version: 5.0 | Release: SDK | Title: OMA Device Management Security Best Practices | Filename: wce51conomadevicemanagementv112securitybestpractices.htm | Built on: Wednesday, September 14, 2005">Send Feedback</a> on this topic to the authors</font></p>
+<!--Feedback Link Bottom End-->
+<!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="mob5conCopyrightInformationForMagneto" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link></font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

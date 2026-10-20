@@ -1,0 +1,117 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>RegisterDevice</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="RegisterDevice"/>
+<MSHelp:RLTitle Title="RegisterDevice"/>
+<MSHelp:Keyword Index="K" Term="RegisterDevice"/>
+<MSHelp:Keyword Index="A" Term="wce50lrfRegisterDevice"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Driver"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="False"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="apiref"/>
+<MSHelp:Attr Name="Filename" Value="device.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="False"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+<MSHelp:Attr Name="APIName" Value="RegisterDevice"/>
+<MSHelp:Attr Name="APIType" Value="LibDef"/>
+<MSHelp:Attr Name="APILocation" Value="Coredll.lib"/>
+<MSHelp:Attr Name="PBFeature" Value="CoreDriver"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_3006416">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50lrfregisterdevice"></A>RegisterDevice</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>This function registers a new device. <A HREF="wce50lrfactivatedeviceex.htm">ActivateDeviceEx</A> supersedes this function.</P>
+
+<PRE class="syntax"><B>HANDLE RegisterDevice( </B>
+  <B>LPCWSTR </B><I>lpszType</I><B>,</B><I> </I>
+  <B>DWORD </B><I>dwIndex</I><B>,</B><I> </I>
+  <B>LPCWSTR </B><I>lpszLib</I><B>,</B><I> </I>
+  <B>DWORD </B><I>dwInfo</I>
+<B>);</B></PRE>
+
+<H4 class="dtH4">Parameters</H4>
+
+<DL>
+<DT><I>lpszType</I></DT>
+
+<DD>[in] Long pointer to the null-terminated string that contains the device identifier prefix, for example COM, DEV, or PGR. Must be three characters long.</dd>
+
+<DT><I>dwIndex</I></DT>
+
+<DD>[in] Device identifier index. Must be a number from 0 (zero) through 9. For example, the index value for COM2 is 2.</dd>
+
+<DT><I>lpszLib</I></DT>
+
+<DD>[in] Long pointer to the null-terminated string that identifies the device driver DLL name.</dd>
+
+<DT><I>dwInfo</I></DT>
+
+<DD>[in] Instance information. </dd>
+</DL>
+
+<H4 class="dtH4">Return Values</H4>
+
+<P><A HREF="wce50lrfactivatedeviceex.htm">ActivateDeviceEx</A> supersedes this function.</P>
+
+<P>A handle to a device indicates success. Zero indicates failure. This handle is obtained from the driver's <A HREF="wce50lrfxxxinit15.htm">XXX_Init (Device Manager)</A> function and is passed to the <A HREF="wce50lrfxxxopen17.htm">XXX_Open (Device Manager)</A>, <A HREF="wce50lrfxxxdeinit14.htm">XXX_Deinit (Device Manager)</A>, <A HREF="wce50lrfxxxpowerup.htm">XXX_PowerUp (Device Manager)</A>, and <A HREF="wce50lrfxxxpowerdown.htm">XXX_PowerDown (Device Manager)</A> functions.</P>
+
+<P>For devices that expose the stream interface, the drivers are DLL files. The <B>RegisterDevice</B> function initializes each driver. The Device Manager calls this function on behalf of the driver. However, applications can load custom stream interfaces, in which case they also call this function to register the driver. The <I>lpszLib</I> parameter opens the device. The <I>lpszType</I> parameter is a three-character string that identifies the function's entry points in the DLL so that multiple devices can exist in one DLL. The <I>lpszLib</I> parameter is the name of the DLL that contains the entry points. Pass the <I>dwInfo</I> parameter to the initialization routine. </P>
+
+<H4 class="dtH4">Remarks</H4>
+
+<P>Use the <A HREF="wce50lrfderegisterdevice.htm">DeregisterDevice</A> function, if the user removes a device from the system or if the system is shutting down, and if the handle was returned from a call to <B>RegisterDevice</B>.</P>
+
+<P>This function is only callable by trusted callers. The following list shows the ramifications of this:
+
+<UL type="disc">
+	<LI>The installer for the driver must use a relative path for the DLL. The relative path must point to the Windows directory or other places in the specified search path.</li>
+
+	<LI>If the installer uses an explicit path, it is responsible for setting the correct path and not pointing to a directory that untrusted code can modify.</li>
+</UL>
+
+<H4 class="dtH4">Requirements</H4>
+
+<P><B>OS Versions:</B> Windows CE 1.0 and later.<BR>
+<B>Header:</B> Winbase.h.<BR>
+<B>Link Library:</B> Coredll.lib.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50oristreaminterfacedrivers.htm">Stream Interface Drivers</A> | <A HREF="wce50lrfactivatedeviceex.htm">ActivateDeviceEx</A> | <A HREF="wce50lrfderegisterdevice.htm">DeregisterDevice</A> | <A HREF="wce50lrfxxxdeinit14.htm">XXX_Deinit (Device Manager)</A> | <A HREF="wce50lrfxxxinit15.htm">XXX_Init (Device Manager)</A> | <A HREF="wce50lrfxxxopen17.htm">XXX_Open (Device Manager)</A> | <A HREF="wce50lrfxxxpowerdown.htm">XXX_PowerDown (Device Manager)</A> | <A HREF="wce50lrfxxxpowerup.htm">XXX_PowerUp (Device Manager)</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

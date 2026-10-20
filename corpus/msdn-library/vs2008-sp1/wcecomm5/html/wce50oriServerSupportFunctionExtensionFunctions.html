@@ -1,0 +1,131 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>ServerSupportFunction (ISAPI Extensions) Request Types</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="ServerSupportFunction (ISAPI Extensions) Request Types"/>
+<MSHelp:RLTitle Title="ServerSupportFunction (ISAPI Extensions) Request Types"/>
+<MSHelp:Keyword Index="A" Term="wce50oriServerSupportFunctionExtensionFunctions"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Feature"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbOrient"/>
+<MSHelp:Attr Name="Filename" Value="webserver_functions.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="False"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+<MSHelp:Attr Name="PBFeature" Value="SYSGEN_HTTPD"/>
+<MSHelp:Attr Name="PBOnly" Value="False"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_1044777">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50oriserversupportfunctionextensionfunctions"></A>ServerSupportFunction (ISAPI Extensions) Request Types</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>This section defines the <A HREF="wce50lrfserversupportfunctionisapiextensions.htm">ServerSupportFunction (ISAPI Extensions)</A> request types. These values can be passed in the <I>dwHSERequest </I>parameter of the <B>ServerSupportFunction</B>.</P>
+
+<BLOCKQUOTE class="dtBlock">
+<B><b class="le">Note</b>&nbsp;&nbsp;&nbsp;</B>If a <B>ServerSupportFunction</B> parameter is designated as unused for a particular request type, your extension should set the parameter to NULL or zero, as appropriate.</BLOCKQUOTE>
+
+<H4 class="dtH4">HSE_APPEND_LOG_PARAMETER</H4>
+
+<P>This request type allows the ISAPI extension to write custom log strings to the log record. When the extension calls <A HREF="wce50lrfserversupportfunctionisapiextensions.htm">ServerSupportFunction (ISAPI Extensions)</A>, the specified string is appended to the log record for the current HTTP request.</P>
+
+<P>The extension should set the <I>dwHSERequest</I> parameter of <B>ServerSupportFunction</B> to HSE_APPEND_LOG_PARAMETER. The <I>lpvBuffer</I> parameter of <B>ServerSupportFunction</B> should be set to a pointer to a null-terminated string to append to the log record. The <I>lpdwDataType</I> parameter of <B>ServerSupportFunction</B> is unused for this request type. </P>
+
+<H4 class="dtH4">HSE_REQ_IS_KEEP_CONN</H4>
+
+<P>This request type allows the ISAPI extension to determine the Keep-Alive status of the current connection. </P>
+
+<P>In its call to <A HREF="wce50lrfserversupportfunctionisapiextensions.htm">ServerSupportFunction (ISAPI Extensions)</A>, the extension should set the <I>dwHSERequest</I> parameter of <B>ServerSupportFunction</B> to HSE_REQ_IS_KEEP_CONN. The <I>lpvBuffer</I> parameter of <B>ServerSupportFunction</B> should be set to a pointer to a value that will contain the status of Keep-Alive upon return. The <I>lpdwSize</I> and <I>lpdwDataType</I> parameters are unused for this request type. </P>
+
+<H4 class="dtH4">HSE_REQ_MAP_URL_TO_PATH</H4>
+
+<P>This request type allows the ISAPI extension to map a logical URL path to a physical path.</P>
+
+<P>In its call to <A HREF="wce50lrfserversupportfunctionisapiextensions.htm">ServerSupportFunction (ISAPI Extensions)</A>, the extension should set the <I>dwHSERequest</I> parameter of <B>ServerSupportFunction</B> to HSE_REQ_MAP_URL_TO_PATH. The <I>lpvBuffer</I> parameter of <B>ServerSupportFunction</B> should be set to a pointer to a buffer that contains the null-terminated URL string to map upon entry, and contains the physical path upon return. </P>
+
+<P>The extension should set the <I>lpdwSize</I> parameter of <B>ServerSupportFunction</B> to a pointer to the size of the physical path indicated by <I>lpvBuffer</I> upon return. If the physical path is too large for <I>lpvBuffer</I>, <MSHelp:link keywords="wce50lrfGetLastError" TABINDEX="0">GetLastError</MSHelp:link> returns ERROR_INSUFFICIENT_BUFFER. </P>
+
+<P>The extension must set the <I>lpdwDataType</I> parameter of <B>ServerSupportFunction</B> to NULL.</P>
+
+<H4 class="dtH4">HSE_REQ_MAP_URL_TO_PATH_EX</H4>
+
+<P>This request type allows the ISAPI extension to map a logical URL path to a physical path, as well as gathering several types of attributes that are associated with that physical path, such as access control or cache control flags. </P>
+
+<P>In its call to <A HREF="wce50lrfserversupportfunctionisapiextensions.htm">ServerSupportFunction (ISAPI Extensions)</A>, the extension should set the <I>dwHSERequest</I> parameter of <B>ServerSupportFunction</B> to HSE_REQ_MAP_URL_TO_PATH_EX. The <I>lpvBuffer</I> parameter of <B>ServerSupportFunction</B> should be set to a pointer to a pointer to a buffer containing the logical path to map. The string must be null-terminated.</P>
+
+<P>The extension must set the <I>lpdwDataType</I> parameter of <B>ServerSupportFunction</B> to a pointer to an <A HREF="wce50lrfhseurlmapexinfo.htm">HSE_URL_MAPEX_INFO</A> structure. Upon return, the <B>lpszPath</B> member will contain the physical path mapped by the logical path specified in the <I>lpvBuffer</I> parameter of this function. The path size in the <B>HSE_URL_MAPEX_INFO</B> structure is limited to MAX_PATH length. If the length of the physical path is longer than MAX_PATH, the extension should use HSE_REQ_MAP_URL_TO_PATH to avoid errors. </P>
+
+<H4 class="dtH4">HSE_REQ_SEND_RESPONSE_HEADER</H4>
+
+<P>This request type allows the ISAPI extension to request the Web Server to send a complete HTTP response header to the client browser, including the HTTP status, server version, message time, and MIME version. </P>
+
+<BLOCKQUOTE class="dtBlock">
+<b class="le">Note</b>&nbsp;&nbsp;&nbsp;This request type is deprecated. You should use HSE_REQ_SEND_RESPONSE_HEADER_EX instead.</BLOCKQUOTE>
+
+<H4 class="dtH4">HSE_REQ_SEND_RESPONSE_HEADER_EX</H4>
+
+<P>This request type allows the ISAPI extension to request the Web Server to send a complete HTTP response header to the client browser in an improved way. The response header includes the HTTP status, server version, message time, and MIME version, as for the HSE_REQ_SEND_RESPONSE_HEADER request type. </P>
+
+<BLOCKQUOTE class="dtBlock">
+<b class="le">Note</b>&nbsp;&nbsp;&nbsp;For this request type, your extension must only call <A HREF="wce50lrfserversupportfunctionisapiextensions.htm">ServerSupportFunction (ISAPI Extensions)</A> once per HTTP request.</BLOCKQUOTE>
+
+<P>Your extension should set the <I>dwHSERequest</I> parameter of <B>ServerSupportFunction</B> to HSE_REQ_SEND_RESPONSE_HEADER_EX. The extension should set the <I>lpvBuffer</I> parameter of <B>ServerSupportFunction</B> to a pointer to an <A HREF="wce50lrfhse_send_header_ex_info.htm">HSE_SEND_HEADER_EX_INFO</A> structure that contains the connection, header, and status information that will be included in the HTTP response headers. Your extension can optionally append other header information to the end of the Web server-generated header, such as Content-Type or Content-Length. </P>
+
+<P>The <I>lpdwSize</I> and <I>lpdwDataType</I> parameters of <B>ServerSupportFunction</B> are unused for this request type. </P>
+
+<P>In general, by specifying the lengths of the header and status strings, you can expect better performance from <B>ServerSupportFunction</B> with this request type than you could expect from the deprecated request type HSE_REQ_SEND_RESPONSE_HEADER. If your extension appends its own headers to the server-generated headers, the extension must terminate the header string with an extra carriage return and a linefeed.</P>
+
+<H4 class="dtH4">HSE_REQ_SEND_URL</H4>
+
+<P>This request type allows the ISAPI extension to redirect a client browser to a different URL from the one initially requested. When the <A HREF="wce50lrfserversupportfunctionisapiextensions.htm">ServerSupportFunction (ISAPI Extensions)</A> is called with this request type, the extension must provide the new URL. The Web Server then sends the HTTP status code 302, URL Redirect, to the client browser.</P>
+
+<BLOCKQUOTE class="dtBlock">
+<b class="le">Note</b>&nbsp;&nbsp;&nbsp;This request type is identical in effect to HSE_REQ_SEND_URL_REDIRECT_RESP.</BLOCKQUOTE>
+
+<P>In its call to <B>ServerSupportFunction</B>, the extension should set the <I>dwHSERequest</I> parameter to HSE_REQ_SEND_URL. The <I>lpvBuffer</I> parameter of <B>ServerSupportFunction</B> should be set to a pointer to null-terminated string that contains the absolute URL that will serve as the source of the data to send to the browser. The <I>lpdwDataType</I> parameter is unused in this request type.</P>
+
+<P>Once your extension calls the support function with this request type, no other tasks are required of the extension to process the current request. An HTTP status code 302 response should force the browser to initiate a new connection with the new URL.</P>
+
+<H4 class="dtH4">HSE_REQ_SEND_URL_REDIRECT_RESP</H4>
+
+<P>This request type allows the ISAPI extension to redirect a client browser to a different URL from the one initially requested. When the <A HREF="wce50lrfserversupportfunctionisapiextensions.htm">ServerSupportFunction (ISAPI Extensions)</A> is called with this request type, the extension must provide the new URL. The Web Server then sends the HTTP status code 302, URL Redirect, to the client browser.</P>
+
+<BLOCKQUOTE class="dtBlock">
+<b class="le">Note</b>&nbsp;&nbsp;&nbsp;This request type is identical in effect to HSE_REQ_SEND_URL.</BLOCKQUOTE>
+
+<P>In its call to <B>ServerSupportFunction</B>, the extension should set the <I>dwHSERequest</I> parameter to HSE_REQ_SEND_URL_REDIRECT_RESP. The <I>lpvBuffer</I> parameter of <B>ServerSupportFunction</B> should be set to a pointer to null-terminated string that contains the absolute URL that will serve as the source of the data to send to the browser. The <I>lpdwDataType</I> parameter is unused in this request type.</P>
+
+<P>Once your extension calls the support function with this request type, no other tasks are required of the extension to process the current request. An HTTP status code 302 response should force the browser to initiate a new connection with the new URL.</P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

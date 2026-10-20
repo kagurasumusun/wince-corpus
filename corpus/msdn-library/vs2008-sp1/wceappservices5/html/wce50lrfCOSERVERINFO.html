@@ -1,0 +1,163 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>COSERVERINFO</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="COSERVERINFO"/>
+<MSHelp:RLTitle Title="COSERVERINFO"/>
+<MSHelp:Keyword Index="K" Term="COSERVERINFO"/>
+<MSHelp:Keyword Index="A" Term="wce50lrfCOSERVERINFO"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Feature"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="apiref"/>
+<MSHelp:Attr Name="Filename" Value="com_structures.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="False"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+<MSHelp:Attr Name="APIName" Value="COSERVERINFO"/>
+<MSHelp:Attr Name="PBFeature" Value="SYSGEN_DCOM"/>
+<MSHelp:Attr Name="PBOnly" Value="False"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_3003950">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50lrfcoserverinfo"></A>COSERVERINFO</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>This structure is used to identify a remote machine resource to the new or enhanced activation functions.</P>
+
+<PRE class="syntax"><B>typedef struct _COSERVERINFO {</B>
+  <B>DWORD </B><I>dwReserved1</I><B>;</B>
+  <B>LPWSTR </B><I>pwszName</I><B>;</B>
+  <B>COAUTHINFO* </B><I>pAuthInfo</I><B>;</B>
+  <B>DWORD </B><I>dwReserved2</I><B>;</B>
+<B>} COSERVERINFO;</B></PRE>
+
+<H4 class="dtH4">Members</H4>
+
+<DL>
+<DT><B>dwReserved1</B></DT>
+
+<DD>Reserved for future use; set to zero.</dd>
+
+<DT><B>pwszName</B></DT>
+
+<DD>Pointer to the name of the machine to be used.</dd>
+
+<DT><B>pAuthInfo</B></DT>
+
+<DD>Set to a pointer to a <A HREF="wce50lrfcoauthinfo.htm">COAUTHINFO</A> structure to override the default activation security for machine remote activations. Otherwise, set to NULL to indicate that default values should be used. 
+
+<P>For more information, see the Remarks section.
+</dd>
+
+<DT><B>dwReserved2</B></DT>
+
+<DD>Reserved for future use; set to zero.</dd>
+</DL>
+
+<H4 class="dtH4">Remarks</H4>
+
+<P>The <B>COSERVERINFO</B> structure is used primarily to identify a remote system in object creation functions. </P>
+
+<P>Machine resources are named using the naming scheme of the network transport. By default, all UNC and DNS names are allowed. </P>
+
+<P>If <B>pAuthInfo</B> is set to NULL, NTLMSSP with the identity of the client will be used. To meet any of the needs in the following list, <B>pAuthInfo</B> can be set to point to a non-NULL <A HREF="wce50lrfcoauthinfo.htm">COAUTHINFO</A> structure: 
+
+<UL type="disc">
+	<LI>To specify a different client identity for machine remote activations. The specified identity is used for the launch permission check on the server rather than the real client identity.</li>
+
+	<LI>To specify that Kerberos, rather than NTLMSSP, is used for machine remote activation. A nondefault client identity might or might not be specified. </li>
+
+	<LI>To request unsecure activation.</li>
+
+	<LI>To specify a proprietary authentication service.</li>
+</UL>
+
+<P>If <B>pAuthInfo</B> is not NULL, those values are used to specify the authentication settings for the remote call. These settings are passed to <MSHelp:link keywords="wce50conProgrammingElementNotSupported" TABINDEX="0">RpcBindingSetAuthInfoEx</MSHelp:link>. </P>
+
+<P>If the <B>pAuthInfo</B> member is not specified, values in the <B>AppID</B> section of the registry are used to override default authentication settings. </P>
+
+<P>The following table shows the settings that are overridden.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=36%>pAhuthInfo member</TH>
+<TH width=64%>Setting</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=36%><B>dwAuthnSvc</B></TD>
+<TD width=64%>RPC_C_AUTHN_WINNT</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=36%><B>dwAuthzSvc</B></TD>
+<TD width=64%>RPC_C_AUTHZ_NONE</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=36%><B>pszServerPrincName</B></TD>
+<TD width=64%>NULL</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=36%><B>dwAuthnLevel</B></TD>
+<TD width=64%>RPC_C_AUTHN_LEVEL_CONNECT</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=36%><B>dwImpersonationLevel</B></TD>
+<TD width=64%>RPC_C_IMP_LEVEL_IMPERSONATE</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=36%><B>pvAuthIdentityData</B></TD>
+<TD width=64%>NULL</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=36%><B>dwCapabilities</B></TD>
+<TD width=64%>RPC_C_QOS_CAPABILITIES_DEFAULT</TD>
+</TR>
+</table></div>
+
+<H4 class="dtH4">Requirements</H4>
+
+<P><B>OS Versions:</B> Windows CE 2.0 and later.<BR>
+<B>Header:</B> Wtypes.h.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50lrfcoauthinfo.htm">COAUTHINFO</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

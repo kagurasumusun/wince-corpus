@@ -1,0 +1,126 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>SHCreateShortcut</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="SHCreateShortcut"/>
+<MSHelp:RLTitle Title="SHCreateShortcut"/>
+<MSHelp:Keyword Index="K" Term="SHCreateShortcut"/>
+<MSHelp:Keyword Index="A" Term="wce50lrfSHCreateShortcut"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Feature"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="apiref"/>
+<MSHelp:Attr Name="Filename" Value="ceshell_reference.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="True"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+<MSHelp:Attr Name="APIName" Value="SHCreateShortcut"/>
+<MSHelp:Attr Name="APIType" Value="LibDef"/>
+<MSHelp:Attr Name="APILocation" Value="Coredll.lib"/>
+<MSHelp:Attr Name="PBFeature" Value="SYSGEN_STANDARDSHELL"/>
+<MSHelp:Attr Name="PBOnly" Value="False"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_3021455">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50lrfshcreateshortcut"></A>SHCreateShortcut</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>This function creates a shortcut. A remote application interface (RAPI) version of this function exists, <MSHelp:link keywords="wce50lrfCeSHCreateShortcutRAPI" TABINDEX="0">CeSHCreateShortcut (RAPI)</MSHelp:link>.</P>
+
+<H4 class="dtH4">Syntax</H4>
+
+<PRE class="syntax"><B>DWORD WINAPI</B> <B>SHCreateShortcut(</B>
+  <B>LPTSTR</B> <I>szShortcut</I><B>, </B>
+  <B>LPTSTR</B> <I>szTarget </I>
+<B>);</B></PRE>
+
+<H4 class="dtH4">Parameters</H4>
+
+<DL>
+<DT><I>szShortcut</I></DT>
+
+<DD>[in] Null-terminated string that contains the path and name of the shortcut to create. The shortcut is created at the location identified by the path.</dd>
+
+<DT><I>szTarget</I></DT>
+
+<DD>[in] Null-terminated string that contains the target path and arguments for the shortcut. The size of the buffer is limited to 256 characters. Place quotes around the target path so that <B>SHCreateShortcut</B> can correctly parse the target file from any following arguments.</dd>
+</DL>
+
+<H4 class="dtH4">Return Values</H4>
+
+<P>TRUE indicates success. FALSE indicates failure. FALSE is also returned if the specified shortcut already exists.</P>
+
+<H4 class="dtH4">Remarks</H4>
+
+<P>This function is not prototyped correctly in Shellapi.h. It returns a <B>BOOL</B> instead of a <B>DWORD</B>.</P>
+
+<P>Use the <I>szShortcut</I> parameter to specify the location and display name for the shortcut and the <I>szTarget</I> parameter to specify the path to the application or file that you are creating a shortcut to. For example, if your platform supports Windows Media Player and you want to add a shortcut to it in the My Documents folder, set <I>szShortcut</I> to "\My Documents\Windows Media Player.lnk" and <I>szTarget</I> to "\Windows\ceplayer.exe". This is shown in the following code, which creates a shortcut titled "Windows Media Player" that launches the Ceplayer.exe application when activated.</P>
+
+<PRE class="code">SHCreateShortcut( _T("\\My Documents\\Windows Media Player.lnk"),
+                  _T("\\Windows\\Ceplayer.exe"));</PRE>
+
+<P>If you want to create a shortcut to a file that needs to launch an application to expose the file's contents, you can create a shortcut to the launching application and include the file name as an argument in <I>szTarget</I>. For example, to create a shortcut to play an introductory video named IntroVideo.wmv in Windows Media Player, you could set <I>szShortcut</I> to "\My Documents\Introductory Video.lnk" and <I>szTarget</I> to "\Windows\ceplayer.exe IntroVideo.wmv". When this shortcut is activated, the media player application launches and plays IntroVideo.wmv.</P>
+
+<P>Alternately, if the launching application does not accept a file argument then you could create a shortcut to the file using an .lnk extension rather than its native file extension. To handle the previous example with this method, set <I>szShortcut</I> to "\My Documents\Introductory Video.lnk" and <I>szTarget</I> to "\Windows\IntroVideo.lnk". This has the same result as before.</P>
+
+<P>Passing a NULL value for <I>szShortcut</I> will return ERROR_INVALID_PARAMETER.</P>
+
+<H4 class="dtH4">Code Example</H4>
+
+<P>The following code example demonstrates how to use <B>SHCreateShortcut</B>.</P>
+
+<BLOCKQUOTE class="dtBlock">
+<b class="le">Note</b>&nbsp;&nbsp;&nbsp;To make the following code example easier to read, security checking and error handling are not included. This code example should not be used in a release configuration unless it has been modified to include them.</BLOCKQUOTE>
+
+<PRE class="code">BOOL SHCreateShortcutExample()
+{
+
+    // Create a shortcut called myAppShortcut.lnk, 
+    // that links to the target file in \Windows\Program Files, named myApp.exe.
+    // Place the shortcut in the folder \Windows.
+
+    return SHCreateShortcut(TEXT("\\Windows\\myAppShortcut.lnk"), TEXT("\\Windows\\Program Files\\myApp.exe"));
+
+}</PRE>
+
+<H4 class="dtH4">Requirements</H4>
+
+<P><B>OS Versions:</B> Windows CE 1.0 and later.<BR>
+<B>Header:</B> Shellapi.h.<BR>
+<B>Link Library:</B> Coredll.lib.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50grfstandardshellfunctions.htm">Standard Shell Functions</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

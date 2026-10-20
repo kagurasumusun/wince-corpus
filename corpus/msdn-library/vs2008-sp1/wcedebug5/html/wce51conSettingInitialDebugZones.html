@@ -1,0 +1,128 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Setting Initial Debug Zones</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Setting Initial Debug Zones"/>
+<MSHelp:RLTitle Title="Setting Initial Debug Zones"/>
+<MSHelp:Keyword Index="A" Term="wce51conSettingInitialDebugZones"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Debugging"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="True"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="debugging_messages.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="True"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="True"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_1066793">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce51consettinginitialdebugzones"></A>Setting Initial Debug Zones</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>You can set initial debug zones in the registry on the development workstation or on the target device. In addition, you can set debug zones in your code, from the kernel debugger, and from the Target Control window.</P>
+
+<P>If you set the registry value in the registries of both the development workstation and the target device, the value on the development workstation takes precedence over the value on the target device. The caller queries the value on the target device if it cannot reach the development workstation or if the registry on the development workstation does not contain a value for the module.
+
+<UL type="disc">
+	<LI>Development workstation registry
+<P>Routines on the development workstation read the registry key <B>HKEY_CURRENT_USER\Pegasus\Zones</B> and search for the module name, specified in the <A HREF="wce50condbgparamstructuredeclaration.htm">DBGPARAM</A> macro. 
+
+<P>If the key exists, <MSHelp:link keywords="wce50lrfSetDbgZone" TABINDEX="0">SetDbgZone</MSHelp:link> uses the stored debug zone mask to update the debug zone name in the <B>DBGPARAM</B> macro.
+</li>
+
+	<LI>Target device registry
+<P>You can also set the initial debug zones of a specific module on the target device by modifying the registry of the target device to override the default value of the zone mask. 
+
+<P>In the <B>HKEY_LOCAL_MACHINE\DebugZones</B> registry key on the target device, create a registry entry with the name of the debug zone and a <B>DWORD</B> value equal to a zone mask. 
+
+<P>For example, to turn on the first five debug zones for a module named VoIPPhone, create a <B>VoIPPhone</B> entry with <B>DWORD</B> value 0x001F.
+
+<P>When you set the registry value on the target device, use the same registry value that you use on the development workstation. 
+</li>
+
+	<LI>Within code 
+<P>From within a module, you can change the zone settings during run-time from code. For more information about the existing zones, see <A HREF="wce50tskviewingdebugzonesforamodule.htm">Viewing Debug Zones for a Module</A>.
+
+<P>For example, the following code line changes the zone settings from within a module: 
+
+<PRE class="code">  dpCurSettings.ulZoneMask = 0x00000001</PRE>
+
+<P>If you want to change the zones for one module using code that is inside another application or module, use the <MSHelp:link keywords="wce50lrfSetDbgZone" TABINDEX="0">SetDbgZone</MSHelp:link>.
+
+<PRE class="code">  DBGPARAM dbg;  // OK uninitialized, receives new settings
+  SetDbgZone(hProcess, hModule, 0, dwZone, &amp;dbg);</PRE>
+
+<P>Use hProcess=0 if you are controlling a DLL; use hModule=0 if you are controlling a process. 
+</li>
+
+	<LI>Kernel debugger
+<P>You can change zone settings from the debugger at a breakpoint by opening a watch window and typing 
+
+<PRE class="code">  {,,myapp.exe}dpCurSettings.ulZoneMask</PRE>
+
+<P>- OR -
+
+<PRE class="code">  {,,mydll.dll}dpCurSettings.ulZoneMask</PRE>
+
+<P>And then modifying the value. When you continue execution, the new debug zones will be used. 
+
+<P>For more information, see <MSHelp:link keywords="wce50urfWatchWindow" TABINDEX="0">Watch Window</MSHelp:link>.
+</li>
+</UL>
+
+<H4 class="dtH4">Example</H4>
+
+<P>The following code example shows how to associate a bitmask with a debug zone. In this example, an application header file defines 16 (0&#0150;15) debug zones. </P>
+
+<PRE class="code">#define ZONEID_INIT    0
+#define ZONEID_SECOND  1
+#define ZONEID_EXCEPT  2
+.
+#define ZONEID_ERROR      15</PRE>
+
+<P>After defining a debug zone to a bitmask, associate a <I>debug zone mask</I> name with the defined bitmask. A debug zone mask is a named bitmask that is used to turn a debug zone on or off. </P>
+
+<P>The following code example shows how to associate debug zone mask names with the 16 previously defined debug zones.</P>
+
+<PRE class="code">#define ZONEMASK_INIT      (1&lt;&lt;ZONEID_INIT)
+#define ZONEMASK_SECOND    (1&lt;&lt;ZONEID_SECOND)
+#define ZONEMASK_EXCEPT    (1&lt;&lt;ZONEID_EXCEPT)
+.
+#define ZONEMASK_ERROR     (1&lt;&lt;ZONEID_ERROR)</PRE>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50conunderstandingdebugzonesdialogbox.htm">Understanding the Debug Zones Dialog Box</A> | <A HREF="wce50condebugzoneregistration.htm">Debug Zone Registration</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

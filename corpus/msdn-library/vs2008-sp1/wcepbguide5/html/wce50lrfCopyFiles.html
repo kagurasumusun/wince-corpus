@@ -1,0 +1,156 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>CopyFiles</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="CopyFiles"/>
+<MSHelp:RLTitle Title="CopyFiles"/>
+<MSHelp:Keyword Index="K" Term="CopyFiles [Devices]"/>
+<MSHelp:Keyword Index="A" Term="wce50lrfCopyFiles"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Guide"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="True"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="cabwiz.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="True"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_3012231">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50lrfcopyfiles"></A>CopyFiles</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>The CopyFiles key, under the [DefaultInstall] section, is required and describes the default files to copy to the target device.</P>
+
+<BLOCKQUOTE class="dtBlock">
+<b class="le">Security Note</b>&nbsp;&nbsp;&nbsp;If files require protection from being overwritten on the target device by unprivileged applications, before creating the .cab file, make sure that these files are marked as System files on the desktop. The CAB Wizard examines the attributes of each file packed in the .cab file, and honors these attributes when the files are installed on the target device.</BLOCKQUOTE>
+
+<PRE class="syntax">[copyfile_list_section]
+destination_filename,[source_filename],[,flags]
+[destination_filename,[source_filename],[,flags]]</PRE>
+
+<H4 class="dtH4">Parameters</H4>
+
+<DL>
+<DT><I>destination_filename</I></DT>
+
+<DD>Specifies the name of the destination file.
+
+<BLOCKQUOTE class="dtBlock">
+<b class="le">Note</b>&nbsp;&nbsp;&nbsp;Use only Unicode characters that can be converted into ANSI characters without data loss. This enables backward compatibility with earlier device versions. For more information, see <A HREF="wce50concabwizardoverview.htm">CAB Wizard</A>.</BLOCKQUOTE>
+</dd>
+
+<DT><I>source_filename </I></DT>
+
+<DD>Optional if this is identical to <I>destination_filename</I>. </dd>
+
+<DT><I>flags</I></DT>
+
+<DD>Contains a numeric value that specifies an action to be done while copying files. 
+
+<P>The following table shows the values that are supported by Windows CE.
+
+
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=40%>Flag</TH>
+<TH width=18%>Value</TH>
+<TH width=42%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=40%>COPYFLG_WARN_IF_SKIP</TD>
+<TD width=18%>0x00000001</TD>
+<TD width=42%>Warn a user if an attempt is made to skip a file after an error occurs.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=40%>COPYFLG_NOSKIP</TD>
+<TD width=18%>0x00000002</TD>
+<TD width=42%>Do not allow a user to skip copying a file.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=40%>COPYFLG_NO_OVERWRITE</TD>
+<TD width=18%>0x00000010</TD>
+<TD width=42%>Do not overwrite a file in the destination directory.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=40%>COPYFLG_REPLACEONLY</TD>
+<TD width=18%>0x00000400</TD>
+<TD width=42%>Copy the source file to the destination directory only if the file is in the destination directory.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=40%>CE_COPYFLG_NO_DATE_DIALOG</TD>
+<TD width=18%>0x20000000</TD>
+<TD width=42%>Do not copy files if the target file is newer.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=40%>CE_COPYFLG_NODATECHECK</TD>
+<TD width=18%>0x40000000</TD>
+<TD width=42%>Ignore date while overwriting the target file. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=40%>CE_COPYFLG_SHARED</TD>
+<TD width=18%>0x80000000</TD>
+<TD width=42%>Create a reference when a shared DLL is counted.</TD>
+</TR>
+</table></div>
+
+</dd>
+</DL>
+
+<P>The following [CopyFiles] code example renames Help.htm and warns if it is skipped, while WinGame.wav is renamed and marked as shared:</P>
+
+<PRE class="code">[DefaultInstall]
+CopyFiles = CopyFilesSection
+
+[CopyFilesSection]
+"Sample Help.htm",Help.htm,,0x00000001
+"Win Game.wav",WinGame.wav,,0x80000000</PRE>
+
+<H4 class="dtH4">Remarks</H4>
+
+<P>If you want to package a .cab file inside another .cab file, you must also add a custom Setup.dll file to the outer .cab file. This Setup.dll file will install any .cab files that are packaged inside the outer .cab file. For more information, see <A HREF="wce51conoptionalsetupdllfilesforinstallation.htm">Optional Setup.dll Files for Installation</A>.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50concreatinganinffile.htm">Information File</A> | <A HREF="wce50concabwizardoverview.htm">CAB Wizard</A> </P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

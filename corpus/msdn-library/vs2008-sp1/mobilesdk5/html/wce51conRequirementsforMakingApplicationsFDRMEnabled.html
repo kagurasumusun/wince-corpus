@@ -1,0 +1,153 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Requirements for Making Applications FDRM Enabled</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Requirements for Making Applications FDRM Enabled"/>
+<MSHelp:RLTitle Title="Requirements for Making Applications FDRM Enabled"/>
+<MSHelp:Keyword Index="A" Term="wce51conRequirementsforMakingApplicationsFDRMEnabled"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Application"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbsmartphone"/>
+<MSHelp:Attr Name="Product" Value="kbPocketPC"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="Technology" Value="kbPocketPC"/>
+<MSHelp:Attr Name="Technology" Value="kbSmartphone"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="fdrm_conceptual_magneto.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="False"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_4000618">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Windows Mobile Version 5.0 SDK<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce51conrequirementsformakingapplicationsfdrmenabled"></A>Requirements for Making Applications FDRM Enabled</H1>
+<!--Feedback Link Top Start-->
+<P CLASS="feedback"><font size="1"><a href="mailto:medfdbk&#64;microsoft.com?subject=Product: Windows Mobile | Version: 5.0 | Release: SDK | Title: Requirements for Making Applications FDRM Enabled | Filename: wce51conrequirementsformakingapplicationsfdrmenabled.htm | Built on: Wednesday, September 14, 2005">Send Feedback</a> on this topic to the authors</font></p>
+<!--Feedback Link Top End-->
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>Applications can be FDRM-enabled for Windows Mobile-based Pocket PCs and Smartphones by calling the generic Windows Mobile FDRM APIs. If an application is using the Windows Mobile FDRM APIs, the application must not compromise the FDRM content or use it in any way other than according to the FDRM rules and restrictions. Applications are required to call the Windows Mobile FDRM APIs explicitly to access protected content. When applications call the Windows Mobile FDRM APIs, notifications specific to the FDRM engine are returned to them.</P>
+
+<BLOCKQUOTE class="dtBlock">
+<b class="le">Note</b>&nbsp;&nbsp;&nbsp;The methods to enable DShow filters for FDRM is different than the methods required by other applications.</BLOCKQUOTE>
+
+<BLOCKQUOTE class="dtBlock">
+<b class="le">Note</b>&nbsp;&nbsp;&nbsp;FDRM-enabled applications must conform to all the FDRM use rules. For more detailed use definitions, refer to the FDRM engine restrictions or operator requirements provided by your FDRM engine provider. For example, OMA DRM V1.0 is an example of a DRM engine.</BLOCKQUOTE>
+
+<P>The following list shows the requirements for making applications FDRM-enabled:
+
+<OL type="1">
+	<LI>Enable applications to access DRM-protected content by calling the Windows Mobile FDRM APIs. For more information, see the <A HREF="wce51grffdrmapireference.htm">FDRM API Reference</A>.
+<BLOCKQUOTE class="dtBlock">
+<b class="le">Note</b>&nbsp;&nbsp;&nbsp;Applications should not show an error dialog when an error is returned from the FDRM engine.</BLOCKQUOTE>
+</li>
+
+	<LI>Before it accesses content, the application must verify that it has valid rights.
+<UL type="disc">
+	<LI>If content rights have expired, access to any form of the content by the user must be prevented.</li>
+
+	<LI>If content rights are valid, the application must commit rights to the FDRM engine before content use and preview. 
+<P>For information about when to commit rights during various use and preview scenarios, see the <A HREF="wce51conrightscommitmenttable.htm">Rights Commitment Table</A>. 
+
+<P>When a preset sound or image content has expired for a ring tone or home screen, the application must use the default content. The FDRM engine does not inform the user of a reversion to the default content.
+
+<P>Applications that persist content on the device for an extended period of time with no definite closing of the application should re-verify rights periodically. An example of an application that persists content is a home screen that persists background images. There is no definite time the home screen closes. The recommended periodic timeframe for re-verifying rights is specified in the <B>PersistentView</B> registry settings and is configured by OEMs. 
+</li>
+</UL>
+</li>
+
+	<LI>Prevent saving modified versions of FDRM-protected content.</li>
+
+	<LI>Allow the FDRM engine to show the FDRM UI if applicable.</li>
+
+	<LI>Prevent forwarding content that is locked to the device. The exceptions to this requirement are limited to the forwarding of content by storing it on removable storage or backing it up by using ActiveSync in protected format.
+<P>For example, you can meet this requirement by using either of the following methods:
+
+<UL type="disc">
+	<LI>Disable the forward option, provide no other UI, and block the forward request.</li>
+
+	<LI>Use the FDRM engine UI to notify the user that content cannot be forwarded. Display the notification before you block the forward request. 
+<BLOCKQUOTE class="dtBlock">
+<b class="le">Note</b>&nbsp;&nbsp;&nbsp;Enable forwarding of FDRM-protected content that is not locked to the device.</BLOCKQUOTE>
+</li>
+</UL>
+</li>
+
+	<LI>The following list shows what to do if the menu has a properties UI:
+<UL type="disc">
+	<LI>Add a <B>Protected Status</B> line item if appropriate.</li>
+
+	<LI>Add a new menu item or SoftKey to access the FDRM engine <B>Content Protection</B> properties for protected content.</li>
+</UL>
+</li>
+
+	<LI>Provide FDRM enabling list views, including messaging lists, for example for message services such as MMS, or file explorer.
+<UL type="disc">
+	<LI>Protected images may be shown as a thumbnail before expiration without adjusting rights status.</li>
+
+	<LI>Expired content should be differentiated from other content by using a standard Windows Mobile FDRM expired icon, if provided.</li>
+
+	<LI>There is no requirement to differentiate between protected and unprotected content.</li>
+</UL>
+
+<P>If you scroll through a list view that automatically renders content, wait for the delay time specified as <B>Delay</B> in the OEM configured registry settings. After the delay time, continue with rights verification and commitment if the content is used.
+</li>
+
+	<LI>Messaging applications must conform to the <A HREF="wce51conrightscommitmenttable.htm">Rights Commitment Table</A> and relevant standards for FDRM enabling message previewing and viewing.</li>
+
+	<LI>Applications that are capable of downloading or receiving FDRM-protected content must call the FDRM engine to help protect the content on the device safely.</li>
+
+	<LI>Applications that are capable of sending FDRM-protected content that is not locked to the device must use the <B>FileDrmCreateForwardableContent</B> function so that the content is packaged correctly for the sending or receiving application.</li>
+
+	<LI>An application that has been FDRM-enabled must maintain a minimal delay when it uses FDRM content. When an FDRM-enabled application uses FDRM-protected content, the delay before the start of using, displaying, or playing all content must not be increased more than 500 milliseconds because the FDRM-enabled application uses the FDRM functions.</li>
+
+	<LI>Applications must check for changes in the FDRM rights store. The FDRM rights store is the FDRM engine provider's store.
+<BLOCKQUOTE class="dtBlock">
+<b class="le">Note&nbsp;&nbsp;&nbsp;</b>Applications are not notified of rights updates.</BLOCKQUOTE>
+</li>
+
+	<LI>Applications must perform normally if an FDRM client is not included on the Windows Mobile&trade;-based device. However, applications that are not FDRM-enabled will not be granted access to FDRM-protected content.</li>
+
+	<LI>Applications must conform the recommended application flow for FDRM-protected content.</li>
+</OL>
+
+<P>The following illustration shows an example of the application flow for FDRM-protected content.</P>
+
+<P class="fig"><IMG SRC="drawing-drm_api_flow.gif" ALT="" BORDER=0></P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><MSHelp:link keywords="mob5conFDRMApplicationDevelopment" TABINDEX="0">FDRM Application Development</MSHelp:link> | <A HREF="wce51conrightscommitmenttable.htm">Rights Commitment Table</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Feedback Link Bottom Start-->
+<p><font size="1"><a href="mailto:medfdbk&#64;microsoft.com?subject=Product: Windows Mobile | Version: 5.0 | Release: SDK | Title: Requirements for Making Applications FDRM Enabled | Filename: wce51conrequirementsformakingapplicationsfdrmenabled.htm | Built on: Wednesday, September 14, 2005">Send Feedback</a> on this topic to the authors</font></p>
+<!--Feedback Link Bottom End-->
+<!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="mob5conCopyrightInformationForMagneto" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link></font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

@@ -1,0 +1,123 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Defining the XSLT Context for XPath Expressions</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Defining the XSLT Context for XPath Expressions"/>
+<MSHelp:RLTitle Title="Defining the XSLT Context for XPath Expressions"/>
+<MSHelp:Keyword Index="A" Term="wce50conHowXSLTDefinestheContextforXPathExpressions"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Feature"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="XSLpg02.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="True"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+<MSHelp:Attr Name="PBFeature" Value="SYSGEN_MSXML"/>
+<MSHelp:Attr Name="PBOnly" Value="False"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_3024112">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50conhowxsltdefinesthecontextforxpathexpressions"></A>Defining the XSLT Context for XPath Expressions</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>At run-time, templates in a style sheet are associated with specific source nodes, starting with the document root node that is associated with the root template (<B>match="/"</B>). Within the template, the associated source node is referred to as the current node. The current node defines a context for evaluating XPath expressions within the template.</P>
+
+<P>XPath expressions are accepted as attribute values for &lt;xsl:value-of&gt;, &lt;xsl:for-each&gt;, &lt;xsl:apply-templates&gt;, &lt;xsl:if&gt;, &lt;xsl:when&gt;, &lt;xsl:copy-of&gt;, &lt;xsl:param&gt;, &lt;xsl:sort&gt;, &lt;xsl:variable&gt;, &lt;xsl:with-param&gt;, and &lt;xsl:template&gt;. The attribute names define how the context for the query is determined and whether it results in a new context.</P>
+
+<H2 class="dtH2">Select Expressions</H2>
+
+<P>The &lt;xsl:value-of&gt;, &lt;xsl:for-each&gt;, &lt;xsl:copy-of&gt;, &lt;xsl:param&gt;, &lt;xsl:sort&gt;, &lt;xsl:variable&gt;, &lt;xsl:with-param&gt;, and &lt;xsl:apply-templates&gt; elements have a <B>select</B> attribute. This expression is evaluated relative to the template's current node. In &lt;xsl:for-each&gt; or &lt;xsl:apply-templates&gt;, the select returns a node-set, and each node in this set becomes the current node for further queries within it.</P>
+
+<PRE class="code">&lt;TABLE BORDER="1"&gt;
+  &lt;xsl:for-each select="invoices/invoice"&gt;
+    &lt;TR&gt;
+      &lt;TD&gt;Invoice #&lt;xsl:value-of select="@id"/&gt;&lt;/TD&gt;
+    &lt;/TR&gt;
+    &lt;xsl:for-each select="items/item"&gt;
+      &lt;TR&gt;
+        &lt;TD&gt;&lt;xsl:value-of select="qty"/&gt;&lt;/TD&gt;
+        &lt;TD&gt;&lt;xsl:value-of select="description"/&gt;&lt;/TD&gt;
+        &lt;TD&gt;$&lt;xsl:value-of select="price"/&gt;&lt;/TD&gt;
+      &lt;/TR&gt;
+    &lt;/xsl:for-each&gt;
+  &lt;/xsl:for-each&gt;
+&lt;/TABLE&gt;</PRE>
+
+<P>The first &lt;xsl:for-each&gt; selects a set of "invoice" elements, each of which becomes the context for the "items/item" query. Each "item", in turn, becomes the context for the various queries in the &lt;xsl:value-of&gt; elements.</P>
+
+<P>Each node selected by &lt;xsl:apply-templates&gt; is associated with a template and thus, becomes the current node for the template.</P>
+
+<P>Because each expression defines a new context, a set of nested queries, such as those in the preceding example, produces a set or "path" of context nodes active at one time.</P>
+
+<H2 class="dtH2">Test Boolean Expressions</H2>
+
+<P>The conditional elements &lt;xsl:if&gt; and &lt;xsl:when&gt; do not define a new context for queries within themselves because they do not actually select new nodes. They just test to make sure the nodes are there.</P>
+
+<PRE class="code">&lt;TABLE&gt;
+  &lt;xsl:for-each select="items/item"&gt;
+    &lt;TR&gt;
+      &lt;TD&gt;
+        &lt;xsl:value-of select="qty"/&gt;
+      &lt;/TD&gt;
+      &lt;TD&gt;
+        &lt;xsl:value-of select="description"/&gt;
+      &lt;/TD&gt;
+      &lt;TD&gt;
+        $&lt;xsl:value-of select="price"/&gt;
+      &lt;/TD&gt;
+      &lt;TD&gt; &lt;!-- 10% volume discount --&gt;
+        &lt;xsl:if test="qty[.&gt;=10]"&gt;
+          &lt;xsl:for-each select="price"&gt;
+            &lt;xsl:value-of select="formatNumber(.*.10, '$#,##0.00')"/&gt;
+          &lt;/xsl:for-each&gt;
+        &lt;/xsl:if&gt;
+      &lt;/TD&gt;
+      &lt;TD STYLE="text-align:right"&gt; &lt;!-- line total --&gt;
+        &lt;xsl:value-of select="formatNumber(user:lineTotal(.), '$#,##0.00')"/&gt; 
+      &lt;/TD&gt;
+    &lt;/TR&gt;
+  &lt;/xsl:for-each&gt;
+&lt;/TABLE&gt;</PRE>
+
+<P>In this example you can see that the &lt;xsl:for-each select="price"&gt; query is relative to "item" elements, despite the intervening conditional that tests the "qty" value.</P>
+
+<H2 class="dtH2">Match Patterns</H2>
+
+<P>The &lt;xsl:template&gt; element has a <B>match</B> attribute that accepts a pattern for the purposes of matching templates to specific elements; there is no fixed context for a query in this case. For more information, see <A HREF="wce50conauthoringmatchpatterns.htm">Authoring Match Patterns</A>.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50conxpath.htm">XPath</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

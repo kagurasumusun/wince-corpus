@@ -1,0 +1,125 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>FormFactoryEx</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="FormFactoryEx"/>
+<MSHelp:RLTitle Title="FormFactoryEx"/>
+<MSHelp:Keyword Index="K" Term="FormFactoryEx"/>
+<MSHelp:Keyword Index="A" Term="mob5lrfFormFactoryEx"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Application"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbsmartphone"/>
+<MSHelp:Attr Name="Product" Value="kbPocketPC"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="Technology" Value="kbPocketPC"/>
+<MSHelp:Attr Name="Technology" Value="kbSmartphone"/>
+<MSHelp:Attr Name="TopicType" Value="apiref"/>
+<MSHelp:Attr Name="Filename" Value="CE_MAPI_FuncStrucEnum_magneto.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="False"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_1064552">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Windows Mobile Version 5.0 SDK<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="mob5lrfformfactoryex"></A>FormFactoryEx</H1>
+<!--Feedback Link Top Start-->
+<P CLASS="feedback"><font size="1"><a href="mailto:medfdbk&#64;microsoft.com?subject=Product: Windows Mobile | Version: 5.0 | Release: SDK | Title: FormFactoryEx | Filename: mob5lrfformfactoryex.htm | Built on: Wednesday, September 14, 2005">Send Feedback</a> on this topic to the authors</font></p>
+<!--Feedback Link Top End-->
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>The <B>FormFactoryEx</B> function must be implemented to return a reference to the <A HREF="mob5lrfiformproviderex.htm">IFormProviderEx</A> interface, which allows Messaging to create the plug-in's custom read and compose forms. The <B>FORMFACTORYEXFUNC</B> type defines a pointer to this function.</P>
+
+<BLOCKQUOTE class="dtBlock">
+<b class="le">Note</b>&nbsp;&nbsp;&nbsp;The <B>FormFactoryEx</B> function is not available on Pocket PC 2002 or Smartphone&nbsp;2002. For these platforms, use the <A HREF="mob5lrfformfactory.htm">FormFactory</A> function.</BLOCKQUOTE>
+
+<H4 class="dtH4">Syntax</H4>
+
+<PRE class="syntax"><B>HRESULT FormFactoryEx (</B>
+  <B>LPCWSTR</B> <I>pszMsgClass</I><B>,</B>
+  <B>IFormProviderEx**</B> <I>ppObj</I><B>,</B>
+<B>);</B></PRE>
+
+<H4 class="dtH4">Parameters</H4>
+
+<DL>
+<DT><I>pszMsgClass</I></DT>
+
+<DD>[in] Reference to the message's message class property.</dd>
+
+<DT><I>ppObj</I></DT>
+
+<DD>[out] Reference to the plug-in's <A HREF="mob5lrfiformproviderex.htm">IFormProviderEx</A> interface. Returns <B>NULL</B> if <I>pszMsgClass</I> is valid but the object cannot be created.</dd>
+</DL>
+
+<H4 class="dtH4">Return Values</H4>
+
+<P>This function returns an appropriate <B>HRESULT</B> value, such as the following:
+
+<DL>
+<DT><B>S_OK</B></DT>
+
+<DD>The function successfully returned a reference to the <A HREF="mob5lrfiformproviderex.htm">IFormProviderEx</A> interface.</dd>
+
+<DT><B>MAPI_E_INVALID_PARAMETER</B></DT>
+
+<DD>The input parameter is <B>NULL</B>.</dd>
+
+<DT><B>MAPI_E_NOT_ENOUGH_MEMORY</B></DT>
+
+<DD>A memory allocation failed.</dd>
+</DL>
+
+<H4 class="dtH4">Remarks</H4>
+
+<P>For a plug-in to integrate with Messaging, it must register as a separate message class with Messaging and provide custom read and compose forms for Messaging. Optionally, it can register with the WAP Push Router to be notified of binary WAP push messages.</P>
+
+<P>When any type of message arrives, Messaging searches the registry for a Messaging plug-in DLL that matches the message's message class within the registry (<B>IPM.Note</B> for e-mail, <B>IPM.Note.MeetingRequest</B> for appointments, <B>IPM.SMStext</B> for Short Message Service (SMS), and so on). Custom message types could be created for Enhanced Messaging Service (EMS) or Multimedia Messaging Service (MMS) by a developer. Messaging loads the plug-in DLL, calling the Windows CE <B>GetProcAddress</B> function to get a handle to its <A HREF="#mob5lrfformfactoryex">FormFactoryEx</A> function. Messaging calls <B>FormFactoryEx</B>, passing in the message class as a string, and the plug-in responds by returning a reference to its <A HREF="mob5lrfiformproviderex.htm">IFormProviderEx</A> interface.</P>
+
+<P>Messaging calls <A HREF="mob5lrfiformproviderexcreatereadform.htm">IFormProviderEx::CreateReadForm</A> to read the message and calls <A HREF="mob5lrfiformproviderexcreatecomposeform.htm">IFormProviderEx::CreateComposeForm</A> to compose a new message. Both methods allow the plug-in to create its own window as a child of the form frame.</P>
+
+<P>When Messaging calls <B>CreateComposeForm</B> and <B>CreateReadForm</B>, it passes in a pointer to its <A HREF="mob5lrfimessageformhostex.htm">IMessageFormHostEx</A> interface. Messaging uses the <A HREF="mob5lrfimessageformex.htm">IMessageFormEx</A> interface pointer for communicating with the plug-in and uses the plug-in's handle (<B>HWND</B>) to pass on Windows messages it does not process for the plug-in. </P>
+
+<H4 class="dtH4">Requirements </H4>
+
+<P><B>Pocket&nbsp;PC:</B> Windows&nbsp;Mobile&nbsp;2003 and later<BR>
+<B>Smartphone:</B> Windows&nbsp;Mobile&nbsp;2003 and later<BR>
+<B>OS&nbsp;Versions:</B> Windows&nbsp;CE&nbsp;.NET 4.2 and later<BR>
+<B>Header:</B> cemapi.h<BR>
+<B>Library:</B> cemapi.lib</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="mob5grfmapifunctions.htm">MAPI Functions</A> | <A HREF="mob5orimessaging.htm">Messaging</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Feedback Link Bottom Start-->
+<p><font size="1"><a href="mailto:medfdbk&#64;microsoft.com?subject=Product: Windows Mobile | Version: 5.0 | Release: SDK | Title: FormFactoryEx | Filename: mob5lrfformfactoryex.htm | Built on: Wednesday, September 14, 2005">Send Feedback</a> on this topic to the authors</font></p>
+<!--Feedback Link Bottom End-->
+<!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="mob5conCopyrightInformationForMagneto" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link></font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

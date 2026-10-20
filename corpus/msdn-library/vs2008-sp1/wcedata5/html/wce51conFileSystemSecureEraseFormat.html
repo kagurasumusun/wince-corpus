@@ -1,0 +1,73 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>File System Secure Erase and Format</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="File System Secure Erase and Format"/>
+<MSHelp:RLTitle Title="File System Secure Erase and Format"/>
+<MSHelp:Keyword Index="A" Term="wce51conFileSystemSecureEraseFormat"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Feature"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="fatfs_guide.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="True"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="True"/>
+<MSHelp:Attr Name="PBFeature" Value="SYSGEN_STOREMGR"/>
+<MSHelp:Attr Name="PBOnly" Value="False"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_1070963">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce51confilesystemsecureeraseformat"></A>File System Secure Erase and Format</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>The file system secure erase and format operation allows you to securely erase all data, including previously stored data, from a FAT or TFAT volume. This enables the complete removal of all persistent data, ensuring that no remnants of data remain in remapped flash blocks or on unallocated blocks on a hard disk device.</P>
+
+<P>To implement secure erase and format, the file system first calls the block driver to determine of it implements <MSHelp:link keywords="wce51lrfIOCTL_DISK_SET_SECURE_WIPE_FLAG" TABINDEX="0">IOCTL_DISK_SET_SECURE_WIPE_FLAG</MSHelp:link>. If the block driver implements this IOCTL, then MSFLASH implements the secure erase and format. If not, then FAT reformats the volume by passing the FATUTIL_SECURE_WIPE flag in the <MSHelp:link keywords="cmrefFORMAT_OPTIONS" TABINDEX="0">FORMAT_OPTIONS</MSHelp:link> structure.</P>
+
+<P>Once a secure erase and format operation is initiated, it continues until completion. This occurs even if the erase and format is repeatedly interrupted due to a reset or loss of power. Upon completion, no data remains on the physical storage device. For a flash media device, all unmapped physical blocks are erased in addition to the erasure of all logical blocks. For a hard disk device, a low-level format of the entire volume erases all data on the device.</P>
+
+<P>A registry setting is used by the Storage Manager to determine if a secure erase and format or a traditional format operation is performed when a format request is initiated. The following registry entry enables the secure erase and format of a volume.</P>
+
+<PRE class="code">[HKEY_LOCAL_MACHINE\System\StorageManager\Profiles\&lt;<I>your profile name</I>&gt;\FATFS]
+   "SecureWipe"=dword:1</PRE>
+
+<P>A trusted application can also initiate a secure erase and format by calling the <MSHelp:link keywords="wce50lrfLoadLibrary" TABINDEX="0">LoadLibrary</MSHelp:link> function on Fatutil.dll.</P>
+
+<P>The secure erase and format operation does not offer guaranteed protection against the physical removal of a storage device prior to completion. The secure erase and format of a hard drive does not perform multiple writes to blocks using repeat cycles or patterns. The format is a low-level format, ensuring that data that can be read from the device using a block driver is erased. A secure erase and format of multiple volumes occurs synchronously. It is not possible to designate multiple storage volumes for a secure erase and format simultaneously. Each volume must be securely erased and formatted individually.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50confatfilesystem.htm">FAT File System</A> | <A HREF="wce50contransactionsafefatfilesystem.htm">Transaction-Safe FAT File System</A> | <MSHelp:link keywords="wce50lrfLoadLibrary" TABINDEX="0">LoadLibrary</MSHelp:link></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

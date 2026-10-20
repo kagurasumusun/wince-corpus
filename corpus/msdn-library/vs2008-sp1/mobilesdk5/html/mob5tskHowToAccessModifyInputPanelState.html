@@ -1,0 +1,119 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>How to: Access and Modify the Input Panel State</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="How to: Access and Modify the Input Panel State"/>
+<MSHelp:RLTitle Title="How to: Access and Modify the Input Panel State"/>
+<MSHelp:Keyword Index="A" Term="mob5tskHowToAccessModifyInputPanelState"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Application"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbsmartphone"/>
+<MSHelp:Attr Name="Product" Value="kbPocketPC"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="Technology" Value="kbPocketPC"/>
+<MSHelp:Attr Name="Technology" Value="kbSmartphone"/>
+<MSHelp:Attr Name="TopicType" Value="kbTask"/>
+<MSHelp:Attr Name="Filename" Value="Input_Panel_magneto.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="True"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_1063770">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Windows Mobile Version 5.0 SDK<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="mob5tskhowtoaccessmodifyinputpanelstate"></A>How to: Access and Modify the Input Panel State</H1>
+<!--Feedback Link Top Start-->
+<P CLASS="feedback"><font size="1"><a href="mailto:medfdbk&#64;microsoft.com?subject=Product: Windows Mobile | Version: 5.0 | Release: SDK | Title: How to: Access and Modify the Input Panel State | Filename: mob5tskhowtoaccessmodifyinputpanelstate.htm | Built on: Wednesday, September 14, 2005">Send Feedback</a> on this topic to the authors</font></p>
+<!--Feedback Link Top End-->
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>For Windows Mobile-based Pocket PCs, the <MSHelp:link keywords="wce50lrfSHSipInfo" TABINDEX="0">SHSipInfo</MSHelp:link> function provides a way to get information about the currently selected input panel, such as the state of the input panel (shown or hidden), its size and position on the display, and whether it is docked or floating. The same function also provides for changing input panel settings directly. <B>SHSipInfo</B> works primarily through the Windows CE <MSHelp:link keywords="wce50lrfSIPINFO" TABINDEX="0">SIPINFO</MSHelp:link> structure. </P>
+
+<BLOCKQUOTE class="dtBlock">
+<b class="le">Note</b>&nbsp;&nbsp;&nbsp;In most cases, a developer does not need to access direct information about the input panel, and the number of cases where these settings should be programmatically changed are fewer still. However, when this level of control is required, <B>SHSipInfo</B> provides a convenient way to directly manage the input panel.</BLOCKQUOTE>
+
+<P>The following code example shows how to use the <B>SHSipInfo</B> function to access and modify the <B>SIPINFO</B> structure.</P>
+
+<PRE class="code">BOOL LowerSip( void )
+{
+    BOOL fRes = FALSE;
+    SIPINFO si;
+
+    memset(&amp;si, 0, sizeof(si));
+    si.cbSize = sizeof(si);
+    if(SHSipInfo(SPI_GETSIPINFO, 0, &amp;si, 0)) 
+    {
+        si.fdwFlags &amp;= ~SIPF_ON;
+        fRes = SHSipInfo( SPI_SETSIPINFO, 0, &amp;si, 0 );
+    }
+
+    return fRes;
+}</PRE>
+
+<P>When the user changes the input panel state, the operating system sends a <B>WM_SETTINGCHANGE</B> message to all active applications. This message has <B>SPI_SETSIPINFO</B> in its <I>wParam</I> parameter. The following code example shows how you can use the <MSHelp:link keywords="wce50lrfSHSipInfo" TABINDEX="0">SHSipInfo</MSHelp:link> function to move the input panel on the screen in response to a <B>WM_SETTINGCHANGE</B> message.</P>
+
+<PRE class="code">WndProc( HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam )
+{
+    SIPINFO si;
+    switch( msg ) 
+    {
+        case WM_SETTINGCHANGE:
+            switch( wParam ) 
+            {
+                case SPI_SETSIPINFO:
+                    memset( &amp;si, 0, sizeof( si ) );
+                    si.cbSize = sizeof( si );
+                    if( SHSipInfo( SPI_GETSIPINFO, 0, &amp;si, 0 ) ) 
+                    {
+                        MoveWindow(
+                            hwnd,
+                            si.rcVisibleDesktop.left,
+                            si.rcVisibleDesktop.top,
+                            si.rcVisibleDesktop.right &#0150;
+                            si.rcVisibleDesktop.left,
+                            si.rcVisibleDesktop.bottom -
+                            si.rcVisibleDesktop.top,
+                            TRUE );
+                    }
+                    break;
+            }
+            break;
+    }
+return 0;
+}</PRE>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="mob5condisplayingorhidinginputpanel.htm">Displaying or Hiding the Input Panel</A> | <A HREF="mob5oriinputpanelprogrammingoverview.htm">Input Panel Programming Overview</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Feedback Link Bottom Start-->
+<p><font size="1"><a href="mailto:medfdbk&#64;microsoft.com?subject=Product: Windows Mobile | Version: 5.0 | Release: SDK | Title: How to: Access and Modify the Input Panel State | Filename: mob5tskhowtoaccessmodifyinputpanelstate.htm | Built on: Wednesday, September 14, 2005">Send Feedback</a> on this topic to the authors</font></p>
+<!--Feedback Link Bottom End-->
+<!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="mob5conCopyrightInformationForMagneto" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link></font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

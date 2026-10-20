@@ -1,0 +1,286 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>SHCameraCapture</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="SHCameraCapture"/>
+<MSHelp:RLTitle Title="SHCameraCapture"/>
+<MSHelp:Keyword Index="K" Term="SHCameraCapture"/>
+<MSHelp:Keyword Index="A" Term="mob5lrfSHCameraCaptureFn"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Application"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbsmartphone"/>
+<MSHelp:Attr Name="Product" Value="kbPocketPC"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="Technology" Value="kbPocketPC"/>
+<MSHelp:Attr Name="Technology" Value="kbSmartphone"/>
+<MSHelp:Attr Name="TopicType" Value="apiref"/>
+<MSHelp:Attr Name="Filename" Value="shell_reference_magneto.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="True"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_1072773">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Windows Mobile Version 5.0 SDK<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="mob5lrfshcameracapturefn"></A>SHCameraCapture</H1>
+<!--Feedback Link Top Start-->
+<P CLASS="feedback"><font size="1"><a href="mailto:medfdbk&#64;microsoft.com?subject=Product: Windows Mobile | Version: 5.0 | Release: SDK | Title: SHCameraCapture | Filename: mob5lrfshcameracapturefn.htm | Built on: Wednesday, September 14, 2005">Send Feedback</a> on this topic to the authors</font></p>
+<!--Feedback Link Top End-->
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>The <B>SHCameraCapture</B> function launches the Camera Capture dialog box, which allows the user to capture still images and video clips.</P>
+
+<H4 class="dtH4">Syntax</H4>
+
+<PRE class="syntax"><B>HRESULT SHCameraCapture (</B>
+  <B>PSHCAMERACAPTURE</B> <I>pshcc</I>
+<B>);</B></PRE>
+
+<H4 class="dtH4">Parameters</H4>
+
+<DL>
+<DT><I>pshcc</I></DT>
+
+<DD>[in/out] Reference to an <A HREF="mob5lrfshcameracapture.htm">SHCAMERACAPTURE</A> structure, which contains information that initializes the <B>SHCameraCapture</B> function, and also contains a reference to the fully-qualified path-name of the captured picture file or video file.</dd>
+</DL>
+
+<H4 class="dtH4">Return Values</H4>
+
+<DL>
+<DT><B>S_OK</B></DT>
+
+<DD>The method completed successfully.</dd>
+
+<DT><B>S_FALSE</B></DT>
+
+<DD>The user canceled the Camera Capture dialog box.</dd>
+
+<DT><B>E_OUTOFMEMORY</B></DT>
+
+<DD>There is not enough memory to save the image or video.</dd>
+
+<DT><B>E_INVALIDARG</B></DT>
+
+<DD>An invalid argument was specified.</dd>
+</DL>
+
+<H4 class="dtH4">Remarks</H4>
+
+<P>When the <B>SHCameraCapture</B> function returns successfully, the buffer pointed to by <B>SHCAMERACAPTURE::</B><I>szFile</I> contains the fully-qualified path-name of the picture file or video file.</P>
+
+<P>Application writers should be aware that <B>SHCameraCapture</B> function can cause the calling application to stop responding in cases where the calling application is minimized and then reactivated while the call to <B>SHCameraCapture</B> function is still blocking. </P>
+
+<P>A possible sequence of events can be as follows:
+
+<UL type="disc">
+	<LI>User launches an application</li>
+
+	<LI>Application calls <B>SHCameraCapture</B> </li>
+
+	<LI>User minimizes the application while the Camera view is active </li>
+
+	<LI>User reactivates the application </li>
+</UL>
+
+<P>Rather than going back to Camera view, the user will see the calling application, and it will stop responding. </P>
+
+<P>You should take both of the following steps to avoid these types of issues when calling this API:
+
+<OL type="1">
+	<LI>Don't use the WS_POPUP window style in the window that calls <B>SHCameraCapture</B>.</li>
+
+	<LI>When your application is being reactivated, determine whether it is still blocking on a call to <B>SHCameraCapture</B> and if it is, bring the Camera window to the foreground. You can find the Camera window by calling <B>FindWindow(TEXT("Camera View"), NULL)</B>.</li>
+</OL>
+
+<P>The following code example shows how to overcome this problem.</P>
+
+<PRE class="code">// The class name of the Camera window.
+#define CAMERAWND_CLASSNAME TEXT("Camera View")
+
+// The message to activate the Camera window.
+#define WM_ACTIVATE_CAMERAVIEW WM_USER + 1
+
+// The flag to determine if the Camera window is running.
+BOOL g_bCameraRunning = FALSE;
+
+// The sample function of calling SHCameraCapture()
+HRESULT CameraCaptureExample(HWND hwndOwner, LPTSTR pszFilename)
+{
+   HRESULT hResult;
+   SHCAMERACAPTURE shcc;
+
+   // Set the SHCAMERACAPTURE structure.
+   // Set g_bCameraRunning flag as TRUE before we call SHCameraCapture() function.
+   g_bCameraRunning = TRUE;
+
+   // Display the Camera Capture dialog.
+   hResult = SHCameraCapture(&amp;shcc);
+
+   // Set g_bCameraRunning flag as FALSE after we called SHCameraCapture() function.
+   g_bCameraRunning = FALSE;
+
+   return hResult;
+}
+
+// The window procedure of app's window
+LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
+{
+   switch (uMsg)
+   {
+      case WM_ACTIVATE:
+         if (WA_ACTIVE == LOWORD(wParam) &amp;&amp; g_bCameraRunning)
+         {
+            PostMessage(hwnd, WM_ACTIVATE_CAMERAVIEW, 0, 0);
+         }
+         break;
+      case WM_ACTIVATE_CAMERAVIEW:
+         if (g_bCameraRunning)
+         {
+            // Reactivate the camera window if camera window is running
+            HWND hwndCamera = FindWindow(CAMERAWND_CLASSNAME, NULL);
+            if (NULL != hwndCamera)
+            {
+               // Bring the last active window owned by camera window to the foreground
+               SetForegroundWindow(GetLastActiveWindow(hwndCamera));
+            }
+         }
+         break;
+
+// Determine if hwnd is owned by hwndOwner.
+BOOL IsOwned(HWND hwndOwner, HWND hwnd)
+{
+   BOOL bOwned = FALSE;
+   while (NULL != (hwnd = GetWindow(hwnd, GW_OWNER)))
+   {
+      if (hwnd == hwndOwner)
+      {
+         bOwned = TRUE;
+         break;
+      }
+   }
+return bOwned;
+}
+
+// Get the topmost, visible, enabled window who is owned by the window
+// which specified by the application-defined value given in EnumWindows.
+BOOL CALLBACK EnumLastActiveWindowProc(HWND hwnd, LPARAM lParam)
+{
+   BOOL bContinue = TRUE;
+   HWND hOwner = *((HWND *)lParam);
+
+   // Ignore windows which are invisible, disabled or cannot be activated.
+   if (!IsWindowVisible(hwnd) || !IsWindowEnabled(hwnd) || (WS_EX_NOACTIVATE &amp; GetWindowExStyle(hwnd)))
+   {
+   // Continue enumeration.
+   goto Exit;
+   }
+
+   // If this is the owner window, there are no owned windows because
+   // all owned windows are always above its owner in the z-order.
+   if (hwnd == hOwner)
+   {
+   // Not found the owned window. Stop enumeration.
+      bContinue = FALSE;
+      goto Exit;
+   }
+   // Is this window owned by hwndOwner?
+   if (IsOwned(hOwner, hwnd))
+   {
+      // Found the last owned window. Stop enumeration.
+      bContinue = FALSE;
+      *((HWND *)lParam) = hwnd;
+      goto Exit;
+   }
+   Exit:
+      return bContinue;
+}
+
+// Retrieves the last active window owned by hwndOwner.
+HWND GetLastActiveWindow(HWND hwndOwner)
+{
+   HWND hwndLastActive = hwndOwner;
+   EnumWindows(EnumLastActiveWindowProc, (LPARAM)&amp;hwndLastActive);
+   return hwndLastActive;
+}</PRE>
+
+<H4 class="dtH4">Code Example</H4>
+
+<P>The following code example demonstrates how to use <B>SHCameraCapture</B>.</P>
+
+<BLOCKQUOTE class="dtBlock">
+<b class="le">Note</b>&nbsp;&nbsp;&nbsp;To make the following code example easier to read, security checking and error handling are not included. This code example should not be used in a release configuration unless it has been modified to include them.</BLOCKQUOTE>
+
+<PRE class="code">HRESULT CameraCaptureExample(HWND hwndOwner, LPTSTR pszFilename)
+{
+    HRESULT         hResult;
+<code><b class="cfe">    SHCAMERACAPTURE shcc;</b></code>
+
+    // Set the SHCAMERACAPTURE structure.
+    ZeroMemory(&amp;shcc, sizeof(shcc));
+    shcc.cbSize             = sizeof(shcc);
+    shcc.hwndOwner          = hwndOwner;
+    shcc.pszInitialDir      = TEXT("\\My Documents");
+    shcc.pszDefaultFileName = TEXT("test.3gp");
+    shcc.pszTitle           = TEXT("Camera Demo");
+    shcc.<MSHelp:link keywords="wce51lrfCAMERACAPTURE_VIDEOTYPES" TABINDEX="0">VideoTypes</MSHelp:link>         = CAMERACAPTURE_VIDEOTYPE_MESSAGING;
+    shcc.nResolutionWidth   = 176;
+    shcc.nResolutionHeight  = 144;
+    shcc.nVideoTimeLimit    = 15;
+    shcc.<MSHelp:link keywords="wce51lrfCAMERACAPTURE_MODE" TABINDEX="0">Mode</MSHelp:link>               = CAMERACAPTURE_MODE_VIDEOWITHAUDIO;
+
+    // Display the Camera Capture dialog.
+<code><b class="cfe">    hResult = SHCameraCapture(&amp;shcc);</b></code>
+
+    // The next statements will execute only after the user takes
+    // a picture or video, or closes the Camera Capture dialog.
+    if (S_OK == hResult)
+    {
+        StringCchCopy(pszFilename, MAX_PATH, shcc.szFile);
+    }
+
+    return hResult;
+}
+</PRE>
+
+<H4 class="dtH4">Requirements</H4>
+
+<P><B>Pocket&nbsp;PC:</B> Windows Mobile 5.0 and later.<BR>
+<B>Smartphone:</B> Windows Mobile 5.0 and later.<BR>
+<B>OS&nbsp;Versions:</B> Windows&nbsp;CE&nbsp;5.01 and later.<BR>
+<B>Header:</B> Aygshell.h.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="mob5lrfshcameracapture.htm">SHCAMERACAPTURE Structure</A> | <MSHelp:link keywords="wce51lrfCAMERACAPTURE_MODE" TABINDEX="0">CAMERACAPTURE_MODE Enumeration</MSHelp:link> | <MSHelp:link keywords="wce51lrfCAMERACAPTURE_STILLQUALITY" TABINDEX="0">CAMERACAPTURE_STILLQUALITY Enumeration</MSHelp:link> | <MSHelp:link keywords="wce51lrfCAMERACAPTURE_VIDEOTYPES" TABINDEX="0">CAMERACAPTURE_VIDEOTYPES Enumeration</MSHelp:link> | <MSHelp:link keywords="mob5samCamera" TABINDEX="0">Camera</MSHelp:link> | <MSHelp:link keywords="mob5samCameraCaptureGraph" TABINDEX="0">Camera Capture Graph</MSHelp:link></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Feedback Link Bottom Start-->
+<p><font size="1"><a href="mailto:medfdbk&#64;microsoft.com?subject=Product: Windows Mobile | Version: 5.0 | Release: SDK | Title: SHCameraCapture | Filename: mob5lrfshcameracapturefn.htm | Built on: Wednesday, September 14, 2005">Send Feedback</a> on this topic to the authors</font></p>
+<!--Feedback Link Bottom End-->
+<!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="mob5conCopyrightInformationForMagneto" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link></font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

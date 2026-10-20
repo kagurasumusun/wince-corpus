@@ -1,0 +1,99 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>IEEE 1394 Driver Thread Priorities</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="IEEE 1394 Driver Thread Priorities"/>
+<MSHelp:RLTitle Title="IEEE 1394 Driver Thread Priorities"/>
+<MSHelp:Keyword Index="A" Term="wce50conIEEE1394DriverThreadPriorities"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Driver"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="False"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="1394bus_guide.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="True"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="True"/>
+<MSHelp:Attr Name="PBFeature" Value="1394Driver"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_1050081">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50conieee1394driverthreadpriorities"></A>IEEE 1394 Driver Thread Priorities</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>You can adjust thread priorities for IEEE 1394 drivers through the registry. Thread priority adjustments apply to each IEEE 1394 driver and take place at boot-time. All IEEE 1394 drivers must load with the same set of priorities. Changing the thread priorities of the IEEE 1394 drivers at run-time results in unpredictable behavior.</P>
+
+<P>Wdm1394.h defines PASSIVE_LEVEL, APC_LEVEL, DISPATCH_LEVEL, and DIRQL as global variables. These variables must be initialized before any code can use them.</P>
+
+<P><B>WDM1394Init</B> should initialize the thread priority variables. Generally, the call to <B>WDM1394Init</B> is in the DLL entry point for the IEEE 1394 module. If the module does not perform special processing in its entry point, the module can use <B>WDM1394DllMain</B> as the entry point.</P>
+
+<P>Wdmutil.lib defines the <B>WDM1394Init</B> and <B>WDM1394DllMain</B> entry points. The source for Wdmutil.lib is in %_WINCEROOT%\Public\Common\OAK\Drivers\1394\Drivers\Wdmutil.</P>
+
+<P>The following table shows the default thread priorities.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=50%>Thread priority</TH>
+<TH width=50%>Value</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>PASSIVE_LEVEL</TD>
+<TD width=50%>250</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>APC_LEVEL</TD>
+<TD width=50%>249</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>DISPLATCH_LEVEL</TD>
+<TD width=50%>248</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>DIRQL</TD>
+<TD width=50%>247</TD>
+</TR>
+</table></div>
+
+<P>The following registry sample shows how to override these values in the registry.</P>
+
+<PRE class="code">[HKEY_LOCAL_MACHINE\Drivers\WDMDrivers]
+  "PassivePrio256"=dword:fb   ; 251 - thread_priority_normal
+  "APCPrio256"=dword:f9       ; 249
+  "DispatchPrio256"=dword:f6  ; 246 
+  "DIRQLPrio256"=dword:f5     ; 245</PRE>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

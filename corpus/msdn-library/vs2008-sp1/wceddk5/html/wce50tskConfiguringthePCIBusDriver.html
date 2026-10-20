@@ -1,0 +1,189 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Enabling the PCI Bus Driver</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Enabling the PCI Bus Driver"/>
+<MSHelp:RLTitle Title="Enabling the PCI Bus Driver"/>
+<MSHelp:Keyword Index="A" Term="wce50tskConfiguringthePCIBusDriver"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Driver"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="False"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbTask"/>
+<MSHelp:Attr Name="Filename" Value="howto_enablingpcibus.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="True"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="True"/>
+<MSHelp:Attr Name="PBFeature" Value="PCIBusDriver"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_3017583">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50tskconfiguringthepcibusdriver"></A>Enabling the PCI Bus Driver</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>The PCI Bus driver is in %_WINCEROOT%\Public\Common\Oak\Drivers\PCIbus. It is responsible for enumerating the PCI bus and loading device drivers for all PCI devices it finds and recognizes on the bus. </P>
+
+<P>To support driver loading, driver unloading, and PCI bus power management, the PCI bus driver remains loaded. This allows dynamic loading of device drivers for PCI devices. Individual device drivers do not need to enumerate their bus on their own. </P>
+
+<P>All PCI bus enumeration code is contained in one DLL and all device drivers can reuse this code.</P>
+
+<BLOCKQUOTE class="dtBlock">
+<b class="le">Note</b>&nbsp;&nbsp;&nbsp;For the CEPC or any hardware platform that uses a BIOS to set up the PCI bus, the PCI bus driver does not need to configure the bus. </BLOCKQUOTE>
+
+<BLOCKQUOTE class="dtBlock">
+The PCI bus driver enumerates or reads the state of the bus and provides this information into the <B>Instance</B> key for a device and the driver, and the <MSHelp:link keywords="wce50conIOResourceManager" TABINDEX="0">I/O Resource Manager</MSHelp:link>. </BLOCKQUOTE>
+
+<BLOCKQUOTE class="dtBlock">
+You can skip the configuration step by setting <B>NoConfig</B> equal to 1. This value is a subkey of <B>RootKey\PCI</B>. </BLOCKQUOTE>
+
+<BLOCKQUOTE class="dtBlock">
+If you need to configure, set <B>NoConfig</B> equal to 0 (zero), or remove it.</BLOCKQUOTE>
+
+<P>The following steps show you how to enable the PCI bus driver and the associated installable interrupt service routines (ISRs). </P>
+
+<P class="labelproc"><B>To enable the PCI bus driver</B>
+
+<OL type="1">
+	<LI>Modify the boot loader and initialization code.
+<P>Typically, the boot loader and startup code enumerates the entire PCI bus. Modify this functionality so that the boot loader and startup code enumerates only the debugging devices that reside on the PCI bus. This is typically the Ethernet debugging adapter. Serial is usually a legacy ISA port.
+
+<P>Make sure the enumerator handles the case where the debug device is behind a PCI to PCI bridge or PCI to PCI bridges. 
+
+<P>The host to PCI bridge is set up with the largest possible windows, while any PCI to PCI bridges between the host and the Ethernet debugging device will be set up with windows that are only as large as the debugging devices. 
+
+<P>This window starts at the beginning of the host to PCI bridge window. This allows the PCI bus driver to expand this window to accommodate additional devices. 
+
+<P>If there is more than one debugging device that shares the same resource type, memory or I/O space, their resources must be placed next to each other, or as close as possible allowed by natural alignment. 
+
+<P>Any devices and bridges other than the debugging devices must be disabled by setting the three least significant bits of the command register equal to zero. At power-on, this is the default state.
+
+<P>The registry needs to be populated with information about the debugging device. This is needed for the PCI bus enumerator to recognize that the device is already set up and is using resources. 
+
+<P>The <A HREF="wce50lrfpcidevinfo.htm">PCI_DEV_INFO</A> structure is filled with information about the device. This information includes bus, device and function numbers, memory, I/O base addresses, and so on, when the debugging device is set up. 
+
+<P>For an example, see %_WINCEROOT%\Public\Common\OAK\Drivers\PCIBus\PCIcfg.c. The structure is written to the registry key <B>HKEY_LOCAL_MACHINE\Drivers\BuiltIn\PCI\Instance\KITL</B> in this example, with a call to <MSHelp:link keywords="wce50lrfIOCTLHALINITREGISTRY" TABINDEX="0">IOCTL_HAL_INITREGISTRY</MSHelp:link> by the kernel. 
+</li>
+
+	<LI>Set up the host to PCI bridge.
+<P>Typically, the boot loader and startup code have already properly set up the host to PCI bridge. The PCI window must match that of the resources described in the registry under the main <B>PCI</B> key. 
+</li>
+
+	<LI>Implement OAL functions.
+<P>Implement the following functions in your OAL. These are declared in %_WINCEROOT%\Platform\&lt;<I>Hardware platform</I>&gt;\Inc\Oalintr.h.
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=28%>Function</TH>
+<TH width=72%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=28%><MSHelp:link keywords="wce50lrfOEMGetInterrupt" TABINDEX="0">OEMGetInterrupt</MSHelp:link></TD>
+<TD width=72%>Used by the PCI bus enumerator to request an IRQ for a PCI device.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=28%><MSHelp:link keywords="wce50lrfOEMRequestSysIntr" TABINDEX="0">OEMRequestSysIntr</MSHelp:link></TD>
+<TD width=72%>Used in the <MSHelp:link keywords="wce50lrfOEMIoControl" TABINDEX="0">OEMIoControl</MSHelp:link> routine to implement IOCTL_HAL_TRANSLATE_IRQ and IOCTL_HAL_REQUEST_SYSINTR.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=28%><MSHelp:link keywords="wce50lrfOEMTranslateIrq" TABINDEX="0">OEMTranslateIrq</MSHelp:link></TD>
+<TD width=72%>Used by the main ISR to translate a non-shareable IRQ into a SYSINTR, or the last shared IRQ that is not covered by an installable ISR. 
+<P>This is a direct one-to-one mapping of IRQ to SYSINTR.</P>
+</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=28%><MSHelp:link keywords="wce50lrfOEMTranslateSysIntr" TABINDEX="0">OEMTranslateSysIntr</MSHelp:link></TD>
+<TD width=72%>Maps a SYSINTR to its corresponding IRQ.</TD>
+</TR>
+</table></div>
+</li>
+
+	<LI>Update <MSHelp:link keywords="wce50lrfOEMIoControl" TABINDEX="0">OEMIoControl</MSHelp:link>.
+<P>Update <B>OEMIoControl </B>to include <MSHelp:link keywords="wce50lrfIOCTLHALTRANSLATEIRQ" TABINDEX="0">IOCTL_HAL_TRANSLATE_IRQ</MSHelp:link>, <MSHelp:link keywords="wce50lrfIOCTLHALREQUESTSYSINTR" TABINDEX="0">IOCTL_HAL_REQUEST_SYSINTR</MSHelp:link>, and <MSHelp:link keywords="wce50lrfIOCTLHALREQUESTIRQ" TABINDEX="0">IOCTL_HAL_REQUEST_IRQ</MSHelp:link>. 
+
+<P>See %_WINCEROOT%\Platform\<I>&lt;Hardware platform&gt;</I>\Src\Kernel\OAL and %_WINCEROOT%\Platform\<I>&lt;Hardware platform&gt;</I>\Src\Inc for example implementations.
+</li>
+
+	<LI>Update the main OAL ISR routine.
+<P>Call the chain of installed interrupts first to see if anything claims the interrupt. If nothing does, perform the standard action of translating the IRQ into a SYSINTR and then return. You can slightly optimize this by calling <MSHelp:link keywords="wce50lrfNKCallIntChain" TABINDEX="0">NKCallIntChain</MSHelp:link> only on IRQs for which installable ISRs are allowed.
+
+<P>See %_WINCEROOT%\Public\Common\OAK\CSP\x86\OAL\fwpc.c for an example implementation.
+
+<P>This implementation is also shown in the code example below.
+
+<PRE class="code">// Call interrupt chain to see if any installed ISRs handle this interrupt
+nSysIntr = NKCallIntChain(nIRQ);
+
+// IRQ not claimed by installed ISR; translate into SYSINTR
+if (nSysIntr == SYSINTR_CHAIN) {
+    nSysIntr = OEMTranslateIrq(nIRQ);
+}
+ 
+// If we have found a valid interrupt, disable it and return SYSINTR
+if (nSysIntr != -1) {
+    OEMInterruptDisable(nSysIntr);
+    return nSysIntr;
+} else {
+    return SYSINTR_NOP;
+}</PRE>
+</li>
+
+	<LI>Update Platform.reg and Platform.bib.
+<P>The <B>MemBase</B>, <B>MemLen</B>, <B>IoBase</B> and <B>IoLen</B> values under the <B>PCI</B> key indicate the PCI bus windows used by the system. These are logical, physical, PCI bus-relative addresses. These addresses are not translated. 
+
+<P>Add PCIbus.dll to Platform.bib, and add the following to Platform.reg. 
+
+<P>The values for <B>MemBase</B>, <B>MemLen</B>, <B>IoBase</B>, and <B>IoLen</B> are sample values and are not expected to work with every hardware platform. 
+
+<P>When <B>NoConfig</B> is set to 1, the <B>MemBase</B>, <B>MemLen</B>, <B>IoBase</B>, and <B>IoLen</B> values are not used.
+
+<PRE class="code"><code class="ce">[HKEY_LOCAL_MACHINE\Drivers\BuiltIn\PCI]
+    "Dll"="PCIbus.dll"
+    "Order"=dword:20
+    "Flags"=dword:1
+    "NoConfig"=dword:0
+    "MemBase"=dword:40000000
+    "MemLen"=dword:20000000
+    "IoBase"=dword:00800000
+    "IoLen"=dword:00800000</code></PRE>
+</li>
+</OL>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50conpcibusdriver.htm">PCI Bus Driver</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

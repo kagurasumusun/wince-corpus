@@ -1,0 +1,123 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>OEMRequestSysIntr</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="OEMRequestSysIntr"/>
+<MSHelp:RLTitle Title="OEMRequestSysIntr"/>
+<MSHelp:Keyword Index="K" Term="OEMRequestSysIntr"/>
+<MSHelp:Keyword Index="A" Term="wce50lrfOEMRequestSysIntr"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Hardware"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="True"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="apiref"/>
+<MSHelp:Attr Name="Filename" Value="oal_functions3.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="False"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+<MSHelp:Attr Name="APIName" Value="OEMRequestSysIntr"/>
+<MSHelp:Attr Name="APIType" Value="IDLDef"/>
+<MSHelp:Attr Name="APILocation" Value="Platform OAL"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_3010261">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50lrfoemrequestsysintr"></A>OEMRequestSysIntr</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>This function implements IOCTL_HAL_TRANSLATE_IRQ and IOCTL_HAL_REQUEST_SYSINTR in the <A HREF="wce50lrfoemiocontrol.htm">OEMIoControl</A> function.</P>
+
+<PRE class="syntax"><B>DWORD OEMRequestSysIntr(</B>
+  <B>DWORD </B><I>Irq</I>
+<B>);</B></PRE>
+
+<H4 class="dtH4">Parameters</H4>
+
+<DL>
+<DT><I>Irq</I></DT>
+
+<DD>[in] IRQ within the allowed IRQ range.</dd>
+</DL>
+
+<H4 class="dtH4">Return Values</H4>
+
+<P>The return value depends on the condition associated with the IRQ passed to this function. </P>
+
+<P>The following table shows the return values for this function.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=50%>IRQ condition</TH>
+<TH width=50%>Return value</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>IRQ not mapped.</TD>
+<TD width=50%>Next available new SYSINTR mapping is created and that SYSINTR is returned.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>IRQ mapped and not shareable.</TD>
+<TD width=50%>Returns the SYSINTR that is mapped.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>IRQ mapped and shareable.</TD>
+<TD width=50%>New SYSINTR mapping is created and the next available SYSINTR is used.</TD>
+</TR>
+</table></div>
+
+<H4 class="dtH4">Remarks</H4>
+
+<P>The <A HREF="wce50lrfoeminit.htm">OEMInit</A> routine tries to map the IRQ and SYSINTR tables for static mapping on built-in devices when their drivers read their SYSINTR values from the registry. </P>
+
+<P>The OAL must also be responsible for determining which interrupts are shareable &#0151; typically, each of the four PCI interrupts &#0151; and which interrupts are not shareable.</P>
+
+<P>In general, a device driver should never request a SYSINTR. If it must, a device driver should never request a new SYSINTR more than once. </P>
+
+<P>A PCI device should read its SYSINTR from the registry because the PCI bus driver has already requested it. </P>
+
+<P>Most legacy drivers request a new SYSINTR that is different from the one the PCI bus requests. This works, if installable ISRs are used.</P>
+
+<P>Be sure the Ethernet debugging adapter <B>Init</B> routine calls <B>OEMRequestSysIntr</B>. </P>
+
+<H4 class="dtH4">Requirements</H4>
+
+<P><B>OS Versions:</B> Windows CE .NET 4.0 and later.<BR>
+<B>Header:</B> Oalintr.h.<BR>
+<B>Link Library:</B> Platform OAL.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50lrfoemethinit.htm">OEMEthInit</A> | <A HREF="wce50lrfoeminit.htm">OEMInit</A> | <A HREF="wce50lrfoemiocontrol.htm">OEMIoControl</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

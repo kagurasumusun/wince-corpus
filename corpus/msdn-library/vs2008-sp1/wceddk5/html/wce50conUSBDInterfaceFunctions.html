@@ -1,0 +1,66 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>USB Driver Interface Functions</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="USB Driver Interface Functions"/>
+<MSHelp:RLTitle Title="USB Driver Interface Functions"/>
+<MSHelp:Keyword Index="A" Term="wce50conUSBDInterfaceFunctions"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Driver"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="False"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="usbhost_guide.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="False"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+<MSHelp:Attr Name="PBFeature" Value="USBHostDriver"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_3019340">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50conusbdinterfacefunctions"></A>USB Driver Interface Functions</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>USB device drivers interact with the peripherals that they control by using the USB driver interface functions. These functions, which are provided by the USB driver module, constitute the core of a USB device driver's functionality. There are several categories of USB driver interface functions, each related to a different aspect of interacting with a USB device, including transfer, pipe, frame, and configuration functions, as well as functions for performing other miscellaneous tasks.</P>
+
+<P>Transfer functions are the most important category because they handle sending data to and receiving data from a USB device. There are four basic types of transfer: control, bulk, interrupt, and isochronous. There are several special transfer functions that provide common types of control transfer, such as device configuration and setup requests. All transfer functions have an optional callback parameter. If a callback function is provided, the transfer functions return immediately, or asynchronously, without waiting for the transfer request to complete. When the transfer request finishes, the USB driver module invokes the function pointed to by the callback parameter. Additionally, a USB device driver can use the USB_NO_WAIT flag to cause the transfer functions to return asynchronously, even if no callback is specified. USB device drivers typically do this in situations when they queue several requests to the device and wait for only the last one to finish. In such cases, the device driver is still responsible for closing all transfer handles. If the USB device driver provides no callback function and does not use the USB_NO_WAIT flag, the transfer function blocks until the transfer is complete. If a transfer request fails, possibly even before the transfer is issued, then the transfer function will return FALSE immediately and will not invoke any callback functions.</P>
+
+<P>The USB driver module calls the callback function in a context that might block other USB operations. These callback functions should perform very minimal processing, preferably just setting some state variables and signaling an event so that any substantial post-processing can be handled by another thread; such callback functions cannot call any USB driver interface functions. In particular, callback functions that handle notifications from <A HREF="wce50lrfaborttransfer.htm">AbortTransfer</A> must not call the <A HREF="wce50lrfclosetransfer.htm">CloseTransferHandle</A> function. See the HID sample driver for examples of using callback functions.</P>
+
+<P>HCD implementations generally have an internal contiguous buffer of memory, which is used as a temporary staging location for data during transfers. Copying data into and out of this buffer might impose an unacceptable limit on the performance of a USB device driver. In such cases, the driver might pass an optional physical memory address that the USB system uses directly for data transfers. A driver-specific buffer used in this way must be contiguous within 4 KB segments and must not be accessed by the USB device driver during transfer operations. </P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50grfusbdriverreference.htm">USB Host Controller Driver Reference</A> | <A HREF="wce50grfusbhostdriverreference.htm">USB Host Driver Reference</A> | <A HREF="wce50conusbdriverarchitecture.htm">USB Host Controller Driver Architecture</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

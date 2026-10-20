@@ -1,0 +1,290 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Implementing the OEMPlatformInit Function</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Implementing the OEMPlatformInit Function"/>
+<MSHelp:RLTitle Title="Implementing the OEMPlatformInit Function"/>
+<MSHelp:Keyword Index="A" Term="wce50tskImplementingtheOEMPlatformInitFunction"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Hardware"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="True"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbTask"/>
+<MSHelp:Attr Name="Filename" Value="howto_developing_a_bootloader.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="True"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_3010321">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50tskimplementingtheoemplatforminitfunction"></A>Implementing the OEMPlatformInit Function</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>After you initialize the CPU and core logic in the boot loader development process, you can focus on initializing board-level hardware by implementing the <A HREF="wce50lrfoemplatforminit.htm">OEMPlatformInit</A> function. </P>
+
+<P>The <B>OEMPlatformInit</B> function initializes board-level hardware when necessary so that code added later can download over the Ethernet controller. This function is highly hardware-platform dependent.</P>
+
+<P>The following list shows the tasks that the <B>OEMPlatformInit</B> function needs to perform:
+
+<UL type="disc">
+	<LI>Initialize the real-time clock (RTC) or any other timekeeping device used by the <A HREF="wce50lrfoemethgetsecs.htm">OEMEthGetSecs</A> function. For this task, a second resolution is acceptable.</li>
+
+	<LI>Initialize flash memory, or a flash memory controller in the case of <B>NAND</B> flash memory.</li>
+
+	<LI>If the network device resides on a PCI bus, initialize the host PCI bridge, enumerate the buses to locate the network controller to be used for downloads, and only configure the PCI hardware required to enable the network controller to operate, that is, the network controller itself and any intermediate bridge logic.
+<P>The PCI bus driver should configure the remainder of the PCI bus under the OS. For more information about the PCI bus driver, see <MSHelp:link keywords="wce50conPCIBusDriver" TABINDEX="0">PCI Bus Driver</MSHelp:link>.
+</li>
+
+	<LI>If the network device resides on a PCMCIA bus, initialize the PCMCIA bridge or controller.</li>
+
+	<LI>Initialize the network controller to be used for downloading the boot loader image from the host machine. 
+<P>Microsoft provides a number of static libraries for various network controllers that can be used to initialize and communicate with the controller. 
+
+<P>If the hardware platform has a built-in network controller, that is, one soldered to the motherboard, then <B>OEMPlatformInit</B> can be simplified to assume that one controller will be used. 
+
+<P>If the hardware platform supports expansion buses, for example, PCMCIA or PCI, the implementation for <B>OEMPlatformInit</B> may need to allow for a variety of network controllers to be plugged in. 
+
+<P>Because the Ethernet controller libraries export a common interface, you can use function pointers to select among a number of controller libraries for the particular hardware not being used. You can use these function pointers throughout the boot loader in place of the actual network controller library call.
+
+<P>The following code example shows how you can use function pointers:
+
+<PRE class="code">// Function pointers to the support library functions of the currently 
+// installed debug Ethernet controller.
+//
+PFN_EDBG_INIT             pfnEDbgInit;
+PFN_EDBG_INIT_DMABUFFER   pfnEDbgInitDMABuffer;
+PFN_EDBG_GET_FRAME        pfnEDbgGetFrame;
+PFN_EDBG_SEND_FRAME       pfnEDbgSendFrame;
+
+...
+    while(!bFoundCard) {
+        // RNDIS has its own PCI scan routine.
+        // 
+        dwAddress =pBootArgs-&gt;dwEdbgBaseAddr;
+        cIrq = pBootArgs-&gt;ucEdbgIRQ;
+        cAdaptType=pBootArgs-&gt;ucEdbgAdapterType;
+        if (!SelectPCINetCard(&amp;dwAddress,&amp;cIrq,&amp;cAdaptType)) { // Cannot found a card match
+            break;
+        }
+        
+        // Set up EDBG driver callbacks based on Ethernet controller type.
+        //
+        bFoundCard=TRUE;
+        switch (cAdaptType)
+        {
+        case EDBG_ADAPTER_NE2000:
+            pfnEDbgInit           = NE2000Init;
+            pfnEDbgInitDMABuffer  = NULL;
+            pfnEDbgGetFrame       = NE2000GetFrame;       
+            pfnEDbgSendFrame      = NE2000SendFrame;      
+            break;
+            
+        case EDBG_ADAPTER_DP83815:
+            pfnEDbgInit           = DP83815Init;
+            pfnEDbgInitDMABuffer  = DP83815InitDMABuffer;
+            pfnEDbgGetFrame       = DP83815GetFrame;
+            pfnEDbgSendFrame      = DP83815SendFrame;
+            break;
+            
+        case EDBG_ADAPTER_RTL8139:
+            pfnEDbgInit           = RTL8139Init;
+            pfnEDbgInitDMABuffer  = RTL8139InitDMABuffer;
+            pfnEDbgGetFrame       = RTL8139GetFrame;       
+            pfnEDbgSendFrame      = RTL8139SendFrame;      
+            break;
+            
+        case EDBG_ADAPTER_3C90X:
+            pfnEDbgInit           = D3C90XInit;
+            pfnEDbgInitDMABuffer  = D3C90XInitDMABuffer;
+            pfnEDbgGetFrame       = D3C90XGetFrame;       
+            pfnEDbgSendFrame      = D3C90XSendFrame;      
+            break;
+            
+        case EDBG_USB_RNDIS:
+            pfnEDbgInit           = HostMiniInit;
+            pfnEDbgInitDMABuffer  = NULL;
+            pfnEDbgGetFrame       = RndisEDbgGetFrame;
+            pfnEDbgSendFrame      = RndisEDbgSendFrame;
+            dwAddress=0; // This forces RNDIS to scan the PCI bus.
+            break ;
+            
+        default:
+            UnsportedNicCardType(cAdaptType);
+            EdbgOutputDebugString("vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv\r\n");
+            EdbgOutputDebugString("-------------------------------------------------\r\n");
+            EdbgOutputDebugString(" ERROR: Unsupported Ethernet adapter type (%u).\r\n", pBootArgs-&gt;ucEdbgAdapterType);
+            EdbgOutputDebugString("-------------------------------------------------\r\n");
+            EdbgOutputDebugString("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\r\n");
+            bFoundCard=FALSE;
+            break;
+        }
+    };
+    if (bFoundCard) {
+         pBootArgs-&gt;dwEdbgBaseAddr=dwAddress;
+         pBootArgs-&gt;ucEdbgIRQ=cIrq;
+         pBootArgs-&gt;ucEdbgAdapterType=cAdaptType;
+    }
+    else 
+    if (pBootArgs-&gt;dwEdbgBaseAddr &amp;&amp; pBootArgs-&gt;ucEdbgIRQ) {
+        pfnEDbgInit           = NE2000Init;
+        pfnEDbgInitDMABuffer  = NULL;
+        pfnEDbgGetFrame       = NE2000GetFrame;       
+        pfnEDbgSendFrame      = NE2000SendFrame;      
+        bFoundCard=TRUE;
+        // Default to ISA or configure NE2000 Card.
+    }
+    else {
+        EdbgOutputDebugString("vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv\r\n");
+        EdbgOutputDebugString("-------------------------------------------------\r\n");
+        EdbgOutputDebugString(" ERROR: Unsupported Ethernet adapter type (%u).\r\n", pBootArgs-&gt;ucEdbgAdapterType);
+        EdbgOutputDebugString("-------------------------------------------------\r\n");
+        EdbgOutputDebugString("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\r\n");
+        SpinForever();
+    }
+    // Initialize NIC DMA buffer, if required.
+    //
+    if (pfnEDbgInitDMABuffer)
+    {
+        if (!pfnEDbgInitDMABuffer(ETHDMA_BUFFER_BASE, ETHDMA_BUFFER_SIZE))
+        {
+            EdbgOutputDebugString("ERROR: Failed to initialize Ethernet controller DMA buffer.\r\n");
+            return FALSE;
+        }
+    }
+
+    // Call driver-specific initialization.
+    //
+    if (!pfnEDbgInit( (BYTE *) pBootArgs-&gt;dwEdbgBaseAddr, 1, MyAddr.wMAC)) {
+        EdbgOutputDebugString("vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv\r\n");
+        EdbgOutputDebugString("---------------------------------------------\r\n");
+        EdbgOutputDebugString(" Failed to initialize Ethernet board!\r\n");
+        EdbgOutputDebugString(" Please check that the Ethernet card is\r\n");
+        EdbgOutputDebugString(" properly installed and configured.\r\n");
+        EdbgOutputDebugString("---------------------------------------------\r\n");
+        EdbgOutputDebugString("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\r\n");
+        return FALSE;
+    }
+...</PRE>
+</li>
+
+	<LI>Initialize the boot arguments, boot args, area of the memory and then populate the region with information that will be used by the OS. 
+<P>This shared memory buffer will be updated throughout the boot loader to carry information such as the network device used for download, including base address, interrupt, IP address, subnet mask, and MAC address, and other system or user settings.
+</li>
+</UL>
+
+<P class="labelproc"><B>To implement the OEMPlatformInit function</B>
+
+<UL type="disc">
+	<LI>Edit the file Main.c by adding the code necessary to fully implement the stubbed version of the <B>OEMPlatformInit</B> function in Main.c.
+<P>The following code example shows the implementation of the <B>OEMPlatformInit</B> function for the hardware platform used in this boot loader development example.
+
+<PRE class="code">BOOL OEMPlatformInit(void)
+{
+    BOOL                    fRet            = FALSE;
+    BOOT_ARGS              *pBootArgs;                  // OEM-defined
+    ETH_HARDWARE_SETTINGS  *pEdbgSettings;              // OEM-defined
+    EDBG_ADDR              *pMyAddr;
+
+
+    EdbgOutputDebugString("Microsoft Windows CE Ethernet Bootloader %d.%d for Platform Example (%s %s)\n\n",
+                          EBOOT_VERSION_MAJOR,EBOOT_VERSION_MINOR, __DATE__, __TIME__);
+    
+
+    //------------------------------------------------------------------
+    // Initialize the arguments passed from boot loader to kernel.
+    // At a minimum, this will include the debug ethernet settings (which 
+    // are loaded from flash, specified by the user, and/or discovered at 
+    // runtime).
+    //
+    // The boot args are part of the driver globals region of RAM.  
+    // This region is reserved in the .bib file.
+    //------------------------------------------------------------------
+
+    pBootArgs = (BOOT_ARGS*)BOOT_ARGS_PHYSICAL_MEMORY_START;
+    memset(pBootArgs, 0, sizeof(BOOT_ARGS));
+
+    pBootArgs-&gt;dwSig            = BOOTARG_SIG;
+    pBootArgs-&gt;dwLen            = sizeof(BOOT_ARGS);
+    pBootArgs-&gt;dwEdbgDebugZone  = EdbgDebugZone;
+
+
+    //------------------------------------------------------------------
+    // Allow user to interrupt the loader to alter settings.
+    //
+    // After a few seconds WaitForKeyPress should return FALSE,
+    // letting the loader continue unattended.
+    //------------------------------------------------------------------
+    
+    if (WaitForKeyPress())
+    {
+        //
+        // Using the debug serial functions you implemented,
+        // display a configuration menu to the user.
+        // Let the user toggle DHCP, set a static IP address, and so on.
+        //
+        LoaderMainMenu();     
+    }
+
+
+    //------------------------------------------------------------------
+    // Initialize the ethernet controller, save configuration in 
+    // boot args for kernel.
+    //------------------------------------------------------------------
+    
+    pEdbgSettings = &amp;pBootArgs-&gt;Edbg;
+    fRet          = InitEthernet(pEdbgSettings);
+
+    if (!fRet) {
+        EdbgOutputDebugString("ERROR: Ethernet initialization failed\r\n");
+
+        SpinForever();
+
+    }
+    
+
+    pMyAddr = &amp;pEdbgSettings-&gt;Adapter.Addr;
+    EdbgOutputDebugString("INFO: Debug Ethernet MAC Address: %B:%B:%B:%B:%B:%B\r\n",
+                          pMyAddr-&gt;wMAC[0] &amp; 0x00FF, pMyAddr-&gt;wMAC[0] &gt;&gt; 8,
+                          pMyAddr-&gt;wMAC[1] &amp; 0x00FF, pMyAddr-&gt;wMAC[1] &gt;&gt; 8,
+                          pMyAddr-&gt;wMAC[2] &amp; 0x00FF, pMyAddr-&gt;wMAC[2] &gt;&gt; 8);
+
+    return(TRUE);
+}</PRE>
+</li>
+</UL>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50conebootcodelibrary.htm">Eboot Code Library</A> | <A HREF="wce50howhowtodevelopabootloader.htm">How to Develop a Boot Loader</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

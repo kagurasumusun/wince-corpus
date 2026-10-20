@@ -1,0 +1,94 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Extending a Display Driver with the DDGPE Classes</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Extending a Display Driver with the DDGPE Classes"/>
+<MSHelp:RLTitle Title="Extending a Display Driver with the DDGPE Classes"/>
+<MSHelp:Keyword Index="A" Term="wce50conDisplayDriverExtensionUsingDDGPEClasses"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Driver"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="False"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbTask"/>
+<MSHelp:Attr Name="Filename" Value="ddraw_guide.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="False"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+<MSHelp:Attr Name="PBFeature" Value="DirectDrawDriver"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_3017623">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50condisplaydriverextensionusingddgpeclasses"></A>Extending a Display Driver with the DDGPE Classes</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>This topic describes the steps required to extend your display driver using the DirectDraw Graphics Primitive Engine (DDGPE) C++ classes. The DDGPE C++ classes extend the functionality of GPE to support the inclusion of a DirectDraw hardware abstraction layer (DDHAL). To add this functionality, you will need to make some minor changes to your source code.</P>
+
+<P>Before you begin, you need to know the location of the following:
+
+<UL type="disc">
+	<LI>The build file containing information to link your device driver to Gpe.lib, usually called sources.</li>
+
+	<LI>The header file containing your device-specific declaration of a GPE-derived class.</li>
+
+	<LI>The source code file containing the constructor of the device-specific derivation of the <B>GPE</B> class, along with any other files that include the Gpe.h header file.</li>
+
+	<LI>Any header files containing the device-specific derivation of the <A HREF="wce50lrfddgpesurfclass.htm">DDGPESurf Class</A>.</li>
+
+	<LI>Any source code files referencing the <B>GPESurf</B> class directly, for example, constructors for any derived classes.</li>
+</UL>
+
+<P class="labelproc"><B>To extend a display driver with the DDGPE classes</B>
+
+<OL type="1">
+	<LI>Place Ddgpe.lib in the appropriate library directory path, and put Ddgpe.h in the appropriate header directory path.
+<P>Make the changes in your build file to link to Ddgpe.lib, in addition to Gpe.lib, which should already exist. Depending on your build environment, you may need to add Ddgpe.lib as one of your <B>SOURCELIB</B> entries, in order for <A HREF="wce50lrfhalinit.htm">HALInit</A> to be exported properly by your linker.
+</li>
+
+	<LI>Change the header file defining your device-specific class to derive directly from DDGPE instead of from GPE.
+<P>Make any necessary changes to your constructors or other functions to accommodate this change of base class. Change the files that include Gpe.h to include Gdgpe.h.
+</li>
+
+	<LI>Change any header files deriving from the <B>GPESurf</B> class, these may or may not be present in your display driver, to derive from <B>DDGPESurf</B>.
+<P>Modify your source code to accommodate this change of base class. You should be sure that your code always refers to <B>DDGPESurf</B> where it would normally refer to <B>GPESurf</B>.
+</li>
+
+	<LI>Recompile your display driver and test it to be sure that it still works properly.
+<P>When you have verified that it continues to work properly, continue to the next topic, <A HREF="wce50conddhalfunctionalityimplementation.htm">DDHAL Functionality Implementation</A>.
+</li>
+</OL>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50condirectdrawdisplaydrivercreation.htm">DirectDraw Display Driver Creation</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

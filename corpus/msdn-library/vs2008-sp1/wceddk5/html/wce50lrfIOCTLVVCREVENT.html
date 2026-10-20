@@ -1,0 +1,115 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>IOCTL_VVCR_EVENT</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="IOCTL_VVCR_EVENT"/>
+<MSHelp:RLTitle Title="IOCTL_VVCR_EVENT"/>
+<MSHelp:Keyword Index="K" Term="IOCTL_VVCR_EVENT"/>
+<MSHelp:Keyword Index="A" Term="wce50lrfIOCTLVVCREVENT"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Driver"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="False"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="apiref"/>
+<MSHelp:Attr Name="Filename" Value="1394_vvcr_reference.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="False"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+<MSHelp:Attr Name="APIName" Value="IOCTL_VVCR_EVENT"/>
+<MSHelp:Attr Name="PBFeature" Value="1394Driver"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_3016982">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50lrfioctlvvcrevent"></A>IOCTL_VVCR_EVENT</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>This IOCTL permits the caller to receive notifications from the virtual VCR driver about events that have occurred.</P>
+
+<H4 class="dtH4">Parameters</H4>
+
+<DL>
+<DT><I>hDevice</I></DT>
+
+<DD>[in] Handle to the target object. To obtain a device handle, call the <MSHelp:link keywords="wce50lrfCreateFile" TABINDEX="0">CreateFile</MSHelp:link> function with a name obtained dynamically from the <B>SetupDiEnumDeviceInterfaces</B> function. </dd>
+
+<DT><I>dwIoControlCode</I></DT>
+
+<DD>[in] Target operation and the type of device on which to perform it. Set to IOCTL_VVCR_EVENT.</dd>
+
+<DT><I>lpInBuffer</I></DT>
+
+<DD>[in] Initialized <A HREF="wce50lrfvvcreventrequest.htm">VVCR_Event_Request</A> structure. The <B>vve_Flags</B> member must be pre-initialized.</dd>
+
+<DT><I>BufferSize</I></DT>
+
+<DD>[in] Size of the <B>VVCR_Event_Request</B> structure. Set to <B>sizeof(VVCR_Event_Request)</B>.</dd>
+
+<DT><I>lpOutBuffer</I></DT>
+
+<DD>[out] Pointer to a <A HREF="wce50lrfvvcreventresponse.htm">VVCR_Event_Response</A> structure.</dd>
+
+<DT><I>nOutBufferSize</I></DT>
+
+<DD>[out] This field should be pre-initialized with the maximum size of the <I>lpOutBuffer</I> parameter, which should be <B>sizeof(VVCR_Event_Response)</B>.</dd>
+
+<DT><I>lpBytesReturned</I></DT>
+
+<DD>[out] Pointer to a <B>DWORD</B> that receives the actual count of bytes returned by the function in the output buffer. </dd>
+
+<DT><I>lpOverlapped</I></DT>
+
+<DD>[out] If not used, NULL. Otherwise, this should point to a completely filled out <B>OVERLAPPED</B> structure that contains a valid event. The event is signaled when the I/O operation is complete. </dd>
+</DL>
+
+<H4 class="dtH4">Return Values</H4>
+
+<P>If the operation succeeds, the <MSHelp:link keywords="wce50lrfDeviceIoControl" TABINDEX="0">DeviceIoControl</MSHelp:link> function returns a non-zero value. If the operation fails, <B>DeviceIoControl</B> returns zero. To obtain extended error information, call the <MSHelp:link keywords="wce50lrfGetLastError" TABINDEX="0">GetLastError</MSHelp:link> function. </P>
+
+<H4 class="dtH4">Remarks</H4>
+
+<P>This command is for notifications from the virtual VCR driver to the application. The response structure is created with a set of response structures containing arguments, one for each VVCR_EVENT type defined. </P>
+
+<P>This command is to be issued to the virtual VCR driver, and the driver completes it when the driver has information to return. For many of the return possibilities, the driver is responsible for taking action and notifying the virtual VCR driver of the result of the action by calling <A HREF="wce50lrfioctlvvcrcomplete.htm">IOCTL_VVCR_COMPLETE</A>. If the application does not complete its request in time, the virtual VCR driver will automatically send a REJECT message back to the original sender. </P>
+
+<P>The <A HREF="wce50lrfvvcreventtype.htm">VVCR_EVENT_Type</A> enumeration represents AV/C requests that have been sent to the virtual VCR driver and that require action by the application for completion. VVCR_EVENT_PlugStateChange does not require action by the application.</P>
+
+<H4 class="dtH4">Requirements</H4>
+
+<P><B>OS Versions:</B> Windows CE .NET 4.0 and later.<BR>
+<B>Header:</B> Avc_vvcr.h.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><MSHelp:link keywords="wce50lrfCreateFile" TABINDEX="0">CreateFile</MSHelp:link> | <MSHelp:link keywords="wce50lrfDeviceIoControl" TABINDEX="0">DeviceIoControl</MSHelp:link> | <A HREF="wce50lrfioctlvvcrcomplete.htm">IOCTL_VVCR_COMPLETE</A> | <A HREF="wce50lrfvvcreventrequest.htm">VVCR_Event_Request</A> | <A HREF="wce50lrfvvcreventresponse.htm">VVCR_Event_Response</A> | <A HREF="wce50lrfvvcreventtype.htm">VVCR_EVENT_Type</A> </P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

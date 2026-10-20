@@ -1,0 +1,76 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Legacy PCMCIA Driver Support</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Legacy PCMCIA Driver Support"/>
+<MSHelp:RLTitle Title="Legacy PCMCIA Driver Support"/>
+<MSHelp:Keyword Index="A" Term="wce50oriPCMCIADeprecatedDriverSupport"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Driver"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="False"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbOrient"/>
+<MSHelp:Attr Name="Filename" Value="pccardnew.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="False"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+<MSHelp:Attr Name="PBFeature" Value="PCCardDriver"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_1035181">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50oripcmciadeprecateddriversupport"></A>Legacy PCMCIA Driver Support</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>The PC Card host stack in Microsoft&reg; Windows&reg; CE 5.0 supports PCMCIA drivers developed prior to Windows CE 5.0. The PCMCIA legacy compatibility layer provides support for PCMCIA card services and converts the PCMCIA card service bus-agnostic interface that is provided by the PC Card bus driver. </P>
+
+<BLOCKQUOTE class="dtBlock">
+<b class="le">Note</b>&nbsp;&nbsp;&nbsp;A legacy PCMCIA client driver is one that was created prior to Windows CE 5.0 that supports only 16-bit PCMCIA cards. A PC Card driver is one that was created in Windows CE 5.0 that supports both 16 and 32-bit PCMCIA cards and was written using the bus-agnostic driver model. For more information, see <A HREF="wce50oripccardclientdrivers.htm">PC Card Bus-Agnostic Client Drivers</A>.</BLOCKQUOTE>
+
+<P>Existing PCMCIA client drivers will continue to function correctly without modifications. However, Microsoft recommends that you convert legacy PCMCIA drivers to bus-agnostic drivers. For more information, see <A HREF="wce50oripccardservicesdefaultenablerdriver.htm">PC Card Bus Driver</A>.</P>
+
+<P>Legacy PCMCIA cards that do not support the configuration status register (CSR) in their attribute memory can potentially cause a device to quit responding. This can occur when the PC Card reader shares an interrupt with another device or when the sockets of the PC card reader share the same interrupt. In this situation, you should rewrite your driver to use the Windows CE 5.0 driver architecture using the PC CARD template. In the Windows CE 5.0 architecture, a driver is expected to provide its own installable interrupt service handler (ISR).</P>
+
+<P>PC Card client drivers are stream interface drivers that use the PC Card card services library to interact with their PC Card devices. Because the PC Card card services library handles all the details of moving data across the PCMCIA bus, the stream interface drivers for PC Card devices are free to work on device-specific tasks. PC Card client drivers can also interact with the PC Card socket service library, if necessary.</P>
+
+<P>Most PC Card socket functions have a parameter that represents a socket and function pair. A socket and function pair is a combination of one particular PC Card socket and one particular function of a PC Card. Socket and function pairs support multifunction PC Cards and devices with more than one PC Card socket. Your drivers for multifunction cards should register one device file name for each function. Any drivers that you develop for PC Cards should also work with any socket index, because different devices have different numbers of PC Card sockets.</P>
+
+<P>If you develop a generic PC Card driver, which is one that can drive an entire class of PC Cards adhering to a specified operating standard, you need an additional entry point in the dynamic-link library (DLL) for a detection function. The Device Manager uses the detection function when a user inserts an unknown PC Card with no Plug and Play identifier. This function must conform to the <B>PFN_DETECT_ENTRY</B> prototype declared in %_WINCEROOT%\Public\Common\DDK\Inc\DevLoad.h. </P>
+
+<BLOCKQUOTE class="dtBlock">
+<b class="le">Note</b>&nbsp;&nbsp;&nbsp;User-level applications cannot access the PC Card card services library directly. An application that attempts to call the <B>LoadLibrary</B> function encounters errors because of the way the Device Manager manages the PC Card card services library. For applications that must access these functions, use a small, intermediate device driver that provides wrappers around the functions in the library. For more information, see <MSHelp:link keywords="wce50lrfLoadLibrary" TABINDEX="0">LoadLibrary</MSHelp:link>.</BLOCKQUOTE>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50oripccarddrivers.htm">PC Card Drivers</A> | <A HREF="wce50oripccardservicesdefaultenablerdriver.htm">PC Card Bus Driver</A> | <A HREF="wce50orideprecatedpcmciadriverconversiontobusagnosticmodel.htm">Converting a Legacy PCMCIA Driver to a Bus-Agnostic Driver</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

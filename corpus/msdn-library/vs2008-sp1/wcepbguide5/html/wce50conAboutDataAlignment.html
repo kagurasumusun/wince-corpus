@@ -1,0 +1,134 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>About Data Alignment</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="About Data Alignment"/>
+<MSHelp:RLTitle Title="About Data Alignment"/>
+<MSHelp:Keyword Index="A" Term="wce50conAboutDataAlignment"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Guide"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="True"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="comp_data_alignment.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="True"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_1043643">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50conaboutdataalignment"></A>About Data Alignment</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>Alignment is a property of a memory address, expressed as the numeric address modulo a power of 2. For example, the address 0x0001103F modulo 4 is 3; that address is said to be aligned to 4n+3, where 4 indicates the chosen power of 2. The alignment of an address depends on the chosen power of two. The same address modulo 8 is 7.</P>
+
+<P>An address is said to be aligned to X if its alignment is Xn+0.</P>
+
+<P>CPUs execute instructions that operate on data stored in memory, and the data are identified by their addresses in memory. In addition to its address, a single datum also has a size. A datum is called naturally aligned if its address is aligned to its size, and misaligned otherwise. For example, an 8-byte floating-point datum is naturally aligned if the address used to identify it is aligned to 8.</P>
+
+<P>Reading data that is not naturally aligned requires much more hardware complexity. Many CPUs, such as those based on Alpha, IA-64, MIPS, and SuperH architectures, refuse to read misaligned data. When a program requests that one of these CPUs access data that is not aligned, the CPU enters an exception state and notifies the software that it cannot continue. </P>
+
+<P>The behavior of Windows operating systems with regard to accessing misaligned data varies based on the target architecture and version of the software. On the Windows CE platforms ARM, MIPS, and SH, the operating system default is to give the application an exception notification when a misaligned access is requested. For IA-64, Windows NT supports the <B>SetErrorMode</B> API to <I>enable</I> automatic handling of misaligned accesses, but Windows CE does not provide this API. The purpose of this change in behavior for newer operating system versions is to strongly discourage reliance on misaligned memory accesses, which can incur enormous performance losses on targets that do not support them in hardware. </P>
+
+<H3 class="dtH3">Compiler handling of data alignment</H3>
+
+<P>The compiler attempts to allocate data in a way that prevents data misalignment.</P>
+
+<P>For simple data types, the compiler assigns addresses that are multiples of the size in bytes of the data type. Thus, the compiler assigns addresses to variables of type <B>long</B> that are multiples of four, setting the bottom two bits of the address to zero.</P>
+
+<P>In addition, the compiler pads structures in a way that naturally aligns each element of the structure. Consider the structure <B>struct x_ </B>in the following code example:</P>
+
+<PRE class="code">struct x_
+{
+   char a;     // 1 byte
+   int b;      // 4 bytes
+   short c;    // 2 bytes
+   char d;     // 1 byte
+} MyStruct;</PRE>
+
+<P>The compiler pads this structure to enforce alignment naturally. </P>
+
+<P>The following code example shows how the compiler places the padded structure in memory:</P>
+
+<PRE class="code">// Shows the actual memory layout
+struct x_
+{
+   char a;            // 1 byte
+   char _pad0[3];     // padding to put 'b' on 4-byte boundary
+   int b;            // 4 bytes
+   short c;          // 2 bytes
+   char d;           // 1 byte
+   char _pad1[1];    // padding to make sizeof(x_) multiple of 4
+}</PRE>
+
+<P>Both declarations return <B>sizeof(struct x_)</B> as 12 bytes. </P>
+
+<P>The second declaration includes two padding elements:
+
+<UL type="disc">
+	<LI><B>char _pad0[3]</B> to align the <B>int</B> b member on a four-byte boundary</li>
+
+	<LI><B>char _pad1[1]</B> to align the array elements of the structure <B>struct _x bar[3]</B>;</li>
+</UL>
+
+<P>The padding aligns the elements of <B>bar[3] </B>in a way that allows natural access. The following code example shows the <B>bar[3]</B> array layout:</P>
+
+<PRE class="code">adr
+offset   element
+------   -------
+0x0000   char a;         // bar[0]
+0x0001   char pad0[3];
+0x0004   int b;
+0x0008   short c;
+0x000a   char d;
+0x000b   char _pad1[1];
+
+0x000c   char a;         // bar[1]
+0x000d   char _pad0[3];
+0x0010   int b;
+0x0014   short c;
+0x0016   char d;
+0x0017   char _pad1[1];
+
+0x0018   char a;         // bar[2]
+0x0019   char _pad0[3];
+0x001c   int b;
+0x0020   short c;
+0x0022   char d;
+0x0023   char _pad1[1];</PRE>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50conworkingwithpackingstructures.htm">Working with Packing Structures</A> | <A HREF="wce50con__unalignedkeyword.htm">__unaligned Keyword</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

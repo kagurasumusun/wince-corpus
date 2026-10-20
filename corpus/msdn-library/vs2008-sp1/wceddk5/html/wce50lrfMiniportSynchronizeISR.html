@@ -1,0 +1,93 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>MiniportSynchronizeISR</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="MiniportSynchronizeISR"/>
+<MSHelp:RLTitle Title="MiniportSynchronizeISR"/>
+<MSHelp:Keyword Index="K" Term="MiniportSynchronizeISR"/>
+<MSHelp:Keyword Index="A" Term="wce50lrfMiniportSynchronizeISR"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Driver"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="False"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="apiref"/>
+<MSHelp:Attr Name="Filename" Value="ndis_upper_edge_functions.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="False"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+<MSHelp:Attr Name="APIName" Value="MiniportSynchronizeISR"/>
+<MSHelp:Attr Name="PBFeature" Value="NetworkDriver"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_3018966">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50lrfminiportsynchronizeisr"></A>MiniportSynchronizeISR</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P><B>MiniportSynchronizeISR</B> is a required function for NIC driver functions that run at less than DIRQL and share resources with that driver's <A HREF="wce50lrfminiportisr.htm">MiniportISR</A> or <A HREF="wce50lrfminiportdisableinterrupt.htm">MiniportDisableInterrupt</A> function. </P>
+
+<PRE class="syntax"><B>BOOLEAN MiniportSynchronizeISR(</B>
+<B>  PVOID</B> <I>SynchronizeContext</I> 
+<B>);</B></PRE>
+
+<H4 class="dtH4">Parameters</H4>
+
+<DL>
+<DT><I>SynchronizeContext</I></DT>
+
+<DD>[in] Points to a context area supplied when the NIC driver's <B>MiniportXxx</B> or internal function called <A HREF="wce50lrfndismsynchronizewithinterrupt.htm">NdisMSynchronizeWithInterrupt</A>. Usually, this input parameter is a pointer to a set of shared resources at an offset within the NIC-specific <I>MiniportAdapterContext</I> area passed to other Miniport<I>Xxx</I> functions. </dd>
+</DL>
+
+<H4 class="dtH4">Return Values</H4>
+
+<P><B>MiniportSynchronizeISR</B> returns a Boolean with a driver-determined meaning that is propagated to the caller of <B>NdisMSynchronizeWithInterrupt</B>. </P>
+
+<H4 class="dtH4">Remarks</H4>
+
+<P>If any NIC driver function shares resources, such as device registers, with the driver's <B>MiniportISR</B> or <B>MiniportDisableInterrupt</B> function, the driver function that runs, by default, at less than DIRQL cannot access those resources directly. If it attempted to access such shared resources directly, the lower priority function might be pre-empted by execution of <B>MiniportISR</B> or <B>MiniportDisableInterrupt</B>, which could change state out from under the lower priority driver function. </P>
+
+<P>To synchronize access to such shared resources with <B>MiniportISR</B> or <B>MiniportDisableInterrupt</B>, lower priority driver functions must call <B>NdisMSynchronizeWithInterrupt</B> to have the driver's <B>MiniportSynchronizeISR</B> function access those shared resources at DIRQL. Calling <B>NdisMSynchronizeWithInterrupt</B> prevents race conditions and deadlocks in such a NIC driver, particularly in SMP machines.</P>
+
+<P>Any lower priority driver functions that share resources among themselves (but not with any function that runs at DIRQL) should use a spin lock to protect those shared resources. </P>
+
+<P><B>MiniportSynchronizeISR</B> runs at the DIRQL assigned when the driver's <B>MiniportInitialize</B> function called <A HREF="wce50lrfndismregisterinterrupt.htm">NdisMRegisterInterrupt</A>. Like any driver function that runs at DIRQL, <B>MiniportSynchronizeISR</B> should return control as quickly as possible, and it can call only those <B>Ndis</B><I>XXX</I> functions that are safe to call at any IRQL. </P>
+
+<H4 class="dtH4">Requirements</H4>
+
+<P><B>OS Versions:</B> Windows CE .NET 4.0 and later.<BR>
+<B>Header:</B> Externs.h.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50lrfminiportdisableinterrupt.htm">MiniportDisableInterrupt</A> | <A HREF="wce50lrfminiportinitialize.htm">MiniportInitialize</A> | <A HREF="wce50lrfminiportisr.htm">MiniportISR</A> | <A HREF="wce50lrfndisallocatespinlock.htm">NdisAllocateSpinLock</A> | <A HREF="wce50lrfndismregisterinterrupt.htm">NdisMRegisterInterrupt</A> | <A HREF="wce50lrfndismsynchronizewithinterrupt.htm">NdisMSynchronizeWithInterrupt</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

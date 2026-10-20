@@ -1,0 +1,93 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Using Flags with Your Events</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Using Flags with Your Events"/>
+<MSHelp:RLTitle Title="Using Flags with Your Events"/>
+<MSHelp:Keyword Index="A" Term="wce51tskUsingFlagsWithYourEvents"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Debugging"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="True"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbTask"/>
+<MSHelp:Attr Name="Filename" Value="celog_event_tracking_customization.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="True"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_1073140">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce51tskusingflagswithyourevents"></A>Using Flags with Your Events</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>The <MSHelp:link keywords="wce50lrfCeLogData" TABINDEX="0">CeLogData</MSHelp:link> function allows you to specify two values, <I>fFlagged</I> and <I>wFlag</I>, that you can use to attach a small amount of additional information to your events. The <I>fFlagged</I> value indicates whether to attach a flag to the event, and the <I>wFlag</I> parameter contains the flag when <I>fFlagged</I> is TRUE.</P>
+
+<P>The flags are not used by the system; you can set an event flag to any value you like. For example, you can use flags to attach an additional 16-bit value to your data, or use flags to identify the source of a logging call. For example, if you log identical data from two different places in your code, consider using flags to indicate which <B>CeLogData</B> call logged the data.</P>
+
+<P>The following code shows an example of flag usage with <B>CeLogData</B>. The example logs a DWORD value in a CELID_RAW_ULONG event several times, and uses flag values to separate the calls. In this example, there are two <B>CeLogData</B> calls that would be identical if not for the flag.</P>
+
+<PRE class="code"> DWORD dwIndex;
+ DWORD dwValue = 47;
+
+ for (dwIndex = 0; dwIndex &lt; 3; dwIndex++) {
+ // The first call sets the fFlagged parameter to TRUE, and sets wFlag to 1
+    CeLogData(TRUE, CELID_RAW_ULONG, &amp;dwValue, sizeof(DWORD),
+         0, CELZONE_ALWAYSON, 1, TRUE);
+    dwValue += 7;
+ // The second call sets the next fFlagged parameter to TRUE, and sets wFlag to 2
+    CeLogData(TRUE, CELID_RAW_ULONG, &amp;dwValue, sizeof(DWORD),
+         0, CELZONE_ALWAYSON, 2, TRUE);
+ }</PRE>
+
+<P>The Readlog output of this code example shows the flag value in each event header.</P>
+
+<PRE class="code"> 0:00:22.404.387 : (Flag 1) Raw data    1 (ulong)
+        47 = 0x0000002F
+ 0:00:22.404.400 : (Flag 2) Raw data    1 (ulong)
+        54 = 0x00000036
+ 0:00:22.404.410 : (Flag 1) Raw data    1 (ulong)
+        54 = 0x00000036
+ 0:00:22.404.422 : (Flag 2) Raw data    1 (ulong)
+        61 = 0x0000003D
+ 0:00:22.404.435 : (Flag 1) Raw data    1 (ulong)
+        61 = 0x0000003D
+ 0:00:22.404.446 : (Flag 2) Raw data    1 (ulong)
+        68 = 0x00000044</PRE>
+
+<P>Remote Kernel Tracker does not display flag values. To view the flags on your events, you must use the <A HREF="wce51orireadlogviewingtool.htm">Readlog viewing tool</A>. </P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><MSHelp:link keywords="wce50lrfCeLogData" TABINDEX="0">CeLogData</MSHelp:link> | <A HREF="wce51tskloggingeventsusingpre-defineddatatypes.htm">Logging Events Using Pre-Defined Data Types</A> | <A HREF="wce51tskcapturingeventswithcustomdatastructures.htm">Capturing Events with Custom Data Structures</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

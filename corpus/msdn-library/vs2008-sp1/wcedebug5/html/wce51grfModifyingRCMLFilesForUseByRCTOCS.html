@@ -1,0 +1,185 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Modifying RCML files for use by RCTOCS</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Modifying RCML files for use by RCTOCS"/>
+<MSHelp:RLTitle Title="Modifying RCML files for use by RCTOCS"/>
+<MSHelp:Keyword Index="A" Term="wce51grfModifyingRCMLFilesForUseByRCTOCS"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Debugging"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="True"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="UIALDevGuide.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="True"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_1076642">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce51grfmodifyingrcmlfilesforusebyrctocs"></A>Modifying RCML files for use by RCTOCS</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>In order to auto-generate abstraction layer code for your application, you must first mark up the .RCML files that correspond to each dialog in the app. RCML files are used by the build process to lay out UI, so they contain within them the parent dialog and all of its child controls, with required details about each one. IMPORTANT: If you are not the developer for this feature area, please get permission from the dev area owner to change RCML files in the product tree. Careless changes can break the build. Do not remove any tags or attributes that may be present, and do not modify attributes whose names are not on this list.</P>
+
+<P>Boot a current emulator build and, from a build window, launch the desktop tool pspy.</P>
+
+<P>Confirm that your build window's _FLATRELEASEDIR environment variable is set to your currently booted emulator build location and type 'pspy'. Wait for the desktop UI to come up and for the app to connect to the emulator.</P>
+
+<P>Once it is connected, use the mouse inside the emulator window (or navigate through the list view in pspy if you are working on SmartPhone) to select different windows. They will be outlined in the emulator and selected in the desktop app's list view, and details for the at control will be shown. Look for "child ID" in the details view, and match that to the ID attribute in RCML.</P>
+
+<P>Then locate and check out the RCML files for your application.</P>
+
+<P>RCML is XML, and the tool that reads it and converts it to C# code is looking for a specific set of attributes that need to be added to the existing tags.</P>
+
+<P>Change the tags as necessary as specified in the following list of tags and attributes. This list specifies the tags you need to modify, the attributes you need to add to each tag, and an example of each attribute. Attributes are case-sensitive.
+
+<UL type="disc">
+	<LI>&lt;PAGE&gt;</li>
+
+	<LI>APPNAME="appName": This is the name of your app to be appended to your project namespace when the C# code is generated.</li>
+
+	<LI>FRIENDLYNAME="FindReplace": This will be the name of the parent class containing all the child controls. Don't add "Dialog" as part of the text, since that will be appended to your FRIENDLYNAME by the codegen tools.</li>
+
+	<LI>NAMESPACE="Microsoft.MobileDevices.AbstractionLayer.pOffice": This is the parent namespace onto which APPNAME will be appended. Do not put the value inside the APPNAME attribute into your NAMESPACE value. If you have a parent app namespace, like pOffice or pOutlook, this is the right place to add it.</li>
+
+	<LI>PROJECT="PocketPC": Choices are PocketPC and Smartphone.</li>
+
+	<LI>DIRECTORY="\abstractionlayer\&lt;appName&gt;\&lt;sub-appName&gt;\&lt;project&gt;": This is a relative path where the generated files will be copied. It is relative to %_WINCEROOT%\private\qaapps\automation, and should be changed to match your checkin point.</li>
+
+	<LI>CSHELP="The FindReplace dialog": This is a place to put text that will be added to comments in the generated code.</li>
+
+	<LI>PROCESSNAME="yourapp.exe" - (OPTIONAL): This attribute will add a property to the dialog window finder that tells it to match this dialog only if it is owned by the provided process name. This can be helpful if the wrong dialog is being found when you try to initialize a specific UIAL object.</li>
+
+	<LI>SCOPE="private" - (OPTIONAL): This attribute will cause a base and a derived UIAL class to be generated by rctocs. The derived class can safely be hand-edited. Include this attribute if you need to override any of the UIAL defaults. If you don't need to do this, leave this attribute off.</li>
+
+	<LI>BASECLASS="ClassName:(parameterString)" - (OPTIONAL): This attribute specifies that the UIAL class generated for this dialog should be derived from base class "ClassName" and that the constructor should pass "paramaterString" to the base constructor. The base class needs to derive from MobilityToolKit.MobilityDialog.</li>
+
+	<LI>OBSCURED="true" - (OPTIONAL): This attribute will force the .Visible property of the mainFinder object to be set to false. This worked around a bug in the DATK that caused exceptions when a UIAL object is initialized with the .Visible property set to true. This should no longer be necessary.</li>
+
+	<LI>IGNORETEXT="true" - (OPTIONAL): This attribute will prevent rctocs from initializing the .Text property of the mainFinder object. This is useful under circumstances where the main dialog's titlebar text changes at runtime, or the auto-generated IDN value corresponding to the window title is wrong, for whatever reason. NOTE: including this attribute will cause any value inside the IDNTEXT attribute to not be generated.</li>
+
+	<LI>IDNTEXT="YourDialogIdns.mainWindowTitle" - (OPTIONAL): If present, the contents of this attribute will be used as the value of the .Text property of the mainFinder object, in place of an auto-generated IDN value. We recommend that the value you use here is a reference to a member variable contained within the IdnHolder class that belongs to this dialog. An instance of this class is already provided by rctocs, for your convenience, and looks something like this:</li>
+</UL>
+
+<PRE class="code">/// &lt;summary&gt;
+/// IdnHolder object holding all the owner-maintained strings for AlignDialog.
+/// &lt;/summary&gt;
+public readonly AlignDialogIdnHolder AlignDialogIdns = new AlignDialogIdnHolder();</PRE>
+
+<UL type="disc">
+	<LI>&lt;BUTTON&gt;, &lt;CHECKBOX&gt;, &lt;COMBOBOX&gt;, &lt;LABEL&gt;, &lt;LISTBOX&gt;, &lt;SPINNER&gt;, &lt;EDIT&gt; (the following attributes apply to all of these tags)</li>
+
+	<LI>FRIENDLYNAME="ShowFormattingCheckBox": This will be the name of the control in the generated code. You should append the control type to 1 or 2 words describing the control.</li>
+
+	<LI>CSHELP="Check this box to toggle formatting display": This is a place to put text that will be added to comments in the generated code.</li>
+
+	<LI>OBSCURED="true" - (OPTIONAL): This attribute will force the .Visible property of the control's WindowFinder object to be set to false. This worked around a bug in the DATK that caused exceptions when a UIAL object is initialized with the .Visible property set to true. This should no longer be necessary.</li>
+
+	<LI>OPTIONAL="true" - (OPTIONAL): This attribute will prevent the control from being added to the dialog's VerifyAllControls() method. This is useful for controls that are present and visible only under specific circumstances at run-time.</li>
+
+	<LI>MODIFIER="override" - (OPTIONAL): Use this to specify a modifier for the control (override, virtual, public, private, etc.) where public is the default if not specified.</li>
+
+	<LI>IDNTEXT="YourDialogIdns.mainWindowTitle" - (OPTIONAL): If present, the contents of this attribute will be used as the value of the .Text property of the control's WindowFinder object. This is useful under circumstances where identification by control ID alone is insufficient or error-prone. We recommend that the value you use here is a reference to a member variable contained within the IdnHolder class that belongs to this dialog. An instance of this class is already provided by rctocs, for your convenience, and looks something like this:</li>
+</UL>
+
+<PRE class="code">/// &lt;summary&gt;
+/// IdnHolder object holding all the owner-maintained strings for AlignDialog.
+/// &lt;/summary&gt;
+public readonly AlignDialogIdnHolder AlignDialogIdns = new AlignDialogIdnHolder();</PRE>
+
+<P>As you choose friendly names for your controls, you should postfix the DATK Control type to the end of the variable name. For example, if you have a combo box that sets the Type of a search, you could name it SearchTypeComboBox. Or, if you have a textbox that accepts a name you could name it NameTextBox. Here is the list of DATK control names that should be used:
+
+<UL type="disc">
+	<LI>Button</li>
+
+	<LI>CheckBox</li>
+
+	<LI>ColumnHeader</li>
+
+	<LI>ComboBox</li>
+
+	<LI>ContextMenu</li>
+
+	<LI>Control</li>
+
+	<LI>HtmlControl</li>
+
+	<LI>HtmlLink</li>
+
+	<LI>HtmlLinks</li>
+
+	<LI>Label</li>
+
+	<LI>LabelEditControl</li>
+
+	<LI>ListBox</li>
+
+	<LI>ListView</li>
+
+	<LI>ListViewItem</li>
+
+	<LI>MainMenu</li>
+
+	<LI>Menu</li>
+
+	<LI>MenuItem</li>
+
+	<LI>RadioButton</li>
+
+	<LI>SBTextBox</li>
+
+	<LI>SIPFloater</li>
+
+	<LI>SIPWindow</li>
+
+	<LI>SliderControl</li>
+
+	<LI>Softkeys</li>
+
+	<LI>TabControl</li>
+
+	<LI>TabPage</li>
+
+	<LI>TextBox</li>
+
+	<LI>ToolBar</li>
+
+	<LI>ToolBarButton</li>
+
+	<LI>VirtualListView</li>
+</UL>
+
+<P>After your changes have been made, drag each file into Internet Explorer to confirm that it parses correctly. Fix your parsing syntax errors (if any) before checking the files in.</P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

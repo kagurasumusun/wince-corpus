@@ -1,0 +1,130 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>IOCTL_VCR_AVCCMD</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="IOCTL_VCR_AVCCMD"/>
+<MSHelp:RLTitle Title="IOCTL_VCR_AVCCMD"/>
+<MSHelp:Keyword Index="K" Term="IOCTL_VCR_AVCCMD"/>
+<MSHelp:Keyword Index="A" Term="wce50lrfIOCTLVCRAVCCMD"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Driver"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="False"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="apiref"/>
+<MSHelp:Attr Name="Filename" Value="avcvcr_reference.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="False"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+<MSHelp:Attr Name="APIName" Value="IOCTL_VCR_AVCCMD"/>
+<MSHelp:Attr Name="PBFeature" Value="1394Driver"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_3017253">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50lrfioctlvcravccmd"></A>IOCTL_VCR_AVCCMD</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>This IOCTL permits the caller to make AV/C VCR subunit control code requests against the target VCR. Each of these control codes are listed and documented as a separate command under the names AVC_VCR_CMD_<I>XXX</I>.</P>
+
+<PRE class="syntax"><B>BOOL DeviceIoControl(</B>
+  <B>HANDLE </B><I>hDevice</I><B>,</B>
+  <B>DWORD </B><I>dwIoControlCode</I><B>,</B>
+  <B>LPVOID </B><I>lpInBuffer</I><B>,</B>
+  <B>DWORD </B><I>nInBufferSize</I><B>,</B>
+  <B>LPVOID </B><I>lpOutBuffer</I><B>,</B>
+  <B>DWORD </B><I>nOutBufferSize</I><B>,</B>
+  <B>LPDWORD </B><I>lpBytesReturned</I><B>,</B>
+  <B>LPOVERLAPPED </B><I>lpOverlapped</I>
+<B>);</B></PRE>
+
+<H4 class="dtH4">Parameters</H4>
+
+<DL>
+<DT><I>hDevice</I></DT>
+
+<DD>Handle to the target object. To get a device handle, call the <MSHelp:link keywords="wce50lrfCreateFile" TABINDEX="0">CreateFile</MSHelp:link> function with a name obtained dynamically from the <B>SetupDiEnumDeviceInterfaces</B> function. </dd>
+
+<DT><I>dwIoControlCode</I></DT>
+
+<DD>Control code for the operation. This value identifies the target operation and the type of device on which to perform it. For this operation, use <B>IOCTL_VCR_AVCCMD</B>. </dd>
+
+<DT><I>lpInBuffer</I></DT>
+
+<DD>This must be filled in with a properly initialized <A HREF="wce50lrfvcrrequestresponse.htm">VCR_RequestResponse</A> structure. The documentation on each individual command code shows which fields should be pre-initialized in this structure for that command. </dd>
+
+<DT><I>nInBufferSize</I></DT>
+
+<DD>This should be to <B>sizeof(VCR_RequestResponse)</B>. </dd>
+
+<DT><I>lpOutBuffer</I></DT>
+
+<DD>This must point to a <B>VCR_RequestResponse</B> structure, typically the same structure listed previously. When this structure completes the requested command, it will contain the results of the transaction. The documentation for each command code describes which fields will contain data as a result of the command having been processed. </dd>
+
+<DT><I>nOutBufferSize</I></DT>
+
+<DD>This should be set to <B>sizeof(VCR_RequestResponse)</B>. </dd>
+
+<DT><I>lpBytesReturned</I></DT>
+
+<DD>Pointer to a <B>DWORD</B> variable that receives the actual count of bytes returned by the function in the output buffer. </dd>
+
+<DT><I>lpOverlapped</I></DT>
+
+<DD>If not used, NULL. Otherwise, this should point to a completely filled out <B>OVERLAPPED </B>structure that contains a valid event. The event will be signaled when the I/O operation is complete. </dd>
+</DL>
+
+<H4 class="dtH4">Return Values</H4>
+
+<P>If the operation succeeds, <MSHelp:link keywords="wce50lrfDeviceIoControl" TABINDEX="0">DeviceIoControl</MSHelp:link> will return a non-zero value. If the operation fails, <B>DeviceIoControl</B> will return 0. To obtain extended error information, call <MSHelp:link keywords="wce50lrfGetLastError" TABINDEX="0">GetLastError</MSHelp:link>.</P>
+
+<H4 class="dtH4">Remarks</H4>
+
+<P>This IOCTL covers quite a few different variant actions. The communication used to actually control a VCR subunit is a standard protocol documented by the IEEE 1394 Trade Association. This IOCTL provides a wrapper and packetization for a subset of the commands in the VCR subunit standard, the commands that are most likely to be implemented on a consumer product. </P>
+
+<P>Keep in mind that the key processing for each of these commands occurs on the peripheral, not on TVPAK. This means that each brand or model of VCR might provide its own idiosyncrasies, and these should not be attributed to TVPAK.</P>
+
+<P>Out of the consumer-based commands that TVPAK supports sending, only the smallest subset are listed by the VCR subunit standard as mandatory. Most consumer VCRs with IEEE 1394 interfaces support today only the absolute minimum commands necessary, which is typically only those listed as mandatory. Even though TVPAK is capable of sending many commands, the receiving VCR might not be capable of processing them.</P>
+
+<P>The <B>VCR_RequestResponse</B> structure is primarily a union of the details of all of the command parameters and results processed.</P>
+
+<P>The <I>AV/C Digital Interface Command Set VCR Subunit Specification</I> is a useful resource for understanding what a specific command does. However, data described within the document, especially in the topic of range values, might be overridden by this documentation. For example, the VCR subunit driver automatically manages decimal to BCD conversion for many of the supported commands.</P>
+
+<H4 class="dtH4">Requirements</H4>
+
+<P><B>OS Versions:</B> Windows CE .NET 4.0 and later.<BR>
+<B>Header:</B> Avc_vcr.h.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><MSHelp:link keywords="wce50lrfCreateFile" TABINDEX="0">CreateFile</MSHelp:link> | <MSHelp:link keywords="wce50lrfDeviceIoControl" TABINDEX="0">DeviceIoControl</MSHelp:link> | <A HREF="wce50lrfavcvcrcmdanalogaudiooutputmode.htm">AVC_VCR_CMD_ANALOG_AUDIO_OUTPUT_MODE</A> | <A HREF="wce50lrfavcvcrcmdinputsignalmode.htm">AVC_VCR_CMD_INPUT_SIGNAL_MODE</A> | <A HREF="wce50lrfavcvcrcmdloadmedium.htm">AVC_VCR_CMD_LOAD_MEDIUM</A> | <A HREF="wce50lrfavcvcrcmdmediuminfo.htm">AVC_VCR_CMD_MEDIUM_INFO</A> | <A HREF="wce50lrfavcvcrcmdoutputsignalmode.htm">AVC_VCR_CMD_OUTPUT_SIGNAL_MODE</A> | <A HREF="wce50lrfavcvcrcmdplay.htm">AVC_VCR_CMD_PLAY</A> | <A HREF="wce50lrfavcvcrcmdrecordingdate.htm">AVC_VCR_CMD_RECORDING_DATE</A> | <A HREF="wce50lrfavcvcrcmdrecord.htm">AVC_VCR_CMD_RECORD</A> | <A HREF="wce50lrfavcvcrcmdrecordingspeed.htm">AVC_VCR_CMD_RECORDING_SPEED</A> | <A HREF="wce50lrfavcvcrcmdrecordingtime.htm">AVC_VCR_CMD_RECORDING_TIME</A> | <A HREF="wce50lrfavcvcrcmdrelativetimecounter.htm">AVC_VCR_CMD_RELATIVE_TIME_COUNTER</A> | <A HREF="wce50lrfavcvcrcmdtimecode.htm">AVC_VCR_CMD_TIME_CODE</A> | <A HREF="wce50lrfavcvcrcmdtransportstate.htm">AVC_VCR_CMD_TRANSPORT_STATE</A> | <A HREF="wce50lrfavcvcrcmdwind.htm">AVC_VCR_CMD_WIND</A> | <A HREF="wce50lrfvcrrequestresponse.htm">VCR_RequestResponse</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

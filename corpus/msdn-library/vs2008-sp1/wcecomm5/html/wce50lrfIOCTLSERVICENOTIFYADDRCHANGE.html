@@ -1,0 +1,89 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>IOCTL_SERVICE_NOTIFY_ADDR_CHANGE</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="IOCTL_SERVICE_NOTIFY_ADDR_CHANGE"/>
+<MSHelp:RLTitle Title="IOCTL_SERVICE_NOTIFY_ADDR_CHANGE"/>
+<MSHelp:Keyword Index="K" Term="IOCTL_SERVICE_NOTIFY_ADDR_CHANGE"/>
+<MSHelp:Keyword Index="A" Term="wce50lrfIOCTLSERVICENOTIFYADDRCHANGE"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Feature"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="apiref"/>
+<MSHelp:Attr Name="Filename" Value="servdotexe_functions.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="False"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+<MSHelp:Attr Name="APIName" Value="IOCTL_SERVICE_NOTIFY_ADDR_CHANGE"/>
+<MSHelp:Attr Name="PBFeature" Value="SYSGEN_SERVICES"/>
+<MSHelp:Attr Name="PBOnly" Value="False"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_3007681">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50lrfioctlservicenotifyaddrchange"></A>IOCTL_SERVICE_NOTIFY_ADDR_CHANGE</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>This IOCTL is passed as an input parameter along when Services.exe notifies every running service of address changes in the system.</P>
+
+<H4 class="dtH4">Parameters</H4>
+
+<DL>
+<DT><I>pBufIn</I></DT>
+
+<DD>[in] Pointer to a <B>PIP_ADAPTER_ADDRESSES</B> structure containing information on the local addresses for a specific network adapter.</dd>
+</DL>
+
+<H4 class="dtH4">Return Values</H4>
+
+<P>Returns TRUE if successful, FALSE otherwise. To obtain extended error information, call the <MSHelp:link keywords="wce50lrfSetLastError" TABINDEX="0">SetLastError</MSHelp:link> function.</P>
+
+<H4 class="dtH4">Remarks</H4>
+
+<P>When Services.exe initializes, it creates a thread that receives notification about address changes in the system. When an IP address on the system is added or removed, this thread wakes and calls the <A HREF="wce50lrfgetadaptersaddresses.htm">GetAdaptersAddresses</A> function to retrieve the information about the local addresses. It then calls every running service with IOCTL_SERVICE_NOTIFY_ADDR_CHANGE and with the results of <B>GetAdaptersAddresses</B> in the input parameters. </P>
+
+<P>If a service needs to use this information later, it must call <B>GetAdaptersAddresses</B> to retrieve its own copy of this data. The pointer passed to the service during the call to the <A HREF="wce50lrfxxxiocontrol319.htm">xxx_IOControl (Services.exe)</A> function is valid only during the duration of the function call. You must not copy the data to a private buffer using <MSHelp:link keywords="wce50lrfmemcpy" TABINDEX="0">memcpy, wmemcpy</MSHelp:link> because the structure contains internal pointers to memory locations inside the buffer that will not be valid when the call to <B>xxx_IOControl</B> returns.</P>
+
+<P>If a service needs to keep track of network interfaces, it must call <B>GetAdaptersAddresses</B> when it initializes to obtain the current state of the network adapters. Services.exe only generates the IOCTL_SERVICE_NOTIFY_ADDR_CHANGE IOCTL when network adapter information changes, therefore the service must read this information on its own initially. A logical place for the call <B>to GetAdaptersAddresses</B> would be in the service's <A HREF="wce50lrfxxxinit318.htm">xxx_Init (Services.exe)</A> function.</P>
+
+<P>An example of a service that makes use of the network adapter information and IOCTL_NOTIFY_ADDR_CHANGE is the Web Server. The Web Server can be configured to route HTTP requests to different virtual Web sites based on the network adapter the HTTP request arrived on, but it must internally keep track of the system's network adapters in order to route these requests.</P>
+
+<H4 class="dtH4">Requirements</H4>
+
+<P><B>OS Versions:</B> Windows CE .NET 4.1 and later.<BR>
+<B>Header:</B> Service.h.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50lrfxxxiocontrol319.htm">xxx_IOControl (Services.exe)</A> | <A HREF="wce50lrfgetadaptersaddresses.htm">GetAdaptersAddresses</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

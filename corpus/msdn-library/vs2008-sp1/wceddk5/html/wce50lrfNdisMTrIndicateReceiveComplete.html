@@ -1,0 +1,98 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>NdisMTrIndicateReceiveComplete</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="NdisMTrIndicateReceiveComplete"/>
+<MSHelp:RLTitle Title="NdisMTrIndicateReceiveComplete"/>
+<MSHelp:Keyword Index="K" Term="NdisMTrIndicateReceiveComplete"/>
+<MSHelp:Keyword Index="A" Term="wce50lrfNdisMTrIndicateReceiveComplete"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Driver"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="False"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="apiref"/>
+<MSHelp:Attr Name="Filename" Value="ndis_library_functions2.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="False"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+<MSHelp:Attr Name="APIName" Value="NdisMTrIndicateReceiveComplete"/>
+<MSHelp:Attr Name="APIType" Value="DLLExport"/>
+<MSHelp:Attr Name="APILocation" Value="Ndis.dll"/>
+<MSHelp:Attr Name="PBFeature" Value="NetworkDriver"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_3018558">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50lrfndismtrindicatereceivecomplete"></A>NdisMTrIndicateReceiveComplete</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>This function notifies NDIS that a Token Ring receive packet, identified in a preceding call to <A HREF="wce50lrfndismtrindicatereceive.htm">NdisMTrIndicateReceive</A>, has been fully transferred by the NIC so that NDIS can notify the appropriate bound protocol drivers.</P>
+
+<PRE class="syntax"><B>VOID NdisMTrIndicateReceiveComplete(</B>
+<B>  NDIS_HANDLE</B> <I>MiniportAdapterHandle</I>
+<B>);</B></PRE>
+
+<H4 class="dtH4">Parameters</H4>
+
+<DL>
+<DT><I>MiniportAdapterHandle</I></DT>
+
+<DD>[in] Specifies the handle originally input to <B>MiniportInitialize</B>.</dd>
+</DL>
+
+<H4 class="dtH4">Return Values</H4>
+
+<P>None.</P>
+
+<H4 class="dtH4">Remarks</H4>
+
+<P>After any Token Ring receive indication, a miniport eventually must call <B>NdisMTrIndicateReceiveComplete</B> to indicate the end of the transfer operation over the net, even if a particular packet is accepted by no bound protocol.</P>
+
+<P><B>NdisMTrIndicateReceiveComplete</B> both indicates the completion of a transfer operation for a receive and notifies any bound protocol that has already consumed the initial indication that it can begin post-processing the received data.</P>
+
+<P>When a miniport calls <B>NdisMTrIndicateReceiveComplete</B>, NDIS indicates the completion of the receive operation to each such protocol by calling its <A HREF="wce50lrfprotocolreceivecomplete.htm">ProtocolReceiveComplete</A> function.</P>
+
+<P><B>ProtocolReceiveComplete</B> functions need not operate under the severe time constraints of the corresponding <A HREF="wce50lrfprotocolreceive.htm">ProtocolReceive</A> functions. However, another receive indication to the <B>ProtocolReceive</B> function can come in while the <B>ProtocolReceiveComplete</B> function is running.</P>
+
+<P>A miniport need not call <B>NdisMTrIndicateReceiveComplete</B> in one-to-one correspondence with its calls to <B>NdisMTrIndicateReceive</B>. That is, a NIC driver can issue a single receive-complete indication for some number of receive indications, particularly when network traffic is high. For example, when a miniport is continually indicating receives from the same source; it might call <B>NdisMTrIndicateReceiveComplete</B> once for every ten indications. On the other hand, a miniport might call <B>NdisMTrIndicateReceiveComplete</B> once for each indication when network traffic is low so that the driver can regain ownership of the memory it allocated for receives promptly. However, a miniport must call <B>NdisMTrIndicateReceiveComplete</B> at least once per batch of packets indicated from its <A HREF="wce50lrfminiporthandleinterrupt.htm">MiniportHandleInterrupt</A> function.</P>
+
+<H4 class="dtH4">Requirements</H4>
+
+<P><B>OS Versions:</B> Windows CE .NET 4.0 and later.<BR>
+<B>Header:</B> Ndis.h.<BR>
+<B>Link Library:</B> Ndis.dll.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50lrfndismtrindicatereceive.htm">NdisMTrIndicateReceive</A> | <A HREF="wce50lrfprotocolreceivecomplete.htm">ProtocolReceiveComplete</A> | <A HREF="wce50lrfprotocolreceive.htm">ProtocolReceive</A> | <A HREF="wce50lrfminiporthandleinterrupt.htm">MiniportHandleInterrupt</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

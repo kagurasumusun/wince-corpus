@@ -1,0 +1,142 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>ftell</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="ftell"/>
+<MSHelp:RLTitle Title="ftell"/>
+<MSHelp:Keyword Index="K" Term="ftell"/>
+<MSHelp:Keyword Index="A" Term="wce50lrfftell"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Application"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="False"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="Technology" Value="CRT"/>
+<MSHelp:Attr Name="TechnologyVers" Value="kbCRT"/>
+<MSHelp:Attr Name="TopicType" Value="apiref"/>
+<MSHelp:Attr Name="Filename" Value="crt2.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="True"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+<MSHelp:Attr Name="APIName" Value="ftell"/>
+<MSHelp:Attr Name="APIType" Value="DLLExport"/>
+<MSHelp:Attr Name="APILocation" Value="coredll.dll"/>
+<MSHelp:Attr Name="PBFeature" Value="SYSGEN_FULL_CRT"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_3026880">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50lrfftell"></A>ftell</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>Gets the current position of a file pointer.</P>
+
+<PRE class="syntax"><B>long ftell( </B>
+<B>&nbsp;&nbsp;&nbsp;FILE*</B> <I>stream</I> 
+<B>);</B></PRE>
+
+<H4 class="dtH4">Parameters</H4>
+
+<DL>
+<DT><I>stream</I></DT>
+
+<DD>Target <B>FILE</B> structure.</dd>
+</DL>
+
+<H4 class="dtH4">Return Values</H4>
+
+<P><B>ftell</B> returns the current file position. </P>
+
+<P>The value returned by <B>ftell</B> might not reflect the physical byte offset for streams opened in text mode, because text mode causes carriage return&#0150;linefeed translation. </P>
+
+<P>Use <B>ftell</B> with <B>fseek</B> to return to file locations correctly. </P>
+
+<P>On error, <B>ftell</B> returns &#0150;1L. </P>
+
+<P>On devices incapable of seeking (such as terminals and printers), or when stream does not refer to an open file, the return value is undefined.</P>
+
+<H4 class="dtH4">Remarks</H4>
+
+<P>The <B>ftell</B> function gets the current position of the file pointer (if any) associated with stream. The position is expressed as an offset relative to the beginning of the stream.</P>
+
+<P>When a file is opened for appending data, the current file position is determined by the last I/O operation, not by where the next write would occur. For example, if a file is opened for an append and the last operation was a read, the file position is the point where the next read operation would start, not where the next write would start. </P>
+
+<P>When a file is opened for appending, the file position is moved to end of file before any write operation.</P>
+
+<P>If no I/O operation has yet occurred on a file opened for appending, the file position is the beginning of the file.</P>
+
+<P>In text mode, CTRL+Z is interpreted as an end-of-file character on input. </P>
+
+<P>In files opened for reading/writing, <B>fopen</B> and all related routines check for a CTRL+Z at the end of the file and remove it if possible. This is done because using <B>ftell</B> and <B>fseek</B> to move within a file that ends with a CTRL+Z might cause <B>ftell</B> to behave improperly near the end of the file. </P>
+
+<P class="label"><B>Example</B></P>
+
+<PRE class="code">/* FTELL.C: This program opens a file named FTELL.C
+ * for reading and tries to read 100 characters. It
+ * then uses ftell to determine the position of the
+ * file pointer and displays this position.
+ */
+
+#include &lt;stdio.h&gt;
+
+FILE *stream;
+
+void main( void )
+{
+   long position;
+   char list[100];
+   if( (stream = fopen( "ftell.c", "rb" )) != NULL )
+   {
+      /* Move the pointer by reading data: */
+      fread( list, sizeof( char ), 100, stream );
+      /* Get position after read: */
+      position = ftell( stream );
+      printf( "Position after trying to read 100 bytes: %ld\n",
+              position );
+      fclose( stream );
+   }
+}</PRE>
+
+<P class="label"><B>Output</B></P>
+
+<PRE class="code">Position after trying to read 100 bytes: 100</PRE>
+
+<H4 class="dtH4">Requirements</H4>
+
+<P><B>OS Versions: </B>Windows CE 2.0 and later.<BR>
+<B>Header: </B>stdlib.h.<BR>
+<B>Link Library: </B>coredll.dll.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50lrffgetpos.htm">fgetpos</A> | <A HREF="wce50lrffseek.htm">fseek</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

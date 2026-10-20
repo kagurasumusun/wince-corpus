@@ -1,0 +1,158 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>PD_CreatePartition</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="PD_CreatePartition"/>
+<MSHelp:RLTitle Title="PD_CreatePartition"/>
+<MSHelp:Keyword Index="K" Term="PD_CreatePartition"/>
+<MSHelp:Keyword Index="A" Term="wce50lrfPDCreatePartition"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Feature"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="apiref"/>
+<MSHelp:Attr Name="Filename" Value="partitiondrv_reference.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="False"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+<MSHelp:Attr Name="APIName" Value="PD_CreatePartition"/>
+<MSHelp:Attr Name="PBFeature" Value="SYSGEN_STOREMGR"/>
+<MSHelp:Attr Name="PBOnly" Value="True"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_3009802">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50lrfpdcreatepartition"></A>PD_CreatePartition</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>This function creates a partition on the store volume.</P>
+
+<PRE class="syntax"><B>DWORD PD_CreatePartition(</B>
+  <B>DWORD </B><I>dwStoreId</I><B>,</B>
+  <B>LPCTSTR </B><I>szPartName</I><B>,</B>
+  <B>BYTE </B><I>bPartType</I><B>, </B>
+  <B>SECTORNUM </B><I>numSectors</I><B>, </B>
+  <B>BOOL </B><I>bAuto</I>
+<B>);</B></PRE>
+
+<H4 class="dtH4">Parameters</H4>
+
+<DL>
+<DT><I>dwStoreId</I></DT>
+
+<DD>[in] This is returned from a <A HREF="wce50lrfpdopenstore.htm">PD_OpenStore</A> call.</dd>
+
+<DT><I>szPartName</I></DT>
+
+<DD>[in] The name of the new partition to create.</dd>
+
+<DT><I>bPartType</I></DT>
+
+<DD>[in] The partition type or identifier. The byte limitation indicates that a given partition format can only support 256 different partition types. There is not one to one correspondence between this identifier and the types of file systems supported. In actuality the number of file systems is less because multiple partition types might map to the same file system, and some partition types might have no file system associated with them but indicate something specific.
+
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=24%>Partition type</TH>
+<TH width=76%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=24%>PART_UNKNOWN</TD>
+<TD width=76%>Partition type is unknown.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=24%>PART_DOS2_FAT</TD>
+<TD width=76%>Legitimate DOS partition.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=24%>PART_DOS3_FAT</TD>
+<TD width=76%>Legitimate DOS partition.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=24%>PART_DOS4_FAT</TD>
+<TD width=76%>Legitimate DOS partition.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=24%>PART_DOS32</TD>
+<TD width=76%>Legitimate DOS partition (FAT32).</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=24%>PART_DOS32X13</TD>
+<TD width=76%>Same as 0x0B only "use LBA".</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=24%>PART_DOSX13</TD>
+<TD width=76%>Same as 0x06 only "use LBA".</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=24%>PART_DOSX13X</TD>
+<TD width=76%>Same as 0x05 only "use LBA".</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=24%>INVALID</TD>
+<TD width=76%>Partition type is invalid or not used.</TD>
+</TR>
+</table></div>
+
+</dd>
+
+<DT><I>numSectors</I></DT>
+
+<DD>[in] This is a 64-bit number indicating the size of the partition to create. A partition driver is not required to support the full 64 bits.</dd>
+
+<DT><I>bAuto</I></DT>
+
+<DD>[in] When this flag is set, <B>bPartType</B> is ignored and the partition driver is allowed to generate the appropriate partition type for the default file system type that it supports. In the case of FAT, it will select a partition type based on the number of sectors in this partition, FAT12, FAT16 or FAT32.</dd>
+</DL>
+
+<H4 class="dtH4">Return Values</H4>
+
+<P>TRUE if the call was successful, FALSE otherwise.</P>
+
+<H4 class="dtH4">Requirements</H4>
+
+<P><B>OS Versions:</B> Windows CE .NET 4.0 and later.<BR>
+<B>Header:</B> Partdrv.h.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50lrfpdopenstore.htm">PD_OpenStore</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

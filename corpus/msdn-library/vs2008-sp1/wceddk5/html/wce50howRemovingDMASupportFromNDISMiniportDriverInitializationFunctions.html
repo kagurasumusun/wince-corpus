@@ -1,0 +1,181 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Removing DMA Support from the NDIS Miniport Driver Initialization Functions</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Removing DMA Support from the NDIS Miniport Driver Initialization Functions"/>
+<MSHelp:RLTitle Title="Removing DMA Support from the NDIS Miniport Driver Initialization Functions"/>
+<MSHelp:Keyword Index="A" Term="wce50howRemovingDMASupportFromNDISMiniportDriverInitializationFunctions"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Driver"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="False"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbTask"/>
+<MSHelp:Attr Name="Filename" Value="howto_portndisdriver.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="True"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+<MSHelp:Attr Name="PBFeature" Value="NetworkDriver"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_1038191">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50howremovingdmasupportfromndisminiportdriverinitializationfunctions"></A>Removing DMA Support from the NDIS Miniport Driver Initialization Functions</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>Because the Windows CE NDIS implementation does not support DMA, remove DMA support from the NDIS miniport driver initialization functions.</P>
+
+<P class="labelproc"><B>To remove DMA support from the NDIS miniport driver initialization functions</B>
+
+<OL type="1">
+	<LI>In %_WINCEROOT%\Platform\%_TGTPLAT%\Drivers\<I>CENDISMiniport</I>, open Mp_init.c.</li>
+
+	<LI>Find the <B>NICRegTable</B> initialization.
+<P>The following code example shows the relevant line of code from the Windows desktop-based NDIS miniport driver <B>NICRegTable</B> initialization.
+
+<PRE class="code">  {NDIS_STRING_CONST("NumRfd"), 0, MP_OFFSET(NumRfd), MP_SIZE(NumRfd), 32, NIC_MIN_RFDS, NIC_MAX_RFDS},</PRE>
+</li>
+
+	<LI>Replace the line of code shown in step 2 with code appropriate for Windows CE.
+<P>The following code example shows the appropriate replacement for Windows CE.
+
+<PRE class="code">#ifndef UNDER_CE
+  {NDIS_STRING_CONST("NumRfd"), 0, MP_OFFSET(NumRfd), MP_SIZE(NumRfd), 32, NIC_MIN_RFDS, NIC_MAX_RFDS},
+#else
+  {NDIS_STRING_CONST("NumRfd"), 0, MP_OFFSET(NumRfd), MP_SIZE(NumRfd), NIC_MAX_GROW_RFDS, NIC_MIN_RFDS, NIC_MAX_RFDS},
+#endif</PRE>
+</li>
+
+	<LI>Find the <B>MpExtractPMInfoFromPciSpace</B> function call, and enable this call only when WINCE_PM_ENABLE is defined.
+<P>The following code example shows how to enable the <B>MpExtractPMInfoFromPciSpace</B> call when WINCE_PM_ENABLE is defined.
+
+<PRE class="code">#ifdef WINCE_PM_ENABLE        
+  MpExtractPMInfoFromPciSpace (Adapter, (PUCHAR)pPciConfig);
+#endif</PRE>
+</li>
+
+	<LI>Find the <B>MpAllocAdapterBlock</B> function definition, and then use the <code class="ce">#ifdef</code>, <code class="ce">#else</code>, and <code class="ce">#endif</code> directives within the local variable declarations to remove the variables that are not needed for Windows CE.
+<P>The following code example shows how to use these directives to remove the unused variables.
+
+<PRE class="code">    PMP_ADAPTER     Adapter;
+#ifdef UNDER_CE
+    NDIS_STATUS     Status;
+#else
+    NDIS_HANDLE     PacketPoolHandle;
+    NDIS_HANDLE     BufferPoolHandle;
+    PNDIS_PACKET    Packet;
+    PNDIS_BUFFER    Buffer;
+    NDIS_STATUS     Status;
+    LONG            index;
+#endif</PRE>
+</li>
+
+	<LI>Find the <B>NICAllocAdapterMemory</B> function definition, and then use the <code class="ce">#ifndef</code> and <code class="ce">#endif</code> directives within the local variable declarations to remove the variables that are not needed for Windows CE.
+<P>The following code example shows how to use these directives to remove the unused variables.
+
+<PRE class="code">    NDIS_STATUS     Status;
+#ifndef UNDER_CE    
+    PMP_TCB         pMpTCB;
+#endif
+    PMP_TXBUF       pMpTxbuf;
+    PUCHAR          pMem;
+    ULONG           MemPhys;
+    LONG            index;
+#ifndef UNDER_CE    
+    LONG            MapRegisterCount;
+#endif
+    ULONG           ErrorValue = 0;
+    UINT            MaxNumBuffers;
+#if OFFLOAD
+    
+    BOOLEAN         OffloadSharedMemSuccess = FALSE;
+    UINT            i;
+#endif</PRE>
+</li>
+
+	<LI>In the <B>NICAllocAdapterMemory</B> function definition, use the <code class="ce">#ifndef</code>, <code class="ce">#else</code>, and <code class="ce">#endif</code> directives to remove the calls to the scatter/gather DMA initialization functions, and then set <B>Status</B> equal to NDIS_STATUS_FAILURE because the Windows CE NDIS implementation does not support scatter/gather DMA.
+<P>The following code example shows how to use these directives to remove the calls to the scatter/gather DMA initialization functions.
+
+<PRE class="code">#ifndef UNDER_CE        
+#if OFFLOAD          
+        Status = NdisMInitializeScatterGatherDma(
+                     Adapter-&gt;AdapterHandle,
+                     FALSE,
+                     LARGE_SEND_OFFLOAD_SIZE);
+#else
+        Status = NdisMInitializeScatterGatherDma(
+                     Adapter-&gt;AdapterHandle,
+                     FALSE,
+                     NIC_MAX_PACKET_SIZE);
+#endif        
+#else
+
+        //
+        //  No scatter gather support in CE NDIS.
+        //
+        
+        Status = NDIS_STATUS_FAILURE;
+
+#endif  //  UNDER_CE</PRE>
+</li>
+
+	<LI>Find the <B>NICAllocRfd</B> function definition, and then use the <code class="ce">#ifndef</code> and <code class="ce">#endif</code> directives within the local variable declarations to remove the variables that are not needed for Windows CE.
+<P>The following code example shows how to use these directives to remove the unused variables.
+
+<PRE class="code">#ifndef UNDER_CE    
+    ULONG               HwRfdPhys;  
+#endif</PRE>
+</li>
+
+	<LI>Find the <B>NICInitializeAdapter</B> function definition, and then use the <code class="ce">#ifndef</code> and <code class="ce">#endif</code> directives within the local variable declarations to remove the variables that are not needed for Windows CE.
+<P>The following code example shows how to use these directives to remove the unused variables.
+
+<PRE class="code">#ifndef UNDER_CE    
+    USHORT          EepromFlags;
+#endif</PRE>
+</li>
+
+	<LI>From the IDE <B>Build</B> menu, choose <B>Open Build Release Directory</B>. </li>
+
+	<LI>Navigate to the directory containing your Windows CE NDIS miniport driver. 
+<P>Be sure your NDIS miniport driver is in %_WINCEROOT%\Platform\%_TGTPLAT%\Drivers\<I>CENDISMiniport</I>.
+</li>
+
+	<LI>Build the Windows CE NDIS miniport driver with the Build tool. 
+<P>For more information about the Build tool, see <MSHelp:link keywords="wce50conBuildTool" TABINDEX="0">Build Tool</MSHelp:link>. Microsoft recommends using the <B>-c</B> parameter with the Build tool to delete all object files.
+</li>
+</OL>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50howhowtomigratewindows-baseddesktopndisminiportdrivertowindowsce.htm">How to Migrate a Windows-based Desktop NDIS Miniport Driver to Windows CE</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

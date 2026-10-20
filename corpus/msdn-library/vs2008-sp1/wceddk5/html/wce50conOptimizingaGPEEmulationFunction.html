@@ -1,0 +1,208 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Optimizing a GPE Emulation Function</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Optimizing a GPE Emulation Function"/>
+<MSHelp:RLTitle Title="Optimizing a GPE Emulation Function"/>
+<MSHelp:Keyword Index="A" Term="wce50conOptimizingaGPEEmulationFunction"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Driver"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="False"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="howto_optimizingdisplaydriver.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="True"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+<MSHelp:Attr Name="PBFeature" Value="DisplayDriver"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_3017601">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50conoptimizingagpeemulationfunction"></A>Optimizing a GPE Emulation Function</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>This topic describes changes to the implementation of the function <B>EmulatedBlt_Internal</B> to improve the performance for the FLAT display driver in <A HREF="wce50howhowtoprofileandoptimizeadisplaydriver.htm">How to Profile and Optimize a Display Driver</A>. </P>
+
+<P>These changes are made to specifically address the specific scenario presented in that example, namely RGB555 to RGB565 color conversion. </P>
+
+<P>You could apply this optimization to all the drivers and all the OS designs that you usually work with. The tradeoff for doing this, however, is an increase in the footprint and complexity of your display driver in exchange for an optimization for a scenario that is actually somewhat rare in most general applications. </P>
+
+<P>As indicated in <A HREF="wce50condisplaydriverperformance.htm">Display Driver Performance</A>, the default emulation functions are good candidates for optimization because they can be replaced with more efficient implementations that use specific hardware functionality, specialized knowledge of the usage scenario, or both. </P>
+
+<P>The following steps describe how to add code to your OS design to improve the performance of ProfApp.exe based on the results from <A HREF="wce50tskobtainingaperformanceprofileforadisplaydriver.htm">Obtaining a Performance Profile for a Display Driver</A>.</P>
+
+<P class="labelproc"><B>To optimize EmulatedBlt_Internal for RGB555 to RGB565 color conversion</B>
+
+<OL type="1">
+	<LI>In your Emulrotate project, replace line 186 of ebbltsel.cpp with the following code so that this <CODE>if</CODE> statement is nested within the existing <CODE>if</CODE> statement:
+<PRE class="code">if (!(pParms-&gt;pConvert &amp;&amp; pParms-&gt;rop4 ==
+      0xCCCC &amp;&amp; pParms-&gt;pSrc-&gt;Format() == gpe16Bpp))
+{
+  return  S_OK;   // This was originally line 186.
+}</PRE>
+
+<P>This code creates a special case for 16-bit-per-pixel (bpp) format conversions within the function <B>EmulatedBltSelect16</B>.
+</li>
+
+	<LI>Insert the following code into ebbltsel.cpp at what was originally line 238 to add another <CODE>else if</CODE> clause to the existing <CODE>if</CODE> statement. 
+<P>Depending on how you formatted your code changes in the previous step, the correct spot for this code should be approximately line 244.
+
+<PRE class="code">else if ((pParms-&gt;pSrc-&gt;Format() == gpe16Bpp) &amp;&amp;
+         (NULL == pParms-&gt;pLookup) &amp;&amp; (pParms-&gt;pConvert))
+{
+  pParms-&gt;pBlt = FUNCNAME(BltSrcCopy1616Convert);
+}</PRE>
+
+<P>This creates a special code path to a new function to handle 16-bpp format conversions.
+</li>
+
+	<LI>Insert the following code into public\common\oak\inc\emul.h at line 138:
+<PRE class="code">SCODE EmulatedBltSrcCopy1616Convert( GPEBltParms * );</PRE>
+
+<P>This code prototypes a new function to perform 16-bpp color format conversions.
+</li>
+
+	<LI>In your Emulrotate project, add the following code to ebcopy16.cpp:
+<PRE class="code">SCODE Emulator::EmulatedBltSrcCopy1616Convert(GPEBltParms* pBltParms)
+{
+  // Source-related information.
+  PRECTL   prcSrc         = pBltParms-&gt;prclSrc;
+  UINT32   iScanStrideSrc = pBltParms-&gt;pSrc-&gt;Stride()/sizeof(WORD);
+  WORD    *pwScanLineSrc  = (WORD *)pBltParms-&gt;pSrc-&gt;Buffer() +
+                            prcSrc-&gt;top * iScanStrideSrc      +
+                            prcSrc-&gt;left;
+
+  // Destination-related information.
+  PRECTL   prcDst         = pBltParms-&gt;prclDst;
+  UINT32   iScanStrideDst = pBltParms-&gt;pDst-&gt;Stride()/sizeof(WORD);
+  WORD    *pwScanLineDst  = (WORD *)pBltParms-&gt;pDst-&gt;Buffer() +
+                            prcDst-&gt;top * iScanStrideDst      +
+                            prcDst-&gt;left;
+
+  int cRows = prcDst-&gt;bottom - prcDst-&gt;top;
+  int cCols = prcDst-&gt;right  - prcDst-&gt;left;
+
+  // Copy source before overwriting.
+  if (!pBltParms-&gt;yPositive)
+  {
+    // Scan from end of memory, and negate stride.
+    pwScanLineSrc += iScanStrideSrc * (cRows - 1);
+    pwScanLineDst += iScanStrideDst * (cRows - 1);
+
+    iScanStrideSrc = (UINT32)-(INT32)iScanStrideSrc;
+    iScanStrideDst = (UINT32)-(INT32)iScanStrideDst;
+  }
+
+  if (!pBltParms-&gt;xPositive)
+  {
+    // Copy from right to left.
+    for (int row = 0; row &lt; cRows; row++)
+    {
+      WORD *pwPixelDst = pwScanLineDst + cCols - 1;
+      WORD *pwPixelSrc = pwScanLineSrc + cCols - 1;
+
+      while (pwPixelDst &gt;= pwScanLineDst)
+      {
+        *pwPixelDst = *pwPixelSrc &amp; 0x1f | ((*pwPixelSrc &amp; 0x7fe) &lt;&lt; 1);
+        pwPixelDst--;
+        pwPixelSrc--;
+      }
+      pwScanLineSrc += iScanStrideSrc;
+      pwScanLineDst += iScanStrideDst;
+    }  
+  }
+  else
+  {
+    // Copy from left to right.
+    for (int row = 0; row &lt; cRows; row++)
+    {
+      WORD *pwPixelDst = pwScanLineDst;
+      WORD *pwPixelSrc = pwScanLineSrc;
+      WORD *pwLim      = pwPixelDst + cCols;
+
+      BOOL bPreWord;
+      BOOL bPostWord;
+
+      DWORD * pdwPixelDst;
+      DWORD * pdwLim;
+
+      bPreWord = ((WORD)pwPixelDst &amp; 2) ? TRUE : FALSE;
+
+      if (bPreWord)
+      {
+        *pwPixelDst = *pwPixelSrc &amp; 0x1f | ((*pwPixelSrc &amp; 0x7fe) &lt;&lt; 1);
+        pwPixelDst++;
+        pwPixelSrc++;
+      }
+
+      pdwPixelDst = (DWORD *)pwPixelDst;
+      pdwLim      = (DWORD *)((DWORD)pwLim &amp; (~3));
+      bPostWord   = ((WORD)pwLim &amp; 2) ? TRUE : FALSE;
+
+      while (pdwPixelDst &lt; pdwLim)
+      {
+        DWORD dwSrc = (*pwPixelSrc &lt;&lt; 16);
+
+        pwPixelSrc++;
+        dwSrc |= *pwPixelSrc;
+        pwPixelSrc++;
+
+        dwSrc = (dwSrc &amp; 0x1F001F) | ((dwSrc &amp; 0x7FE07FE0) &lt;&lt; 1);
+
+        *pdwPixelDst = dwSrc;
+        pdwPixelDst++;
+      }
+
+      pwPixelDst = (WORD *)pdwPixelDst;
+
+      if (bPostWord)
+      {
+       *pwPixelDst = *pwPixelSrc &amp; 0x1f | ((*pwPixelSrc &amp; 0x7fe) &lt;&lt; 1);
+        pwPixelDst++;
+        pwPixelSrc++;
+      }
+
+      pwScanLineSrc += iScanStrideSrc;
+      pwScanLineDst += iScanStrideDst;
+    }
+  }
+  return S_OK;
+}</PRE>
+</li>
+</OL>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50howhowtoprofileandoptimizeadisplaydriver.htm">How to Profile and Optimize a Display Driver</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

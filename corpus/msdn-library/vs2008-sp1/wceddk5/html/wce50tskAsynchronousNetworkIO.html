@@ -1,0 +1,66 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Asynchronous Network I/O</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Asynchronous Network I/O"/>
+<MSHelp:RLTitle Title="Asynchronous Network I/O"/>
+<MSHelp:Keyword Index="A" Term="wce50tskAsynchronousNetworkIO"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Driver"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="False"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbTask"/>
+<MSHelp:Attr Name="Filename" Value="ndis_guide1.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="False"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+<MSHelp:Attr Name="PBFeature" Value="NetworkDriver"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_3018297">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50tskasynchronousnetworkio"></A>Asynchronous Network I/O</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>Because of the latency inherent in some network operations, many of the upper-edge functions provided by a NIC driver and the lower-edge functions of a protocol driver are designed to support asynchronous operation. Rather than wasting CPU cycles waiting in a loop for a task to finish or a hardware event to signal, network drivers handle most operations asynchronously. </P>
+
+<P>Using a completion function supports asynchronous network I/O. For example, when a protocol driver calls NDIS to send a packet, it results in a call to the NIC driver's <A HREF="wce50lrfminiportsend.htm">MiniportSend</A> function. The NIC driver can try to complete this request immediately and return an appropriate status value as a result. For synchronous operation, the possible responses are NDIS_STATUS_SUCCESS to indicate successful completion of the send, NDIS_STATUS_RESOURCES, and NDIS_STATUS_FAILURE to indicate failure. </P>
+
+<P>A send operation can take some time to complete while the NIC driver or NDIS queues the packet and waits for the NIC to indicate the result of the send operation. The NIC driver <B>MiniportSend</B> function can handle a send operation asynchronously by returning a status value of NDIS_STATUS_PENDING. When the NIC driver completes the send operation, it calls the <A HREF="wce50lrfndismsendcomplete.htm">NdisMSendComplete</A> completion function, passing a pointer to the packet descriptor that was sent. This information is passed to the protocol driver, signaling completion. </P>
+
+<P>If a driver operation requires extended time to complete, the driver typically supports asynchronous operation with a similar completion function. These function names have the following format: <B>NdisM<I>XXX</I>Complete</B>. Along with the send and receive functions, completion functions are available for setting and querying a network configuration, resetting hardware, indicating status, indicating received data, and transferring received data.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50connetworkdriverprogrammingconsiderations.htm">Network Driver Programming Considerations</A> | <A HREF="wce50lrfminiportsend.htm">MiniportSend</A> | <A HREF="wce50lrfndismethindicatereceivecomplete.htm">NdisMEthIndicateReceiveComplete</A> | <A HREF="wce50lrfndismindicatestatuscomplete.htm">NdisMIndicateStatusComplete</A> | <A HREF="wce50lrfndismqueryinformationcomplete.htm">NdisMQueryInformationComplete</A> | <A HREF="wce50lrfndismresetcomplete.htm">NdisMResetComplete</A> | <A HREF="wce50lrfndismsendcomplete.htm">NdisMSendComplete</A> | <A HREF="wce50lrfndismsetinformationcomplete.htm">NdisMSetInformationComplete</A> | <A HREF="wce50lrfndismtransferdatacomplete.htm">NdisMTransferDataComplete</A> | <A HREF="wce50lrfndismtrindicatereceivecomplete.htm">NdisMTrIndicateReceiveComplete</A> | <A HREF="wce50lrfndismwanindicatereceivecomplete.htm">NdisMWanIndicateReceiveComplete</A> | <A HREF="wce50lrfndismwansendcomplete.htm">NdisMWanSendComplete</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

@@ -1,0 +1,170 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Adding the Windows-based Desktop NDIS Miniport Driver to the Run-Time Image Build</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Adding the Windows-based Desktop NDIS Miniport Driver to the Run-Time Image Build"/>
+<MSHelp:RLTitle Title="Adding the Windows-based Desktop NDIS Miniport Driver to the Run-Time Image Build"/>
+<MSHelp:Keyword Index="A" Term="wce50howAddingWindows-basedDesktopNDISMiniportDriverToOSImageBuild"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Driver"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="False"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbTask"/>
+<MSHelp:Attr Name="Filename" Value="howto_portndisdriver.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="True"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="True"/>
+<MSHelp:Attr Name="PBFeature" Value="NetworkDriver"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_1038189">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50howaddingwindows-baseddesktopndisminiportdrivertoosimagebuild"></A>Adding the Windows-based Desktop NDIS Miniport Driver to the Run-Time Image Build</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>Before building the Windows-based desktop NDIS miniport driver in Platform Builder, add it to your Workspace.</P>
+
+<P class="labelproc"><B>To add the Windows-based desktop NDIS miniport driver to the run-time image build</B>
+
+<OL type="1">
+	<LI>Navigate to the directory containing your Windows desktop-based NDIS miniport driver, and copy all .c and .h files to %_WINCEROOT%\Platform\%_TGTPLAT%\Drivers\<I>CENDISMiniport</I>.
+<P>Replace <I>CENDISMiniport</I> with an appropriate directory name for your Windows CE-based NDIS miniport driver.
+</li>
+
+	<LI>Add an entry for the <I>CENDISMiniport</I> directory to the Dirs file in %_WINCEROOT%\Platform\%_TGTPLAT%\Drivers.</li>
+
+	<LI>Add a Sources file to %_WINCEROOT%\Platform\%_TGTPLAT%\Drivers\<I>CENDISMiniport</I>.
+<P>In the following sources file example for the E100BEX driver, miniport_test is the name of the OS design created with Platform Builder, and CEPC is %_TGTPLAT%.
+
+<PRE class="code">TARGETNAME=e100bex
+
+TARGETTYPE=DYNLINK
+
+DLLENTRY=DllEntry
+
+CDEFINES=$(CDEFINES) -DNDIS_MINIPORT_DRIVER -DNDIS51_MINIPORT=1
+
+#
+# if define LBFO then undefine OFFLOAD
+# if define OFFLOAD then undefine LBFO, LBFO and OFFLOAD cannot both be defined
+# default LBFO and OFFLOAD are not defined
+#
+
+#CDEFINES=$(CDEFINES) -DLBFO=1
+
+#CDEFINES=$(CDEFINES) -DOFFLOAD
+
+#CDEFINES=$(CDEFINES) -DWINCE_PM_ENABLE
+
+CDEFINES=$(CDEFINES) -DUSE_SEND_RCV_LOCKS
+
+TARGETLIBS= \
+$(_PROJECTSDKROOT)\lib\x86\retail\coredll.lib    \
+$(_PROJECTOAKROOT)\lib\x86\retail\ceddk.lib    \
+$(_PROJECTOAKROOT)\lib\x86\retail\netmui.lib    \
+$(_PROJECTSDKROOT)\lib\x86\retail\ndis.lib
+
+SOURCES = \
+   mp_main.c  \
+   offload.c  \
+   mp_init.c  \
+   mp_req.c   \
+   mp_nic.c   \
+   mp_dbg.c   \
+   eeprom.c   \
+   physet.c   \
+   routines.c
+
+#  WINCETARGETFILE0 must match the def file name.
+WINCETARGETFILE0=e100bex.def</PRE>
+</li>
+
+	<LI>Add a Makefile file to %_WINCEROOT%\Platform\%_TGTPLAT%\Drivers\<I>CENDISMiniport</I>. 
+<P>The following code example shows a Makefile file. All Windows CE-based Makefile files are identical.
+
+<PRE class="code">!INCLUDE $(_MAKEENVROOT)\makefile.def</PRE>
+</li>
+
+	<LI>Expose the NDIS miniport driver entry point by adding a .def file to %_WINCEROOT%\Platform\%_TGTPLAT%\Drivers\<I>CENDISMiniport</I>.
+<P>The following code example shows a .def file from the E100BEX driver.
+
+<PRE class="code">LIBRARY         e100bex
+
+EXPORTS         DriverEntry</PRE>
+</li>
+
+	<LI>Add an entry for the E100BEX driver to the MODULES section of the Project.bib file.
+<P>The following code example shows the MODULES section entry for the E100BEX driver.
+
+<PRE class="code">e100bex.dll       $(_FLATRELEASEDIR)\e100bex.dll            NK  SH</PRE>
+</li>
+
+	<LI>Add registry keys to Project.reg.
+<P>The following registry example shows the registry keys for the E100BEX driver.
+
+<PRE class="code">[HKEY_LOCAL_MACHINE\Comm\e100bex]
+   "DisplayName"="Intel 82559"
+   "Group"="NDIS"
+   "ImagePath"="E100BEX.dll"
+
+[HKEY_LOCAL_MACHINE\Drivers\BuiltIn\PCI\Template\E100BEX]
+   "Dll"="NDIS.dll"
+   "Class"=dword:02
+   "SubClass"=dword:00
+   "ProgIF"=dword:0
+   "VendorID"=multi_sz:"8086"
+   "DeviceID"=multi_sz:"1229"
+   "Prefix"="NDS"
+   "IsrDll"="giisr.dll"
+   "IsrHandler"="ISRHandler"
+   "PortIsIO"=dword:1
+   "PortOffset"=dword:0
+   "PortSize"=dword:2
+   "PortMask"=dword:F300</PRE>
+</li>
+
+	<LI>From the IDE <B>Build</B> menu, choose <B>Open Build Release Directory</B>. </li>
+
+	<LI>Navigate to the directory containing your Windows CE NDIS miniport driver. 
+<P>Be sure your NDIS miniport driver is in %_WINCEROOT%\Platform\%_TGTPLAT%\Drivers\<I>CENDISMiniport</I>.
+</li>
+
+	<LI>Build the Windows CE NDIS miniport driver with the Build tool. 
+<P>For more information about the Build tool, see <MSHelp:link keywords="wce50conBuildTool" TABINDEX="0">Build Tool</MSHelp:link>. Microsoft recommends using the <B>-c</B> parameter with the Build tool to delete all object files.
+</li>
+</OL>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50howhowtomigratewindows-baseddesktopndisminiportdrivertowindowsce.htm">How to Migrate a Windows-based Desktop NDIS Miniport Driver to Windows CE</A> | <MSHelp:link keywords="wce51conConfigurationFiles" TABINDEX="0">Configuration Files</MSHelp:link></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

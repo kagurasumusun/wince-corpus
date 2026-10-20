@@ -1,0 +1,83 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Critical-to-Off Interrupt Implementation</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Critical-to-Off Interrupt Implementation"/>
+<MSHelp:RLTitle Title="Critical-to-Off Interrupt Implementation"/>
+<MSHelp:Keyword Index="A" Term="wce50conCriticaltoOffInterruptImplementation"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Feature"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="os_power.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="True"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+<MSHelp:Attr Name="PBFeature" Value="CORE"/>
+<MSHelp:Attr Name="PBOnly" Value="True"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_3009792">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50concriticaltooffinterruptimplementation"></A>Critical-to-Off Interrupt Implementation</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>To implement the critical-to-off transition, implement a voltage comparator that generates a nonmaskable interrupt (NMI).</P>
+
+<P>The following code example demonstrates a possible implementation for an NMI interrupt service routine (ISR) function. This ISR should verify that there is a critically low battery condition, power down all peripherals as quickly as possible, place the RAM in the self-refresh state, and suspend the microprocessor. If the microprocessor continues from the suspend power state after the wake-up event, it needs to jump to the reset vector code. The following code example shows the microprocessor startup code that should execute when the microprocessor is reset. The following code example will be the last item to get executed by the operating system and may not be supported by all processors.</P>
+
+<PRE class="code">NmiISR:
+Mask NMI            ; Keep NMI from occurring
+
+; Make sure there is truly a low battery condition
+for (i=0; i &lt; 10; i++) {
+   Check Battery Level
+   If (Battery Level == OK) {
+      return SYSINTR_NOP;
+   }
+}
+
+Power off all peripherals
+Put RAM in self refresh
+Suspend CPU
+Jump reset vector   ; For CPUs that would continue after the wake-up 
+                    ; condition</PRE>
+
+<P>In the x86 hardware platform, the kernel exports the <B>OEMNMIHandler</B> function, which the OEM can use to capture critical events in the system.</P>
+
+<P>Some OEMs may choose to have critical suspends handled by the Power Manager in an interrupt service thread (IST) rather than in an ISR. To enable this, the critical power NMI could schedule a high priority IST that calls SetSystemPowerState. When it handles this system call, the Power Manager can gracefully shut down critical devices and transfer power to other devices. It then puts the system into its lowest power mode with dynamic RAM (DRAM) refresh enabled. This approach would require that the platform hardware keep the system alive long enough for the Power Manager to shut down processing.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50conkernelpowermanagement.htm">Kernel Power Management</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

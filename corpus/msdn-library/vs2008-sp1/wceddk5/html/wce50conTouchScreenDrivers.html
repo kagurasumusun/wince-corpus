@@ -1,0 +1,90 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Touch Screen Driver Development Concepts</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Touch Screen Driver Development Concepts"/>
+<MSHelp:RLTitle Title="Touch Screen Driver Development Concepts"/>
+<MSHelp:Keyword Index="A" Term="wce50conTouchScreenDrivers"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Driver"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="False"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="touch_guide.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="False"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="True"/>
+<MSHelp:Attr Name="PBFeature" Value="TouchScreenDriver"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_3019305">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50contouchscreendrivers"></A>Touch Screen Driver Development Concepts</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>The touch screen driver reads user input from touch screen hardware and converts it to touch events that are sent to the Graphics, Windowing, and Events Subsystem (GWES). The driver also converts uncalibrated coordinates to calibrated coordinates. Calibrated coordinates compensate for any hardware anomalies, such as skew or nonlinear sequences. </P>
+
+<P>For the touch screen driver to work properly it must submit points while the user's finger or stylus is touching the touch screen. When the user's finger or stylus is removed from the screen, the driver must submit at least one final event indicating that the user's finger or stylus tip was removed. The calibrated coordinates must be reported to the nearest one-quarter of a pixel.</P>
+
+<P>The following steps detail the basic algorithm that you, the driver developer, can use to sample and calibrate the screen with the touch screen driver:
+
+<OL type="1">
+	<LI>Call the <A HREF="wce50lrftouchpanelenable.htm">TouchPanelEnable</A> function to start the screen sampling.</li>
+
+	<LI>Call the <A HREF="wce50lrftouchpanelgetdevicecaps.htm">TouchPanelGetDeviceCaps</A> function to request the number of sampling points.</li>
+
+	<LI>For every calibration point, perform the following steps:
+<OL type="a">
+	<LI>Call <A HREF="wce50lrftouchpanelgetdevicecaps.htm">TouchPanelGetDeviceCaps</A> to get a calibration coordinate.</li>
+
+	<LI>Draw a crosshair at the returned coordinate.</li>
+
+	<LI>Call the <A HREF="wce50lrftouchpanelreadcalibrationpoint.htm">TouchPanelReadCalibrationPoint</A> function to get calibration data.</li>
+</OL>
+</li>
+
+	<LI>Call the <A HREF="wce50lrftouchpanelsetcalibration.htm">TouchPanelSetCalibration</A> function to calculate the calibration coefficients.</li>
+</OL>
+
+<P>After the touch screen driver executes this sequence, any finger or stylus samples generated for the screen are passed to the callback function specified in <B>TouchPanelEnable</B>. The driver may pass either calibrated or uncalibrated points to the callback. If the driver has an efficient calibration algorithm, it can return calibrated points. However, if the calibration is computationally intensive, the driver may choose to return uncalibrated points, rather than perform extensive calculations in the high-priority driver thread. The lower priority thread processing points from the callback can then perform the calibration. </P>
+
+<P>You can calibrate the screen without an ENTER key. The default calibration code includes a routine called <B>UseEnterEsc</B>. This routine calls the <MSHelp:link keywords="wce50lrfGetKeyboardStatus" TABINDEX="0">GetKeyboardStatus</MSHelp:link> function to determine whether a keyboard is present, enabled, and supports the ENTER and ESC keys. If so, it prompts the user to use the keyboard to complete the calibration routine. If not, the user is prompted to tap the screen to complete calibration.</P>
+
+<P>Internally, the GWES keyboard code opens <B>HKEY_LOCAL_MACHINE\HARDWARE\DEVICEMAP\KEYBD</B> and searches for a <B>DWORD</B> value called <B>Status</B>. This is a bitmask combining the KBDI_KEYBOARD_XXX values from %_WINCEROOT%\Public\Common\Sdk\Inc\Keybd.h. If <B>Status</B> is not found, GWES uses KBDI_KEYBOARD_PRESENT | KBDI_KEYBOARD_ENTER_ESC | KBDI_KEYBOARD_ALPHA_NUM. This registry access only occurs once, when the keyboard driver is loaded. This bitmask is the basis for what you get when you call <MSHelp:link keywords="wce50lrfGetKeyboardStatus" TABINDEX="0">GetKeyboardStatus</MSHelp:link>. GWES adds or subtracts the KBDI_KEYBOARD_ENABLED bit based on calls to the <MSHelp:link keywords="wce50lrfEnableHardwareKeyboard" TABINDEX="0">EnableHardwareKeyboard</MSHelp:link> function. The KBDI_KEYBOARD_ENABLED bit is set when the keyboard driver is loaded. </P>
+
+<P>When you set the <B>Status</B> registry value, OEMs can then control the type of prompting users get during calibration. If a registry update is not flexible enough, the calibration code in %_WINCEROOT%\Public\Common\OAK\Drivers\Calibrui can be modified as appropriate.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50grftouchscreendriverddsifunctions.htm">Touch Screen Driver DDSI Functions</A> | <A HREF="wce50grftouchscreendriverfunctions.htm">Touch Screen Driver Functions</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

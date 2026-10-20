@@ -1,0 +1,81 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Disabling an Interrupt</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Disabling an Interrupt"/>
+<MSHelp:RLTitle Title="Disabling an Interrupt"/>
+<MSHelp:Keyword Index="A" Term="wce50conDisablinganInterrupt"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Hardware"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="True"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="howto_developing_an_OAL.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="False"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_3010407">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50condisablinganinterrupt"></A>Disabling an Interrupt</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>If your OS needs to disable an interrupt, this typically occurs after the kernel has received a request to unload a driver.</P>
+
+<P class="labelproc"><B>To disable an interrupt</B>
+
+<UL type="disc">
+	<LI>Implement the <A HREF="wce50lrfoeminterruptdisable.htm">OEMInterruptDisable</A> function, which is called by the kernel when such a request has been made</li>
+</UL>
+
+<P>To disable a driver interrupt, Windows CE initiates the following sequence of steps:
+
+<OL type="1">
+	<LI>The kernel calls the <MSHelp:link keywords="wce50lrfFreeLibrary" TABINDEX="0">FreeLibrary</MSHelp:link> function to close or unload the device driver.</li>
+
+	<LI>The kernel calls the DLL main entry function of the driver with the DLL_PROCESS_DETACH flag passed in as a parameter.</li>
+
+	<LI>The device driver calls the <MSHelp:link keywords="wce50lrfInterruptDisable" TABINDEX="0">InterruptDisable</MSHelp:link> function to disable the logical interrupt. </li>
+
+	<LI><B>InterruptDisable</B> calls <B>OEMInterruptDisable</B> to disable the physical interrupt.
+<P>If the interrupt request (IRQ) line is not multiplexed, the interrupt service routine (ISR) can physically disable the IRQ line associated with the interrupt identifier. 
+
+<P>If the IRQ line is multiplexed, the ISR sends an SYSINTR_NOP interrupt identifier to the kernel for interrupts with the disabled interrupt identifier to keep track of those multiplexed interrupts that have been disabled.
+</li>
+</OL>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50howhowtodevelopanoemadaptationlayer.htm">How to Develop an OEM Adaptation Layer</A> | <A HREF="wce50conimplementinganisr.htm">Implementing an ISR</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

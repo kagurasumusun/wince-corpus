@@ -1,0 +1,78 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Handling Nested Interrupts</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Handling Nested Interrupts"/>
+<MSHelp:RLTitle Title="Handling Nested Interrupts"/>
+<MSHelp:Keyword Index="A" Term="wce50conNestedInterrupts"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Driver"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="False"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Filename" Value="driverarchitecture.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="False"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+<MSHelp:Attr Name="PBFeature" Value="CoreDriver"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_3017969">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50connestedinterrupts"></A>Handling Nested Interrupts</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>To prevent the loss and delay of high-priority interrupts, the Windows CE kernel uses nested interrupts. Nested interrupts allow interrupt requests (IRQs) of a higher priority to preempt IRQs of a lower priority. Nested interrupts are allowed in conjunction with the <MSHelp:link keywords="wce50conRealTimePrioritySystem" TABINDEX="0">Real-Time Priority System</MSHelp:link>. ISRs of a higher priority might preempt ISRs of a lower priority. </P>
+
+<P>The following steps show how Windows CE handles nested ISR calls: 
+
+<OL type="1">
+	<LI>The kernel disables all other IRQs with the same or lower priority as the IRQ that invoked the current ISR call.</li>
+
+	<LI>If a higher-priority IRQ arrives before the current ISR completes processing, the kernel saves the current ISR state. 
+<P>The state includes only those registers that are supported for use in an ISR.
+</li>
+
+	<LI>The kernel calls the higher-priority ISR to handle the new request.</li>
+
+	<LI>The kernel loads the original ISR's state and continues processing.</li>
+</OL>
+
+<P>The kernel handles the details of saving an ISR's state when a higher priority interrupt occurs and restoring it after the high priority ISR has completed. In most cases, a preempted ISR does not detect that it has been preempted. The level of interrupt nesting is limited solely by what the hardware platform can support.</P>
+
+<P>An ISR that uses too much time can cause other interrupts to be missed entirely, resulting in erratic or sluggish performance of the whole system. By separating interrupt processing into a very short ISR and a longer interrup service thread (IST), interrupts can be masked for as little time as possible. ISRs only mask interrupts of equal or lower priority than themselves.Windows CE can nest as many ISRs as the hardware platform supports. Other than a possible delay in completion, an ISR is not affected by an interrupt.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><MSHelp:link keywords="wce50conDefininganInterruptIdentifier" TABINDEX="0">Defining an Interrupt Identifier</MSHelp:link> | <MSHelp:link keywords="wce50conImplementinganISR" TABINDEX="0">Implementing an ISR</MSHelp:link> | <MSHelp:link keywords="wce50conLoader" TABINDEX="0">Loader</MSHelp:link> | <A HREF="wce50conpcibusdriver.htm">PCI Bus Driver</A> | <MSHelp:link keywords="wce50conRealTimePrioritySystem" TABINDEX="0">Real-Time Priority System</MSHelp:link></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

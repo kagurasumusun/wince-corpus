@@ -1,0 +1,128 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>DrvStrokePath</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="DrvStrokePath"/>
+<MSHelp:RLTitle Title="DrvStrokePath"/>
+<MSHelp:Keyword Index="K" Term="DrvStrokePath"/>
+<MSHelp:Keyword Index="A" Term="wce50lrfDrvStrokePath"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Driver"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="PBOnly" Value="False"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="apiref"/>
+<MSHelp:Attr Name="Filename" Value="display_reference.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="False"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+<MSHelp:Attr Name="APIName" Value="DrvStrokePath"/>
+<MSHelp:Attr Name="APIType" Value="LibDef"/>
+<MSHelp:Attr Name="APILocation" Value="Ddi_ati_lib.lib, Ddi_flat_lib.lib, Ddi_gx_lib.lib, Ddi_mq200_lib.lib, Ddi_nop_lib.lib, Ddi_rflat_lib.lib, Ddi_rgx_lib.lib, or Ddi_tvia5_lib.lib"/>
+<MSHelp:Attr Name="PBFeature" Value="DisplayDriver"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_3017944">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50lrfdrvstrokepath"></A>DrvStrokePath</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>This function strokes a path when called by GDI. </P>
+
+<PRE class="syntax"><B>BOOL DrvStrokePath(</B>
+<B>  SURFOBJ* </B><I>pso</I><B>,</B>
+<B>  PATHOBJ* </B><I>ppo</I><B>,</B>
+<B>  CLIPOBJ* </B><I>pco</I><B>,</B>
+<B>  XFORMOBJ* </B><I>pxo</I><B>,</B>
+<B>  BRUSHOBJ* </B><I>pbo</I><B>,</B>
+<B>  POINTL* </B><I>pptlBrushOrg</I><B>,</B>
+<B>  LINEATTRS* </B><I>plineattrs</I><B>,</B>
+<B>  MIX </B><I>mix</I>
+<B>);</B></PRE>
+
+<H4 class="dtH4">Parameters</H4>
+
+<DL>
+<DT><I>pso</I> </DT>
+
+<DD>[in] Surface on which to draw. </dd>
+
+<DT><I>ppo</I> </DT>
+
+<DD>[in] Pointer to a <B>PATHOBJ</B> structure. GDI <B>PATHOBJ_<I>XXX</I></B> functions enumerate the lines, Bezier curves, and other data that constitutes the path. This indicates what is to be drawn. </dd>
+
+<DT><I>pco</I> </DT>
+
+<DD>[in] Pointer to a <B>CLIPOBJ</B> structure. GDI <B>CLIPOBJ_<I>XXX</I></B> functions are provided to enumerate the clip region as a set of rectangles. Optionally, all the lines in the path may be enumerated preclipped by <B>CLIPOBJ</B>. This means that drivers can have all their line clipping calculations done for them. </dd>
+
+<DT><I>pxo</I> </DT>
+
+<DD>[in] Pointer to a <B>XFORMOBJ</B> structure. This is needed only when a geometric wide line is to be drawn. It specifies the transform that maps world coordinates to device coordinates. This is needed because the path is provided in device coordinates but a geometric wide line is actually widened in world coordinates.
+
+<P>Query the <B>XFORMOBJ</B> structure to find the transform.
+</dd>
+
+<DT><I>pbo</I> </DT>
+
+<DD>[in] Brush to use when drawing the path. </dd>
+
+<DT><I>pptlBrushOrg</I> </DT>
+
+<DD>[in] Pointer to the brush origin used to align the brush pattern on the device. </dd>
+
+<DT><I>plineattrs</I> </DT>
+
+<DD>[in] Pointer to a <B>LINEATTRS</B> structure. The <B>elStyleState</B> member of this structure must be updated as part of this function if the line is styled. The <B>ptlLastPel</B> member must be updated if a single pixel width cosmetic line is being drawn. </dd>
+
+<DT><I>mix</I> </DT>
+
+<DD>[in] <B>MIX</B> structure that defines the foreground and background raster operations to use for the brush. </dd>
+</DL>
+
+<H4 class="dtH4">Return Values</H4>
+
+<P>TRUE if the driver is able to stroke the path. If GDI should stroke the path, the return value is FALSE, and an error code is not logged. If the driver encounters an error, the return value is DDI_ERROR, and an error code is reported.</P>
+
+<H4 class="dtH4">Remarks</H4>
+
+<P>The mix mode defines how the incoming pattern mixes with the data already on the device surface. The <B>MIX</B> data type consists of two <B>ROP2</B> values packed into a single <B>ULONG</B>. The low-order byte defines the foreground raster operation; the high-order byte defines the background raster operation.</P>
+
+<H4 class="dtH4">Requirements</H4>
+
+<P><B>OS Versions:</B> Windows CE 1.0 and later.<BR>
+<B>Header:</B> Winddi.h.<BR>
+<B>Link Library:</B> Ddi_ati_lib.lib, Ddi_flat_lib.lib, Ddi_gx_lib.lib, Ddi_mq200_lib.lib, Ddi_nop_lib.lib, Ddi_rflat_lib.lib, Ddi_rgx_lib.lib, or Ddi_tvia5_lib.lib.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50condisplaydrivers.htm">Display Drivers</A> | <A HREF="wce50lrfdrvfillpath.htm">DrvFillPath</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>

@@ -1,0 +1,106 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>MyFSD_CreateDirectoryW</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="MyFSD_CreateDirectoryW"/>
+<MSHelp:RLTitle Title="MyFSD_CreateDirectoryW"/>
+<MSHelp:Keyword Index="K" Term="MyFSD_CreateDirectoryW"/>
+<MSHelp:Keyword Index="A" Term="wce50lrfMyFSDCreateDirectoryW"/>
+<MSHelp:Attr Name="DevelopmentPhase" Value="Feature"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat50"/>
+<MSHelp:Attr Name="Source" Value="Documentation"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwce50"/>
+<MSHelp:Attr Name="TopicType" Value="apiref"/>
+<MSHelp:Attr Name="Filename" Value="fsd_functions.doc"/>
+<MSHelp:Attr Name="ContainsCode" Value="False"/>
+<MSHelp:Attr Name="ContainsRegistryKeys" Value="False"/>
+<MSHelp:Attr Name="APIName" Value="MyFSD_CreateDirectoryW"/>
+<MSHelp:Attr Name="APIType" Value="LibDef"/>
+<MSHelp:Attr Name="APILocation" Value="Fsdmgr.lib"/>
+<MSHelp:Attr Name="PBFeature" Value="FILESYSTEM"/>
+<MSHelp:Attr Name="PBOnly" Value="False"/>
+</xml>
+<SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_3005197">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>
+<!--BANNER TITLE START-->Platform Builder for Microsoft Windows CE 5.0<!--BANNER TITLE END-->
+</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wce50lrfmyfsdcreatedirectoryw"></A><I>MyFSD</I>_CreateDirectoryW</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><!--Content Start-->
+<P>This function is called by the FSD Manager to create a new directory in an installable file system. The application originally calls the corresponding standard Win32 function <A HREF="wce50lrfcreatedirectory.htm">CreateDirectory</A>. This function is exported by an implementation of FSD and is called indirectly by FSDMGR.</P>
+
+<PRE class="syntax"><B>BOOL</B> <B><I>MyFSD</I>_CreateDirectoryW( </B>
+  <B>PVOLUME </B><I>pVolume</I><B>,</B> 
+  <B>PCWSTR</B> <I>pwsPathName</I><B>,</B> 
+  <B>PSECURITY_ATTRIBUTES</B> <I>pSecurityAttributes</I>
+<B>);</B> </PRE>
+
+<H4 class="dtH4">Parameters</H4>
+
+<DL>
+<DT><I>pVolume</I></DT>
+
+<DD>[in] Pointer to the value that the file system driver (FSD) defines in its DLL and passes to the <A HREF="wce50lrffsdmgrregistervolume.htm">FSDMGR_RegisterVolume</A> function when registering the volume. The definition of <I>pVolume</I> can point to private structures.</dd>
+
+<DT><I>pwsPathName</I></DT>
+
+<DD>[in] Pointer to a null-terminated string that specifies the path of the directory to be created. </dd>
+
+<DT><I>pSecurityAttributes</I></DT>
+
+<DD>[in] Ignored; set to NULL. </dd>
+</DL>
+
+<H4 class="dtH4">Return Values</H4>
+
+<P>Nonzero indicates success. Zero indicates failure. To get extended error information, call <MSHelp:link keywords="wce50lrfGetLastError" TABINDEX="0">GetLastError</MSHelp:link>.</P>
+
+<H4 class="dtH4">Remarks</H4>
+
+<P>An FSD exports this function, if it wants to support the <B>CreateDirectory</B> function. All FSD functions can be called on re-entry; therefore, FSD developers must take this into account when developing an FSD.</P>
+
+<P>The Fsdmgr component is a DLL that manages all OS interaction with installable files systems. Each installable file system requires an FSD, which is a DLL that exports an API needed to support an installable file system. The name of the DLL for an FSD and the names of the functions it exports start with the name of the associated installable file system. For example, if the name of file system is MyFSD, then its DLL is MyFSD.dll and its exported functions are prefaced with MyFSD_*. </P>
+
+<P>Fsdmgr provides service functions to FSDs. The <B>FSDMGR_RegisterVolume</B>, <A HREF="wce50lrffsdmgrcreatefilehandle.htm">FSDMGR_CreateFileHandle</A>, and <A HREF="wce50lrffsdmgrcreatesearchhandle.htm">FSDMGR_CreateSearchHandle</A> functions record a <B>DWORD</B> of volume-specific data an FSD needs to keep associated with volume. This volume-specific data is passed as the first parameter of these three functions.</P>
+
+<P>Applications that access an installable file system use standard Win32 functions. For example, when an application wants to create a folder on a device that contains an installable file system, it calls <B>CreateDirectory</B>. Fsdmgr recognizes that the path is to a device containing an installable file system and calls the appropriate function, which in the case of the MyFSD file system is <B><I>MyFSD</I>_CreateDirectoryW</B>. That is, the application calls <B>CreateDirectory</B>, causing Fsdmgr to call <B><I>MyFSD_</I>CreateDirectoryW</B>.</P>
+
+<H4 class="dtH4">Requirements</H4>
+
+<P><B>OS Versions:</B> Windows CE 2.10 and later.<BR>
+<B>Header:</B> Fsdmgr.h. <BR>
+<B>Link Library:</B> Fsdmgr.lib.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="wce50lrfcreatedirectory.htm">CreateDirectory</A> | <A HREF="wce50lrffsdmgrcreatefilehandle.htm">FSDMGR_CreateFileHandle</A> | <A HREF="wce50lrffsdmgrcreatesearchhandle.htm">FSDMGR_CreateSearchHandle</A> | <A HREF="wce50lrffsdmgrregistervolume.htm">FSDMGR_RegisterVolume</A> | <A HREF="wce50lrfmyfsdremovedirectoryw.htm">MyFSD_RemoveDirectoryW</A></P>
+<!--Content End--><!--Footer Start-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">Last updated on Wednesday, September 14, 2005</font></p>
+</div><!--Copyright Start-->
+<p><font size="1"><MSHelp:link keywords="wce50oriMicrosoftWindowsCENETHelpCopyrightInformation" TABINDEX="0">&copy; 2005 Microsoft Corporation. All rights reserved.</MSHelp:link><font></p>
+<!--Copyright End-->
+<br>
+<!--Footer End-->
+</BODY>
+</HTML>
