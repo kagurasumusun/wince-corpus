@@ -280,7 +280,7 @@ def name_from_title(title):
 MD_KIND_WORD = re.compile(
     r"(?i)\s+(function|structure|enumeration|callback|interface|class|"
     r"library|attribute|macro|union|typedef|constant|method|property|"
-    r"event|operator|constructor|destructor|field)$")
+    r"event|operator|constructor|destructor|field|message|transaction)$")
 
 
 

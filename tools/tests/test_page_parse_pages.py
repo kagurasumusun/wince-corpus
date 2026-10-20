@@ -98,5 +98,20 @@ class MvbTablePrototypeTests(unittest.TestCase):
         self.assertIn("HIMAGELIST TreeView_SetImageList(", named[0]["text"])
 
 
+class MarkdownMessagePageTests(unittest.TestCase):
+    """sdk-api message pages: 'WM_GETICON message (Winuser.h)' must name
+    WM_GETICON as the subject or its header requirement floats free."""
+
+    def test_wm_geticon(self):
+        fact = _fact("win32/common/wm-geticon.md")
+        self.assertEqual(fact.get("primary_name"), "WM_GETICON")
+        headers = [r for r in fact["requirements"] if r["field"] == "header"]
+        self.assertTrue(any("Winuser.h" in r["value"] for r in headers),
+                        headers)
+        defines = [d for d in fact["declarations"]
+                   if d["text"].startswith("#define WM_GETICON")]
+        self.assertEqual(len(defines), 1)
+
+
 if __name__ == "__main__":
     unittest.main()
