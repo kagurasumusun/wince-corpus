@@ -399,3 +399,43 @@ CeGCC 由来値の来歴レイヤ (§12)、版文の「Not supported in Windows 
 - `symbols.is_api` と `symbols.noise` は一度も計算されていない。
   孤立シンボルの監査 (大半は実名) を踏まえ、分類子を実働させる代わりに
   両列を削除し、表面分類は `v_symbol_surface` に一本化する。
+
+## 13. 追記：schema v2 実施結果（2026-10-20）
+
+§12 を実装した (schema 2 / extractor 3 / builder 2、全量再生成 +
+kbgen check = kb OK、CI とローカルで全テーブルハッシュ・DB サイズ一致)。
+
+- **CeGCC 採用層**: 常に文書が勝つという条件の下で、定数値 3,382 件 +
+  ヘッダ選択 4,702 件を layer='cegcc' として採用した。値を持つ名前は
+  CE 文書のみの 6,711 → 10,093、選出ヘッダを持つ名前は 22,586 → 27,288。
+  採用条件は (a) CE 文書がその名前を定数として提示するが番号を印刷しない
+  (値はこの集合に限る。関数名 AbortDoc と Escape コード ABORTDOC のような
+  名前衝突で関数に値が付く事故を subset で検出して狭めた)、(b) 採用可な
+  CeGCC 行が全会一致、(c) winsock/GL の表示義務ファイル由来は常に除外。
+  mingw32ce の寄与は値 4 件のみ (CRT 値は CE 文書が概ね印刷済み) で、
+  主な寄与は coredll6.def の書き出し表と比較被覆である。validate は
+  「cegcc 行が文書根拠を引用しない・ce 行と共存しない・引用した CeGCC 行と
+  一致する」を不変条件として検査する。gaps.tsv は文書側の欠落として
+  引き続き列挙し、`(CeGCC value adopted)` の注記を付けた。
+- **マネージド層**: 10,657 ページ全てに主体が付き (Namespace.Type.Member、
+  8,280 シンボル)、浮いていた宣言観測 31,326 件が全て帰属した。Assembly は
+  リンクファイルとして解決され (38 アセンブリ)、Version Information は
+  dotnet 可用性として読む (parsed 671)。宣言は印刷言語 (lang-csharp 等) を
+  markup に保持し、主 variant は C# 印刷を優先する。overload が通常形の
+  ため dotnet 層では宣言 divergence を衝突化しない (署名単位の同一性は
+  将来の overload-aware キー設計で扱う)。完全名の親 (名前空間→型→メンバ) は
+  parent_key 化していない (キーのドット分割で辿れる。ネイティブ名への
+  波及を避けて見送り)。
+- **typedef 別名**: `symbol_relations` typedef_alias 2,919 件 (根拠は引用
+  typedef 本身、括弧バランスで決定的に読む)。
+- **版文 not_supported**: 16 行が新ステータスで記録された (「Not supported
+  in Windows CE」を os_versions 値として印刷するページは corpus 全体で
+  それだけであり、残りの「未対応」は散文ノート側に存在する)。
+- **整理**: is_api / noise 列を削除。32 ビットパターン一致を比較で一致扱い
+  とし、agree/differ は 2,455 / 82。
+
+残る設計事項: 定数名として観測されながら CE 値も採用値も無い名前は
+9,341 残る (CeGCC 内部の不一致で見送ったもの、CeGCC が持たない CE 固有
+名を含む)。これは文書ハーベスト側の課題のままである。Header/.def 生成の
+設計は、この KB (文書層 + cegcc 層 + reference の書き出し表) を入力に
+別途起こす。

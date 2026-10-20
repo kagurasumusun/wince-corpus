@@ -140,7 +140,10 @@ gaps.tsv (collection worklist). Query everything else with
     gaps = [("name", "gap", "detail")]
     for row in conn.execute(
             "SELECT s.display_name, 'unnumbered-constant',"
-            " COUNT(*) || ' name mentions, no numbered print'"
+            " COUNT(*) || ' name mentions, no numbered print' ||"
+            " CASE WHEN EXISTS (SELECT 1 FROM constant_values a"
+            "   WHERE a.symbol_key = o.symbol_key AND a.layer='cegcc')"
+            "  THEN ' (CeGCC value adopted)' ELSE '' END"
             " FROM constant_name_observations o"
             " JOIN symbols s ON s.symbol_key = o.symbol_key"
             " WHERE NOT EXISTS (SELECT 1 FROM constant_values cv"
@@ -148,7 +151,11 @@ gaps.tsv (collection worklist). Query everything else with
             " GROUP BY o.symbol_key ORDER BY s.display_name"):
         gaps.append(row)
     for row in conn.execute(
-            "SELECT s.display_name, 'no-ce-header', 'subject page but no chosen CE header'"
+            "SELECT s.display_name, 'no-ce-header',"
+            " 'subject page but no chosen CE header' ||"
+            " CASE WHEN EXISTS (SELECT 1 FROM symbol_headers a"
+            "   WHERE a.symbol_key = v.symbol_key AND a.layer='cegcc')"
+            "  THEN ' (CeGCC header adopted)' ELSE '' END"
             " FROM v_symbol_surface v JOIN symbols s"
             "   ON s.symbol_key = v.symbol_key"
             " WHERE v.has_ce_page=1 AND NOT EXISTS"

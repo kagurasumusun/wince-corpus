@@ -120,10 +120,14 @@ def cmd_constant(conn, name: str) -> int:
     for layer, scope, vraw, vint, status in conn.execute(
             "SELECT layer, scope, value_raw, value_int, status FROM constant_values"
             " WHERE symbol_key=? ORDER BY layer, scope", (key,)):
-        print(f"  resolved[{layer}/{scope}]: {vraw} (int={vint}, {status})")
+        note = (" (CeGCC-adopted; not in CE docs)" if layer == "cegcc" else "")
+        print(f"  resolved[{layer}/{scope}]: {vraw} (int={vint}, {status}){note}")
     compared = conn.execute(
         "SELECT source_id, ref_value_printed, comparison"
         " FROM v_constant_reference_compare WHERE symbol_key=?", (key,)).fetchall()
+    adopted = bool(conn.execute(
+        "SELECT 1 FROM constant_values WHERE symbol_key=? AND layer='cegcc'",
+        (key,)).fetchone())
     for src, v, comp in compared:
         print(f"  reference[{src}]: {v} ({comp}; comparison only)")
     if not compared:
@@ -132,8 +136,10 @@ def cmd_constant(conn, name: str) -> int:
                 " FROM reference_names WHERE name_key=?"
                 " AND kind IN ('define','const') ORDER BY source_id"
                 " LIMIT 10", (key,)):
-            print(f"  reference[{src}]: {v} in {hdr} ({loc}; comparison only,"
-                  " NOT a CE value)")
+            basis = ("adoption basis" if adopted and src.startswith("w32api-")
+                     else "comparison only")
+            print(f"  reference[{src}]: {v} in {hdr} ({loc}; {basis},"
+                  " NOT a CE-documented value)")
     resolved = conn.execute(
         "SELECT COUNT(*) FROM constant_values WHERE symbol_key=? AND layer='ce'",
         (key,)).fetchone()[0]
