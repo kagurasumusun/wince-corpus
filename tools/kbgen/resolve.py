@@ -345,10 +345,10 @@ def _resolve_declarations(conn, layers: dict[str, str]) -> None:
     groups: dict[tuple[str, str, str], list[tuple]] = collections.defaultdict(list)
     for row in conn.execute(
             "SELECT obs_id, subject_key, page_path, kind, calling_convention,"
-            " spacing, ws_norm_sha256 FROM declaration_observations"
+            " spacing, ws_norm_sha256, markup FROM declaration_observations"
             " WHERE subject_key IS NOT NULL AND role='syntax'"
             " AND implementation=0 ORDER BY obs_id"):
-        oid, sym, page, kind, cc, spacing, ws = row
+        oid, sym, page, kind, cc, spacing, ws, markup = row
         layer = layers[page]
         if layer == "oss":
             continue
@@ -362,16 +362,27 @@ def _resolve_declarations(conn, layers: dict[str, str]) -> None:
             if kinds else None
         cc = sorted(ccs.items(), key=lambda kv: (-kv[1], kv[0]))[0][0] \
             if ccs else None
+        langs = collections.Counter(
+            r[7] for r in rows if r[7] and r[7].startswith("lang-"))
         per_symbol[(sym, layer)].append({
             "ws": ws, "rows": rows, "kind": kind, "cc": cc,
             "n_pages": len({r[2] for r in rows}),
             "n_preserved": sum(1 for r in rows if r[5] == "preserved"),
+            "lang": (sorted(langs.items(), key=lambda kv: (-kv[1], kv[0]))[0][0]
+                     if langs else ""),
         })
 
     books = {r[0]: r[1] for r in conn.execute("SELECT path, book FROM pages")}
     for (sym, layer) in sorted(per_symbol):
+        # Managed pages print one signature per language; the primary
+        # print of a managed symbol is its C# text when present.
+        def lang_rank(v, _layer=layer):
+            if _layer != "dotnet":
+                return 0
+            return {"lang-csharp": 0, "lang-c++": 1}.get(v["lang"], 2)
         variants = sorted(per_symbol[(sym, layer)],
-                          key=lambda v: (0 if v["n_preserved"] else 1,
+                          key=lambda v: (lang_rank(v),
+                                         0 if v["n_preserved"] else 1,
                                          -v["n_pages"], v["ws"]))
         for i, v in enumerate(variants):
             vid = obs_id("t", sym, layer, v["ws"])
@@ -386,15 +397,31 @@ def _resolve_declarations(conn, layers: dict[str, str]) -> None:
                 conn.execute(
                     "INSERT OR IGNORE INTO declaration_variant_observations"
                     "(variant_id, obs_id) VALUES (?,?)", (vid, r[0]))
-        preserved = [v for v in variants if v["n_preserved"]]
-        if len(preserved) >= 2:
+        # Managed members overload: one subject (Type.Member) carries
+        # one page per overload, each in several print languages, so
+        # ">1 distinct signature text" is the norm, not a divergence.
+        # Without signature-level identity a conflict row would be
+        # noise; managed divergence waits for overload-aware keys.
+        if layer == "dotnet":
+            continue
+        # Divergence is judged within one print language, should a
+        # native page ever print several.
+        by_lang: dict[str, list] = collections.defaultdict(list)
+        for v in variants:
+            if v["n_preserved"]:
+                by_lang[""].append(v)
+        for lang in sorted(by_lang):
+            preserved = by_lang[lang]
+            if len(preserved) < 2:
+                continue
             parts = []
             for v in preserved[:6]:
                 sets = sorted({books[r[2]] for r in v["rows"]})
                 parts.append(f"{v['ws'][:8]}: {v['n_pages']}p "
                              f"[{', '.join(sets[:3])}]")
             _conflict(conn, "declaration-divergence", sym, layer,
-                      f"{len(preserved)} distinct preserved syntax texts: "
+                      f"{len(preserved)} distinct preserved syntax texts"
+                      + (f" ({lang})" if lang else "") + ": "
                       + "; ".join(parts))
 
 

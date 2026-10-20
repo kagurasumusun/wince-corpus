@@ -35,11 +35,13 @@ python3 -m tools.kbgen export --table symbol_headers --format tsv
 ```
 
 The build is deterministic: the same inputs rebuild the same database
-bytes, so the committed manifest is a complete description of the DB's
-content. `check` verifies integrity, that every chosen fact cites page
-evidence (in the fact's own layer), that reference material is
-un-citable, that every corpus page still hashes to what was ingested,
-and that no build input has drifted.
+content (per-table content hashes in the manifest), so the committed
+manifest is a complete description of the DB. `check` verifies
+integrity, that every chosen documented fact cites page evidence in
+the fact's own layer, that the 'cegcc' adoption layer cites only
+CeGCC rows and never coexists with a documented answer, that every
+corpus page still hashes to what was ingested, and that no build
+input has drifted.
 
 ## What a fact is (and is not)
 
@@ -49,14 +51,24 @@ and that no build input has drifted.
   where a page prints them.
 - CE, Win32 and .NET statements live in one DB as separate **layers**.
   A Win32 page can never make a CE fact true.
-- `reference_*` tables hold the pinned CeGCC w32api and dotnet/pinvoke
-  snapshots for **comparison only**. Evidence foreign keys cannot point
-  at them, so a reference value can never become a CE value, a header,
-  or a symbol. (Wine/ReactOS/MinGW-w64 are prohibited as references:
-  they are not Windows CE.)
+- `reference_*` tables hold the pinned third-party snapshots (CeGCC
+  w32api + CeGCC mingw32ce, public domain; dotnet/pinvoke, MIT,
+  desktop comparison only). Two uses: comparison against documented
+  values, and the **`cegcc` adoption layer** (schema v2): for names
+  the CE documentation numbers nowhere, a resolved row with
+  `layer='cegcc'` may carry the CeGCC value/header, citing the exact
+  CeGCC file:line. It never overrides or mixes into documented `ce`
+  facts, requires unanimous CeGCC evidence, and excludes the six
+  notice-bearing headers (winsock/GL). Survey and licence record:
+  `docs/cegcc-survey.ja.md`, model: `docs/kb-design.ja.md` §12.
+  (Wine/ReactOS/MinGW-w64 are prohibited as references: they are not
+  Windows CE.)
 - Disagreement is data, not noise: tied header evidence, diverging
   declaration prints and conflicting constant values are rows in
   `conflicts`, never silently resolved. A human review row is the only
   override, and even it may only select among page prints.
 
-Design record: `docs/kb-design.ja.md`.
+Design record: `docs/kb-design.ja.md`. The managed layer: every
+`dotnet` page's subject is its `Namespace.Type[.Member]` name, its
+Assembly line resolves to a link file, and its Version Information
+statement to `dotnet` availability rows.

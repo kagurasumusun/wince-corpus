@@ -319,10 +319,17 @@ def declarations(fragment, page_title=None):
                     elif not _slot_belongs_to_title(text, page_title) \
                             or _fragment_defines(fragment, _prototype_name(text)):
                         role = "example"
+        # Print language, when the page marks it (``lang-csharp`` on the
+        # <pre> or its opening <code>): managed pages print one signature
+        # per language, so the resolver must compare like with like.
+        lang_m = re.search(r'class\s*=\s*"[^"]*?\b(lang-[a-z+#]+)',
+                           attrs + inner[:200], re.I)
         out.append({
             "text": text,
-            "markup": (re.search(r'class\s*=\s*"([^"]+)"', attrs, re.I) or
-                       [None, "pre"])[1] if 'class=' in attrs.lower() else "pre",
+            "markup": (lang_m.group(1).lower() if lang_m else
+                       (re.search(r'class\s*=\s*"([^"]+)"', attrs, re.I) or
+                        [None, "pre"])[1]
+                       if 'class=' in attrs.lower() else "pre"),
             "spacing": _spacing(text),
             "calling_convention": _calling_convention(text),
             "role": role,
