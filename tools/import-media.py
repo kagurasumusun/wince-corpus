@@ -190,7 +190,13 @@ def provenance_text(item, data, rows, medium_note):
 
 
 def write_scratch_provenance(out, item, data, rows):
-    """The medium was not kept: record where the pages came from instead."""
+    """The medium was not kept: record where the pages came from instead.
+
+    A multi-medium set (the three VS.NET 2003 discs) imports into
+    one tree through several queue rows; a sibling medium's section
+    is appended, never clobbered, and a medium already recorded is
+    not recorded twice.
+    """
     os.makedirs(out, exist_ok=True)
     rel = os.path.relpath(out, ROOT) if out.startswith(ROOT) else out
     text = provenance_text(item, data, rows, rel)
@@ -201,7 +207,15 @@ def write_scratch_provenance(out, item, data, rows):
         "discards the image. Binaries, headers, samples and toolchains\nare "
         "not part of this corpus - see \"What is collected\" in the "
         "top-level\nREADME.\n")
-    with open(os.path.join(out, "PROVENANCE.md"), "w", encoding="utf-8") as fh:
+    path = os.path.join(out, "PROVENANCE.md")
+    if os.path.exists(path):
+        with open(path, encoding="utf-8") as fh:
+            if f"archive.org/details/{item}" in fh.read():
+                return
+        with open(path, "a", encoding="utf-8") as fh:
+            fh.write("\n---\n\n" + text)
+        return
+    with open(path, "w", encoding="utf-8") as fh:
         fh.write(text)
 
 

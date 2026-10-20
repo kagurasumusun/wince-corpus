@@ -68,6 +68,28 @@ class UdfDetectionTests(unittest.TestCase):
             os.unlink(path)
 
 
+class ScratchProvenanceTests(unittest.TestCase):
+    """A multi-disc set imports through several rows into one tree:
+    each medium's provenance section is kept, once."""
+
+    DATA = {"metadata": {"title": "t", "creator": "c", "date": "2003"}}
+    ROWS = [("disc.7z", 10, "abc", "https://example.invalid/d")]
+
+    def test_two_media_append_same_medium_skips(self):
+        import tempfile
+        with tempfile.TemporaryDirectory() as tmp:
+            media.write_scratch_provenance(tmp, "item-d1", self.DATA,
+                                           self.ROWS)
+            media.write_scratch_provenance(tmp, "item-d2", self.DATA,
+                                           self.ROWS)
+            media.write_scratch_provenance(tmp, "item-d1", self.DATA,
+                                           self.ROWS)
+            text = open(os.path.join(tmp, "PROVENANCE.md"),
+                        encoding="utf-8").read()
+        self.assertEqual(text.count("archive.org/details/item-d1"), 1)
+        self.assertEqual(text.count("archive.org/details/item-d2"), 1)
+
+
 class Help2TitleTests(unittest.TestCase):
     def test_msi_mangled_names(self):
         self.assertEqual(media.help2_title("FL_wcecoreos5_hxs_enu"),
