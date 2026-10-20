@@ -15,7 +15,7 @@ this file exists so a reader can see the shape without a query tool.
 - constants documented but unnumbered: 16,334 names
 - headers: 824; chosen CE symbol->header: 24,411
 - link files: 1,004; chosen CE symbol->file: 13,698
-- availability statements parsed/partial/unparsed: 106,397/5,753/9,221
+- availability statements parsed/partial/unparsed: 107,438/11,851/2,082
 - Unicode/ANSI variant relations: 2,225 (page-statement: 1,070, import-rule: 1,155); typedef-alias relations: 3,102
 - conflicts open: 7,538; reviewed: 8
 - ingest rejects: 131 (see ingest_rejects table)
