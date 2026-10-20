@@ -7,8 +7,8 @@ this file exists so a reader can see the shape without a query tool.
 - corpus pages indexed: 122,170
 - symbols: 50,740 (is_api: 50,740)
 - symbols with a CE subject page: 29,166; with a Win32 page: 6,119; with both: 4,590
-- declaration observations: 111,776 (syntax: 96,656, collapsed spacing: 17,170)
-- chosen declaration variants (CE primary): 25,353
+- declaration observations: 111,778 (syntax: 96,658, collapsed spacing: 17,170)
+- chosen declaration variants (CE primary): 25,355
 - requirement observations: 215,369
 - constant observations: 30,019 over 8,807 names
 - resolved CE constant values: 6,734 (version-scoped rows: 23)
