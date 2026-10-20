@@ -222,13 +222,15 @@ CE 分岐行 (版数下限つき 73 + `wce` 38) を直接の根拠とする。
 
 - **Learn の embedded 名前空間は枯渇済み** (全列挙 would-fetch=0、
   2026-10-15)。追加の文書はメディア/ミラーレーンからしか来ない。
-- **メディアレーン**: `queues/media.tsv` に 4 媒体を
-  inventory-scratch として追加した (CE 5.0 CD5 / CE 6.0 R2 /
-  CE 6.0 R3 / CE 6.0 Platform Builder SP1)。archive.org の
-  識別子とファイル形式は 2026-10-20 にアイテムページで確認済み。
-  Platform Builder 媒体は shared source も含むため、棚卸し結果を
-  読むまで import には進まない (取り込むのは文書ページのみ、
-  という既存方針のとおり)。
+- **メディアレーン**: `queues/media.tsv` 経由で 4 媒体 (CE 5.0
+  CD5 / CE 6.0 R2 / CE 6.0 R3 / CE 6.0 Platform Builder SP1) を
+  棚卸しした (2026-10-20、archive.org 識別子は事前確認済み)。
+  結果は 4 件とも文書セット無し: CD5 はバイナリディスク
+  (18,798 ファイル中 HTML/WinHelp/CHM ともに 0)、R2/R3/SP1 は
+  製品ペイロード (.lib/.pdb/.res と shared source、MSI 内部
+  ファイル) のみで、取り込む文書は無かった。行は判定記録を
+  残して削除済み。残る本命は MSDN Library ディスク (2001–2010)
+  で、archive.org アイテムの特定が次の作業になる。
 - **CE 2.0 SDK Books Online** は MPLATSDK.20 の展開自体は完了して
   いるが、中身が InfoViewer `.ivt` (10 冊) でデコーダが無いこと
   が真のブロッカ (sources/README.md)。unshield の問題ではない。

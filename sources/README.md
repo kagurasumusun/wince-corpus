@@ -61,21 +61,21 @@ can collect them):
 |--------|-------|----------------|
 | CE 2.0 SDK "Books Online" — **partly collected**: the SDK disc's `windbg.hlp` and ReadMe are imported (`corpus/mvb/windows-ce-2.0-sdk/`), but its Books Online is InfoViewer `.ivt` (10 books, `data1/Online_help_files/`), which no tool here decodes | Internet Archive `MPLATSDK.20` (02/98), see `queues/media.tsv` | the CE 2.0 Win32 API reference itself comes from the MSDN Library sets already in the corpus; an `.ivt` decoder would add the SDK's own platform documentation |
 | CE 5.0 CD5 | <https://archive.org/details/en_win_ce_net_cd5> | **inventoried 2026-10-20: no documentation aboard** (18,798 files, 0 HTML/WinHelp/CHM -- a binaries disc); not collected |
-| CE 6.0 R2 update | <https://archive.org/details/windows-embedded-ce-6.0-r2> | Platform Builder 6.0 R2 documentation |
-| CE 6.0 R3 update | <https://archive.org/details/CE6R3> | CE 6.0 R3 documentation (incl. the 3.5 Compact Framework reference) |
-| CE 6.0 Platform Builder SP1 | <https://archive.org/details/windows-embedded-ce-6.0-platform-builder-sp1> + Microsoft Download Center id 4097 (`Release Notes.htm` is a plain file) | Platform Builder 6.0 documentation |
+| CE 6.0 R2 update | <https://archive.org/details/windows-embedded-ce-6.0-r2> | **inventoried 2026-10-20: product payload only** (26,811 files, no documentation set); not collected |
+| CE 6.0 R3 update | <https://archive.org/details/CE6R3> | **inventoried 2026-10-20: product payload only** (19,745 files, no documentation set -- the CF 3.5 reference is not on this disc); not collected |
+| CE 6.0 Platform Builder SP1 | <https://archive.org/details/windows-embedded-ce-6.0-platform-builder-sp1> + Microsoft Download Center id 4097 (`Release Notes.htm` is a plain file) | **inventoried 2026-10-20: tools payload only** (3,326 files, 0 documentation pages); not collected |
 | CE 5.0 Standard SDK | Microsoft Download Center id 17310 (still live) | the CE 5.0 Standard SDK API surface |
 | MSDN Library discs (2001–2010) | Internet Archive / WinWorld | the MSDN-era captures of CE 3.0–5.0 reference, including custom-hardware docs |
 
-Queued for inventory (2026-10-20): the CE 5.0 CD5, CE 6.0 R2,
-CE 6.0 R3 and Platform Builder 6.0 SP1 items above are now
-`inventory-scratch` rows in `queues/media.tsv` (identifiers and
-file forms verified against the archive.org item pages).  The
-inventory listing lands in `data/reports/media-last.txt`;
-importing any documentation from them is decided only after
-reading it.  The Platform Builder media also contain shared
-source, which is never corpus material (documentation pages
-only -- `docs/COLLECTION-POLICY.md`).
+Inventory outcome (2026-10-20, runs 39363624759/39364902845): all
+four items above were downloaded and inventoried via
+`queues/media.tsv`; none carries a documentation set (see the
+table), so none was imported and the rows were removed again.
+The remaining unexamined vein is the MSDN Library disc sets
+(2001-2010) in the last row: they hold the CE .NET / Windows
+Mobile documentation (the RIL/CM sets included) that Learn never
+migrated.  Pinning specific archive.org items for them is the
+next harvest-expansion step.
 
 For page-level material the *queues* are the actionable list, and as of
 2026-10 both of them are done: `queues/mslearn-embedded.txt` is exhausted
