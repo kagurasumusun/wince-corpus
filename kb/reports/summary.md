@@ -3,7 +3,7 @@
 Counts from `kb/kb.sqlite3`. The database is the source of truth;
 this file exists so a reader can see the shape without a query tool.
 
-- schema version: 3 (extractor 3, builder 2)
+- schema version: 3 (extractor 4, builder 2)
 - corpus pages indexed: 210,773
 - symbols: 65,942
 - symbols with a CE subject page: 31,952; with a Win32 page: 6,119; with both: 4,600; with a .NET subject page: 8,280
