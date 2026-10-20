@@ -129,6 +129,7 @@ DOC_SET_VERSIONS = {
     "msdn-library/windows-mobile-6.5": "6.5",
     "msdn-library/vs2008-sp1": "5.0",
     "msdn-library/jan-2002": "3.0",
+    "msdn-library/vsnet-2003": "4.1",
 }
 
 
