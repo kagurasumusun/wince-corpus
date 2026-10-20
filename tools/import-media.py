@@ -20,6 +20,9 @@ What "documentation" means here, per file type inside the medium:
 * ``.chm``                      unpacked with 7z (see tools/extract-chm.py)
 * ``.hlp``/``.mvb``             decoded with helpdeco (if it is on PATH; see
                                 tools/extract-mvb.py for the MVB recipe)
+* ``.ivt``/``.ivi``             InfoViewer titles, decoded by
+                                tools/extract-ivt.py (pure Python; the
+                                CE 2.0 SDK Books Online lives in these)
 * ``.iso``                      read with tools/iso9660.py (no 7z needed)
 * ``.cab``                      InstallShield cabinets are unpacked with
                                 ``unshield`` when it is on PATH
@@ -83,7 +86,7 @@ PAGE_EXT = (".htm", ".html")
 # instead is handled with the per-medium exclude regex in queues/media.tsv.
 DEFAULT_EXCLUDE = r"(^|/)(_vti_cnf|_vti_pvt|_derived|_private)(/|\\)"
 
-HELP_EXT = (".hlp", ".mvb", ".mvw", ".gid")
+HELP_EXT = (".hlp", ".mvb", ".mvw", ".gid", ".ivt", ".ivi")
 # Assets, binaries, toolchains and source code: counted, never imported.  A
 # medium is a carrier for its documentation; the code it ships stays where it
 # is (see "What is collected" in the top-level README).
@@ -404,7 +407,8 @@ def inventory(root, label, exclude=""):
             examples[ext].append(rel)
     refused = excluder(exclude)
     log(f"[media] {label}: {sum(counts.values()):,} files "
-        f"({pages:,} HTML pages, {help_files:,} WinHelp/MVB, {chms:,} CHM"
+        f"({pages:,} HTML pages, {help_files:,} WinHelp/MVB/InfoViewer,"
+        f" {chms:,} CHM"
         f"{', import excludes ' + exclude if refused else ''})")
     for ext, number in counts.most_common(20):
         first = examples[ext][0][:70] if examples[ext] else ""
@@ -501,31 +505,36 @@ def extract_pages(root, out, label, dry_run=False, exclude=""):
 
 
 def extract_helpfile(path, out, rel, dry_run=False):
-    """WinHelp/MVB: hand the file to tools/extract-mvb.py (helpdeco + RTF).
+    """A compiled help file: decode it into HTML pages under out/<BOOK>/.
 
-    helpdeco itself is a third-party decompiler that is not part of this
-    repository; the workflow builds it from its pinned commit.  Without it the
-    file is reported and left for a run that has it.
+    WinHelp/MVB goes to tools/extract-mvb.py (helpdeco + RTF; helpdeco
+    itself is a third-party decompiler that is not part of this
+    repository -- the workflow builds it from its pinned commit, and
+    without it the file is reported and left for a run that has it).
+    InfoViewer titles (.ivt/.ivi) go to tools/extract-ivt.py, this
+    repository's own pure-Python decoder, so they need no toolchain.
     """
     if dry_run:
         return 1
-    tool = os.path.join(os.path.dirname(os.path.abspath(__file__)),
-                        "extract-mvb.py")
+    ext = os.path.splitext(path)[1].lower()
+    tool_name, flag, tag = ("extract-ivt.py", "--ivt", "[ivt]") \
+        if ext in (".ivt", ".ivi") else ("extract-mvb.py", "--mvb", "[mvb]")
+    tool = os.path.join(os.path.dirname(os.path.abspath(__file__)), tool_name)
     book = re.sub(r"[^A-Za-z0-9_]+", "_",
                   os.path.splitext(os.path.basename(path))[0]).upper()
     result = subprocess.run(
-        [sys.executable, tool, "--mvb", os.path.abspath(path),
+        [sys.executable, tool, flag, os.path.abspath(path),
          "--book", book, "--out", os.path.abspath(out)],
         capture_output=True, text=True, errors="replace")
     pages = 0
     for line in (result.stdout or "").splitlines():
-        if line.startswith("[mvb]") and "pages" in line:
+        if line.startswith(tag) and "pages" in line:
             match = re.search(r"(\d+) pages", line)
             if match:
                 pages = int(match.group(1))
     if result.returncode != 0:
         tail = (result.stderr or result.stdout or "").strip().splitlines()
-        log(f"[media] extract-mvb failed on {rel}: "
+        log(f"[media] {tool_name} failed on {rel}: "
             f"{tail[-1] if tail else 'no output'}")
     else:
         log(f"[media] {os.path.basename(rel)} -> {pages} pages (book {book})")
