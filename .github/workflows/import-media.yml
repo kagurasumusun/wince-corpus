@@ -128,6 +128,7 @@ jobs:
           # the checks write to a committed log as they go, and the
           # step after this one commits that log when this step fails.
           set -o pipefail
+          exec 3>&1
           exec > >(stdbuf -oL tee data/reports/media-refresh.txt) 2>&1
           df -h / | tail -1
           echo "== build-index =="
@@ -152,6 +153,12 @@ jobs:
           python3 tools/check-corpus.py --report || true
           echo "== check-policy =="
           python3 tools/check-policy.py
+          # Stop logging here: the log file is itself committed below,
+          # and tee appending the commit's own output to it left the
+          # tree dirty, which killed the pull --rebase after a fully
+          # successful refresh (run 39426146526).
+          exec 1>&3 2>&3 3>&-
+          sleep 2
           git config user.name "wince-docs-corpus importer"
           git config user.email "wince-corpus-harvester@users.noreply.github.com"
           git add sources/ corpus/ data/index data/reports queues  || true
