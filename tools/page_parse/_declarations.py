@@ -255,7 +255,14 @@ def declarations(fragment, page_title=None):
         attrs, inner = match.group(1), match.group(2)
         text = text_of(inner)
         if not _looks_like_declaration(text):
-            continue
+            # Under an explicit Syntax heading the page asserts the block
+            # is the declaration; a block the archive printed with a
+            # typo'd terminator ('HRESULT GetSIPMessage( ... }' for
+            # ');') is still quoted -- verbatim, never repaired.
+            if not (syntax_region and syntax_region.find(inner[:200]) != -1
+                    and 8 <= len(text) <= 4000
+                    and re.search(r"[A-Za-z_]\w*\s*\(", text)):
+                continue
         implementation = is_implementation(text)
         macro_block = _is_macro_block(text)
         role = "example" if implementation else (

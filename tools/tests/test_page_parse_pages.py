@@ -144,3 +144,15 @@ class KindOfDeclarationTests(unittest.TestCase):
         self.check("#define RASPPPIPV6 struct tagRASPPPIPV6 { DWORD d; }",
                    "struct")
         self.check("typedef int (*CB)(struct _X *p);", "callback")
+
+
+class PrintedTypoSyntaxTests(unittest.TestCase):
+    """A Syntax block the archive printed with a typo'd terminator is
+    still the page's declaration: quoted verbatim, never repaired."""
+
+    def test_get_sip_message(self):
+        fact = _fact("ee500689(v=winembedded.60).html")
+        syntax = _syntax(fact)
+        self.assertEqual(len(syntax), 1)
+        self.assertIn("HRESULT GetSIPMessage(", syntax[0]["text"])
+        self.assertTrue(syntax[0]["text"].rstrip().endswith("}"))
