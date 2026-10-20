@@ -32,7 +32,8 @@ import collections
 import re
 
 from .common import (doc_set_version, file_tokens, header_tokens, obs_id,
-                     parse_availability, parse_constant_value, symbol_key)
+                     parse_availability, parse_constant_value,
+                     parse_dotnet_versions, symbol_key)
 from .reviews import Reviews
 
 RANK_REVIEWED = 5
@@ -41,6 +42,7 @@ RANK_MEMBERSHIP = 20
 RANK_CONSTANT_PAGE = 30
 RANK_FAMILY = 40
 RANK_INCLUDE = 45
+RANK_CEGCC = 50
 RANK_NAMES = {
     RANK_REVIEWED: "reviewed",
     RANK_SUBJECT: "subject-requirement",
@@ -48,6 +50,7 @@ RANK_NAMES = {
     RANK_CONSTANT_PAGE: "constant-page",
     RANK_FAMILY: "family-statement",
     RANK_INCLUDE: "include-instruction",
+    RANK_CEGCC: "cegcc-adopted",
 }
 
 _INCLUDE_LABELS = {"req.include-header", "include", "include file"}
@@ -296,7 +299,7 @@ def _resolve_files(conn, layers: dict[str, str]) -> None:
             "SELECT ro.obs_id, ro.subject_key, ro.for_name, ro.page_path,"
             " rf.file_key, rf.file_kind FROM requirement_observations ro"
             " JOIN requirement_files rf ON rf.obs_id = ro.obs_id"
-            " WHERE ro.field IN ('library','dll','module')"
+            " WHERE ro.field IN ('library','dll','module','assembly')"
             " AND rf.file_kind IN ('lib','dll','module')"
             " AND ro.subject_key IS NOT NULL"):
         add(sym, fkey, fkind, layers[page],
@@ -529,7 +532,9 @@ def _resolve_versions(conn, layers: dict[str, str]) -> None:
                               (target,)).fetchone()
         if not exists:
             continue
-        min_v, max_v, status = parse_availability(raw)
+        min_v, max_v, status = (parse_dotnet_versions(raw)
+                                if layer == "dotnet"
+                                else parse_availability(raw))
         conn.execute(
             "INSERT OR IGNORE INTO symbol_versions(symbol_key, layer, obs_id,"
             " min_version, max_version, raw, parse_status)"
@@ -611,3 +616,188 @@ def resolve_all(conn, reviews: Reviews, shared_map_path: str) -> None:
     _resolve_constants(conn, layers, reviews)
     _resolve_versions(conn, layers)
     _resolve_relations(conn, layers, read_shared_map(shared_map_path))
+    _resolve_typedef_aliases(conn)
+    _adopt_cegcc(conn, layers)
+
+
+# ------------------------------------------------------------ typedef aliases
+
+_TYPEDEF_TAG_RE = re.compile(
+    r"typedef\s+(?:struct|union|enum)\s+([A-Za-z_]\w*)")
+_ALIAS_TOKEN_RE = re.compile(r"^[A-Za-z_]\w*$")
+_ALIAS_QUALIFIERS = {"FAR", "NEAR", "_FAR", "_NEAR", "__far", "__near",
+                     "far", "near"}
+
+
+def _typedef_aliases_of(text: str):
+    """[(tag, alias), ...] of a declaration quote's tag-typedefs.
+
+    Handles `typedef struct tagX {...} X, *PX;` (brace-balanced body,
+    several typedefs in one quoted block) and the body-less
+    `typedef struct tagX X;` / `... FAR *HX;` forms.  Whitespace is
+    collapsed first, so glued (`typedefstruct`) collapsed-spacing
+    quotes simply yield nothing.
+    """
+    flat = re.sub(r"\s+", " ", text)
+    out = []
+    for m in _TYPEDEF_TAG_RE.finditer(flat):
+        tag = m.group(1)
+        i = m.end()
+        while i < len(flat) and flat[i] == " ":
+            i += 1
+        if i < len(flat) and flat[i] == "{":
+            depth = 0
+            while i < len(flat):
+                if flat[i] == "{":
+                    depth += 1
+                elif flat[i] == "}":
+                    depth -= 1
+                    if depth == 0:
+                        i += 1
+                        break
+                i += 1
+        semi = flat.find(";", i)
+        if semi < 0:
+            continue
+        tail = flat[i:semi]
+        if "(" in tail or "{" in tail:
+            continue
+        for tok in tail.split(","):
+            words = tok.strip().lstrip("*").strip().split()
+            while len(words) > 1 and words[0] in _ALIAS_QUALIFIERS:
+                words = words[1:]
+            cand = words[-1].lstrip("*") if words else ""
+            if cand and cand != tag and _ALIAS_TOKEN_RE.match(cand):
+                out.append((tag, cand))
+    return out
+
+
+def _resolve_typedef_aliases(conn) -> None:
+    """symbol_relations rows for tag <-> typedef-name pairs.
+
+    The basis is the quoted typedef itself (verbatim declaration
+    texts); both names become symbols if the build did not already
+    need them.
+    """
+    pairs = set()
+    for (text,) in conn.execute(
+            "SELECT DISTINCT tb.text FROM declaration_observations do"
+            " JOIN text_blobs tb ON tb.sha256 = do.text_sha256"
+            " WHERE tb.text LIKE '%typedef%struct%'"
+            "    OR tb.text LIKE '%typedef%union%'"
+            "    OR tb.text LIKE '%typedef%enum%'"):
+        for tag, alias in _typedef_aliases_of(text):
+            pairs.add((alias, tag))
+    for alias, tag in sorted(pairs):
+        for display in (alias, tag):
+            conn.execute(
+                "INSERT OR IGNORE INTO symbols(symbol_key, display_name)"
+                " VALUES (?,?)", (symbol_key(display), display))
+        conn.execute(
+            "INSERT OR IGNORE INTO symbol_relations(symbol_key, other_key,"
+            " variant_kind, basis) VALUES (?,?,?,?)",
+            (symbol_key(alias), symbol_key(tag), "typedef_alias",
+             "declaration"))
+
+
+# ------------------------------------------------------------- CeGCC adoption
+
+def _documented_ce_symbols(conn, layers: dict[str, str]) -> set[str]:
+    """Symbols the CE documentation says something about (any layer-ce
+    subject, declaration, constant or constant-name observation)."""
+    out = set()
+    for sym, page in conn.execute(
+            "SELECT symbol_key, page_path FROM page_subjects"):
+        if layers.get(page) == "ce":
+            out.add(sym)
+    for sym, page in conn.execute(
+            "SELECT subject_key, page_path FROM declaration_observations"
+            " WHERE subject_key IS NOT NULL"):
+        if layers.get(page) == "ce":
+            out.add(sym)
+    for table in ("constant_observations", "constant_name_observations"):
+        for sym, page in conn.execute(
+                f"SELECT symbol_key, page_path FROM {table}"):
+            if layers.get(page) == "ce":
+                out.add(sym)
+    return out
+
+
+def _adopt_cegcc(conn, layers: dict[str, str]) -> None:
+    """Fill documented-but-unnumbered CE names from the CeGCC headers.
+
+    docs/kb-design.ja.md section 12: a 'cegcc' row exists only where
+    the CE documentation resolves no value/header, every adoptable
+    CeGCC row agrees, and the evidence is the CeGCC reference row
+    itself (file:line in the pinned public-domain snapshot).
+    Disagreement inside CeGCC leaves the name unnumbered.
+    """
+    documented = _documented_ce_symbols(conn, layers)
+    if not documented:
+        return
+    known = _symbols(conn)
+    by_key: dict[str, list[tuple]] = collections.defaultdict(list)
+    for row in conn.execute(
+            "SELECT reference_id, name_key, header_key, value_printed,"
+            " value_int FROM reference_names"
+            " WHERE adoptable=1 AND kind='define' ORDER BY reference_id"):
+        by_key[row[1]].append(row)
+
+    have_ce_value = {r[0] for r in conn.execute(
+        "SELECT symbol_key FROM constant_values"
+        " WHERE layer='ce' AND scope='*'")}
+    # A *value* is adopted only for names the CE docs present as
+    # constants (a constant-name row or a constant observation):
+    # CE-documented function names collide with CeGCC constant names
+    # (AbortDoc the API vs ABORTDOC the Escape code) and must not
+    # grow values.  Header adoption below keeps the broad set.
+    constant_documented = set()
+    for table in ("constant_observations", "constant_name_observations"):
+        for sym, page in conn.execute(
+                f"SELECT symbol_key, page_path FROM {table}"):
+            if layers.get(page) == "ce":
+                constant_documented.add(sym)
+    for sym in sorted(constant_documented & known):
+        if sym in have_ce_value:
+            continue
+        rows = [r for r in by_key.get(sym, ()) if r[4] is not None]
+        values = {r[4] for r in rows}
+        if len(values) != 1:
+            continue
+        vint = next(iter(values))
+        raws = collections.Counter(r[3] for r in rows if r[3])
+        raw = sorted(raws.items(), key=lambda kv: (-kv[1], kv[0]))[0][0]
+        conn.execute(
+            "INSERT OR IGNORE INTO constant_values(symbol_key, layer,"
+            " scope, value_kind, value_int, value_raw, status)"
+            " VALUES (?,'cegcc','*','integer',?,?,'resolved')",
+            (sym, vint, raw))
+        for r in rows:
+            conn.execute(
+                "INSERT OR IGNORE INTO constant_value_evidence(evidence_id,"
+                " symbol_key, layer, scope, reference_id)"
+                " VALUES (?,?, 'cegcc', '*', ?)",
+                (obs_id("e", sym, "cegcc", "*", r[0]), sym, r[0]))
+
+    have_ce_header = {r[0] for r in conn.execute(
+        "SELECT DISTINCT symbol_key FROM symbol_headers WHERE layer='ce'")}
+    for sym in sorted(documented & known):
+        if sym in have_ce_header:
+            continue
+        rows = [r for r in by_key.get(sym, ()) if r[2]]
+        headers = {r[2] for r in rows}
+        if len(headers) != 1:
+            continue
+        hkey = next(iter(headers))
+        _register_header(conn, hkey, hkey)
+        conn.execute(
+            "INSERT OR IGNORE INTO symbol_headers(symbol_key, header_key,"
+            " layer, rank, rank_name, is_chosen)"
+            " VALUES (?,?,'cegcc',?, ?,1)",
+            (sym, hkey, RANK_CEGCC, RANK_NAMES[RANK_CEGCC]))
+        for r in rows:
+            conn.execute(
+                "INSERT OR IGNORE INTO symbol_header_evidence(evidence_id,"
+                " symbol_key, header_key, layer, reference_id)"
+                " VALUES (?,?,?,'cegcc',?)",
+                (obs_id("e", sym, hkey, "cegcc", r[0]), sym, hkey, r[0]))

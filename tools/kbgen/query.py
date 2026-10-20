@@ -19,7 +19,7 @@ from .common import symbol_key
 
 def _sym(conn, name: str):
     return conn.execute(
-        "SELECT symbol_key, display_name, parent_key, is_api, noise FROM symbols"
+        "SELECT symbol_key, display_name, parent_key FROM symbols"
         " WHERE symbol_key=?", (symbol_key(name),)).fetchone()
 
 
@@ -28,10 +28,10 @@ def cmd_symbol(conn, name: str) -> int:
     if not row:
         print(f"no symbol: {name}")
         return 1
-    key, display, parent, is_api, noise = row
+    key, display, parent = row
     kinds = [r[0] for r in conn.execute(
         "SELECT DISTINCT kind FROM symbol_kinds WHERE symbol_key=? ORDER BY kind", (key,))]
-    print(f"{display}  [{key}] kinds={kinds} parent={parent} is_api={is_api} noise={noise}")
+    print(f"{display}  [{key}] kinds={kinds} parent={parent}")
     spell = [r[0] for r in conn.execute(
         "SELECT DISTINCT spelling FROM symbol_spellings WHERE symbol_key=? ORDER BY spelling",
         (key,))]

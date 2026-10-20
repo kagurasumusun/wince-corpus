@@ -27,7 +27,16 @@ def write_reports(conn, reports_dir: str) -> None:
 
     pages = q("SELECT COUNT(*) FROM pages")
     symbols = q("SELECT COUNT(*) FROM symbols")
-    is_api = q("SELECT COUNT(*) FROM symbols WHERE is_api=1")
+    dotnet_subjects = q(
+        "SELECT COUNT(DISTINCT ps.symbol_key) FROM page_subjects ps"
+        " JOIN pages p ON p.path=ps.page_path JOIN doc_sets d ON d.book=p.book"
+        " WHERE d.layer='dotnet'")
+    adopted_values = q("SELECT COUNT(*) FROM constant_values"
+                       " WHERE layer='cegcc'")
+    adopted_headers = q("SELECT COUNT(*) FROM symbol_headers"
+                        " WHERE layer='cegcc' AND is_chosen=1")
+    typedef_aliases = q("SELECT COUNT(*) FROM symbol_relations"
+                        " WHERE variant_kind='typedef_alias'")
     ce_subjects = q(
         "SELECT COUNT(DISTINCT ps.symbol_key) FROM page_subjects ps"
         " JOIN pages p ON p.path=ps.page_path JOIN doc_sets d ON d.book=p.book"
@@ -84,8 +93,8 @@ this file exists so a reader can see the shape without a query tool.
 
 - schema version: {meta.get('schema_version')} (extractor {meta.get('extractor_version')}, builder {meta.get('builder_version')})
 - corpus pages indexed: {pages:,}
-- symbols: {symbols:,} (is_api: {is_api:,})
-- symbols with a CE subject page: {ce_subjects:,}; with a Win32 page: {win_subjects:,}; with both: {both:,}
+- symbols: {symbols:,}
+- symbols with a CE subject page: {ce_subjects:,}; with a Win32 page: {win_subjects:,}; with both: {both:,}; with a .NET subject page: {dotnet_subjects:,}
 - declaration observations: {decl_obs:,} (syntax: {decl_syntax:,}, collapsed spacing: {decl_collapsed:,})
 - chosen declaration variants (CE primary): {variants_primary:,}
 - requirement observations: {req_obs:,}
@@ -95,10 +104,11 @@ this file exists so a reader can see the shape without a query tool.
 - headers: {headers:,}; chosen CE symbol->header: {chosen_headers:,}
 - link files: {files:,}; chosen CE symbol->file: {chosen_files:,}
 - availability statements parsed/partial/unparsed: {av.get('parsed', 0):,}/{av.get('partial', 0):,}/{av.get('unparsed', 0):,}
-- Unicode/ANSI variant relations: {rel_page + rel_import:,} (page-statement: {rel_page:,}, import-rule: {rel_import:,})
+- Unicode/ANSI variant relations: {rel_page + rel_import:,} (page-statement: {rel_page:,}, import-rule: {rel_import:,}); typedef-alias relations: {typedef_aliases:,}
 - conflicts open: {conflicts_open:,}; reviewed: {conflicts_reviewed:,}
 - ingest rejects: {rejects:,} (see ingest_rejects table)
-- reference names (isolated, comparison only): {ref_names:,}; CE values agreeing/differing: {agree:,}/{differ:,}
+- reference names: {ref_names:,}; CE values agreeing/differing vs references: {agree:,}/{differ:,}
+- CeGCC-adopted (layer 'cegcc', only where CE docs are silent): {adopted_values:,} constant values, {adopted_headers:,} header choices
 
 See coverage.tsv (per doc set), conflicts.tsv (review worklist) and
 gaps.tsv (collection worklist). Query everything else with

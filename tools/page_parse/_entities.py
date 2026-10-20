@@ -322,3 +322,23 @@ def kind_from_filename(name):
     """``nf-fileapi-createfilew.md`` -> ``function``."""
     match = re.match(r"^(nf|ns|ne|nc|ni|nn|nl|na)-", name)
     return KIND_FROM_PREFIX.get(match.group(1)) if match else None
+
+
+
+MANAGED_TITLE_RE = re.compile(
+    r"^(.+?)\s+(Class|Interface|Structure|Enumeration|Delegate|Method|"
+    r"Property|Field|Event|Constructor|Operator)(?:\s+\([^)]*\))*\s*$")
+
+
+def managed_title(title):
+    """Learn managed title -> (Type[.Member], kind) or None.
+
+    ``WebRequest.Create Method (System.Net)`` -> (``WebRequest.Create``,
+    ``method``).  Trailing parentheticals (overload hints and the
+    namespace display) are not part of the path; the namespace comes
+    from the body (``managed_reference``).
+    """
+    match = MANAGED_TITLE_RE.match(re.sub(r"\s+", " ", title or "").strip())
+    if not match:
+        return None
+    return match.group(1).strip(), match.group(2).lower()

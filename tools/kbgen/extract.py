@@ -215,6 +215,25 @@ def parse_page(job: tuple) -> dict:
             fact["subjects"].append({"name": n, "basis": basis,
                                      "is_primary": False, "kind": None})
 
+    if layer == "dotnet" and not fact["subjects"]:
+        # Managed layer: the Learn title grammar names the documented
+        # type/member, the body names its namespace and assembly.
+        managed = page_parse.managed_title(title)
+        if managed:
+            type_path, managed_kind = managed
+            ref = page_parse.managed_reference(fragment)
+            namespace = ref.get("namespace")
+            full = f"{namespace}.{type_path}" if namespace else type_path
+            fact["primary_name"] = full
+            fact["subjects"].append({
+                "name": full, "basis": "learn-managed-title",
+                "is_primary": True, "kind": managed_kind})
+            if ref.get("version_statement"):
+                fact["requirements"].append({
+                    "field": "os_versions", "label": "Version Information",
+                    "value": ref["version_statement"],
+                    "evidence": ref.get("version_evidence", "")})
+
     fact["notes"] = [dict(item, kind="ce-restriction")
                      for item in page_parse.constraints(fragment)]
     fact["notes"] += [dict(note, kind="ce-note")
@@ -247,6 +266,8 @@ def parse_page(job: tuple) -> dict:
     import collections
     kinds = collections.Counter(d["kind"] for d in fact["declarations"]
                                 if d["role"] == "syntax" and d["kind"])
-    if kinds:
+    if kinds and layer != "dotnet":
+        # Managed kinds come from the title grammar, not from classifying
+        # C# syntax quotes with the C shape rules.
         fact["kind_hint"] = kinds.most_common(1)[0][0]
     return fact

@@ -5,9 +5,12 @@ Checks, in order:
   1. SQLite integrity_check + foreign_key_check.
   2. kb_meta / schema version present and expected.
   3. Evidence integrity: every chosen fact has evidence; every evidence
-     row cites exactly one observation or review (schema CHECK) whose
-     page is in the fact's layer; evidence can never cite reference rows
-     (they are not in observation_index, and this is asserted).
+     row cites exactly one observation, review or reference row (schema
+     CHECK).  Observation evidence must come from a page in the fact's
+     layer.  Reference evidence is allowed only on 'cegcc'-layer rows
+     (the adoption layer), which in turn may cite nothing else, must
+     never coexist with a documented 'ce' answer for the same symbol,
+     and must agree with the CeGCC rows they cite.
   4. Resolution invariants: at most one chosen header per (symbol, layer);
      chosen link files never beyond membership rank; exactly one primary
      declaration variant per (symbol, layer); reviewed constant values
@@ -83,9 +86,9 @@ def validate(db_path: str = DB_PATH, manifest_path: str | None = MANIFEST_PATH,
     c.check(meta.get("schema_version") == str(SCHEMA_VERSION),
             f"schema_version {meta.get('schema_version')} != {SCHEMA_VERSION}")
 
-    # 3. evidence integrity and layer isolation.  Everything citable is in
-    #    observation_index; reference_names rows are not, so an evidence row
-    #    physically cannot cite them -- asserted here anyway.
+    # 3. evidence integrity and layer isolation.  Reference rows are not
+    #    observations (never in observation_index); they are citable only
+    #    through the reference_id evidence slot of 'cegcc'-layer rows.
     c.count_is(conn,
                "SELECT COUNT(*) FROM observation_index oi"
                " JOIN reference_names rn ON rn.locator = oi.obs_id", 0,
@@ -118,6 +121,61 @@ def validate(db_path: str = DB_PATH, manifest_path: str | None = MANIFEST_PATH,
                " JOIN doc_sets d ON d.book = p.book"
                " WHERE d.layer != dv.layer", 0,
                "variant observations outside the variant's layer")
+
+    # 3b. CeGCC adoption boundary (docs/kb-design.ja.md section 12).
+    for ev in ("symbol_header_evidence", "constant_value_evidence"):
+        c.count_is(conn,
+                   f"SELECT COUNT(*) FROM {ev}"
+                   " WHERE reference_id IS NOT NULL AND layer != 'cegcc'", 0,
+                   f"{ev}: reference evidence outside layer 'cegcc'")
+        c.count_is(conn,
+                   f"SELECT COUNT(*) FROM {ev} WHERE layer='cegcc'"
+                   " AND (obs_id IS NOT NULL OR review_id IS NOT NULL)", 0,
+                   f"{ev}: 'cegcc' rows citing pages or reviews")
+        c.count_is(conn,
+                   f"SELECT COUNT(*) FROM {ev} e"
+                   " JOIN reference_names rn"
+                   "  ON rn.reference_id = e.reference_id"
+                   " WHERE rn.adoptable = 0", 0,
+                   f"{ev}: cites a non-adoptable reference row")
+    c.count_is(conn,
+               "SELECT COUNT(*) FROM constant_values cg"
+               " WHERE cg.layer='cegcc' AND EXISTS"
+               "  (SELECT 1 FROM constant_values ce"
+               "   WHERE ce.symbol_key=cg.symbol_key AND ce.layer='ce'"
+               "    AND ce.scope='*')", 0,
+               "'cegcc' constant value beside a documented CE value")
+    c.count_is(conn,
+               "SELECT COUNT(*) FROM symbol_headers cg"
+               " WHERE cg.layer='cegcc' AND EXISTS"
+               "  (SELECT 1 FROM symbol_headers ce"
+               "   WHERE ce.symbol_key=cg.symbol_key AND ce.layer='ce')", 0,
+               "'cegcc' header beside documented CE header candidates")
+    c.count_is(conn,
+               "SELECT COUNT(*) FROM constant_values cg"
+               " WHERE cg.layer='cegcc' AND NOT EXISTS"
+               "  (SELECT 1 FROM constant_value_evidence e"
+               "   WHERE e.symbol_key=cg.symbol_key AND e.layer='cegcc')", 0,
+               "'cegcc' constant values without evidence")
+    c.count_is(conn,
+               "SELECT COUNT(*) FROM symbol_headers cg"
+               " WHERE cg.layer='cegcc' AND NOT EXISTS"
+               "  (SELECT 1 FROM symbol_header_evidence e"
+               "   WHERE e.symbol_key=cg.symbol_key AND e.layer='cegcc'"
+               "    AND e.header_key=cg.header_key)", 0,
+               "'cegcc' headers without evidence")
+    c.count_is(conn,
+               "SELECT COUNT(*) FROM constant_value_evidence e"
+               " JOIN reference_names rn ON rn.reference_id=e.reference_id"
+               " JOIN constant_values cg"
+               "  ON cg.symbol_key=e.symbol_key AND cg.layer='cegcc'"
+               " WHERE rn.value_int IS NULL OR rn.value_int != cg.value_int",
+               0, "'cegcc' value disagreeing with its cited CeGCC rows")
+    c.count_is(conn,
+               "SELECT COUNT(*) FROM symbol_header_evidence e"
+               " JOIN reference_names rn ON rn.reference_id=e.reference_id"
+               " WHERE e.layer='cegcc' AND rn.header_key != e.header_key", 0,
+               "'cegcc' header disagreeing with its cited CeGCC rows")
 
     # 4. resolution invariants
     bad = [r[0] for r in conn.execute(

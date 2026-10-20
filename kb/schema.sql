@@ -1,18 +1,23 @@
--- kb/schema.sql -- the knowledge-base contract (schema version 1).
+-- kb/schema.sql -- the knowledge-base contract (schema version 2).
 --
 -- One SQLite database (kb/kb.sqlite3) built only by tools/kbgen from:
 -- corpus/ pages (via data/index/INDEX.tsv), data/catalogs/, the licence
 -- registry, the Win32 shared-surface map, the human reviews in
--- kb/inputs/reviews/, and the two pinned third-party references under
--- sources/ (comparison only).  See docs/kb-design.ja.md.
+-- kb/inputs/reviews/, and the pinned third-party references under
+-- sources/.  See docs/kb-design.ja.md (section 12 for the CeGCC
+-- adoption layer) and docs/cegcc-survey.ja.md.
 --
 -- Layers inside one DB, separated by provenance, never mixed:
 --   ce     -- Microsoft Windows CE documentation (the facts)
 --   win32  -- the CE-shared Win32 reference pages (facts about those pages)
 --   dotnet -- the .NET families on top of CE (kept apart)
 --   oss    -- allowlisted open-source documents (notes only, no symbols)
--- Reference material lives in reference_* tables.  No evidence foreign
--- key can point there, so a reference row can never support a CE fact.
+--   cegcc  -- values adopted from the public-domain CeGCC headers for
+--             names the CE documentation numbers nowhere (resolved
+--             layer only; never a page layer, never overrides ce)
+-- Reference material lives in reference_* tables.  A reference row
+-- can be cited ONLY by a 'cegcc'-layer resolved row -- never by a CE
+-- fact; validate.py enforces the boundary.
 --
 -- Every observation names the corpus page it quotes (page_path -> pages),
 -- and the page row carries its licence scope.  Resolved facts cite
@@ -79,9 +84,7 @@ CREATE TABLE symbols (
     symbol_key   TEXT PRIMARY KEY,
     display_name TEXT NOT NULL,
     parent_key   TEXT REFERENCES symbols(symbol_key),
-    local_name   TEXT,
-    is_api       INTEGER NOT NULL CHECK (is_api IN (0,1)),
-    noise        TEXT
+    local_name   TEXT
 ) STRICT;
 CREATE INDEX symbols_display ON symbols(display_name);
 
@@ -315,7 +318,7 @@ CREATE TABLE reviews (
 CREATE TABLE symbol_headers (
     symbol_key TEXT NOT NULL REFERENCES symbols(symbol_key),
     header_key TEXT NOT NULL REFERENCES headers(header_key),
-    layer      TEXT NOT NULL CHECK (layer IN ('ce','win32','dotnet')),
+    layer      TEXT NOT NULL CHECK (layer IN ('ce','win32','dotnet','cegcc')),
     rank       INTEGER NOT NULL,      -- lower = stronger (resolve.py RANK_*)
     rank_name  TEXT NOT NULL,
     is_chosen  INTEGER NOT NULL CHECK (is_chosen IN (0,1)),
@@ -323,16 +326,20 @@ CREATE TABLE symbol_headers (
 ) STRICT;
 CREATE INDEX symbol_headers_header ON symbol_headers(header_key);
 
--- Evidence rows carry a content-hash id: exactly one of obs_id/review_id is
--- set, and a nullable column cannot sit in a STRICT primary key.
+-- Evidence rows carry a content-hash id: exactly one of
+-- obs_id/review_id/reference_id is set (reference_id only for
+-- 'cegcc'-layer rows), and a nullable column cannot sit in a STRICT
+-- primary key.
 CREATE TABLE symbol_header_evidence (
     evidence_id TEXT PRIMARY KEY,
     symbol_key TEXT NOT NULL,
     header_key TEXT NOT NULL,
     layer      TEXT NOT NULL,
-    obs_id     TEXT REFERENCES observation_index(obs_id),
-    review_id  TEXT REFERENCES reviews(review_id),
-    CHECK ((obs_id IS NULL) != (review_id IS NULL)),
+    obs_id       TEXT REFERENCES observation_index(obs_id),
+    review_id    TEXT REFERENCES reviews(review_id),
+    reference_id TEXT REFERENCES reference_names(reference_id),
+    CHECK ((obs_id IS NOT NULL) + (review_id IS NOT NULL)
+         + (reference_id IS NOT NULL) = 1),
     FOREIGN KEY (symbol_key, header_key, layer)
         REFERENCES symbol_headers(symbol_key, header_key, layer)
 ) STRICT;
@@ -387,7 +394,7 @@ CREATE TABLE declaration_variant_observations (
 
 CREATE TABLE constant_values (
     symbol_key TEXT NOT NULL REFERENCES symbols(symbol_key),
-    layer      TEXT NOT NULL CHECK (layer IN ('ce','win32','dotnet')),
+    layer      TEXT NOT NULL CHECK (layer IN ('ce','win32','dotnet','cegcc')),
     scope      TEXT NOT NULL,          -- '*' or a CE version like '5.0'
     value_kind TEXT NOT NULL CHECK (value_kind IN ('integer','expression')),
     value_int  INTEGER,
@@ -401,9 +408,11 @@ CREATE TABLE constant_value_evidence (
     symbol_key TEXT NOT NULL,
     layer      TEXT NOT NULL,
     scope      TEXT NOT NULL,
-    obs_id     TEXT REFERENCES observation_index(obs_id),
-    review_id  TEXT REFERENCES reviews(review_id),
-    CHECK ((obs_id IS NULL) != (review_id IS NULL)),
+    obs_id       TEXT REFERENCES observation_index(obs_id),
+    review_id    TEXT REFERENCES reviews(review_id),
+    reference_id TEXT REFERENCES reference_names(reference_id),
+    CHECK ((obs_id IS NOT NULL) + (review_id IS NOT NULL)
+         + (reference_id IS NOT NULL) = 1),
     FOREIGN KEY (symbol_key, layer, scope)
         REFERENCES constant_values(symbol_key, layer, scope)
 ) STRICT;
@@ -416,16 +425,19 @@ CREATE TABLE symbol_versions (
     max_version  TEXT,
     raw          TEXT NOT NULL,
     parse_status TEXT NOT NULL CHECK (parse_status IN
-        ('parsed','partial','unparsed')),
+        ('parsed','partial','unparsed','not_supported')),
     PRIMARY KEY (symbol_key, layer, obs_id)
 ) STRICT;
 
--- symbol_key is the A/W variant, other_key is the CE base name.
+-- For ansi/unicode: symbol_key is the A/W variant, other_key the CE
+-- base name.  For typedef_alias: symbol_key is the typedef name,
+-- other_key the struct/union/enum tag it aliases (basis 'declaration',
+-- derived from the quoted typedef).
 CREATE TABLE symbol_relations (
     symbol_key   TEXT NOT NULL REFERENCES symbols(symbol_key),
     other_key    TEXT NOT NULL REFERENCES symbols(symbol_key),
-    variant_kind TEXT NOT NULL CHECK (variant_kind IN ('ansi','unicode')),
-    basis        TEXT NOT NULL CHECK (basis IN ('page-statement','import-rule')),
+    variant_kind TEXT NOT NULL CHECK (variant_kind IN ('ansi','unicode','typedef_alias')),
+    basis        TEXT NOT NULL CHECK (basis IN ('page-statement','import-rule','declaration')),
     PRIMARY KEY (symbol_key, other_key, basis)
 ) STRICT;
 
@@ -449,16 +461,18 @@ CREATE TABLE reference_sources (
 ) STRICT;
 
 CREATE TABLE reference_names (
+    reference_id  TEXT PRIMARY KEY,   -- content hash (references.py)
     source_id     TEXT NOT NULL REFERENCES reference_sources(source_id),
     kind          TEXT NOT NULL CHECK (kind IN ('define','export','dllimport','const')),
     name          TEXT NOT NULL,
     name_key      TEXT NOT NULL,      -- symbol_key form, comparison joins only
     header_key    TEXT,               -- define/const: the file that prints it
     module_name   TEXT,               -- export/dllimport: the module/dll as printed
-    value_printed TEXT,               -- define/const: value as printed (comparison only, never adopted)
+    value_printed TEXT,               -- define/const: value as printed
     value_int     INTEGER,
     locator       TEXT NOT NULL,      -- archive member (and line when known)
-    PRIMARY KEY (source_id, kind, locator, name)
+    adoptable     INTEGER NOT NULL CHECK (adoptable IN (0,1)),
+    UNIQUE (source_id, kind, locator, name)
 ) STRICT;
 CREATE INDEX reference_names_key ON reference_names(name_key);
 
@@ -493,10 +507,31 @@ SELECT cv.symbol_key, s.display_name, cv.value_int AS ce_value_int,
        rn.value_int AS ref_value_int, rn.value_printed AS ref_value_printed,
        rn.header_key AS ref_header, rn.locator,
        CASE WHEN rn.value_int IS NOT NULL AND cv.value_int IS NOT NULL
-            THEN CASE WHEN rn.value_int = cv.value_int THEN 'agree' ELSE 'differ' END
+            THEN CASE WHEN rn.value_int = cv.value_int
+                           OR (rn.value_int & 4294967295)
+                              = (cv.value_int & 4294967295)
+                      THEN 'agree' ELSE 'differ' END
             ELSE 'uncomparable' END AS comparison
 FROM constant_values cv
 JOIN symbols s ON s.symbol_key = cv.symbol_key
 JOIN reference_names rn ON rn.name_key = cv.symbol_key
      AND rn.kind IN ('define','const')
 WHERE cv.layer = 'ce' AND cv.scope = '*';
+
+-- Resolved constant values across layers, side by side.  The cegcc
+-- columns are populated only where the CE documentation prints no
+-- number (schema-v2 adoption layer, docs/kb-design.ja.md section 12).
+CREATE VIEW v_symbol_values AS
+SELECT s.symbol_key, s.display_name,
+       ce.value_int AS ce_value_int, ce.value_raw AS ce_value_raw,
+       w32.value_int AS win32_value_int, w32.value_raw AS win32_value_raw,
+       cg.value_int AS cegcc_value_int, cg.value_raw AS cegcc_value_raw
+FROM symbols s
+LEFT JOIN constant_values ce
+  ON ce.symbol_key = s.symbol_key AND ce.layer = 'ce' AND ce.scope = '*'
+LEFT JOIN constant_values w32
+  ON w32.symbol_key = s.symbol_key AND w32.layer = 'win32' AND w32.scope = '*'
+LEFT JOIN constant_values cg
+  ON cg.symbol_key = s.symbol_key AND cg.layer = 'cegcc' AND cg.scope = '*'
+WHERE ce.symbol_key IS NOT NULL OR w32.symbol_key IS NOT NULL
+   OR cg.symbol_key IS NOT NULL;

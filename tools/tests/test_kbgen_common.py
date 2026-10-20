@@ -156,3 +156,23 @@ class AvailabilityTests(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class NotSupportedAndDotnetVersionTests(unittest.TestCase):
+    def test_not_supported_is_a_status(self):
+        from tools.kbgen.common import parse_availability
+        self.assertEqual(parse_availability("Not supported in Windows CE"),
+                         (None, None, "not_supported"))
+        # a denial beats a version named elsewhere in the same cell
+        self.assertEqual(
+            parse_availability("Windows NT 4.0. Not supported in Windows CE"),
+            (None, None, "not_supported"))
+
+    def test_dotnet_version_floor(self):
+        from tools.kbgen.common import parse_dotnet_versions
+        self.assertEqual(
+            parse_dotnet_versions(
+                "Available in .NET Micro Framework version 2.5"),
+            ("2.5", None, "parsed"))
+        self.assertEqual(parse_dotnet_versions("See Also"),
+                         (None, None, "unparsed"))

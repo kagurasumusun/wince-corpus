@@ -125,6 +125,7 @@ from ._entities import (
     documented_title_names,
     interface_member_title,
     kind_from_filename,
+    managed_title,
     kind_title_name,
     name_from_filename,
     name_from_markdown_title,
@@ -179,6 +180,7 @@ from ._requirements import (
     listed_function_requirements,
     requirements,
     stated_none,
+    managed_reference,
 )
 
 from ._constants import (

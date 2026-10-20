@@ -68,7 +68,7 @@ class Builder:
                                                   basis)
             self.conn.execute(
                 "INSERT OR IGNORE INTO symbols(symbol_key, display_name,"
-                " parent_key, local_name, is_api, noise) VALUES (?,?,?,?,1,NULL)",
+                " parent_key, local_name) VALUES (?,?,?,?)",
                 (key, display, parent_key, local))
             self._symbol_seen.add(key)
         self.conn.execute(
@@ -193,7 +193,11 @@ class Builder:
                  1 if decl.get("implementation") else 0, language,
                  text_sha, ws_sha))
             if decl["role"] == "syntax":
-                self.add_kind(subject_key, decl.get("kind"), "declaration")
+                if language != "managed":
+                    # A C#-syntax quote has no C declaration kind; the
+                    # managed kind comes from the page's title grammar.
+                    self.add_kind(subject_key, decl.get("kind"),
+                                  "declaration")
             member_types = decl.get("member_types") or []
             for pos, member in enumerate(decl.get("members") or []):
                 mtype, mname = page_parse.member_parts(member)
@@ -216,7 +220,7 @@ class Builder:
                 self.conn.execute(
                     "INSERT OR IGNORE INTO requirement_files(obs_id, file_key,"
                     " file_kind) VALUES (?,?,?)", (oid, hkey, "header"))
-        elif field in ("library", "dll"):
+        elif field in ("library", "dll", "assembly"):
             for fkey, fkind, display in file_tokens(value):
                 self.register_file(fkey, fkind, display)
                 self.conn.execute(
@@ -489,9 +493,11 @@ class Builder:
                 "INSERT OR IGNORE INTO reference_sources(source_id, description,"
                 " archive, sha256) VALUES (?,?,?,?)", source)
             self.conn.executemany(
-                "INSERT OR IGNORE INTO reference_names(source_id, kind, name,"
-                " name_key, header_key, module_name, value_printed, value_int,"
-                " locator) VALUES (?,?,?,?,?,?,?,?,?)", rows)
+                "INSERT OR IGNORE INTO reference_names(reference_id, source_id,"
+                " kind, name, name_key, header_key, module_name, value_printed,"
+                " value_int, locator, adoptable)"
+                " VALUES (?,?,?,?,?,?,?,?,?,?,?)",
+                [(obs_id("x", r[0], r[1], r[8], r[2]), *r) for r in rows])
 
 
 def canonical_table_hashes(conn) -> dict[str, dict]:
@@ -539,6 +545,9 @@ def _input_rows(jobs_tree: str | None) -> list[tuple[str, str, str]]:
     w = references.find_w32api()
     if w:
         add("reference", w)
+    m = references.find_mingw()
+    if m:
+        add("reference", m)
     p = references.find_pinvoke()
     if p:
         add("reference", p)

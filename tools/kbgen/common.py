@@ -24,9 +24,9 @@ CATALOG_DIR = os.path.join(ROOT, "data", "catalogs")
 SHARED_MAP_PATH = os.path.join(ROOT, "data", "reports", "win32-shared.tsv")
 LICENSE_REGISTRY = os.path.join(ROOT, "data", "license-scopes.tsv")
 
-SCHEMA_VERSION = 1
-EXTRACTOR_VERSION = 2
-BUILDER_VERSION = 1
+SCHEMA_VERSION = 2
+EXTRACTOR_VERSION = 3
+BUILDER_VERSION = 2
 
 
 # ---------------------------------------------------------------- identity
@@ -328,6 +328,40 @@ def _recognised(version: str) -> bool:
     return version in CE_VERSIONS or version in _PRINTED_CE_VERSIONS
 
 
+_NOT_SUPPORTED_CE_RE = re.compile(
+    r"not supported (?:in|on|for) windows ce"
+    r"|windows ce[^.]{0,40}not supported"
+    r"|not (?:available|supported) (?:in|on) (?:windows )?ce\b")
+
+
+_DOTNET_AVAILABLE_RE = re.compile(
+    r"available in\b[^\n]*?version\s+(\d+\.\d+)", re.I)
+_DOTNET_SUPPORTED_RE = re.compile(r"supported in[:\s]*([\d.,\s]+)", re.I)
+
+
+def parse_dotnet_versions(raw: str) -> tuple[str | None, str | None, str]:
+    """A managed page's Version Information statement -> (min, max, status).
+
+    The printed shapes are few: "Available in .NET Micro Framework
+    version 2.5" (a floor) and "Supported in: 3.5, 3.0, 2.0" (a list
+    whose minimum is the floor).  Numbers are framework versions,
+    kept as printed; anything else stays unparsed with the statement
+    verbatim in the observation.
+    """
+    if not raw:
+        return None, None, "unparsed"
+    m = _DOTNET_AVAILABLE_RE.search(raw)
+    if m:
+        return m.group(1), None, "parsed"
+    m = _DOTNET_SUPPORTED_RE.search(raw)
+    if m:
+        nums = re.findall(r"\d+\.\d+", m.group(1))
+        if nums:
+            floor = min(nums, key=lambda v: tuple(int(x) for x in v.split(".")))
+            return floor, None, "parsed"
+    return None, None, "unparsed"
+
+
 def parse_availability(raw: str) -> tuple[str | None, str | None, str]:
     """Parse one printed availability statement -> (min, max, status).
 
@@ -344,6 +378,10 @@ def parse_availability(raw: str) -> tuple[str | None, str | None, str]:
     if not raw:
         return None, None, "unparsed"
     text = raw.lower()
+    if _NOT_SUPPORTED_CE_RE.search(text):
+        # The statement positively denies CE support ("Not supported
+        # in Windows CE"): that is a fact, not an absence of one.
+        return None, None, "not_supported"
 
     found = [v for v in _CE_CONTEXT_RE.findall(text) if _recognised(v)]
     if not _DESKTOP_RE.search(text):

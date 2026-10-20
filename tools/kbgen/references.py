@@ -1,15 +1,25 @@
-"""The isolated third-party references (comparison material only).
+"""The pinned third-party references: comparison material, plus the
+CeGCC adoption source for names the CE documentation numbers nowhere.
 
-Two pinned snapshots under sources/ may be *compared* against the KB --
-never used as evidence for a CE fact (schema: evidence FKs cannot point
-at reference rows; validate.py checks the isolation):
+Three pinned snapshots under sources/ are parsed into reference_* rows:
 
-* sources/w32api-cegcc/ -- the CeGCC w32api (public domain, pinned): the
-  classic 32-bit Win32 headers adapted for Windows CE.  We record the
-  names its include/ headers define (with the value as printed)
-  and the export names of its lib/+libce/ .def lists.
+* sources/w32api-cegcc/ -- CeGCC's w32api (public domain; classic
+  MinGW Win32 headers adapted to Windows CE): the names its include/
+  headers define (with the value as printed) and the export names of
+  its lib/+libce/ .def lists.
+* sources/w32api-cegcc-mingw/ -- CeGCC's mingw module ("mingw32ce",
+  public domain): the CE C-runtime headers under include/ and the
+  coredll/crtdll .def files at its root.
 * sources/dotnet-pinvoke/ -- the archived dotnet/pinvoke C# bindings
-  (MIT): const/enum names with values as printed, and [DllImport] names.
+  (MIT; desktop Win32, comparison only).
+
+Provenance and licence survey: docs/cegcc-survey.ja.md; adoption
+model: docs/kb-design.ja.md section 12.  Reference rows carry
+``adoptable``: whether the row may be cited by a 'cegcc'-layer
+resolved row.  Only CeGCC define rows outside the six notice-bearing
+files (winsock.h, winsock2.h, ws2tcpip.h, GL/gl.h, GL/glext.h,
+GL/glu.h) are adoptable; a reference row can never support a
+documented ('ce') fact, and validate.py enforces the boundary.
 
 STANDING PROHIBITION (2026-10, user order): Wine, ReactOS and MinGW-w64
 are NOT Windows CE and must never be used as reference material here.
@@ -26,7 +36,14 @@ import tarfile
 from .common import ROOT, _fit_int64, parse_constant_value, symbol_key
 
 W32API_GLOB = os.path.join(ROOT, "sources", "w32api-cegcc", "w32api-*-src.tar.gz")
+MINGW_GLOB = os.path.join(ROOT, "sources", "w32api-cegcc-mingw", "mingw-*-src.tar.gz")
 PINVOKE_DIR = os.path.join(ROOT, "sources", "dotnet-pinvoke")
+
+# Header files whose own licence notice (BSD UCB/DEC; Mesa; SGI
+# FSL-B) is not the package public-domain grant.  Their values are
+# kept for comparison but never adopted (docs/cegcc-survey.ja.md).
+_ADOPTION_EXCLUDED_HEADERS = {"winsock.h", "winsock2.h", "ws2tcpip.h",
+                              "gl.h", "glext.h", "glu.h"}
 
 _REF_DEFINE_RE = re.compile(r"^\s*#\s*define\s+([A-Za-z_]\w*)(\([^)]*\))?\s*(.*?)\s*$")
 _REF_COMMENT_RE = re.compile(r"/\*.*?\*/|//.*$")
@@ -70,6 +87,11 @@ def find_w32api() -> str | None:
     return tarballs[-1] if tarballs else None
 
 
+def find_mingw() -> str | None:
+    tarballs = sorted(glob.glob(MINGW_GLOB))
+    return tarballs[-1] if tarballs else None
+
+
 def find_pinvoke() -> str | None:
     if not os.path.isdir(PINVOKE_DIR):
         return None
@@ -85,8 +107,25 @@ def _value_int(printed: str | None) -> int | None:
     return parsed[1] if parsed and parsed[0] == "integer" else None
 
 
-def load_w32api(tarball: str):
-    """Yield reference_names rows + return (source row, rows)."""
+def _adoptable_define(member_name: str, header: str) -> int:
+    """May this define row be cited by a 'cegcc'-layer resolved row?"""
+    if header in _ADOPTION_EXCLUDED_HEADERS:
+        return 0
+    if "/gl/" in member_name.lower():
+        return 0
+    return 1
+
+
+def _load_header_tarball(tarball: str, source_id: str, description: str,
+                         root_defs: bool = False):
+    """reference_names rows + (source row, rows) for a CeGCC module.
+
+    Scope: constant defines (and enum members) in include/** headers,
+    plus .def export names -- under lib/+libce/ for w32api, at the
+    module root for mingw32ce.  Rows are 10-tuples ending in
+    ``adoptable`` (define rows only; exports are never cited by
+    resolved rows, only read directly by the future .def generator).
+    """
     rows = []
     rel = os.path.relpath(tarball, ROOT)
     with tarfile.open(tarball) as tar:
@@ -100,10 +139,12 @@ def load_w32api(tarball: str):
             if handle is None:
                 continue
             in_include = "include" in parts[:-1]
-            in_lib = any(p in ("lib", "libce") for p in parts[:-1])
+            in_lib = (len(parts) == 2 if root_defs
+                      else any(p in ("lib", "libce") for p in parts[:-1]))
             if in_include and parts[-1].lower().endswith((".h", ".hpp", ".hxx", ".hh")):
                 text = handle.read().decode("utf-8", "replace")
                 header = parts[-1].lower()
+                adopt = _adoptable_define(member.name, header)
                 for lineno, line in enumerate(text.splitlines(), 1):
                     m = _REF_DEFINE_RE.match(line)
                     if not m:
@@ -114,10 +155,10 @@ def load_w32api(tarball: str):
                     if name.startswith("__") or _REF_GUARDISH.match(name):
                         continue
                     printed = _REF_COMMENT_RE.sub("", value).strip() or None
-                    rows.append(("w32api-cegcc", "define", name,
+                    rows.append((source_id, "define", name,
                                  symbol_key(name), header, None, printed,
                                  _value_int(printed),
-                                 f"{member.name}:{lineno}"))
+                                 f"{member.name}:{lineno}", adopt))
                 for em in _REF_ENUM_RE.finditer(text):
                     base = text.count("\n", 0, em.start(1)) + 1
                     for off, piece in enumerate(em.group(1).splitlines()):
@@ -129,10 +170,10 @@ def load_w32api(tarball: str):
                         if name.startswith("__"):
                             continue
                         printed = (m.group(2) or "").strip() or None
-                        rows.append(("w32api-cegcc", "define", name,
+                        rows.append((source_id, "define", name,
                                      symbol_key(name), header, None, printed,
                                      _value_int(printed),
-                                     f"{member.name}:{base + off}"))
+                                     f"{member.name}:{base + off}", adopt))
             elif in_lib and parts[-1].lower().endswith(".def"):
                 text = handle.read().decode("utf-8", "replace")
                 module = parts[-1][:-4].lower()
@@ -153,14 +194,24 @@ def load_w32api(tarball: str):
                     m = _DEF_EXPORT_RE.match(s)
                     if m:
                         name = m.group(1)
-                        rows.append(("w32api-cegcc", "export", name,
+                        rows.append((source_id, "export", name,
                                      _export_name_key(name), None, module,
-                                     None, None, member.name))
-    source = ("w32api-cegcc",
-              "CeGCC w32api (public domain; pinned; comparison only)",
-              rel, _sha256_file(tarball))
+                                     None, None, member.name, 0))
+    source = (source_id, description, rel, _sha256_file(tarball))
     return source, rows
 
+
+def load_w32api(tarball: str):
+    return _load_header_tarball(
+        tarball, "w32api-cegcc",
+        "CeGCC w32api (public domain; pinned; comparison + cegcc adoption)")
+
+
+def load_mingw(tarball: str):
+    return _load_header_tarball(
+        tarball, "w32api-cegcc-mingw",
+        "CeGCC mingw32ce runtime (public domain; pinned; comparison + cegcc adoption)",
+        root_defs=True)
 
 _CONST_RE = re.compile(
     r"^\s*(?:public|internal)\s+const\s+"
@@ -386,7 +437,7 @@ def load_pinvoke(tarball: str):
     source = ("dotnet-pinvoke",
               "dotnet/pinvoke C# bindings (MIT; archived; comparison only)",
               rel, _sha256_file(tarball))
-    return source, [tuple(r) for r in rows]
+    return source, [tuple(r) + (0,) for r in rows]
 
 
 def load_all():
@@ -395,6 +446,9 @@ def load_all():
     w = find_w32api()
     if w:
         out.append(load_w32api(w))
+    m = find_mingw()
+    if m:
+        out.append(load_mingw(m))
     p = find_pinvoke()
     if p:
         out.append(load_pinvoke(p))

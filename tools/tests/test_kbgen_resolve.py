@@ -53,8 +53,8 @@ class ResolveCase(unittest.TestCase):
 
     def symbol(self, key, display=None):
         self.conn.execute(
-            "INSERT OR IGNORE INTO symbols(symbol_key, display_name, is_api)"
-            " VALUES (?,?,1)", (key, display or key))
+            "INSERT OR IGNORE INTO symbols(symbol_key, display_name)"
+            " VALUES (?,?)", (key, display or key))
         return key
 
     def req_header(self, sym, page, header, for_name=None):
@@ -204,3 +204,102 @@ class ConstantValueTests(ResolveCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class CegccAdoptionTests(ResolveCase):
+    """The 'cegcc' layer: adopted only where CE docs are silent."""
+
+    def reference(self, name, header, raw, vint, adoptable=1,
+                  source="w32api-cegcc"):
+        self.conn.execute(
+            "INSERT OR IGNORE INTO reference_sources(source_id, description,"
+            " archive, sha256) VALUES (?,?,?,?)",
+            (source, "test", "x.tar.gz", "0" * 64))
+        rid = obs_id("x", source, "define", f"inc/{header}:1", name)
+        self.conn.execute(
+            "INSERT INTO reference_names(reference_id, source_id, kind,"
+            " name, name_key, header_key, module_name, value_printed,"
+            " value_int, locator, adoptable)"
+            " VALUES (?,?, 'define', ?, ?, ?, NULL, ?, ?, ?, ?)",
+            (rid, source, name, name.lower(), header, raw, vint,
+             f"inc/{header}:1", adoptable))
+        return rid
+
+    def unnumbered(self, sym, page):
+        o = oid("n")
+        self.conn.execute("INSERT INTO observation_index VALUES (?,?,?)",
+                          (o, "constant-name", page))
+        self.conn.execute(
+            "INSERT INTO constant_name_observations(obs_id, symbol_key,"
+            " page_path, table_sha256, row_sha256) VALUES (?,?,?,?,?)",
+            (o, sym, page, self.blob, self.blob))
+
+    def cegcc_value(self, sym):
+        return self.conn.execute(
+            "SELECT value_int FROM constant_values WHERE symbol_key=?"
+            " AND layer='cegcc'", (sym,)).fetchone()
+
+    def test_adopted_when_documented_unnumbered(self):
+        page = self.page("ce/a.html", "chm/test", "ce", "5.0")
+        self.symbol("foo_const")
+        self.unnumbered("foo_const", page)
+        self.reference("FOO_CONST", "foo.h", "0x10", 16)
+        self.run_resolve()
+        self.assertEqual(self.cegcc_value("foo_const"), (16,))
+        # and a 'cegcc' header choice from the same define
+        self.assertEqual(self.chosen_header("foo_const", layer="cegcc"),
+                         "foo.h")
+        ev = self.conn.execute(
+            "SELECT reference_id, obs_id, review_id"
+            " FROM constant_value_evidence WHERE layer='cegcc'").fetchall()
+        self.assertTrue(ev and ev[0][0] and ev[0][1] is None
+                        and ev[0][2] is None)
+
+    def test_not_adopted_when_ce_documents_value(self):
+        page = self.page("ce/b.html", "chm/test", "ce", "5.0")
+        self.symbol("bar_const")
+        self.constant("bar_const", page, "7", 7)
+        self.reference("BAR_CONST", "bar.h", "9", 9)
+        self.run_resolve()
+        self.assertIsNone(self.cegcc_value("bar_const"))
+
+    def test_not_adopted_when_cegcc_disagrees(self):
+        page = self.page("ce/c.html", "chm/test", "ce", "5.0")
+        self.symbol("baz_const")
+        self.unnumbered("baz_const", page)
+        self.reference("BAZ_CONST", "a.h", "1", 1)
+        self.reference("BAZ_CONST", "b.h", "2", 2, source="w32api-mingw")
+        self.run_resolve()
+        self.assertIsNone(self.cegcc_value("baz_const"))
+
+    def test_not_adopted_from_excluded_or_undocumented(self):
+        page = self.page("ce/d.html", "chm/test", "ce", "5.0")
+        self.symbol("wsock_const")
+        self.unnumbered("wsock_const", page)
+        self.reference("WSOCK_CONST", "winsock.h", "3", 3, adoptable=0)
+        self.symbol("ghost_const")  # never documented in CE
+        self.reference("GHOST_CONST", "g.h", "5", 5)
+        self.run_resolve()
+        self.assertIsNone(self.cegcc_value("wsock_const"))
+        self.assertIsNone(self.cegcc_value("ghost_const"))
+
+
+class TypedefAliasTests(unittest.TestCase):
+    def test_tag_alias_pairs(self):
+        got = resolve._typedef_aliases_of(
+            "typedef struct _WAVEHDR { LPSTR lpData; } WAVEHDR,"
+            " *PWAVEHDR, FAR *LPWAVEHDR;")
+        self.assertEqual(got, [("_WAVEHDR", "WAVEHDR"),
+                               ("_WAVEHDR", "PWAVEHDR"),
+                               ("_WAVEHDR", "LPWAVEHDR")])
+
+    def test_nested_body(self):
+        got = resolve._typedef_aliases_of(
+            "typedef struct tagX { struct { int a; } inner; } X;")
+        self.assertEqual(got, [("tagX", "X")])
+
+    def test_no_tag_no_alias(self):
+        self.assertEqual(resolve._typedef_aliases_of(
+            "typedef struct { int x; } POINT;"), [])
+        self.assertEqual(resolve._typedef_aliases_of(
+            "typedef int BOOL;"), [])

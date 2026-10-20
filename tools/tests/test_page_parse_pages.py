@@ -156,3 +156,26 @@ class PrintedTypoSyntaxTests(unittest.TestCase):
         self.assertEqual(len(syntax), 1)
         self.assertIn("HRESULT GetSIPMessage(", syntax[0]["text"])
         self.assertTrue(syntax[0]["text"].rstrip().endswith("}"))
+
+
+class ManagedSubjectTests(unittest.TestCase):
+    """A Learn managed page's subject is Namespace.Type(.Member), and
+    its Assembly line is a requirement on that subject."""
+
+    @classmethod
+    def setUpClass(cls):
+        cls.fact = _fact("dotnet-compact-framework/0waatex7(v=vs.102).html")
+
+    def test_managed_subject(self):
+        self.assertEqual(self.fact["layer"], "dotnet")
+        subs = self.fact["subjects"]
+        self.assertEqual(len(subs), 1)
+        self.assertEqual(subs[0]["name"], "System.Uri.Equality")
+        self.assertEqual(subs[0]["kind"], "operator")
+        self.assertEqual(self.fact["primary_name"], "System.Uri.Equality")
+
+    def test_assembly_requirement(self):
+        asm = [r for r in self.fact["requirements"]
+               if r["field"] == "assembly"]
+        self.assertTrue(asm)
+        self.assertIn("System.Http.dll", asm[0]["value"])

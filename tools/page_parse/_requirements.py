@@ -732,3 +732,42 @@ def listed_function_requirements(fragment):
                     "value": dll_value,
                     "evidence": re.sub(r"\s+", " ", match.group(0)).strip()})
     return out
+
+_NAMESPACE_RE = re.compile(
+    r"<strong>\s*Namespace:\s*</strong>(.*?)(?:<br|</p>)", re.S | re.I)
+_ASSEMBLY_RE = re.compile(
+    r"<strong>\s*Assembly:\s*</strong>(.*?)</p>", re.S | re.I)
+_ASSEMBLY_DLL_RE = re.compile(r"\(in\s+([^()\s]+\.dll)\)", re.I)
+_VERSION_INFO_RE = re.compile(
+    r"Version Information</h[23]>(.*?)(?=<h[23]\b|$)", re.S | re.I)
+
+
+def managed_reference(fragment):
+    """A managed page's Namespace / Assembly / Version Information lines.
+
+    Returns dicts in the requirement-observation shape (without field),
+    keyed: namespace (plain name), assembly (the dll file name),
+    version_statement (the section text, verbatim-ish).  Each carries
+    an ``*_evidence`` quote.  Missing pieces are absent.
+    """
+    out = {}
+    match = _NAMESPACE_RE.search(fragment)
+    if match:
+        name = text_of(match.group(1), keep_newlines=False).strip()
+        if name:
+            out["namespace"] = name.split()[0]
+            out["namespace_evidence"] = "Namespace: " + name
+    match = _ASSEMBLY_RE.search(fragment)
+    if match:
+        line = text_of(match.group(1), keep_newlines=False).strip()
+        dll = _ASSEMBLY_DLL_RE.search(line)
+        if dll:
+            out["assembly"] = dll.group(1)
+            out["assembly_evidence"] = "Assembly: " + line
+    match = _VERSION_INFO_RE.search(fragment)
+    if match:
+        text = text_of(match.group(1), keep_newlines=False).strip()
+        if text:
+            out["version_statement"] = text
+            out["version_evidence"] = "Version Information: " + text
+    return out
