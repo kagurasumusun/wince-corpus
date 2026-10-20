@@ -67,6 +67,16 @@ can collect them):
 | CE 5.0 Standard SDK | Microsoft Download Center id 17310 (still live) | the CE 5.0 Standard SDK API surface |
 | MSDN Library discs (2001–2010) | Internet Archive / WinWorld | the MSDN-era captures of CE 3.0–5.0 reference, including custom-hardware docs |
 
+Queued for inventory (2026-10-20): the CE 5.0 CD5, CE 6.0 R2,
+CE 6.0 R3 and Platform Builder 6.0 SP1 items above are now
+`inventory-scratch` rows in `queues/media.tsv` (identifiers and
+file forms verified against the archive.org item pages).  The
+inventory listing lands in `data/reports/media-last.txt`;
+importing any documentation from them is decided only after
+reading it.  The Platform Builder media also contain shared
+source, which is never corpus material (documentation pages
+only -- `docs/COLLECTION-POLICY.md`).
+
 For page-level material the *queues* are the actionable list, and as of
 2026-10 both of them are done: `queues/mslearn-embedded.txt` is exhausted
 (`--dry-run` reports 0 to fetch), and `queues/wayback-msdn-2010.txt` — 31,388

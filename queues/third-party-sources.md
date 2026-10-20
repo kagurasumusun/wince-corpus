@@ -13,7 +13,7 @@ sources (2026-10) - they are filed under `corpus/msdn-library/` and
 |--------|---------------|----------------|
 | https://techshelps.github.io/ (github.com/techshelps/techshelps.github.io) | The seven MSDN Library sets that document Windows CE 1.0/2.0 (CEGUIDE, WCEMFC, WCEATL, VBCE, WCEDDK, VCCE, DNEMBED) | `corpus/msdn-library/techshelps/` (tools/import-techshelps.py) |
 | https://github.com/jeffpar/kbarchive | The KnowledgeBase articles of the Windows CE product family | `corpus/kb/` (tools/import-kbarchive.py) |
-| https://library.thedatadungeon.com/ | The Windows CE documentation of the MSDN Library April 2000 (its 1998/1992 editions can be added later) | `corpus/msdn-library/datadungeon-2000-04/` (tools/crawl-mirror.py, config queues/mirrors.tsv) |
+| https://library.thedatadungeon.com/ | The Windows CE documentation of the MSDN Library April 2000 (the 1998-06 edition was checked 2026-10-20 and has **no Windows CE section** -- its TOC's "Platform SDK"/"SDK Documentation" subtrees are desktop material; CE docs of that era shipped only with the CE SDK itself.  The 1992 edition predates CE.) | `corpus/msdn-library/datadungeon-2000-04/` (tools/crawl-mirror.py, config queues/mirrors.tsv) |
 
 Robots/usage notes: library.thedatadungeon.com/robots.txt disallows
 AI-training crawlers (GPTBot, ClaudeBot, anthropic-ai, CCBot, Amazonbot,
@@ -31,6 +31,17 @@ on the list fails `tools/check-policy.py`. What was looked at and refused
 (SDL 1.2 `README.WinCE`, because it is a file of the LGPL source distribution;
 mixed platform manuals that would have to be excerpted; mailing-list patches)
 is in `corpus/oss/PROVENANCE.md`.
+
+## Checked and not there (do not re-probe)
+
+* **Windows Mobile (`bb*`) topics on Microsoft Learn** -- checked
+  2026-10-20: `learn.microsoft.com/en-us/previous-versions/windows/embedded/bb416652`
+  (the MSDN topic CeGCC's aygshell.h cites) returns 404, with and
+  without a version tag.  The Windows Mobile SDK documentation was
+  not migrated to Learn's previous-versions archive; its surviving
+  full form is the MSDN Library disc sets (2001-2010, media lane)
+  and Wayback captures.  The corpus holds only a 34-topic WM 6.5
+  shell/input subset (`corpus/msdn-library/windows-mobile-6.5/`).
 
 ## Not collected
 

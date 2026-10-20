@@ -116,15 +116,176 @@ def _adoptable_define(member_name: str, header: str) -> int:
     return 1
 
 
+# -- the _WIN32_WCE guard context of each printed line ---------------------
+#
+# CeGCC adapted the desktop w32api headers to Windows CE by wrapping the
+# CE-correct replacement in ``#ifdef _WIN32_WCE`` (and the desktop form in
+# the matching ``#else`` / ``#ifndef`` branch) -- their FAQ describes the
+# pattern, and about 260 define lines sit in such branches.  A define's
+# guard context is therefore part of its provenance: the same name can
+# print one value for CE and another for the desktop (THREAD_PRIORITY_*
+# does), and only the CE branch may ever be adopted.  The classifier
+# below is deliberately small and conservative: a condition it cannot
+# prove CE-only (mixed ``||`` terms, unrecognised shapes) yields the
+# unguarded context '', never a guess.
+
+_GUARD_DIRECTIVE_RE = re.compile(r"#\s*(if|ifdef|ifndef|elif|else|endif)\b(.*)$")
+_GUARD_FLOOR_RE = re.compile(r"_WIN32_WCE\s*>=\s*(0[xX][0-9A-Fa-f]+|\d+)")
+_GUARD_BELOW_RE = re.compile(r"_WIN32_WCE\s*<\s*(?:0[xX][0-9A-Fa-f]+|\d+)")
+_GUARD_NOT_DEFINED_RE = re.compile(r"!\s*defined\s*\(?\s*_WIN32_WCE\b")
+_GUARD_DEFINED_RE = re.compile(r"\bdefined\s*\(?\s*_WIN32_WCE\b")
+
+
+def _guard_floor(literal: str) -> int:
+    """A printed _WIN32_WCE floor as a version number.
+
+    ``0x0420`` is already the version digits in hex.  The decimal
+    spelling (``400``, ``420``) prints the same digits -- the CeGCC
+    headers say so themselves ("Use 400, not 0x0400", service.h) --
+    so a decimal literal is read as version digits, not as an integer.
+    """
+    if literal.lower().startswith("0x"):
+        return int(literal, 16)
+    return int(literal, 16)
+
+
+def _guard_frame(directive: str, condition: str):
+    """(sense, floor) of one conditional: sense 'wce' | 'not-wce' | 'other'.
+
+    'wce' means the branch compiles only for a Windows CE target,
+    'not-wce' that it is excluded for CE (a desktop branch, an
+    old-version branch, or ``#if 0`` dead code); anything unprovable
+    is 'other' and contributes nothing.
+    """
+    cond = _REF_COMMENT_RE.sub("", condition).split("/*", 1)[0].strip()
+    if directive == "ifdef":
+        return ("wce", None) if cond == "_WIN32_WCE" else ("other", None)
+    if directive == "ifndef":
+        return ("not-wce", None) if cond == "_WIN32_WCE" else ("other", None)
+    if cond in ("0", "(0)"):
+        return ("not-wce", None)          # dead for every target
+    if "_WIN32_WCE" not in cond or "||" in cond:
+        return ("other", None)            # unprovable: say nothing
+    floor = _GUARD_FLOOR_RE.search(cond)
+    if floor:
+        return ("wce", _guard_floor(floor.group(1)))
+    if _GUARD_BELOW_RE.search(cond):
+        return ("not-wce", None)
+    if _GUARD_NOT_DEFINED_RE.search(cond):
+        return ("not-wce", None)
+    if _GUARD_DEFINED_RE.search(cond):
+        return ("wce", None)
+    if re.search(r"(?<![\w!])_WIN32_WCE\b", cond):
+        return ("wce", None)              # bare _WIN32_WCE: 0 off CE
+    return ("other", None)
+
+
+def _wce_guard_contexts(lines) -> list:
+    """Per-line _WIN32_WCE guard context: 'wce>=0x420' | 'wce' |
+    'not-wce' | '' (unguarded / unprovable).
+
+    A small preprocessor stack machine over the printed lines (block
+    comments and backslash continuations honoured).  ``#else`` flips a
+    CE frame, an ``#elif`` that never mentions _WIN32_WCE after a CE
+    branch is the non-CE remainder, and nesting combines outermost
+    first: any 'not-wce' frame excludes the line for CE, otherwise the
+    strongest CE floor wins.
+    """
+    contexts = []
+    stack = []                            # frames of (sense, floor)
+    in_block_comment = False
+    pending = None                        # continued directive text
+
+    def combine():
+        floor = None
+        for sense, fl in stack:
+            if sense == "not-wce":
+                return "not-wce"
+            if sense == "wce":
+                if fl is not None:
+                    floor = fl if floor is None else max(floor, fl)
+                elif floor is None:
+                    floor = -1            # a CE frame without a floor
+        if floor is None:
+            return ""
+        return "wce" if floor < 0 else f"wce>={floor:#x}"
+
+    def apply(text):
+        m = _GUARD_DIRECTIVE_RE.match(text)
+        if not m:
+            return
+        directive, cond = m.group(1), m.group(2)
+        if directive in ("if", "ifdef", "ifndef"):
+            stack.append(_guard_frame(directive, cond))
+        elif directive == "elif":
+            sense, floor = _guard_frame(directive, cond)
+            if sense == "other" and stack and stack[-1][0] == "wce" \
+                    and "_WIN32_WCE" not in cond:
+                sense = "not-wce"         # the non-CE remainder
+            if stack:
+                stack[-1] = (sense, floor if sense == "wce" else None)
+        elif directive == "else":
+            if stack:
+                sense = stack[-1][0]
+                flip = {"wce": "not-wce", "not-wce": "wce"}.get(sense, sense)
+                stack[-1] = (flip, None)
+        elif directive == "endif":
+            if stack:
+                stack.pop()
+
+    for raw in lines:
+        code = raw
+        if in_block_comment:
+            end = code.find("*/")
+            if end < 0:
+                contexts.append(combine())
+                continue
+            in_block_comment = False
+            code = code[end + 2:]
+        stripped = code.lstrip()
+        is_directive = stripped.startswith("#")
+        probe = code
+        while "/*" in probe:
+            start = probe.find("/*")
+            stop = probe.find("*/", start + 2)
+            if stop < 0:
+                in_block_comment = True
+                if not is_directive or probe.find("#") > start:
+                    is_directive = False
+                break
+            probe = probe[:start] + probe[stop + 2:]
+        if pending is not None:
+            pending += " " + code.strip()
+            if code.rstrip().endswith("\\"):
+                pending = pending.rstrip("\\").rstrip()
+                contexts.append(combine())
+                continue
+            apply(pending)
+            pending = None
+            contexts.append(combine())
+            continue
+        if is_directive:
+            text = stripped
+            if code.rstrip().endswith("\\"):
+                pending = text.rstrip("\\").rstrip()
+                contexts.append(combine())
+                continue
+            apply(text)
+        contexts.append(combine())
+    return contexts
+
+
 def _load_header_tarball(tarball: str, source_id: str, description: str,
                          root_defs: bool = False):
     """reference_names rows + (source row, rows) for a CeGCC module.
 
     Scope: constant defines (and enum members) in include/** headers,
     plus .def export names -- under lib/+libce/ for w32api, at the
-    module root for mingw32ce.  Rows are 10-tuples ending in
-    ``adoptable`` (define rows only; exports are never cited by
-    resolved rows, only read directly by the future .def generator).
+    module root for mingw32ce.  Rows are 11-tuples ending in
+    ``adoptable, ce_guard`` (ce_guard is the _WIN32_WCE guard context
+    of the printed line for header rows, None for .def exports;
+    exports are never cited by resolved rows, only read directly by
+    the future .def generator).
     """
     rows = []
     rel = os.path.relpath(tarball, ROOT)
@@ -145,7 +306,9 @@ def _load_header_tarball(tarball: str, source_id: str, description: str,
                 text = handle.read().decode("utf-8", "replace")
                 header = parts[-1].lower()
                 adopt = _adoptable_define(member.name, header)
-                for lineno, line in enumerate(text.splitlines(), 1):
+                lines = text.splitlines()
+                guards = _wce_guard_contexts(lines)
+                for lineno, line in enumerate(lines, 1):
                     m = _REF_DEFINE_RE.match(line)
                     if not m:
                         continue
@@ -158,7 +321,8 @@ def _load_header_tarball(tarball: str, source_id: str, description: str,
                     rows.append((source_id, "define", name,
                                  symbol_key(name), header, None, printed,
                                  _value_int(printed),
-                                 f"{member.name}:{lineno}", adopt))
+                                 f"{member.name}:{lineno}", adopt,
+                                 guards[lineno - 1]))
                 for em in _REF_ENUM_RE.finditer(text):
                     base = text.count("\n", 0, em.start(1)) + 1
                     for off, piece in enumerate(em.group(1).splitlines()):
@@ -170,10 +334,14 @@ def _load_header_tarball(tarball: str, source_id: str, description: str,
                         if name.startswith("__"):
                             continue
                         printed = (m.group(2) or "").strip() or None
+                        line_no = base + off
+                        guard = guards[line_no - 1] \
+                            if 0 < line_no <= len(guards) else ""
                         rows.append((source_id, "define", name,
                                      symbol_key(name), header, None, printed,
                                      _value_int(printed),
-                                     f"{member.name}:{base + off}", adopt))
+                                     f"{member.name}:{line_no}", adopt,
+                                     guard))
             elif in_lib and parts[-1].lower().endswith(".def"):
                 text = handle.read().decode("utf-8", "replace")
                 module = parts[-1][:-4].lower()
@@ -196,7 +364,7 @@ def _load_header_tarball(tarball: str, source_id: str, description: str,
                         name = m.group(1)
                         rows.append((source_id, "export", name,
                                      _export_name_key(name), None, module,
-                                     None, None, member.name, 0))
+                                     None, None, member.name, 0, None))
     source = (source_id, description, rel, _sha256_file(tarball))
     return source, rows
 
@@ -437,7 +605,9 @@ def load_pinvoke(tarball: str):
     source = ("dotnet-pinvoke",
               "dotnet/pinvoke C# bindings (MIT; archived; comparison only)",
               rel, _sha256_file(tarball))
-    return source, [tuple(r) + (0,) for r in rows]
+    # + (adoptable=0, ce_guard=None): comparison material only, and the
+    # _WIN32_WCE guard notion does not apply to C# bindings.
+    return source, [tuple(r) + (0, None) for r in rows]
 
 
 def load_all():

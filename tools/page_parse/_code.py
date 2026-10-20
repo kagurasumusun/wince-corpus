@@ -45,10 +45,12 @@ def _spacing(text):
 
 
 CALLING_CONVENTION = (
-    ("winapi", r"\bWINAPI\b|\bAPIENTRY\b|\bSTDAPICALLTYPE\b|\bWINAPIV\b"),
-    ("cdecl", r"\b_cdecl\b|\b__cdecl\b|\bCDECL\b"),
-    ("stdcall", r"\b_stdcall\b|\b__stdcall\b|\bSTDAPI\b|\bCALLBACK\b|"
-                r"\bPASCAL\b|\b_export\b"),
+    ("winapi", r"\bWINAPI\b|\bAPIENTRY\b|\bSTDAPICALLTYPE\b|\bWINAPIV\b|"
+               r"\bWSAAPI\b|\bSNMPAPI\b"),
+    ("cdecl", r"\b_cdecl\b|\b__cdecl\b|\bCDECL\b|\bcdecl\b"),
+    ("stdcall", r"\b_stdcall\b|\b__stdcall\b|\bSTDAPI_?\b|\bCALLBACK\b|"
+                r"\bPASCAL\b|\b_export\b|"
+                r"\bSTDMETHOD(?:CALLTYPE|IMP|IMPV)?\b|\bSTDMETHOD_\s*\("),
     ("fastcall", r"\b_fastcall\b|\b__fastcall\b"),
     ("this", r"\bthis\b\s*\("),
     ("extern-c", r'extern\s+"C"'),
@@ -401,6 +403,30 @@ def _is_build_script(text):
 
 
 
+_PROTO_HEAD_RE = re.compile(r"(?s)^([^;{}]*?)\b([A-Za-z_]\w*)\s*\((.*)\)\s*;?\s*$")
+_PROTO_HEAD_KEYWORDS = {"struct", "union", "enum", "if", "while", "for",
+                        "switch", "sizeof", "return", "typedef", "else",
+                        "do"}
+
+
+
+def _prototype_head(text):
+    """True for a whole-quote prototype shape `... Name( args );`.
+
+    The head before the name may carry a return type (including a
+    leading ``struct``/``enum`` tag and calling-convention macros);
+    the argument list must not contain a semicolon (that would be a
+    body or several statements, not one prototype).
+    """
+    match = _PROTO_HEAD_RE.match(text.strip())
+    if not match:
+        return False
+    if match.group(2).lower() in _PROTO_HEAD_KEYWORDS:
+        return False
+    return ";" not in match.group(3)
+
+
+
 def _kind_of(text):
     """What a declaration text declares, judged by its own shape.
 
@@ -429,6 +455,11 @@ def _kind_of(text):
         return "interface"
     if re.match(r"\s*typedef\b", text):
         return "typedef"
+    if _prototype_head(text):
+        # Before the leading-tag fallback below: a function *returning*
+        # a struct/enum (`struct hostent *gethostbyaddr(...)`) declares
+        # the function, not the type.
+        return "function"
     if re.match(r"\s*(?:struct|union)\s+[A-Za-z_]", text):
         return "struct"
     if re.match(r"\s*enum\s+[A-Za-z_]", text):

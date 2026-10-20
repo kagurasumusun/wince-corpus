@@ -495,9 +495,9 @@ class Builder:
             self.conn.executemany(
                 "INSERT OR IGNORE INTO reference_names(reference_id, source_id,"
                 " kind, name, name_key, header_key, module_name, value_printed,"
-                " value_int, locator, adoptable)"
-                " VALUES (?,?,?,?,?,?,?,?,?,?,?)",
-                [(obs_id("x", r[0], r[1], r[8], r[2]), *r) for r in rows])
+                " value_int, locator, adoptable, ce_guard)"
+                " VALUES (?,?,?,?,?,?,?,?,?,?,?,?)",
+                [(obs_id("x", r[0], r[1], r[8], r[2], r[10]), *r) for r in rows])
 
 
 def canonical_table_hashes(conn) -> dict[str, dict]:

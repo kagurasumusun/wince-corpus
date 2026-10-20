@@ -210,19 +210,20 @@ class CegccAdoptionTests(ResolveCase):
     """The 'cegcc' layer: adopted only where CE docs are silent."""
 
     def reference(self, name, header, raw, vint, adoptable=1,
-                  source="w32api-cegcc"):
+                  source="w32api-cegcc", ce_guard="", line=1):
         self.conn.execute(
             "INSERT OR IGNORE INTO reference_sources(source_id, description,"
             " archive, sha256) VALUES (?,?,?,?)",
             (source, "test", "x.tar.gz", "0" * 64))
-        rid = obs_id("x", source, "define", f"inc/{header}:1", name)
+        locator = f"inc/{header}:{line}"
+        rid = obs_id("x", source, "define", locator, name, ce_guard)
         self.conn.execute(
             "INSERT INTO reference_names(reference_id, source_id, kind,"
             " name, name_key, header_key, module_name, value_printed,"
-            " value_int, locator, adoptable)"
-            " VALUES (?,?, 'define', ?, ?, ?, NULL, ?, ?, ?, ?)",
+            " value_int, locator, adoptable, ce_guard)"
+            " VALUES (?,?, 'define', ?, ?, ?, NULL, ?, ?, ?, ?, ?)",
             (rid, source, name, name.lower(), header, raw, vint,
-             f"inc/{header}:1", adoptable))
+             locator, adoptable, ce_guard))
         return rid
 
     def unnumbered(self, sym, page):
@@ -271,6 +272,53 @@ class CegccAdoptionTests(ResolveCase):
         self.reference("BAZ_CONST", "b.h", "2", 2, source="w32api-mingw")
         self.run_resolve()
         self.assertIsNone(self.cegcc_value("baz_const"))
+
+    def test_ce_branch_value_wins_over_desktop_branch(self):
+        # CeGCC prints THREAD_PRIORITY_*-style splits: one value under
+        # #ifdef _WIN32_WCE, another in the desktop branch.  The old
+        # unanimity rule refused the name; the CE branch now decides.
+        page = self.page("ce/g.html", "chm/test", "ce", "5.0")
+        self.symbol("split_const")
+        self.unnumbered("split_const", page)
+        self.reference("SPLIT_CONST", "s.h", "15", 15,
+                       ce_guard="not-wce", line=10)
+        self.reference("SPLIT_CONST", "s.h", "0", 0,
+                       ce_guard="wce", line=12)
+        self.run_resolve()
+        self.assertEqual(self.cegcc_value("split_const"), (0,))
+        cited = self.conn.execute(
+            "SELECT rn.ce_guard FROM constant_value_evidence e"
+            " JOIN reference_names rn ON rn.reference_id=e.reference_id"
+            " WHERE e.layer='cegcc'").fetchall()
+        self.assertEqual(cited, [("wce",)])
+
+    def test_ce_excluded_branch_is_never_adopted(self):
+        # A define CeGCC prints only for the desktop (#ifndef
+        # _WIN32_WCE) must not give the CE-documented name a value.
+        page = self.page("ce/h.html", "chm/test", "ce", "5.0")
+        self.symbol("desk_const")
+        self.unnumbered("desk_const", page)
+        self.reference("DESK_CONST", "d.h", "0x200", 512,
+                       ce_guard="not-wce")
+        self.run_resolve()
+        self.assertIsNone(self.cegcc_value("desk_const"))
+        self.assertIsNone(self.chosen_header("desk_const", layer="cegcc"))
+
+    def test_split_ce_branches_refuse_rather_than_fall_back(self):
+        # Two CE-branch values under different version floors: the
+        # single-scope adoption cannot express either, and the
+        # desktop value is not a fallback.
+        page = self.page("ce/i.html", "chm/test", "ce", "5.0")
+        self.symbol("floor_const")
+        self.unnumbered("floor_const", page)
+        self.reference("FLOOR_CONST", "f.h", "1", 1,
+                       ce_guard="wce>=0x400", line=3)
+        self.reference("FLOOR_CONST", "f.h", "2", 2,
+                       ce_guard="wce>=0x500", line=5)
+        self.reference("FLOOR_CONST", "f.h", "9", 9,
+                       ce_guard="not-wce", line=7)
+        self.run_resolve()
+        self.assertIsNone(self.cegcc_value("floor_const"))
 
     def test_not_adopted_from_excluded_or_undocumented(self):
         page = self.page("ce/d.html", "chm/test", "ce", "5.0")

@@ -133,6 +133,18 @@ class KindOfDeclarationTests(unittest.TestCase):
         self.check("DWORD GetIfEntry(PMIB_IFROW pIfRow "
                    "// pointer to interface entry );", "function")
 
+    def test_functions_returning_tagged_types_are_functions(self):
+        self.check("struct hostent *gethostbyaddr(const char *addr,"
+                   " int len, int type);", "function")
+        self.check("enum StreamControlState CheckStreamState("
+                   " IMediaSample *pSample);", "function")
+        self.check("struct berval** ldap_get_values_len("
+                   " LDAP* ExternalHandle, LDAPMessage* Message,"
+                   " UNICODE PTCHAR attr );", "function")
+        # ...while a body or a bare forward declaration still is not:
+        self.check("struct _STATSTG { DWORD type; };", "struct")
+        self.check("struct _OPAQUE;", "struct")
+
     def test_bodies_and_typedefs(self):
         self.check("typedef struct tagPOINT { LONG x; LONG y; } POINT;",
                    "struct")
@@ -144,6 +156,29 @@ class KindOfDeclarationTests(unittest.TestCase):
         self.check("#define RASPPPIPV6 struct tagRASPPPIPV6 { DWORD d; }",
                    "struct")
         self.check("typedef int (*CB)(struct _X *p);", "callback")
+
+
+class CallingConventionTests(unittest.TestCase):
+    """Every printed spelling is recorded; silence stays silence."""
+
+    def check(self, text, convention):
+        import page_parse
+        self.assertEqual(page_parse._calling_convention(text), convention,
+                         text[:60])
+
+    def test_spelling_families(self):
+        self.check("BOOL WINAPI Foo(void);", "winapi")
+        self.check("INT WSAAPI WSAEnum(void);", "winapi")
+        self.check("SNMPAPI SnmpUtilAsnAnyCpy(AsnAny *a, AsnAny *b);",
+                   "winapi")
+        self.check("unsigned cdecl _CountLeadingZeros(long x);", "cdecl")
+        self.check("virtual HRESULT STDMETHODCALLTYPE Execute(void *p);",
+                   "stdcall")
+        self.check("STDMETHOD(Close) (THIS);", "stdcall")
+        self.check("STDMETHODIMP C::Run(void);", "stdcall")
+        self.check("STDAPI_(int) ReadInt(IStream *p, HRESULT &hr);",
+                   "stdcall")
+        self.check("void PlainSymbol(int x);", None)
 
 
 class PrintedTypoSyntaxTests(unittest.TestCase):

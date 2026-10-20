@@ -176,6 +176,12 @@ def validate(db_path: str = DB_PATH, manifest_path: str | None = MANIFEST_PATH,
                " JOIN reference_names rn ON rn.reference_id=e.reference_id"
                " WHERE e.layer='cegcc' AND rn.header_key != e.header_key", 0,
                "'cegcc' header disagreeing with its cited CeGCC rows")
+    for ev in ("constant_value_evidence", "symbol_header_evidence"):
+        c.count_is(conn,
+                   f"SELECT COUNT(*) FROM {ev} e"
+                   " JOIN reference_names rn ON rn.reference_id=e.reference_id"
+                   " WHERE e.layer='cegcc' AND rn.ce_guard='not-wce'", 0,
+                   f"{ev}: 'cegcc' row citing a CE-excluded CeGCC branch")
 
     # 4. resolution invariants
     bad = [r[0] for r in conn.execute(

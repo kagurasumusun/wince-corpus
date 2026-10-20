@@ -131,14 +131,16 @@ def cmd_constant(conn, name: str) -> int:
     for src, v, comp in compared:
         print(f"  reference[{src}]: {v} ({comp}; comparison only)")
     if not compared:
-        for src, v, hdr, loc in conn.execute(
-                "SELECT source_id, value_printed, header_key, locator"
+        for src, v, hdr, loc, guard in conn.execute(
+                "SELECT source_id, value_printed, header_key, locator,"
+                " ce_guard"
                 " FROM reference_names WHERE name_key=?"
                 " AND kind IN ('define','const') ORDER BY source_id"
                 " LIMIT 10", (key,)):
             basis = ("adoption basis" if adopted and src.startswith("w32api-")
                      else "comparison only")
-            print(f"  reference[{src}]: {v} in {hdr} ({loc}; {basis},"
+            branch = f"; _WIN32_WCE guard: {guard}" if guard else ""
+            print(f"  reference[{src}]: {v} in {hdr} ({loc}{branch}; {basis},"
                   " NOT a CE-documented value)")
     resolved = conn.execute(
         "SELECT COUNT(*) FROM constant_values WHERE symbol_key=? AND layer='ce'",

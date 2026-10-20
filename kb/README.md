@@ -54,13 +54,17 @@ input has drifted.
 - `reference_*` tables hold the pinned third-party snapshots (CeGCC
   w32api + CeGCC mingw32ce, public domain; dotnet/pinvoke, MIT,
   desktop comparison only). Two uses: comparison against documented
-  values, and the **`cegcc` adoption layer** (schema v2): for names
-  the CE documentation numbers nowhere, a resolved row with
-  `layer='cegcc'` may carry the CeGCC value/header, citing the exact
-  CeGCC file:line. It never overrides or mixes into documented `ce`
-  facts, requires unanimous CeGCC evidence, and excludes the six
-  notice-bearing headers (winsock/GL). Survey and licence record:
-  `docs/cegcc-survey.ja.md`, model: `docs/kb-design.ja.md` §12.
+  values, and the **`cegcc` adoption layer** (schema v2; guard-aware
+  since v3): for names the CE documentation numbers nowhere, a
+  resolved row with `layer='cegcc'` may carry the CeGCC
+  value/header, citing the exact CeGCC file:line. It never overrides
+  or mixes into documented `ce` facts, requires unanimous CeGCC
+  evidence, and excludes the six notice-bearing headers (winsock/GL).
+  Each define row also carries `ce_guard`, the `_WIN32_WCE` guard
+  context of its printed line: rows a CE compile excludes never take
+  part, and where CeGCC printed a CE-branch value that branch alone
+  decides. Survey and licence record: `docs/cegcc-survey.ja.md`
+  (CE-adaptation sources: §7), model: `docs/kb-design.ja.md` §12/§14.
   (Wine/ReactOS/MinGW-w64 are prohibited as references: they are not
   Windows CE.)
 - Disagreement is data, not noise: tied header evidence, diverging

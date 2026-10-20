@@ -472,6 +472,14 @@ CREATE TABLE reference_names (
     value_int     INTEGER,
     locator       TEXT NOT NULL,      -- archive member (and line when known)
     adoptable     INTEGER NOT NULL CHECK (adoptable IN (0,1)),
+    -- define rows of the CeGCC header modules: the _WIN32_WCE guard
+    -- context of the printed line, as CeGCC's CE adaptation wrote it --
+    -- 'wce>=0x420' (a version floor), 'wce' (CE-only branch), 'not-wce'
+    -- (excluded when compiling for CE: desktop branch or dead code),
+    -- '' (unguarded).  NULL for rows the notion does not apply to
+    -- (exports, the pinvoke comparison module).
+    ce_guard      TEXT CHECK (ce_guard IS NULL OR ce_guard IN ('','wce','not-wce')
+                              OR ce_guard LIKE 'wce>=0x%'),
     UNIQUE (source_id, kind, locator, name)
 ) STRICT;
 CREATE INDEX reference_names_key ON reference_names(name_key);

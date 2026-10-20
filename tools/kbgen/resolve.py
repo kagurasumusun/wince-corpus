@@ -755,9 +755,13 @@ def _adopt_cegcc(conn, layers: dict[str, str]) -> None:
 
     docs/kb-design.ja.md section 12: a 'cegcc' row exists only where
     the CE documentation resolves no value/header, every adoptable
-    CeGCC row agrees, and the evidence is the CeGCC reference row
-    itself (file:line in the pinned public-domain snapshot).
-    Disagreement inside CeGCC leaves the name unnumbered.
+    CeGCC row in the chosen guard class agrees, and the evidence is
+    the CeGCC reference row itself (file:line in the pinned
+    public-domain snapshot).  Rows printed in a branch that a CE
+    compile excludes (ce_guard 'not-wce') never take part; when CeGCC
+    printed a CE-branch value (ce_guard 'wce...'), that branch alone
+    decides -- the desktop branch of a split name is not a fallback.
+    Disagreement inside the chosen class leaves the name unnumbered.
     """
     documented = _documented_ce_symbols(conn, layers)
     if not documented:
@@ -766,9 +770,17 @@ def _adopt_cegcc(conn, layers: dict[str, str]) -> None:
     by_key: dict[str, list[tuple]] = collections.defaultdict(list)
     for row in conn.execute(
             "SELECT reference_id, name_key, header_key, value_printed,"
-            " value_int FROM reference_names"
+            " value_int, ce_guard FROM reference_names"
             " WHERE adoptable=1 AND kind='define' ORDER BY reference_id"):
         by_key[row[1]].append(row)
+
+    def guard_pool(rows):
+        """The rows that may decide an adoption: CE-branch rows when
+        CeGCC printed any, else the unguarded rows; 'not-wce' rows
+        (excluded for a CE target) never enter the pool."""
+        live = [r for r in rows if r[5] != "not-wce"]
+        guarded = [r for r in live if (r[5] or "").startswith("wce")]
+        return guarded or live
 
     have_ce_value = {r[0] for r in conn.execute(
         "SELECT symbol_key FROM constant_values"
@@ -787,7 +799,8 @@ def _adopt_cegcc(conn, layers: dict[str, str]) -> None:
     for sym in sorted(constant_documented & known):
         if sym in have_ce_value:
             continue
-        rows = [r for r in by_key.get(sym, ()) if r[4] is not None]
+        rows = guard_pool([r for r in by_key.get(sym, ())
+                           if r[4] is not None])
         values = {r[4] for r in rows}
         if len(values) != 1:
             continue
@@ -811,7 +824,7 @@ def _adopt_cegcc(conn, layers: dict[str, str]) -> None:
     for sym in sorted(documented & known):
         if sym in have_ce_header:
             continue
-        rows = [r for r in by_key.get(sym, ()) if r[2]]
+        rows = guard_pool([r for r in by_key.get(sym, ()) if r[2]])
         headers = {r[2] for r in rows}
         if len(headers) != 1:
             continue

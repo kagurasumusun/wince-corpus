@@ -3,7 +3,7 @@
 Counts from `kb/kb.sqlite3`. The database is the source of truth;
 this file exists so a reader can see the shape without a query tool.
 
-- schema version: 2 (extractor 3, builder 2)
+- schema version: 3 (extractor 3, builder 2)
 - corpus pages indexed: 122,170
 - symbols: 61,970
 - symbols with a CE subject page: 29,166; with a Win32 page: 6,119; with both: 4,590; with a .NET subject page: 8,280
@@ -20,7 +20,7 @@ this file exists so a reader can see the shape without a query tool.
 - conflicts open: 6,225; reviewed: 8
 - ingest rejects: 54 (see ingest_rejects table)
 - reference names: 67,299; CE values agreeing/differing vs references: 2,455/82
-- CeGCC-adopted (layer 'cegcc', only where CE docs are silent): 3,382 constant values, 4,702 header choices
+- CeGCC-adopted (layer 'cegcc', only where CE docs are silent): 3,385 constant values, 4,699 header choices
 
 See coverage.tsv (per doc set), conflicts.tsv (review worklist) and
 gaps.tsv (collection worklist). Query everything else with
