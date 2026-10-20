@@ -237,3 +237,17 @@ class RequiredHeaderTableTests(unittest.TestCase):
             self._listed_headers(
                 "02f39be5-6640-48ca-859a-86288b66f941.html"),
             {"_prefetch": "<cmnintrin.h>"})
+
+
+class MislabeledValueColumnTests(unittest.TestCase):
+    """``Value | Bitmask | Description``: the column LABELED Value
+    holds the constant names, Bitmask the numbers.  The cell-shape
+    fallback must let the identifier column claim the name role
+    (the Connection Manager pages numbered nothing before)."""
+
+    def test_cm_dsf_bitmask_values(self):
+        fact = _fact("ee497126(v=winembedded.60).html")
+        values = {c["name"]: c["value"] for c in fact["constants"]}
+        self.assertEqual(values["CM_DSF_BILLBYTIME"], "0x00000001")
+        self.assertEqual(values["CM_DSF_ALWAYSON"], "0x00000002")
+        self.assertEqual(values["CM_DSF_SUSPENDRESUME"], "0x00000004")

@@ -190,6 +190,20 @@ def constant_tables(fragment, raw_row=False):
                 return seen >= 2
 
             width = max((len(c) for c in body_cells), default=0)
+            if name_i is None:
+                # A column LABELED as a value ("Value | Bitmask |
+                # Description") may hold the constant names while an
+                # unlisted label holds the numbers -- the cells
+                # decide: an identifier column under a value label is
+                # the name column, and the number column is then
+                # found by cell shape below.  (The "Value"/"Weight"
+                # LOGFONT pair above is the same shape, read earlier.)
+                mislabeled = [i for i in value_is
+                              if i not in corr_is and ident_column(i)]
+                if mislabeled:
+                    name_i = mislabeled[0]
+                    value_is = []
+                    hex_i = val_i = dec_i = None
             if name_i is None or name_i in value_is or \
                     (name_i is not None and not ident_column(name_i)):
                 # also when a HEADER match points at a non-name column
