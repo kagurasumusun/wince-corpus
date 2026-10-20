@@ -257,7 +257,8 @@ def unpack(seven, source, dest):
     """Unpack an archive into dest; returns True when it worked."""
     os.makedirs(dest, exist_ok=True)
     result = subprocess.run([seven, "x", "-y", "-bso0", "-bsp0", source,
-                             f"-o{dest}"], capture_output=True, text=True)
+                             f"-o{dest}"], capture_output=True, text=True,
+                            errors="replace")
     if result.returncode != 0:
         tail = (result.stderr or result.stdout or "").strip().splitlines()
         log(f"[media] 7z could not unpack {os.path.basename(source)}: "
@@ -293,7 +294,8 @@ def unpack_cab(source, dest):
         return False
     os.makedirs(dest, exist_ok=True)
     result = subprocess.run([tool, "x", "-d", dest, source],
-                            capture_output=True, text=True)
+                            capture_output=True, text=True,
+                            errors="replace")
     if result.returncode != 0:
         tail = (result.stderr or result.stdout or "").strip().splitlines()
         log(f"[media] unshield could not unpack {os.path.basename(source)}: "
@@ -514,7 +516,7 @@ def extract_helpfile(path, out, rel, dry_run=False):
     result = subprocess.run(
         [sys.executable, tool, "--mvb", os.path.abspath(path),
          "--book", book, "--out", os.path.abspath(out)],
-        capture_output=True, text=True)
+        capture_output=True, text=True, errors="replace")
     pages = 0
     for line in (result.stdout or "").splitlines():
         if line.startswith("[mvb]") and "pages" in line:
