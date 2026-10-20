@@ -202,8 +202,6 @@ def main():
     CREATE TABLE IF NOT EXISTS names(
       name TEXT, page_id TEXT, kind TEXT, path TEXT,
       PRIMARY KEY(name, page_id, kind, path));
-    CREATE INDEX IF NOT EXISTS idx_names_name ON names(name);
-    CREATE INDEX IF NOT EXISTS idx_names_path ON names(path);
     CREATE TABLE IF NOT EXISTS meta(key TEXT PRIMARY KEY, value TEXT);
     """)
     # Migration: a names table from the page_id-keyed layout has no
@@ -220,6 +218,11 @@ def main():
                           "CREATE INDEX idx_names_path ON names(path);")
         print("build-index-sql: names table predates path keying; "
               "rebuilding the index from scratch")
+    # The indexes on names wait until here: on a pre-path database the
+    # table the CREATE above left alone has no path column to index.
+    con.executescript(
+        "CREATE INDEX IF NOT EXISTS idx_names_name ON names(name);"
+        "CREATE INDEX IF NOT EXISTS idx_names_path ON names(path);")
     state = {}
     state_json = None
     if args.full or migrated:
