@@ -2,6 +2,13 @@
 
 import re
 
+from ._text import (
+    CELL,
+    ROW,
+    TABLE,
+    text_of,
+)
+
 
 
 # ------------------------------------------------------------- declarations
@@ -550,3 +557,122 @@ def declared_names(text):
             if match:
                 add(match.group(1))
     return [name for name in names if not name.startswith("__")]
+
+
+# ------------------------------------------------------ MVB (CE 1.0/2.0 Books Online)
+#
+# The helpdeco-converted Books Online pages print a prototype in two
+# shapes no other template uses:
+#
+# * a two-column table, one code line per row, the second column the
+#   ``//`` comment of that line -- the first row's comment is the header
+#   (``HMENU CommandBar_GetMenu(`` | ``// commctrl.h``), and the prose
+#   (Parameters/Return Values/...) follows in the same table after the
+#   closing ``);`` row;
+# * one code line per block (``<pre class="code">`` or ``<p>``), e.g. a
+#   typedef split as ``typedef struct tagX`` / ``{`` / member / ``} X;``,
+#   or a message's "corresponding macro" prototype after a
+#   ``// Corresponding macro`` cue line.
+#
+# Both readers return the printed lines; joining them with newlines
+# restores the line structure the converter broke.  Line contents are
+# quoted untouched.
+
+_PROTO_TABLE_END = re.compile(r"^(?:\);\s*|};\s*|}?\s*[A-Za-z_]\w*\s*;\s*)$")
+_PROTO_TABLE_FIRST = re.compile(
+    r"^(?:typedef\b|struct\b|enum\b|union\b|#\s*define\b|"
+    r"[A-Za-z_][\w\s\*]*?\b[A-Za-z_]\w*\s*\()")
+_SYNTAX_HEADER_COMMENT = re.compile(r"^//\s*([A-Za-z0-9_]+\.h)\s*$")
+
+
+def _mvb_syntax_tables(fragment):
+    """[(code_lines, header_or_None)] for each MVB prototype table."""
+    out = []
+    for table in TABLE.finditer(fragment):
+        rows = []
+        for row in ROW.finditer(table.group(1)):
+            raw_cells = CELL.findall(row.group(1))
+            if len(raw_cells) > 2:
+                rows = None
+                break
+            cells = [text_of(c, keep_newlines=False).strip()
+                     for c in raw_cells]
+            rows.append((raw_cells, cells))
+        if not rows or len(rows) < 2:
+            continue
+        first = rows[0][1][0] if rows[0][1] else ""
+        if not (1 <= len(first) <= 120) or not _PROTO_TABLE_FIRST.match(first):
+            continue
+        lines = []
+        header = None
+        terminated = False
+        ok = True
+        for index, (raw_cells, cells) in enumerate(rows):
+            code = cells[0] if cells else ""
+            comment = cells[1] if len(cells) > 1 else ""
+            if comment and not comment.startswith("//"):
+                ok = False
+                break
+            if "<br" in raw_cells[0].lower() or len(code) > 160:
+                break            # the prose part of the table starts
+            if index == 0 and comment:
+                m = _SYNTAX_HEADER_COMMENT.match(comment)
+                if m:
+                    header = m.group(1)
+            lines.append(code)
+            if _PROTO_TABLE_END.match(code) or code.endswith(");"):
+                terminated = True
+                break
+            if len(lines) > 60:
+                ok = False
+                break
+        if ok and terminated and len(lines) >= 2:
+            out.append((lines, header))
+    return out
+
+
+_MVB_BLOCK = re.compile(
+    r"(?is)<pre\b[^>]*class\s*=\s*\"code\"[^>]*>(.*?)</pre>|<p>(.*?)</p>")
+_MVB_PROTO_START = re.compile(
+    r"^(?:typedef\s+(?:struct|enum|union)\b[^\n;{]*|"
+    r"[A-Za-z_][\w\s\*]*?\b[A-Za-z_]\w*\s*\(\s*)$")
+_MVB_MACRO_CUE = re.compile(r"(?i)^//\s*corresponding macro\b")
+
+
+def _mvb_line_prototypes(fragment):
+    """[(code_lines, cued_macro)] for block-per-line MVB prototypes."""
+    blocks = []
+    for match in _MVB_BLOCK.finditer(fragment):
+        inner = match.group(1) if match.group(1) is not None else match.group(2)
+        text = text_of(inner, keep_newlines=False).strip()
+        if text:
+            blocks.append(text)
+    out = []
+    i = 0
+    while i < len(blocks):
+        macro_cue = bool(_MVB_MACRO_CUE.match(blocks[i]))
+        start = i + 1 if macro_cue else i
+        if start >= len(blocks) or not _MVB_PROTO_START.match(blocks[start]):
+            i += 1
+            continue
+        lines = []
+        depth_paren = depth_brace = 0
+        j = start
+        complete = False
+        while j < len(blocks) and j - start < 40:
+            line = blocks[j]
+            if len(line) > 160:
+                break
+            lines.append(line)
+            depth_paren += line.count("(") - line.count(")")
+            depth_brace += line.count("{") - line.count("}")
+            j += 1
+            if depth_paren <= 0 and depth_brace <= 0 and line.rstrip().endswith(";"):
+                complete = True
+                break
+        if complete and len(lines) >= 2:
+            out.append((lines, macro_cue))
+            i = j
+        else:
+            i += 1
+    return out

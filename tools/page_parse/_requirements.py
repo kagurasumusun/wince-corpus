@@ -1,6 +1,9 @@
 """Requirements blocks (Header:/Library:/OS versions: ...) and component-page listed-function rows."""
 
 import re
+from ._code import (
+    _mvb_syntax_tables,
+)
 from ._evidence import (
     _names_in_next_table,
 )
@@ -474,6 +477,15 @@ def requirements(fragment):
             seen.add((field, value))
             out.append({"field": field, "label": label, "value": value,
                         "evidence": evidence})
+    # An MVB syntax table states the header as the prototype's first
+    # ``//`` comment (``HMENU CommandBar_GetMenu(`` | ``// commctrl.h``);
+    # those pages have no Requirements block at all.
+    for _lines, header in _mvb_syntax_tables(fragment):
+        if header and ("header", header) not in seen \
+                and _plausible("header", header):
+            seen.add(("header", header))
+            out.append({"field": "header", "label": "Syntax",
+                        "value": header, "evidence": f"// {header}"})
     return out
 
 

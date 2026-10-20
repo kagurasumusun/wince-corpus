@@ -11,6 +11,8 @@ from ._code import (
     _kind_of,
     _looks_like_declaration,
     _members,
+    _mvb_line_prototypes,
+    _mvb_syntax_tables,
     _spacing,
     abi_flags,
     is_implementation,
@@ -356,7 +358,53 @@ def declarations(fragment, page_title=None):
                 "implementation": implementation,
             })
             break
+    # MVB Books Online prototypes (CE 1.0/2.0): a code-line/``//``-comment
+    # table, or one code line per block.  The shapes are template-specific
+    # enough to read directly; a page that already yielded a syntax block
+    # keeps it, except that a "corresponding macro" prototype is always
+    # recorded -- attributed to the macro it declares, never to the
+    # page's subject (a message).
+    have_syntax = any(d["role"] == "syntax" for d in out)
+    mvb_texts = []
+    if not have_syntax:
+        mvb_texts += [("\n".join(lines), "mvb-table", False)
+                      for lines, _header in _mvb_syntax_tables(fragment)]
+    if any(marker in fragment for marker in
+           ('class="code"', "Corresponding macro", "typedef struct",
+            "typedef enum", "typedef union")):
+        mvb_texts += [("\n".join(lines), "mvb-lines", macro_cue)
+                      for lines, macro_cue in _mvb_line_prototypes(fragment)
+                      if macro_cue or not have_syntax]
+    for text, markup, macro_cue in mvb_texts:
+        if any(d["text"] == text for d in out):
+            continue
+        if not _looks_like_declaration(text) or is_implementation(text):
+            continue
+        decl = {
+            "text": text, "markup": markup,
+            "spacing": _spacing(text),
+            "calling_convention": _calling_convention(text),
+            "role": "syntax",
+            "kind": _kind_of(text), "members": _members(text),
+            "member_types": [member_type(line)
+                             for line in _members(text)],
+            "abi_flags": abi_flags(text),
+            "implementation": False,
+        }
+        name = _prototype_name(text) or _typedef_tail_name(text)
+        if name:
+            decl["declares"] = name
+        out.append(decl)
     return out
+
+
+_TYPEDEF_TAIL = re.compile(r"}\s*([A-Za-z_]\w*)\s*;\s*$")
+
+
+def _typedef_tail_name(text):
+    """The alias of a ``typedef struct {...} Name;`` block, if any."""
+    match = _TYPEDEF_TAIL.search(text.rstrip())
+    return match.group(1) if match else None
 
 
 
