@@ -153,6 +153,48 @@ class AvailabilityTests(unittest.TestCase):
         self.assertEqual(common.parse_availability("Windows CE OS"),
                          (None, None, "partial"))
 
+    def test_platform_lists_floor_at_the_earliest_shell(self):
+        # The CE 3.0 SDK sets print bare platform lists; H/PC Pro is
+        # the CE 2.11 device class, Pocket PC the CE 3.0 one.
+        self.assertEqual(
+            common.parse_availability("H/PC Pro, Palm-size PC, Pocket PC"),
+            ("2.11", None, "partial"))
+        self.assertEqual(common.parse_availability("H/PC Pro"),
+                         ("2.11", None, "partial"))
+        self.assertEqual(common.parse_availability("Pocket PC"),
+                         ("3.0", None, "partial"))
+        self.assertEqual(
+            common.parse_availability("Windows Mobile 2002 and later"),
+            ("3.0", None, "partial"))
+
+    def test_branded_shell_beats_bare_pocket_pc(self):
+        # One CE 4.2 shell described by two phrases, not two platforms.
+        self.assertEqual(
+            common.parse_availability("Windows Mobile 2003 for Pocket PC"),
+            ("4.2", None, "partial"))
+        # But two qualified shells are two platforms (a range): the
+        # floor is the earlier one.
+        self.assertEqual(
+            common.parse_availability(
+                "Pocket PC 2000 through Windows Mobile 2003 SE "
+                "(not supported in later versions)"),
+            ("3.0", None, "partial"))
+        self.assertEqual(
+            common.parse_availability(
+                "Smartphone 2002 through Windows Mobile 2003 SE "
+                "(not supported in later versions)"),
+            ("3.0", None, "partial"))
+
+    def test_printed_minor_variants_are_recognised(self):
+        # The era also prints 5.01 / 4.10 / 1.02; labels stay as printed.
+        self.assertEqual(common.parse_availability("Windows CE 5.01 and later"),
+                         ("5.01", None, "parsed"))
+        self.assertEqual(
+            common.parse_availability("Windows CE OS .NET 4.10 and later"),
+            ("4.10", None, "parsed"))
+        self.assertEqual(common.parse_availability("Windows CE OS 1.02 and later"),
+                         ("1.02", None, "parsed"))
+
 
 if __name__ == "__main__":
     unittest.main()
@@ -175,4 +217,19 @@ class NotSupportedAndDotnetVersionTests(unittest.TestCase):
                 "Available in .NET Micro Framework version 2.5"),
             ("2.5", None, "parsed"))
         self.assertEqual(parse_dotnet_versions("See Also"),
+                         (None, None, "unparsed"))
+        # The Micro Framework sets also print plural version lists;
+        # the earliest listed version is the floor.  MFDeploy tool
+        # releases are not framework bounds and stay unparsed.
+        self.assertEqual(
+            parse_dotnet_versions(
+                "Available in the .NET Micro Framework versions "
+                "3.0, 4.0, and 4.1."),
+            ("3.0", None, "parsed"))
+        self.assertEqual(
+            parse_dotnet_versions(
+                "Available in the .NET Micro Framework versions "
+                "4.1 and 4.2."),
+            ("4.1", None, "parsed"))
+        self.assertEqual(parse_dotnet_versions("Available in MFDeploy 4.0 SP1."),
                          (None, None, "unparsed"))

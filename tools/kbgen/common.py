@@ -310,7 +310,8 @@ _RANGE_SEP = re.compile(r"\b(?:through|to|until)\b|[-–—]|\.\.")
 # canonical ce_versions rows.  They are kept as printed labels; only
 # membership in the recognised set decides whether a bare number in a
 # statement is a CE version at all.
-_PRINTED_CE_VERSIONS = {"1.01", "2.01", "2.1", "2.10", "3.1"}
+_PRINTED_CE_VERSIONS = {"1.01", "1.02", "1.9", "2.01", "2.1", "2.10",
+                        "3.1", "4.10", "5.01"}
 _CE_CONTEXT_RE = re.compile(
     r"(?:\bce(?:\s+\.net|\s+os)?|\bwince)\s*(\d+\.\d\d?)")
 _DESKTOP_RE = re.compile(
@@ -319,12 +320,24 @@ _DESKTOP_RE = re.compile(
 # Pocket PC 2000/2002 and Smartphone 2002 are CE 3.0 shells,
 # Windows Mobile 2003 is CE 4.2.  A statement in shell terms is
 # 'partial' by construction (the mapping is documented here, the
-# print itself is preserved verbatim beside it).
+# print itself is preserved verbatim beside it).  Every qualified
+# shell name denotes a distinct platform, so a statement naming
+# several (a Platform list "H/PC Pro, Palm-size PC, Pocket PC",
+# a range "Pocket PC 2000 through Windows Mobile 2003 SE") floors
+# at the earliest of them.  Bare "Pocket PC" is the exception: it
+# may merely re-describe a branded shell ("Windows Mobile 2003
+# for Pocket PC" is one CE 4.2 shell, not two platforms), so it
+# decides only when no qualified name matched.  Palm-size PC is
+# deliberately unmapped: the brand spans CE 2.0 devices and the
+# lists never need it (the shells beside it decide).
 _SHELL_VERSIONS = (
+    (re.compile(r"\bwindows mobile 2003\b"), "4.2"),
     (re.compile(r"\bpocket pc 200[02]\b"), "3.0"),
     (re.compile(r"\bsmartphone 2002\b"), "3.0"),
-    (re.compile(r"\bwindows mobile 2003\b"), "4.2"),
+    (re.compile(r"\bwindows mobile 200[02]\b"), "3.0"),
+    (re.compile(r"\bh/pc pro\b"), "2.11"),
 )
+_BARE_POCKET_PC_RE = re.compile(r"\bpocket pc\b")
 
 
 def _recognised(version: str) -> bool:
@@ -338,7 +351,9 @@ _NOT_SUPPORTED_CE_RE = re.compile(
 
 
 _DOTNET_AVAILABLE_RE = re.compile(
-    r"available in\b[^\n]*?version\s+(\d+\.\d+)", re.I)
+    r"available in\b[^\n]*?versions?\s+"
+    r"((?:\d+\.\d+)(?:\s*,\s*(?:and\s+)?\d+\.\d+|\s+and\s+\d+\.\d+)*)",
+    re.I)
 _DOTNET_SUPPORTED_RE = re.compile(r"supported in[:\s]*([\d.,\s]+)", re.I)
 
 
@@ -346,16 +361,21 @@ def parse_dotnet_versions(raw: str) -> tuple[str | None, str | None, str]:
     """A managed page's Version Information statement -> (min, max, status).
 
     The printed shapes are few: "Available in .NET Micro Framework
-    version 2.5" (a floor) and "Supported in: 3.5, 3.0, 2.0" (a list
-    whose minimum is the floor).  Numbers are framework versions,
-    kept as printed; anything else stays unparsed with the statement
-    verbatim in the observation.
+    version 2.5", "Available in the .NET Micro Framework versions
+    3.0, 4.0, and 4.1." and "Supported in: 3.5, 3.0, 2.0" -- floors
+    and lists whose minimum is the floor.  Numbers are framework
+    versions, kept as printed; anything else stays unparsed with
+    the statement verbatim in the observation (MFDeploy tool
+    versions included: a deployment tool's release is not a
+    framework availability bound).
     """
     if not raw:
         return None, None, "unparsed"
     m = _DOTNET_AVAILABLE_RE.search(raw)
     if m:
-        return m.group(1), None, "parsed"
+        nums = re.findall(r"\d+\.\d+", m.group(1))
+        floor = min(nums, key=lambda v: tuple(int(x) for x in v.split(".")))
+        return floor, None, "parsed"
     m = _DOTNET_SUPPORTED_RE.search(raw)
     if m:
         nums = re.findall(r"\d+\.\d+", m.group(1))
@@ -393,9 +413,12 @@ def parse_availability(raw: str) -> tuple[str | None, str | None, str]:
         # "CE OS 1.0 and 1.01") or to the CE column it was printed in.
         found = [v for v in _VERSION_RE.findall(text) if _recognised(v)]
     if not found:
-        for pattern, version in _SHELL_VERSIONS:
-            if pattern.search(text):
-                return version, None, "partial"
+        shells = [version for pattern, version in _SHELL_VERSIONS
+                  if pattern.search(text)]
+        if shells:
+            return min(shells, key=CE_VERSIONS.index), None, "partial"
+        if _BARE_POCKET_PC_RE.search(text):
+            return "3.0", None, "partial"
         if re.search(r"\bce\b|wince", text):
             # CE asserted without a version bound ("Windows CE OS").
             return None, None, "partial"
