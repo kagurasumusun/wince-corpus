@@ -303,24 +303,61 @@ def value_int(raw: str | None) -> int | None:
 
 _VERSION_RE = re.compile(r"(\d+\.\d\d?)")
 _RANGE_SEP = re.compile(r"\b(?:through|to|until)\b|[-–—]|\.\.")
+# Version numbers the era's pages print next to "CE" but that are not
+# canonical ce_versions rows.  They are kept as printed labels; only
+# membership in the recognised set decides whether a bare number in a
+# statement is a CE version at all.
+_PRINTED_CE_VERSIONS = {"1.01", "2.01", "2.1", "2.10", "3.1"}
+_CE_CONTEXT_RE = re.compile(
+    r"(?:\bce(?:\s+\.net|\s+os)?|\bwince)\s*(\d+\.\d\d?)")
+_DESKTOP_RE = re.compile(
+    r"\bwindows\s+(?:nt|9[58]\b|2000|xp|vista|server|me\b)|\bnt\s+\d")
+# Shell platforms whose release fixes the CE version underneath:
+# Pocket PC 2000/2002 and Smartphone 2002 are CE 3.0 shells,
+# Windows Mobile 2003 is CE 4.2.  A statement in shell terms is
+# 'partial' by construction (the mapping is documented here, the
+# print itself is preserved verbatim beside it).
+_SHELL_VERSIONS = (
+    (re.compile(r"\bpocket pc 200[02]\b"), "3.0"),
+    (re.compile(r"\bsmartphone 2002\b"), "3.0"),
+    (re.compile(r"\bwindows mobile 2003\b"), "4.2"),
+)
+
+
+def _recognised(version: str) -> bool:
+    return version in CE_VERSIONS or version in _PRINTED_CE_VERSIONS
 
 
 def parse_availability(raw: str) -> tuple[str | None, str | None, str]:
     """Parse one printed availability statement -> (min, max, status).
 
-    Only version numbers in CE_VERSIONS count (``Windows CE 5.0``).
+    Only version numbers printed in a CE context count (``Windows
+    CE 5.0``, ``CE .NET 4.0``, ``wince 2.0``).  In mixed lists
+    (``Windows 95, Windows NT 4.0, Windows CE 2.12``) the desktop
+    numbers must not become CE bounds.  A statement with no CE context
+    at all counts its bare numbers only when it also names no desktop
+    Windows (a Versions-column cell like ``2.10 and later``).
     Unrecognised statements stay verbatim with status 'unparsed'; a
-    statement that mentions a version without a clear shape is 'partial'.
+    statement that mentions a version without a clear shape is
+    'partial'.
     """
     if not raw:
         return None, None, "unparsed"
     text = raw.lower()
-    # 1.01 and 2.10 are how the era's pages print those releases; they are
-    # kept as printed labels (only membership in the recognised set matters
-    # for whether a number is a CE version at all).
-    found = [v for v in _VERSION_RE.findall(text)
-             if v in CE_VERSIONS or v in ("1.01", "2.10")]
+
+    found = [v for v in _CE_CONTEXT_RE.findall(text) if _recognised(v)]
+    if not _DESKTOP_RE.search(text):
+        # The statement names no desktop Windows, so bare numbers belong
+        # to the CE context it does name ("CE 2.12 through .NET 4.1",
+        # "CE OS 1.0 and 1.01") or to the CE column it was printed in.
+        found = [v for v in _VERSION_RE.findall(text) if _recognised(v)]
     if not found:
+        for pattern, version in _SHELL_VERSIONS:
+            if pattern.search(text):
+                return version, None, "partial"
+        if re.search(r"\bce\b|wince", text):
+            # CE asserted without a version bound ("Windows CE OS").
+            return None, None, "partial"
         return None, None, "unparsed"
 
     def order(v: str) -> tuple[int, int]:
@@ -332,7 +369,7 @@ def parse_availability(raw: str) -> tuple[str | None, str | None, str]:
         return first, None, "parsed"
     if re.search(r"\bonly\b", text) and len(found) == 1:
         return first, first, "parsed"
-    if re.search(r"\b(?:before|earlier than|prior to)\b", text):
+    if re.search(r"\b(?:and|or) earlier\b|\b(?:before|prior to)\b", text):
         return None, first, "partial"
     if len(found) >= 2 and _RANGE_SEP.search(text):
         lo, hi = sorted(found[:2], key=order)

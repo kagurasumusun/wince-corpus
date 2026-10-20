@@ -120,6 +120,39 @@ class AvailabilityTests(unittest.TestCase):
         self.assertEqual(common.parse_availability("some prose"),
                          (None, None, "unparsed"))
 
+    def test_desktop_numbers_never_become_ce_bounds(self):
+        self.assertEqual(
+            common.parse_availability(
+                "Windows 95, Windows NT 4.0, Windows CE 2.12"),
+            ("2.12", None, "partial"))
+        self.assertEqual(
+            common.parse_availability(
+                "Windows NT 4.0, Windows 95, Windows CE .NET 4.0"),
+            ("4.0", None, "partial"))
+        self.assertEqual(
+            common.parse_availability("Windows 2000, Windows XP"),
+            (None, None, "unparsed"))
+
+    def test_bare_versions_column_prints(self):
+        self.assertEqual(common.parse_availability("2.10 and later"),
+                         ("2.10", None, "parsed"))
+        self.assertEqual(common.parse_availability("2.01 and later"),
+                         ("2.01", None, "parsed"))
+        self.assertEqual(common.parse_availability("Windows CE OS 2.1 and later"),
+                         ("2.1", None, "parsed"))
+
+    def test_earlier_is_a_maximum(self):
+        self.assertEqual(common.parse_availability("Windows CE 2.12 and earlier."),
+                         (None, "2.12", "partial"))
+
+    def test_shell_platform_statements_are_partial(self):
+        self.assertEqual(common.parse_availability("Pocket PC 2002 and later"),
+                         ("3.0", None, "partial"))
+        self.assertEqual(common.parse_availability("Smartphone 2002 and later."),
+                         ("3.0", None, "partial"))
+        self.assertEqual(common.parse_availability("Windows CE OS"),
+                         (None, None, "partial"))
+
 
 if __name__ == "__main__":
     unittest.main()
