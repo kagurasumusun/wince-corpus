@@ -331,3 +331,71 @@ _declarations / _markdown / _entities / _notes）に機械的に分割し、subs
 (`typedef struct tagX {..} X;` の両名を結ぶ)、.NET マネージド層の主題化、
 CeGCC 由来値の来歴レイヤ (§12)、版文の「Not supported in Windows CE」の
 表現、死んでいる is_api / noise 列の整理。
+
+## 12. 次期設計：schema v2（CeGCC 採用層・マネージド層・関係の拡張）
+
+調査根拠は `docs/cegcc-survey.ja.md`。いずれも「文書の事実」とは混ざらない
+構造を維持したまま、開発基盤生成に必要な不足を来歴付きで補う拡張である。
+実装は extractor 3 / builder 2 / schema 2 として一括し、subset 検証 →
+全量再生成 → kbgen check の順で進める。
+
+### 12.1 CeGCC 採用層
+
+- 入力: 既存 `w32api-cegcc` に `w32api-cegcc-mingw` (mingw32ce) を追加。
+  reference_names の各行に「採用可否」を持たせ、表示義務のある 6 ファイル
+  (winsock 系 3、GL 系 3) 由来の行は採用不可として取り込む時点で決める
+  (file → 可否の表は references.py の定数。走査で再確認可能な形にする)。
+- 表現: `constant_values.layer` に `cegcc` を追加する。cegcc 行が存在する
+  のは「同名に ce 行が無く、採用可な CeGCC 値が存在する」場合に限る。
+  根拠はページ引用ではなく reference_names 行 (source_id + locator) を
+  指し、evidence 経由で原ファイル:行まで追える。`symbol_values` ビューは
+  `cegcc_value_int` 等の独立列として開示し、ce 列には混入しない。
+  ヘッダも同型 (`symbol_headers.layer='cegcc'`、ce 候補が無い場合のみ
+  選出)。DLL 書き出しは reference_names (export) のままとし、生成層は
+  libce/mingwdll を主根拠に読む (文書の Library 要件が常に優先)。
+- 不変条件 (validate): cegcc 行と ce 行が同名で共存しないこと、cegcc 行の
+  根拠が必ず reference 由来であること、採用不可ファイル由来の行が
+  採用されていないこと。サマリは採用件数を開示する。
+- 生成契約 (将来の Header/.def Gen が守る): cegcc 由来の行には
+  `/* CeGCC (public domain), not in CE docs: w32api include/winuser.h:1234 */`
+  の形で来歴コメントを付け、生成物冒頭にも層別の出典一覧を置く。
+  値は「文書が沈黙した箇所の補完」であり、生成物利用者が文書事実と
+  区別できることが採用の条件である。
+- 比較表示の正常化: 符号違いの同一 32 ビットパターン (-1 と
+  0xFFFFFFFF) は比較上「一致」に数える。
+
+### 12.2 マネージド (.NET) 層の主題化
+
+- 対象: `corpus/dotnet/` (10,657 ページ) と Learn の Embedded Compact 7。
+  現状は宣言観測 3 万件超が無主題で浮いている。
+- モデル: `page_subjects.layer` に `dotnet` を追加し、主題は型の完全名
+  (例 `System.Net.WebClient`) とメンバ名。シンボル名空間は小文字化キー
+  の慣行を踏襲しつつ、マネージド名はドットを含む表示名を保持する。
+  宣言観測はページ主題へ帰属し、アセンブリ名は要件 (library)、
+  .NET Compact Framework の版は可用性として読む。ネイティブ層とは
+  シンボルを共有しない (名前の偶然の一致で混ざらないよう、マネージド
+  主題のシンボルは layer で区別できることが要件)。
+- 抽出: dotnet の Markdown フロントマタ/見出しから型・メンバ・
+  アセンブリを読むリーダを _markdown / _entities に追加する
+  (extractor 3)。
+
+### 12.3 typedef の別名関係
+
+- `symbol_relations.variant_kind` に `typedef_alias` を追加する
+  (現行 CHECK は ansi/unicode のみ)。根拠は宣言引用そのもの:
+  `typedef struct tagX {...} X;` のような宣言観測から決定的に導出し、
+  根拠種別 `declaration` で宣言の引用を指す。Header Gen が
+  タグ名と別名のどちらで参照されても辿れることが目的。
+
+### 12.4 版文の not_supported
+
+- 「Not supported in Windows CE」のような欠落の明言は、版文としては
+  読めるが min/max が空で「無情報」と区別がつかない。`symbol_versions`
+  の status に `not_supported` を追加し、CE に存在しないこと自体を
+  事実として保持する (ヘッダの版ガード設計と被覆面の解釈に効く)。
+
+### 12.5 死んだ列の整理
+
+- `symbols.is_api` と `symbols.noise` は一度も計算されていない。
+  孤立シンボルの監査 (大半は実名) を踏まえ、分類子を実働させる代わりに
+  両列を削除し、表面分類は `v_symbol_surface` に一本化する。
