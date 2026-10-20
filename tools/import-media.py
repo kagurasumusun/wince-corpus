@@ -46,8 +46,8 @@ keeps a later run from downloading the same image again (``--force`` redoes it).
 Action ``inventory-scratch`` only probes such a medium: fetch it, list what
 it holds by extension and throw it away, importing nothing
 (``inventory-list-scratch`` names every file instead -- for scouting a disc
-whose packaging is unknown).  Either way, only documentation is imported -
-documentation corpus, not a source-code mirror.
+whose packaging is unknown).  Either way, only documentation is imported:
+this is a documentation corpus, not a source-code mirror.
 """
 
 import argparse
