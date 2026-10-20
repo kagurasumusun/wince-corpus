@@ -522,6 +522,16 @@ def extract_helpfile(path, out, rel, dry_run=False):
     tool = os.path.join(os.path.dirname(os.path.abspath(__file__)), tool_name)
     book = re.sub(r"[^A-Za-z0-9_]+", "_",
                   os.path.splitext(os.path.basename(path))[0]).upper()
+    book_dir = os.path.join(out, book)
+
+    def book_files():
+        found = set()
+        for dirpath, _dirs, filenames in os.walk(book_dir):
+            for name in filenames:
+                found.add(os.path.join(dirpath, name))
+        return found
+
+    before = book_files()
     result = subprocess.run(
         [sys.executable, tool, flag, os.path.abspath(path),
          "--book", book, "--out", os.path.abspath(out)],
@@ -536,8 +546,25 @@ def extract_helpfile(path, out, rel, dry_run=False):
         tail = (result.stderr or result.stdout or "").strip().splitlines()
         log(f"[media] {tool_name} failed on {rel}: "
             f"{tail[-1] if tail else 'no output'}")
-    else:
-        log(f"[media] {os.path.basename(rel)} -> {pages} pages (book {book})")
+        return pages
+    # The extractor subprocess writes straight into the book directory,
+    # so the alias rule the other routes honour at write time is applied
+    # here on what it just wrote: a page dedupe-corpus.py collapsed must
+    # not come back (its surviving copy is already in the corpus).
+    held_back = 0
+    for written in sorted(book_files() - before):
+        if alias_index.is_aliased(written):
+            os.remove(written)
+            held_back += 1
+            try:
+                os.removedirs(os.path.dirname(written))
+            except OSError:
+                pass
+    if held_back:
+        pages -= held_back
+        log(f"[media] {os.path.basename(rel)}: {held_back} page(s) held "
+            f"back (already in the corpus, see data/index/aliases.tsv)")
+    log(f"[media] {os.path.basename(rel)} -> {pages} pages (book {book})")
     return pages
 
 
