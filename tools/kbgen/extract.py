@@ -91,7 +91,11 @@ def _attach_name_rows(fact: dict, rows: list) -> None:
                 {"name": row["name"], "basis": "name-row",
                  "is_primary": False, "kind": kind})
             have.add(row["name"])
-        fact["declarations"].extend(row["declarations"])
+        # The row's declarations declare the ROW's name, not the page's
+        # primary subject; carry that explicitly so the builder never
+        # attributes them to the page title's symbol.
+        fact["declarations"].extend(
+            dict(d, declares=row["name"]) for d in row["declarations"])
         for req in row["requirements"]:
             fact["requirements"].append(dict(req, for_name=row["name"]))
 

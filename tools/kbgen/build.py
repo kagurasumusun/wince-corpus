@@ -152,8 +152,10 @@ class Builder:
                 " basis, is_primary) VALUES (?,?,?,?)",
                 (path, key, subj["basis"], 1 if subj.get("is_primary") else 0))
             self.add_kind(key, subj.get("kind"), subj["basis"])
-        if primary_key is None and subject_keys:
-            primary_key = next(iter(subject_keys.values()))
+        # No fallback to "first subject": a page whose only subjects are
+        # name-row entries has no page-level subject, and attributing its
+        # page-level requirements/declarations to the alphabetically first
+        # row name (APIENTRY on windows-data-types) was a misattribution.
         self.add_kind(primary_key, fact.get("kind_hint"), "page-kind")
 
         self._ingest_declarations(fact, primary_key)
@@ -170,6 +172,14 @@ class Builder:
             oid = obs_id("d", path, decl["text"], decl["role"])
             if not self.register_obs(oid, "declaration", path):
                 continue
+            # A declaration the reader could attribute to a specific name
+            # (a name-row/listed-type row, a corresponding macro) belongs
+            # to THAT symbol, not to the page's primary subject.
+            declares = decl.get("declares")
+            subject_key = primary_key
+            if declares:
+                self.register_symbol(declares, path, "name-row")
+                subject_key = symbol_key(declares)
             text_sha = self.blob(decl["text"])
             ws_sha = self.blob(ws_norm(decl["text"]))
             self.conn.execute(
@@ -177,13 +187,13 @@ class Builder:
                 " subject_key, page_path, kind, role, markup, spacing,"
                 " calling_convention, implementation, language, text_sha256,"
                 " ws_norm_sha256) VALUES (?,?,?,?,?,?,?,?,?,?,?,?)",
-                (oid, primary_key, path, decl.get("kind"), decl["role"],
+                (oid, subject_key, path, decl.get("kind"), decl["role"],
                  decl.get("markup"), decl["spacing"],
                  decl.get("calling_convention"),
                  1 if decl.get("implementation") else 0, language,
                  text_sha, ws_sha))
             if decl["role"] == "syntax":
-                self.add_kind(primary_key, decl.get("kind"), "declaration")
+                self.add_kind(subject_key, decl.get("kind"), "declaration")
             member_types = decl.get("member_types") or []
             for pos, member in enumerate(decl.get("members") or []):
                 mtype, mname = page_parse.member_parts(member)
