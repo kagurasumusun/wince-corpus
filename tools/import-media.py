@@ -43,8 +43,10 @@ medium that is *not* kept: it is fetched to ``.cache/media/<name>/``, the
 documentation pages go to the corpus, and a ``PROVENANCE.md`` next to those
 pages records where they came from, while ``data/reports/media-imported.tsv``
 keeps a later run from downloading the same image again (``--force`` redoes it).
-Action ``inventory-scratch`` only probes such a medium: fetch it, list what it
-holds, throw it away.  Either way, only documentation is imported - this is a
+Action ``inventory-scratch`` only probes such a medium: fetch it, list what
+it holds by extension and throw it away, importing nothing
+(``inventory-list-scratch`` names every file instead -- for scouting a disc
+whose packaging is unknown).  Either way, only documentation is imported -
 documentation corpus, not a source-code mirror.
 """
 
@@ -178,7 +180,7 @@ def write_scratch_provenance(out, item, data, rows):
         fh.write(text)
 
 
-def fetch_item(item, name, pattern, keep=True):
+def fetch_item(item, name, pattern, keep=True, list_files=False):
     data = metadata(item)
     files = [f for f in data.get("files", [])
              if f.get("source") == "original"
@@ -208,7 +210,7 @@ def fetch_item(item, name, pattern, keep=True):
     else:
         # No medium in the repository: the provenance goes next to the pages.
         _SCRATCH[name] = {"rows": rows, "data": data, "item": item}
-    inventory(out, name)
+    inventory(out, name, list_files=list_files)
     return 0
 
 
@@ -325,6 +327,15 @@ def unpack_iso(source, dest):
     return True
 
 
+def is_microsoft_cab(source):
+    """True for a Microsoft cabinet (``MSCF`` signature)."""
+    try:
+        with open(source, "rb") as fh:
+            return fh.read(4) == b"MSCF"
+    except OSError:
+        return False
+
+
 def unpack_cab(source, dest):
     """Unpack an InstallShield cabinet with unshield (7z cannot read them)."""
     tool = shutil.which("unshield")
@@ -382,7 +393,10 @@ def walk_medium(root, seven, depth=0, unpacked=None, prefix=""):
                                 f"it to 7z")
                         else:
                             done = unpack_iso(path, target)
-                    if not done and lower.endswith(".cab"):
+                    if not done and lower.endswith(".cab") \
+                            and not is_microsoft_cab(path):
+                        # unshield reads InstallShield cabinets only;
+                        # a Microsoft cabinet (MSCF) belongs to 7z.
                         done = unpack_cab(path, target)
                     if not done and seven:
                         done = unpack(seven, path, target)
@@ -428,13 +442,21 @@ def excluder(exclude=""):
     return re.compile(pattern, re.I)
 
 
-def inventory(root, label, exclude=""):
-    """Print (and return) what a medium holds, without importing anything."""
+def inventory(root, label, exclude="", list_files=False):
+    """Print (and return) what a medium holds, without importing anything.
+
+    With ``list_files`` every file of the medium is named as well --
+    the scouting mode for a disc whose packaging has to be understood
+    (e.g. an MSI payload of MS Help 2 titles) before an import can be
+    scoped to the part this corpus collects.
+    """
     seven = seven_zip()
     counts = collections.Counter()
     examples = collections.defaultdict(list)
     pages = help_files = chms = 0
     for path, kind, rel in walk_medium(root, seven):
+        if list_files:
+            log(f"    = {rel}")
         ext = os.path.splitext(path)[1].lower() or "(none)"
         if kind == "documentation":
             if ext in PAGE_EXT:
@@ -673,7 +695,9 @@ def run_config(config, only, dry_run=False, force=False):
             return 1
     done = imported_state()
     for entry in entries:
-        scratch = entry["action"] in ("import-scratch", "inventory-scratch")
+        scratch = entry["action"] in ("import-scratch", "inventory-scratch",
+                                      "inventory-list-scratch")
+        list_files = entry["action"] == "inventory-list-scratch"
         wanted = entry["action"] in ("import", "import-scratch")
         if scratch and wanted and not force:
             receipt = done.get(entry["name"])
@@ -693,11 +717,12 @@ def run_config(config, only, dry_run=False, force=False):
             if dry_run:
                 continue
             if fetch_item(entry["item"], entry["name"], entry["pattern"],
-                          keep=not scratch):
+                          keep=not scratch, list_files=list_files):
                 return 1
         else:
             log(f"[media] {entry['name']}: already fetched, inventory:")
-            inventory(source_dir, entry["name"], entry.get("exclude", ""))
+            inventory(source_dir, entry["name"], entry.get("exclude", ""),
+                      list_files=list_files)
         if wanted and entry["out"]:
             out = entry["out"] if os.path.isabs(entry["out"]) else os.path.join(
                 ROOT, entry["out"])
