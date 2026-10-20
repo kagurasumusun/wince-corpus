@@ -8,8 +8,13 @@ have to rescan ~78k HTML files on every run.
 Schema
   pages(path TEXT PRIMARY KEY, page_id TEXT, section TEXT, title TEXT,
         size INTEGER)
-  names(name TEXT, page_id TEXT, kind TEXT,
-        PRIMARY KEY(name, page_id, kind))
+  names(name TEXT, page_id TEXT, kind TEXT, path TEXT,
+        PRIMARY KEY(name, page_id, kind, path))
+      path is the page the name was extracted from.  page_id alone
+      cannot carry that: two doc sets can have the same topic file
+      name (the techshelps and MSDN-January-2002 copies of WCEMFC
+      both have cfndrdlg_17.htm), and keying by page_id let one
+      page's re-extraction delete the other page's names.
       kind: 'api'    - markdown page name (nf-createfilew.md -> CreateFileW)
             'title'  - name parsed from the page <title>
             'const'  - `NAME = value` / `#define NAME value` print
@@ -195,14 +200,29 @@ def main():
       title TEXT, size INTEGER);
     CREATE INDEX IF NOT EXISTS idx_pages_page_id ON pages(page_id);
     CREATE TABLE IF NOT EXISTS names(
-      name TEXT, page_id TEXT, kind TEXT,
-      PRIMARY KEY(name, page_id, kind));
+      name TEXT, page_id TEXT, kind TEXT, path TEXT,
+      PRIMARY KEY(name, page_id, kind, path));
     CREATE INDEX IF NOT EXISTS idx_names_name ON names(name);
+    CREATE INDEX IF NOT EXISTS idx_names_path ON names(path);
     CREATE TABLE IF NOT EXISTS meta(key TEXT PRIMARY KEY, value TEXT);
     """)
+    # Migration: a names table from the page_id-keyed layout has no
+    # path column (and may already have lost rows to page_id
+    # collisions); rebuild it from scratch, like --full.
+    name_cols = [row[1] for row in con.execute("PRAGMA table_info(names)")]
+    migrated = "path" not in name_cols
+    if migrated:
+        con.executescript("DROP TABLE IF EXISTS names;"
+                          "CREATE TABLE names("
+                          "  name TEXT, page_id TEXT, kind TEXT, path TEXT,"
+                          "  PRIMARY KEY(name, page_id, kind, path));"
+                          "CREATE INDEX idx_names_name ON names(name);"
+                          "CREATE INDEX idx_names_path ON names(path);")
+        print("build-index-sql: names table predates path keying; "
+              "rebuilding the index from scratch")
     state = {}
     state_json = None
-    if args.full:
+    if args.full or migrated:
         # --full rebuilds from scratch: drop any rows left over from a
         # previous layout of the corpus (paths and sections change when
         # the tree is reorganised).
@@ -243,23 +263,20 @@ def main():
         if prev and prev[-1] == st.st_size:
             continue
         title, rows = extract(f, page_id)
-        tx.execute("DELETE FROM names WHERE page_id=?", (page_id,))
+        tx.execute("DELETE FROM names WHERE path=?", (rel,))
         section = os.path.dirname(os.path.relpath(f, CORPUS)) \
             .replace(os.sep, "/")
         tx.execute(
             "INSERT OR REPLACE INTO pages VALUES(?,?,?,?,?)",
             (rel, page_id, section, title, st.st_size))
         tx.executemany(
-            "INSERT OR IGNORE INTO names VALUES(?,?,?)",
-            [(n, page_id, k) for n, k in rows])
+            "INSERT OR IGNORE INTO names VALUES(?,?,?,?)",
+            [(n, page_id, k, rel) for n, k in rows])
         state[rel] = [st.st_mtime, st.st_size]
         changed += 1
     for rel in list(state):
         if rel not in live:
-            base = os.path.basename(rel)[:-5]
-            ver = base.find("(v=")
-            page_id = base if ver < 0 else base[:ver] + "|" + base[ver + 3:-1]
-            tx.execute("DELETE FROM names WHERE page_id=?", (page_id,))
+            tx.execute("DELETE FROM names WHERE path=?", (rel,))
             tx.execute("DELETE FROM pages WHERE path=?", (rel,))
             del state[rel]
             removed += 1

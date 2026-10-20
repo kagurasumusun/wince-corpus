@@ -166,7 +166,7 @@ def query_db(db_path, mode, needle):
         param = needle
     sql = f"""
         SELECT n.name, n.kind, p.page_id, p.section, p.title, p.path
-        FROM names n JOIN pages p ON p.page_id = n.page_id
+        FROM names n JOIN pages p ON p.path = n.path
         WHERE {where}
         ORDER BY n.name, p.section
     """

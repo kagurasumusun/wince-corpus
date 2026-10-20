@@ -195,7 +195,7 @@ def load_mined(db_path=DB_PATH):
     try:
         rows = con.execute(
             "SELECT n.name, p.section, p.page_id, p.title, n.kind"
-            " FROM names n JOIN pages p ON p.page_id = n.page_id")
+            " FROM names n JOIN pages p ON p.path = n.path")
         for name, section, page_id, title, kind in rows:
             if kind not in MINE_KINDS:
                 continue
