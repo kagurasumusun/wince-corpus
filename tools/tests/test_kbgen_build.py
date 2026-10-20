@@ -17,7 +17,7 @@ sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.dirname(
 from tools.kbgen import extract  # noqa: E402
 from tools.kbgen.build import build  # noqa: E402
 from tools.kbgen.common import INDEX_PATH  # noqa: E402
-from tools.kbgen.validate import validate  # noqa: E402
+from tools.kbgen.validate import _obs_bearing_yield, validate  # noqa: E402
 
 
 class BuildTests(unittest.TestCase):
@@ -44,6 +44,56 @@ class BuildTests(unittest.TestCase):
             self.assertEqual(d1, d2, "two builds of the same inputs differ")
 
 
+
+
+class SampleYieldTests(unittest.TestCase):
+    """The sample re-extraction check counts only observation-bearing
+    yield: what Builder._ingest_* would register in
+    observation_index."""
+
+    def test_name_rows_alone_bear_no_observation(self):
+        fact = {"subjects": [{"name": "0x00"}], "declarations": [],
+                "name_rows": [{"name": "0x00", "description": "x"}] * 5}
+        self.assertEqual(_obs_bearing_yield(fact), 0)
+
+    def test_constants_need_parseable_values_and_names(self):
+        self.assertEqual(_obs_bearing_yield(
+            {"constants": [{"name": "FOO", "value": "soon"}]}), 0)
+        self.assertEqual(_obs_bearing_yield(
+            {"constants": [{"name": "FOO", "value": "0x10"}]}), 1)
+        self.assertEqual(_obs_bearing_yield(
+            {"constant_names": [{"name": ""}]}), 0)
+
+    def test_conditional_families(self):
+        self.assertEqual(_obs_bearing_yield(
+            {"family_headers": [{"kind": "exact"}]}), 0)
+        self.assertEqual(_obs_bearing_yield(
+            {"family_headers": [{"kind": "prefix"}]}), 1)
+        self.assertEqual(_obs_bearing_yield(
+            {"unsupported_constants": [{"names": []}]}), 0)
+        self.assertEqual(_obs_bearing_yield({"notes": [{}]}), 1)
+
+    def test_wbxml_token_page_validates(self):
+        # mobilesdk5's WBXML token tables yield name_rows for numeric
+        # tokens and nothing else: ingest writes zero observations
+        # and the sample check must agree (full-build regression at
+        # 173k pages).
+        jobs = [j for j in extract.read_index(
+            INDEX_PATH, "msdn-library/vs2008-sp1")
+            if j[2].endswith("wce51grfStartTokensOnCodePage0.html")]
+        self.assertEqual(len(jobs), 1)
+        with tempfile.TemporaryDirectory() as tmp:
+            db = os.path.join(tmp, "kb.sqlite3")
+            manifest = os.path.join(tmp, "manifest.json")
+            build(db, manifest, None, workers=1, page_jobs=jobs)
+            conn = sqlite3.connect(f"file:{db}?mode=ro", uri=True)
+            obs = conn.execute("SELECT COUNT(*) FROM observation_index"
+                               ).fetchone()[0]
+            conn.close()
+            self.assertEqual(obs, 0)
+            rc = validate(db_path=db, manifest_path=manifest,
+                          skip_page_hashes=True, sample=1)
+            self.assertEqual(rc, 0)
 
 
 class HexColumnTests(unittest.TestCase):

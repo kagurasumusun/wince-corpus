@@ -29,10 +29,12 @@ from __future__ import annotations
 import hashlib
 import json
 import os
+import re
 import sqlite3
 
 from .common import (CATALOG_DIR, DB_PATH, MANIFEST_PATH, ROOT,
-                     SCHEMA_VERSION, valid_lib_dll_token)
+                     SCHEMA_VERSION, parse_constant_value, symbol_key,
+                     valid_lib_dll_token)
 
 _EVIDENCE_TABLES = ("symbol_header_evidence", "symbol_file_evidence",
                     "constant_value_evidence")
@@ -54,6 +56,45 @@ class Checker:
         got = conn.execute(sql).fetchone()[0]
         if got != expected:
             self.failures.append(f"{message}: {got} (expected {expected})")
+
+
+def _obs_bearing_yield(fact) -> int:
+    """Whether ingest would write observation_index rows for a fact.
+
+    Mirrors Builder._ingest_* (tools/kbgen/build.py) at zero-vs-
+    nonzero granularity; keep in step with its register_obs sites.
+    Subjects never bear observations, and neither do name_rows
+    themselves (the declarations/requirements a row carries are in
+    their own families) -- a page whose only yield is name|description
+    rows for unregistrable names ingests zero observations, which
+    the sample check below must not read as extractor drift (the
+    173k-page full build tripped on exactly that: mobilesdk5's
+    wce51grfStartTokensOnCodePage0).  Constants need a parseable
+    value on a registrable name, constant_names a registrable name,
+    family_headers count only their "prefix" entries, and an
+    unsupported_constants entry without names states nothing.
+    """
+    total = 0
+    for key, val in fact.items():
+        if not isinstance(val, list) or key in ("subjects", "name_rows"):
+            continue
+        if key == "constants":
+            for item in val:
+                raw = item.get("value")
+                parsed = parse_constant_value(
+                    None if raw is None
+                    else re.sub(r"^0X", "0x", str(raw)))
+                if parsed is not None and symbol_key(item.get("name")):
+                    total += 1
+        elif key == "constant_names":
+            total += sum(1 for item in val if symbol_key(item.get("name")))
+        elif key == "family_headers":
+            total += sum(1 for item in val if item.get("kind") == "prefix")
+        elif key == "unsupported_constants":
+            total += sum(1 for item in val if item.get("names"))
+        else:
+            total += len(val)
+    return total
 
 
 def _file_sha256(path: str) -> str:
@@ -245,12 +286,13 @@ def validate(db_path: str = DB_PATH, manifest_path: str | None = MANIFEST_PATH,
             # agrees at least zero-vs-nonzero with what ingest saw; exact
             # obs-id equality is covered by --verify-reproducible).  Count
             # every observation-bearing family, not just the big four --
-            # a page whose only yield is constant names must not read as 0.
+            # a page whose only yield is constant names must not read as 0
+            # -- but only the yield ingest can actually register as
+            # observations (_obs_bearing_yield).
             if fact.get("missing"):
                 mism += 1
                 continue
-            fam = sum(len(v) for k, v in fact.items()
-                      if isinstance(v, list) and k != "subjects")
+            fam = _obs_bearing_yield(fact)
             if (fam == 0) != (got == 0):
                 mism += 1
         c.check(mism == 0, f"sample re-extraction mismatches: {mism}")
