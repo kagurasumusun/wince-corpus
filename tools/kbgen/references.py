@@ -37,6 +37,24 @@ _REF_GUARDISH = re.compile(r"_INC_[A-Z0-9_]+$|__?\S+_H(?:INCLUDED)?_+$")
 _DEF_EXPORT_RE = re.compile(r"^([A-Za-z_@$?][\w@$?]*)")
 _DEF_KEYWORDS = {"LIBRARY", "NAME", "EXPORTS", "SECTIONS", "VERSION",
                  "HEAPSIZE", "STACKSIZE", "DESCRIPTION"}
+_STDCALL_DECORATION = re.compile(r"@\d*$")
+
+
+def _export_name_key(name: str) -> str:
+    """The symbol key of a .def export, x86 stdcall decoration removed.
+
+    The .def lists print ``CreateSecurityPage@4`` (and sometimes
+    ``_name@N``); the verbatim name is kept in the ``name`` column, but
+    the *key* must be the undecorated API name or the export never
+    matches a KB symbol.  C++-mangled names (``?...``) have no C name
+    and keep their verbatim key.
+    """
+    if name.startswith("?"):
+        return symbol_key(name)
+    plain = _STDCALL_DECORATION.sub("", name)
+    if plain.startswith(("_", "@")):      # _name@N stdcall, @name@N fastcall
+        plain = plain[1:]
+    return symbol_key(plain)
 
 
 def _sha256_file(path: str) -> str:
@@ -136,8 +154,8 @@ def load_w32api(tarball: str):
                     if m:
                         name = m.group(1)
                         rows.append(("w32api-cegcc", "export", name,
-                                     symbol_key(name), None, module, None,
-                                     None, member.name))
+                                     _export_name_key(name), None, module,
+                                     None, None, member.name))
     source = ("w32api-cegcc",
               "CeGCC w32api (public domain; pinned; comparison only)",
               rel, _sha256_file(tarball))
