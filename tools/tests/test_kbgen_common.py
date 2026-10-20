@@ -42,12 +42,36 @@ class ConstantGrammarTests(unittest.TestCase):
                          ("expression", None))
         self.assertEqual(common.parse_constant_value("(1 << 4)"),
                          ("expression", None))
+        # Maker-macro calls are constant expressions too.
+        self.assertEqual(common.parse_constant_value("MAKE_D3DMHRESULT(2158)"),
+                         ("expression", None))
+        self.assertEqual(common.parse_constant_value("MAKE_HRESULT(1, 7, 5)"),
+                         ("expression", None))
+
+    def test_floats_are_kept_without_int_reading(self):
+        self.assertEqual(
+            common.parse_constant_value("2.2204460492503131e-016"),
+            ("float", None))
+        self.assertEqual(common.parse_constant_value("1.0f"), ("float", None))
+
+    def test_bare_hex_with_letter_is_hex(self):
+        # Digit-led, hex-only, contains a letter: cannot be decimal or
+        # an identifier, so the radix is proved by the print itself.
+        self.assertEqual(common.parse_constant_value("8009100F"),
+                         ("integer", 0x8009100F))
+        self.assertEqual(common.parse_constant_value("8000400A"),
+                         ("integer", 0x8000400A))
+        # All-digit stays decimal at grammar level (column context in
+        # build._reconcile_hex_columns proves HRESULT columns).
+        self.assertEqual(common.parse_constant_value("80091008"),
+                         ("integer", 80091008))
+        # Too short for the hex reading; the float shape claims it
+        # without an integer reading.
+        self.assertEqual(common.parse_constant_value("1E5"), ("float", None))
 
     def test_rejects(self):
         # Junk that the old KB stored as a constant value.
         self.assertIsNone(common.parse_constant_value("compile"))
-        # Bare hex without 0x: a guess, not a number.
-        self.assertIsNone(common.parse_constant_value("8009100F"))
         self.assertIsNone(common.parse_constant_value(""))
         self.assertIsNone(common.parse_constant_value(None))
         # A lone identifier is an alias at best, not a value.

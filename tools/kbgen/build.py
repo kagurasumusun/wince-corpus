@@ -556,6 +556,42 @@ def _package_hash(package_dir: str) -> str:
     return h.hexdigest()
 
 
+def _reconcile_hex_columns(conn) -> None:
+    """Re-read 8-digit values in a proven hex column as hex.
+
+    HRESULT-style tables print the value column in bare hex
+    (``80091008`` next to ``8009100F``).  The letter-bearing prints
+    parse as hex on their own (common.parse_constant_value); the
+    all-digit prints of the SAME printed table are then known to be
+    hex too -- the column's own convention proves the radix, so this
+    is a reading of the page, not a guess.  Only the 8-digit HRESULT
+    shape is re-read, and rows that also carry a printed decimal are
+    left alone.
+    """
+    # Group by (page, printed table).  Rows without a table (define
+    # lines) all share the empty-text blob hash -- they are NOT a
+    # column and must never form a group.
+    empty_sha = sha256_text("")
+    hex_tables = {(row[0], row[1]) for row in conn.execute(
+        "SELECT DISTINCT page_path, table_sha256 FROM constant_observations"
+        " WHERE value_raw GLOB '[0-9]*[A-Fa-f]*'"
+        " AND value_raw NOT GLOB '*[^0-9A-Fa-f]*'"
+        " AND length(value_raw) >= 4 AND table_sha256 != ?", (empty_sha,))}
+    if not hex_tables:
+        return
+    for obs_id, raw, page, table_sha in conn.execute(
+            "SELECT obs_id, value_raw, page_path, table_sha256"
+            " FROM constant_observations"
+            " WHERE decimal_raw IS NULL AND length(value_raw) = 8"
+            " AND value_raw GLOB '[0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9]'"
+            ).fetchall():
+        if (page, table_sha) in hex_tables:
+            conn.execute(
+                "UPDATE constant_observations SET value_int=? WHERE obs_id=?",
+                (int(raw, 16), obs_id))
+    conn.commit()
+
+
 def build(db_path: str, manifest_path: str, reports_dir: str | None,
           workers: int = 2, only_tree: str | None = None,
           page_jobs: list[tuple] | None = None) -> str:
@@ -605,6 +641,7 @@ def build(db_path: str, manifest_path: str, reports_dir: str | None,
 
         ref_data = references.load_all()
         builder.finish(reviews, ref_data)
+        _reconcile_hex_columns(conn)
         resolve.resolve_all(conn, reviews, SHARED_MAP_PATH)
 
         index_sha = _file_sha256(INDEX_PATH)

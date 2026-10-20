@@ -44,5 +44,64 @@ class BuildTests(unittest.TestCase):
             self.assertEqual(d1, d2, "two builds of the same inputs differ")
 
 
+
+
+class HexColumnTests(unittest.TestCase):
+    """HRESULT tables print bare hex; the letter prints prove the radix
+    of the whole column, including its all-digit prints."""
+
+    SCHEMA = """
+    CREATE TABLE constant_observations(
+        obs_id TEXT PRIMARY KEY, symbol_key TEXT, page_path TEXT,
+        value_raw TEXT, value_int INTEGER, decimal_raw TEXT,
+        origin TEXT, group_header TEXT, table_sha256 TEXT,
+        row_sha256 TEXT) STRICT;
+    """
+
+    def _conn(self, rows):
+        import sqlite3 as _sq
+        conn = _sq.connect(":memory:")
+        conn.execute(self.SCHEMA)
+        conn.executemany(
+            "INSERT INTO constant_observations(obs_id, symbol_key,"
+            " page_path, value_raw, value_int, decimal_raw, table_sha256)"
+            " VALUES (?,?,?,?,?,?,?)", rows)
+        return conn
+
+    def test_all_digit_prints_follow_their_column(self):
+        from tools.kbgen.build import _reconcile_hex_columns
+        conn = self._conn([
+            ("o1", "a", "p1", "80091008", 80091008, None, "T"),
+            ("o2", "b", "p1", "8009100F", 0x8009100F, None, "T"),
+            # same value on another page/table: stays decimal
+            ("o3", "c", "p2", "80091008", 80091008, None, "U"),
+            # a row with a printed decimal is never re-read
+            ("o4", "d", "p1", "80091010", 80091010, "80091010", "T"),
+            # not the 8-digit HRESULT shape
+            ("o5", "e", "p1", "1234567", 1234567, None, "T"),
+        ])
+        _reconcile_hex_columns(conn)
+        got = dict(conn.execute(
+            "SELECT obs_id, value_int FROM constant_observations"))
+        self.assertEqual(got["o1"], 0x80091008)
+        self.assertEqual(got["o2"], 0x8009100F)
+        self.assertEqual(got["o3"], 80091008)
+        self.assertEqual(got["o4"], 80091010)
+        self.assertEqual(got["o5"], 1234567)
+
+    def test_define_lines_without_a_table_never_form_a_column(self):
+        from tools.kbgen.build import _reconcile_hex_columns
+        from tools.kbgen.common import sha256_text
+        empty = sha256_text("")
+        conn = self._conn([
+            ("o1", "a", "p1", "80091008", 80091008, None, empty),
+            ("o2", "b", "p9", "8009BEEF", 0x8009BEEF, None, empty),
+        ])
+        _reconcile_hex_columns(conn)
+        got = dict(conn.execute(
+            "SELECT obs_id, value_int FROM constant_observations"))
+        self.assertEqual(got["o1"], 80091008)
+
+
 if __name__ == "__main__":
     unittest.main()

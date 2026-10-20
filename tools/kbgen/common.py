@@ -214,12 +214,16 @@ _DEC = re.compile(r"^-?\d+$")
 _HEX = re.compile(r"^-?0[xX][0-9a-fA-F]+$")
 _SUFFIX = re.compile(r"^(.*?[\da-fA-F])[uUlLfF]+$")
 _EXPR_TOKEN = re.compile(
-    r"\s*(?:0[xX][0-9a-fA-F]+|\d+|[A-Za-z_]\w*|<<|>>|[-+*/%|&^~()])")
+    r"\s*(?:0[xX][0-9a-fA-F]+|\d+|[A-Za-z_]\w*|<<|>>|[-+*/%|&^~(),])")
 
 
 def _fit_int64(value: int) -> int | None:
     """SQLite INTEGER is signed 64-bit; bigger prints keep only their text."""
     return value if -(2 ** 63) <= value <= 2 ** 63 - 1 else None
+
+
+_BARE_HEX = re.compile(r"\d[0-9A-Fa-f]*[A-Fa-f][0-9A-Fa-f]*")
+_FLOAT = re.compile(r"^-?(?:(?:\d+\.\d*|\.\d+|\d+)(?:[eE][+-]?\d+)|\d+\.\d+)[fF]?$")
 
 
 def parse_constant_value(raw: str | None) -> tuple[str, int | None] | None:
@@ -229,8 +233,15 @@ def parse_constant_value(raw: str | None) -> tuple[str, int | None] | None:
     literal (C suffixes are print marks), ("expression", None) for an
     expression over names/numbers (``RASBASE+153``, ``(1 << 4)``), or
     None when the print is not a constant at all (``compile`` -- the value
-    side of ``UNICODE = compile`` -- or a bare-hex ``8009100F`` whose
-    reading is a guess).  Rejects are recorded, never silently dropped.
+    side of ``UNICODE = compile``).  Rejects are recorded, never silently
+    dropped.
+
+    A digit-led token made only of hex digits and containing a letter
+    (``8009100F``) is a bare-hex integer: a decimal literal cannot
+    contain letters and an identifier cannot start with a digit, so the
+    reading is not a guess.  An all-digit token stays decimal here --
+    HRESULT tables print ``80091008`` for 0x80091008, and only the
+    table's own column (see build._reconcile_hex_columns) can prove it.
     """
     if raw is None:
         return None
@@ -252,8 +263,17 @@ def parse_constant_value(raw: str | None) -> tuple[str, int | None] | None:
             return "integer", _fit_int64(int(bare, 10))
         except ValueError:
             return None
+    if _FLOAT.match(bare):
+        # A real-number print (DBL_EPSILON): kept as an observation with
+        # no integer reading, not dropped as junk.
+        return "float", None
+    if len(bare) >= 4 and _BARE_HEX.fullmatch(bare):
+        try:
+            return "integer", _fit_int64(int(bare, 16))
+        except ValueError:
+            return None
     if text[0].isdigit():
-        return None          # bare hex (8009100F) or other digit-led junk
+        return None          # other digit-led junk (dates, versions...)
     # Expression: must tokenise completely and contain an operator.
     pos = 0
     has_op = False
@@ -265,7 +285,13 @@ def parse_constant_value(raw: str | None) -> tuple[str, int | None] | None:
         if tok in ("+", "-", "*", "/", "%", "|", "&", "^", "~", "<<", ">>"):
             has_op = True
         pos = m.end()
-    return ("expression", None) if has_op else None
+    if has_op:
+        return ("expression", None)
+    if re.match(r"\s*[A-Za-z_]\w*\s*\(", text):
+        # A maker-macro call (MAKE_HRESULT(...), MAKE_D3DMHRESULT(2158)):
+        # a constant expression with no top-level operator.
+        return ("expression", None)
+    return None
 
 
 def value_int(raw: str | None) -> int | None:
