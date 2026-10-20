@@ -1,8 +1,8 @@
 """The extractor interface (versioned): one corpus page -> observations.
 
-    EXTRACTOR_VERSION = 1   (tools/page_parse.py behind this module)
+    EXTRACTOR_VERSION = 1   (the tools/page_parse package behind this module)
 
-kbgen never calls tools/page_parse.py directly; everything goes through
+kbgen never calls tools/page_parse directly; everything goes through
 parse_page() here, so the page-format readers can be replaced or improved
 later by bumping EXTRACTOR_VERSION and rebuilding.  The output is plain
 dicts (picklable, worker-safe): what the page *prints*, quoted, with no

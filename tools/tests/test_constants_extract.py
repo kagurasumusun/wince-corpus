@@ -1,4 +1,4 @@
-"""Tests for the constant extractors of tools/page_parse.py.
+"""Tests for the constant extractors of tools/page_parse.
 
 Every special-format table shape that carries constant values must be
 read completely -- a shape missed is a shape lost ("存在しているのに抽出

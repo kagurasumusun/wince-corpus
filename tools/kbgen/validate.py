@@ -203,11 +203,15 @@ def validate(db_path: str = DB_PATH, manifest_path: str | None = MANIFEST_PATH,
                 "manifest table hashes != database content")
 
     # --- input drift
-    from .build import _builder_hash
+    from .build import _package_hash
+    _here = os.path.dirname(os.path.abspath(__file__))
+    _packages = {"tools/kbgen/*.py": _here,
+                 "tools/page_parse/*.py": os.path.join(_here, os.pardir,
+                                                       "page_parse")}
     for path, _role, sha, _size in conn.execute(
             "SELECT path, role, sha256, size FROM build_inputs ORDER BY path"):
-        if path == "tools/kbgen/*.py":
-            actual = _builder_hash()
+        if path in _packages:
+            actual = _package_hash(_packages[path])
         else:
             full = os.path.join(ROOT, path)
             actual = _file_sha256(full) if os.path.exists(full) else None

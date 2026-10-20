@@ -522,7 +522,7 @@ def _input_rows(jobs_tree: str | None) -> list[tuple[str, str, str]]:
     add("licenses", LICENSE_REGISTRY)
     add("shared-map", SHARED_MAP_PATH)
     add("schema", SCHEMA_PATH)
-    add("extractor", os.path.join(here, os.pardir, "page_parse.py"))
+    rows.append(("tools/page_parse/*.py", "extractor", "*page_parse*"))
     rows.append(("tools/kbgen/*.py", "builder", "*kbgen*"))
     for name in ("constant-header-review.tsv", "constant-value-review.tsv"):
         add("review", os.path.join(KB_DIR, "inputs", "reviews", name))
@@ -535,13 +535,13 @@ def _input_rows(jobs_tree: str | None) -> list[tuple[str, str, str]]:
     return rows
 
 
-def _builder_hash() -> str:
-    here = os.path.dirname(os.path.abspath(__file__))
+def _package_hash(package_dir: str) -> str:
+    """Hash every .py file of a package directory (sorted, name + bytes)."""
     h = hashlib.sha256()
-    for name in sorted(os.listdir(here)):
+    for name in sorted(os.listdir(package_dir)):
         if name.endswith(".py"):
             h.update(name.encode())
-            with open(os.path.join(here, name), "rb") as fh:
+            with open(os.path.join(package_dir, name), "rb") as fh:
                 h.update(fh.read())
     return h.hexdigest()
 
@@ -611,12 +611,16 @@ def build(db_path: str, manifest_path: str, reports_dir: str | None,
         conn.executemany("INSERT OR REPLACE INTO kb_meta(key, value)"
                          " VALUES (?,?)", sorted(meta.items()))
 
+        here = os.path.dirname(os.path.abspath(__file__))
+        package_dirs = {"*kbgen*": here,
+                        "*page_parse*": os.path.join(here, os.pardir,
+                                                     "page_parse")}
         for relpath, role, abspath in _input_rows(only_tree):
-            if abspath == "*kbgen*":
+            if abspath in package_dirs:
                 conn.execute(
                     "INSERT OR IGNORE INTO build_inputs(path, role, sha256, size)"
-                    " VALUES (?,?,?,?)", ("tools/kbgen/*.py", role,
-                                          _builder_hash(), 0))
+                    " VALUES (?,?,?,?)", (relpath, role,
+                                          _package_hash(package_dirs[abspath]), 0))
             else:
                 conn.execute(
                     "INSERT OR IGNORE INTO build_inputs(path, role, sha256, size)"
