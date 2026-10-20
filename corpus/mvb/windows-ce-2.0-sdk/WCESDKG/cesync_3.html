@@ -1,0 +1,491 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML>
+<HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text-html; charset=Windows-1252">
+<title>Implementing the Synchronization Components</title>
+<meta name=MS-HAID content="_wcesdk_implementing_the_synchronization_components">
+<meta name=MS-HKWD content="Implementing the Synchronization Components">
+</HEAD>
+<BODY BGCOLOR=#FFFFFF TEXT=#000000>
+<!-- WCESDKG InfoViewer title (Wcesdkg.ivt); HTML topics extracted with tools/extract-ivt.py, images and the title's own indexes dropped. -->
+
+<form name=x><object name=iv classid="clsid:9c2ac687-ceef-11cf-96d9-00a0c903b016">
+</object></form>
+<h2><a name="_wcesdk_implementing_the_synchronization_components"></a>Implementing the ActiveSync Components</h2>
+<h4><img src="../guide/art/wedge.gif" border=0>&#09;To implement the desktop synchronization components  </h4>
+<ol>
+<li>
+Create a project that builds a desktop ActiveSync module.<p>
+This can be a single DLL that implements the required interfaces summarized in the <b>ActiveSync Reference</b>. For a description of a sample ActiveSync template, see the Sample ActiveSync Module.</p>
+</li>
+<li>
+Analyze the desktop data store.<p>
+Determine the definition of the object, the object type name, the folder, the object identifier, and ways to identify whether an object has changed.</p>
+</li>
+<li>
+Create one GUID for the store, using the Visual C++ GUID generator tool (Guidgen.exe).<br><br></li>
+<li>
+Define <A HREF='javascript:document.x.iv.ALink("_wcesdk_hreplitem","")'><b>HREPLITEM</b></a> and <A HREF='javascript:document.x.iv.ALink("_wcesdk_hreplfld","")'><b>HREPLFLD</b></a>. These handles can simply be pointers to some data structures. Also, define <A HREF='javascript:document.x.iv.ALink("_wcesdk_hreplobj","")'><b>HREPLOBJ</b></a> which is a generic handle that can be either <b>HREPLITEM </b>or <b>HREPLFLD</b>.<br><br></li>
+<li>
+Implement all methods in <A HREF='javascript:document.x.iv.ALink("_wcesdk_ireplstore_iunknown","")'><b>IReplStore</b></a>.<p>
+These methods implement the following functionality:
+<ul>
+<li>
+Initialize the store.<br><br></li>
+<li>
+Provide a folder handle for the given object type, and return a pointer to the <A HREF='javascript:document.x.iv.ALink("_wcesdk_ireplobjhandler_iunknown","")'><b>IReplObjHandler</b></a> interface.<br><br></li>
+<li>
+Provide for management of the object types.<br><br></li>
+<li>
+Provide a way for Windows CE Services to display related information in its main window.<br><br></li>
+<li>
+Enumerate objects for a given object type.</li>
+</ul>
+</li>
+<li>
+Implement all methods in <A HREF='javascript:document.x.iv.ALink("_wcesdk_ireplobjhandler_iunknown","")'><b>IReplObjHandler</b></a>.</li>
+</ol>
+<h4><img src="../guide/art/wedge.gif" border=0>&#09;To implement the Windows CE platform ActiveSync components</h4>
+<ol>
+<li>
+Create a project that builds a Windows CE platform ActiveSync module.<p>
+This can be a single DLL that implements the required platform functions that are summarized in the <b>ActiveSync Reference</b>. For a description of a sample synchronization template, see the Sample ActiveSync Module.</p>
+</li>
+<li>
+Determine how the objects are stored on the Windows CE platform in the device.<p>
+For example, determine whether the data is stored in a flat file, in a Windows CE database, or in some other custom format.</p>
+</li>
+<li>
+Implement the required functions referenced in the first step.<br><br></li>
+<li>
+Implement the methods in <A HREF='javascript:document.x.iv.ALink("_wcesdk_ireplobjhandler_iunknown","")'><b>IReplObjHandler</b></a>.<p>
+These methods do not have to be fully implemented and can simply be stubbed.</p>
+</li>
+</ol>
+<h4><img src="../guide/art/wedge.gif" border=0>&#09;To register the ActiveSync components</h4>
+<ol>
+<li>
+Create the required registry keys on the desktop PC.<p>
+For a description of the required desktop PC registry settings, see Schedule+ ActiveSync Components: Example.</p>
+<p>
+For another example, see the file Stsync.reg provided with the SDK sample, located in the Wce\Samples\Win32\Wce200\Sync\v2\Stockpor\desktop\sync directory (See Sample ActiveSync Module).</p>
+</li>
+<li>
+Create the required registry keys on the Windows CE device. This can be done at application setup time with the device connected.<p>
+For a description of the required Windows CE platform registry settings, see Schedule+ ActiveSync Components: Example.</p>
+<p>
+For another example, see the file Devsetup.cpp provided with the SDK sample, located in the Wce\Samples\Win32\Wce200\Sync\v2\Stockpor\device directory (See Sample ActiveSync Module).</p>
+</li>
+</ol>
+<h3>Sample ActiveSync Module  </h3>
+<p>
+The Windows CE SDK provides a sample application that will assist you in developing an ActiveSync module. The sample is located on the SDK in the Wce\Samples\Win32\Wce200\Sync\v2\Stockpor directory. The project is named Stockpor; this implements a sample stock portfolio application that synchronizes data between the desktop PC and the Windows CE platform. </p>
+<p>
+Also, the Desksamp and Devsamp directories provide templates that you can use to build your own ActiveSync module.</p>
+<p>
+For a detailed description of this sample, see the file Readme.doc, located on the SDK in the Wce\Samples\Win32\Wce200\Sync directory.</p>
+<h3>ActiveSync Reference  </h3>
+<ul>
+<li>
+ActiveSync Interfaces<p>
+The following interfaces are implemented on the desktop PC by an ActiveSync service provider and Windows CE Services.</p>
+<table>
+<tr valign=top>
+<td>
+<b>Interface</b></td>
+<td>
+<b>Description</b></td>
+</tr>
+<tr valign=top>
+<td>
+<A HREF='javascript:document.x.iv.ALink("_wcesdk_ireplstore_iunknown","")'><b>IReplStore</b></a></td>
+<td>
+Implemented in the desktop PC ActiveSync component; implements methods related to the data store.</td>
+</tr>
+<tr valign=top>
+<td>
+<A HREF='javascript:document.x.iv.ALink("_wcesdk_ireplobjhandler_iunknown","")'><b>IReplObjHandler</b></a></td>
+<td>
+Implemented in the desktop PC ActiveSync component; implements methods related to the serialization and de-serialization of an object.</td>
+</tr>
+<tr valign=top>
+<td>
+<A HREF='javascript:document.x.iv.ALink("_wcesdk_ireplnotify_iunknown","")'><b>IReplNotify</b></a></td>
+<td>
+Implemented by the ActiveSync service manager in Windows CE Services (for example, the Explorer Window); the ActiveSync service provider can use this to notify the ActiveSync service manager of certain events taking place in the ActiveSync service provider store. </td>
+</tr>
+<tr valign=top>
+<td>
+<A HREF='javascript:document.x.iv.ALink("_wcesdk_ienumreplitem","")'><b>IEnumReplItem</b></a></td>
+<td>
+Enables enumeration of a collection of items; used by <A HREF='javascript:document.x.iv.ALink("_wcesdk_ireplstore_activatedialog","")'><b>IReplStore::ActivateDialog</b></a>.</td>
+</tr>
+</table><br>
+</li>
+<li>
+Windows CE Platform ActiveSync Component Functions<p>
+The following functions are implemented in the Windows CE platform ActiveSync module. They are called by the ActiveSync service manager in the Windows CE platform.</p>
+<table>
+<tr valign=top>
+<td>
+</td>
+<td>
+</td>
+</tr>
+<tr valign=top>
+<td>
+<A HREF='javascript:document.x.iv.ALink("_wcesdk_initobjtype","")'><b>InitObjType</b></a></td>
+<td>
+initializes data after module load; frees allocated resources and returns a pointer to IReplObjHandler interface.</td>
+</tr>
+<tr valign=top>
+<td>
+<A HREF='javascript:document.x.iv.ALink("_wcesdk_getobjtypeinfo","")'><b>GetObjTypeInfo</b></a></td>
+<td>
+gets information on an object type</td>
+</tr>
+<tr valign=top>
+<td>
+<A HREF='javascript:document.x.iv.ALink("_wcesdk_objectnotify","")'><b>ObjectNotify</b></a></td>
+<td>
+notifies ActiveSync service provider of a change/deletion of object and asks for object ID for serialization/de-serialization of the object</td>
+</tr>
+<tr valign=top>
+<td>
+<A HREF='javascript:document.x.iv.ALink("_wcesdk_reportstatus","")'><b>ReportStatus</b></a></td>
+<td>
+used to notify ActiveSync service provider of certain events (for example, the start and end of synchronization).</td>
+</tr>
+</table><br>
+</li>
+<li>
+ActiveSync Structures<table>
+<tr valign=top>
+<td>
+</td>
+<td>
+</td>
+</tr>
+<tr valign=top>
+<td>
+<A HREF='javascript:document.x.iv.ALink("_wcesdk_hreplitem","")'><b>HREPLITEM</b></a></td>
+<td>
+a handle to a data object stored by the ActiveSync service provider</td>
+</tr>
+<tr valign=top>
+<td>
+<A HREF='javascript:document.x.iv.ALink("_wcesdk_hreplfld","")'><b>HREPLFLD</b></a></td>
+<td>
+a handle to a folder  stored by the ActiveSync service provider</td>
+</tr>
+<tr valign=top>
+<td>
+<A HREF='javascript:document.x.iv.ALink("_wcesdk_hreplobj","")'><b>HREPLOBJ</b></a></td>
+<td>
+a structure used to set up the object handler before serialization/de-serialization of an object</td>
+</tr>
+<tr valign=top>
+<td>
+<A HREF='javascript:document.x.iv.ALink("_wcesdk_confinfo","")'><b>CONFINFO</b></a></td>
+<td>
+used to retrieve information about two conflicting items.</td>
+</tr>
+<tr valign=top>
+<td>
+<A HREF='javascript:document.x.iv.ALink("_wcesdk_objnotify","")'><b>OBJNOTIFY</b></a></td>
+<td>
+used to notify ActiveSync service provider that an object has changed or been deleted.</td>
+</tr>
+<tr valign=top>
+<td>
+<A HREF='javascript:document.x.iv.ALink("_wcesdk_objtypeinfo","")'><b>OBJTYPEINFO</b></a></td>
+<td>
+used to store information about an object type.</td>
+</tr>
+<tr valign=top>
+<td>
+<A HREF='javascript:document.x.iv.ALink("_wcesdk_objuidata","")'><b>OBJUIDATA</b></a></td>
+<td>
+used by <b>IReplStore::GetObjTypeUIData</b> to send UI related data about an object type to the store.</td>
+</tr>
+<tr valign=top>
+<td>
+<A HREF='javascript:document.x.iv.ALink("_wcesdk_replsetup","")'><b>REPLSETUP</b></a></td>
+<td>
+used to set up the object handler before serialization/de-serialization of each object.</td>
+</tr>
+<tr valign=top>
+<td>
+<A HREF='javascript:document.x.iv.ALink("_wcesdk_storeinfo","")'><b>STOREINFO</b></a></td>
+<td>
+used to identify an instance of the store.</td>
+</tr>
+<tr valign=top>
+<td>
+<A HREF='javascript:document.x.iv.ALink("_wcesdk_devinfo","")'><b>DEVINFO</b></a></td>
+<td>
+used to store information about a device</td>
+</tr>
+</table><br>
+</li>
+<li>
+IReplStore interface methods<table>
+<tr valign=top>
+<td>
+</td>
+<td>
+</td>
+</tr>
+<tr valign=top>
+<td>
+<A HREF='javascript:document.x.iv.ALink("_wcesdk_ireplstore_activatedialog","")'><b>ActivateDialog</b></a></td>
+<td>
+activate a ActiveSync service provider-specific dialog</td>
+</tr>
+<tr valign=top>
+<td>
+<A HREF='javascript:document.x.iv.ALink("_wcesdk_ireplstore_bytestoobject","")'><b>BytesToObject</b></a></td>
+<td>
+converts an array of bytes to a HREPLOBJ when loading</td>
+</tr>
+<tr valign=top>
+<td>
+<A HREF='javascript:document.x.iv.ALink("_wcesdk_ireplstore_compareitem","")'><b>CompareItem</b></a></td>
+<td>
+compares the given handles of two items</td>
+</tr>
+<tr valign=top>
+<td>
+<A HREF='javascript:document.x.iv.ALink("_wcesdk_ireplstore_comparestoreids","")'><b>CompareStoreIDs</b></a></td>
+<td>
+compares the identifiers of two stores</td>
+</tr>
+<tr valign=top>
+<td>
+<A HREF='javascript:document.x.iv.ALink("_wcesdk_ireplstore_copyobject","")'><b>CopyObject</b></a></td>
+<td>
+copies a HREPLOBJ to another</td>
+</tr>
+<tr valign=top>
+<td>
+<A HREF='javascript:document.x.iv.ALink("_wcesdk_ireplstore_findfirstitem","")'><b>FindFirstItem</b></a></td>
+<td>
+returns a HREPLITEM of the first object in a given folder, if any</td>
+</tr>
+<tr valign=top>
+<td>
+<A HREF='javascript:document.x.iv.ALink("_wcesdk_ireplstore_finditemclose","")'><b>FindItemClose</b></a></td>
+<td>
+complete the Find operation in the given folder.</td>
+</tr>
+<tr valign=top>
+<td>
+<A HREF='javascript:document.x.iv.ALink("_wcesdk_ireplstore_findnextitem","")'><b>FindNextItem</b></a></td>
+<td>
+return a HREPLITEM of the next object in the given folder, if any</td>
+</tr>
+<tr valign=top>
+<td>
+<A HREF='javascript:document.x.iv.ALink("_wcesdk_ireplstore_freeobject","")'><b>FreeObject</b></a></td>
+<td>
+free the given HREPLOBJ</td>
+</tr>
+<tr valign=top>
+<td>
+<A HREF='javascript:document.x.iv.ALink("_wcesdk_ireplstore_getconflictinfo","")'><b>GetConflictInfo</b></a></td>
+<td>
+get information about two conflicting objects</td>
+</tr>
+<tr valign=top>
+<td>
+<A HREF='javascript:document.x.iv.ALink("_wcesdk_ireplstore_getfolderinfo","")'><b>GetFolderInfo</b></a></td>
+<td>
+returns a HREPLFLD for folder, given the object type name; also returns a pointer to IReplObjHandler of the given object type.</td>
+</tr>
+<tr valign=top>
+<td>
+<A HREF='javascript:document.x.iv.ALink("_wcesdk_ireplstore_getobjtypeuidata","")'><b>GetObjTypeUIData</b></a></td>
+<td>
+sends UI related data about an object type to the ActiveSync service manager</td>
+</tr>
+<tr valign=top>
+<td>
+<A HREF='javascript:document.x.iv.ALink("_wcesdk_ireplstore_getstoreinfo","")'><b>GetStoreInfo</b></a></td>
+<td>
+get information about the current store instance</td>
+</tr>
+<tr valign=top>
+<td>
+<A HREF='javascript:document.x.iv.ALink("_wcesdk_ireplstore_initialize","")'><b>Initialize</b></a></td>
+<td>
+initializes the ActiveSync service provider</td>
+</tr>
+<tr valign=top>
+<td>
+<A HREF='javascript:document.x.iv.ALink("_wcesdk_ireplstore_isfolderchanged","")'><b>IsFolderChanged</b></a></td>
+<td>
+check if any object in the folder has been changed since the method was last called.</td>
+</tr>
+<tr valign=top>
+<td>
+<A HREF='javascript:document.x.iv.ALink("_wcesdk_ireplstore_isitemchanged","")'><b>IsItemChanged</b></a></td>
+<td>
+check if the item is changed.</td>
+</tr>
+<tr valign=top>
+<td>
+<A HREF='javascript:document.x.iv.ALink("_wcesdk_ireplstore_isitemreplicated","")'><b>IsItemReplicated</b></a></td>
+<td>
+check if the item should be replicated using ActiveSync service provider defined rules.</td>
+</tr>
+<tr valign=top>
+<td>
+<A HREF='javascript:document.x.iv.ALink("_wcesdk_ireplstore_isvalidobject","")'><b>IsValidObject</b></a></td>
+<td>
+Determines if the given HREPLOBJ is valid.</td>
+</tr>
+<tr valign=top>
+<td>
+<A HREF='javascript:document.x.iv.ALink("_wcesdk_ireplstore_objecttobytes","")'><b>ObjectToBytes</b></a></td>
+<td>
+convert the HREPLOBJ to an array of bytes when saving</td>
+</tr>
+<tr valign=top>
+<td>
+<A HREF='javascript:document.x.iv.ALink("_wcesdk_ireplstore_removeduplicates","")'><b>RemoveDuplicates</b></a></td>
+<td>
+finds and removes any duplicated objects in the store</td>
+</tr>
+<tr valign=top>
+<td>
+<A HREF='javascript:document.x.iv.ALink("_wcesdk_ireplstore_reportstatus","")'><b>ReportStatus</b></a></td>
+<td>
+servier is reporting to the store about certain operations.</td>
+</tr>
+<tr valign=top>
+<td>
+<A HREF='javascript:document.x.iv.ALink("_wcesdk_ireplstore_updateitem","")'><b>UpdateItem</b></a></td>
+<td>
+update the item's time-stamp, change number, etc. that is identified by the handle</td>
+</tr>
+</table><br>
+</li>
+<li>
+IReplNotify interface methods:<table>
+<tr valign=top>
+<td>
+</td>
+<td>
+</td>
+</tr>
+<tr valign=top>
+<td>
+<A HREF='javascript:document.x.iv.ALink("_wcesdk_ireplnotify_getwindow","")'><b>GetWindow</b></a></td>
+<td>
+get the handle of the current active window to be used as parent of the modal dialog or message boxes.</td>
+</tr>
+<tr valign=top>
+<td>
+<A HREF='javascript:document.x.iv.ALink("_wcesdk_ireplnotify_onitemnotify","")'><b>OnItemNotify</b></a></td>
+<td>
+tells ActiveSync service manager that an object has been created, deleted, or modified.</td>
+</tr>
+<tr valign=top>
+<td>
+<A HREF='javascript:document.x.iv.ALink("_wcesdk_ireplnotify_setstatustext","")'><b>SetStatusText</b></a></td>
+<td>
+set the status text on the ActiveSync service manager.</td>
+</tr>
+<tr valign=top>
+<td>
+<A HREF='javascript:document.x.iv.ALink("_wcesdk_ireplnotify_querydevice","")'><b>QueryDevice</b></a></td>
+<td>
+query information about a device</td>
+</tr>
+</table><br>
+</li>
+<li>
+IReplObjHandler interface methods:<table>
+<tr valign=top>
+<td>
+</td>
+<td>
+</td>
+</tr>
+<tr valign=top>
+<td>
+<A HREF='javascript:document.x.iv.ALink("_wcesdk_ireplobjhandler_deleteobj","")'><b>DeleteObj</b></a></td>
+<td>
+deletes an object</td>
+</tr>
+<tr valign=top>
+<td>
+<A HREF='javascript:document.x.iv.ALink("_wcesdk_ireplobjhandler_getpacket","")'><b>GetPacket</b></a></td>
+<td>
+de-serializes an object into data packet(s) which is sent between the desktop and the Windows CE device</td>
+</tr>
+<tr valign=top>
+<td>
+<A HREF='javascript:document.x.iv.ALink("_wcesdk_ireplobjhandler_setpacket","")'><b>SetPacket</b></a></td>
+<td>
+serializes the data packet(s) into an object</td>
+</tr>
+<tr valign=top>
+<td>
+<A HREF='javascript:document.x.iv.ALink("_wcesdk_ireplobjhandler_setup","")'><b>Setup</b></a></td>
+<td>
+sets up the ActiveSync service provider so it is ready to serialize/de-serialize an object.</td>
+</tr>
+<tr valign=top>
+<td>
+<A HREF='javascript:document.x.iv.ALink("_wcesdk_ireplobjhandler_reset","")'><b>Reset</b></a></td>
+<td>
+resets the ActiveSync service provider so all resources used during the serialization/de-serialization process are freed.</td>
+</tr>
+</table><br>
+</li>
+<li>
+IEnumReplItem interface methods:<table>
+<tr valign=top>
+<td>
+</td>
+<td>
+</td>
+</tr>
+<tr valign=top>
+<td>
+<A HREF='javascript:document.x.iv.ALink("_wcesdk_ienumreplitem_clone","")'><b>Clone</b></a></td>
+<td>
+creates a copy of the current state of enumeration</td>
+</tr>
+<tr valign=top>
+<td>
+<A HREF='javascript:document.x.iv.ALink("_wcesdk_ienumreplitem_getfolderhandle","")'><b>GetFolderHandle</b></a></td>
+<td>
+gets a handle to the folder being enumerated</td>
+</tr>
+<tr valign=top>
+<td>
+<A HREF='javascript:document.x.iv.ALink("_wcesdk_ienumreplitem_next","")'><b>Next</b></a></td>
+<td>
+advances to the next item in the enumeration sequence.</td>
+</tr>
+<tr valign=top>
+<td>
+<A HREF='javascript:document.x.iv.ALink("_wcesdk_ienumreplitem_reset","")'><b>Reset</b></a></td>
+<td>
+resets the enumeration sequence to the beginning</td>
+</tr>
+<tr valign=top>
+<td>
+<A HREF='javascript:document.x.iv.ALink("_wcesdk_ienumreplitem_skip","")'><b>Skip</b></a></td>
+<td>
+skips over the next item in the enumeration sequence.</td>
+</tr>
+</table><br>
+</li>
+</ul>
+<p>
+ </p>
+</BODY>
+</HTML>

@@ -1,0 +1,82 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML>
+<HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text-html; charset=Windows-1252">
+<title>Using the HTML Viewer Control</title>
+<meta name=MS-HAID content="_wcesdk_using_the_html_viewer_control">
+<meta name=MS-HKWD content="Using the HTML Viewer Control">
+</HEAD>
+<BODY BGCOLOR=#FFFFFF TEXT=#000000>
+<!-- WCESDKG InfoViewer title (Wcesdkg.ivt); HTML topics extracted with tools/extract-ivt.py, images and the title's own indexes dropped. -->
+
+<form name=x><object name=iv classid="clsid:9c2ac687-ceef-11cf-96d9-00a0c903b016">
+</object></form>
+<h3><a name="_wcesdk_using_the_html_viewer_control"></a>Using the HTML Viewer Control</h3>
+<h4><img src="../guide/art/wedge.gif" border=0>&#09;To create the HTML viewer control</h4>
+<ol>
+<li>
+Load the HTML viewer DLL by calling the <A HREF='javascript:document.x.iv.ALink("_wcesdk_win32_loadlibrary","")'><b>LoadLibrary</b></a> function, specifying &quot;htmlview.dll&quot; in the <i>lpLibFileName</i> parameter.<br><br></li>
+<li>
+Register the HTML viewer control class by calling the <A HREF='javascript:document.x.iv.ALink("_wcesdk_inithtmlcontrol","")'><b>InitHTMLControl</b></a> function. <br><br></li>
+<li>
+Create a window for the HTML viewer control by calling the <A HREF='javascript:document.x.iv.ALink("_wcesdk_win32_createwindow","")'><b>CreateWindow</b></a> function, specifying DISPLAYNAME in the <i>lpClassName</i> parameter.</li>
+</ol>
+<h4><img src="../guide/art/wedge.gif" border=0>&#09;To display an HTML document</h4>
+<ol>
+<li>
+Clear the current contents of the HTML viewer control by sending it a <A HREF='javascript:document.x.iv.ALink("_wcesdk_win32_wm_settext","")'>WM_SETTEXT</a> message.<br><br></li>
+<li>
+Load an HTML document and copy the document's text to the control by sending the control a series of <A HREF='javascript:document.x.iv.ALink("_wcesdk_dtm_addtext","")'>DTM_ADDTEXT</a> (ANSI) or <A HREF='javascript:document.x.iv.ALink("_wcesdk_dtm_addtextw","")'>DTM_ADDTEXTW</a> (Unicode) messages.<br><br></li>
+<li>
+When the document processing is complete, send the control a <A HREF='javascript:document.x.iv.ALink("_wcesdk_dtm_endofsource","")'>DTM_ENDOFSOURCE</a> message.<br><br></li>
+<li>
+Process any <A HREF='javascript:document.x.iv.ALink("_wcesdk_nm_hotspot","")'>NM_HOTSPOT</a> notifications sent by the control when the user taps a link or submits a form.<p>
+<font face="Symbol"><span style="font-family:symbol">&#183;</span></font>&#09;For each <A HREF='javascript:document.x.iv.ALink("_wcesdk_nm_inline_image","")'>NM_INLINE_IMAGE</a> notification received from the control, load the image. The HTML viewer control will display the image loading icon.
+<ul>
+<li>
+After the image has loaded successfully, send the control a <A HREF='javascript:document.x.iv.ALink("_wcesdk_dtm_setimage","")'>DTM_SETIMAGE</a> message containing the bitmap handle (HBITMAP) of the image to display.<br><br></li>
+<li>
+If the image doesn't load successfully, send a <A HREF='javascript:document.x.iv.ALink("_wcesdk_dtm_imagefail","")'>DTM_IMAGEFAIL</a> message. This indicates to the control that it should display the broken image icon.</li>
+</ul>
+<p>
+<font face="Symbol"><span style="font-family:symbol">&#183;</span></font>&#09;For each <A HREF='javascript:document.x.iv.ALink("_wcesdk_nm_inline_sound","")'>NM_INLINE_SOUND</a> notification received from the control, load the sound and play it the number of times indicated in the <i>dwLoopCount</i> parameter.</p>
+</li>
+</ol>
+<p>
+The following code fragment shows how to create an HTML control. </p>
+<pre>#define DISPLAYCLASS  TEXT(&quot;DISPLAYCLASS&quot;)
+
+BOOL g_bMakeFit = TRUE;&#09;&#09;&#09;// DTM_ENABLESHRINK Shrink-enable flag
+TCHAR const c_szHTMLControlLibrary[] = TEXT(&quot;htmlview.dll&quot;);
+
+HINSTANCE g_hInstHTMLCtrl;&#09;&#09;// HTML Control Viewer instance
+HINSTANCE hInstance;&#09;&#09;&#09;// Application instance
+HWND m_hwndHtml;&#09;&#09;&#09;// Handle to HTML DISPLAYCLASS window
+
+// Load the HTML Viewer Control DLL (Htmlview.dll)
+g_hInstHTMLCtrl = LoadLibrary(c_szHTMLControlLibrary);
+
+// Initialize the HTML Viewer Control.
+InitHTMLControl(hInstance);
+
+LRESULT WndProc (HWND hwnd, UINT msg, WPARAM wp, LPARAM lp) {
+&#09;switch (message) {
+&#09;&#09;case WM_CREATE: {
+&#09;&#09;&#09;m_hwndHtml = CreateWindow(DISPLAYCLASS, NULL,
+&#09;&#09;&#09;&#09;WS_CHILD | WS_VISIBLE | WS_VSCROLL | WS_CLIPSIBLINGS,
+&#09;&#09;&#09;&#09;rc.left, rc.top, rc.right - rc.left, rc.bottom - rc.top,
+&#09;&#09;&#09;&#09;hWnd, (HMENU)IDC_HTMLVIEW, g_hInst, NULL);
+&#09;&#09;&#09;SetFocus(m_hwndHtml);
+&#09;&#09;&#09;// Do something interesting.
+&#09;&#09;&#09;PostMessage(m_hwndHtml, DTM_ENABLESHRINK, 0, g_bMakeFit);
+&#09;&#09;&#09;break;
+&#09;&#09;} /* WM_CREATE */
+&#09;&#09;.
+&#09;&#09;.
+&#09;&#09;.
+&#09;}
+}</pre>
+<p>
+For an example of how to use HTML Viewer Control in an application, see the Htmlview sample application, included in the Wce\Samples\Win32 directory.</p>
+</BODY>
+</HTML>

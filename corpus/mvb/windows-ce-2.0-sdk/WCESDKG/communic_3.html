@@ -1,0 +1,45 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML>
+<HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text-html; charset=Windows-1252">
+<title>Using a Modem (Telephony API)</title>
+<meta name=MS-HAID content="_wcesdk_using_a_modem_telephony_api_">
+<meta name=MS-HKWD content="Using a Modem (Telephony API)">
+</HEAD>
+<BODY BGCOLOR=#FFFFFF TEXT=#000000>
+<!-- WCESDKG InfoViewer title (Wcesdkg.ivt); HTML topics extracted with tools/extract-ivt.py, images and the title's own indexes dropped. -->
+
+<form name=x><object name=iv classid="clsid:9c2ac687-ceef-11cf-96d9-00a0c903b016">
+</object></form>
+<h2><a name="_wcesdk_using_a_modem_telephony_api_"></a>Using a Modem (Telephony API)</h2>
+<p>
+Modems are used to connect Windows CE devices to remote computers for a wide variety of purposes. Data can be exchanged using either serial or network communication techniques. However, before information can be transferred, the modem must first be connected to the remote device, and then managed for the duration of the session. Although similar to the procedures described in the previous section, there is more to managing a modem connection than simply opening or closing a file.</p>
+<p>
+With a modem, an application must be able to handle such tasks as dialing the appropriate phone number and disconnecting the line when the session is over. To simplify the process of using modems Windows CE supports a subset of the Microsoft telephony API (TAPI), focussed on outbound calls. TAPI provides a set of functions that applications can use to handle  process of making and managing a modem connection (but not the actual transfer of data).</p>
+<h4><img src="../guide/art/wedge.gif" border=0>&#09;To make a modem connection using TAPI</h4>
+<ol>
+<li>
+Initialize TAPI with <b>lineInitialize</b>. <p>
+This function returns the number of line devices available. The application must provide the name of the callback function that TAPI will use to pass information back (discussed later).</p>
+</li>
+<li>
+Open the line with <b>lineOpen</b>.<p>
+If in doubt of the line's capabilities, you can obtain this information with <b>lineGetDevCaps</b>.</p>
+</li>
+<li>
+Place the call with <b>lineMakeCall</b>.<p>
+When the call is set up, the application will receive a LINE_REPLY message through its callback function. This message indicates only that the call has been established at the local end, perhaps indicated by a dial tone.</p>
+</li>
+<li>
+As the connection process proceeds, an application will receive a series of LINE_CALLSTATE messages through its callback function indicating the progress of the connection (dialtone, ringing, etc.). When the connection is completed, the application will receive a LINECALLSTATE_CONNECTED message.<br><br></li>
+<li>
+During information transfer, TAPI continues to manage the connection, but the actual data transmission and reception is handled by the application.<br><br></li>
+<li>
+When transmission is finished, the application's callback function will receive a LINE_CALLSTATE message indicating, for example, that a remote disconnect has occurred.<br><br></li>
+<li>
+Close the line with <b>lineClose</b>.<br><br></li>
+<li>
+Shut down TAPI with <b>lineShutdown</b>.</li>
+</ol>
+</BODY>
+</HTML>

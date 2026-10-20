@@ -1,0 +1,104 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML>
+<HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text-html; charset=Windows-1252">
+<title>LibMain</title>
+<meta name=MS-HAID content="_wcesdk_libmain">
+<meta name=MS-HKWD content="LibMain (Windows CE)">
+</HEAD>
+<BODY BGCOLOR=#FFFFFF TEXT=#000000>
+<!-- WCESDK InfoViewer title (WCESDK.IVT); HTML topics extracted with tools/extract-ivt.py, images and the title's own indexes dropped. -->
+
+<BODY BGCOLOR=#FFFFFF BACKGROUND= "images\cewmark.gif" TEXT=#000000><form name=x><object name=iv classid="clsid:9c2ac687-ceef-11cf-96d9-00a0c903b016">
+</object></form>
+<h1><a name="_wcesdk_libmain"></a>LibMain</h1>
+<p>
+The <b>LibMain</b> function is called by the system to initialize a dynamic-link library (DLL). A DLL must contain <b>LibMain</b> if the library is linked with the file Libentry.obj.</p>
+<h3>Syntax</h3>
+<p>
+<b>int CALLBACK LibMain</b>(<b>HINSTANCE</b> <i>hinst</i>, <b>WORD</b> <i>wDataSeg</i>, <b>WORD</b> <i>cbHeapSize</i>, <b>LPSTR</b> <i>lpszCmdLine<b>)</i>;</b></p>
+<h3>At a Glance</h3>
+<table>
+<tr valign=top>
+<td>
+Platforms:</td>
+<td>
+H/PC</td>
+</tr>
+<tr valign=top>
+<td>
+Windows CE versions:</td>
+<td>
+1.0 and later</td>
+</tr>
+</table><br>
+<h3>Parameters</h3>
+<dl>
+<dt>
+<i>hinst</i></dt>
+<dd>
+Handle to the instance of the DLL.<br>
+</dd>
+<dt>
+<i>wDataSeg</i></dt>
+<dd>
+Value of the data segment (DS) register.<br>
+</dd>
+<dt>
+<i>cbHeapSize</i></dt>
+<dd>
+Size of the heap defined in the module-definition file. (The LibEntry routine in LIBENTRY.OBJ uses this value to initialize the local heap.)<br>
+</dd>
+<dt>
+<i>lpszCmdLine</i></dt>
+<dd>
+Pointer to a null-terminated string specifying command-line information. This parameter is rarely used by DLLs.</dd>
+</dl>
+<h3>Return Values</h3>
+<p>
+The function should return 1 if it is successful. Otherwise, it should return 0.</p>
+<h3>Remarks</h3>
+<p>
+The <b>LibMain</b> function is called by <b>LibEntry</b>, which is called by Windows when the DLL is loaded. The <b>LibEntry</b> routine is provided in the LIBENTRY.OBJ module. <b>LibEntry</b> initializes the DLL's heap (if a HEAPSIZE value is specified in the DLL's module-definition file) before calling <b>LibMain</b>.</p>
+<p>
+The following example shows a typical <b>LibMain</b> function:</p>
+<pre>int CALLBACK LibMain (HINSTANCE hinst, WORD wDataSeg, WORD cbHeap, LPSTR lpszCmdLine)
+  {
+    HGLOBAL           hgblClassStruct;
+    LPWNDCLASS        lpClassStruct;
+    static HINSTANCE  hinstLib = NULL;
+
+    /* Has the library been initialized yet? */
+
+    if (hinstLib == NULL)
+      {
+        hgblClassStruct = LocalAlloc(0, sizeof(WNDCLASS));
+   
+        if (hgblClassStruct != NULL)
+          {
+            lpClassStruct = (LPWNDCLASS) LocalLock(hgblClassStruct);
+  
+            if (lpClassStruct != NULL)
+              {
+                /* Define the class attributes. */
+
+                lpClassStruct-&gt;style = CS_HREDRAW | CS_VREDRAW | CS_DBLCLKS | CS_GLOBALCLASS;
+                lpClassStruct-&gt;lpfnWndProc = (WNDPROC)DllWndProc;
+                lpClassStruct-&gt;cbWndExtra = 0;
+                lpClassStruct-&gt;hInstance = hinst;
+                lpClassStruct-&gt;hIcon = NULL;
+                lpClassStruct-&gt;hCursor = NULL;
+                lpClassStruct-&gt;hbrBackground = (HBRUSH) (COLOR_WINDOW + 1);
+                lpClassStruct-&gt;lpszMenuName = NULL;
+                lpClassStruct-&gt;lpszClassName = TEXT(&quot;MyClassName&quot;);
+
+                hinstLib = (RegisterClass(lpClassStruct)) ? hinst : NULL;
+                LocalUnlock(lpClassStruct);
+              }
+          }
+      }
+    return 1 ;
+  }
+</pre>
+</BODY>
+</HTML>

@@ -1,0 +1,38 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML>
+<HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text-html; charset=Windows-1252">
+<title>Memory Architecture</title>
+<meta name=MS-HAID content="_wcesdk_memory_architecture">
+<meta name=MS-HKWD content="Memory Architecture">
+</HEAD>
+<BODY BGCOLOR=#FFFFFF TEXT=#000000>
+<!-- WCESDKG InfoViewer title (Wcesdkg.ivt); HTML topics extracted with tools/extract-ivt.py, images and the title's own indexes dropped. -->
+
+<form name=x><object name=iv classid="clsid:9c2ac687-ceef-11cf-96d9-00a0c903b016">
+</object></form>
+<h3><a name="_wcesdk_memory_architecture"></a>Memory Architecture</h3>
+<p>
+The Windows CE kernel supports a single flat (i.e., not segmented) virtual address space which is shared by all processes. Instead of assigning each process a different address space, Windows CE protects process memory by altering page protections. Virtual addresses are mapped onto physical memory by the kernel. This approach largely eliminates the need for an application developer to be concerned with the physical layout of the target system's memory.</p>
+<p>
+The portion of virtual memory available to processes is divided into 33 &quot;slots&quot;, each 32 Mb in size. The kernel protects each process by assigning it a unique slot, with one slot reserved for the currently running process. The number of processes is thus limited to 32, but there is no limit (aside from physical memory) on the total number of threads. Within each slot, memory regions are allocated as follows:
+<ul>
+<li>
+64 KB of reserved space<br><br></li>
+<li>
+File, code, and data sections for the process<br><br></li>
+<li>
+The primary thread's stack, and the default heap for the process<br><br></li>
+<li>
+DLLs loaded from RAM<br><br></li>
+<li>
+DLLs loaded from ROM</li>
+</ul>
+<p>
+The kernel prevents an application from accessing memory outside of its allocated slot by generating an exception. Applications can check for and handle such exceptions by using the <b>try</b> and <b>except </b> functions.</p>
+<p>
+Windows CE allows memory mapping, which permits multiple processes to share the same physical memory. This feature results in very fast data transfer between cooperating processes or between a driver and an application. One GB of virtual address space, distinct from that used for the slots, is allocated for memory mapping. Other than the total amount available, there is no restriction on how that memory can be allocated. </p>
+<p>
+Memory is always allocated to applications one page at a time. Page size is determined by the system designer and specified when the operating system is built for the target hardware platform. On an H/PC, for example, the page size is normally either 1 KB or 4 KB.</p>
+</BODY>
+</HTML>

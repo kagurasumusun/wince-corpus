@@ -1,0 +1,57 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML>
+<HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text-html; charset=Windows-1252">
+<title>Supporting Drop-Down Toolbar Buttons</title>
+<meta name=MS-HAID content="_wcesdk_supporting_drop_down_toolbar_buttons">
+<meta name=MS-HKWD content="Supporting Drop-Down Toolbar Buttons">
+</HEAD>
+<BODY BGCOLOR=#FFFFFF TEXT=#000000>
+<!-- WCESDKG InfoViewer title (Wcesdkg.ivt); HTML topics extracted with tools/extract-ivt.py, images and the title's own indexes dropped. -->
+
+<form name=x><object name=iv classid="clsid:9c2ac687-ceef-11cf-96d9-00a0c903b016">
+</object></form>
+<h3><a name="_wcesdk_supporting_drop_down_toolbar_buttons"></a>Supporting Drop-Down Toolbar Buttons</h3>
+<p>
+When the user clicks a toolbar button that uses the TBSTYLE_DROPDOWN style, the toolbar control sends its parent a <A HREF='javascript:document.x.iv.ALink("_wcesdk_tbn_dropdown","")'>TBN_DROPDOWN</a> notification message. The following DoNotify application-defined function illustrates how an application can support a drop-down button in a toolbar control by responding to this notification message. </p>
+<p>
+If the incoming notification message is TBN_DROPDOWN, DoNotify retrieves the bounding rectangle of the button the user clicked by sending the <A HREF='javascript:document.x.iv.ALink("_wcesdk_tb_getrect","")'>TB_GETRECT</a> message. When sending the message, DoNotify specifies the command ID of the drop-down button as the wParam parameter of the SendMessage function. (The button's command ID was retrieved from the <b>iItem</b> member of the <A HREF='javascript:document.x.iv.ALink("_wcesdk_nmtoolbar","")'><b>NMTOOLBAR</b></a> structure that <i>lParam</i> points to.) After DoNotify retrieves the bounding rectangle, it calls <A HREF='javascript:document.x.iv.ALink("_wcesdk_win32_mapwindowpoints","")'><b>MapWindowPoints</b></a> to convert the rectangle from client coordinates to screen coordinates. It then retrieves the pop-up menu from a menu resource by using the <A HREF='javascript:document.x.iv.ALink("_wcesdk_win32_getsubmenu","")'><b>GetSubMenu</b></a> function, and calls the <A HREF='javascript:document.x.iv.ALink("_wcesdk_win32_trackpopupmenuex","")'><b>TrackPopupMenuEx</b></a> function to display the menu. Note that DoNotify positions the menu under the correct button by using the rectangle it retrieved earlier. It also includes the TPM_VERTICAL flag to ensure that the menu is displayed so it doesn't overlap the button. </p>
+<pre>BOOL WINAPI DoNotify(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
+{
+#define lpnm   ((LPNMHDR)lParam)
+#define lpnmTB ((LPNMTOOLBAR)lParam)
+
+   RECT      rc;
+   TPMPARAMS tpm;
+   HMENU     hPopupMenu = NULL;
+   BOOL      bRet = FALSE;
+
+   switch(lpnm-&gt;code){
+      case TBN_DROPDOWN:
+         SendMessage(lpnmTB-&gt;hdr.hwndFrom, TB_GETRECT,
+                     (WPARAM)lpnmTB-&gt;iItem, (LPARAM)&amp;rc);
+
+         MapWindowPoints(lpnmTB-&gt;hdr.hwndFrom,
+                         HWND_DESKTOP, (LPPOINT)&amp;rc, 2);                         
+
+         tpm.cbSize = sizeof(TPMPARAMS);
+         tpm.rcExclude.top    = rc.top;
+         tpm.rcExclude.left   = rc.left;
+         tpm.rcExclude.bottom = rc.bottom;
+         tpm.rcExclude.right  = rc.right;
+         
+         hPopupMenu = 
+           GetSubMenu( LoadMenu(g_hinst,MAKEINTRESOURCE(IDR_POPUP)),0);
+
+         TrackPopupMenuEx(hPopupMenu,
+                          TPM_LEFTALIGN|TPM_LEFTBUTTON|TPM_VERTICAL,               
+                          rc.left, rc.bottom, g_hwndMain, &amp;tpm);
+         
+         return (FALSE);
+   }
+
+   return FALSE;
+}
+</pre>
+</BODY>
+</HTML>

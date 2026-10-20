@@ -1,0 +1,48 @@
+<HTML>
+<HEAD>
+<TITLE>1.2.3 .WEAK</TITLE>
+</HEAD><body bgcolor="#FFFFFF">
+<!-- SHASM InfoViewer title (Shasm.ivt); HTML topics extracted with tools/extract-ivt.py, images and the title's own indexes dropped. -->
+
+<A NAME="off_197553"></A><A NAME="21bf61b3"></A><FONT FACE="Arial" SIZE="4"><B>1.2.3 .WEAK
+<P>
+</B></FONT><FONT FACE="Arial" SIZE="3">Shasm introduces the .WEAK directive, which may be used to define a </FONT><FONT FACE="Times New Roman" SIZE="3">“</FONT><FONT FACE="Arial" SIZE="3">weak external</FONT><FONT FACE="Times New Roman" SIZE="3">”</FONT><FONT FACE="Arial" SIZE="3"> symbol. Weak externals are a mechanism for programs allowing flexibility at
+link time. A .WEAK directive such as:
+<P>
+ </FONT><FONT FACE="Lucida Sans Typewriter" SIZE="3">.weak  unlink,__unlink
+<P>
+</FONT><FONT FACE="Arial" SIZE="3">indicates that when the program is linked, if the symbol </FONT><FONT FACE="Times New Roman" SIZE="3">“</FONT><FONT FACE="Arial" SIZE="3">unlink</FONT><FONT FACE="Times New Roman" SIZE="3">”</FONT><FONT FACE="Arial" SIZE="3"> is defined by any object file, then references to </FONT><FONT FACE="Times New Roman" SIZE="3">“</FONT><FONT FACE="Arial" SIZE="3">unlink</FONT><FONT FACE="Times New Roman" SIZE="3">”</FONT><FONT FACE="Arial" SIZE="3"> are resolved to its definition as usual. However, if the symbol </FONT><FONT FACE="Times New Roman" SIZE="3">“</FONT><FONT FACE="Arial" SIZE="3">unlink</FONT><FONT FACE="Times New Roman" SIZE="3">”</FONT><FONT FACE="Arial" SIZE="3"> is not defined by any object file, then references to </FONT><FONT FACE="Times New Roman" SIZE="3">“</FONT><FONT FACE="Arial" SIZE="3">unlink</FONT><FONT FACE="Times New Roman" SIZE="3">”</FONT><FONT FACE="Arial" SIZE="3"> are resolved to </FONT><FONT FACE="Times New Roman" SIZE="3">“</FONT><FONT FACE="Arial" SIZE="3">__unlink</FONT><FONT FACE="Times New Roman" SIZE="3">”</FONT><FONT FACE="Arial" SIZE="3"> instead. (The symbol </FONT><FONT FACE="Times New Roman" SIZE="3">“</FONT><FONT FACE="Arial" SIZE="3">__unlink</FONT><FONT FACE="Times New Roman" SIZE="3">”</FONT><FONT FACE="Arial" SIZE="3"> must be defined in exactly one of the object files, or an error will result.)
+The syntax of the .WEAK directive is as follows:
+<P>
+ </FONT><FONT FACE="Lucida Sans Typewriter" SIZE="3">.weak  &lt;weak_name&gt;, &lt;default_name&gt; [, &lt;type_expr&gt;]
+<P>
+</FONT><FONT FACE="Arial" SIZE="3">The optional type_expr argument is an expression (whose value must be
+absolute), giving the type of weak external. If the value is zero or the third argument
+is omitted, the </FONT><FONT FACE="Times New Roman" SIZE="3">“</FONT><FONT FACE="Arial" SIZE="3">alias</FONT><FONT FACE="Times New Roman" SIZE="3">”</FONT><FONT FACE="Arial" SIZE="3"> type of weak external is generated. This is almost certainly what you want;
+therefore, you would not ordinarily want to use the optional third argument.
+Examples:
+<P>
+ </FONT><FONT FACE="Lucida Sans Typewriter" SIZE="3">.weak  foo,bar,1
+<P>
+NO_SEARCH .equ 1
+<P>
+SEARCH_LIB .equ 2
+<P>
+ .weak  ick,yuk,NO_SEARCH
+<P>
+ .weak  snap,crackle,SEARCH_LIB
+<P>
+</FONT><FONT FACE="Arial" SIZE="3">Note that if you inadvertantly place a symbol in the third argument position,
+and the symbol happens to be relative, you</FONT><FONT FACE="Times New Roman" SIZE="3">’</FONT><FONT FACE="Arial" SIZE="3">ll get error 404; this does not mean that you can</FONT><FONT FACE="Times New Roman" SIZE="3">’</FONT><FONT FACE="Arial" SIZE="3">t use relative symbols or expressions in a .WEAK directive, just that the
+third argument has to have an absolute value.
+<P>
+Note that the C and C++ compilers prepend a _ (an underscore) to each symbol
+name; consequently, if unlink and __unlink were defined and referenced in
+assembly language, you would code the .WEAK directive as shown in the first example,
+above, but if unlink and __unlink were defined and referenced in C code, you
+would code the .WEAK directive as follows:
+<P>
+ </FONT><FONT FACE="Lucida Sans Typewriter" SIZE="3">.weak  _unlink,___unlink
+<P>
+</FONT></BODY>
+</HTML>

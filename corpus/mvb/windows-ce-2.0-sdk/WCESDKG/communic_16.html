@@ -1,0 +1,82 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML>
+<HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text-html; charset=Windows-1252">
+<title>Sample Infrared Socket Client</title>
+<meta name=MS-HAID content="_wcesdk_sample_infrared_socket_client">
+<meta name=MS-HKWD content="Sample Infrared Socket Client">
+</HEAD>
+<BODY BGCOLOR=#FFFFFF TEXT=#000000>
+<!-- WCESDKG InfoViewer title (Wcesdkg.ivt); HTML topics extracted with tools/extract-ivt.py, images and the title's own indexes dropped. -->
+
+<form name=x><object name=iv classid="clsid:9c2ac687-ceef-11cf-96d9-00a0c903b016">
+</object></form>
+<h3><a name="_wcesdk_sample_infrared_socket_client"></a>Sample Infrared Socket Client</h3>
+<p>
+This sample client opens a socket and makes five attempts to locate a server. When a server is detected, the client queries the server for its device identifier and sends a greeting to the service named &quot;MyServer&quot;. It then waits for the server to respond, prints the response, and closes the socket.</p>
+<pre>#include &lt;windows.h&gt;
+#include &lt;af_irda.h&gt;
+
+#define&#09;NumRetries&#09;5
+
+int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
+                    LPTSTR lpCmdLine, int nCmdShow )
+{
+    SOCKET        sock;
+    SOCKADDR_IRDA address = {AF_IRDA, 0,0,0,0, &quot;MyServer&quot;};
+    DEVICELIST    devList;
+    int           devListLen = sizeof(devList),
+                  cnt = 0,
+                  idx = 0;
+    char          helloClient[25];
+    TCHAR         helloText[25];
+
+    sock = socket(AF_IRDA, SOCK_STREAM, 0);
+    devList.numDevice = 0; // initialize number of devices to zero
+
+    // Make NumRetries (5) attempts to find server device
+    while ((devList.numDevice == 0) &amp;&amp; (cnt &lt;= NumRetries))
+    {
+        // see if device exists &amp; retrieve its device identifier
+        getsockopt(sock, SOL_IRLMP, IRLMP_ENUMDEVICES,
+                   (char *)&amp;devList, &amp;devListLen);
+        cnt++;
+        Sleep(1000); // Wait one second before retrying
+    }
+    if  (cnt &gt; NumRetries)
+    {
+        // Server device could not be located - Notify user
+        MessageBox (NULL, TEXT(&quot;Server could not be located&quot;),
+                    TEXT(&quot;IR Client&quot;), MB_OK);
+    }
+    else // We found a server
+    {
+        // Get socket address of server
+        for (idx = 0; idx &lt;= 3; idx++)
+             address.irdaDeviceID[idx] =
+             devList.Device[0].irdaDeviceID[idx];
+
+        // Connect to server with service name MyServer
+        connect(sock, (struct sockaddr *)&amp;address,
+                       sizeof(SOCKADDR_IRDA));
+
+        // Send a greeting to MyServer
+        send(sock, &quot;Hello Server!&quot;, strlen(&quot;Hello Server!&quot;)+1, 0);
+
+        // Wait for a response; blocking call.
+        recv(sock, helloClient, sizeof(helloClient), 0);
+
+        // Convert string to Unicode
+        for (idx = 0; idx &lt;= sizeof(helloClient); idx++)
+             helloText[idx] = helloClient[idx];
+
+        // Display string received from Server
+        MessageBox (NULL, helloText, TEXT(&quot;IR Client&quot;), MB_OK);
+
+        closesocket(sock);
+    }
+return 0;
+}
+</pre>
+</BODY>
+</HTML>

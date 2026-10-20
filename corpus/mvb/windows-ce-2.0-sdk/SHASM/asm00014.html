@@ -1,0 +1,78 @@
+<HTML>
+<HEAD>
+<TITLE>.1.3.4  PROLOG</TITLE>
+</HEAD><body bgcolor="#FFFFFF">
+<!-- SHASM InfoViewer title (Shasm.ivt); HTML topics extracted with tools/extract-ivt.py, images and the title's own indexes dropped. -->
+
+<A NAME="off_264496"></A><A NAME="5c788e14"></A><FONT FACE="Arial" SIZE="4"><B>1.3.4  .PROLOG
+<P>
+</B></FONT><FONT FACE="Arial" SIZE="3">The .PROLOG directive marks the end of the prolog code of a function. The
+prolog code is the code at the beginning of a function that sets up the stack frame
+for the function, in accordance with the Calling Standard Specification. This
+would include saving the PR register, pushing other registers onto the stack,
+setting up the frame pointer, etc. See the Calling Standard Specification for
+more information. The .PROLOG directive should appear between the last line of
+prolog code and the first line of non-prolog code for the function. If the
+function has no prolog code, then the .PROLOG directive should appear between the
+.ENTRY directive for the function and the first line of code in the function. The
+syntax of the .PROLOG directive is as follows:
+<P>
+ </FONT><FONT FACE="Lucida Sans Typewriter" SIZE="3">.prolog
+<P>
+</FONT><FONT FACE="Arial" SIZE="3">Example (see also examples for the </FONT><FONT FACE="Arial" COLOR="#008000" SIZE="3"><A HREF="asm00011.htm">.PDATA</A></FONT><FONT FACE="Arial" SIZE="3"> directive, above):
+<P>
+</FONT><FONT FACE="Lucida Sans Typewriter" SIZE="3">fun6: .entry
+<P>
+ ; this is the prolog code:
+<P>
+ mov.l  r14,@-sp
+<P>
+ mov.l  r8,@-sp
+<P>
+ sts.l  pr,@-sp
+<P>
+ mov  sp,fp
+<P>
+ add  #12,fp
+<P>
+ ; end of prolog code.
+<P>
+ .prolog    ; mark end of prolog code
+<P>
+ add  #-16,sp
+<P>
+ ; function code goes here
+<P>
+ mov  fp,r2
+<P>
+ add  #-12,r2
+<P>
+ lds.l  @r2+,pr
+<P>
+ mov.l  @r2+,r8
+<P>
+ mov  r2,sp
+<P>
+ rts
+<P>
+  mov.l @sp+,fp
+<P>
+ .endf
+<P>
+</FONT><FONT FACE="Arial Narrow" SIZE="4"><B>Note:
+<P>
+</B></FONT><FONT FACE="Arial" SIZE="3">It is important that the .PROLOG directive be used appropriately, and that the
+prolog code (and the epilog code) of each function conform to the Calling
+Standard Specification. Otherwise, structured exception handling may not work
+correctly, and the debugger may be unable to provide stack traces. If the .PROLOG
+directive is not specified for a function (ie, an .ENDF directive is encountered
+without a .PROLOG directive having been encountered since the most recent
+.ENTRY directive), Shasm will issue a warning, and act as though the .PROLOG
+directive had been specified immediately following the .ENTRY directive. This
+effectively indicates that the function has no prolog code; if the function does in
+fact have prolog code, then structured exception handling and stack tracing may
+not operate properly, as noted. It is recommended that you always use a .PROLOG
+directive, even if the function has no prolog code.
+<P>
+</FONT></BODY>
+</HTML>

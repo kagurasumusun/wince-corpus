@@ -1,0 +1,103 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML>
+<HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text-html; charset=Windows-1252">
+<title>ICeFileFilterSite::OpenDestinationFile</title>
+<meta name=MS-HAID content="_wcesdk_icefilefiltersite_opendestinationfile">
+<meta name=MS-HKWD content="ICeFileFilterSite::OpenDestinationFile">
+</HEAD>
+<BODY BGCOLOR=#FFFFFF TEXT=#000000>
+<!-- WCESDK InfoViewer title (WCESDK.IVT); HTML topics extracted with tools/extract-ivt.py, images and the title's own indexes dropped. -->
+
+<BODY BGCOLOR=#FFFFFF BACKGROUND= "images\cewmark.gif" TEXT=#000000><form name=x><object name=iv classid="clsid:9c2ac687-ceef-11cf-96d9-00a0c903b016">
+</object></form>
+<h1><a name="_wcesdk_icefilefiltersite_opendestinationfile"></a>ICeFileFilterSite::OpenDestinationFile</h1>
+<p>
+The <b>ICeFileFilterSite::OpenDestinationFile</b> method is used by a file filter to open a destination file. </p>
+<h2>Syntax</h2>
+<p>
+<b>STDMETHODIMP ICeFileFilterSite::OpenDestinationFile(<BR>int</b> <i>nHowToOpenFile</i><b>,</b><BR><b>LPCSTR</b> <i>pszFullpath</i><b>,</b><BR><b>LPVOID</b> *<i>ppObj<BR></i><b>);</b></p>
+<h2>At a Glance</h2>
+<table>
+<tr valign=top>
+<td>
+Header file:</td>
+<td>
+Replfilt.h</td>
+</tr>
+<tr valign=top>
+<td>
+Platforms:</td>
+<td>
+H/PC</td>
+</tr>
+<tr valign=top>
+<td>
+Windows CE versions:</td>
+<td>
+2.0 and later</td>
+</tr>
+</table><br>
+<h2>Parameters</h2>
+<dl>
+<dt>
+<i>nHowToOpenFile</i> </dt>
+<dd>
+Specifies how the source file is to be opened. This can be one of the following values: <dl>
+<dt>
+PF_OPENFLAT</dt>
+<dd>
+Open as a flat file. <br>
+</dd>
+<dt>
+PF_OPENCOMPOUND</dt>
+<dd>
+Open as an OLE compound file. Note that Windows CE does not support compound files. </dd>
+</dl>
+<br>
+</dd>
+<dt>
+<i>pszFullpath</i> </dt>
+<dd>
+Name of the file to open to override the default destination file name. If this parameter is NULL, the default destination file name will be used. <br>
+</dd>
+<dt>
+<i>ppObj</i> </dt>
+<dd>
+Address of an <b>LPVOID</b> variable that will receive an <b>IStream</b> pointer if <i>nHowToOpenFile</i> is PF_OPENFLAT, or an <b>IStorage</b> pointer if <i>nHowToOpenFile</i> is PF_OPENCOMPOUND. This object must be released using the <a href="filt_if_16.htm"><b>ICeFileFilterSite::CloseDestinationFile</b></a> method before returning to H/PC Explorer. </dd>
+</dl>
+<h2>Return Values</h2>
+<dl>
+<dt>
+NOERROR</dt>
+<dd>
+<b>OpenDestinationFile</b> was successful.</dd>
+</dl>
+<p>
+If <b>OpenDestinationFile</b> fails, the return value is an <b>HRESULT_FROM_WIN32</b> error value. </p>
+<h2>Remarks</h2>
+<p>
+The default destination file name and path are specified in the <a href="str_pw_4.htm"><b>CFF_DESTINATIONFILE</b></a> structure that is passed in to the call to <b>ICeFileFilter::NextConvertFile</b>. The default path is a temporary path managed by Windows CE Services. For example, if the user drags a bitmap file named Tmp.bmp from the desktop PC to the mobile device, the default destination file name is Tmp.2bp. </p>
+<p>
+When the file filter's <b>ICeFileFilter::NextConvertFile</b> method calls the <b>ICeFileFilterSite::OpenDestinationFile</b> method, the destination file can be modified, as shown in the following code fragment:</p>
+<pre>// Filter and copy Tmp.bmp on desktop to Tmp1.2bp on Windows CE device
+CFF_DESTINATIONFILE *pdf;
+IStream *pstmDst;   // Open the destination file as a stream
+TCHAR szBuf[80];
+
+lstrcpy(szBuf, pdf-&gt;szPath);        // Use default path …
+lstrcat(szBuf, TEXT(&quot;TMP1.2bp&quot;) );  // … but Modify the file name
+
+hres = cffs-&gt;OpenDestinationFile(PF_OPENFLAT, szBuf, (LPVOID*)&amp;pstmDst);
+</pre>
+<p>
+In this example, note that the path to the directory that contains the temporary destination was preserved. The reason is that, after the file filter conversion is complete (that is, <b>NextConvertFile</b> has returned (ERROR_NO_MORE_ITEMS), Windows CE Services looks in <i>szPath</i> and copies all files (regardless of file or extension name) to the target folder, as directed by the user. </p>
+<p>
+The temporary destination file path must be located on the desktop PC, but the path can be modified as desired. </p>
+<p>
+Note that <b>OpenDestinationFile</b> can be called only once within a given call to <b>ICeFileFilter::NextConvertFile</b>. </p>
+<h2>See Also</h2>
+<p>
+<a href="filt_if_16.htm"><b>ICeFileFilterSite::CloseDestinationFile</b></a></p>
+</BODY>
+</HTML>

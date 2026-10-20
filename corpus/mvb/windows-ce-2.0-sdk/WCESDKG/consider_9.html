@@ -1,0 +1,188 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML>
+<HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text-html; charset=Windows-1252">
+<title>Non-Standard Debugging</title>
+<meta name=MS-HAID content="_wcesdk_non_standard_debugging">
+<meta name=MS-HKWD content="Non-Standard Debugging">
+</HEAD>
+<BODY BGCOLOR=#FFFFFF TEXT=#000000>
+<!-- WCESDKG InfoViewer title (Wcesdkg.ivt); HTML topics extracted with tools/extract-ivt.py, images and the title's own indexes dropped. -->
+
+<form name=x><object name=iv classid="clsid:9c2ac687-ceef-11cf-96d9-00a0c903b016">
+</object></form>
+<h3><a name="_wcesdk_non_standard_debugging"></a>Non-Standard Debugging</h3>
+<p>
+If you are developing software for a standard Windows CE platform, such as the H/PC, you can use the Windows CE emulation environment and remote tools to debug and test your application. However, if you are developing an application for another Windows CE platform, such as an embedded system, you have to build your own debugging environment. </p>
+<p>
+The Windows CE API includes the interfaces necessary to create a full featured debugger application, such as VC++ or Windbg. Although the creation tools exist, the limited size of the Windows CE environment makes such a debugger unrealistic. If you decide to write a debugger application, the best approach is to create a debug client using Windows CE debug functions and to communicate the relevant events to a PC-based debugger. When writing a debugging application, choose one of the following ways to start the debugging session: 
+<ul>
+<li>
+Launch a process with CreateProcess specifying the DEBUG_PROCESS (or DEBUG_ONLY_THIS_PROCESS) in the dwCreateFlags field. In addition to the DEBUG_PROCESS flag , use CREATE_SUSPENDED to prevent the application from running after it is initialized. Once suspended, a debugger can initialize and add any appropriate break points.<p>
+<font face="Symbol"><span style="font-family:symbol">&#45;</span></font> Or <font face="Symbol"><span style="font-family:symbol">&#45;</span></font></p>
+</li>
+<li>
+Attach to an already running application. To attach to a process, you must obtain permission to the process by calling OpenProcess and passing in the ID of the process you want to debug. If a valid handle is returned, call DebugActiveProcess to start debugging. After attaching to the process, the CREATE_PROCESS_DEBUG_EVENT returns the primary thread handle and the multiple CREATE_THREAD_DEBUG_EVENTs return the secondary thread handles. After attaching to the process and receiving the initial events, the process's thread is resumed. Unlike Windows NT, Windows CE has no EXCEPTION_DEBUG_EVENT. All thread handles must be closed with <b>CloseHandle </b>when you stop debugging.</li>
+</ul>
+<p>
+Windows CE Version 2.0 has built in support for Just-In-Time (JIT) debugging. JIT enables you to run an application outside of the development environment. When an error occurs, the application calls the installed debugger. You register your JIT debugger by placing the name of your debugger in the registry value JITDebugger located at HKEY_LOCAL_MACHINE\Debug. To enable JIT, you must warmboot the device after the above value is added to the registry.</p>
+<p>
+If you choose not to write a debugger application, you must create some debugging tools in the Windows CE system. Windows CE provides both functions and structures to do this.</p>
+<p>
+The following debugging functions and structures are supported by Windows CE:</p>
+<table>
+<tr valign=top>
+<td>
+<b>Supported Debugging Functions</b></td>
+</tr>
+<tr valign=top>
+<td>
+</td>
+</tr>
+<tr valign=top>
+<td>
+<A HREF='javascript:document.x.iv.ALink("_wcesdk_win32_continuedebugevent","")'>ContinueDebugEvent</a></td>
+</tr>
+<tr valign=top>
+<td>
+<A HREF='javascript:document.x.iv.ALink("_wcesdk_win32_debugactiveprocess","")'>DebugActiveProcess</a></td>
+</tr>
+<tr valign=top>
+<td>
+<A HREF='javascript:document.x.iv.ALink("_wcesdk_win32_debugbreak","")'>DebugBreak</a></td>
+</tr>
+<tr valign=top>
+<td>
+<A HREF='javascript:document.x.iv.ALink("_wcesdk_win32_flushinstructioncache","")'>FlushInstructionCache</a></td>
+</tr>
+<tr valign=top>
+<td>
+<A HREF='javascript:document.x.iv.ALink("_wcesdk_win32_getthreadcontext","")'>GetThreadContext</a></td>
+</tr>
+<tr valign=top>
+<td>
+<A HREF='javascript:document.x.iv.ALink("_wcesdk_win32_outputdebugstring","")'>OutputDebugString</a></td>
+</tr>
+<tr valign=top>
+<td>
+<A HREF='javascript:document.x.iv.ALink("_wcesdk_win32_readprocessmemory","")'>ReadProcessMemory</a></td>
+</tr>
+<tr valign=top>
+<td>
+<A HREF='javascript:document.x.iv.ALink("_wcesdk_win32_setthreadcontext","")'>SetThreadContext</a></td>
+</tr>
+<tr valign=top>
+<td>
+<A HREF='javascript:document.x.iv.ALink("_wcesdk_win32_waitfordebugevent","")'>WaitForDebugEvent</a></td>
+</tr>
+<tr valign=top>
+<td>
+<A HREF='javascript:document.x.iv.ALink("_wcesdk_win32_writeprocessmemory","")'>WriteProcessMemory</a></td>
+</tr>
+<tr valign=top>
+<td>
+</td>
+</tr>
+<tr valign=top>
+<td>
+<b>Supported Debugging Structures</b></td>
+</tr>
+<tr valign=top>
+<td>
+</td>
+</tr>
+<tr valign=top>
+<td>
+CONTEXT</td>
+</tr>
+<tr valign=top>
+<td>
+CREATE_PROCESS_DEBUG_INFO</td>
+</tr>
+<tr valign=top>
+<td>
+CREATE_THREAD_DEBUG_INFO</td>
+</tr>
+<tr valign=top>
+<td>
+DEBUG_EVENT</td>
+</tr>
+<tr valign=top>
+<td>
+EXCEPTION_DEBUG_INFO</td>
+</tr>
+<tr valign=top>
+<td>
+EXIT_PROCESS_DEBUG_INFO</td>
+</tr>
+<tr valign=top>
+<td>
+EXIT_THREAD_DEBUG_INFO</td>
+</tr>
+<tr valign=top>
+<td>
+LOAD_DLL_DEBUG_INFO</td>
+</tr>
+<tr valign=top>
+<td>
+OUTPUT_DEBUG_STRING_INFO</td>
+</tr>
+<tr valign=top>
+<td>
+UNLOAD_DLL_DEBUG_INFO</td>
+</tr>
+</table><br>
+<p>
+The following debugging functions and structures are not supported by Windows CE:</p>
+<table>
+<tr valign=top>
+<td>
+<b>Unsupported Debugging Functions</b></td>
+</tr>
+<tr valign=top>
+<td>
+</td>
+</tr>
+<tr valign=top>
+<td>
+IsDebuggerPresent</td>
+</tr>
+<tr valign=top>
+<td>
+GetThreadSelectorEntry</td>
+</tr>
+<tr valign=top>
+<td>
+FatalExit</td>
+</tr>
+<tr valign=top>
+<td>
+FatalAppExit</td>
+</tr>
+<tr valign=top>
+<td>
+SetDebugErrorLevel</td>
+</tr>
+<tr valign=top>
+<td>
+</td>
+</tr>
+<tr valign=top>
+<td>
+<b>Unsupported Debugging Structures</b></td>
+</tr>
+<tr valign=top>
+<td>
+</td>
+</tr>
+<tr valign=top>
+<td>
+LDT_ENTRY</td>
+</tr>
+<tr valign=top>
+<td>
+RIP_INFO</td>
+</tr>
+</table><br>
+</BODY>
+</HTML>

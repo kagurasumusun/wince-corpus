@@ -1,0 +1,46 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML>
+<HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text-html; charset=Windows-1252">
+<title>Processing the MCN_GETDAYSTATE Notification Message</title>
+<meta name=MS-HAID content="_wcesdk_processing_the_mcn_getdaystate_notification_message">
+<meta name=MS-HKWD content="Processing the MCN_GETDAYSTATE Notification Message">
+</HEAD>
+<BODY BGCOLOR=#FFFFFF TEXT=#000000>
+<!-- WCESDKG InfoViewer title (Wcesdkg.ivt); HTML topics extracted with tools/extract-ivt.py, images and the title's own indexes dropped. -->
+
+<form name=x><object name=iv classid="clsid:9c2ac687-ceef-11cf-96d9-00a0c903b016">
+</object></form>
+<h3><a name="_wcesdk_processing_the_mcn_getdaystate_notification_message"></a>Processing the MCN_GETDAYSTATE Notification Message</h3>
+<p>
+Month calendar controls send the <A HREF='javascript:document.x.iv.ALink("_wcesdk_mcn_getdaystate","")'>MCN_GETDAYSTATE</a> notification message to request information about how the days within the visible months should be displayed. The following application-defined function, DoNotify, processes MCN_GETDAYSTATE by filling an array of <b>MONTHDAYSTATE</b> values to highlight the fifteenth day of each month. </p>
+<p>
+DoNotify extracts the number of <b>MONTHDAYSTATE</b> values needed from the cDayState member of the <A HREF='javascript:document.x.iv.ALink("_wcesdk_nmdaystate","")'><b>NMDAYSTATE</b></a> structure that lParam points to. It then loops to set the fifteenth bit in each element of the array, using the application-defined BOLDDAY macro. </p>
+<pre>BOOL WINAPI DoNotify(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
+{
+#define BOLDDAY(ds,iDay) if(iDay&gt;0 &amp;&amp; iDay&lt;32)\
+                            (ds)|=(0x00000001&lt;&lt;(iDay-1))
+
+#define lpnmDS ((NMDAYSTATE *)lParam)
+#define MAX_MONTHS 12
+
+   MONTHDAYSTATE mds[MAX_MONTHS];
+   INT i, iMax;
+   LPNMHDR hdr = (LPNMHDR)lParam;
+
+   switch(hdr-&gt;code){
+      case MCN_GETDAYSTATE:
+         iMax=lpnmDS-&gt;cDayState;
+                  
+         for(i=0;i&lt;iMax;i++){
+            mds[i] = (MONTHDAYSTATE)0;
+            BOLDDAY(mds[i],15);
+         }
+         lpnmDS-&gt;prgDayState = mds;
+         break;
+   }
+   return FALSE;
+}
+</pre>
+</BODY>
+</HTML>

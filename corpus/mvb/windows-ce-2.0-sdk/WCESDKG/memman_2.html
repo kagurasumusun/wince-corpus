@@ -1,0 +1,39 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML>
+<HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text-html; charset=Windows-1252">
+<title>Types of Memory Allocation</title>
+<meta name=MS-HAID content="_wcesdk_types_of_memory_allocation">
+</HEAD>
+<BODY BGCOLOR=#FFFFFF TEXT=#000000>
+<!-- WCESDKG InfoViewer title (Wcesdkg.ivt); HTML topics extracted with tools/extract-ivt.py, images and the title's own indexes dropped. -->
+
+<form name=x><object name=iv classid="clsid:9c2ac687-ceef-11cf-96d9-00a0c903b016">
+</object></form>
+<h2><a name="_wcesdk_types_of_memory_allocation"></a>Types of Memory Allocation</h2>
+<p>
+There are several independent memory pools from which an application can allocate memory such as the stack, the default heap and the local heap. Each pool consists of an integral number of pages. Some can easily grow and shrink, others cannot. Use these memory pools to allocate application memory in a manner that minimizes the amount of wasted RAM. </p>
+<p>
+The most commonly used data storage mechanism is to declare it on the stack. The stack starts at 1KB; the system adds additional memory to it one page at a time up to 58KB (a hard limit). The system can shrink a stack, but it does so lazily and only if all other sources of pages are exhausted. For short-lived data, the stack is a good place from which to allocate memory. However, avoid allocating large amounts of memory from the stack. </p>
+<p>
+<b>Note</b>  Do not allow the stack for a thread to grow larger than 58KB. Exceeding this threshold results in a system access violation.</p>
+<p>
+Declaring static or global data causes the system to put the data in the read/write (R/W) data section of the module. This section does not grow or shrink. Use the standard Win32 DunpBin utility (Dumpbin.exe) or the Remote Memory Viewer to determine the size of your application's data section. Using the C run-time library automatically declares data in the R/W section, making it difficult to eliminate. </p>
+<p>
+Look carefully at everything in the R/W section. Make sure you declare all constant data items. The compiler then moves the constant data into the read-only data section. To utilize space that would otherwise be wasted because of page granularity, move other types of data into the R/W section once the system has removed the constant data. This allows you to use less heap space. Make sure you place a note in your code to remind you to look at your memory usage each time you add more data. It would be counter-productive to fill the section with additional data, then have it grow by an entire page just to accommodate an additional variable. Additionally, the loader needs 50 to 75 bytes free in the R/W section. Make sure you leave space for it.</p>
+<p>
+The <A HREF='javascript:document.x.iv.ALink("_wcesdk_win32_virtualalloc","")'><b>VirtualAlloc</b></a> function is the primary tool for allocating virtual memory in the Windows CE operating system. You can use <b>VirtualAlloc</b> to directly allocate an integral number of memory pages. When you free memory by using <A HREF='javascript:document.x.iv.ALink("_wcesdk_win32_virtualfree","")'><b>VirtualFree</b></a>, it is immediately returned to the global virtual memory pool. </p>
+<p>
+All other memory pools (such as stacks and heaps) are based on <b>VirtualAlloc</b>. Because <b>VirtualAlloc</b> can only allocate pages, do not use it to allocate small memory objects. However, if you are allocating a large memory object (ideally, a multiple of the page size), using <b>VirtualAlloc</b> is the most efficient method. One important advantage of this approach is that the memory is easily returned if a low-memory condition occurs. </p>
+<p>
+Each process has a default heap upon which <A HREF='javascript:document.x.iv.ALink("_wcesdk_win32_localalloc","")'><b>LocalAlloc</b></a> and <A HREF='javascript:document.x.iv.ALink("_wcesdk_win32_localfree","")'><b>LocalFree</b></a> operate. Under Windows CE, a heap supports only fixed memory. The heap grows whenever a call to <b>LocalAlloc</b> cannot be satisfied from the available space. The system cannot compact a heap. This leads to fragmentation, which results in the number of available pages not corresponding to the total amount of free space in the heap. </p>
+<p>
+Though the operating system automatically shrinks the heap if it has one or more free memory pages, .the system may not be able to shrink the heap as much as you might expect because fragmentation creates many partially filled pages. </p>
+<p>
+The <A HREF='javascript:document.x.iv.ALink("_wcesdk_win32_heapcreate","")'><b>HeapCreate</b></a> function creates a new heap that is separate from the default heap. Memory for the new heap is reserved but not actually committed until needed. To allocate and free memory, use the <A HREF='javascript:document.x.iv.ALink("_wcesdk_win32_heapalloc","")'><b>HeapAlloc</b></a> and <A HREF='javascript:document.x.iv.ALink("_wcesdk_win32_heapfree","")'><b>HeapFree</b></a> functions. They are similar to <A HREF='javascript:document.x.iv.ALink("_wcesdk_win32_localalloc","")'><b>LocalAlloc</b></a> and <A HREF='javascript:document.x.iv.ALink("_wcesdk_win32_localfree","")'><b>LocalFree</b></a>.<b> </b>The difference is that when you are finished, you can free this heap by using <A HREF='javascript:document.x.iv.ALink("_wcesdk_win32_heapdestroy","")'><b>HeapDestroy</b></a>, and return the memory back to the global virtual memory pool. </p>
+<p>
+Creating a separate heap is a good allocation strategy when you need to make a lot of small temporary allocations. For example, an application that works with documents could create a new heap from which all allocations pertaining to a document are performed. When the document is closed, the application can free the heap, and return the memory to the global virtual memory pool. This strategy keeps the size of the default heap small, and avoids generating numerous partially-filled pages using <A HREF='javascript:document.x.iv.ALink("_wcesdk_win32_virtualalloc","")'><b>VirtualAlloc</b></a>.</p>
+<p>
+Keep in mind that each heap requires approximately 500 bytes of overhead. Creating separate heaps is a good strategy only if you expect to allocate at least 5KB. </p>
+</BODY>
+</HTML>

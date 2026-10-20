@@ -1,0 +1,64 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML>
+<HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text-html; charset=Windows-1252">
+<title>Sample Infrared Socket Server</title>
+<meta name=MS-HAID content="_wcesdk_sample_infrared_socket_server">
+<meta name=MS-HKWD content="Sample Infrared Socket Server">
+</HEAD>
+<BODY BGCOLOR=#FFFFFF TEXT=#000000>
+<!-- WCESDKG InfoViewer title (Wcesdkg.ivt); HTML topics extracted with tools/extract-ivt.py, images and the title's own indexes dropped. -->
+
+<form name=x><object name=iv classid="clsid:9c2ac687-ceef-11cf-96d9-00a0c903b016">
+</object></form>
+<h3><a name="_wcesdk_sample_infrared_socket_server"></a>Sample Infrared Socket Server</h3>
+<p>
+This simple IrSock server allocates a socket and binds it to the service named &quot;MyServer&quot;. It then allocates a single connection object and prepares the server to listen for incoming connections. When the client contacts the server, the server accepts the connection. It then receives a string from the client, passes one back, and closes the connection.</p>
+<pre>#include &lt;windows.h&gt;
+#include &lt;af_irda.h&gt;
+
+int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
+                    LPTSTR lpCmdLine, int nCmdShow )
+{
+    SOCKET         ServerSock, // Socket for the Server
+                   ClientSock; // Socket for the Client
+
+    // The IrDA address for the server
+    SOCKADDR_IRDA  address = {AF_IRDA, 0, 0, 0, 0, &quot;MyServer&quot;};
+
+    char           helloServer[25];  // ASCII String 
+    TCHAR          helloText[25];    // UNICODE String
+    int            idx = 0;
+
+    // Allocate a stream socket in the IrDA address domain
+    ServerSock = socket(AF_IRDA, SOCK_STREAM, 0);
+
+    // Associate the service name MyServer with the socket
+    bind(ServerSock, (struct sockaddr *)&amp;address, sizeof(address));
+
+    // Allow a single incoming connection
+    listen(ServerSock, 1);
+
+    // Wait for a client to contact us.  Blocking call.
+    ClientSock = accept(ServerSock, 0, 0);
+
+    // Receive a string from the client
+    recv(ClientSock, helloServer, sizeof(helloServer), 0);
+
+    // Convert string from client to Unicode
+    for (idx = 0; idx &lt;= sizeof(helloServer); idx++)
+          helloText[idx] = helloServer[idx];
+
+    // Display string received from client
+    MessageBox (NULL, helloText, TEXT(&quot;IR Server&quot;), MB_OK);
+
+    // Send a greeting back to the Client
+    send(ClientSock, &quot;Hello Client!&quot;, strlen(&quot;Hello Client!&quot;)+1, 0);
+
+    closesocket(ClientSock); // Close Client Socket
+    closesocket(ServerSock); // Close Server Socket
+
+return 0;
+}</pre>
+</BODY>
+</HTML>

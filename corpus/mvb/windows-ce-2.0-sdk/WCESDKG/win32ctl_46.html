@@ -1,0 +1,88 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML>
+<HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text-html; charset=Windows-1252">
+<title>Sample Function: OnNotify</title>
+<meta name=MS-HAID content="_wcesdk_sample_function.3a_.onnotify">
+<meta name=MS-HKWD content="Sample Function: OnNotify">
+</HEAD>
+<BODY BGCOLOR=#FFFFFF TEXT=#000000>
+<!-- WCESDKG InfoViewer title (Wcesdkg.ivt); HTML topics extracted with tools/extract-ivt.py, images and the title's own indexes dropped. -->
+
+<form name=x><object name=iv classid="clsid:9c2ac687-ceef-11cf-96d9-00a0c903b016">
+</object></form>
+<h3><a name="_wcesdk_sample_function.3a_.onnotify"></a>Sample Function: OnNotify </h3>
+<p>
+This sample user-defined function handles notification messages commonly sent from a virtual list view control. </p>
+<pre>LRESULT OnNotify( HWND hwnd, NMHDR* pnmhdr )
+{
+    LRESULT lrt = FALSE;
+
+    switch (pnmhdr-&gt;code){
+        case LVN_GETDISPINFO:
+            RndItem rndItem;
+            LVDISPINFO* pLvdi = (LVDISPINFO*) pnmhdr;
+            if (-1 == pLvdi-&gt;item.iItem){
+                OutputDebugString(&quot;LVOWNER: Request for -1 item?\n&quot;);
+                DebugBreak();
+            }
+
+            //  Get information for item at index iItem.
+            RetrieveItem( &amp;rndItem, pLvdi-&gt;item.iItem );
+
+            if(pLvdi-&gt;item.mask &amp; LVIF_STATE){
+                //  Fill in the state information.
+                pLvdi-&gt;item.state |= rndItem.state;
+            }
+
+            if(pLvdi-&gt;item.mask &amp; LVIF_IMAGE){
+                //  Fill in the image information.
+                pLvdi-&gt;item.iImage = rndItem.iIcon;
+            }
+
+            if(pLvdi-&gt;item.mask &amp; LVIF_TEXT){
+                //  Fill in the text information.
+                switch (pLvdi-&gt;item.iSubItem){
+                    case 0:
+                        //  Copy the main item text.
+                        lstrcpy( pLvdi-&gt;item.pszText, rndItem.Title );
+                        break;
+
+                    case 1:
+                        //  Copy subitem 1 text
+                        lstrcpy( pLvdi-&gt;item.pszText, rndItem.SubText1 );
+                        break;
+
+                    case 2:
+                        //  Copy subitem 2 text
+                        lstrcpy( pLvdi-&gt;item.pszText, rndItem.SubText2 );
+                        break;
+
+                    default:
+                        break;
+                }
+            }
+            lrt = FALSE;
+            break;
+
+    case LVN_ODCACHEHINT:
+        NMLVCACHEHINT* pcachehint = (NMLVCACHEHINT*) pnmhdr;
+
+        // Load the cache with the recommended range.
+        PrepCache( pcachehint-&gt;iFrom, pcachehint-&gt;iTo );
+        break;
+
+    case LVN_ODFINDITEM:
+        LPNMLVFINDITEM pnmfi = (LPNMLVFINDITEM)pnmhdr;
+
+        // Call a user-defined function to find the index according 
+        // to LVFINDINFO. Set return value to -1 if no hits are found.
+        break;
+
+    default:
+        break;
+
+    return( lrt );
+}</pre>
+</BODY>
+</HTML>

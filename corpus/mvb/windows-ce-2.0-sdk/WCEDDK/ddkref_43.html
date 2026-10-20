@@ -1,0 +1,112 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
+<HTML>
+<HEAD><META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=Windows-1252">
+<TITLE>ACMDM_STREAM_CONVERT</TITLE>
+<META NAME="MS-HKWD" CONTENT="ACMDM_STREAM_CONVERT">
+<META NAME="MS-HAID" CONTENT="_wceddk_ACMDM_STREAM_CONVERT">
+</HEAD>
+<BODY BGPROPERTIES="FIXED" TEXT="#000000" BGCOLOR="#FFFFFF">
+<!-- WCEDDK InfoViewer title (WCEDDK.IVT); HTML topics extracted with tools/extract-ivt.py, images and the title's own indexes dropped. -->
+
+<FORM name=x>
+<OBJECT name=iv classid="clsid:9c2ac687-ceef-11cf-96d9-00a0c903b016">
+</OBJECT>
+</FORM>
+<FONT FACE="ARIAL,HELVETICA" SIZE="2">
+<H2><A NAME="_wceddk_ACMDM_STREAM_CONVERT"></A>ACMDM_STREAM_CONVERT</H2>
+<P>
+The ACMDM_STREAM_CONVERT message requests a ACM driver to perform a conversion
+operation on a specified conversion stream.
+<H5>Return Value</H5>
+<P>
+The driver should return MMSYSERR_NOERROR if the operation succeeds. Otherwise
+it should return one of the MMSYSERR error codes defined in mmsystem.h, or one
+of the ACMERR error codes defined in msacm.h.
+<H5>Parameters</H5>
+<DL>
+<DT>
+<I>dwDriverID</I>
+<DD>
+Driver instance identifier. This is the value returned by the driver in
+response to the <B>ACM_Open</B>&nbsp;function.
+<BR>
+<DT>
+<I>hDriver</I>
+<DD>
+Driver handle.
+<BR>
+<DT>
+<I>uMsg</I>
+<DD>
+ACMDM_STREAM_CONVERT
+<BR>
+<DT>
+<I>lParam1</I>
+<DD>
+Pointer to an <B>ACMDRVSTREAMINSTANCE</B>&nbsp;structure.
+<BR>
+<DT>
+<I>lParam2</I>
+<DD>
+Pointer to an <B>ACMDRVSTREAMHEADER</B>&nbsp;structure.
+</DL>
+<H5>Comments</H5>
+<P>
+The ACM (WAVEAPI.DLL) sends the ACMDM_STREAM_CONVERT message by calling the
+ACM driver's <B>ACM_IOControl</B>() entry point via DeviceIoControl(). The ACM
+sends this message when an application calls the <B>acmStreamConvert</B>
+function, which is described in the Win32 SDK.
+<P>
+All ACM drivers that provide stream conversions must support this message. For
+more information about stream conversions, see Converting Data Streams in the
+Windows NT DDK.
+<P>
+The <B>ACMDRVSTREAMINSTANCE</B>&nbsp;structure received with this message is the
+same structure that was received with a previous ACMDM_STREAM_OPEN message.
+The driver does not need to validate the structure's contents again.
+<P>
+The <B>ACMDRVSTREAMHEADER</B>&nbsp;structure identifies the source and destination
+data buffers. The source buffer contains the data to be converted. The driver
+places converted data into the destination buffer.
+<P>
+The driver must check the flags in the <B>ACMDRVSTREAMHEADER</B>&nbsp;structure's
+fdwConvert member. These flags indicate how converted data should be returned.
+<P>
+Because stream conversions are time-critical operations, ACMDM_STREAM_CONVERT
+messages must be processed efficiently. The driver should perform as much
+processing as possible in response to the ACMDM_STREAM_OPEN message.
+<P>
+If the driver supports asynchronous operations, and if the client has
+specified the ACM_STREAMOPENF_ASYNC flag ( contained in the <B>ACMDRVSTREAMINSTANCE</B>
+structure's fdwOpen member), then the driver must do the following when it has
+finished converting the data in the source buffer:
+<P>
+·Set the <B>ACMDRVSTREAMHEADER</B>&nbsp;structure's ACMSTREAMHEADER_STATUSF_DONE
+flag.
+<P>
+·Send the client an MM_ACM_DONE callback message, by calling the
+PostThreadMessage function.
+<P>
+Asynchronous drivers can make use of the <B>ACMDRVSTREAMHEADER</B>&nbsp;structure's
+ACMSTREAMHEADER_STATUSF_INQUEUE flag, along with the structure's padshNext
+member, to maintain a conversion queue of stream header structures.
+<P>
+Before calling the driver's <B>ACM_IOControl</B>&nbsp;function, the ACM verifies
+that:
+<P>
+·The <B>ACMDRVSTREAMHEADER</B>&nbsp;structure is readable and writeable, and of the
+proper size.
+<P>
+·The <B>ACMDRVSTREAMHEADER</B>&nbsp;structure's fdwConvert member contains valid
+flag values.
+<P>
+·The <B>ACMDRVSTREAMHEADER</B>&nbsp;structure's buffers have been prepared (see
+ACMDM_STREAM_PREPARE), and the specified buffer sizes are not larger than
+their prepared sizes.
+<P>
+·The <B>ACMDRVSTREAMHEADER</B>&nbsp;structure is not currently in an asynchronous
+driver's conversion queue. (That is, the structure's
+ACMSTREAMHEADER_STATUSF_INQUEUE flag is not set.)
+<P></FONT>
+</BODY>
+</HTML>

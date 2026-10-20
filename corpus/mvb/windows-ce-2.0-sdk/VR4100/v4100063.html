@@ -1,0 +1,120 @@
+<HTML>
+<HEAD>
+<TITLE>Status Register (12)</TITLE>
+</HEAD><BODY BGCOLOR=#ffffff>
+<!-- VR4100 InfoViewer title (Vr4100.ivt); HTML topics extracted with tools/extract-ivt.py, images and the title's own indexes dropped. -->
+<BASEFONT FACE="Arial,Helvetica" SIZE="2">
+<A HREF= "VR41home.htm"><IMG SRC="contents.gif" ALT="contents.gif" BORDER = 0></A>
+<P>
+<A NAME="off_853961"></A><A NAME="a746cbec"></A><FONT FACE="Arial,Helvetica"><H1>Status Register (12)
+<P>
+</H1></FONT><FONT FACE="Arial" SIZE="3">The Status register (SR) is a read/write register that contains the operating
+mode, interrupt enabling, and the diagnostic states of the processor. The
+following list describes the more important Status register fields; Figures 5-5 and
+5-6 show the format of the entire register, including descriptions of the
+fields. Some of the important fields include:
+<P>
+The 8-bit Interrupt Mask (IM) field controls the enabling of up to eight
+individual interrupt conditions. Only when:
+<P>
+the interrupts are globally enabled (by setting the IE bit), and
+<P>
+the individual interrupt condition is enabled (by setting its corresponding IM
+bit),
+<P>
+does the Interrupt exception, as indicated by the corresponding interrupt
+request bit (IP) in the Cause register, occur. For more information, refer to the
+Interrupt Pending (IP) field of the Cause register.
+<P>
+Regardless of the CU0 bit setting, CP0 is always usable in Kernel mode.
+<P>
+The 9-bit Diagnostic<B> </B>Status (DS) field is used for self-testing, and checks the cache and virtual
+memory system.
+<P>
+The Reverse-Endian (RE) bit, bit 25, reverses the endianness of the machine
+for the user task. The system can be configured as either little-endian or
+big-endian at system reset by the BigEndian pin, as follows:
+<P>
+when RE = 1, kernel endianness is specified by the BigEndian pin and user
+endianness is the opposite of the kernel
+<P>
+when RE = 0 both kernel and user endianness are specified by the BigEndian pin.
+<P>
+</FONT><FONT FACE="Arial" SIZE="5"><B>Status Register Format
+<P>
+</B></FONT><FONT FACE="Arial" SIZE="3">Figure 5-5 shows the format of the <I>Status </I>register. Table 5-3 describes the <I>Status</I> register fields. Figure 5-6 and Table 5-4 provide additional information on
+the <I>Diagnostic Status</I> (<I>DS</I>) field. All bits in the <I>DS</I> field except <I>TS</I> are readable and writable.
+<P>
+ </FONT><FONT FACE="Times New Roman" SIZE="6"><IMG SRC="v4100089.gif" ALT="v4100089.gif" BORDER=0 WIDTH=548 HEIGHT=108>
+<P>
+</FONT><FONT FACE="Times New Roman" SIZE="3">Figure 5-5    Status Register
+<P>
+ </FONT><FONT FACE="Times New Roman" SIZE="6"><IMG SRC="v4100090.gif" ALT="v4100090.gif" BORDER=0 WIDTH=510 HEIGHT=506>
+ <IMG SRC="v4100091.gif" ALT="v4100091.gif" BORDER=0 WIDTH=516 HEIGHT=351>
+<P>
+</FONT><FONT FACE="Times New Roman" SIZE="3">Table 5-3    Status Register Fields
+<P>
+ </FONT><FONT FACE="Times New Roman" SIZE="6"><IMG SRC="v4100092.gif" ALT="v4100092.gif" BORDER=0 WIDTH=448 HEIGHT=97>
+<P>
+</FONT><FONT FACE="Times New Roman" SIZE="3">Figure 5-6    Status Register DS Field
+<P>
+ </FONT><FONT FACE="Times New Roman" SIZE="6"><IMG SRC="v4100093.gif" ALT="v4100093.gif" BORDER=0 WIDTH=513 HEIGHT=401>
+<P>
+</FONT><FONT FACE="Times New Roman" SIZE="3">Table 5-4    Status Register Diagnostic Status Bits
+<P>
+</FONT><FONT FACE="Arial" SIZE="5"><B>Status Register Reset
+<P>
+</B></FONT><FONT FACE="Arial" SIZE="3">The contents of the <I>Status</I> register are undefined after a Cold Reset, except for the following bits in
+the <I>Diagnostic Status </I>field:
+<P>
+<I>TS </I>= 0, SR = 0
+<P>
+<I>ERL</I> and <I>BEV</I> = 1
+<P>
+The<I> SR </I>bit distinguishes between a Cold Reset and Soft Reset.
+<P>
+</FONT><FONT FACE="Arial" SIZE="5"><B>Status Register Modes and Access States
+<P>
+</B></FONT><FONT FACE="Arial" SIZE="3">Fields of the <I>Status</I> register set the modes and access states described in the sections that
+follow.
+<P>
+<B>Interrupt Enable</B>: Interrupts are enabled when all of the following conditions are true:
+<P>
+<I>IE</I> = 1
+<P>
+<I>EXL</I> = 0
+<P>
+<I>ERL</I> = 0
+<P>
+If these conditions are met, the settings of the <I>IM</I> bits enable the interrupts.
+<P>
+<B>Operating Modes</B>: The following CPU <I>Status</I> register bit settings are required for User, Kernel, and Supervisor modes
+(see Chapter 4 for more information about operating modes).
+<P>
+The processor is in User mode when <I>KSU</I> = 102,<I> EXL</I> = 0, and <I>ERL</I> = 0.
+<P>
+The processor is in Supervisor mode when <I>KSU</I> = 012,<I> EXL</I> = 0, and <I>ERL</I> = 0.
+<P>
+The processor is in Kernel mode when <I>KSU</I> = 002, or<I> EXL</I> = 1, or <I>ERL</I> = 1. 
+<P>
+<B>32- and 64-bit Modes</B>: The following CPU <I>Status</I> register bit settings select 32- or 64-bit operation for User, Kernel, and
+Supervisor operating modes. Enabling 64-bit operation permits the execution of
+64-bit opcodes and translation of 64-bit addresses. 64-bit operation for User,
+Kernel and Supervisor modes can be set independently.
+<P>
+64-bit addressing for Kernel mode is enabled when <I>KX</I> = 1. 64-bit operations are always valid in Kernel mode.
+<P>
+64-bit addressing and operations are enabled for Supervisor mode when <I>SX</I> = 1.
+<P>
+64-bit addressing and operations are enabled for User mode when <I>UX</I> = 1.
+<P>
+<B>Kernel Address Space Accesses</B>: Access to the kernel address space is allowed when the processor is in
+Kernel mode.
+<P>
+<B>Supervisor Address Space Accesses</B>: Access to the supervisor address space is allowed when the processor is in
+Kernel or Supervisor mode.
+<P>
+<B>User Address Space Accesses</B>: Access to the user address space is allowed in any of the three operating
+modes.
+<P>
+</FONT></BODY>

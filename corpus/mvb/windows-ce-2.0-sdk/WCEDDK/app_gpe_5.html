@@ -1,0 +1,64 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
+<HTML>
+<HEAD><META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=Windows-1252">
+<TITLE>ColorConverter Class</TITLE>
+<META NAME="MS-HKWD" CONTENT="ColorConverter Class">
+<META NAME="MS-HAID" CONTENT="_wceddk_ColorConverter_Class">
+</HEAD>
+<BODY BGPROPERTIES="FIXED" TEXT="#000000" BGCOLOR="#FFFFFF">
+<!-- WCEDDK InfoViewer title (WCEDDK.IVT); HTML topics extracted with tools/extract-ivt.py, images and the title's own indexes dropped. -->
+
+<FORM name=x>
+<OBJECT name=iv classid="clsid:9c2ac687-ceef-11cf-96d9-00a0c903b016">
+</OBJECT>
+</FORM>
+<FONT FACE="ARIAL,HELVETICA" SIZE="2">
+<H3><A NAME="_wceddk_ColorConverter_Class"></A>ColorConverter Class</H3>
+<P>
+Complete color conversion support is contained within the GPE base classes in
+the file swconvrt.cpp as the class ColorConverter. This converter allows for
+Blt-time translation between any combination of source and destination surface
+pixel types.  Pixel formats for surfaces conform to one of the following basic
+types:
+<P>
+PAL_RGB - essentially the same as a PALETTENTRY structure, or an unsigned long
+of the form 0x00BBGGRR)
+<P>
+PAL_BGR - the same as an RGBQUAD structure, or an unsigned long of the form
+0x00RRGGBB
+<P>
+PAL_MASKED - similar to RGB or BGR in that specific bits are used for the
+different primary components of a color. This is most common for 15 or 16 bit
+pixel definitions.
+<P>
+PAL_INDEXED - a palettized surface. Each pixel may contain 1, 2, 4, or 8 bits
+to select from the current palette for the surface.
+<P>
+Upon entry to a Drv function which contains a pxlo (XLATEOBJ *) parameter, the
+Drv function creates and initializes a ColorConverter object for the
+translation. Alternatively, based upon the iUniq field of the XLATEOBJ, it may
+use a cached ColorConverter from a previous call.
+<P>
+The ColorConverter populates two pointers - pLookup and pConverter. If both
+are NULL then no conversion is required for this operation (the source and
+destination formats are compatible and the palettes -if any- are identical).
+If pLookup is not NULL, then the operation must convert each source pixel to a
+destination pixel using the source pixel value as an index into the lookup
+table.
+<P>
+If pConverter is not NULL, then it is the address of a function which should
+be called to convert a source pixel to a destination pixel. This is only used
+when the source and destination formats are not compatible and the source
+format is not indexed.
+<P>
+At most one of pLookup and pConverter will be set to non-NULL.
+<P>
+Color conversion is an optional feature for Windows CE. As such, it may be
+removed in part, or completely to reduce the size of the driver. If it is
+removed or reduced for a given platform, then all bitmaps provided for that
+platform must be authored to a bit depth and/or palette which is supported by
+the display driver.  The current size of the complete color converter is
+slightly over 2K bytes (non-debug)
+<P></FONT>
+</BODY>
+</HTML>

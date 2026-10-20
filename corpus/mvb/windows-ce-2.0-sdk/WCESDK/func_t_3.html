@@ -1,0 +1,103 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML>
+<HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text-html; charset=Windows-1252">
+<title>TransportConnect</title>
+<meta name=MS-HAID content="_wcesdk_transportconnect">
+<meta name=MS-HKWD content="TransportConnect (Windows CE)">
+</HEAD>
+<BODY BGCOLOR=#FFFFFF TEXT=#000000>
+<!-- WCESDK InfoViewer title (WCESDK.IVT); HTML topics extracted with tools/extract-ivt.py, images and the title's own indexes dropped. -->
+
+<BODY BGCOLOR=#FFFFFF BACKGROUND= "images\cewmark.gif" TEXT=#000000><form name=x><object name=iv classid="clsid:9c2ac687-ceef-11cf-96d9-00a0c903b016">
+</object></form>
+<h1><a name="_wcesdk_transportconnect"></a>TransportConnect</h1>
+<p>
+The <b>TransportConnect</b> function connects to a service for transmission or reception. </p>
+<h2>Syntax</h2>
+<p>
+<b>BOOL TransportConnect(HANDLE</b> <i>hService</i><b>, DWORD </b><i>dwFlags</i><b>, HWND </b><i>hNotify</i><b>, (BOOL) (*</b><i>CallBack</i><b>)(int </b><i>iStatus</i><b>, BOOL </b><i>bUnknownmax</i><b>));</b></p>
+<h2>At a Glance</h2>
+<table>
+<tr valign=top>
+<td>
+Header file:</td>
+<td>
+Smtp.h</td>
+</tr>
+<tr valign=top>
+<td>
+Platforms:</td>
+<td>
+H/PC</td>
+</tr>
+<tr valign=top>
+<td>
+Windows CE versions:</td>
+<td>
+1.0 and later</td>
+</tr>
+</table><br>
+<h2>Parameters</h2>
+<dl>
+<dt>
+<i>hService</i></dt>
+<dd>
+Handle to a <b>SERVICE</b> structure.<br>
+</dd>
+<dt>
+<i>dwFlags</i></dt>
+<dd>
+Transmit and receive flags. The following flags can be set:<dl>
+<dt>
+TRANSPORT_SEND</dt>
+<dd>
+Indicates a request to start the <i>transmit</i> functionality of the service.<br>
+</dd>
+<dt>
+TRANSPORT_RECV</dt>
+<dd>
+Indicates a request to start the <i>receive</i> functionality of the service.</dd>
+</dl>
+<br>
+</dd>
+<dt>
+<i>hNotify</i></dt>
+<dd>
+Handle to the window that will receive any notification messages that may be sent from a transport service routine. The <i>SAMPLE </i>service can call the <a href="msgque_f_8.htm"><b>SendMessage</b></a> function to send the following notification  messages to <i>hNotify</i>.<dl>
+<dt>
+TRANSPORT_CONN_LOST (WM_USER + 1)</dt>
+<dd>
+Sent to <i>hNotify</i> to inform Inbox that the connection has closed in the background. For example, this could be sent if a remote modem connection was lost. The <b>SendMessage</b> parameters <i>wparam</i> and <i>lparam</i> are ignored. <b>SendMessage</b> always returns zero.<br>
+</dd>
+<dt>
+TRANSPORT_REFRESH (WM_USER + 2)</dt>
+<dd>
+Sent to <i>hNotify</i> to request Inbox to refresh its connection to the service. For example, this could be used if Inbox has an open connection to the service and the service determines that a new message has arrived.  The <b>SendMessage</b> parameters <i>wparam</i> and <i>lparam</i> are ignored. <b>SendMessage</b> always returns zero.</dd>
+</dl>
+<br>
+</dd>
+<dt>
+<i>CallBack</i></dt>
+<dd>
+If this <i>CallBack</i> routine is not NULL, it can be called from a <b>Transport*</b> function, for example. The <i>CallBack</i> routine displays a status window, indicating the progress toward completion.<p>
+The <i>CallBack</i> routine is passed an integer value between 0 and 99 (<i>iStatus</i>), indicating the progress toward completion. In this case, <i>bUnknownmax </i>must be set to FALSE.</p>
+<p>
+If the maximum value of <i>iStatus</i> might be greater than 99 (that is, the maximum is unknown), then <i>bUnknownmax </i>must be set to TRUE.</p>
+</dd>
+</dl>
+<p>
+<b>Note</b>  The <i>CallBack</i> parameter implemented in the Inbox client application always returns TRUE.</p>
+<h2>Return Values</h2>
+<p>
+If the transmit or receive service connection succeeds, <b>TransportConnect</b> returns TRUE. If <i>hService</i> is invalid or if the connection fails, then FALSE is returned.</p>
+<h2>Remarks</h2>
+<p>
+The <b>TransportConnect</b> function must be implemented by the transport service provider in a DLL registered as a mail service. The Inbox application loads this DLL when the user selects the service and calls <b>TransportConnect</b> to connect to the service.</p>
+<p>
+The <i>dwFlags</i> parameter should be checked to determine whether this is a call to connect the transmit service or the receive service. The <i>CallBack</i> routine can be saved in the <i>hService</i> <b>SERVICE</b> structure, so that it can be called from other transport service routines.</p>
+<h2>See Also</h2>
+<p>
+<a href="func_t_6.htm"><b>TransportDisconnect</b></a></p>
+</BODY>
+</HTML>

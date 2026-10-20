@@ -1,0 +1,114 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML>
+<HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text-html; charset=Windows-1252">
+<title>Registering a File Filter</title>
+<meta name=MS-HAID content="_wcesdk_registering_a_file_filter">
+<meta name=MS-HKWD content="Registering a File Filter">
+</HEAD>
+<BODY BGCOLOR=#FFFFFF TEXT=#000000>
+<!-- WCESDKG InfoViewer title (Wcesdkg.ivt); HTML topics extracted with tools/extract-ivt.py, images and the title's own indexes dropped. -->
+
+<form name=x><object name=iv classid="clsid:9c2ac687-ceef-11cf-96d9-00a0c903b016">
+</object></form>
+<h3><a name="_wcesdk_registering_a_file_filter"></a>Registering a File Filter</h3>
+<p>
+A file filter must be registered in two places. The first place is under the file type's extension key<i> </i>(defined below) in the <b>InstalledFilters</b> subkey. This associates the file filter with the file type it can convert. The other place is under the <b>HKEY_CLASSES_ROOT\CLSID</b> key. This registration gives information on the file filter's capabilities and its DLL.Optionally, it can also be registered under the file type's extension key as the <b>DefaultImport</b> and/or <b>DefaultExport</b> named value. As the names imply, they define the default file filters for the file type.</p>
+<p>
+DefaultImport and DefaultExport</p>
+<p>
+Each key under the <b>HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows CE Services\Filters</b> key is the name of a file extension. These are the <i>extension keys</i>. Each extension key may have a <b>DefaultImport</b> and a <b>DefaultExport</b> named value, which is the CLSID for a file filter. This identifies which filter, if any, to use as a default when importing or exporting files with the given extension.</p>
+<h4>InstalledFilters subkey</h4>
+<p>
+Under each extension key is the <b>InstalledFilters</b> subkey. This key has any number of named values, each of which is a CLSID identifying a file filter object. The CLSID must identify an OLE component object model (COM) object that is used for the file filter conversion.. These filters will then be listed in the Windows CE Services user interface as filter options, with the <b>DefaultImport</b> or <b>DefaultExport</b> value shown as the default. </p>
+<p>
+<b>Note</b>  Any filter defined as the <b>DefaultImport</b> or <b>DefaultExport</b> named value must be listed in the <b>InstalledFilters</b> subkey also.</p>
+<p>
+The following is the structure of the <b>Filters</b> key and the <b>InstalledFilters</b> subkey.</p>
+<pre>HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows CE Services\Filters
+
+   \.&lt;file extension&gt;
+      [DefaultImport = &lt;Default import filter CLSID&gt;]
+      [DefaultExport = &lt;Default export filter CLSID&gt;]
+      \InstalledFilters
+         [&lt;clsid1&gt;]
+         . . .
+         [more CLSID's for this extension]
+    . . .
+    [more extensions]
+</pre>
+<h4>HKEY_CLASSES_ROOT\CLSID key  </h4>
+<p>
+This key gives basic information concerning file filters. Each file filter that has been identified in the <b>HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows CE Services\Filters</b> key must be registered under the <b>HKEY_CLASSES_ROOT\CLSID</b> key. The following is the structure of this key and its subkeys.</p>
+<pre>HKEY_CLASSES_ROOT\CLSID
+
+   \&lt;<i>clsid</i>&gt;
+      \(Default) = &lt;Description listed in &quot;Edit Conversion Settings&quot; listbox&gt;
+      \DefaultIcon = &lt;filename,index for the icon for this type&gt;
+      \InProcServer32 = &lt;filename of the DLL that handles his type&gt;
+         ThreadingModel = Apartment
+      \PegasusFilter
+         [Import]
+         [HasOptions]
+         Description = &lt;String to display in the conversion dialog&gt;
+         NewExtension = &lt;extension of converted file&gt;
+   \. . . [<i>more clsids for filters</i>]
+</pre>
+<p>
+The CLSID key contains the following subkeys.
+<ul>
+<li>
+<i><b>&lt;</b>clsid<b>&gt;</b></i><p>
+The <i>clsid</i> key is a named value that is the CLSID of the registered file filter. This key contains the <b>DefaultIcon</b>, <b>InProcServer32</b>, and <b>PegasusFilter</b> subkeys.
+<ul>
+<li>
+<b>DefaultIcon</b><p>
+Defines the icon-name string or icon resource identifier for the icon associated with the file filter DLL. </p>
+</li>
+<li>
+<b>InProcServer32</b><p>
+The default value identifies the file filter DLL. The <b>ThreadingModel</b> named value defines the Apartment model capabilities of the installed file filter. </p>
+</li>
+<li>
+<b>PegasusFilter</b><p>
+Provides information on the specific capabilities of the file filer. This key may have the following named values: </p>
+<table>
+<tr valign=top>
+<td>
+<b>Named Value </b></td>
+<td>
+<b>Description </b></td>
+</tr>
+<tr valign=top>
+<td>
+<b>Import</b></td>
+<td>
+If this named value exists, the conversion type is for importing files from the desktop PC to the Windows CE device. Otherwise, the conversion type is for exporting files from the desktop PC to the Windows CE device. </td>
+</tr>
+<tr valign=top>
+<td>
+<b>HasOptions</b></td>
+<td>
+If this named value exists, the file filter supports the <b>ICeFileFilter::FilterOptions</b> method.</td>
+</tr>
+<tr valign=top>
+<td>
+<b>Description</b></td>
+<td>
+The data for this named value is a string that describes the conversion. The Windows CE Services application displays this text on the property sheets displayed by selecting the <b>Device<font face="Wingdings"><span style="font-family:Wingdings">&#224;</span></font>Desktop</b> or <b>Desktop<font face="Wingdings"><span style="font-family:Wingdings">&#224;</span></font>Device</b> tab control selections from the <b>File Conversion Properties</b> selection dialog box and then selecting the <b>Edit</b> button to display the <b>Edit Conversion Settings</b> dialog box. <p>
+For example, if the <b>Import</b> named value exists, then on the <b>Desktop<font face="Wingdings"><span style="font-family:Wingdings">&#224;</span></font>Device</b> property sheet, the data value defined by the <b>Description</b> named value will be displayed under the file conversions details &quot;Convert to HPC files of the type&quot;. </p>
+</td>
+</tr>
+<tr valign=top>
+<td>
+<b>NewExtension</b></td>
+<td>
+This named value defines the extension of the file that will be created on the destination device. </td>
+</tr>
+</table><br>
+</li>
+</ul>
+</li>
+</ul>
+</BODY>
+</HTML>

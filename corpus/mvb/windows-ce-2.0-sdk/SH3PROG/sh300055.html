@@ -1,0 +1,119 @@
+<HTML>
+<HEAD>
+<TITLE>6.21   DMULS.L (Double-Length Multiply as Signed): Arithmetic Instruction</TITLE>
+</HEAD><body bgcolor="#FFFFFF">
+<!-- SH3PROG InfoViewer title (sh3prog.ivt); HTML topics extracted with tools/extract-ivt.py, images and the title's own indexes dropped. -->
+
+<A NAME="off_2162688"></A><A NAME="0694418f"></A><FONT FACE="Arial" SIZE="5"><B>6.21   DMULS.L (Double-Length Multiply as Signed): Arithmetic Instruction
+<P>
+
+<P>
+</B></FONT><TABLE><TR VALIGN=TOP><TD><FONT FACE="Arial" SIZE="3"><B>Format
+<BR></B></FONT></TD><TD><FONT FACE="Arial" SIZE="3"><B>Abstract
+<BR></B></FONT></TD><TD><FONT FACE="Arial" SIZE="3"><B>Code
+<BR></B></FONT></TD><TD><FONT FACE="Arial" SIZE="3"><B>Cycle
+<BR></B></FONT></TD><TD><FONT FACE="Arial" SIZE="3"><B>T Bit
+<BR></B></FONT></TD></TR><TR VALIGN=TOP><TD><FONT FACE="Lucida Sans Typewriter" SIZE="3">DMULS.L Rm,Rn
+<BR></FONT></TD><TD><FONT FACE="Arial" SIZE="3">With sign, Rn<IMG SRC="sh390003.gif" ALT="sh390003.gif" BORDER=0 WIDTH=3 HEIGHT=16><IMG SRC="sh390001.gif" ALT="sh390001.gif" BORDER=0 WIDTH=7 HEIGHT=16><IMG SRC="sh390003.gif" ALT="sh390003.gif" BORDER=0 WIDTH=3 HEIGHT=16>Rm <IMG SRC="sh390002.gif" ALT="sh390002.gif" BORDER=0 WIDTH=13 HEIGHT=16> MACH, MACL
+<BR></FONT></TD><TD><FONT FACE="Lucida Sans Typewriter" SIZE="3">0011nnnnmmmm1101
+<BR></FONT></TD><TD><FONT FACE="Arial" SIZE="3">2 (to 5)
+<BR></FONT></TD><TD><FONT FACE="Arial" SIZE="3">-
+<BR>
+<BR></FONT></TD></TR></TABLE><FONT FACE="Arial" SIZE="3"><B>Description: 
+<P>
+</B>Performs 32-bit multiplication of the contents of general registers Rn and Rm,
+and stores the 64-bit results in the MACL and MACH register. The operation is
+a signed arithmetic operation.
+<P>
+<B>Operation:
+<P>
+</B></FONT><FONT FACE="Lucida Sans Typewriter" SIZE="3">DMULS(long m,long n) /* DMULS.L Rm,Rn */
+<P>
+{
+<P>
+ unsigned long RnL,RnH,RmL,RmH,Res0,Res1,Res2;
+<P>
+ unsigned long temp0,temp1,temp2,temp3;
+<P>
+ long tempm,tempn,fnLmL;
+<P>
+ tempn=(long)R[n];
+<P>
+ tempm=(long)R[m];
+<P>
+ if (tempn&lt;0) tempn=0-tempn;
+<P>
+ if (tempm&lt;0) tempm=0-tempm;
+<P>
+ if ((long)(R[n]^R[m])&lt;0) fnLmL=-1;
+<P>
+ else fnLmL=0;
+<P>
+ temp1=(unsigned long)tempn;
+<P>
+ temp2=(unsigned long)tempm;
+<P>
+ RnL=temp1&amp;0x0000FFFF;
+<P>
+ RnH=(temp1&gt;&gt;16)&amp;0x0000FFFF;
+<P>
+ RmL=temp2&amp;0x0000FFFF;
+<P>
+ RmH=(temp2&gt;&gt;16)&amp;0x0000FFFF;
+<P>
+ temp0=RmL*RnL;
+<P>
+ temp1=RmH*RnL;
+<P>
+ temp2=RmL*RnH;
+<P>
+ temp3=RmH*RnH;
+<P>
+ Res2=0
+<P>
+ Res1=temp1+temp2;
+<P>
+ if (Res1&lt;temp1) Res2+=0x00010000;
+<P>
+ temp1=(Res1&lt;&lt;16)&amp;0xFFFF0000;
+<P>
+ Res0=temp0+temp1;
+<P>
+ if (Res0&lt;temp0) Res2++;
+<P>
+ Res2=Res2+((Res1&gt;&gt;16)&amp;0x0000FFFF)+temp3;
+<P>
+ if (fnLmL&lt;0) {
+<P>
+  Res2=~Res2;
+<P>
+  if (Res0==0)
+<P>
+   Res2++;
+<P>
+  else
+<P>
+   Res0=(~Res0)+1;
+<P>
+ }
+<P>
+ MACH=Res2;
+<P>
+ MACL=Res0;
+<P>
+ PC+=2;
+<P>
+}
+<P>
+</FONT><FONT FACE="Arial" SIZE="3"><B>Example:
+<P>
+</B></FONT><FONT FACE="Lucida Sans Typewriter" SIZE="3">DMULS R0,R1 Before execution R0 = H'FFFFFFFE, R1 = H'00005555
+<P>
+  After execution MACH = H'FFFFFFFF, MACL = H'FFFF5556
+<P>
+STS MACH,R0 Operation result (top)
+<P>
+STS MACL,R0 Operation result (bottom)
+<P>
+</FONT></BODY>
+</HTML>

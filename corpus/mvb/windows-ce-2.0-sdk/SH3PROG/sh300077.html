@@ -1,0 +1,63 @@
+<HTML>
+<HEAD>
+<TITLE>6.43   NEGC (Negate with Carry): Arithmetic Instruction</TITLE>
+</HEAD><body bgcolor="#FFFFFF">
+<!-- SH3PROG InfoViewer title (sh3prog.ivt); HTML topics extracted with tools/extract-ivt.py, images and the title's own indexes dropped. -->
+
+<A NAME="off_2851264"></A><A NAME="6c596266"></A><FONT FACE="Arial" SIZE="5"><B>6.43   NEGC (Negate with Carry): Arithmetic Instruction 
+<P>
+
+<P>
+</B></FONT><TABLE><TR VALIGN=TOP><TD><FONT FACE="Arial" SIZE="3"><B>Format
+<BR></B></FONT></TD><TD><FONT FACE="Arial" SIZE="3"><B>Abstract
+<BR></B></FONT></TD><TD><FONT FACE="Arial" SIZE="3"><B>Code
+<BR></B></FONT></TD><TD><FONT FACE="Arial" SIZE="3"><B>Cycle
+<BR></B></FONT></TD><TD><FONT FACE="Arial" SIZE="3"><B>T Bit
+<BR></B></FONT></TD></TR><TR VALIGN=TOP><TD><FONT FACE="Lucida Sans Typewriter" SIZE="3">NEGC Rm,Rn
+<BR></FONT></TD><TD><FONT FACE="Arial" SIZE="3">0 - Rm - T <IMG SRC="sh390002.gif" ALT="sh390002.gif" BORDER=0 WIDTH=13 HEIGHT=16> Rn, Borrow <IMG SRC="sh390002.gif" ALT="sh390002.gif" BORDER=0 WIDTH=13 HEIGHT=16> T
+<BR></FONT></TD><TD><FONT FACE="Lucida Sans Typewriter" SIZE="3">0110nnnnmmmm1010
+<BR></FONT></TD><TD><FONT FACE="Arial" SIZE="3">1
+<BR></FONT></TD><TD><FONT FACE="Arial" SIZE="3">Borrow
+<BR>
+<BR></FONT></TD></TR></TABLE><FONT FACE="Arial" SIZE="3"><B>Description: 
+<P>
+</B>Subtracts general register Rm data and the T bit from 0, and stores the result
+in Rn. If a borrow is generated, T bit changes accordingly. This instruction
+is used for inverting the sign of a value that has more than 32 bits.
+<P>
+<B>Operation:
+<P>
+</B></FONT><FONT FACE="Lucida Sans Typewriter" SIZE="3">NEGC(long m,long n) /* NEGC Rm,Rn */
+<P>
+{
+<P>
+ unsigned long temp;
+<P>
+ temp=0-R[m];
+<P>
+ R[n]=temp-T;
+<P>
+ if (0&lt;temp) T=1;
+<P>
+ else T=0;
+<P>
+ if (temp&lt;R[n]) T=1;
+<P>
+ PC+=2;
+<P>
+}
+<P>
+</FONT><FONT FACE="Arial" SIZE="3"><B>Example:
+<P>
+</B></FONT><FONT FACE="Lucida Sans Typewriter" SIZE="3">CLRT  Sign inversion of R1 and R0 (64 bits)
+<P>
+NEGC R1,R1 Before execution R1 = H'00000001, T = 0
+<P>
+  After execution R1 = H'FFFFFFFF, T = 1
+<P>
+NEGC R0,R0 Before execution R0 = H'00000000, T = 1
+<P>
+  After execution R0 = H'FFFFFFFF, T = 1
+<P>
+</FONT></BODY>
+</HTML>

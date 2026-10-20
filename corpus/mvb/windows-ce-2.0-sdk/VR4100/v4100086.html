@@ -1,0 +1,48 @@
+<HTML>
+<HEAD>
+<TITLE>Coprocessor Unusable Exception</TITLE>
+</HEAD><BODY BGCOLOR=#ffffff>
+<!-- VR4100 InfoViewer title (Vr4100.ivt); HTML topics extracted with tools/extract-ivt.py, images and the title's own indexes dropped. -->
+<BASEFONT FACE="Arial,Helvetica" SIZE="2">
+<A HREF= "VR41home.htm"><IMG SRC="contents.gif" ALT="contents.gif" BORDER = 0></A>
+<P>
+<A NAME="off_1213204"></A><A NAME="a5ab825a"></A><FONT FACE="Arial" SIZE="3"><H1>Coprocessor Unusable Exception
+<P>
+</H1></FONT><FONT FACE="Arial" SIZE="5"><B>Cause
+<P>
+</B></FONT><FONT FACE="Arial" SIZE="3">The Coprocessor Unusable exception occurs when an attempt is made to execute a
+coprocessor instruction for either:
+<P>
+a corresponding coprocessor unit that has not been marked usable, or
+<P>
+CP0 instructions, when the unit has not been marked usable and the process
+executes in User or Supervisor mode.
+<P>
+This exception is not maskable.
+<P>
+</FONT><FONT FACE="Arial" SIZE="5"><B>Processing
+<P>
+</B></FONT><FONT FACE="Arial" SIZE="3">The common exception vector is used for this exception, and the <I>CPU</I> code in the <I>Cause</I> register is set. The contents of the<I> Coprocessor Usage Error</I> field of the coprocessor <I>Cause</I> register indicate which of the four coprocessors was referenced. The <I>EPC </I>register contains the address of the unusable coprocessor instruction unless
+it is in a branch delay slot, in which case the <I>EPC</I> register contains the address of the preceding branch instruction and the <I>BD</I> bit of the <I>Cause</I> register is set.
+<P>
+</FONT><FONT FACE="Arial" SIZE="5"><B>Servicing
+<P>
+</B></FONT><FONT FACE="Arial" SIZE="3">The coprocessor unit to which an attempted reference was made is identified by
+the<I> </I>Coprocessor Usage Error field, which results in one of the following
+situations:
+<P>
+If the process is entitled access to the coprocessor, the coprocessor is
+marked usable and the corresponding state is restored to the coprocessor. 
+<P>
+If the process is entitled access to the coprocessor, but the coprocessor does
+not exist or has failed, interpretation of the coprocessor instruction is
+possible.
+<P>
+If the <I>BD</I> bit is set in the <I>Cause</I> register, the branch instruction must be interpreted; then the coprocessor
+instruction can be emulated and execution resumed with the <I>EPC</I> register advanced past the coprocessor instruction.
+<P>
+If the process is not entitled access to the coprocessor, the process
+executing at the time is handed a UNIX SIGILL/ILL_PRIVIN_FAULT (illegal
+instruction/privileged instruction fault) signal. This error is usually fatal.
+<P>
+</FONT></BODY>

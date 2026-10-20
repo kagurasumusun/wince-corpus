@@ -1,0 +1,92 @@
+<HTML>
+<HEAD>
+<TITLE>6.46   OR (OR Logical) Logic Operation Instruction</TITLE>
+</HEAD><body bgcolor="#FFFFFF">
+<!-- SH3PROG InfoViewer title (sh3prog.ivt); HTML topics extracted with tools/extract-ivt.py, images and the title's own indexes dropped. -->
+
+<A NAME="off_2884251"></A><A NAME="8d41f79f"></A><FONT FACE="Arial" SIZE="5"><B>6.46   OR (OR Logical) Logic Operation Instruction 
+<P>
+
+<P>
+</B></FONT><TABLE><TR VALIGN=TOP><TD><FONT FACE="Arial" SIZE="3"><B>Format
+<BR></B></FONT></TD><TD><FONT FACE="Arial" SIZE="3"><B>Abstract
+<BR></B></FONT></TD><TD><FONT FACE="Arial" SIZE="3"><B>Code
+<BR></B></FONT></TD><TD><FONT FACE="Arial" SIZE="3"><B>Cycle
+<BR></B></FONT></TD><TD><FONT FACE="Arial" SIZE="3"><B>T Bit
+<BR></B></FONT></TD></TR><TR VALIGN=TOP><TD><FONT FACE="Lucida Sans Typewriter" SIZE="3">OR Rm,Rn
+<BR></FONT></TD><TD><FONT FACE="Arial" SIZE="3">Rn | Rm <IMG SRC="sh390002.gif" ALT="sh390002.gif" BORDER=0 WIDTH=13 HEIGHT=16> Rn
+<BR></FONT></TD><TD><FONT FACE="Lucida Sans Typewriter" SIZE="3">0010nnnnmmmm1011
+<BR></FONT></TD><TD><FONT FACE="Arial" SIZE="3">1
+<BR></FONT></TD><TD><FONT FACE="Arial" SIZE="3">-
+<BR></FONT></TD></TR><TR VALIGN=TOP><TD><FONT FACE="Lucida Sans Typewriter" SIZE="3">OR #imm,R0
+<BR></FONT></TD><TD><FONT FACE="Arial" SIZE="3">R0 | imm <IMG SRC="sh390002.gif" ALT="sh390002.gif" BORDER=0 WIDTH=13 HEIGHT=16> R0
+<BR></FONT></TD><TD><FONT FACE="Lucida Sans Typewriter" SIZE="3">11001011iiiiiiii
+<BR></FONT></TD><TD><FONT FACE="Arial" SIZE="3">1
+<BR></FONT></TD><TD><FONT FACE="Arial" SIZE="3">-
+<BR></FONT></TD></TR><TR VALIGN=TOP><TD><FONT FACE="Lucida Sans Typewriter" SIZE="3">OR.B #imm,@(R0,GBR)
+<BR></FONT></TD><TD><FONT FACE="Arial" SIZE="3">(R0 + GBR) | imm <IMG SRC="sh390002.gif" ALT="sh390002.gif" BORDER=0 WIDTH=13 HEIGHT=16> (R0 + GBR)
+<BR></FONT></TD><TD><FONT FACE="Lucida Sans Typewriter" SIZE="3">11001111iiiiiiii
+<BR></FONT></TD><TD><FONT FACE="Arial" SIZE="3">3
+<BR></FONT></TD><TD><FONT FACE="Arial" SIZE="3">-
+<BR>
+<BR></FONT></TD></TR></TABLE><FONT FACE="Arial" SIZE="3"><B>Description: 
+<P>
+</B>Logically ORs the contents of general registers Rn and Rm, and stores the
+result in Rn. The contents of general register R0 can also be ORed with
+zero-extended 8-bit immediate data, or 8-bit memory data accessed by using indirect
+indexed GBR addressing can be ORed with 8-bit immediate data.
+<P>
+<B>Operation:
+<P>
+</B></FONT><FONT FACE="Lucida Sans Typewriter" SIZE="3">OR(long m,long n) /* OR Rm,Rn */
+<P>
+{
+<P>
+ R[n]|=R[m];
+<P>
+ PC+=2;
+<P>
+}
+<P>
+ORI(long i) /* OR #imm,R0 */
+<P>
+{
+<P>
+ R[0]|=(0x000000FF &amp; (long)i);
+<P>
+ PC+=2;
+<P>
+}
+<P>
+ORM(long i) /* OR.B #imm,@(R0,GBR) */
+<P>
+{
+<P>
+ long temp;
+<P>
+ temp=(long)Read_Byte(GBR+R[0]);
+<P>
+ temp|=(0x000000FF &amp; (long)i);
+<P>
+ Write_Byte(GBR+R[0],temp);
+<P>
+ PC+=2;
+<P>
+}
+<P>
+</FONT><FONT FACE="Arial" SIZE="3"><B>Example:
+<P>
+</B></FONT><FONT FACE="Lucida Sans Typewriter" SIZE="3">OR R0,R1 Before execution R0 = H'AAAA5555, R1 = H'55550000
+<P>
+  After execution R1 = H'FFFF5555
+<P>
+OR #H'F0,R0 Before execution R0 = H'00000008
+<P>
+  After execution R0 = H'000000F8
+<P>
+OR.B #H'50,@(R0,GBR) Before execution @(R0,GBR) = H'A5
+<P>
+  After execution @(R0,GBR) = H'F5
+<P>
+</FONT></BODY>
+</HTML>

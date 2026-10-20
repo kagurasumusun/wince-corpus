@@ -1,0 +1,56 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML>
+<HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text-html; charset=Windows-1252">
+<title>Using the TVS_CHECKBOXES Tree View Style</title>
+<meta name=MS-HAID content="_wcesdk_using_the_tvs_checkboxes_tree_view_style">
+<meta name=MS-HKWD content="Using the TVS_CHECKBOXES Tree View Style">
+</HEAD>
+<BODY BGCOLOR=#FFFFFF TEXT=#000000>
+<!-- WCESDKG InfoViewer title (Wcesdkg.ivt); HTML topics extracted with tools/extract-ivt.py, images and the title's own indexes dropped. -->
+
+<form name=x><object name=iv classid="clsid:9c2ac687-ceef-11cf-96d9-00a0c903b016">
+</object></form>
+<h3><a name="_wcesdk_using_the_tvs_checkboxes_tree_view_style"></a>Using the TVS_CHECKBOXES Tree View Style</h3>
+<p>
+Using the TVS_CHECKBOXES enables check boxes for items in a tree view control. The following application-defined function illustrates how to retrieve an item's check state. </p>
+<p>
+The following example function illustrates how to set an item's check state. </p>
+<pre>BOOL TreeView_SetCheckState(HWND hwndTreeView, HTREEITEM hItem, BOOL fCheck)
+    {
+    TVITEM tvItem;
+
+    tvItem.mask = TVIF_HANDLE | TVIF_STATE;
+    tvItem.hItem = hItem;
+    tvItem.stateMask = TVIS_STATEIMAGEMASK;
+
+    /*
+    Since state images are one-based, 1 in this macro turns the check off, and 
+    2 turns it on.
+    */
+    tvItem.state = INDEXTOSTATEIMAGEMASK((fCheck ? 2 : 1));
+
+    return TreeView_SetItem(hwndTreeView, &amp;tvItem);
+    }
+</pre>
+<p>
+The following example function illustrates how to retrieve an item's check state.</p>
+<pre>BOOL WINAPI TreeView_GetCheckState(HWND hwndTV, HTREEITEM hItem)
+{
+   TVITEM tvi;
+
+   // Prepare to receive the desired information.
+   tvi.hItem = hItem;
+   tvi.mask = TVIF_HANDLE | TVIF_STATE;
+   tvi.stateMask = TVIS_STATEIMAGEMASK;
+
+   // Request the information
+   TreeView_GetItem(hwndTV, &amp;tvi);
+
+   // Return zero if it's not checked and nonzero otherwise
+   return ((BOOL)(tvi.state &gt;&gt; 12) -1);
+}</pre>
+<p>
+ </p>
+</BODY>
+</HTML>

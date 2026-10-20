@@ -1,0 +1,117 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML>
+<HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text-html; charset=Windows-1252">
+<title>Handling Low Memory Situations</title>
+<meta name=MS-HAID content="_wcesdk_handling_low_memory_situations">
+</HEAD>
+<BODY BGCOLOR=#FFFFFF TEXT=#000000>
+<!-- WCESDKG InfoViewer title (Wcesdkg.ivt); HTML topics extracted with tools/extract-ivt.py, images and the title's own indexes dropped. -->
+
+<form name=x><object name=iv classid="clsid:9c2ac687-ceef-11cf-96d9-00a0c903b016">
+</object></form>
+<h2><a name="_wcesdk_handling_low_memory_situations"></a>Handling Low Memory Situations</h2>
+<p>
+An H/PC is a low memory device, and RAM is always at a premium. No matter how effectively an application uses RAM, it is always possible for the system to run out of memory. This implies that the <A HREF='javascript:document.x.iv.ALink("_wcesdk_win32_virtualalloc","")'><b>VirtualAlloc</b></a> function cannot find any unallocated pages. </p>
+<p>
+A low memory condition can manifest itself to the application in the following ways: 
+<ul>
+<li>
+A call to the <b>VirtualAlloc</b> function can fail. <br><br></li>
+<li>
+The <A HREF='javascript:document.x.iv.ALink("_wcesdk_win32_localalloc","")'><b>LocalAlloc</b></a> or <A HREF='javascript:document.x.iv.ALink("_wcesdk_win32_heapalloc","")'><b>HeapAlloc</b></a> function may attempt to grow a heap, but fail to do so. <br><br></li>
+<li>
+The stack may try to grow, but not be able to do so. </li>
+</ul>
+<p>
+The first two manifestations cause failures to be returned in an orderly fashion. These failures occur as a result of a direct call by the application, or indirectly following a call to a function such as <A HREF='javascript:document.x.iv.ALink("_wcesdk_win32_createwindow","")'><b>CreateWindow</b></a>.<b> </b>The third manifestation is more severe. It causes the process to wait for a free page. </p>
+<p>
+<b>Note</b>  Memory limits may change in future releases of the Windows CE operating system.</p>
+<p>
+The system constantly monitors the amount of available memory and tries to prevent limited memory conditions from occurring.</p>
+<p>
+When an application attempts to allocate memory, the system &quot;filters&quot; the request by limiting the amount actually allocated. This prevents a single application from using all available memory with one large allocation. When the system enters a low memory situation, the maximum memory limit is further reduced.</p>
+<p>
+The system continually monitors memory usage. When available memory falls below a <i>Hibernation Threshold</i>, the limited-memory regime is entered, and the system starts asynchronously sending WM_HIBERNATE messages to active applications. This message warns applications that available memory is becoming scarce.</p>
+<p>
+There are two additional thresholds, <i>low</i> and <i>critical</i>, that define successively more restrictive memory regimes. The following table defines values for memory thresholds and maximum allowable memory allocations for the three levels of limited-memory conditions. The numbers are based on a 1K page, with those for a 4K page size provided in parentheses.</p>
+<table>
+<tr valign=top>
+<td>
+<b>Item</b></td>
+<td>
+<b>Value</b></td>
+<td>
+<b>Description</b></td>
+</tr>
+<tr valign=top>
+<td>
+Hibernation Threshold</td>
+<td>
+128K<p>
+(160K)</p>
+</td>
+<td>
+Point at which the system enters a limited-memory state. A WM_HIBERNATE message is sent when the system memory falls below this value.</td>
+</tr>
+<tr valign=top>
+<td>
+Low Memory Threshold</td>
+<td>
+64K<p>
+(96K)</p>
+</td>
+<td>
+Minimum available memory size the system must maintain when system is in a &quot;low&quot; memory state.</td>
+</tr>
+<tr valign=top>
+<td>
+Maximum Low Memory Allocation</td>
+<td>
+16K</td>
+<td>
+Maximum amount of memory allowed to be allocated with <b>VirtualAlloc</b> when system is in a &quot;low&quot; memory state.</td>
+</tr>
+<tr valign=top>
+<td>
+Critical Memory Threshold</td>
+<td>
+16K<p>
+(48K)</p>
+</td>
+<td>
+Minimum available memory size system must maintain when system is in a &quot;critical&quot; memory state.</td>
+</tr>
+<tr valign=top>
+<td>
+Maximum Critical Memory Allocation</td>
+<td>
+  8K</td>
+<td>
+Maximum amount of memory allowed to be allocated with <b>VirtualAlloc</b> when the system is in a &quot;critical&quot; memory state.</td>
+</tr>
+</table><br>
+<p>
+There are basically four limited memory scenarios that the system must respond to. They include:
+<ul>
+<li>
+Request less than the low-memory maximum<br><br></li>
+<li>
+Request greater than the low-memory minimum<br><br></li>
+<li>
+Request less than the critical-memory maximum<br><br></li>
+<li>
+Request greater than the critical-memory minimum</li>
+</ul>
+<p>
+If an application calls <b>VirtualAlloc</b> requesting a memory allocation less than the maximum allowable for a low-memory state, but still enough to cause the system to fall below the low-memory threshold, then a <b>System Out of</b> <b>Memory</b> Dialog Box displays. The user must either select applications for the system to close, or increase the amount of RAM allocated to Program Memory.</p>
+<p>
+If the user opts to close applications the system sends WM_CLOSE messages. If an application marked closed does not shutdown within 8 seconds, an <b>End Task/Wait</b> Dialog Box displays, giving the user the choice of terminating the application or waiting for an additional period of time.</p>
+<p>
+Any <b>VirtualAlloc</b> call that requests more than the low-memory maximum fails if it causes the amount of available memory in the system to fall below the low-memory threshold. The <b>System Out of Memory </b>Dialog Box does <i>not</i> displays. <b>LocalAlloc</b> does not necessarily have the same constraint. Depending on the state of the system's heap, a <b>LocalAlloc </b>can succeed.</p>
+<p>
+If an application calls <b>VirtualAlloc</b> and the request causes the amount of available memory in the system to fall below the critical memory threshold, the <b>System Out of Memory </b>Dialog Box displays. The user must either select applications for the system to close, or increase the amount of RAM allocated to Program Memory (if available). The system calls <A HREF='javascript:document.x.iv.ALink("_wcesdk_win32_terminateprocess","")'><b>TerminateProcess</b></a> to terminate any applications selected by the user.</p>
+<p>
+Applications that call <b>VirtualAlloc</b> requesting a memory allocation greater than critical-memory maximum fail if the amount of available memory in the system falls below the critical-memory threshold. Depending on the state of the system's heap, calls to <b>LocalAlloc</b> can succeed.</p>
+</BODY>
+</HTML>

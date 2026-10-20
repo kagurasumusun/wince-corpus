@@ -1,0 +1,63 @@
+<HTML>
+<HEAD>
+<TITLE>SWR    Store Word Right</TITLE>
+</HEAD><BODY BGCOLOR=#ffffff>
+<!-- PR3910 InfoViewer title (Pr3910.ivt); HTML topics extracted with tools/extract-ivt.py, images and the title's own indexes dropped. -->
+<BASEFONT FACE="Arial,Helvetica" SIZE="2">
+<A HREF= "PR39home.htm"><IMG SRC="contents.gif" ALT="contents.gif" BORDER = 0></A>
+<P>
+<A NAME="off_1638996"></A><A NAME="ba6e7da0"></A><FONT FACE="Arial" SIZE="3"><H1>SWR    Store Word Right
+<P>
+ </H1></FONT><FONT FACE="Times New Roman" SIZE="6"><IMG SRC="P3900110.gif" ALT="P3900110.gif" BORDER=0 WIDTH=676 HEIGHT=87>
+<P>
+</FONT><FONT FACE="Arial" SIZE="3"><B>Format :</B>  SWR rt,offset(base)
+<P>
+<B>Description :</B>  This instruction can be used with the SWL instruction to store the contents
+of a register into four consecutive bytes of memory, when the bytes cross a
+boundary between two word. SWR stores the right portion of the register into the
+appropriate part of the low-order word; SWL stores the left portion of the
+register into the appropriate part of the low-order word of memory. The SWR
+instruction adds its sign-extended 16-bit <I>offset</I> to the contents of general register <I>base</I> to form a 32-bit unsigned effective address which may specify an arbitrary
+byte. It alters only the word in memory which contains that byte. From one to
+four bytes will be stored, depending on the starting byte specified. Conceptually,
+it starts at the low-order (right-most) byte of the register and copies it to
+the specified byte in memory; then it proceeds toward the high-order byte of
+the register and the high-order byte of the word in memory, copying bytes from
+register to memory until it reaches the high-order byte of the word in memory. 
+<P>
+Address error exceptions due to byte alignment are suppressed by this
+instruction.
+<P>
+<B>Operation :
+<P>
+</B>  T:   vAddress  (offset15)16 || offset15..0 + GPR[base]
+<P>
+    (pAddress, nonCacheable)  AddrTranslation (vAddress)
+<P>
+    byte  vAddress1..0 
+<P>
+    if BigEndian then 
+<P>
+    data  GPR[rt]7+8*byte..0 || 024-8*byte 
+<P>
+    else 
+<P>
+    data  GPR[rt]31-8*byte..0 || 0 8*byte 
+<P>
+    endif 
+<P>
+T+1:     if BigEndian then 
+<P>
+    StoreMemory(nonCacheable,byte,data,pAddress31..2 || 02)
+<P>
+    else 
+<P>
+    StoreMemory(nonCacheable,WORD-byte,data,pAddress) 
+<P>
+    endif
+<P>
+<B>Exceptions :</B>  Bus error exception
+<P>
+Address error exception
+<P>
+</FONT></BODY>

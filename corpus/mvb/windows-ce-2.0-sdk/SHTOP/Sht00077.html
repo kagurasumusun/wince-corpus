@@ -1,0 +1,72 @@
+<HTML>
+<HEAD>
+<TITLE>/Yu</TITLE>
+</HEAD><body bgcolor="#FFFFFF">
+<!-- SHTOP InfoViewer title (Shtop.ivt); HTML topics extracted with tools/extract-ivt.py, images and the title's own indexes dropped. -->
+
+<A NAME="off_1148901"></A><A NAME="000064ed"></A><FONT FACE="Arial" SIZE="4"><B>/Yu (Use Precompiled Header)
+<P>
+</B></FONT><FONT FACE="Arial" SIZE="3">Option
+<P>
+/Yu[[<I>filename</I>]]
+<P>
+The /Yu option instructs the compiler to use an existing precompiled header in
+the current compilation. No space is allowed between the option and the <I>filename</I>.
+<P>
+<B>Using /Yu with a Filename
+<P>
+</B>The <I>filename</I> argument is the name of a header file, which is included in the source file
+using an #include preprocessor directive. The include files name must be the
+same for both the /Yc option that creates the precompiled header and any
+subsequent /Yu option indicating use of the precompiled header.
+<P>
+For /Yc, <I>filename</I> specifies the point at which precompilation stops; the compiler precompiles
+all code through <I>filename</I> and names the resulting precompiled header using the base name of the include
+file and an extension of .PCH. For /Yu, the compiler assumes that all code
+occurring before <I>filename</I> is precompiled. The compiler skips to the specified <B>#include</B> directive, uses the code contained in the precompiled header file, and then
+compiles all code after <I>filename</I>. 
+<P>
+Consider the following code:
+<P>
+</FONT><FONT FACE="Lucida Sans Typewriter" SIZE="3">#include &lt;afxwin.h&gt;  // Include header for class library
+<P>
+#include &quot;resource.h&quot; // Include resource definitions
+<P>
+#include &quot;myapp.h&quot;  // Include information specific to this app
+<P>
+</FONT><FONT FACE="Arial" SIZE="3">...
+<P>
+When this code is compiled with the command line
+<P>
+SHCL /YuMYAPP.H PROG.CPP
+<P>
+the compiler does not process the three include statements but uses
+precompiled code from MYAPP.PCH, thereby saving the time involved in preprocessing all
+three of the files (and any files they might include).
+<P>
+You can use the /Fp option with the /Yu option to specify the name of the .PCH
+file if the name is different from either the <I>filename</I> argument to /Yc or the base name of the source file, as in the following:
+<P>
+SHCL /YuMYAPP.H /FpMYPCH.PCH PROG.CPP
+<P>
+This command specifies a precompiled header file named MYPCH.PCH. The compiler
+uses its contents to restore the precompiled state of all header files up to
+and including MYAPP.H. The compiler then compiles the code that occurs after the
+MYAPP.H include statement.
+<P>
+<B>Using /Yu Without a Filename
+<P>
+</B>When you specify the /Yu option without a filename, your source program must
+contain a <B>hdrstop</B> pragma that specifies the filename. The compiler skips to the location of
+that pragma, restores the compiled state from the precompiled header file
+specified by the pragma, and then compiles only code that follows the pragma. If the <B>hdrstop</B> pragma does not specify a filename, the compiler looks for a file with a name
+derived from the base name of the source file with a .PCH extension.
+<P>
+If you specify the /Yu option without a filename and fail to specify a <B>hdrstop</B> pragma, an error message is generated and the compilation is unsuccessful.
+<P>
+</FONT><FONT FACE="Arial Narrow" SIZE="4"><B>Note: 
+<P>
+</B></FONT><FONT FACE="Arial" SIZE="3">If the options /Yc<I>filename</I> and /Yu<I>filename</I> occur on the same command line and both reference, or imply, the same <I>filename</I>, /Yc<I>filename</I> takes precedence. This feature simplifies the writing of makefiles.
+<P>
+</FONT></BODY>
+</HTML>

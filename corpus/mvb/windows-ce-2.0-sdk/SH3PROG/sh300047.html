@@ -1,0 +1,86 @@
+<HTML>
+<HEAD>
+<TITLE>6.13   BT/S (Branch if True with Delay Slot): Branch Instruction</TITLE>
+</HEAD><body bgcolor="#FFFFFF">
+<!-- SH3PROG InfoViewer title (sh3prog.ivt); HTML topics extracted with tools/extract-ivt.py, images and the title's own indexes dropped. -->
+
+<A NAME="off_1934536"></A><A NAME="a95af618"></A><FONT FACE="Arial" SIZE="5"><B>6.13   BT/S (Branch if True with Delay Slot): Branch Instruction
+<P>
+
+<P>
+</B></FONT><TABLE><TR VALIGN=TOP><TD><FONT FACE="Arial" SIZE="3"><B>Format
+<BR></B></FONT></TD><TD><FONT FACE="Arial" SIZE="3"><B>Abstract
+<BR></B></FONT></TD><TD><FONT FACE="Arial" SIZE="3"><B>Code
+<BR></B></FONT></TD><TD><FONT FACE="Arial" SIZE="3"><B>Cycle
+<BR></B></FONT></TD><TD><FONT FACE="Arial" SIZE="3"><B>T Bit
+<BR></B></FONT></TD></TR><TR VALIGN=TOP><TD><FONT FACE="Lucida Sans Typewriter" SIZE="3">BT/S label
+<BR></FONT></TD><TD><FONT FACE="Arial" SIZE="3">When T = 1, disp + PC <IMG SRC="sh390002.gif" ALT="sh390002.gif" BORDER=0 WIDTH=13 HEIGHT=16> PC; 
+<BR>When T = 0, nop
+<BR></FONT></TD><TD><FONT FACE="Lucida Sans Typewriter" SIZE="3">10001101dddddddd
+<BR></FONT></TD><TD><FONT FACE="Arial" SIZE="3">2/1
+<BR></FONT></TD><TD><FONT FACE="Arial" SIZE="3">-
+<BR>
+<BR></FONT></TD></TR></TABLE><FONT FACE="Arial" SIZE="3"><B>Description: 
+<P>
+</B>Reads the T bit, and if T = 1, BT/S branches after the following instruction
+executes. If T = 0, BT/S executes the next instruction. The branch destination
+is an address specified by PC + displacement. The PC points to the starting
+address of the second instruction after the branch instruction. The 8-bit
+displacement is sign-extended and doubled. Consequently, the relative interval from the
+branch destination is -256 to +254 bytes. If the displacement is too short to
+reach the branch destination, use BT/S with the BRA instruction or the like.
+<P>
+</FONT><FONT FACE="Arial Narrow" SIZE="4"><B>Note:
+<P>
+</B></FONT><FONT FACE="Arial" SIZE="3">Since this is a delay branch instruction, the instruction immediately
+following is executed before the branch. Between the time this instruction and the
+instruction immediately following are executed, no interrupts are accepted. When
+the instruction immediately following is a branch instruction, it is recognized
+as an illegal slot instruction. 
+<P>
+<B>Operation:
+<P>
+</B></FONT><FONT FACE="Lucida Sans Typewriter" SIZE="3">BTS(long d) /* BTS disp */
+<P>
+{
+<P>
+ long disp;
+<P>
+ unsigned long temp;
+<P>
+ temp=PC;
+<P>
+ if ((d&amp;0x80)==0) disp=(0x000000FF &amp; (long)d);
+<P>
+ else disp=(0xFFFFFF00 | (long)d);
+<P>
+ if (T==1) {
+<P>
+  PC=PC+(disp&lt;&lt;1)+4;
+<P>
+  Delay_Slot(temp+2);
+<P>
+ }
+<P>
+ else PC+=2;
+<P>
+}
+<P>
+</FONT><FONT FACE="Arial" SIZE="3"><B>Example:
+<P>
+ </B></FONT><FONT FACE="Lucida Sans Typewriter" SIZE="3">SETT   T is always 1
+<P>
+ BF/S TARGET_F Does not branch, because T = 1
+<P>
+ NOP
+<P>
+ BT/S TARGET_T Branches to TARGET, because T = 1
+<P>
+ ADD R0,R1  Executes before branching.
+<P>
+ NOP   ¨ The PC location is used to calculate the branch destination  address of the BT/S instruction
+<P>
+TARGET_T:   ¨ Branch destination of the BT/S instruction
+<P>
+</FONT></BODY>
+</HTML>

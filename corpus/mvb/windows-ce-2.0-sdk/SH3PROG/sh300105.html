@@ -1,0 +1,63 @@
+<HTML>
+<HEAD>
+<TITLE>6.71   TAS (Test and Set): Logic Operation Instruction</TITLE>
+</HEAD><body bgcolor="#FFFFFF">
+<!-- SH3PROG InfoViewer title (sh3prog.ivt); HTML topics extracted with tools/extract-ivt.py, images and the title's own indexes dropped. -->
+
+<A NAME="off_3441146"></A><A NAME="0ff5ed8e"></A><FONT FACE="Arial" SIZE="5"><B>6.71   TAS (Test and Set): Logic Operation Instruction 
+<P>
+
+<P>
+</B></FONT><TABLE><TR VALIGN=TOP><TD><FONT FACE="Arial" SIZE="3"><B>Format
+<BR></B></FONT></TD><TD><FONT FACE="Arial" SIZE="3"><B>Abstract
+<BR></B></FONT></TD><TD><FONT FACE="Arial" SIZE="3"><B>Code
+<BR></B></FONT></TD><TD><FONT FACE="Arial" SIZE="3"><B>Cycle
+<BR></B></FONT></TD><TD><FONT FACE="Arial" SIZE="3"><B>T Bit
+<BR></B></FONT></TD></TR><TR VALIGN=TOP><TD><FONT FACE="Lucida Sans Typewriter" SIZE="3">TAS.B @Rn
+<BR></FONT></TD><TD><FONT FACE="Arial" SIZE="3">When (Rn) is 0, 1 <IMG SRC="sh390002.gif" ALT="sh390002.gif" BORDER=0 WIDTH=13 HEIGHT=16> T, 1 <IMG SRC="sh390002.gif" ALT="sh390002.gif" BORDER=0 WIDTH=13 HEIGHT=16> MSB of (Rn)
+<BR></FONT></TD><TD><FONT FACE="Lucida Sans Typewriter" SIZE="3">0100nnnn00011011
+<BR></FONT></TD><TD><FONT FACE="Arial" SIZE="3">3
+<BR></FONT></TD><TD><FONT FACE="Arial" SIZE="3">Test results
+<BR>
+<BR></FONT></TD></TR></TABLE><FONT FACE="Arial" SIZE="3"><B>Description: 
+<P>
+</B>Reads byte data from the address specified by general register Rn, and sets
+the T bit to 1 if the data is 0, or clears the T bit to 0 if the data is not 0.
+Then, data bit 7 is set to 1, and the data is written to the address specified
+by Rn. During this operation, the bus is not released. 
+<P>
+</FONT><FONT FACE="Arial Narrow" SIZE="4"><B>Note:
+<P>
+</B></FONT><FONT FACE="Arial" SIZE="3">The destination of the TAS instruction should be placed in a non-cacheable
+space when the cache is enabled.
+<P>
+<B>Operation:
+<P>
+</B></FONT><FONT FACE="Lucida Sans Typewriter" SIZE="3">TAS(long n) /* TAS.B @Rn */
+<P>
+{
+<P>
+ long temp;
+<P>
+ temp=(long)Read_Byte(R[n]); /* Bus Lock enable */
+<P>
+ if (temp==0) T=1;
+<P>
+ else T=0;
+<P>
+ temp|=0x00000080;
+<P>
+ Write_Byte(R[n],temp);  /* Bus Lock disable */
+<P>
+ PC+=2;
+<P>
+}
+<P>
+</FONT><FONT FACE="Arial" SIZE="3"><B>Example:
+<P>
+</B></FONT><FONT FACE="Lucida Sans Typewriter" SIZE="3">_LOOP TAS.B @R7 R7 = 1000
+<P>
+ BF _LOOP Loops until data in address 1000 is 0
+<P>
+</FONT></BODY>
+</HTML>

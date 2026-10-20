@@ -1,0 +1,125 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML>
+<HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text-html; charset=Windows-1252">
+<title>Opening the Contacts Database</title>
+<meta name=MS-HAID content="_wcesdk_opening_the_contacts_database">
+<meta name=MS-HKWD content="Opening the Contacts Database">
+</HEAD>
+<BODY BGCOLOR=#FFFFFF TEXT=#000000>
+<!-- WCESDKG InfoViewer title (Wcesdkg.ivt); HTML topics extracted with tools/extract-ivt.py, images and the title's own indexes dropped. -->
+
+<form name=x><object name=iv classid="clsid:9c2ac687-ceef-11cf-96d9-00a0c903b016">
+</object></form>
+<h4><a name="_wcesdk_opening_the_contacts_database"></a>Opening the Contacts Database</h4>
+<h5><img src="../guide/art/wedge.gif" border=0>&#09;To open the Contacts database</h5>
+<p>
+&#09;1.&#09;Call the <b>OpenAddressBook</b>function.</p>
+<h5>If successful, you can proceed to access the database. </h5>
+<p>
+&#09;1.&#09;If the call fails, obtain specific error information by calling <b>GetLastError</b>. If the error value is ERROR_FILE_NOT_FOUND, the Contacts database does not exist. </p>
+<p>
+&#09;2.&#09;If the database does not exist, create the database by invoking the <b>CreateAddressBook</b>function before re-opening it.&#09;3.&#09;Specify up to four property tags for the <i>hhSortProp</i> parameter <font face="Symbol"><span style="font-family:symbol">&#45;</span></font> Or <font face="Symbol"><span style="font-family:symbol">&#45;</span></font></p>
+<p>
+Set the <i>hhSortProp</i> parameter to NULL to use the default properties: surname, company name, office telephone number, and home telephone number. The <b>OpenAddressBook</b> function then uses the sort property array to specify the current sort order.Call <b>CloseAddressBook</b> to close the Contacts database.</p>
+<dl>
+<dt>
+The following example illustrates this procedure:</dt>
+<dd>
+<pre>// make sure the Contacts database exists and can be opened.
+If(!OpenAddressBook(hwndParent, hhSortProp)) {
+     dwError=GetLastError();
+     if(dwError==ERROR_FILE_NOT_FOUND) {
+          if(!CreateAddressBook(NULL, 0))
+                return FALSE;
+          if(!OpenAddressBook(hwndParent, hhSortProp))
+                return FALSE;
+          // the Contacts database is now opened and ready for use.
+          
+     }
+     
+Calling <b>OpenAddressBook</b> to open an existing Contacts database can fail if the <i>hhSortProp</i> array has been altered by another thread. In this case, <b>GetLastError</b> will return ERROR_INVALID_PARAMETER. Attempt to re-open the database by calling <b>OpenAddressBook</b> without specifying a sort order as illustrated in the following example:if (dwError==ERROR_INVALID_PARAMETER) {
+     if(!OpenAddressBook(hwndParent, 0)) 
+           return FALSE;
+     // retrieve column properties and make sure they are valid 
+     // before using the database.
+   
+   }</pre>
+</dd>
+</dl>
+<p>
+Multiple applications can open the Contacts database simultaneously. To coordinate data access and preserve data integrity, the operating system sends object-store notification messages to attached applications whenever the database has been modified. The <b>OpenAddressBook</b> function specifies the window handle, <i>hwndParent</i>, to receive such notification messages which have the DB_PEGOID_ prefix and are defined in the Windbase.h header file. Upon receiving a notification message, call the <b>RecountCards</b>function to re-enumerate the number of records in the database. </p>
+<p>
+The following sample code illustrates how to open the Contacts database. When <b>OpenAddressBook</b> fails because the database does not exist, the example creates the database. When the creation is successful, the example then tries to open the database again. The <b>GetPropertyDataStruct</b> function examines address card properties to ensure that the database has not been corrupted. The example returns TRUE if the database was successfully opened or FALSE otherwise: </p>
+<pre>// OpenUpTheAddressBook - Opens the Contacts database, creating it 
+// if it doesn't exist. Returns TRUE if successful or FALSE otherwise.
+// hwndParent - handle of the parent window that is to receive database 
+// notifications (DB_PEGOID_*).
+// hhSortProp - property tag for setting the sort order.
+BOOL OpenUpTheAddressBook(HWND hwndParent, HHPRTAG hhSortProp)
+{
+    DWORD dwError;                   // Error code
+    HHPRTAG propList[MAX_COLUMNS];   // Sort-order property tags
+    int nColumns;                    // Number of sortable columns 
+    int index;                       // Loop index
+
+    // Attempt to open the Contacts database.
+    if (!OpenAddressBook(hwndParent, hhSortProp)) {
+        dwError = GetLastError();
+        if (dwError == ERROR_FILE_NOT_FOUND) {
+
+            // The Contacts database doesn't exist, so try to create 
+            // it.  Use the default sort order properties.
+            if (!CreateAddressBook(NULL, 0)) {
+                goto InitError;
+            }
+   
+            // The Contacts database was created, now try 
+            // again to open it.
+            if (!OpenAddressBook(hwndParent, hhSortProp)) {
+                goto InitError;
+            }
+
+        // Check for an invalid parameter error. 
+        } else if (dwError == ERROR_INVALID_PARAMETER) {
+            // Another application may have changed the sort orders. 
+            // Try opening the database without specifying a 
+            // sort order. 
+            if (!OpenAddressBook(hwndParent, 0)) {
+                goto InitError;
+            }
+
+            // Retrieve the column properties.
+            nColumns = MAX_COLUMNS;
+            if (!GetColumnProperties(&amp;propList, &amp;nColumns)) {
+                goto InitError;
+            }
+
+            // Make sure the properties are valid.
+            for (index = 0; index &lt; nColumns; index++) {
+                if (GetPropertyDataStruct(GPDS_PROPERTY, 
+                        propList[index], NULL) == GPDS_ERR) {
+                    // The database is corrupt.
+                    MessageBox(hwndParent, IDS_CORRUPT_DATABASE, 
+                        MB_ICONEXCLAMATION | MB_OK);
+                    goto InitError;
+                }
+            }
+
+            // Try opening the database one last time.
+            hhSortProp = propList[0];
+            if (!OpenAddressBook(hwndParent, hhSortProp)) {
+                goto InitError;
+            }
+        } else {
+            goto InitError;
+        }
+    }
+        return TRUE;
+
+    InitError:
+        return FALSE;
+}
+</pre>
+</BODY>
+</HTML>

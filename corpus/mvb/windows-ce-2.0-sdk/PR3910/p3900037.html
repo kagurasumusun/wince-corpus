@@ -1,0 +1,59 @@
+<HTML>
+<HEAD>
+<TITLE>5.1 Kernel/User Modes</TITLE>
+</HEAD><BODY BGCOLOR=#ffffff>
+<!-- PR3910 InfoViewer title (Pr3910.ivt); HTML topics extracted with tools/extract-ivt.py, images and the title's own indexes dropped. -->
+<BASEFONT FACE="Arial,Helvetica" SIZE="2">
+<A HREF= "PR39home.htm"><IMG SRC="contents.gif" ALT="contents.gif" BORDER = 0></A>
+<P>
+<A NAME="off_329539"></A><A NAME="1d776775"></A><FONT FACE="Arial" SIZE="3"><H1>5.1 Kernel/User Modes
+<P>
+</H1>The PR3910 core implements two running modes - kernel and user. The kernel
+mode is a privileged state that allows accesses to all physical memory, the
+complete instruction set and all registers, including the GPR and CP0 registers. The
+user mode is a protected mode with limited access to the above.
+<P>
+The PR3910 core enters the kernel mode at boot time by taking a reset
+exception. It also enters kernel mode whenever an exception is taken, including traps
+and interrupts. It enters the user mode by executing a restore from exception
+(RFE) instruction.
+<P>
+Normally, the kernel mode allows access to the entire 4 GBytes of virtual
+address spac, whereas the user mode is restricted to a fraction of the entire
+address space.
+<P>
+The memory address space is divided into four memory segments. Three of these
+segments are in the kernel address space, the fourth segment is in a shared
+kernel/user address space - kuseg (kernel/user segment), kseg0 (kernel segment 0),
+kseg1 (kernel segment1) and kseg2 (kernel segment 2). The segments are
+determined by the upper three bits of the virtual address, as shown in <B>Error! Bookmark not defined.</B>.
+<P>
+</FONT><FONT FACE="Times New Roman" SIZE="3">Figure  5-1  PR3910 Memory Segments
+<P>
+ </FONT><FONT FACE="Times New Roman" SIZE="6"><IMG SRC="P3900013.gif" ALT="P3900013.gif" BORDER=0 WIDTH=613 HEIGHT=158>
+<P>
+</FONT><FONT FACE="Arial" SIZE="3">1.  Kernel/User mode segment (relocated) - kuseg
+<P>
+This memory segment is shared by both the kernel and the user. It allows the
+user access to 2 GBytes of physical memory space for program and data structures.
+<P>
+2.  Kernel mode virtual segment (relocated) - kseg0
+<P>
+This memory segment is cached and is accessible only by the kernel. This
+segment is typically used for kernel only execution code and data structures.
+<P>
+3.  Kernel mode virtual segment (relocated) - kseg1
+<P>
+This memory segment is uncached and is also accessible by the user mode
+program in physical address space. This segment is used for the bootstrap program.
+User programs can access ROM/PROM library functions as a cached address space.
+The kernel can use this address space to access I/O devices as uncached memory
+mapped I/ O locations.
+<P>
+4.  Kernel mode virtual segment - kseg2
+<P>
+This memory segment is cached and is accessible by the kernel mode program in
+physical address space. This segment is typically used for kernel execution
+code.
+<P>
+</FONT></BODY>

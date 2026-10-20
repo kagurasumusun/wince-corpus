@@ -1,0 +1,93 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML>
+<HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text-html; charset=Windows-1252">
+<title>Creating, Writing, and Deleting Records and Properties</title>
+<meta name=MS-HAID content="_wcesdk_creating_writing_and_deleting_records_and_properties">
+</HEAD>
+<BODY BGCOLOR=#FFFFFF TEXT=#000000>
+<!-- WCESDKG InfoViewer title (Wcesdkg.ivt); HTML topics extracted with tools/extract-ivt.py, images and the title's own indexes dropped. -->
+
+<form name=x><object name=iv classid="clsid:9c2ac687-ceef-11cf-96d9-00a0c903b016">
+</object></form>
+<h3><a name="_wcesdk_creating_writing_and_deleting_records_and_properties"></a>Creating, Writing, and Deleting Records and Properties</h3>
+<p>
+An application creates new records or modifies existing records using the <A HREF='javascript:document.x.iv.ALink("_wcesdk_cewriterecordprops","")'><b>CeWriteRecordProps</b></a> function. The function parameters include the handle to the database and the object identifier of the record to add. If the object identifier is zero, <b>CeWriteRecordProps</b> creates a new record. </p>
+<p>
+To write properties to a record, the application fills an array of <A HREF='javascript:document.x.iv.ALink("_wcesdk_cepropval","")'><b>CEPROPVAL</b></a> structures and passes the address of the array to <b>CeWriteRecordProps</b> along with the database handle and the record's object identifier. Each structure contains a property identifier and the data value for that property. To specify the data value, an application fills the <b>val</b> member, which is defined as a <A HREF='javascript:document.x.iv.ALink("_wcesdk_cevalunion","")'><b>CEVALUNION</b></a> union. The <b>CEPROPVAL</b> structure also includes a flag member that an application can set to CEDB_PROPDELETE in order to delete the given property or properties. If the <b>CeWriteRecordProps</b> function succeeds, the object identifier of the new or modified record is returned. </p>
+<p>
+An application uses the <A HREF='javascript:document.x.iv.ALink("_wcesdk_cedeleterecord","")'><b>CeDeleteRecord</b></a> function to delete a record from a database, supplying the object identifier of the record and the handle to the open database that contains the record. </p>
+<p>
+The following sample fragment creates and writes a new property that is a byte array( or blob):</p>
+<pre>// this sample fragment writes a new record containing 1 blob property 
+// into an open database
+CEPROPVAL NewProp;   // the new property contains a blob...
+CEBLOB blob;   // the blob contains a byte array...
+BYTE * pBuf = NULL;  // ...and here's the actual blob data
+UINT cbBuf;   // count of bytes needed in blob
+...
+// figure out the size needed, then allocate it
+pBuf = (BYTE *) LocalAlloc(LMEM_FIXED, cbBuf); 
+// put the actual data into pBuf here...
+
+// now set up to write the new blob property 
+NewProp.propid = CEVT_BLOB;
+NewProp.wFlags = 0;    
+blob.dwCount = cbBuf;  // count of bytes in the buffer
+blob.lpb = pBuf;  // set CEBLOB field to point to buffer
+NewProp.val.blob = blob; // blob itself points to the buffer
+oid = CeWriteRecordProps(hDb, // database handle
+    0, // new record
+    1, // one property
+    &amp;NewProp);  // pointer to the blob property
+// perform error handling by checking oid... 
+</pre>
+<p>
+You write a record into a database by filling an array of <A HREF='javascript:document.x.iv.ALink("_wcesdk_cepropval","")'><b>CEPROPVAL</b></a> structures and passing the array to the <A HREF='javascript:document.x.iv.ALink("_wcesdk_cewriterecordprops","")'><b>CeWriteRecordProps</b></a> function, along with an open handle to the database in which to add the record. The following example shows how to add a record to a database: </p>
+<pre>// SetAddressData - Adds a name and address to an address database in 
+//   the object store.
+// Returns the object identifier of the record in which the name and 
+//   address are written.
+// pAddressData - pointer to a structure that contains the name and
+//   address to add
+//
+// Global variable:
+//     g_hAddressDatabase - open handle to the address database
+
+CEOID SetAddressData(PADDRESSDATA pAddressData)
+{
+    CEPROPVAL rgPropVal[ADDRESS_PROP_COUNT];
+    WORD wCurrent = 0;
+
+    // Use a C runtime function to zero-fill the array of property 
+    // values.   
+    memset(&amp;rgPropVal, 0, sizeof(CEPROPVAL) * ADDRESS_PROP_COUNT);
+        
+    // Name
+    rgPropVal[wCurrent].propid = HHPR_NAME;
+    rgPropVal[wCurrent++].val.lpwstr = pAddressData-&gt;pwszName;
+
+    // Street
+    rgPropVal[wCurrent].propid = HHPR_STREET;
+    rgPropVal[wCurrent++].val.lpwstr = pAddressData-&gt;pwszStreet;
+
+    // City
+    rgPropVal[wCurrent].propid = HHPR_CITY;
+    rgPropVal[wCurrent++].val.lpwstr = pAddressData-&gt;pwszCity;
+
+    // State
+    rgPropVal[wCurrent].propid = HHPR_STATE;
+    rgPropVal[wCurrent++].val.lpwstr = pAddressData-&gt;pwszState;
+
+    // Zip code
+    rgPropVal[wCurrent].propid = HHPR_ZIP_CODE;
+    rgPropVal[wCurrent++].val.ulVal = pAddressData-&gt;dwZip;
+
+    oid = CeWriteRecordProps(g_hAddressDatabase, 0, wCurrent, 
+        rgPropVal);
+    
+    return oid;
+}                                                 
+</pre>
+</BODY>
+</HTML>

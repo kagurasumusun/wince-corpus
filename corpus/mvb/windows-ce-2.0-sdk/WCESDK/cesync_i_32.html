@@ -1,0 +1,182 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML>
+<HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text-html; charset=Windows-1252">
+<title>IReplStore::ReportStatus</title>
+<meta name=MS-HAID content="_wcesdk_ireplstore_reportstatus">
+<meta name=MS-HKWD content="IReplStore::ReportStatus (Windows CE)">
+<meta name=MS-HKWD content="ReportStatus (Windows CE)">
+</HEAD>
+<BODY BGCOLOR=#FFFFFF TEXT=#000000>
+<!-- WCESDK InfoViewer title (WCESDK.IVT); HTML topics extracted with tools/extract-ivt.py, images and the title's own indexes dropped. -->
+
+<BODY BGCOLOR=#FFFFFF BACKGROUND= "images\cewmark.gif" TEXT=#000000><form name=x><object name=iv classid="clsid:9c2ac687-ceef-11cf-96d9-00a0c903b016">
+</object></form>
+<h1><a name="_wcesdk_ireplstore_reportstatus"></a>IReplStore::ReportStatus</h1>
+<p>
+ActiveSync service manager calls Report Status to get information on the status of the synchronization. See the definition of <i>uStatus</i> for available status codes. This is an API exported by the store.dll for the synchronization engine.</p>
+<h2>Syntax</h2>
+<b>HRESULT ReportStatus(<BR>HREPLFLD </b><i>hFolder</i><b>,<BR>HREPLITEM </b><i>hItem</i><b>,<BR>UINT </b><i>uStatus</i><b>,<BR>UINT </b><i>uParam</i><b><BR>);</b>
+<h2>At a Glance</h2>
+<table>
+<tr valign=top>
+<td>
+Header file:</td>
+<td>
+Cesync.h</td>
+</tr>
+<tr valign=top>
+<td>
+Platforms:</td>
+<td>
+H/PC</td>
+</tr>
+<tr valign=top>
+<td>
+Windows CE versions:</td>
+<td>
+2.0 and later</td>
+</tr>
+</table><br>
+<h2>Parameters</h2>
+<dl>
+<dt>
+<i>hFolder</i></dt>
+<dd>
+Handle to the folder this status applies to. This parameter is NULL if status applies to all folders.<br>
+</dd>
+<dt>
+<i>hItem</i></dt>
+<dd>
+Handle to the object this status applies to. This parameter is NULL if status applies to all objects.<br>
+</dd>
+<dt>
+<i>uStatus</i></dt>
+<dd>
+Status code. Can be one of the following:<dl>
+<dt>
+RSC_BEGIN_SYNC</dt>
+<dd>
+Synchronization is about to start; <i>uReserved</i> is a combination of bit flags:<p>
+BSF_AUTO_SYNC  synchronization is started as a result of changes while &quot;autosync on change&quot; is turned on.</p>
+<p>
+BSF_REMOTE_SYNC  consistent with RSC_REMOTE_SYNC, set if synchronization is done remotely.</p>
+<br>
+</dd>
+<dt>
+RSC_END_SYNC</dt>
+<dd>
+Synchronization has ended.<br>
+</dd>
+<dt>
+RSC_BEGIN_CHECK</dt>
+<dd>
+The ActiveSync service manager is about to call <b>FindFirstItem</b> and <b>FindNextItem</b>.<br>
+</dd>
+<dt>
+RSC_END_CHECK</dt>
+<dd>
+The ActiveSync service manager has completed all enumeration calls (<b>FindItemClose</b> has been called).<br>
+</dd>
+<dt>
+RSC_DATE_CHANGED</dt>
+<dd>
+The user has changed the system date. This code is called on every existing object in the store to give the ActiveSync service provider a chance to reset the synchronization options that depend on date. For example, if an ActiveSync service provider wants to synchronize files that are modified in the last two weeks, it can respond to this code to reset the enable bit for each item such that when <b>IsItemReplicated</b> is called later, it will re-evaluate based on the new date.<br>
+</dd>
+<dt>
+RSC_RELEASE</dt>
+<dd>
+The ActiveSync service manager is about to release the <b>IReplStore</b> object. This is called before the final <b>IReplStore::Release</b> call.<br>
+</dd>
+<dt>
+RSC_REMOTE_SYNC</dt>
+<dd>
+If <i>uParam</i> is TRUE, the ActiveSync service manager is about to start remote synchronization. The ActiveSync service provider should not show any UI that requires user interaction from now on until this status code is used again with <i>uParam</i> equal to FALSE.<br>
+</dd>
+<dt>
+RSC_INTERRUPT</dt>
+<dd>
+ActiveSync service manager is about to interrupt the current operation.<p>
+these return values for <i>uParam</i> are defined only for RSC_INTERRUPT:</p>
+<p>
+PSA_RESET_INTERRUPT</p>
+<p>
+This flag is set if the interrupt state is being cleared (that is, normal operation is resuming).</p>
+<p>
+PSA_SYS_SHUTDOWN</p>
+<p>
+User has shut down Windows operating system</p>
+<br>
+</dd>
+<dt>
+RSC_BEGIN_SYNC_OBJ</dt>
+<dd>
+Synchronization is about to start on an object type. <i>uReserved</i> is a combination of bit flags (see RSC_BEGIN_SYNC).<br>
+</dd>
+<dt>
+RSC_END_SYNC_OBJ</dt>
+<dd>
+Synchronization is about to end on an object type.<br>
+</dd>
+<dt>
+RSC_OBJ_TYPE_ENABLED</dt>
+<dd>
+Synchronization of the given object is enabled; hFolder is indeed a pointer to a string (object type name)<br>
+</dd>
+<dt>
+RSC_OBJ_TYPE_DISABLED</dt>
+<dd>
+Synchronization of the given object is disabled; hFolder is indeed a pointer to a string (object type name)<br>
+</dd>
+<dt>
+RSC_BEGIN_BATCH_WRITE</dt>
+<dd>
+A series of SetPackets will be called on a number of objects. This is the time for ActiveSync service provider to start a transaction.<br>
+</dd>
+<dt>
+RSC_END_BATCH_WRITE</dt>
+<dd>
+RSC_BEGIN_BATCH_WRITE has ended. This is the time for the ActiveSync service provider to commit the transaction.<br>
+</dd>
+<dt>
+RSC_CONNECTION_CHG</dt>
+<dd>
+The connection status has changed. <i>uParam</i> is TRUE if a connection has been established, otherwise it is FALSE.<br>
+</dd>
+<dt>
+RSC_WRITE_OBJ_FAILED</dt>
+<dd>
+There was a failure while writing to an object on the device. <i>uParam</i> is the HRESULT code.<br>
+</dd>
+<dt>
+RSC_DELETE_OBJ_FAILED</dt>
+<dd>
+There was a failture while deleting an object on the device. <i>uParam</i> is the HRESULT code.</dd>
+</dl>
+<br>
+</dd>
+<dt>
+<i>uParam</i></dt>
+<dd>
+Additional information about the status, based on <i>uStatus</i> code. </dd>
+</dl>
+<h2>Return Values</h2>
+<dl>
+<dt>
+NOERROR</dt>
+<dd>
+the process indicated by <i>uStatus</i> is successful.<br>
+</dd>
+<dt>
+E_FAIL</dt>
+<dd>
+the process indicated by <i>uStatus</i> has failed or encountered problems.</dd>
+</dl>
+<h2>Remarks</h2>
+<p>
+The ActiveSync service provider can simply return NOERROR for all cases if it is not interested.</p>
+<h2>See Also</h2>
+<p>
+<a href="cesync_i_12.htm"><b>IReplStore</b></a></p>
+</BODY>
+</HTML>

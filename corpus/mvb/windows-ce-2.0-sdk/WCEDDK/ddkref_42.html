@@ -1,0 +1,72 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
+<HTML>
+<HEAD><META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=Windows-1252">
+<TITLE>ACMDM_STREAM_CLOSE</TITLE>
+<META NAME="MS-HKWD" CONTENT="ACMDM_STREAM_CLOSE">
+<META NAME="MS-HAID" CONTENT="_wceddk_ACMDM_STREAM_CLOSE">
+</HEAD>
+<BODY BGPROPERTIES="FIXED" TEXT="#000000" BGCOLOR="#FFFFFF">
+<!-- WCEDDK InfoViewer title (WCEDDK.IVT); HTML topics extracted with tools/extract-ivt.py, images and the title's own indexes dropped. -->
+
+<FORM name=x>
+<OBJECT name=iv classid="clsid:9c2ac687-ceef-11cf-96d9-00a0c903b016">
+</OBJECT>
+</FORM>
+<FONT FACE="ARIAL,HELVETICA" SIZE="2">
+<H2><A NAME="_wceddk_ACMDM_STREAM_CLOSE"></A>ACMDM_STREAM_CLOSE</H2>
+<P>
+The ACMDM_STREAM_CLOSE message requests an ACM driver to close a conversion
+stream that was opened with an ACMDM_STREAM_OPEN message.
+<H5>Return Value</H5>
+<P>
+The driver should return MMSYSERR_NOERROR if the operation succeeds. Otherwise
+it should return one of the MMSYSERR error codes defined in mmsystem.h, or one
+of the ACMERR error codes defined in msacm.h. An asynchronous driver might
+have to return ACMERR_BUSY if a conversion operation has not completed.
+<H5>Parameters</H5>
+<DL>
+<DT>
+<I>dwDriverID</I>
+<DD>
+Driver instance identifier. This is the value returned by the driver in
+response to the <B>ACM_Open</B>&nbsp;function.
+<BR>
+<DT>
+<I>hDriver</I>
+<DD>
+Driver handle.
+<BR>
+<DT>
+<I>uMsg</I>
+<DD>
+ACMDM_STREAM_CLOSE
+<BR>
+<DT>
+<I>lParam1</I>
+<DD>
+Pointer to an <B>ACMDRVSTREAMINSTANCE</B>&nbsp;structure.
+<BR>
+<DT>
+<I>lParam2</I>
+<DD>
+Not used.
+</DL>
+<H5>Comments</H5>
+<P>
+The ACM (WAVEAPI.DLL) sends the ACMDM_STREAM_CLOSE message by calling the ACM
+driver's <B>ACM_IOControl</B>() entry point via DeviceIoControl(). The ACM
+sends this message when an application calls the <B>acmStreamClose</B>
+function, which is described in the Win32 SDK.
+<P>
+All ACM drivers that provide stream conversions must support this message. For
+more information about stream conversions, see Converting Data Streams in the
+Windows NT DDK.
+<P>
+If the driver supports asynchronous operations, and if the client has
+specified the ACM_STREAMOPENF_ASYNC flag ( contained in the <B>ACMDRVSTREAMINSTANCE</B>
+structure's fdwOpen member), then the driver should send the client an
+MM_ACM_CLOSE callback message, by calling the PostThreadMessage function,
+after the operation completes.
+<P></FONT>
+</BODY>
+</HTML>

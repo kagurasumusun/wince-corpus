@@ -1,0 +1,104 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML>
+<HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text-html; charset=Windows-1252">
+<title>Working With Windows CE Databases</title>
+<meta name=MS-HAID content="_wcesdk_working_with_windows_ce_databases">
+<meta name=MS-HKWD content="Working With Windows CE Databases">
+</HEAD>
+<BODY BGCOLOR=#FFFFFF TEXT=#000000>
+<!-- WCESDKG InfoViewer title (Wcesdkg.ivt); HTML topics extracted with tools/extract-ivt.py, images and the title's own indexes dropped. -->
+
+<form name=x><object name=iv classid="clsid:9c2ac687-ceef-11cf-96d9-00a0c903b016">
+</object></form>
+<h2><a name="_wcesdk_working_with_windows_ce_databases"></a>Working With Windows CE Databases</h2>
+<p>
+A Windows CE database should not be confused with a full-fledged relational database. It is simply a general-purpose, flexible, structured collection of data. A Windows CE database consists of an arbitrary number of <i>records</i>, where each record consists of one or more <i>properties</i>. A <i>property</i> refers to a data item that consists of a property identifer, a data type identifier, and the data value. For example, an application could use a database of address records, where the properties of each record include a name, street address, city, state, zip code, and telephone number. Windows CE supports integer, string, time, and byte array (&quot;blob&quot;) data types. </p>
+<p>
+Platforms that implement the Windows CE operating system usually ship with several built-in databases and also allow users and applications to create their own additional databases. For example, the H/PC comes with calendar and task list applications which have databases for user data.</p>
+<p>
+Note that databases allow only one level of hierarchy. That is, records cannot contain other records. Nor can records be shared by databases<font face="Symbol"><span style="font-family:Symbol">&#190;</span></font>each record is unique, has a unique object identifier, and is present in exactly one database. The recommended maximum size of a record in bytes is given by the constant <b>CEDB_MAXRECORDSIZE</b>. The recommended maximum property size is given by <b>CEDB_MAXPROPDATASIZE</b>. Both of these constants are defined in Rapi.h and Windbase.h.</p>
+<p>
+Unlike traditional databases, opening and closing a Windows CE database does not imply any transactioning. The database is not committed at closing, but rather it is committed after each individual call.</p>
+<p>
+It is not possible to lock a database to restrict access. Thus, several applications can have open handles to the same database at the same time. However, Windows CE supports several notification messages that can tell an application when another application creates, modifies, or deletes database records. The messages are sent to the specified window when your application calls <A HREF='javascript:document.x.iv.ALink("_wcesdk_ceopendatabase","")'><b>CeOpenDatabase</b></a> and supplies a non-null window handle. </p>
+<p>
+Windows CE supports the following messages:</p>
+<table>
+<tr valign=top>
+<td>
+<b>Message</b></td>
+<td>
+<b>Description</b></td>
+</tr>
+<tr valign=top>
+<td>
+<A HREF='javascript:document.x.iv.ALink("_wcesdk_db_ceoid_changed","")'>DB_CEOID_CHANGED</a></td>
+<td>
+Another thread modified an object in the object store. <BR>The message supplies the object ID.</td>
+</tr>
+<tr valign=top>
+<td>
+<A HREF='javascript:document.x.iv.ALink("_wcesdk_db_ceoid_created","")'>DB_CEOID_CREATED</a></td>
+<td>
+Another thread created an object in the object store. The message supplies the object ID.</td>
+</tr>
+<tr valign=top>
+<td>
+<A HREF='javascript:document.x.iv.ALink("_wcesdk_db_ceoid_record_deleted","")'>DB_CEOID_RECORD_DELETED</a></td>
+<td>
+Another thread deleted a record. The message supplies the record's object ID.</td>
+</tr>
+</table><br>
+<p>
+Each database also includes information about the database as a whole, such as its name, an optional <i>database type identifier</i> that you can use to group similar databases, and up to four sort keys that describe how the records in the database are to be sorted. </p>
+<p>
+Windows CE supports the following database management functions:</p>
+<table>
+<tr valign=top>
+<td>
+<b>Database function category</b></td>
+<td>
+<b>Windows CE Functions</b></td>
+</tr>
+<tr valign=top>
+<td>
+Open and create operations</td>
+<td>
+<A HREF='javascript:document.x.iv.ALink("_wcesdk_cecreatedatabase","")'><b>CeCreateDatabase</b></a>, <A HREF='javascript:document.x.iv.ALink("_wcesdk_ceopendatabase","")'><b>CeOpenDatabase</b></a></td>
+</tr>
+<tr valign=top>
+<td>
+Enumeration operations</td>
+<td>
+<A HREF='javascript:document.x.iv.ALink("_wcesdk_cefindfirstdatabase","")'><b>CeFindFirstDatabase</b></a>, <A HREF='javascript:document.x.iv.ALink("_wcesdk_cefindnextdatabase","")'><b>CeFindNextDatabase</b></a></td>
+</tr>
+<tr valign=top>
+<td>
+Delete operations</td>
+<td>
+<A HREF='javascript:document.x.iv.ALink("_wcesdk_cedeletedatabase","")'><b>CeDeleteDatabase</b></a>,<b> </b><A HREF='javascript:document.x.iv.ALink("_wcesdk_cedeleterecord","")'><b>CeDeleteRecord</b></a></td>
+</tr>
+<tr valign=top>
+<td>
+Record seek operations</td>
+<td>
+<A HREF='javascript:document.x.iv.ALink("_wcesdk_ceseekdatabase","")'><b>CeSeekDatabase</b></a></td>
+</tr>
+<tr valign=top>
+<td>
+Record read/write operations</td>
+<td>
+<A HREF='javascript:document.x.iv.ALink("_wcesdk_cereadrecordprops","")'><b>CeReadRecordProps</b></a>, <A HREF='javascript:document.x.iv.ALink("_wcesdk_cewriterecordprops","")'><b>CeWriteRecordProps</b></a></td>
+</tr>
+<tr valign=top>
+<td>
+Database information operations</td>
+<td>
+<A HREF='javascript:document.x.iv.ALink("_wcesdk_ceoidgetinfo","")'><b>CeOidGetInfo</b></a>, <A HREF='javascript:document.x.iv.ALink("_wcesdk_cesetdatabaseinfo","")'><b>CeSetDatabaseInfo</b></a></td>
+</tr>
+</table><br>
+<p>
+The following sections describe how to use these functions to perform common tasks involving Windows CE databases.</p>
+</BODY>
+</HTML>

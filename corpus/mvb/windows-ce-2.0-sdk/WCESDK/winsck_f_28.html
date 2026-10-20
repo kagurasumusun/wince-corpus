@@ -1,0 +1,228 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML>
+<HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text-html; charset=Windows-1252">
+<title>WSAIoctl</title>
+<meta name=MS-HAID content="_wcesdk_win32_wsaioctl_2">
+<meta name=MS-HKWD content="WSAIoctl">
+</HEAD>
+<BODY BGCOLOR=#FFFFFF TEXT=#000000>
+<!-- WCESDK InfoViewer title (WCESDK.IVT); HTML topics extracted with tools/extract-ivt.py, images and the title's own indexes dropped. -->
+
+<BODY BGCOLOR=#FFFFFF BACKGROUND= "images\cewmark.gif" TEXT=#000000><form name=x><object name=iv classid="clsid:9c2ac687-ceef-11cf-96d9-00a0c903b016">
+</object></form>
+<h1><a name="_wcesdk_win32_wsaioctl_2"></a>WSAIoctl</h1>
+<p>
+The <b>WSAIoctl</b> function controls the mode of a socket.</p>
+<h2>Syntax</h2>
+<b>int WSAIoctl(SOCKET </b><i>s,</i><b>DWORD </b><i>dwIoContorlCode,</i><b>LPVOID </b><i>lpvInBuffer,</i><b>DWORD </b><i>cbInBuffer,</i><b>LPVOID </b><i>lpvOutBuffer,</i><b>DWORD </b><i>cbOutBuffer,</i><b>LPDWORD </b><i>lpcbBytesReturned,</i><b>LPWSAOVERLAPPED </b><i>lpOverlapped,</i><b>LPWSAOVERLAPPED_COMPLETION_ROUTINE </b><i>lpCompletionROUTINE</i><b>);</b>
+<h2>At a Glance</h2>
+<table>
+<tr valign=top>
+<td>
+Header file:</td>
+<td>
+Winsock.h</td>
+</tr>
+<tr valign=top>
+<td>
+Module/Component:</td>
+<td>
+Winsock</td>
+</tr>
+<tr valign=top>
+<td>
+Platforms:</td>
+<td>
+H/PC</td>
+</tr>
+<tr valign=top>
+<td>
+Windows CE versions:</td>
+<td>
+2.0 and later</td>
+</tr>
+<tr valign=top>
+<td>
+Complete documentation:</td>
+<td>
+<A HREF='javascript:document.x.iv.ALink("_win32_wsaioctl_2","")'>Microsoft Platform SDK</a></td>
+</tr>
+</table><br>
+<h2>Remarks</h2>
+<p>
+For secure sockets, the <i>lpcbBytesReturned</i> parameter is a pointer to a DWORD receiving the number of bytes returned in output buffer. Also, the last two parameters, namely, <i>lpOverlapped</i> and <i>lpCompletionRoutine</i>, must be NULL.</p>
+<p>
+In addition to the <b>ioctlsocket</b> control codes (FIONBIO, SIOCATMARK, FIONREAD), the <i>dwIoControlCode</i> parameter may also assume the following SSL-specific control flags:</p>
+<table>
+<tr valign=top>
+<td>
+<b>Value</b></td>
+<td>
+<b>Meaning</b></td>
+</tr>
+<tr valign=top>
+<td>
+SO_SSL_GET_CAPABILITIES</td>
+<td>
+Retrieves a set of flags describing the WinSock security provider's capabilities. The output buffer must be a pointer to a DWORD bit field. At present, only the SO_CAP_CLIENT flag is defined. </td>
+</tr>
+<tr valign=top>
+<td>
+SO_SSL_GET_FLAGS</td>
+<td>
+Retrieves <i>s</i>-channel specific flags associated with a particular socket. The output buffer must be a pointer to a DWORD bit field. See SO_SSL_SET_FLAGS for details on valid flags.</td>
+</tr>
+<tr valign=top>
+<td>
+SO_SSL_SET_FLAGS</td>
+<td>
+Sets the sockets' current <i>s</i>-channel-specific flag values. The input buffer must be a pointer to a DWORD bit field. Currently, only the SSL_FLAG_DEFER_HANDSHAKE flag is defined to allow the application to send and receive plain text data before switching to cipher text. It is required for setting up communication through proxy servers.<p>
+Normally the WinSock security provider performs the secure handshake in the WinSock connect API. However, if this flag is set, the handshake is deferred until the application issues the SO_SSL_PERFORM_HANDSHAKE control code. After the handshaking, this flag is reset. </p>
+</td>
+</tr>
+<tr valign=top>
+<td>
+SO_SSL_GET_PROTOCOLS</td>
+<td>
+<dl>
+<dt>
+Retrieves a list of protocols that the provider currently supports on this socket. The output buffer must be a pointer to a SSLPROTOCOLS structure as described below:</dt>
+<dd>
+<pre>typedef struct _SSLPROTOCOL {<BR>     DWORD dwProtocol;<BR>     DWORD dwVersion;<BR>     DWORD dwFlags;<BR>} SSLPROTOCOL, *LPSSLPROTOCOL;
+typedef struct _SSLPROTOCOLS {<BR>     DWORD dwCount;<BR>     SSLPROTOCOL ProtocolList[1];<BR>} SSLPROTOCOLS, FAR *LPSSLPROTOCOLS;</pre>
+</dd>
+</dl>
+<p>
+Valid protocols include SSL_PROTOCOL_SSL2, SSL_PROTOCOL_SSL3, and SSL_PROTOCOL_PCT1.</p>
+</td>
+</tr>
+<tr valign=top>
+<td>
+SO_SSL_SET_PROTOCOLS</td>
+<td>
+Specifies a list of protocols the provider is to support on this socket. The input buffer must be a pointer to SSLPROTOCOLS structure described above.</td>
+</tr>
+<tr valign=top>
+<td>
+SO_SSL_SET_VALIDATE_CERT_HOOK</td>
+<td>
+<dl>
+<dt>
+Sets the pointer to the socket's certificate validation hook. It is used to specify the callback function invoked by the WinSock security provider when a set of credentials is received from the remote party. The input buffer must be a pointer to the SSLVALIDEATECERTHOOK structure, described below:</dt>
+<dd>
+<pre>typedef struct {<BR>      SSLVALIDATECERTFUNC HookFunc;<BR>      LPVOID pvArg;<BR>} SSLVALIDATEPROTOCOLCERTHOOK, *PSSLVALIDATECERTHOOK;</pre>
+</dd>
+</dl>
+<p>
+where <i>HookFunc</i> is a pointer to the certificate validation callback function (see &quot;Certificate Validation Callback&quot; below). <i>pvArg</i> is a pointer to application specific data and may be used by the application for any purpose.</p>
+</td>
+</tr>
+<tr valign=top>
+<td>
+SO_SSL_PERFORM_HANDSHAKE</td>
+<td>
+Initiates the secure handshake sequence on a connected socket where the SSL_FLAG_DEFER_HANDSHAKE flag has been set prior to the connection. Data buffers are not required, but the SSL_FLAG_DEFER_HANDSHAKE flag will be reset. </td>
+</tr>
+</table><br>
+<b>Certificate Validation Callback</b>
+<p>
+The WinSock security provider invokes the certificate validation callback when the remote party receives a certificate for server authentication. All the client applications must implement the callback function to ensure that the certificate should meet the following minimum requirements:
+<ul>
+<li>
+The certificate has not expired;<br><br></li>
+<li>
+The identity contained within the certificate matches that of the remote party.</li>
+</ul>
+<p>
+The certificate validation callback function is of the following type:</p>
+<p>
+<b>typedef int (CALLBACK *SSLVALIDATECERTFUNC){</b><BR>&#09;<b>DWORD</b>  &#09;<i>dwType</i>,      &#09;&#09;// in<BR>&#09;<b>LPVOID</b> &#09;<i>pvArg</i>,       &#09;&#09;// in<BR>&#09;<b>DWORD</b>  &#09;<i>dwChainLen</i>,  &#09;// in<BR>&#09;<b>LPBLOB</b> &#09;<i>pCertChain</i>,  &#09;// in<BR>&#09;<b>DWORD</b> &#09;<i>dwFlags</i>     &#09;&#09;// in<BR><b>};</b></p>
+<p>
+The parameters are defined in the following table.</p>
+<table>
+<tr valign=top>
+<td>
+<b>Parameters</b></td>
+<td>
+<b>Meaning</b></td>
+</tr>
+<tr valign=top>
+<td>
+<i>dwType</i></td>
+<td>
+Specifies the type of data pointed to be <i>pCertChain</i>. This must be SSL_CERT_X59 to specify that <i>pCertChain</i> be a pointer to an X509 style certificate.</td>
+</tr>
+<tr valign=top>
+<td>
+<i>PvArg</i></td>
+<td>
+An application-defined context passed into the SSLVALIDATECERTHOOK structure.</td>
+</tr>
+<tr valign=top>
+<td>
+<i>DwChainLen</i></td>
+<td>
+The number of certificates pointed to by <i>pCertChain</i>. In Windows CE this will always be one.</td>
+</tr>
+<tr valign=top>
+<td>
+<i>PCertChain</i></td>
+<td>
+Pointer to the remote party's certificate.</td>
+</tr>
+<tr valign=top>
+<td>
+<i>DwFlags</i></td>
+<td>
+To be designed to indicate that the certificate issuer list has been checked with the list of known certificate authorities and that the certificate is either trusted or not. This is required since not all the certificate chain is passed to the application.</td>
+</tr>
+</table><br>
+<p>
+The application-defined callback function will typically return one of the following error codes:</p>
+<table>
+<tr valign=top>
+<td>
+<b>Value</b></td>
+<td>
+<b>Meaning</b></td>
+</tr>
+<tr valign=top>
+<td>
+SSL_ERR_OKAY</td>
+<td>
+The remote party's certificate is acceptable.</td>
+</tr>
+<tr valign=top>
+<td>
+SSL_ERR_BAD_DATA</td>
+<td>
+The certificate is improperly formatted.</td>
+</tr>
+<tr valign=top>
+<td>
+SSL_ERR_BAD_SIG</td>
+<td>
+The signature check fails.</td>
+</tr>
+<tr valign=top>
+<td>
+SSL_ERR_CERT_EXPIRED</td>
+<td>
+The certificate has expired.</td>
+</tr>
+<tr valign=top>
+<td>
+SSL_ERR_CERT_REVOKED</td>
+<td>
+The certificate has been revoked by its issuer.</td>
+</tr>
+<tr valign=top>
+<td>
+SSL_ERR_CERT_UNKNOWN</td>
+<td>
+The issuer of the certificate is not recognized or some unspecified issue arose in the processing of the certificate, rendering it unacceptable.</td>
+</tr>
+</table><br>
+</BODY>
+</HTML>

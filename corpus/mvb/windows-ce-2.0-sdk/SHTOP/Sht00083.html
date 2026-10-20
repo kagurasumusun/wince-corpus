@@ -1,0 +1,82 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
+<html>
+
+<head>
+<meta http-equiv="Content-Type"
+content="text/html; charset=iso-8859-1">
+<meta name="GENERATOR" content="Microsoft FrontPage 2.0">
+<title>Inline Assembler Syntax</title>
+</head>
+
+<body bgcolor="#FFFFFF">
+<!-- SHTOP InfoViewer title (Shtop.ivt); HTML topics extracted with tools/extract-ivt.py, images and the title's own indexes dropped. -->
+
+
+<p><a name="off_1245935"></a><a name="d2d38e40"></a></p>
+
+<p><font size="5" face="Arial"><b>Inline Assembly Language Syntax
+</b></font></p>
+
+<p><font size="3" face="Arial">The <b>__asm</b> statement is an
+intrinsic routine call that assembles one or more
+assembly-language instructions. Before using <b>__asm</b>, you
+should properly declare it as explained in the previous section. </font></p>
+
+<p><font size="3" face="Arial">A call to the <b>__asm</b>
+intrinsic uses the following syntax: </font></p>
+
+<pre><font size="4" face="Lucida Sans Typewriter">    __asm(string[,expression]...); </font></pre>
+
+<p><font size="3" face="Arial">In this syntax, <i>string</i> is a
+null-terminated string consisting of one or more <b>__asm</b>
+line records. Zero or more cases of <i>expression</i> may be
+included. The expressions are processed by the compiler in
+exactly the same way as if they were being passed to a standard
+routine call. The first four words that represent the expression
+list are stored in registers <b>R4</b> through <b>R7</b>, and the
+remaining words are placed on the stack frame starting at a
+displacement of 16 bytes from the stack pointer. </font></p>
+
+<p><font size="3" face="Arial">An example of an <b>__asm</b>
+statement with a single line record is: </font></p>
+
+<pre><font size="4" face="Lucida Sans Typewriter">     __asm(&quot;mov.l @R4,R0&quot;,&amp;var) </font></pre>
+
+<p><font size="3" face="Arial">In the example above, the address
+of <i>var</i> is loaded into R4 by the compiler, and this
+register is available for use by the <b>mov.l</b> instruction
+listed in the <i>string</i> argument. </font></p>
+
+<p><font size="4" face="Arial Narrow"><b>Note: </b></font></p>
+
+<p><font size="3" face="Arial">The default stack frame for a
+function with an inline <b>__asm</b> in it that has a function
+call is 16 bytes. This will allow for up to four arguments to be
+passed to the function. if you want to call one with more than
+four args, you must use <b>__declspec(naked)</b> and allocate
+your own arg build area. </font></p>
+
+<p><font size="3" face="Arial">The inline <b>__asm</b> function
+can also be used in a value context. For example: </font></p>
+
+<pre><font size="4" face="Lucida Sans Typewriter">int foo(intD) {
+     return __asm(</font><font size="4" face="Times New Roman">&#147;</font><font
+size="4" face="Lucida Sans Typewriter">swap.b r4, r0\n</font><font
+size="4" face="Times New Roman">&#148; 
+                   &#147;</font><font size="4"
+face="Lucida Sans Typewriter">swap.w r0, r4\n</font><font
+size="4" face="Times New Roman">&#148; 
+                  &#147;</font><font size="4"
+face="Lucida Sans Typewriter">swap.b r4, r0\n, 
+       D)
+       } </font></pre>
+
+<p><font size="3" face="Arial">This will generate the desired
+code and cause the value in R0 to be preserved. </font></p>
+
+<p><font size="4" face="Arial Narrow"><b>Important: </b></font></p>
+
+<p><font size="3" face="Arial">You must pass in the value of D
+rather than implicitly using r4 without passing it in. </font></p>
+</body>
+</html>

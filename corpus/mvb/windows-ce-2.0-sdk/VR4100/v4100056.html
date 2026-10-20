@@ -1,0 +1,50 @@
+<HTML>
+<HEAD>
+<TITLE>5.1  How Exception Processing Works</TITLE>
+</HEAD><BODY BGCOLOR=#ffffff>
+<!-- VR4100 InfoViewer title (Vr4100.ivt); HTML topics extracted with tools/extract-ivt.py, images and the title's own indexes dropped. -->
+<BASEFONT FACE="Arial,Helvetica" SIZE="2">
+<A HREF= "VR41home.htm"><IMG SRC="contents.gif" ALT="contents.gif" BORDER = 0></A>
+<P>
+<A NAME="off_786871"></A><A NAME="01200340"></A><FONT FACE="Arial" SIZE="3"><H1>5.1  How Exception Processing Works
+<P>
+</H1>This chapter describes CPU exception processing, including an explanation of
+exception processing, followed by the format and use of each CPU exception
+register.
+<P>
+The chapter concludes with a description of each exception</FONT><FONT FACE="Times New Roman" SIZE="3">’</FONT><FONT FACE="Arial" SIZE="3">s cause, together with the manner in which the CPU processes and services each
+exception. 
+<P>
+The processor receives exceptions from a number of sources, including
+translation lookaside buffer (TLB) misses, arithmetic overflows, I/O interrupts, and
+system calls. When the CPU detects an exception, the normal sequence of
+instruction execution is suspended and the processor enters Kernel mode (see Chapter 4
+for a description of system<I> </I>operating modes). 
+<P>
+The processor then disables interrupts and forces execution of a software
+exception process (called a <I>handler</I>) located at a fixed address. The handler saves the context of the processor,
+including the contents of the program counter, the current operating mode (User
+or Supervisor), and the status of the interrupts (enabled or disabled). This
+context is saved so it can be restored when the exception has been serviced.
+<P>
+When an exception occurs, the CPU loads the <I>Exception Program Counter</I> (<I>EPC</I>) register with a location where execution can restart after the exception has
+been serviced. The restart location in the <I>EPC</I> register is the address of the instruction that caused the exception or, if
+the instruction was executing in a branch delay slot, the address of the branch
+instruction immediately preceding the delay slot.
+<P>
+The VR4100 processor supports a supervisor mode and fast TLB refill for all
+address spaces. The VR4100 provides a single interrupt enable (<I>IE</I>), a base operating mode (User, Supervisor, or Kernel), an exception level
+(normal or exception, as indicated by the<I> EXL</I> bit in the <I>Status</I> register), and an error level (normal or error, as indicated by the<I> ERL</I> bit in the <I>Status</I> register). Interrupts are enabled when the interrupt enable bit, <I>IE</I>, is set to a 1, both <I>EXL</I> and <I>ERL</I> are 0, and the corresponding <I>IM</I> field bits in the <I>Status</I> register are set to 1. The operating mode is specified by the base mode when
+the exception level is normal (0), and is set to kernel mode when either the
+exception level or the error level is a 1. Returning from an exception consists
+of resetting the exception level to normal (see the description of the ERET
+instruction in Appendix A).
+<P>
+The registers described later in the chapter assist in this exception
+processing by retaining address, cause and status information.
+<P>
+For a description of the exception handling process, see the description of
+the individual exception contained in this chapter, or the flowcharts at the end
+of this chapter.
+<P>
+</FONT></BODY>

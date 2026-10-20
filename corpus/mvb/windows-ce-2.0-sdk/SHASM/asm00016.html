@@ -1,0 +1,145 @@
+<HTML>
+<HEAD>
+<TITLE>1.4 Calling Convention Macros</TITLE>
+</HEAD><body bgcolor="#FFFFFF">
+<!-- SHASM InfoViewer title (Shasm.ivt); HTML topics extracted with tools/extract-ivt.py, images and the title's own indexes dropped. -->
+
+<A NAME="off_297459"></A><A NAME="2ed330df"></A><FONT FACE="Arial" SIZE="5"><B>1.4  Calling Convention Macros
+<P>
+</B></FONT><FONT FACE="Arial" SIZE="3">It is strongly recommended that you use the calling convention macros, rather
+than directly using the relevant assembler directives. These macros are
+documented in detail in Appendices A and D of the </FONT><FONT FACE="Arial" COLOR="#008000" SIZE="3">Calling Standard Specification</FONT><FONT FACE="Arial" SIZE="3">, and their definitions are provided in the header file kxsh3.h, which may be
+used via the .INCLUDE directive. The following is a brief overview of the
+macros. See also the examples that follow.
+<P>
+<B>START_REGION <I>NameBegin
+<BR></I>END_REGION <I>NameEnd
+<BR></I></B>These two macros are used to mark the beginning and end of a contiguous range
+of text or data. <B><I>NameBegin</I></B> labels the beginning of the range and <B><I>NameEnd</I></B> labels the end. Both of these names are in the global name space.
+<P>
+<B>NESTED_ENTRY <I>Name</I>[,[Section=]<I>SectionName</I>]
+<BR></B>Declares the beginning of a routine that either has an existing frame or
+creates a stack frame. <B><I>Name</I></B> is the routine name and is in the global name space. <B><I>SectionName</I></B> is the name of the section in which the entry will appear; it is optional and
+defaults to .text. A NESTED_ENTRY must have an associated PROLOG_END and
+ENTRY_END.
+<P>
+<B>LEAF_ENTRY <I>Name</I>[,[Section=]<I>SectionName</I>]
+<BR></B>Declares the beginning of a routine that does not require any prolog code. <B><I>Name</I></B> is the routine name and is in the global name space. <B><I>SectionName</I></B> is the name of the section in which the entry will appear; it is optional and
+defaults to .text. A LEAF_ENTRY must have an associated ENTRY_END. An explicit
+PROLOG_END is not needed in this case because LEAF_ENTRY includes PROLOG_END.
+Not all leaf routines can use LEAF_ENTRY.
+<P>
+<B>ALTERNATE_ENTRY <I>Name</I>[,[Section=]<I>SectionName</I>]
+<BR></B>Declares an alternate entry to a routine of either NESTED_ENTRY or LEAF_ENTRY
+type. <B><I>Name</I></B> is the entry point and is in the global name space. <B><I>SectionName</I></B> is the name of the section in which the entry will appear; this parameter is
+not used by the ALTERNATE_ENTRY macro, but is accepted and ignored for
+consistency with NESTED_ENTRY and LEAF_ENTRY. If used, an ALTERNATE_ENTRY call must
+appear in a routine's body.
+<P>
+<B>ENTRY_END [<I>Name</I>]
+<BR></B>Ends the current routine that was specified by a prior NESTED_ENTRY or
+LEAF_ENTRY. <B><I>Name</I></B> should be the same name used in the NESTED_ENTRY or LEAF_ENTRY macros; it is
+currently ignored by the ENTRY_END macro.
+<P>
+<B>EXCEPTION_HANDLER <I>Handler
+<BR></I></B>Associates the exception handler <B><I>Handler</I></B> with the subsequent NESTED_ENTRY or LEAF_ENTRY routine. This association is
+in effect until the matching ENTRY_END macro is encountered.
+<P>
+<B>EXCEPTION_HANDLER_DATA <I>Handler,HandlerData
+<BR></I></B>Associates the exception handler <B><I>Handler</I></B> and the <B><I>HandlerData</I></B> with the subsequent NESTED_ENTRY or LEAF_ENTRY routine. This association is
+in effect until the matching ENTRY_END macro is encountered.
+<P>
+<B>PROLOG_END
+<BR></B>Marks the end of the prolog area. This must appear following a NESTED_ENTRY or
+LEAF_ENTRY macro, following the prolog area and prior to the matching
+ENTRY_END macro.
+<P>
+<B>NESTED_BIGENTRY </B>Name[,[Section=]SectionName]
+<BR>The same as NESTED_ENTRY, except uses the .bigentry assembler directive
+instead of the .entry assembler directive. Use this for functions that are more than
+16,777,214 bytes long, or whose prolog is more than 510 bytes long. (Such a
+function would be very unusual.)
+<P>
+<B>LEAF_BIGENTRY </B>Name[,[Section=]SectionName]
+<BR>The same as LEAF_ENTRY, except uses the .bigentry assembler directive instead
+of the .entry assembler directive. Use this for functions that are more than
+16,777,214 bytes long. (Such a function would be very unusual.)
+<P>
+<B>Example:
+<P>
+</B>For example, instead of writing:
+<P>
+ </FONT><FONT FACE="Lucida Sans Typewriter" SIZE="3">.section .text,code
+<P>
+ .align 4
+<P>
+ .global fun7
+<P>
+fun7: .entry
+<P>
+ .prolog
+<P>
+ rts
+<P>
+  nop
+<P>
+ .endf
+<P>
+ .section special,code
+<P>
+ .align 4
+<P>
+ .global fun8
+<P>
+ .pdata ex_handler
+<P>
+fun8: .entry
+<P>
+ sts.l  pr,@-sp
+<P>
+ .prolog
+<P>
+ bsr  fun7
+<P>
+  nop
+<P>
+ lds.l  @sp+,pr
+<P>
+ rts
+<P>
+  nop
+<P>
+ .endf
+<P>
+</FONT><FONT FACE="Arial" SIZE="3">You could simply write:
+<P>
+ </FONT><FONT FACE="Lucida Sans Typewriter" SIZE="3">LEAF_ENTRY fun7
+<P>
+ rts
+<P>
+  nop
+<P>
+ ENTRY_END
+<P>
+ EXCEPTION_HANDLER ex_handler
+<P>
+ NESTED_ENTRY fun8,Section=special
+<P>
+ sts.l  pr,@-sp
+<P>
+ PROLOG_END
+<P>
+ bsr  fun7
+<P>
+  nop
+<P>
+ lds.l  @sp+,pr
+<P>
+ rts
+<P>
+  nop
+<P>
+ ENTRY_END
+<P>
+</FONT></BODY>
+</HTML>

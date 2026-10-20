@@ -1,0 +1,116 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML>
+<HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text-html; charset=Windows-1252">
+<title>CeRapiInvoke</title>
+<meta name=MS-HAID content="_wcesdk_cerapiinvoke">
+<meta name=MS-HKWD content="CeRapiInvoke">
+</HEAD>
+<BODY BGCOLOR=#FFFFFF TEXT=#000000>
+<!-- WCESDK InfoViewer title (WCESDK.IVT); HTML topics extracted with tools/extract-ivt.py, images and the title's own indexes dropped. -->
+
+<BODY BGCOLOR=#FFFFFF BACKGROUND= "images\cewmark.gif" TEXT=#000000><form name=x><object name=iv classid="clsid:9c2ac687-ceef-11cf-96d9-00a0c903b016">
+</object></form>
+<h1><a name="_wcesdk_cerapiinvoke"></a>CeRapiInvoke</h1>
+<p>
+The <b>CeRapiInvoke </b>function can be used as a general-purpose mechanism to remotely execute a routine on the Windows CE device.</p>
+<h2>Syntax</h2>
+<p>
+<b>HRESULT  CeRapiInvoke( LPCWSTR</b> <i>pDllPath, </i><b>LPCWSTR</b> <i>pFunctionName,</i> <b>DWORD</b> <i>cbInput,</i> <b>BYTE</b> <i>*pInput,</i> <b>DWORD</b> <i>*pcbOutput, </i><b>BYTE </b><i>**ppOutput</i>, <b>IRAPIStream</b> <i>**ppIRAPIStream</i>, <b>DWORD </b><i>dwReserved </i><b>);</b></p>
+<h2>At a Glance</h2>
+<table>
+<tr valign=top>
+<td>
+Header file:</td>
+<td>
+Rapi.h</td>
+</tr>
+<tr valign=top>
+<td>
+Platforms:</td>
+<td>
+H/PC</td>
+</tr>
+<tr valign=top>
+<td>
+Windows CE versions:</td>
+<td>
+2.0 and later</td>
+</tr>
+</table><br>
+<h2>Parameters</h2>
+<h3><i>pDllPath</i></h3>
+<h4>Pointer to a buffer containing the name of a DLL on the Windows CE device containing <i>pFunctionName.</i></h4>
+<dl>
+<dt>
+<i>pFunctionName</i></dt>
+<dd>
+Pointer to a buffer containing the name of the function that RAPI should call on the Windows CE device.<br>
+</dd>
+<dt>
+<i>cbInput</i></dt>
+<dd>
+Number of bytes in the input buffer *<i>pInput</i>.<br>
+</dd>
+<dt>
+<i>pInput</i></dt>
+<dd>
+Pointer to a buffer containing the input data.<br>
+</dd>
+<dt>
+<i>cbOutput</i></dt>
+<dd>
+Pointer to a variable that is set to the number of bytes in the output buffer <i>ppOutput </i>when the function returns.<br>
+</dd>
+<dt>
+<i>ppOutput</i></dt>
+<dd>
+Pointer to a variable that is set to the location of the output buffer upon return.<br>
+</dd>
+<dt>
+<i>ppIRAPIStream</i></dt>
+<dd>
+Pointer to a variable that is set to the address of the <b>IRAPIStream</b> interface. <br>
+</dd>
+<dt>
+<i>dwReserved</i></dt>
+<dd>
+Reserved.</dd>
+</dl>
+<h2>Return Values</h2>
+<p>
+If RAPI services on the Windows CE device successfully locate and call the client function, then in Block Mode the return value is that which is returned on the Windows CE device by the called function. In Stream Mode the return value is S_OK. If the function was not called successfully, or an exception occurred during its execution, an error code will be returned. </p>
+<p>
+The <a href="func_c_84.htm"><b>CeGetLastError</b></a> function can be used to get the error code, which takes the value set by <i>pFunctionName, </i>including the following values: </p>
+<dl>
+<dt>
+ERROR_FILE_NOT_FOUND</dt>
+<dd>
+The <b>LoadLibrary</b> <i>pDllPath </i>call failed on the device. <br>
+</dd>
+<dt>
+ERROR_CALL_NOT_IMPLEMENTED</dt>
+<dd>
+The <b>GetProcAddress</b> of <i>pFunctionNam<b>e</b> </i>call on the device failed.<br>
+</dd>
+<dt>
+ERROR_EXCEPTION_IN_SERVICE</dt>
+<dd>
+An exception occurred during execution of<i> pFunctionName.</i></dd>
+</dl>
+<h2>Remarks</h2>
+<p>
+The <b>CeRapiInvoke</b> function operates in either block mode or stream mode.</p>
+<p>
+In block mode, the caller passes the data in a single buffer as an input parameter and receives the response in a single buffer as an output parameter. This is a synchronous call, thus all input or output data must be present in memory at the time of the call. </p>
+<p>
+In stream mode, the <b>CeRapiInvoke </b>function returns a pointer to an <i>IStream</i> type interface that can be used to exchange arbitrary sized data in any order and direction. In this mode, the caller can still pass data in a single buffer as an input parameter, but from that point on all data should be exchanged via the stream. Thus the data can be read, written, and stored in chunks.</p>
+<p>
+The <i>ppIRAPIStream</i> parameter specifies block mode or stream mode. Select block mode by supplying the value NULL. Select stream mode by supplying a valid pointer to a variable of type <b>IRAPIStream</b>; this <b>IRAPIStream</b> interface can be used for a direct transfer of data. If <i>ppIRAPIStream </i>is not NULL, the <i>pFunctionName</i> parameter on the Windows CE device will be passed a pointer to the <b>IRAPIStream</b> interface.</p>
+<p>
+The <b>IRAPIStream</b><i> </i>definition is based on <b>Istream</b> and has been expanded by two new methods to allow the setting of timeouts. These methods, <b>IRAPIStream::SetRapiStat </b>and <b>IRAPIStream::GetRapiStat</b>,are modeled<i> </i>after the <b>IStream::Stat </b>method.</p>
+<h2>See Also</h2>
+<p>
+<a href="rapi_if.htm"><b>IRapiStream</b></a></p>
+</BODY>
+</HTML>

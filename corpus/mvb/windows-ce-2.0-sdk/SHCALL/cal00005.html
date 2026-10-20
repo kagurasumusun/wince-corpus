@@ -1,0 +1,47 @@
+<HTML>
+<HEAD>
+<TITLE>Parameter Passing</TITLE>
+</HEAD><body bgcolor="#FFFFFF">
+<!-- SHCALL InfoViewer title (Shcall.ivt); HTML topics extracted with tools/extract-ivt.py, images and the title's own indexes dropped. -->
+
+<A NAME="off_68380"></A><A NAME="dcf30c49"></A><FONT FACE="Arial" SIZE="6"><B>Parameter Passing
+<P>
+</B></FONT><FONT FACE="Arial" SIZE="3">In general, the argument list is laid out as if it were a memory-based
+structure with padding inserted to achieve appropriate alignment. The first four
+32-bit words (words 0 thru 3) are passed in registers <B>R4</B> thru <B>R7</B>. If a callee takes the address of any of the arguments passed in these
+registers (either directly or via varargas), and the resulting pointer has any
+possibility of being used to reference subsequent arguments, then at least that
+argument and all that follow it in the registers must be copied to the stack area
+reserved for that purpose. For now, all argument registers are stored regardless
+of which argument has its address taken. The reserved area is adjacent to the
+rest of the argument list so that all <B>varargs</B> dirty tricks work.
+<P>
+Integer and integer-equivalent (e.g., char, pointer) arguments which are
+32-bits or smaller are passed as 32-bit words. A 64-bit integer argument is passed
+as a 4-byte aligned scalar.
+<P>
+<IMG SRC="cal90000.gif" ALT="cal90000.gif" BORDER=0 WIDTH=6 HEIGHT=16> A 64-bit floating-point argument (type <B>double</B>) is passed as a 4-byte aligned scalar. 32-bit floating-point arguments (type <B>float</B>) are passed as 32-bit words.
+<P>
+<IMG SRC="cal90000.gif" ALT="cal90000.gif" BORDER=0 WIDTH=6 HEIGHT=16> A struct or union parameter is passed as a copy.
+<P>
+<IMG SRC="cal90000.gif" ALT="cal90000.gif" BORDER=0 WIDTH=6 HEIGHT=16> The first 4 words of the resulting memory image are then passed in integer
+registers and the remaining words for the argument list image are passed on the
+stack. If only part of a structure or union parameter fits into the first 4 words
+of the argument list, the remainder is stored on the stack.
+<P>
+<IMG SRC="cal90000.gif" ALT="cal90000.gif" BORDER=0 WIDTH=6 HEIGHT=16> If stack probes are required, <B>R1</B> is used to pass the requested size for stack memory allocation to <B>chkstk()</B>. This routine is called in a prolog if a half page or more of stack space is
+needed for the stack frame. It is also called whenever an</FONT><FONT FACE="Arial" COLOR="#008000" SIZE="3"> <B><A HREF="cal00002.htm">alloca()</A></B> </FONT><FONT FACE="Arial" SIZE="3">call is made.
+<P>
+The NK/SH-3 calling sequence provides a <B>varargs</B> implementation that supports all the typical abuses of ANSI C's <B>varargs</B> specification.
+<P>
+<IMG SRC="cal90000.gif" ALT="cal90000.gif" BORDER=0 WIDTH=6 HEIGHT=16> A <B>va_list</B> can be implemented as a real C pointer.
+<P>
+<IMG SRC="cal90000.gif" ALT="cal90000.gif" BORDER=0 WIDTH=6 HEIGHT=16> <B>va_arg()</B> can be implemented as properly casting and dereferencing the <B>va_list</B>, then incrementing the <B>va_list</B> by the size of the given type.
+<P>
+<IMG SRC="cal90000.gif" ALT="cal90000.gif" BORDER=0 WIDTH=6 HEIGHT=16> <B>va_start()</B> can be implemented as returning the address of the item immediately following
+the one given to it.
+<P>
+<IMG SRC="cal90000.gif" ALT="cal90000.gif" BORDER=0 WIDTH=6 HEIGHT=16> <B>va_end()</B> can be implemented as a noop.
+<P>
+</FONT></BODY>
+</HTML>

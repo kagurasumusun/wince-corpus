@@ -1,0 +1,85 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML>
+<HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text-html; charset=Windows-1252">
+<title>Using Fonts</title>
+<meta name=MS-HAID content="_wcesdk_using_fonts">
+<meta name=MS-HKWD content="Using Fonts">
+</HEAD>
+<BODY BGCOLOR=#FFFFFF TEXT=#000000>
+<!-- WCESDKG InfoViewer title (Wcesdkg.ivt); HTML topics extracted with tools/extract-ivt.py, images and the title's own indexes dropped. -->
+
+<form name=x><object name=iv classid="clsid:9c2ac687-ceef-11cf-96d9-00a0c903b016">
+</object></form>
+<h3><a name="_wcesdk_using_fonts"></a>Using Fonts</h3>
+<p>
+Use the <b>AddFontResource</b> function to load a font from in a font-resource file. When you finish using an installed font, use the <b>RemoveFontResource</b> function to remove the font. Whenever you add or delete a font resources, you should use the <b>SendMessage</b> function to send a <b>WM_FONTCHANGE</b> message to all top-level windows in the system. This message notifies other applications that the an application has added or removed a font to the internal font table. </p>
+<p>
+There are two stages to selecting a font. In the first stage, you specify the ideal font you would like to use. This theoretical font is called a logical font. In the second stage, an internal algorithm finds the physical font that is the closest match to your specified logical font. A physical font is a font stored on the device or in the operating system. The process of finding the physical font that most closely matches a specified logical font is called font mapping. </p>
+<h5><img src="../guide/art/wedge.gif" border=0>&#09;To use a font</h5>
+<ol>
+<li>
+Use the <b>EnumFontFamilies</b> function to list the available fonts. This is especially useful when you want to determine which fonts are available from a given font family.<br><br></li>
+<li>
+Use the values returned by the font enumeration function to initialize the members of a <b>LOGFONT</b> structure.<br><br></li>
+<li>
+Create the logical font by calling the <b>CreateFontIndirect</b> function and passing it a pointer to the initialized <b>LOGFONT</b> structure.<br><br></li>
+<li>
+Select the logical font into the current device context with the <b>SelectObject</b> function. </li>
+</ol>
+<p>
+ </p>
+<p>
+When you call <b>SelectObject</b>, Windows CE will load the physical font that most closely matches the logical font specified in the <b>LOGFONT</b> structure. </p>
+<p>
+When initializing the members of the <b>LOGFONT </b>structure, be sure that the <i>lfCharSet</i> member specifies a specific character set. This member is used in the font mapping process and the results will be inconsistent if this member is not initialized correctly. If you specify a typeface name in the <i>lfFaceName</i> member of the <b>LOGFONT </b>structure, make sure that the <i>lfCharSet</i> value contains a matching value. </p>
+<p>
+Windows CE keeps a font table containing all the fonts available for application use. When you call <b>CreateFontIndirect</b>, Windows CE chooses a font from this table. The font table can contain entries for a maximum of 253 fonts. </p>
+<p>
+Windows CE provides six stock logical fonts. You can use the <b>GetStockObject</b> function to obtain a stock font. You can use the values in the following list to obtain a stock font. </p>
+<table>
+<tr valign=top>
+<td>
+<b>Value</b></td>
+<td>
+<b>Meaning</b></td>
+</tr>
+<tr valign=top>
+<td>
+ANSI_FIXED_FONT</td>
+<td>
+Specifies a monospace font based on the Windows character set, usually represented by a Courier font. </td>
+</tr>
+<tr valign=top>
+<td>
+ANSI_VAR_FONT</td>
+<td>
+Specifies a proportional font based on the Windows character set, usually represented by the MS Sans Serif font.</td>
+</tr>
+<tr valign=top>
+<td>
+DEVICE_DEFAULT_FONT</td>
+<td>
+Specifies the preferred font for the given device usually represented by the System font for display devices. Some dot-matrix printers specify a device resident font. You can usually print faster using this font than you can with a font that you have to download from the system.</td>
+</tr>
+<tr valign=top>
+<td>
+OEM_FIXED_FONT</td>
+<td>
+Specifies a monospace font based on an OEM character set. For IBM&reg; computers and compatibles, the OEM font is based on the IBM PC character set.</td>
+</tr>
+<tr valign=top>
+<td>
+SYSTEM_FONT</td>
+<td>
+Specifies the System font. This is a proportional font based on the Windows character set, and is used by the operating system to display window titles, menu names, and text in dialog boxes. The System font is always available. Other fonts are available only if they have been installed.</td>
+</tr>
+<tr valign=top>
+<td>
+SYSTEM_FIXED_FONT</td>
+<td>
+Specifies a monospace font compatible with the System font in Windows versions earlier than 3.0.</td>
+</tr>
+</table><br>
+</BODY>
+</HTML>

@@ -1,0 +1,93 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
+<HTML>
+<HEAD><META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=Windows-1252">
+<TITLE>ACMDM_STREAM_UNPREPARE</TITLE>
+<META NAME="MS-HKWD" CONTENT="ACMDM_STREAM_UNPREPARE">
+<META NAME="MS-HAID" CONTENT="_wceddk_ACMDM_STREAM_UNPREPARE">
+</HEAD>
+<BODY BGPROPERTIES="FIXED" TEXT="#000000" BGCOLOR="#FFFFFF">
+<!-- WCEDDK InfoViewer title (WCEDDK.IVT); HTML topics extracted with tools/extract-ivt.py, images and the title's own indexes dropped. -->
+
+<FORM name=x>
+<OBJECT name=iv classid="clsid:9c2ac687-ceef-11cf-96d9-00a0c903b016">
+</OBJECT>
+</FORM>
+<FONT FACE="ARIAL,HELVETICA" SIZE="2">
+<H2><A NAME="_wceddk_ACMDM_STREAM_UNPREPARE"></A>ACMDM_STREAM_UNPREPARE</H2>
+<P>
+The ACMDM_STREAM_UNPREPARE message requests an ACM driver to clear the
+preparation of the buffers associated with an <B>ACMDRVSTREAMHEADER</B>
+structure.
+<H5>Return Value</H5>
+<P>
+The driver should return MMSYSERR_NOERROR if the operation succeeds. Otherwise
+it should return one of the MMSYSERR error codes defined in mmsystem.h, or one
+of the ACMERR error codes defined in msacm.h.
+<H5>Parameters</H5>
+<DL>
+<DT>
+<I>dwDriverID</I>
+<DD>
+Driver instance identifier. This is the value returned by the driver in
+response to the <B>ACM_Open</B>&nbsp;function.
+<BR>
+<DT>
+<I>hDriver</I>
+<DD>
+Driver handle.
+<BR>
+<DT>
+<I>uMsg</I>
+<DD>
+ACMDM_STREAM_UNPREPARE
+<BR>
+<DT>
+<I>lParam1</I>
+<DD>
+Pointer to an <B>ACMDRVSTREAMINSTANCE</B>&nbsp;structure.
+<BR>
+<DT>
+<I>lParam2</I>
+<DD>
+Pointer to an <B>ACMDRVSTREAMHEADER</B>&nbsp;structure.
+</DL>
+<H5>Comments</H5>
+<P>
+The ACM (WAVEAPI.DLL) sends the ACMDM_STREAM_UNPREPARE message by calling the
+ACM driver's <B>ACM_IOControl</B>() entry point via DeviceIoControl(). The ACM
+sends this message when an application calls the <B>acmStreamUnprepareHeader</B>
+function, which is described in the Win32 SDK.
+<P>
+Support for this message is optional. If a driver supports
+ACMDM_STREAM_PREPARE, it must support ACMDM_STREAM_UNPREPARE.
+<P>
+If the driver returns MMSYSERR_NOTSUPPORTED, the ACM clears the buffer
+preparation. For most drivers, this behavior is sufficient. If the driver does
+clear buffer preparation, it should return MMSYSERR_NOERROR. In either case,
+the ACM clears ACMSTREAMHEADER_STATUSF_PREPARED in the <B>ACMDRVSTREAMHEADER</B>
+structure's fdwStatus member. The driver never modifies this flag. (If you
+want both your driver and the ACM to clear buffer preparations, the driver
+should return MMSYSERR_NOTSUPPORTED after clearing its preparation. The ACM
+can then also clear its preparation.)
+<P>
+Before calling the driver's <B>ACM_IOControl</B>&nbsp;function, the ACM verifies
+that:
+<P>
+·The <B>ACMDRVSTREAMHEADER</B>&nbsp;structure is readable and writeable.
+<P>
+·The <B>ACMDRVSTREAMHEADER</B>&nbsp;structure's cbStruct member contains a size
+value that is at least as large as the structure's defined size.
+<P>
+·The buffers have been previously prepared.
+<P>
+·The buffer addresses and sizes match those specified when these buffers were
+prepared.
+<P>
+·The buffers are not currently in use by an asynchronous driver, based on the <B>ACMDRVSTREAMHEADER</B>
+structure's ACMSTREAMHEADER_STATUSF_INQUEUE flag value.
+<P>
+For more information about the use of ACMDM_STREAM_UNPREPARE, see Converting
+Data Streams in the Windows NT DDK.
+<P></FONT>
+</BODY>
+</HTML>

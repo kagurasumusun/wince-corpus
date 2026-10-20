@@ -1,0 +1,148 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML>
+<HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text-html; charset=Windows-1252">
+<title>Searching for Records</title>
+<meta name=MS-HAID content="_wcesdk_searching_for_records">
+</HEAD>
+<BODY BGCOLOR=#FFFFFF TEXT=#000000>
+<!-- WCESDKG InfoViewer title (Wcesdkg.ivt); HTML topics extracted with tools/extract-ivt.py, images and the title's own indexes dropped. -->
+
+<form name=x><object name=iv classid="clsid:9c2ac687-ceef-11cf-96d9-00a0c903b016">
+</object></form>
+<h3><a name="_wcesdk_searching_for_records"></a>Searching for Records</h3>
+<p>
+An application uses the <A HREF='javascript:document.x.iv.ALink("_wcesdk_ceseekdatabase","")'><b>CeSeekDatabase</b></a> function to search for a record in a database. The <b>CeSeekDatabase</b> function always uses the current sort order as specified in the call to <b>CeOpenDatabase</b>. If the CEDB_AUTOINCREMENT flag was specified, an automatic seek of one from the current position is done with each read operation that occurs on the database. </p>
+<p>
+The <b>CeSeekDatabase</b> function can perform several different types of seek operations. When calling the function, an application specifies a flag that indicates the type of seek operation to perform, and a value whose meaning depends on the specified flag. For example, to find a particular record, an application specifies the CEDB_SEEK_CEOID flag and the object identifier of the desired record. When <b>CeSeekDatabase</b> finds a record, the seek pointer is positioned at that record. Any subsequent read operation takes place at the location of the seek pointer. </p>
+<p>
+<b>Note</b>  A seek can only be performed on a sorted property value.</p>
+<p>
+Seek operations are affected by the sort order associated with the open database handle. For example, suppose the Contacts database is currently sorted based on the name property. If the application specifies the CEDB_SEEK_VALUEFIRSTEQUAL flag and a value of &quot;Joe Smith,&quot; the <b>CeSeekDatabase</b> function will search from the beginning of the database looking only at the name property of each record, and stopping when (and if) a matching property is found. </p>
+<p>
+An application can change the sort order which was set when the database was created by using the <A HREF='javascript:document.x.iv.ALink("_wcesdk_cesetdatabaseinfo","")'><b>CeSetDatabaseInfo</b></a> function, but this is not normally advised. The system maintains a set of indices and other information that it uses to optimize database searches for the given sort orders. When new sort orders are specified, the system must revise all of that internal information. Revising the information can take several minutes for large databases. </p>
+<pre>// This sample fragment demonstrates a call to CeSeekDatabase
+CEOID oid, oidSeek;   // Object identifier of record sought/returned
+DWORD dwIndex;   // Index of record seeked to
+
+// set value of oidSeek appropriately...
+// actual set operation omitted from this fragment
+// Perform the seek
+oid = CeSeekDatabase(hDb, // database handle
+                 CEDB_SEEK_CEOID, // request a seek operation
+                 oidSeek, // specifies the record to seek
+                 &amp;dwIndex); // on success, index to the record
+if (!oid)
+     // error handling goes here; omitted from this fragment...
+// Continues at this point only if record found 
+// After finding the record, read it and get its data
+oid = CeReadRecordProps(hDb, CEDB_ALLOWREALLOC, 
+            &amp;wCount, NULL, &amp;lpBuffer, &amp;wSize);
+</pre>
+<p>
+The following example shows how to find a record in a database and read its properties into a buffer. The function <b>GetAddressData</b> takes two parameters: the object identifier of a record, and a pointer to an application-defined <b>ADDRESSDATA</b> structure that receives the record's property data. First, the <b>GetAddressData</b> function allocates a temporary buffer for the property data, and then it calls the <A HREF='javascript:document.x.iv.ALink("_wcesdk_ceseekdatabase","")'><b>CeSeekDatabase</b></a> function to find the record that has the given object identifier. If the record is found, the <A HREF='javascript:document.x.iv.ALink("_wcesdk_cereadrecordprops","")'><b>CeReadRecordProps</b></a> function reads the property data into the temporary buffer. Finally, the property data is copied from the temporary buffer into the application-defined <b>ADDRESSDATA </b>structure: </p>
+<pre>// GetAddressData - retrieves the contents of an address record
+// Returns a code that indicates the success or failure of the function
+// oidSeek - object identifier of the record to seek
+// pAddressData - pointer to an application-defined ADDRESSDATA 
+//   structure that receives the data from the address record
+//
+// Global variable:
+//     g_hAddressDatabase - open handle to the address database
+
+ECODE GetAddressData(CEOID oidSeek, PADDRESSDATA pAddressData)
+{
+    LPBYTE lpBuffer;       // Buffer for address record
+    WORD wSize = 1024;     // Size of buffer
+    CEOID oid;            // Object identifier of record found or read
+    DWORD dwIndex;         // Index of record seeked to
+    WORD wCount;           // Number of properties in record
+    int i;                 // Loop counter
+    CEPROPID propid;      // Property identifier
+    WORD wLength;          // String length
+    ECODE ec = EC_SUCCESS; // Error/success code
+
+    // Allocate buffer for record data.
+    lpBuffer = (LPBYTE) LocalAlloc(LMEM_FIXED, wSize);
+    if (!lpBuffer) 
+        return EC_OUTOFMEMORY;
+    
+    // Seek to the record.
+    oid = CeSeekDatabase(g_hAddressDatabase, CEDB_SEEK_CEOID, 
+        oidSeek, &amp;dwIndex);
+    if (!oid) 
+        return EC_SEEK_FAILURE;
+    
+    // Read the record.  
+    oid = CeReadRecordProps(g_hAddressDatabase, CEDB_ALLOWREALLOC, 
+        &amp;wCount, NULL, &amp;lpBuffer, &amp;wSize);
+    if (!oid) 
+        return EC_READ_FAILURE;
+    
+    // Fill ADDRESSDATA structure with the data from the address 
+    // record.
+    for (i = 0; i &lt; wCount; i++ ) {
+        propid = ((CEPROPVAL*) lpBuffer)[i].propid;
+        
+        // Switch only on the upper word.
+        switch (propid) {
+            case HHPR_NAME:
+            {
+                // Copy the addressee's name.
+                TCHAR* pData;
+         
+                wLength = 
+                    lstrlen(((CEPROPVAL*) lpBuffer)[i].val.lpwstr);
+                pData = (TCHAR*) LocalAlloc(LMEM_FIXED, 
+                    wLength * sizeof(TCHAR) + 1);
+                if (pData) {
+                    lstrcpy(pData, 
+                        ((CEPROPVAL*) lpBuffer)[i].val.lpwstr);
+                    pAddressData-&gt;pwszName = pData;
+                } else {
+                    ec = EC_OUTOFMEMORY;
+                }
+            }
+            break;
+                
+            case HHPR_STREET:
+            { 
+
+                 // Copy the addressee's street address.
+                TCHAR* pData;
+
+                wLength = 
+                    lstrlen(((CEPROPVAL*)lpBuffer)[i].val.lpwstr);
+                pData = (TCHAR*) LocalAlloc(LMEM_FIXED, 
+                    wLength * sizeof(TCHAR) + 1, FALSE);
+                if (pData) {
+                    lstrcpy(pData, 
+                        ((CEPROPVAL*) lpBuffer)[i].val.lpwstr);
+                    pTaskData-&gt;pwszDescription = pData;
+                } else {
+                    ec = EC_OUTOFMEMORY;
+                }
+            }
+            break;
+
+            .
+            .  // Copy the remaining record properties to the
+            .  // ADDRESSDATA structure.
+            
+
+            default:
+                break;
+        }
+
+        if (ec != EC_SUCCESS)
+            break;
+    }
+    
+    // Free the record buffer.
+    if (lpBuffer) 
+        LocalFree(lpBuffer);
+        
+    return ec;
+}</pre>
+</BODY>
+</HTML>

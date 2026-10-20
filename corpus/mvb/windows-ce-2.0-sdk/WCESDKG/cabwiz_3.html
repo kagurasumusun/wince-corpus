@@ -1,0 +1,553 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML>
+<HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text-html; charset=Windows-1252">
+<title>INF File</title>
+<meta name=MS-HAID content="_wcesdk_inf_file">
+<meta name=MS-HKWD content="INF File">
+</HEAD>
+<BODY BGCOLOR=#FFFFFF TEXT=#000000>
+<!-- WCESDKG InfoViewer title (Wcesdkg.ivt); HTML topics extracted with tools/extract-ivt.py, images and the title's own indexes dropped. -->
+
+<form name=x><object name=iv classid="clsid:9c2ac687-ceef-11cf-96d9-00a0c903b016">
+</object></form>
+<h3><a name="_wcesdk_inf_file"></a>INF File</h3>
+<p>
+The Win32 Setup INF format is used, but with some modifications for Windows CE.  The changes are detailed in this document. The ISV should follow the Win32 Setup INF format (found in the Win32 Setup API documentation) and apply the Windows CE specific changes.</p>
+<p>
+CAB Wizard can create multiple CAB files with a single Setup INF file and multiple application binaries. This is useful for creating multiple CAB files, each one for a specific processor type. To indicate information for a specific processor, append a cpu extension (&quot;processor tag&quot;) to the following section names:
+<ul>
+<li>
+CEDevice<br><br></li>
+<li>
+DefaultInstall<br><br></li>
+<li>
+SourceDisksNames<br><br></li>
+<li>
+SourceDisksFiles</li>
+</ul>
+<pre>Example:
+[DefaultInstall]&#09;&#09;&#09;;shared by all platforms, processed first
+[DefaultInstall.sh3]&#09;&#09;;specific to the SH3 chip
+[DefaultInstall.mips]&#09;;specific to the MIPS chip
+</pre>
+<p>
+Information in sections without a cpu extension are valid unless specifically overridden by information in a section with a cpu extension. The exception to this is the <i>UnsupportedPlatforms </i>key in the CEDevice section, described below.</p>
+<b>Version</b>
+<pre>[Version]
+Signature = &quot;<i>signature-name</i>&quot;
+Provider = &quot;<i>INF-creator</i>&quot;
+CESignature = &quot;$Windows CE$&quot;
+</pre>
+<dl>
+<dt>
+<i>signature-name</i>  (string)</dt>
+<dd>
+must be $Windows NT$ or $Windows 95$<br>
+</dd>
+<dt>
+<i>INF-creator</i> (string)</dt>
+<dd>
+the company name of the application.<pre>example: Provider = &quot;Microsoft&quot;
+</pre>
+</dd>
+</dl>
+<p>
+<b>CEStrings</b> (new section)</p>
+<pre>[CEStrings]
+AppName = <i>app-name
+InstallDir = default-install-dir&#09;
+</i></pre>
+<dl>
+<dt>
+<i>app-name</i>  (string)</dt>
+<dd>
+the name of the application. Other instances of %AppName% in the INF file will be replaced with this string value.<br>
+</dd>
+<dt>
+<i>default-install-dir</i>  (string)</dt>
+<dd>
+the default installation directory on the device. Other instances of %InstallDir% in the INF file will be replaced with this string value.</dd>
+</dl>
+<pre>example:
+[CEStrings]
+AppName=&quot;Game Pack&quot;
+InstallDir=%CE1%\%AppName%
+</pre>
+<b>Strings</b>
+<pre>[Strings]
+<i>string-key </i>= <i>value
+[string-key</i> = <i>value</i>]
+</pre>
+<p>
+<b>CEDevice </b>(new section)</p>
+<pre>[CEDevice]
+[ProcessorType&#09;=[<i>processor-type</i>]]
+[UnsupportedPlatforms = <i>platform-family-name</i>[,<i>platform-family-name</i>]]
+[VersionMin&#09;&#09;= [<i>major-version.minor-version</i>]]
+[VersionMax&#09;&#09;= [<i>major-version.minor-version</i>]]
+[BuildMin&#09;&#09;= [<i>build-number</i>]]
+[BuildMax&#09;&#09;= [<i>build-number</i>]]
+</pre>
+<p>
+All keys are optional. If a key is non-existent, no checking is performed. If a key exists but there is no data, then no checking is performed. The exception is &quot;UnsupportedPlatforms&quot;; if this key exists but there is no data, the previous value is not overridden.</p>
+<dl>
+<dt>
+<i>processor-type</i>  (numeric)</dt>
+<dd>
+the value returned by SYSTEMINFO.dwProcessorType (for example, the SH3 cpu is 10003 and the MIPS cpu is 4000)<br>
+</dd>
+<dt>
+<i>platform-family-name</i>  (string)</dt>
+<dd>
+A list of platform family names known to be unsupported.  If a different platform family name is specified in [CEDevice.xxx] from that in [CEDevice], both platform family name values are unsupported for processor xxx (i.e. the list of specific unsupported platform family names is appended to the previous list of unsupported platform family names). Application Manager will not display the application for an unsupported platform. Also, the user will be warned during setup if the CAB file is copied to an unsupported device.<pre>example:
+[CEDevice]
+UnsupportedPlatforms = <i>pltfrm1</i>&#09;&#09;; <i>pltfrm1</i> is unsupported
+[CEDevice.SH3]
+UnsupportedPlatforms = &#09;&#09;&#09;&#09;; <i>pltfrm1</i> is still unsupported
+</pre>
+<br>
+</dd>
+<dt>
+<i>minor-version</i> (<i>major-version</i>)  (numeric)</dt>
+<dd>
+value returned by OSVERSIONINFO.dwVersionMinor (and .dwVersionMajor). The current CAB file is valid for the currently-connected device if the currently-connected device is &lt;= VersionMax and also &gt;= VersionMin.<br>
+</dd>
+<dt>
+<i>build-number</i>  (numeric)</dt>
+<dd>
+value returned by OSVERSIONINFO.dwBuildNumber. The current CAB file is valid for the currently-connected device if the currently-connected device is  &lt;= BuildMax and also &gt;=BuildMin.</dd>
+</dl>
+<pre>example:
+[CEDevice]&#09;&#09;&#09;&#09;&#09;&#09;&#09;; a &quot;template&quot; for all platforms
+UnsupportedPlatforms = <i>pltfrm1</i>&#09;&#09;; does not support <i>pltfrm1
+; the following specifies version 1.0 devices only
+VersionMin = 1.0
+VersionMax = 1.0
+
+[CEDevice.SH3]&#09;&#09;&#09;&#09;&#09;; inherits all [CEDevice] settings
+; this will create a CAB file specific for &quot;SH3&quot; devices
+ProcessorType = 10003&#09;&#09;&#09;; the SH3 CAB file is only valid for the SH3 processors
+UnsupportedPlatforms =&#09;&#09;&#09;; pltfrm1</i> is still unsupported
+; the following overrides the version settings so that no version checking is performed
+VersionMin =
+VersionMax =
+
+[CEDevice.MIPS]&#09;&#09;&#09;&#09;&#09;; inherits all [CEDevice] settings
+; this will create a CAB file specific for &quot;MIPS&quot; devices
+ProcessorType = 4000&#09;&#09;&#09;&#09;; the &quot;MIPS&quot; CAB file is only valid for the MIPS processor
+UnsupportedPlatforms =<i>pltfrm2&#09;</i>;<i> pltfrm1 and pltfrm2</i> are unsupported for the &quot;MIPS&quot; CAB file
+</pre>
+<p>
+<b>Note</b>  to create the two cpu-specific CAB files for this Setup INF file, CAB Wizard must be run with the parameter  &quot;/cpu  sh3  mips&quot;.</p>
+<p>
+<b>DefaultInstall </b>(this is used instead of the Win32 INF <b>Install </b>section name)</p>
+<pre>[DefaultInstall]
+Copyfiles=<i>copyfile-list-section</i>[,<i>copyfile-list-section</i>]
+AddReg=<i>add-registry-section</i>[<i>,add-registry-section</i>]
+[CEShortcuts<i>=shortcut-list-section</i>[<i>,shortcut-list-section</i>]]&#09;; new key
+[CESetupDLL=<i>setup-DLL</i>]&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;; new key
+[CESelfRegister=<i>self-reg-DLL-filename</i>[<i>,self-reg-DLL-filename</i>]; new key
+</pre>
+<dl>
+<dt>
+<i>shortcut-list-section  </i>(string)</dt>
+<dd>
+section(s) that define shortcuts to a file; it is discussed later.<br>
+</dd>
+<dt>
+<i>setup-DLL  </i>(string)</dt>
+<dd>
+This specifies a single optional ISV-created device-specific &quot;Setup.DLL&quot; that contains functions to handle various operations during installation and removal of the application on the device. The file must be specified in the SourceDisksFiles section. This file is discussed later in this chapter.</dd>
+</dl>
+<p>
+<b>Note</b>  Once the &quot;Setup.DLL&quot; file is incorporated into the CAB file, it is renamed.  You cannot make any assumptions on filename or location of this DLL on the device.</p>
+<dl>
+<dt>
+<i>self-reg-DLL-filename </i>(string)</dt>
+<dd>
+A list of files that &quot;self-register&quot;, exporting the COM functions DllRegisterServer() and DllUnregisterServer(). The file(s) must be specified in the SourceDiskFiles section.<p>
+During installation, if the device-side installation fails to call the file's exported DllRegisterServer(), then the file's exported DllUnregisterServer() function will not be called during uninstallation.</p>
+</dd>
+</dl>
+<b>SourceDisksNames</b>
+<pre>[SourceDisksNames]
+<i>disk-ordinal</i>= ,<i>disk-label</i>,,<i>path
+[disk-ordinal</i>= ,<i>disk-label</i>,,<i>path</i>]
+</pre>
+<b>SourceDisksFiles</b>
+<pre>[SourceDisksFiles]
+<i>filename</i>=<i>disk_number</i>[,<i>subdir</i>]
+[<i>filename</i>=<i>disk_number</i>[,<i>subdir</i>]]
+</pre>
+<b>DestinationDirs</b>
+<pre>[DestinationDirs]
+file-list-section = 0,<i>subdir
+[file-list-section</i> = 0,<i>subdir]
+[DefaultDestDir=0,subdir</i>]
+</pre>
+<p>
+<b>Note</b>  DirIDs are not supported.</p>
+<p>
+<i>Subdir  </i>(string)</p>
+<p>
+destination directory.  The following string substitutions are supported:</p>
+<p>
+<b>Note</b>  These can only be used for the beginning of the path.</p>
+<table>
+<tr valign=top>
+<td>
+<b>string</b></td>
+<td>
+<b>replacement value</b></td>
+</tr>
+<tr valign=top>
+<td>
+%CE1%</td>
+<td>
+\Program Files</td>
+</tr>
+<tr valign=top>
+<td>
+%CE2%</td>
+<td>
+\Windows</td>
+</tr>
+<tr valign=top>
+<td>
+%CE3%</td>
+<td>
+\Windows\Desktop</td>
+</tr>
+<tr valign=top>
+<td>
+%CE4%</td>
+<td>
+\Windows\Startup</td>
+</tr>
+<tr valign=top>
+<td>
+%CE5%</td>
+<td>
+\My Documents</td>
+</tr>
+<tr valign=top>
+<td>
+%CE6%</td>
+<td>
+\Program Files\Accessories</td>
+</tr>
+<tr valign=top>
+<td>
+%CE7%</td>
+<td>
+\Program Files\Communication</td>
+</tr>
+<tr valign=top>
+<td>
+%CE8%</td>
+<td>
+\Program Files\Games</td>
+</tr>
+<tr valign=top>
+<td>
+%CE9%</td>
+<td>
+\Program Files\Pocket Outlook</td>
+</tr>
+<tr valign=top>
+<td>
+%CE10%</td>
+<td>
+\Program Files\Office</td>
+</tr>
+<tr valign=top>
+<td>
+%CE11%</td>
+<td>
+\Windows\Programs</td>
+</tr>
+<tr valign=top>
+<td>
+%CE12%</td>
+<td>
+\Windows\Programs\Accessories</td>
+</tr>
+<tr valign=top>
+<td>
+%CE13%</td>
+<td>
+\Windows\Programs\Communications</td>
+</tr>
+<tr valign=top>
+<td>
+%CE14%</td>
+<td>
+\Windows\Programs\Games</td>
+</tr>
+<tr valign=top>
+<td>
+%CE15%</td>
+<td>
+\Windows\Fonts</td>
+</tr>
+<tr valign=top>
+<td>
+%CE16%</td>
+<td>
+\Windows\Recent</td>
+</tr>
+<tr valign=top>
+<td>
+%CE17%</td>
+<td>
+\Windows\Favorites</td>
+</tr>
+</table><br>
+<pre>example:
+Files.Common &#09;= 0,%CE1%\My Subdir
+Files.Shared &#09;= 0,%CE2%
+</pre>
+<b>CopyFiles</b>
+<pre>[<i>copyfile-list-section</i>]
+<i>destination-file-name</i>,[<i>source-file-name</i>],[,<i>flags</i>]
+[<i>destination-file-name</i>,[<i>source-file-name</i>],[,<i>flags</i>]]
+</pre>
+<p>
+<i>Source-file-name</i> is optional if it is the same as <i>destination-file-name</i>.</p>
+<dl>
+<dt>
+<i>Flags  </i>(numeric)</dt>
+<dd>
+the only values supported are in the following table. </dd>
+</dl>
+<p>
+<b>Note</b>  You must use a combination of the values in hex form (e.g.0x80000002)<font face="Symbol"><span style="font-family:symbol">&#190;</span></font>you cannot use the flag names</p>
+<table>
+<tr valign=top>
+<td>
+<b>flag</b></td>
+<td>
+<b>value</b></td>
+<td>
+<b>description</b></td>
+</tr>
+<tr valign=top>
+<td>
+COPYFLG_WARN_IF_SKIP</td>
+<td>
+0x00000001</td>
+<td>
+warn user if attempt is made to skip a file after an error has occurred.</td>
+</tr>
+<tr valign=top>
+<td>
+COPYFLG_NOSKIP</td>
+<td>
+0x00000002</td>
+<td>
+do not allow user to skip copying a file</td>
+</tr>
+<tr valign=top>
+<td>
+COPYFLG_NO_OVERWRITE</td>
+<td>
+0x00000010</td>
+<td>
+do not overwrite an existing file in the destination directory</td>
+</tr>
+<tr valign=top>
+<td>
+COPYFLG_REPLACEONLY</td>
+<td>
+0x00000400</td>
+<td>
+copy source file to the destination directory only if file is already in destination directory</td>
+</tr>
+<tr valign=top>
+<td>
+CE_COPYFLG_NO_DATE_DIALOG</td>
+<td>
+0x20000000</td>
+<td>
+don't copy if target is newer</td>
+</tr>
+<tr valign=top>
+<td>
+CE_COPYFLG_NODATECHECK</td>
+<td>
+0x40000000</td>
+<td>
+ignore date, overwrite target</td>
+</tr>
+<tr valign=top>
+<td>
+CE_COPYFLG_SHARED</td>
+<td>
+0x80000000</td>
+<td>
+reference counting a shared DLL</td>
+</tr>
+</table><br>
+<b>AddReg</b>
+<pre>[<i>add-registry-section</i>]
+<i>registry-root-string</i> [,<i>subkey</i>][,<i>value-name</i>][,<i>flags</i>][,<i>value</i>]
+[<i>registry-root-string</i> [,<i>subkey</i>][,<i>value-name</i>][,<i>flags</i>][,<i>value</i>]]
+</pre>
+<dl>
+<dt>
+<i>registry-root-strings</i>  (string)</dt>
+<dd>
+the only values supported:<table>
+<tr valign=top>
+<td>
+<b>root string</b></td>
+<td>
+<b>description</b></td>
+</tr>
+<tr valign=top>
+<td>
+HKCR</td>
+<td>
+same as HKEY_CLASSES_ROOT</td>
+</tr>
+<tr valign=top>
+<td>
+HKCU</td>
+<td>
+same as HKEY_CURRENT_USER</td>
+</tr>
+<tr valign=top>
+<td>
+HKLM</td>
+<td>
+same as HKEY_LOCAL_MACHINE</td>
+</tr>
+</table><br>
+<br>
+</dd>
+<dt>
+<i>flags  </i>(numeric)</dt>
+<dd>
+the only values supported are in the following table.</dd>
+</dl>
+<p>
+<b>Note</b>  You must use the values in hex form (e.g. 0x00010000)<font face="Symbol"><span style="font-family:symbol">&#190;</span></font>you cannot use the flag names</p>
+<table>
+<tr valign=top>
+<td>
+<b>flag</b></td>
+<td>
+<b>value</b></td>
+<td>
+<b>description</b></td>
+</tr>
+<tr valign=top>
+<td>
+FLG_ADDREG_NOCLOBBER</td>
+<td>
+0x00000002</td>
+<td>
+if registry key exists, do not overwrite it. This flag may be used in combination with any of the flags below.</td>
+</tr>
+<tr valign=top>
+<td>
+FLG_ADDREG_TYPE_SZ</td>
+<td>
+0x00000000</td>
+<td>
+registry data type REG_SZ</td>
+</tr>
+<tr valign=top>
+<td>
+FLG_ADDREG_TYPE_MULTI_SZ</td>
+<td>
+0x00010000</td>
+<td>
+data type REG_MULTI_SZ. The following &quot;value field&quot; can be a list of strings separated by commas.</td>
+</tr>
+<tr valign=top>
+<td>
+FLG_ADDREG_TYPE_BINARY</td>
+<td>
+0x00000001</td>
+<td>
+data type REG_BINARY. The following &quot;value&quot; filed must be a list of numeric values separated by commas, one byte per field, and must not use the &quot;0x&quot; hex prefix.</td>
+</tr>
+<tr valign=top>
+<td>
+FLG_ADDREG_TYPE_DWORD</td>
+<td>
+0x00010001</td>
+<td>
+data type REG_DWORD. Only the &quot;non compatible format&quot; in the Win32 Setup INF documentation is supported.</td>
+</tr>
+</table><br>
+<pre>Example:
+[RegSection]
+; the following uses (FLG_ADDREG_TYPE_MULTI_SZ | FLG_ADDREG_NOCLOBBER) to create a multi-string with the &quot;noclobber&quot; flag
+&#09;HKLM,Software\Microsoft\Games,Title,0x00010002, &quot;Game&quot;,&quot;Pack&quot;
+; the following uses FLG_ADDREG_TPE_BINARY to create an 8-byte binary registry value
+&#09;HKLM,Software\Microsoft\Games,Data,0x00000001,2,F,B,3,0,A,6,D
+; the following uses (FLG_ADDREG_TYPE_DWORD | FLG_ADDREG_NOCLOBBER) to create a dword with the &quot;no clobber&quot; flag
+&#09;HKLM,Software\Microsoft\Games,HighScore,0x00010003,456
+</pre>
+<p>
+<b>CEShortcuts </b>(new section)</p>
+<pre>[<i>shortcut-list-section</i>]
+<i>shortcut-file-name</i>,<i>shortcut-type-flag</i>,<i>target-file/path</i>[,<i>standard-destination-path</i>]
+[<i>shortcut-file-name</i>,<i>shortcut-type-flag</i>,<i>target-file/path</i>[,<i>standard-destination-path</i>]]
+</pre>
+<dl>
+<dt>
+<i>shortcut-file-name  </i>(string)</dt>
+<dd>
+the shortcut name. It does not require the &quot;.lnk&quot; extension<br>
+</dd>
+<dt>
+<i>shortcut-type-flag  </i>(numeric)</dt>
+<dd>
+0 or empty represents a shortcut to a file; any non-zero numeric value represents a shortcut to a folder<br>
+</dd>
+<dt>
+<i>target-file/path  </i>(string)</dt>
+<dd>
+for a file, use the target filename (e.g. &quot;MyApp.exe&quot;) which must be defined in a file copy list.  For a path, use a <i>file-list-section</i> name defined in [<i>DestinationDirs</i>] (e.g. &quot;<i>DefaultDestDir</i>&quot;), or the %InstallDir% string.<br>
+</dd>
+<dt>
+<i>standard-destination-path</i>  (string)  (optional)</dt>
+<dd>
+can be a standard %CEx% path, or %InstallDir%; if no value is given, the <i>shortcut-list-section </i> name (of the current section) or the &quot;<i>DefaultDestDir</i>&quot;<i> </i>from the &quot;[<i>DestinationDirs</i>]&quot; section is used.</dd>
+</dl>
+<pre>example:
+[DestinationDirs]
+file_list  = %CE2%
+Links = %CE3%
+DefaultDestDir = %InstallDir%
+[file_list]
+&quot;my final app.exe&quot;,app.exe,,0
+[Links]
+; shortcut name is &quot;file 1&quot;
+; this is a shortcut to a file; the target is &quot;my final app.exe&quot;
+; shortcut is created in the folder used in &quot;[DestinationDirs] Links&quot; section, which is currently %CE3%
+&quot;file 1&quot;,0,&quot;my final app.exe&quot;
+
+;shortcut name is &quot;file2&quot;
+;this is a shortcut to a file; the target is &quot;my final app.exe&quot;
+;shortcut is created in the %InstallDir% folder
+&quot;file 2&quot;,0,&quot;my final app.exe&quot;,%InstallDir%
+
+;shortcut name is &quot;path 1&quot;
+;this is a shortcut to a folder
+;the shortcut target is the folder used in &quot;[DestinationDirs] DefaultDestDir&quot; section, which is currently %InstallDir%
+;shortcut is created in the folder used in &quot;[DestinationDirs] Links&quot; section which is currently %CE3%
+&quot;path 1&quot;,1,DefaultDestDir
+
+;shortcut name is &quot;path 2&quot;
+;this is a shortcut to a folder
+;the target is the folder used in &quot;[DestinationDirs] Links&quot; section which is currently %CE3%
+;shortcut is created in the %InstallDir% folder
+&quot;path 2&quot;,1,Links,%InstallDir%
+</pre>
+</BODY>
+</HTML>

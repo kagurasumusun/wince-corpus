@@ -1,0 +1,148 @@
+<HTML>
+<HEAD>
+<TITLE>5.2.4 CP0 Registers</TITLE>
+</HEAD><BODY BGCOLOR=#ffffff>
+<!-- PR3910 InfoViewer title (Pr3910.ivt); HTML topics extracted with tools/extract-ivt.py, images and the title's own indexes dropped. -->
+<BASEFONT FACE="Arial,Helvetica" SIZE="2">
+<A HREF= "PR39home.htm"><IMG SRC="contents.gif" ALT="contents.gif" BORDER = 0></A>
+<P>
+<A NAME="off_426987"></A><A NAME="3d66e4df"></A><FONT FACE="Arial" SIZE="3"><H1>5.2.4 CP0 Registers
+<P>
+</H1>The following CP0 registers are used
+<P>
+<B>EntryHi and EntryLo
+</B>These registers are used to hold a TLB entry. EntryHi also holds the ASID of
+the current process.
+<P>
+<B>Index
+</B>Determines which TLB entry will be read/written by the tlbp and tlbwi
+instructions.
+<P>
+<B>Random
+ </B>This is a counter that is used to simulate a pseudo-random number used by the
+tlbwr instruction to write a TLB entry into a </FONT><FONT FACE="Times New Roman" SIZE="3">“</FONT><FONT FACE="Arial" SIZE="3">randomly</FONT><FONT FACE="Times New Roman" SIZE="3">”</FONT><FONT FACE="Arial" SIZE="3">selected location.
+<P>
+<B>Context
+ </B>This register is provided to speed up the processing of TLB Refill traps. The
+high-order bits are read/write, the lower order 21 bits reflect the BadVAddr
+value.
+<P>
+</FONT><FONT FACE="Times New Roman" SIZE="3"><B>Figure  5-4  </B>EntryHi Register
+<P>
+</FONT><FONT FACE="Times New Roman" SIZE="6"><IMG SRC="P3900016.gif" ALT="P3900016.gif" BORDER=0 WIDTH=815 HEIGHT=83>
+<P>
+</FONT><TABLE><TR VALIGN=TOP><TD><FONT FACE="Arial" SIZE="3"><B>Bit(s)
+<BR></B></FONT></TD><TD><FONT FACE="Arial" SIZE="3"><B>Mnemonic
+<BR></B></FONT></TD><TD><FONT FACE="Arial" SIZE="3"><B>Description
+<BR></B></FONT></TD></TR><TR VALIGN=TOP><TD><FONT FACE="Arial" SIZE="3">31-12
+<BR></FONT></TD><TD><FONT FACE="Arial" SIZE="3">VPN
+<BR></FONT></TD><TD><FONT FACE="Arial" SIZE="3">Virtual Page Number: bits 31..12 of the virtual address. These bits identify a
+4K page in the virtual address space.
+<BR></FONT></TD></TR><TR VALIGN=TOP><TD><FONT FACE="Arial" SIZE="3">11-6
+<BR></FONT></TD><TD><FONT FACE="Arial" SIZE="3">ASID
+<BR></FONT></TD><TD><FONT FACE="Arial" SIZE="3">Address Space Identifier: a 6-bit number that is used to identify in a
+multi-tasking system to which process a certain virtual address belongs to. This way,
+user-level tasks can be loaded at the same virtual address but be mapped to
+different physical pages. Systems with more than 64 address spaces need the help
+of the OS for ASID management.
+<BR></FONT></TD></TR><TR VALIGN=TOP><TD><FONT FACE="Arial" SIZE="3">5-0
+<BR></FONT></TD><TD><FONT FACE="Times New Roman" SIZE="3">—
+<BR></FONT></TD><TD><FONT FACE="Arial" SIZE="3">Reserved, read as zero. It is not necessary to be written as 0.
+<BR>
+<BR></FONT></TD></TR></TABLE><FONT FACE="Times New Roman" SIZE="3"><B>Figure  5-5 </B> EntryLo Register
+<P>
+</FONT><FONT FACE="Times New Roman" SIZE="6"><IMG SRC="P3900017.gif" ALT="P3900017.gif" BORDER=0 WIDTH=814 HEIGHT=86>
+<P>
+</FONT><TABLE><TR VALIGN=TOP><TD><FONT FACE="Arial" SIZE="3"><B>Bit(s)
+<BR></B></FONT></TD><TD><FONT FACE="Arial" SIZE="3"><B>Mnemonic
+<BR></B></FONT></TD><TD><FONT FACE="Arial" SIZE="3"><B>Description
+<BR></B></FONT></TD></TR><TR VALIGN=TOP><TD><FONT FACE="Arial" SIZE="3">31-12
+<BR></FONT></TD><TD><FONT FACE="Arial" SIZE="3">PFN
+<BR></FONT></TD><TD><FONT FACE="Arial" SIZE="3">Page Frame Number: bits 31..12 of the physical address. These bits identify a
+4K page in the physical address space. The MMU translates the VPN into the PFN.
+<BR></FONT></TD></TR><TR VALIGN=TOP><TD><FONT FACE="Arial" SIZE="3">11
+<BR></FONT></TD><TD><FONT FACE="Arial" SIZE="3">N
+<BR></FONT></TD><TD><FONT FACE="Arial" SIZE="3">Cache Control Bit: when this bit is set to 1 the page is made uncachable.
+<BR></FONT></TD></TR><TR VALIGN=TOP><TD><FONT FACE="Arial" SIZE="3">10
+<BR></FONT></TD><TD><FONT FACE="Arial" SIZE="3">D
+<BR></FONT></TD><TD><FONT FACE="Arial" SIZE="3">Dirty Control Bit: when this bit is set to 1 it allows writes to the page to
+happen. If an entry is accessed for a write operation when this bit is cleared,
+the exception TLN Mod is raised.
+<BR></FONT></TD></TR><TR VALIGN=TOP><TD><FONT FACE="Arial" SIZE="3">9
+<BR></FONT></TD><TD><FONT FACE="Arial" SIZE="3">V
+<BR></FONT></TD><TD><FONT FACE="Arial" SIZE="3">Valid Control Bit: If this bit is set, it indicates that the TLB entry is
+valid; otherwise a TLBL (load) or TLBS (store) miss exception occurs.
+<BR></FONT></TD></TR><TR VALIGN=TOP><TD><FONT FACE="Arial" SIZE="3">8
+<BR></FONT></TD><TD><FONT FACE="Arial" SIZE="3">G
+<BR></FONT></TD><TD><FONT FACE="Arial" SIZE="3">Global Control Bit: if this bit is set, the ASID match requirement is ignored
+for a valid translation. In kseg2, The Global bit lets the kernel access all
+mapped data without requiring it to save or restore ASIDs values.
+<BR></FONT></TD></TR><TR VALIGN=TOP><TD><FONT FACE="Arial" SIZE="3">7-0
+<BR></FONT></TD><TD><FONT FACE="Times New Roman" SIZE="3">—
+<BR></FONT></TD><TD><FONT FACE="Arial" SIZE="3">Reserved, must be written as 0, read as zero.
+<BR>
+<BR></FONT></TD></TR></TABLE><FONT FACE="Times New Roman" SIZE="3">Figure  5-6  Index Register
+<P>
+</FONT><FONT FACE="Times New Roman" SIZE="6"><IMG SRC="P3900018.gif" ALT="P3900018.gif" BORDER=0 WIDTH=814 HEIGHT=87>
+<P>
+</FONT><TABLE><TR VALIGN=TOP><TD><FONT FACE="Arial" SIZE="3"><B>Bit(s)
+<BR></B></FONT></TD><TD><FONT FACE="Arial" SIZE="3"><B>Mnemonic
+<BR></B></FONT></TD><TD><FONT FACE="Arial" SIZE="3"><B>Description
+<BR></B></FONT></TD></TR><TR VALIGN=TOP><TD><FONT FACE="Arial" SIZE="3">31
+<BR></FONT></TD><TD><FONT FACE="Arial" SIZE="3">P
+<BR></FONT></TD><TD><FONT FACE="Arial" SIZE="3"><B>Probe Failure</B>: set to 1 when the last tlbp (TLB probe) instruction was unsucssefull.
+<BR></FONT></TD></TR><TR VALIGN=TOP><TD><FONT FACE="Arial" SIZE="3">30-13
+<BR></FONT></TD><TD><FONT FACE="Times New Roman" SIZE="3">—
+<BR></FONT></TD><TD><FONT FACE="Arial" SIZE="3">Reserved, must be written as 0, read as zero.
+<BR></FONT></TD></TR><TR VALIGN=TOP><TD><FONT FACE="Arial" SIZE="3">12-8
+<BR></FONT></TD><TD><FONT FACE="Arial" SIZE="3">Index
+<BR></FONT></TD><TD><FONT FACE="Arial" SIZE="3"><B>Index</B>: index to the TLB entry that will be affected by the TLB read/write
+instructions.
+<BR></FONT></TD></TR><TR VALIGN=TOP><TD><FONT FACE="Arial" SIZE="3">7-0
+<BR></FONT></TD><TD><FONT FACE="Times New Roman" SIZE="3">—
+<BR></FONT></TD><TD><FONT FACE="Arial" SIZE="3">Reserved, must be written as 0, read as zero.
+<BR>
+<BR></FONT></TD></TR></TABLE><FONT FACE="Times New Roman" SIZE="3"><B>Figure  5-7  </B>Random Register
+<P>
+</FONT><FONT FACE="Times New Roman" SIZE="6"><IMG SRC="P3900019.gif" ALT="P3900019.gif" BORDER=0 WIDTH=824 HEIGHT=84>
+<P>
+</FONT><TABLE><TR VALIGN=TOP><TD><FONT FACE="Arial" SIZE="3"><B>Bit(s)
+<BR></B></FONT></TD><TD><FONT FACE="Arial" SIZE="3"><B>Mnemonic
+<BR></B></FONT></TD><TD><FONT FACE="Arial" SIZE="3"><B>Description
+<BR></B></FONT></TD></TR><TR VALIGN=TOP><TD><FONT FACE="Arial" SIZE="3">31-13
+<BR></FONT></TD><TD><FONT FACE="Times New Roman" SIZE="3">—
+<BR></FONT></TD><TD><FONT FACE="Arial" SIZE="3">Reserved, read as zero.
+<BR></FONT></TD></TR><TR VALIGN=TOP><TD><FONT FACE="Arial" SIZE="3">12-8
+<BR></FONT></TD><TD><FONT FACE="Arial" SIZE="3">Random
+<BR></FONT></TD><TD><FONT FACE="Arial" SIZE="3"><B>Random</B>: a pseudo random index (with a value from 0 to 63). This register is
+basically a counter that decrements on every clock cycle but which is constrained to
+count from 63 to 8. This guarantees that the random will never address the first
+8 entries of the TLB. This register may be used during the processing of a TLB
+miss exception, suggesting the TLB entry to be written with the correct
+translation.The instruction TLB write random (tlbwr) is used for this purpose.
+<BR></FONT></TD></TR><TR VALIGN=TOP><TD><FONT FACE="Arial" SIZE="3">7-0
+<BR></FONT></TD><TD><FONT FACE="Times New Roman" SIZE="3">—
+<BR></FONT></TD><TD><FONT FACE="Arial" SIZE="3">Reserved, read as zero.
+<BR>
+<BR></FONT></TD></TR></TABLE><FONT FACE="Times New Roman" SIZE="3"><B>Figure  5-8  </B>Context Register
+<P>
+</FONT><FONT FACE="Times New Roman" SIZE="6"><IMG SRC="P3900020.gif" ALT="P3900020.gif" BORDER=0 WIDTH=818 HEIGHT=94>
+<P>
+</FONT><TABLE><TR VALIGN=TOP><TD><FONT FACE="Arial" SIZE="3"><B>Bit(s)
+<BR></B></FONT></TD><TD><FONT FACE="Arial" SIZE="3"><B>Mnemonic
+<BR></B></FONT></TD><TD><FONT FACE="Arial" SIZE="3"><B>Description
+<BR></B></FONT></TD></TR><TR VALIGN=TOP><TD><FONT FACE="Arial" SIZE="3">31-21
+<BR></FONT></TD><TD><FONT FACE="Arial" SIZE="3">PTE
+<BR></FONT></TD><TD><FONT FACE="Arial" SIZE="3"><B>Page Table </B>: bits 31..21 of a 1 Mbyte aligned memory-resident page-table. It is used by
+the standard R3000A exception handler to quickly refill a TLB entry in case of a
+TLB miss exception. 
+<BR></FONT></TD></TR><TR VALIGN=TOP><TD><FONT FACE="Arial" SIZE="3">20-2
+<BR></FONT></TD><TD><FONT FACE="Arial" SIZE="3">BadVPN
+<BR></FONT></TD><TD><FONT FACE="Arial" SIZE="3"><B>Bad Virtual Page Number</B>: following an exception, this field holds the high-order bits of BadVaddr.
+The value formed by combining PTE and BadVaddr is directly usable as a pointer to
+the memory-resident page table, considerably shortening the refill exception
+code.
+<BR></FONT></TD></TR><TR VALIGN=TOP><TD><FONT FACE="Arial" SIZE="3">1-0
+<BR></FONT></TD><TD><FONT FACE="Times New Roman" SIZE="3">—
+<BR></FONT></TD><TD><FONT FACE="Arial" SIZE="3">Reserved, read as zero. It is not necessary to be written as 0.
+<BR></FONT></TD></TR></TABLE></BODY>

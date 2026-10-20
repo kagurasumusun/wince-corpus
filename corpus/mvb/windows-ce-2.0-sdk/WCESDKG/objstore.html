@@ -1,0 +1,83 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML>
+<HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text-html; charset=Windows-1252">
+<title>Accessing Persistent Storage</title>
+<meta name=MS-HAID content="_wcesdk_accessing_persistent_storage">
+<meta name=MS-HKWD content="Accessing Persistent Storage">
+</HEAD>
+<BODY BGCOLOR=#FFFFFF TEXT=#000000>
+<!-- WCESDKG InfoViewer title (Wcesdkg.ivt); HTML topics extracted with tools/extract-ivt.py, images and the title's own indexes dropped. -->
+
+<form name=x><object name=iv classid="clsid:9c2ac687-ceef-11cf-96d9-00a0c903b016">
+</object></form>
+<h1><a name="_wcesdk_accessing_persistent_storage"></a>Accessing Persistent Storage</h1>
+<p>
+The persistent storage that Windows CE makes available to applications is called the <i>object store</i>. The object store  is used for files, registry entries and Windows CE databases.  </p>
+<p>
+Each object in the object store<font face="Symbol"><span style="font-family:symbol">&#190;</span></font>whether a directory, file, database, or database record<font face="Symbol"><span style="font-family:symbol">&#190;</span></font>is associated with a unique object identifier. The object identifier is normally used for dealing with databases and their records. However, it can be used to obtain information on any object.</p>
+<table>
+<tr valign=top>
+<td>
+<b>Object type</b></td>
+<td>
+<b>Where to obtain the object identifier</b></td>
+</tr>
+<tr valign=top>
+<td>
+directory or file</td>
+<td>
+<i>dwOID</i> field of WIN32_FIND_DATAW from <b>FindFirstFile</b> or <b>FindNextFile</b><p>
+<i>dwOID</i> field of BY_HANDLE_FILE_INFORMATION from <b>GetFileInformationByHandle</b></p>
+</td>
+</tr>
+<tr valign=top>
+<td>
+database</td>
+<td>
+return value of <b>CeCreateDatabase</b> or <b>CeFindNextDatabase</b>.</td>
+</tr>
+<tr valign=top>
+<td>
+database record</td>
+<td>
+return value of <b>CeSeekDatabase</b>, <b>CeReadRecordProps</b>, or <b>CeWriteRecordProps</b>.</td>
+</tr>
+</table><br>
+<p>
+To get information about an object in the object store, a Windows CE application calls the API function <A HREF='javascript:document.x.iv.ALink("_wcesdk_ceoidgetinfo","")'><b>CeOidGetInfo</b></a> and supplies the object identifier in the parameter of type <A HREF='javascript:document.x.iv.ALink("_wcesdk_ceoid_datatype","")'><b>CEOID</b></a>. <A HREF='javascript:document.x.iv.ALink("_wcesdk_ceoidgetinfo","")'><b>CeOidGetInfo</b></a> returns the object data in a <A HREF='javascript:document.x.iv.ALink("_wcesdk_ceoidinfo","")'><b>CEOIDINFO</b></a> structure. This structure's <i>wObjType</i> field contains a flag that indicates the object type. The data in the structure depends on the type of object. For example, if the object is a database record, the <A HREF='javascript:document.x.iv.ALink("_wcesdk_ceoidinfo","")'><b>CEOIDINFO</b></a> structure <i>wObjType</i> field contains the flag OBJTYPE_RECORD, indicating that the data for the object consists of a <A HREF='javascript:document.x.iv.ALink("_wcesdk_cerecordinfo","")'><b>CERECORDINFO</b></a> structure. If there is no valid object for the object identifier the return value of <b>CeOidGetInfo</b> is FALSE.</p>
+<p>
+The following sample fragment demonstrates how to use the object identifier to obtain the object type of any object in the object store. </p>
+<pre>// sample fragment that demonstrates using the object identifier
+CEOID WceObjID;  // object identifier
+CEOIDINFO WceObjInfo;  // structure that contains info about the object
+TCHAR szMsg[MAX_STRING];  // string to display with object info
+... 
+if (CeOidGetInfo(WceObjID, &amp;WceObjInfo)) { 
+    // TRUE return indicates valid data
+    switch (WceObjInfo.wObjType) {
+        case OBJTYPE_FILE:
+            wsprintf(szMsg, TEXT(&quot;Object is a file: %s&quot;), 
+                            WceObjInfo.infFile.szFileName); 
+            break;
+        case OBJTYPE_RECORD:
+            wsprintf(szMsg, TEXT(&quot;Object is a record&quot;));
+                            // can use WceObjInfo.infRecord.oidParent 
+            break;
+        case OBJTYPE_DATABASE: 
+            wsprintf(szMsg, TEXT(&quot;Object is a database: %s&quot;), 
+                            WceObjInfo.infDatabase.szDbaseName); 
+            break;
+        case OBJTYPE_DIRECTORY: 
+            wsprintf(szMsg, TEXT(&quot;Object is a directory: %s&quot;), 
+                            WceObjInfo.infDirectory.szDirName); 
+            break;
+        default:
+            // handle error ...
+            break;
+     } // end case
+} // end if CeOidGetInfo succeeds
+// display the string 
+</pre>
+</BODY>
+</HTML>

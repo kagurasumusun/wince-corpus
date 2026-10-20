@@ -1,0 +1,39 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML>
+<HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text-html; charset=Windows-1252">
+<title>Opening a Database</title>
+<meta name=MS-HAID content="_wcesdk_opening_a_database">
+</HEAD>
+<BODY BGCOLOR=#FFFFFF TEXT=#000000>
+<!-- WCESDKG InfoViewer title (Wcesdkg.ivt); HTML topics extracted with tools/extract-ivt.py, images and the title's own indexes dropped. -->
+
+<form name=x><object name=iv classid="clsid:9c2ac687-ceef-11cf-96d9-00a0c903b016">
+</object></form>
+<h3><a name="_wcesdk_opening_a_database"></a>Opening a Database</h3>
+<p>
+Before accessing records or properties in a database, the application must obtain a handle to the database by calling the <A HREF='javascript:document.x.iv.ALink("_wcesdk_ceopendatabase","")'><b>CeOpenDatabase</b></a> function. The application can specify either the database name or its object identifier. The <b>CeOpenDatabase</b> function returns an open database handle that the application can use in subsequent calls for reading or modifying the database. When the application finishes using the database, it closes the handle by calling the <A HREF='javascript:document.x.iv.ALink("_wcesdk_win32_closehandle","")'><b>CloseHandle</b></a> function. </p>
+<p>
+To increase performance when the application will be reading many properties, use the CEDB_AUTOINCREMENT flag when calling <b>CeOpenDatabase</b>. This flag directs the system to automatically increment the seek pointer every time you access a database property with the <A HREF='javascript:document.x.iv.ALink("_wcesdk_cereadrecordprops","")'><b>CeReadRecordProps</b></a> function. The seek pointer marks the record that will be read by the next read operation. </p>
+<p>
+When calling <A HREF='javascript:document.x.iv.ALink("_wcesdk_ceopendatabase","")'><b>CeOpenDatabase</b></a>, an application can specify the identifier of a property to use as the sort order for the open database handle. The system uses the sort order to determine where to move the seek pointer after each subsequent call to <b>CeReadRecordProps</b> (if the CEDB_AUTOINCREMENT flag is specified). The sort order also determines the property that the <A HREF='javascript:document.x.iv.ALink("_wcesdk_ceseekdatabase","")'><b>CeSeekDatabase</b></a> function uses to traverse the database. </p>
+<p>
+The following sample demonstrates the call to <b>CeOpenDatabase</b>:</p>
+<pre>// Sample code fragment that opens the object store database
+CEOID objId;  // database ID
+TCHAR szDbName[MAX_SIZE]; // contains the database name
+HANDLE hDb;  // handle to the database
+. . .
+hDb = CeOpenDatabase(&amp;objId, // tmp location for the database id
+                      szDbName, // database name
+                      0,      // sort order; 0 indicates ignore
+                      CEDB_AUTOINCREMENT, // flags
+                      NULL); // window handle for notifications
+// perform error checking on hDb handle before continuing...
+// perform other operations on the database, then close it
+CloseHandle(hDb); // close the database handle hDb
+</pre>
+<p>
+For more information about sort orders, see the &quot;Sorting Records&quot; section of this chapter. For more information about moving the seek pointer, see the &quot;Searching for Records&quot; section of this chapter.  </p>
+</BODY>
+</HTML>

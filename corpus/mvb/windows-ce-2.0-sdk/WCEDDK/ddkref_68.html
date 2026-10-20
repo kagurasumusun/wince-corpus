@@ -1,0 +1,75 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
+<HTML>
+<HEAD><META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=Windows-1252">
+<TITLE>CardRequestExclusive</TITLE>
+<META NAME="MS-HKWD" CONTENT="CardRequestExclusive">
+<META NAME="MS-HAID" CONTENT="_wceddk_CardRequestExclusive">
+</HEAD>
+<BODY BGPROPERTIES="FIXED" TEXT="#000000" BGCOLOR="#FFFFFF">
+<!-- WCEDDK InfoViewer title (WCEDDK.IVT); HTML topics extracted with tools/extract-ivt.py, images and the title's own indexes dropped. -->
+
+<FORM name=x>
+<OBJECT name=iv classid="clsid:9c2ac687-ceef-11cf-96d9-00a0c903b016">
+</OBJECT>
+</FORM>
+<FONT FACE="ARIAL,HELVETICA" SIZE="2">
+<H2><A NAME="_wceddk_CardRequestExclusive"></A>CardRequestExclusive</H2>
+<P>
+The <B>CardRequestExclusive </B>function requests exclusive access to a
+specified socket and function pair.
+<H5>Syntax</H5>
+<P>
+<B>STATUS CardRequestExclusive(<BR>
+&nbsp; &nbsp; CARD_CLIENT_HANDLE </B><I>hCardClient<BR>
+</I><B>&nbsp; &nbsp; CARD_SOCKET_HANDLE </B><I>hSocket<BR>
+</I><B>&nbsp; &nbsp; );</B>
+<H5>Parameters</H5>
+<DL>
+<DT>
+<I>hCardClient</I>
+<DD>
+Specifies the client handle obtained from <B><A HREF="ddkref_61.htm">CardRegisterClient</A></B>.
+<BR>
+<DT>
+<I>hSocket</I>
+<DD>
+Specifies a handle to a socket and function pair.
+</DL>
+<H5>Return Values</H5>
+<P>
+If the function succeeds, the return value is CERR_SUCCESS; otherwise, it is
+one of the following:
+<DL>
+<DT>
+CERR_BAD_HANDLE
+<DD>
+Indicates the driver handle specified for <I>hCardClient</I>&nbsp;is invalid.
+<BR>
+<DT>
+CERR_BAD_SOCKET
+<DD>
+Indicates the socket identifier specified for <I>hSocket</I>&nbsp;is invalid or the
+PC Card not inserted.
+<BR>
+<DT>
+CERR_IN_USE
+<DD>
+Indicates exclusive access is owned by another driver.
+</DL>
+<H5>Remarks</H5>
+<P>
+<B>CardRequestExclusive</B>&nbsp;causes Card Services to issue a series of callback
+events services as it negotiates for approval with each registered driver.
+First, all registered drivers are queried with a CE_EXCLUSIVE_REQUEST event
+code to determine if they will allow exclusive use. If they all approve, each
+driver is sent a CE_CARD_REMOVAL event code. Finally a CE_CARD_INSERTION event
+code is sent to the requesting driver followed by a CE_EXCLUSIVE_COMPLETE
+event code. If any of the drivers do not approve, the requesting driver is
+sent a CE_EXCLUSIVE_COMPLETE event code with a failing status in <B>Parm1</B>
+member of the <B>CARD_EVENT_PARMS</B>&nbsp;structure.
+<H5>See Also</H5>
+<P>
+<B><A HREF="ddkref_63.htm">CardReleaseExclusive</A></B>
+<P></FONT>
+</BODY>
+</HTML>

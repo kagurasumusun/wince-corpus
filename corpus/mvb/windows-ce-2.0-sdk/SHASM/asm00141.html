@@ -1,0 +1,60 @@
+<HTML>
+<HEAD>
+<TITLE>8.3.7  Macros Defined By (Within) Other Macros</TITLE>
+</HEAD><body bgcolor="#FFFFFF">
+<!-- SHASM InfoViewer title (Shasm.ivt); HTML topics extracted with tools/extract-ivt.py, images and the title's own indexes dropped. -->
+
+<A NAME="off_3310070"></A><A NAME="f16dd151"></A><FONT FACE="Arial" SIZE="4"><B>8.3.7  Macros Defined By (Within) Other Macros
+<P>
+</B></FONT><FONT FACE="Arial" SIZE="3">Macros can be defined by (in) another macro, although it is not possible to
+define a macro inside an .AWHILE or .AREPEAT loop. This works much as might be
+expected; the only non-obvious part is ensuring that the .ENDM for the nested
+macro isn't interpreted as the end of the outer macro. The following examples show
+two methods of accomplishing this.
+<P>
+<B>Example:
+<P>
+ </B></FONT><FONT FACE="Lucida Sans Typewriter" SIZE="3">.macro  defit  name,code,dummyarg
+<P>
+ .macro  \name
+<P>
+ \code
+<P>
+\dummyarg  .endm
+<P>
+ .endm
+<P>
+ .macro  defit2  name,code,endmarg=</FONT><FONT FACE="Times New Roman" SIZE="3">“</FONT><FONT FACE="Lucida Sans Typewriter" SIZE="3">.endm</FONT><FONT FACE="Times New Roman" SIZE="3">”
+<P>
+ </FONT><FONT FACE="Lucida Sans Typewriter" SIZE="3">.macro  \name
+<P>
+ \code
+<P>
+ \endmarg
+<P>
+ .endm
+<P>
+ .macro  defit3  name,code,argpref,endmarg=</FONT><FONT FACE="Times New Roman" SIZE="3">“</FONT><FONT FACE="Lucida Sans Typewriter" SIZE="3">.endm</FONT><FONT FACE="Times New Roman" SIZE="3">”
+<P>
+ </FONT><FONT FACE="Lucida Sans Typewriter" SIZE="3">.macro  \name  arg
+<P>
+ \code  \argpref\(\arg)
+<P>
+ \endmarg
+<P>
+ .endm
+<P>
+ defit  narp,nop
+<P>
+ defit2  slurp,sleep
+<P>
+ defit3  trabbit,trapa,</FONT><FONT FACE="Times New Roman" SIZE="3">”</FONT><FONT FACE="Lucida Sans Typewriter" SIZE="3">#</FONT><FONT FACE="Times New Roman" SIZE="3">”
+<P>
+ </FONT><FONT FACE="Lucida Sans Typewriter" SIZE="3">narp  ; same as nop
+<P>
+ slurp  ; same as sleep
+<P>
+ trabbit 4 ; same as trapa #4
+<P>
+</FONT></BODY>
+</HTML>

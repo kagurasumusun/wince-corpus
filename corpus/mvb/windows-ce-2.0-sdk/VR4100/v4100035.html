@@ -1,0 +1,51 @@
+<HTML>
+<HEAD>
+<TITLE>Slip Conditions</TITLE>
+</HEAD><BODY BGCOLOR=#ffffff>
+<!-- VR4100 InfoViewer title (Vr4100.ivt); HTML topics extracted with tools/extract-ivt.py, images and the title's own indexes dropped. -->
+<BASEFONT FACE="Arial,Helvetica" SIZE="2">
+<A HREF= "VR41home.htm"><IMG SRC="contents.gif" ALT="contents.gif" BORDER = 0></A>
+<P>
+<A NAME="off_395726"></A><A NAME="3f903d71"></A><FONT FACE="Arial" SIZE="3"><H1>Slip Conditions
+<P>
+</H1>During the 2R and 1E pipe-stages, internal logic will determine whether it is
+possible to start the current instruction in this cycle. If all of the source
+operands are available (either from the register file or via the internal bypass
+logic) and all the hardware resources necessary to complete the instruction
+will be available at the necessary times(s), then the instruction </FONT><FONT FACE="Times New Roman" SIZE="3">“</FONT><FONT FACE="Arial" SIZE="3">run</FONT><FONT FACE="Times New Roman" SIZE="3">”</FONT><FONT FACE="Arial" SIZE="3">; otherwise, the instruction will </FONT><FONT FACE="Times New Roman" SIZE="3">“</FONT><FONT FACE="Arial" SIZE="3">slip</FONT><FONT FACE="Times New Roman" SIZE="3">”</FONT><FONT FACE="Arial" SIZE="3">. Slipped instructions are retired on subsequent cycles until they issue. The
+backend of the pipeline (stages D and W) will advance normally during slips in
+an attempt to resolve the conflict. </FONT><FONT FACE="Times New Roman" SIZE="3">“</FONT><FONT FACE="Arial" SIZE="3">NOPS</FONT><FONT FACE="Times New Roman" SIZE="3">”</FONT><FONT FACE="Arial" SIZE="3"> will be inserted into the bubble in the pipeline. Instructions killed by
+branch likely instructions, ERET or exceptions will not cause slips.
+<P>
+<IMG SRC="v4100048.gif" ALT="v4100048.gif" BORDER=0 WIDTH=420 HEIGHT=207>
+<P>
+</FONT><FONT FACE="Times New Roman" SIZE="3">Figure 3-16    Load Data Interlock
+<P>
+</FONT><FONT FACE="Arial" SIZE="3">Load Data Interlock is detected in R shown in as Figure 3-16 and the pipeline
+slips in its R stage. Load Data Interlock occurs when data fetched by a load
+instruction and data moved from HI,LO or CP0 register is required by the next
+immediate instruction. The pipeline begins running again when the clock after the
+target of the load is read from the data cache, HI, LO and CP0 register. The
+data returned at the end of the D stage is input into the end of the R stage,
+using the bypass multiplexers.
+<P>
+<IMG SRC="v4100049.gif" ALT="v4100049.gif" BORDER=0 WIDTH=420 HEIGHT=176>
+<P>
+</FONT><FONT FACE="Times New Roman" SIZE="3">Figure 3-17    MD busy Interlock
+<P>
+</FONT><FONT FACE="Arial" SIZE="3">MD Busy Interlock is detected in R as shown in Figure 3-17 and the pipeline
+slips in its R stage. MD Busy Interlock occurs when Hi/Lo register is required by
+MFHi/Lo operation before finishing Mult/Div execution. The pipeline begins
+running again the clock after finishing Mult/Div execution. The data returned from
+the HI/LO register at the end of the D stage is input into the end of the R
+stage, using the bypass multiplexers.
+<P>
+Store-Load Interlock is detected in E stage and the pipeline slips in R stage.
+Store-Load Interlock occurs when Store operation followed by Load operation is
+detected. The pipeline begins running again one clock after.
+<P>
+Coprocessor0 Interlock is detected in E stage and the pipeline slips in R
+stage. Coprocessor Interlock occurs when MTC0 config/status operation is detected.
+The pipeline begins running again one clock after.
+<P>
+</FONT></BODY>

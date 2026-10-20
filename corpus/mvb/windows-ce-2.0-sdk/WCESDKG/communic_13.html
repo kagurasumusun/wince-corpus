@@ -1,0 +1,116 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML>
+<HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text-html; charset=Windows-1252">
+<title>Infrared Sockets</title>
+<meta name=MS-HAID content="_wcesdk_infrared_sockets">
+<meta name=MS-HKWD content="Infrared Sockets">
+</HEAD>
+<BODY BGCOLOR=#FFFFFF TEXT=#000000>
+<!-- WCESDKG InfoViewer title (Wcesdkg.ivt); HTML topics extracted with tools/extract-ivt.py, images and the title's own indexes dropped. -->
+
+<form name=x><object name=iv classid="clsid:9c2ac687-ceef-11cf-96d9-00a0c903b016">
+</object></form>
+<h3><a name="_wcesdk_infrared_sockets"></a>Infrared Sockets (IrSock)</h3>
+<p>
+Infrared Sockets (IrSock), is an extension to WinSock that allows it to be used for infrared communication utilizing the IrDA protocol. Each endpoint must support an IrDA-compliant device and an IrDA-compliant protocol stack. The <A HREF='javascript:document.x.iv.ALink("_wcesdk_sockaddr_irda","")'><b>SOCKADDR_IRDA</b></a> structure has been added as an endpoint address type.</p>
+<p>
+Although the same Winsock functions are used with IrSock, some work differently. The principal differences are:
+<ul>
+<li>
+Name Service<p>
+Conventional WinSock name service is best suited to fixed networks in which name bindings are relatively static. IrDA is designed to handle to browsing of in-range resources in an ad hoc manner without need for fixed name-servers or the overhead of large hierarchical networks. IrDA networks are completely ad hoc, and devices come and go frequently as they move in and out of range.</p>
+<p>
+Because of these differences, IrSock does not use the standard WinSock name service functions. Instead, name service is incorporated into the communication stream. </p>
+</li>
+<li>
+Method of addressing<p>
+IrSock introduces a new address structure and a new address family to describe it. The address includes a service name that describes the application in <A HREF='javascript:document.x.iv.ALink("_wcesdk_win32_bind_2","")'><b>bind</b></a> and <A HREF='javascript:document.x.iv.ALink("_wcesdk_win32_connect_2","")'><b>connect</b></a> calls and a device identifier that describes the device on which the application runs. It is similar to the TCP (port number where the service resides) / IP (machine where the service resides) convention. The address family describing the unique features of IrSockets is called AF_IRDA and is defined in the AF_IRDA.H header file.</p>
+<p>
+Addressing can be based on IrDA Logical Service Access Point Selectors (LSAP-SELs) or on services registered with the Information Access Service (IAS). Binding sockets directly to LSAP-SELs eliminates the need for the IAS altogether. Binding sockets to IAS services provides for dynamic address allocation.</p>
+</li>
+<li>
+Enhanced socket options<p>
+Socket options are set with <A HREF='javascript:document.x.iv.ALink("_wcesdk_win32_setsockopt_2","")'><b>setsockopt</b></a>. Only a subset of the WinSock options are supported for IrSock. In particular, because most SO_xxx socket options are not useful for IrSock, only SO_LINGER is supported. Unsupported options return the error code WSAENOTSUPP. </p>
+<p>
+A set of socket options to access the unique features of the IrDA protocol have been added:
+<ul>
+<li>
+IRLMP_IAS_SET allows an application to set a single class in the local IAS. The application specifies the class to set and the attribute and attribute type. The application must allocate a buffer of the necessary size for the passed parameters.<br><br></li>
+<li>
+IRLMP_RAW_MODE, allows an application to switch between the reliable TinyTP mode (which is the default setting) and unreliable IrLMP mode. This option is only available after calling <A HREF='javascript:document.x.iv.ALink("_wcesdk_win32_socket_2","")'><b>socket</b></a> to obtain a socket handle and before calling <b>bind</b> and <b>connect</b>.</li>
+</ul>
+</li>
+</ul>
+<p>
+The following subset of WinSock functions are used by IrSock with modifications as noted: </p>
+<table>
+<tr valign=top>
+<td>
+<b>IrSock function</b></td>
+<td>
+<b>Modification</b></td>
+</tr>
+<tr valign=top>
+<td>
+<A HREF='javascript:document.x.iv.ALink("_wcesdk_win32_accept_2","")'><b>accept</b></a></td>
+<td>
+None.</td>
+</tr>
+<tr valign=top>
+<td>
+<A HREF='javascript:document.x.iv.ALink("_wcesdk_win32_bind_2","")'><b>bind</b></a></td>
+<td>
+Must be called before <b>listen</b> is called.</td>
+</tr>
+<tr valign=top>
+<td>
+<A HREF='javascript:document.x.iv.ALink("_wcesdk_win32_closesocket_2","")'><b>closesocket</b></a></td>
+<td>
+None.</td>
+</tr>
+<tr valign=top>
+<td>
+<A HREF='javascript:document.x.iv.ALink("_wcesdk_win32_connect_2","")'><b>connect</b></a></td>
+<td>
+None.</td>
+</tr>
+<tr valign=top>
+<td>
+<A HREF='javascript:document.x.iv.ALink("_wcesdk_win32_getsockopt_2","")'><b>getsockopt</b></a></td>
+<td>
+IRLMP_IAS_GET and IRLMP_ENUMDEVICES options have been added.</td>
+</tr>
+<tr valign=top>
+<td>
+<A HREF='javascript:document.x.iv.ALink("_wcesdk_win32_listen_2","")'><b>listen</b></a></td>
+<td>
+None.</td>
+</tr>
+<tr valign=top>
+<td>
+<A HREF='javascript:document.x.iv.ALink("_wcesdk_win32_recv_2","")'><b>recv</b></a></td>
+<td>
+None.</td>
+</tr>
+<tr valign=top>
+<td>
+<A HREF='javascript:document.x.iv.ALink("_wcesdk_win32_send_2","")'><b>send</b></a></td>
+<td>
+None</td>
+</tr>
+<tr valign=top>
+<td>
+<A HREF='javascript:document.x.iv.ALink("_wcesdk_win32_setsockopt_2","")'><b>setsockopt</b></a></td>
+<td>
+The IR_LMP_IAS_SET option has been added.</td>
+</tr>
+<tr valign=top>
+<td>
+<A HREF='javascript:document.x.iv.ALink("_wcesdk_win32_socket_2","")'><b>socket</b></a></td>
+<td>
+The AF_IRDA value was added for the address format parameter. Only the SOCK_STREAM socket type is supported.</td>
+</tr>
+</table><br>
+</BODY>
+</HTML>

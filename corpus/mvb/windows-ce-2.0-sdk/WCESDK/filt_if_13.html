@@ -1,0 +1,153 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML>
+<HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text-html; charset=Windows-1252">
+<title>ICeFileFilter::FormatMessage</title>
+<meta name=MS-HAID content="_wcesdk_icefilefilter_formatmessage">
+<meta name=MS-HKWD content="ICeFileFilter::FormatMessage">
+</HEAD>
+<BODY BGCOLOR=#FFFFFF TEXT=#000000>
+<!-- WCESDK InfoViewer title (WCESDK.IVT); HTML topics extracted with tools/extract-ivt.py, images and the title's own indexes dropped. -->
+
+<BODY BGCOLOR=#FFFFFF BACKGROUND= "images\cewmark.gif" TEXT=#000000><form name=x><object name=iv classid="clsid:9c2ac687-ceef-11cf-96d9-00a0c903b016">
+</object></form>
+<h1><a name="_wcesdk_icefilefilter_formatmessage"></a>ICeFileFilter::FormatMessage</h1>
+<p>
+The <b>ICeFileFilter::FormatMessage</b> method formats a message string. </p>
+<h2>Syntax</h2>
+<p>
+<b>STDMETHOD(FormatMessage) (THIS_<BR>DWORD</b>   <i>dwFlags</i><b>,</b><BR><b>DWORD</b>   <i>dwMessageId</i><b>,</b><BR><b>DWORD</b>   <i>dwLanguageId</i><b>,</b><BR><b>LPTSTR</b>  <i>lpBuffer</i><b>,</b><BR><b>DWORD</b>   <i>nSize</i><b>,</b><BR><b>va_list</b> *<i>Arguments</i><b>,</b><BR><b>DWORD</b>   *<i>pcb<BR></i><b>) PURE;</b></p>
+<h2>At a Glance</h2>
+<table>
+<tr valign=top>
+<td>
+Header file:</td>
+<td>
+Replfilt.h</td>
+</tr>
+<tr valign=top>
+<td>
+Platforms:</td>
+<td>
+H/PC</td>
+</tr>
+<tr valign=top>
+<td>
+Windows CE versions:</td>
+<td>
+2.0 and later</td>
+</tr>
+</table><br>
+<h2>Parameters</h2>
+<dl>
+<dt>
+<i>dwFlags</i> </dt>
+<dd>
+Contains a set of bit flags that specify aspects of the formatting process and how to interpret the <i>lpSource</i> parameter. The low-order byte of <i>dwFlags</i> specifies how <b>FormatMessage</b> handles line breaks in the output buffer. The low-order byte can also specify the maximum width of a formatted output line.<p>
+You can specify a combination of the following bit flags: </p>
+<dl>
+<dt>
+FORMAT_MESSAGE_ALLOCATE_BUFFER</dt>
+<dd>
+Specifies that the <i>lpBuffer</i> parameter is a pointer to a PVOID pointer, and that the <i>nSize</i> parameter specifies the minimum number of bytes (ANSI version) or characters (Unicode version) to allocate for an output message buffer. <b>FormatMessage</b> allocates a buffer large enough to hold the formatted message, and places a pointer to the allocated buffer at the address specified by <i>lpBuffer</i>. The caller should use the <a href="lmem_f_8.htm"><b>LocalFree</b></a> function to free the buffer when it is no longer needed.<br>
+</dd>
+<dt>
+FORMAT_MESSAGE_IGNORE_INSERTS</dt>
+<dd>
+Specifies that insert sequences in the message definition are to be ignored and passed through to the output buffer unchanged. This flag is useful for retrieving a message for later formatting. If this flag is set, the <i>Arguments</i> parameter is ignored.<br>
+</dd>
+<dt>
+FORMAT_MESSAGE_FROM_STRING</dt>
+<dd>
+Specifies that <i>lpSource</i> is a pointer to a null-terminated message definition. The message definition can contain insert sequences, just as the message text in a message table resource can. This flag cannot be used with FORMAT_MESSAGE_FROM_HMODULE or FORMAT_MESSAGE_FROM_SYSTEM.<br>
+</dd>
+<dt>
+FORMAT_MESSAGE_FROM_HMODULE</dt>
+<dd>
+Specifies that <i>lpSource</i> is a module handle containing the message-table resources to search. If this <i>lpSource</i> handle is NULL, the current process's application image file will be searched. This flag cannot be used with FORMAT_MESSAGE_FROM_STRING.<br>
+</dd>
+<dt>
+FORMAT_MESSAGE_FROM_SYSTEM</dt>
+<dd>
+Specifies that <b>FormatMessage</b> should search the system message-table resources for the requested message. If this flag is specified with FORMAT_MESSAGE_FROM_HMODULE, <b>FormatMessage</b> searches the system message table if the message is not found in the module specified by <i>lpSource</i>. This flag cannot be used with FORMAT_MESSAGE_FROM_STRING.<p>
+If this flag is specified, an application can pass the result of the <b>CeGetLastError</b> function to retrieve the message text for a system-defined error.</p>
+<br>
+</dd>
+<dt>
+FORMAT_MESSAGE_ARGUMENT_ARRAY</dt>
+<dd>
+Specifies that the <i>Arguments</i> parameter is not a <b>va_list</b> structure, but instead is pointer to an array of 32-bit values that represent the arguments.</dd>
+</dl>
+<p>
+The low-order byte of <i>dwFlags</i> can specify the maximum width of a formatted output line. Use the FORMAT_MESSAGE_MAX_WIDTH_MASK constant and bitwise Boolean operations to set and retrieve this maximum width value.</p>
+<p>
+<b>FormatMessage</b> interprets the value of the low-order byte as follows:</p>
+<dl>
+<dt>
+0</dt>
+<dd>
+There are no output line width restrictions. <b>FormatMessage</b> stores line breaks that are in the message definition text in the output buffer.<br>
+</dd>
+<dt>
+A nonzero value other than FORMAT_MESSAGE_MAX_WIDTH_MASK.</dt>
+<dd>
+The nonzero value is the maximum number of characters in an output line. <b>FormatMessage</b> ignores regular line breaks in the message definition text. <b>FormatMessage</b> never splits a string delimited by white space across a line break. <b>FormatMessage</b> stores hard-coded line breaks in the message definition text in the output buffer. Hard-coded line breaks are coded with the %n escape sequence.<br>
+</dd>
+<dt>
+FORMAT_MESSAGE_MAX_WIDTH_MASK</dt>
+<dd>
+<b>FormatMessage</b> ignores regular line breaks in the message definition text. <b>FormatMessage</b> stores hard-coded line breaks in the message definition text in the output buffer. <b>FormatMessage</b> generates no new line breaks.</dd>
+</dl>
+<br>
+</dd>
+<dt>
+<i>dwMessageId</i> </dt>
+<dd>
+Specifies the 32-bit message identifier for the requested message. This parameter is ignored if <i>dwFlags</i> includes FORMAT_MESSAGE_FROM_STRING.<br>
+</dd>
+<dt>
+<i>dwLanguageId</i> </dt>
+<dd>
+Specifies the 32-bit language identifier for the requested message. This parameter is ignored if <i>dwFlags</i> includes FORMAT_MESSAGE_FROM_STRING. <br>
+</dd>
+<dt>
+<i>lpBuffer</i> </dt>
+<dd>
+Pointer to a buffer for the formatted (and null-terminated) message. If <i>dwFlags</i> includes FORMAT_MESSAGE_ALLOCATE_BUFFER, <b>FormatMessage</b> allocates a buffer using the <a href="lmem_f_7.htm"><b>LocalAlloc</b></a> function, and places the address of the buffer at the address specified in <i>lpBuffer</i>.<br>
+</dd>
+<dt>
+<i>nSize</i> </dt>
+<dd>
+If the FORMAT_MESSAGE_ALLOCATE_BUFFER flag is not set, this parameter specifies the maximum number of bytes (ANSI version) or characters (Unicode version) that can be stored in the output buffer. If FORMAT_MESSAGE_ALLOCATE_BUFFER is set, this parameter specifies the minimum number of bytes or characters to allocate for an output buffer.<br>
+</dd>
+<dt>
+<i>Arguments</i> </dt>
+<dd>
+Pointer to an array of 32-bit values that are used as insert values in the formatted message: %1 in the format string indicates the first value in the <i>Arguments</i> array; %2 indicates the second argument; and so on. <p>
+The interpretation of each 32-bit value depends on the formatting information associated with the insert in the message definition. The default is to treat each value as a pointer to a null-terminated string. </p>
+<p>
+By default, the <i>Arguments</i> parameter is of type <b>va_list</b> *, which is a language- and implementation-specific data type for describing a variable number of arguments. If you do not have a pointer of type <b>va_list</b> *, then specify the FORMAT_MESSAGE_ARGUMENT_ARRAY flag and pass a pointer to an array of 32-bit values; those values are used as input for the message and are formatted as the insert values. Each insert must have a corresponding element in the array.</p>
+<br>
+</dd>
+<dt>
+<i>pcb</i> </dt>
+<dd>
+Pointer to a <b>DWORD</b> that receives the length of the string returned by <b>FormatMessage</b>. If <b>FormatMessage</b> succeeds, <i>pcb</i> holds the number of bytes (ANSI version) or characters (Unicode version) stored in the output buffer, excluding the terminating null character. </dd>
+</dl>
+<h2>Return Values</h2>
+<dl>
+<dt>
+NOERROR</dt>
+<dd>
+<b>FormatMessage</b> was successful. The variable pointed to by the <i>pcb</i> parameter should be non-zero.<br>
+</dd>
+<dt>
+E_FAIL</dt>
+<dd>
+<b>FormatMessage</b> failed.</dd>
+</dl>
+<h2>Remarks</h2>
+<p>
+The <b>FormatMessage</b> method requires a message definition as input. The message definition can come from a buffer passed into <b>FormatMessage</b>, from a message table resource in an already-loaded module, or the caller can prompt <b>FormatMessage</b> to search the system's message table resources. <b>FormatMessage</b> finds the message definition in a message table resource based on a message identifier and a language identifier. <b>FormatMessage</b> copies the formatted message text to an output buffer, processing any embedded insert sequences if requested. <b>FormatMessage</b> also allows the filter to define message codes specific to the filter. For more information, see <A HREF='javascript:document.x.iv.ALink("_wcesdk_file_filters","")'>File Filters</a> and <A HREF='javascript:document.x.iv.ALink("_wcesdk_filter_defined_error_values","")'>Filter Defined Error Values</a>. </p>
+</BODY>
+</HTML>

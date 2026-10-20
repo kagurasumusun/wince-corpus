@@ -1,0 +1,169 @@
+<HTML>
+<HEAD>
+<TITLE>Examples</TITLE>
+</HEAD><body bgcolor="#FFFFFF">
+<!-- SHCALL InfoViewer title (Shcall.ivt); HTML topics extracted with tools/extract-ivt.py, images and the title's own indexes dropped. -->
+
+<A NAME="0653a6dc"></A><FONT FACE="Arial" SIZE="5"><B>Prolog and Epilog Examples
+<P>
+</B></FONT><FONT FACE="Arial" COLOR="#008000" SIZE="3"><A HREF="cal00007.htm"><IMG SRC="cal00001.gif" ALT="cal00001.gif" BORDER=0 WIDTH=14 HEIGHT=14> Prolog and Epilog
+<P>
+</A></FONT><FONT FACE="Arial" SIZE="3"><B>Example #1
+<P>
+</B>Allocate a stack frame to save <B>R14</B>, <B>R8</B> and <B>PR</B> and to allow <B>alloca()</B> calls.  Also, allocate a 4-word argument build area.  No stack space is
+needed for local variables or temporaries.
+<P>
+</FONT><FONT FACE="Lucida Sans Typewriter" SIZE="3">
+<PRE>
+NESTED_ENTRY Function
+mov.l R14, @-R15      // Save old frame pointer
+mov.l R8,  @-R15      // Save a permanent register
+sts.l PR,  @-R15      // Save return address
+mov     R15, R14      // Set up new frame pointer
+add     #12, R14
+add     #-16, R15     // Allocate argument save area
+
+PROLOG_END
+ 
+// Routine body
+
+add     #-12, R14     // Find base of RSA
+mov     R14, R15
+lds.l @R15+, PR       // Restore return address
+mov.l @R15+, R8       // Restore R8
+rts                   // Return
+mov.l @R15+, R14      // Restore R14
+
+ENTRY_END Function
+
+</PRE>
+<P>
+
+<P>
+</I></FONT><FONT FACE="Arial" SIZE="3"><B>Example #2
+<P>
+</B>Allocate a stack frame for a leaf routine which requires 40 bytes for local
+variables and temporaries.  It uses permanent registers <B>R8</B>, <B>R9</B>, and <B>R10</B>.  This routine has no <B>alloca()</B> locals so no Frame Pointer is required.
+<P>
+</FONT><FONT FACE="Lucida Sans Typewriter" SIZE="3">
+<PRE>
+NESTED_ENTRY Function
+
+mov.l R8, @-R15
+mov.l R9, @-R15
+mov.l R10, @-R15
+add     #-40, R15
+
+PROLOG_END
+
+// Routine body
+
+add     #40, R15
+mov.l @R15+, R10
+mov.l @R15+, R9
+rts
+ mov.l @R15+, R8
+
+ENTRY_END Function
+
+</PRE>
+<P>
+</FONT><FONT FACE="Arial" SIZE="3"><B>Example #3
+<P>
+</B>Allocate a stack frame which requires 64K bytes.  Save argument register <B>R4</B> to the incoming argument save area.  Save argument register <B>R5</B> to allocated register <B>R8.  </B>No separate frame pointer is required.  The return address and permanent
+register <B>R8 </B>are saved<B> </B>.  Note that an exception handler is declared in this example.
+<P>
+</FONT><FONT FACE="Lucida Sans Typewriter" SIZE="3">
+<PRE>
+EXCEPTION_HANDLER RoutineHandler
+NESTED_ENTRY Function
+
+mov.l R8, @-R15
+sts.l PR, @-R15
+mov.l R4, @(R15, 8)
+mov.l R5, R8
+mov     #65528, R1        // Frame size
+sub     R1, R15           // Allocate stack frame
+
+PROLOG_END
+
+// Routine body
+
+mov     #65528, R2        // Get size of frame size
+add     R2, R15           // Use temp to restore regs
+lds.l @R15+, PR           // Recover return address
+rts
+ mov.l @R15+, R8          // Restore R8
+
+ENTRY_END Function
+
+
+</PRE>
+<P>
+
+<P>
+
+<P>
+<A NAME="7bb21e46"></A></I></FONT><FONT FACE="Arial" SIZE="5"><B>Assembler Directives Example
+<P>
+</B></FONT><FONT FACE="Arial" SIZE="3">The coding examples used throughout this document are written using macros to
+isolate the programmer from the low-level details involved with using assembler
+directives. The following example demonstrates how the macros listed in </FONT><FONT FACE="Arial" COLOR="#008000" SIZE="3"><A HREF="cal00011.htm">Assembler Macros</A></FONT><FONT FACE="Arial" SIZE="3"> are implemented using assembler directives when the macros cannot be used.
+<P>
+
+<P>
+</FONT><FONT FACE="Lucida Sans Typewriter" SIZE="3">
+<PRE>
+START_REGION NameBegin
+     .global     NameBegin
+NameBegin:
+
+END_REGION NameEnd
+     .global     NameEnd
+NameEnd:
+
+NESTED_ENTRY Name
+     .section     .text,code
+     .align      4
+     .global     Name
+Name:     .entry
+
+LEAF_ENTRY Name
+     .section     .text,code
+     .align     4
+     .global     Name
+     Name:     .entry
+     .prolog
+
+NESTED_BIGENTRY  Name
+     .section     .text,code
+     .align     4
+     .global     Name
+Name:     .bigentry
+
+LEAF_BIGENTRY  Name
+     .section     .text,code
+     .align     4
+     .global     Name
+Name:     .bigentry
+     .prolog
+
+ALTERNATE_ENTRY Name
+     .global     Name
+Name:
+
+ENTRY_END Name
+     .endf
+EXCEPTION_HANDLER Handler
+     .pdata     Handler
+
+EXCEPTION_HANDLER_DATA Handler,HandlerData
+     .pdata     Handler,HandlerData
+
+PROLOG_END
+     .prolog
+
+</PRE>
+<P>
+</FONT><FONT FACE="Arial" SIZE="3"></FONT></BODY>
+</HTML>

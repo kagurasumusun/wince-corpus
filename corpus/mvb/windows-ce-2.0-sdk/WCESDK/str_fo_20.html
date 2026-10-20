@@ -1,0 +1,262 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML>
+<HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text-html; charset=Windows-1252">
+<title>MailMsg</title>
+<meta name=MS-HAID content="_wcesdk_mailmsg">
+<meta name=MS-HKWD content="MailMsg (Windows CE)">
+</HEAD>
+<BODY BGCOLOR=#FFFFFF TEXT=#000000>
+<!-- WCESDK InfoViewer title (WCESDK.IVT); HTML topics extracted with tools/extract-ivt.py, images and the title's own indexes dropped. -->
+
+<BODY BGCOLOR=#FFFFFF BACKGROUND= "images\cewmark.gif" TEXT=#000000><form name=x><object name=iv classid="clsid:9c2ac687-ceef-11cf-96d9-00a0c903b016">
+</object></form>
+<h1><a name="_wcesdk_mailmsg"></a>MailMsg</h1>
+<p>
+The <b>MailMsg</b> structure is used by the <b>Mail</b> and <b>Transport</b> functions to store the contents of messages being sent and received.</p>
+<h2>Syntax</h2>
+<p>
+<b>typedef struct</b> <b>MailMsg</b> {<BR>&#09;<b>DWORD</b>  <i>dwMsgId</i>;<BR>&#09;<b>DWORD</b>  <i>dwFlags</i>;<BR>&#09;<b>DWORD</b>  <i>dwMsgLen</i>;<BR>&#09;<b>WORD</b>  <i>wBodyLen</i>;<BR>&#09;<b>FILETIME</b>  <i>ftDate</i>;<BR>&#09;<b>LPWSTR</b>  <i>szSvcId</i>;<BR>&#09;<b>LPWSTR</b>  <i>szSvcNam</i>;<BR>&#09;<b>WCHAR</b>*  <i>pwcHeaders</i>;<BR>&#09;<b>LPWSTR</b>  <i>szBody</i>;<BR>&#09;<b>CEOID</b>  <i>oid</i>;<BR>&#09;<b>HANDLE</b>  <i>hHeap<BR></i><b>} MailMsg;</b></p>
+<h2>At a Glance</h2>
+<table>
+<tr valign=top>
+<td>
+Header file:</td>
+<td>
+</td>
+</tr>
+<tr valign=top>
+<td>
+Component/Module:</td>
+<td>
+</td>
+</tr>
+<tr valign=top>
+<td>
+Platforms:</td>
+<td>
+</td>
+</tr>
+<tr valign=top>
+<td>
+Versions:</td>
+<td>
+1.0 and later</td>
+</tr>
+</table><br>
+<h2>Members</h2>
+<dl>
+<dt>
+<b>dwMsgId</b></dt>
+<dd>
+Specifies an internal identification number maintained by the system. This identification number is used by library routines to access messages in the message store. Applications should not attempt to change the value stored in this member.<br>
+</dd>
+<dt>
+<b>dwFlags</b></dt>
+<dd>
+Specify the folder containing the message, the status of the message, and how the message is handled. These mail flags are divided into three categories: folder flags, status flags, and message flags. The flags and a brief description of their meanings are listed below.<p>
+Folder flags determine which folder to locate or store the message in. Use only one of the following folder flags in combination with status and message flags.</p>
+<dl>
+<dt>
+MAIL_FOLDER_ALL</dt>
+<dd>
+Folder flag mask<br>
+</dd>
+<dt>
+MAIL_FOLDER_FIRST</dt>
+<dd>
+Start of user-defined folders<br>
+</dd>
+<dt>
+MAIL_FOLDER_LAST</dt>
+<dd>
+End of user-defined folders<br>
+</dd>
+<dt>
+MAIL_FOLDER_SENT</dt>
+<dd>
+Copy of sent mail<br>
+</dd>
+<dt>
+MAIL_FOLDER_OUTBOX</dt>
+<dd>
+Local OUTBOX (last local folder)<br>
+</dd>
+<dt>
+MAIL_FOLDER_INBOX</dt>
+<dd>
+Universal INBOX<br>
+</dd>
+<dt>
+MAIL_FOLDER_ANY</dt>
+<dd>
+Search for any folder during &quot;Get&quot;<br>
+</dd>
+<dt>
+MAIL_FOLDER_TARGET</dt>
+<dd>
+Target folder for MAIL_COPY</dd>
+</dl>
+<p>
+Status flags verify the status of the message being stored or retrieved, or whether the message has attachment. Status flags can be used to determine what type of messages to search for when calling <b>MailFirst</b> and <b>MailNext</b> functions. These flags can be any combination of the following values.</p>
+<dl>
+<dt>
+MAIL_STATUS_ALL</dt>
+<dd>
+Status flag mask<br>
+</dd>
+<dt>
+MAIL_STATUS_FREE</dt>
+<dd>
+Message deleted - free slot<br>
+</dd>
+<dt>
+MAIL_STATUS_DELETE</dt>
+<dd>
+Message set to be deleted<br>
+</dd>
+<dt>
+MAIL_STATUS_COPY</dt>
+<dd>
+Message set to be copied to local target<br>
+</dd>
+<dt>
+MAIL_STATUS_READ</dt>
+<dd>
+Message marked as having been read<br>
+</dd>
+<dt>
+MAIL_STATUS_SERVICE</dt>
+<dd>
+INBOX Message exists on a service<br>
+</dd>
+<dt>
+MAIL_STATUS_COMPOSED</dt>
+<dd>
+Set for outgoing messages (newly composed, replied, or forwarded). In Windows CE version 2.0, an outgoing message can be saved and later re-edited using the outgoing dialog that includes the SEND button.<br>
+</dd>
+<dt>
+MAIL_STATUS_REMOTE</dt>
+<dd>
+INBOX body  exists <i>only </i>on service<br>
+</dd>
+<dt>
+MAIL_STATUS_NOT</dt>
+<dd>
+Look for invert of status bits (GET)<br>
+</dd>
+<dt>
+MAIL_STATUS_ANY</dt>
+<dd>
+(MAIL_STATUS_NOT | MAIL_STATUS_FREE)<br>
+</dd>
+<dt>
+MAIL_STATUS_ALIVE</dt>
+<dd>
+(MAIL_STATUS_ANY | MAIL_STATUS_DELETE)<br>
+</dd>
+<dt>
+MAIL_STATUS_LOCAL</dt>
+<dd>
+(MAIL_STATUS_ALIVE | MAIL_STATUS_SERVICE)<br>
+</dd>
+<dt>
+MAIL_STATUS_BODY</dt>
+<dd>
+(MAIL_STATUS_ALIVE | MAIL_STATUS_REMOTE)<br>
+</dd>
+<dt>
+MAIL_STATUS_UNREAD</dt>
+<dd>
+(MAIL_STATUS_ALIVE | MAIL_STATUS_READ)<br>
+</dd>
+<dt>
+MAIL_STATUS_ATTACHMENTS</dt>
+<dd>
+The message has attachments<br>
+</dd>
+<dt>
+MAIL_STATUS_ATT_REQ</dt>
+<dd>
+The message's attachment is marked for download</dd>
+</dl>
+<p>
+Message flags determine how the message will be handled and how much of the message is retrieved on a mail get. If none of the message flags are set, all fields but the body are retrieved. Use any combination of the first two flags with one of the remaining flags.</p>
+<dl>
+<dt>
+MAIL_FLAGS_ALL</dt>
+<dd>
+Message flag mask<br>
+</dd>
+<dt>
+MAIL_KEEP</dt>
+<dd>
+Move from OUTBOX to FILE after sent. In Windows CE Platform SDK version 2.0, this flag is no longer used. Instead, the client application checks the current registry settings to determine whether it does or does not save a message in the Sent Item folder.<br>
+</dd>
+<dt>
+MAIL_GET_BODY</dt>
+<dd>
+Get body (during a MailGet)<br>
+</dd>
+<dt>
+MAIL_GET_FLAGS</dt>
+<dd>
+Get <i>only </i>flags field (during a get)<br>
+</dd>
+<dt>
+MAIL_FULL</dt>
+<dd>
+Get full body when copying</dd>
+</dl>
+<br>
+</dd>
+<dt>
+<b>dwMsgLen</b></dt>
+<dd>
+Specifies the size, in bytes, of the entire message on the service.<br>
+</dd>
+<dt>
+<b>wBodyLen</b></dt>
+<dd>
+Specifies the size, in bytes, of the message as maintained in the message store.<br>
+</dd>
+<dt>
+<b>ftDate</b></dt>
+<dd>
+Specifies the date and time the message was received by the service.<br>
+</dd>
+<dt>
+<b>szSvcId</b></dt>
+<dd>
+Specifies a unique identification number assigned by the service. The service uses this identification number to access the desired message.<br>
+</dd>
+<dt>
+<b>szSvcNam</b></dt>
+<dd>
+Specifies the name of the service. Applications can use this name to link messages to a particular service.<br>
+</dd>
+<dt>
+<b>pwcHeaders</b></dt>
+<dd>
+Pointer to the header fields. The header consists of entries made up of two fields, a name and an associated value. The name fields are separated from the value fields by a NULL character, and the entries are separated from each other by a NULL character. The header string is terminated with two consecutive NULL characters.<br>
+</dd>
+<dt>
+<b>szBody</b></dt>
+<dd>
+Pointer to the body of the message.<br>
+</dd>
+<dt>
+<b>oid</b></dt>
+<dd>
+Specifies the object identifier. The object ID is assigned by the system and can be used as a key for storing and receiving messages. The object ID is set when the message is inserted in the message store using the <b>MailPut</b> function and returned in this field when the <b>MailFirst</b> or <b>MailNext</b> functions are called.<br>
+</dd>
+<dt>
+<b>hHeap</b></dt>
+<dd>
+Handle to the private heap used for all storage related to this message. Any storage allocated to this heap is freed when the <b>MailFree</b> function is called.</dd>
+</dl>
+<h2>Remarks</h2>
+<p>
+A mail message can be either local or linked to a service. Local messages exist only the device. User-composed messages fall into this category. Service-lined messages, on the other hand, exist on a service somewhere, but are referenced locally. Messages which are synchronized and retrieved via the SMTP/POP3 transport fall into this category.</p>
+</BODY>
+</HTML>

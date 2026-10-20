@@ -1,0 +1,51 @@
+<HTML>
+<HEAD>
+<TITLE>9.6  Notes on Automatic Literal Pool Output</TITLE>
+</HEAD><body bgcolor="#FFFFFF">
+<!-- SHASM InfoViewer title (Shasm.ivt); HTML topics extracted with tools/extract-ivt.py, images and the title's own indexes dropped. -->
+
+<A NAME="off_3507388"></A><A NAME="c8047488"></A><FONT FACE="Arial" SIZE="5"><B>9.6  Notes on Automatic Literal Pool Output 
+<P>
+</B></FONT><FONT FACE="Arial" SIZE="3">If an error occurs when an extended instruction is written, it is usually
+because:
+<P>
+<IMG SRC="asm90000.gif" ALT="asm90000.gif" BORDER=0 WIDTH=6 HEIGHT=16> Extended instructions must not be specified in delay slots (error 151)
+<P>
+<IMG SRC="asm90000.gif" ALT="asm90000.gif" BORDER=0 WIDTH=6 HEIGHT=16> Extended instructions must not be specified in relative sections having a
+boundary alignment value of less than 2 (error 152)
+<P>
+<IMG SRC="asm90000.gif" ALT="asm90000.gif" BORDER=0 WIDTH=6 HEIGHT=16> MOV.L #imm, Rn or MOVA #imm, R0 must not be specified in relative sections
+having a boundary alignment value of less than 4 (error 152)
+<P>
+If an error occurs when a .POOL directive is written, it might be because
+.POOL directives must not be written after unconditional branches (warning 522).
+<P>
+.NOPOOL directives are valid only when written after delay slot instructions.
+If written at other locations, the .NOPOOL directive causes warning 521.
+<P>
+If the displacement of an executable instruction exceeds the valid range when
+an extended instruction is expanded, the assembler generates a literal pool and
+outputs error message 453 for the instruction having a displacement outside
+the valid range. Solution: Move the literal pool output location (for example, by
+the .NOPOOL directive), or change the location or addressing mode of the
+instruction causing the error.
+<P>
+If the assembler cannot find a literal pool output location satisfying the
+following conditions in respect to the extended instruction:
+<P>
+<IMG SRC="asm90000.gif" ALT="asm90000.gif" BORDER=0 WIDTH=6 HEIGHT=16> Same file
+<P>
+<IMG SRC="asm90000.gif" ALT="asm90000.gif" BORDER=0 WIDTH=6 HEIGHT=16> Same section
+<P>
+<IMG SRC="asm90000.gif" ALT="asm90000.gif" BORDER=0 WIDTH=6 HEIGHT=16> Forward direction
+<P>
+the assembler outputs, at the end of the section which includes the extended
+instruction, the literal pool and a BRA instruction with a NOP instruction in
+the delay slot to jump around the literal pool, and outputs warning message 876.
+<P>
+If the displacement of the literal pool from the extended instruction exceeds
+the valid range, error 453 is generated. Solution: Output the literal pool
+within the valid range (for example, using the .POOL directive.)
+<P>
+</FONT></BODY>
+</HTML>

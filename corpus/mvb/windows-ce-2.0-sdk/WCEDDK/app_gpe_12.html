@@ -1,0 +1,47 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
+<HTML>
+<HEAD><META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=Windows-1252">
+<TITLE>GPE::AllocSurface</TITLE>
+<META NAME="MS-HKWD" CONTENT="GPE::AllocSurface">
+<META NAME="MS-HAID" CONTENT="_wceddk_GPE.3a3a.AllocSurface">
+</HEAD>
+<BODY BGPROPERTIES="FIXED" TEXT="#000000" BGCOLOR="#FFFFFF">
+<!-- WCEDDK InfoViewer title (WCEDDK.IVT); HTML topics extracted with tools/extract-ivt.py, images and the title's own indexes dropped. -->
+
+<FORM name=x>
+<OBJECT name=iv classid="clsid:9c2ac687-ceef-11cf-96d9-00a0c903b016">
+</OBJECT>
+</FORM>
+<FONT FACE="ARIAL,HELVETICA" SIZE="2">
+<H3><A NAME="_wceddk_GPE.3a3a.AllocSurface"></A>GPE::AllocSurface</H3>
+<PRE><FONT FACE="Courier" SIZE="2">SCODE GPE::AllocSurface(
+&#09;GPESurf **ppSurf,
+&#09;int width,
+&#09;int height,
+&#09;EGPEFormat format,
+&#09;int surfaceFlags )</FONT></PRE>
+<P>
+This method is called when the driver must allocate storage for surface
+pixels. The <I>surfaceFlags</I>&nbsp;field may contain GPE_REQUIRE_VIDEO_MEMORY or
+GPE_PREFER_VIDEO_MEMORY or neither. If GPE_REQUIRE_VIDEO_MEMORY is set, the
+call must return E_NOT_ENOUGH_MEMORY if there is insufficient video memory
+available or E_INVALID_PARAMETER if the allocation is inappropriate for video
+memory (e.g. wrong pixel format). For GPE_PREFER_VIDEO_MEMORY, the driver is
+expected to allocate the surface from video memory if possible, otherwise it
+should use system memory.
+<P>
+For video memory allocation, it is expected that the driver will implement a
+class derived from GPESurf to contain any extra information such as a pointer
+to the allocator to be used when freeing the memory. Refer to the Node2D class
+for information on a supplied memory allocator which may be used for
+rectangular allocation requirements.
+<P>
+For system memory allocation, GPE::AllocSurface should use the following code
+segment:
+<PRE><FONT FACE="Courier" SIZE="2">&#09;*ppSurf = new GPESurf( width, height, format );
+&#09;if( *ppSurf )
+&#09;&#09;return S_OK;
+&#09;return E_NOT_ENOUGH_MEMORY;</FONT></PRE>
+<P></FONT>
+</BODY>
+</HTML>

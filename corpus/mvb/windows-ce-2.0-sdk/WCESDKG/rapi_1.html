@@ -1,0 +1,147 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML>
+<HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text-html; charset=Windows-1252">
+<title>Initializing and Terminating RAPI</title>
+<meta name=MS-HAID content="_wcesdk_initializing_and_terminating_rapi">
+</HEAD>
+<BODY BGCOLOR=#FFFFFF TEXT=#000000>
+<!-- WCESDKG InfoViewer title (Wcesdkg.ivt); HTML topics extracted with tools/extract-ivt.py, images and the title's own indexes dropped. -->
+
+<form name=x><object name=iv classid="clsid:9c2ac687-ceef-11cf-96d9-00a0c903b016">
+</object></form>
+<h1><a name="_wcesdk_initializing_and_terminating_rapi"></a>Initializing and Terminating RAPI</h1>
+<p>
+Before making RAPI calls, the system must be initialized by calling <A HREF='javascript:document.x.iv.ALink("_wcesdk_cerapiinit","")'><b>CeRapiInit</b></a> or <A HREF='javascript:document.x.iv.ALink("_wcesdk_cerapiinitex","")'><b>CeRapiInitEx</b></a>. These functions perform routine initialization and set up the communications link between the PC and the device. </p>
+<p>
+<b>CeRapiInit</b> is a synchronous operation. It does not return control to the application until a connection is made or an error occurs. In contrast, <b>CeRapiInitEx</b> returns immediately. It continues the initialization until a connection is made, an error occurs, or there is a call to <A HREF='javascript:document.x.iv.ALink("_wcesdk_cerapiuninit","")'><b>CeRapiUninit</b></a>. Although <b>CeRapiInitEx</b> avoids blocking any threads, it is a more complicated process for initialization.</p>
+<h2><img src="../guide/art/wedge.gif" border=0>&#09;To initialize RAPI using CeRapiInitEx</h2>
+<ol>
+<li>
+Call <b>CeRapiInitEx</b>.<br><br></li>
+<li>
+If an error is returned, exit.<br><br></li>
+<li>
+If successful, call <A HREF='javascript:document.x.iv.ALink("_wcesdk_win32_waitforsingleobject","")'><b>WaitForSingleObject</b></a> or <A HREF='javascript:document.x.iv.ALink("_wcesdk_win32_waitformultipleobjects","")'><b>WaitForMultipleObjects</b></a> to wait on the event handle passed back in the <b>heRapiInit</b> member of <A HREF='javascript:document.x.iv.ALink("_wcesdk_rapiinit","")'><b>RAPIINIT</b></a>.<br><br></li>
+<li>
+When <b>heRapiInit</b> is signalled, check for a successful connection or an error value. <br><br></li>
+<li>
+Check the <b>hrRapiInit</b> member of the <b>RAPIINIT</b> structure for the final return value.</li>
+</ol>
+<p>
+When you are finished with RAPI, call <A HREF='javascript:document.x.iv.ALink("_wcesdk_cerapiuninit","")'><b>CeRapiUninit</b></a> to terminate the connection and perform any necessary cleanup. Creating and terminating connections are fairly expensive operations. In general, establish and terminate the link only once per session, not on a per-call basis.</p>
+<p>
+The following example demonstrates the use of the <A HREF='javascript:document.x.iv.ALink("_wcesdk_cerapiinitex","")'><b>CeRapiInitEx</b></a> function. Following the <b>CeRapiInitEx</b> call, the <b>MsgWaitForMultipleObjects</b> function is used to wait on one of two events. One is the event handle passed back through the <b>heRapiInit</b> member of the <A HREF='javascript:document.x.iv.ALink("_wcesdk_rapiinit","")'><b>RAPIINIT</b></a> structure. The other event is when a user terminates a connection <font face="Symbol"><span style="font-family:symbol">&#190;</span></font> and is generated, for instance, from a dialog box.</p>
+<pre>/* InitRapi is similar to CeRapiInit except it will exit properly if the hExitevent is set. hExit is a handle to a timeout or a keyboard input that will cancel a wait dialog (note that the dialog procedure is not included here).*/
+
+HRESULT InitRapi(HEVENT hExit)
+{
+    RAPIINIT ri = { sizeof(RAPIINIT) };
+    HRESULT hr = CeRapiInitEx(&amp;ri);
+    if ( FAILED( hr ) )
+    {
+        return(hr);
+    }
+
+    HANDLE ahWait[] = { hExit                  , ri.heRapiInit };
+    enum              { WAIT_EXIT=WAIT_OBJECT_0, WAIT_INIT     };
+
+    //Wait for an event to happen
+    DWORD dwObj = WaitAndDispatch(ARRAYSIZE(ahWait), ahWait);
+
+    if (WAIT_INIT == dwObj)  ///Event signalled by RAPI
+    {
+        if (FAILED(ri.hrRapiInit)) //Connection failed
+        {
+            CeRapiUninit();
+        }
+
+        return(ri.hrRapiInit);
+    }
+
+    //Event signalled by user or timeout occurred
+    CeRapiUninit();
+
+    // This should never happen; it indicates a problem with the wait
+    if (WAIT_EXIT == dwObj)
+    {
+        return(HRESULT_FROM_WIN32(ERROR_CANCELLED));
+    }
+
+    return(E_FAIL);
+}
+
+
+enum
+{
+    WAD_ALLINPUT    = 0x0000,
+    WAD_SENDMESSAGE = 0x0001,
+} ;
+
+/* WaitAndDispatch waits for the hExit handle (from InitRapi()) or
+   the event handle associated with the call to CeRapiInitEx().
+   This should not be called if there is any UI in this thread unless 
+   only the WAD_SENDMESSAGE flag is set. */
+DWORD WaitAndDispatch(DWORD nCount, HANDLE *phWait, DWORD dwTimeout, UINT uFlags)
+{
+    DWORD dwObj;
+    DWORD dwStart = GetTickCount();
+    DWORD dwTimeLeft = dwTimeout;
+
+    for ( ; ; )
+    {
+        dwObj = MsgWaitForMultipleObjects(nCount, phWait, FALSE,
+            dwTimeLeft, (uFlags&amp;WAD_SENDMESSAGE) ? QS_SENDMESSAGE : QS_ALLINPUT);
+        if (dwObj == (DWORD)-1)
+        {
+            // Wait once more in case MsgWaitForMultipleObjects failed
+            dwObj = WaitForMultipleObjects(nCount, phWait, FALSE, 100);
+            if (dwObj == (DWORD)-1)
+            {
+                break;
+            }
+        }
+        else if (dwObj == WAIT_TIMEOUT)
+        {
+            break;
+        }
+
+        if ((UINT)(dwObj-WAIT_OBJECT_0) &lt; nCount)
+        {
+            // One of the events went off
+            break;
+        }
+
+        /* There is a pending message or we timed out, so dispatch messages */
+        MSG msg;
+        if (uFlags &amp; WAD_SENDMESSAGE)
+        {
+            // This should allow all sent message to go through
+            PeekMessage(&amp;msg, NULL, 0, 0, PM_NOREMOVE);
+        }
+        else
+        {
+            /* This should allow all sent or posted messages to be dispatched, but without keyboard translation */
+            while (PeekMessage(&amp;msg, NULL, 0, 0, PM_REMOVE))
+            {
+                DispatchMessage(&amp;msg);
+            }
+        }
+
+        // Update the amount of time left to wait if not infinite
+        if (INFINITE != dwTimeout)
+        {
+            dwTimeLeft = dwTimeout - (GetTickCount() - dwStart);
+            if ((int)dwTimeLeft &lt; 0)
+            {
+                // We've waited long enough
+                break;
+            }
+        }
+    }
+
+    return(dwObj);
+}
+</pre>
+</BODY>
+</HTML>

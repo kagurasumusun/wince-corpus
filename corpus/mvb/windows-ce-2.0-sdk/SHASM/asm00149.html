@@ -1,0 +1,49 @@
+<HTML>
+<HEAD>
+<TITLE>9.2  Extended Instructions Related to Automatic Literal Pool Generation</TITLE>
+</HEAD><body bgcolor="#FFFFFF">
+<!-- SHASM InfoViewer title (Shasm.ivt); HTML topics extracted with tools/extract-ivt.py, images and the title's own indexes dropped. -->
+
+<A NAME="off_3409155"></A><A NAME="a01e3929"></A><FONT FACE="Arial" SIZE="5"><B>9.2  Extended Instructions Related to Automatic Literal Pool Generation 
+<P>
+</B></FONT><FONT FACE="Arial" SIZE="3">The assembler automatically generates a literal pool corresponding to an
+extended instruction (MOV.W #imm, Rn; MOV.L #imm, Rn; or MOVA #imm, R0) and
+calculates the PC relative displacement value.
+<P>
+A move immediate instruction can be written as follows:
+<P>
+ </FONT><FONT FACE="Lucida Sans Typewriter" SIZE="3">MOV  #<I>expr</I>,Rn
+<P>
+</FONT><FONT FACE="Arial" SIZE="3">Note the absence of any operation size specifier. The assembler computes the
+value of expr and automatically selects the most appropriate operation size. If
+expr is an absolute value in the range -128 to +127, inclusive, a MOV.B
+#expr,Rn instruction will be generated. If expr is an absolute value in the range
+-32768 to +32767, inclusive, a MOV.W @(disp, PC),Rn and a corresponding word-size
+literal pool entry will be generated. Otherwise, including any case where expr's
+value relies on imported symbols or forward references, a MOV.L @(disp, PC),Rn
+and a corresponding longword-size literal pool entry will be generated.
+<P>
+An extended instruction source statement is expanded to an executable
+instruction and literal data as shown in Table 9.1.
+<P>
+<A NAME="6f506047"></A><B>Table 9.1  Extended Instructions and Expanded Results
+<P>
+</B></FONT><TABLE><TR VALIGN=TOP><TD><FONT FACE="Arial" SIZE="3"><B>Extended Instruction
+<BR></B></FONT></TD><TD><FONT FACE="Arial" SIZE="3"><B>Expanded Result 
+<BR></B></FONT></TD></TR><TR VALIGN=TOP><TD><FONT FACE="Arial" SIZE="3">MOV.W #imm, Rn
+<BR></FONT></TD><TD><FONT FACE="Arial" SIZE="3">MOV.W @(disp, PC), Rn and 2-byte literal data
+<BR></FONT></TD></TR><TR VALIGN=TOP><TD><FONT FACE="Arial" SIZE="3">MOV.L #imm, Rn
+<BR></FONT></TD><TD><FONT FACE="Arial" SIZE="3">MOV.L @(disp, PC), Rn and 4-byte literal data
+<BR></FONT></TD></TR><TR VALIGN=TOP><TD><FONT FACE="Arial" SIZE="3">MOVA #imm, R0
+<BR></FONT></TD><TD><FONT FACE="Arial" SIZE="3">MOVA @(disp, PC), R0 and 4-byte literal data
+<BR></FONT></TD></TR><TR VALIGN=TOP><TD><FONT FACE="Arial" SIZE="3">MOV #imm, Rn
+<BR>-128 &lt;= imm &lt;= +127
+<BR>-32768 &lt;= imm &lt;= +32767
+<BR>all other imm values
+<BR></FONT></TD><TD><FONT FACE="Arial" SIZE="3">One of the following, depending on the value of imm:
+<BR>MOV.B #imm, Rn and no literal data
+<BR>MOV.W @(disp, PC), Rn and 2-byte literal data
+<BR>MOV.L @(disp, PC), Rn and 4-byte literal data
+<BR>
+<BR></FONT></TD></TR></TABLE><FONT FACE="Arial" SIZE="3"></FONT></BODY>
+</HTML>

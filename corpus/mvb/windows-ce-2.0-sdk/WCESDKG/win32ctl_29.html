@@ -1,0 +1,92 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML>
+<HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text-html; charset=Windows-1252">
+<title>Creating a Rebar Control</title>
+<meta name=MS-HAID content="_wcesdk_creating_a_rebar_control">
+<meta name=MS-HKWD content="Creating a Rebar Control">
+</HEAD>
+<BODY BGCOLOR=#FFFFFF TEXT=#000000>
+<!-- WCESDKG InfoViewer title (Wcesdkg.ivt); HTML topics extracted with tools/extract-ivt.py, images and the title's own indexes dropped. -->
+
+<form name=x><object name=iv classid="clsid:9c2ac687-ceef-11cf-96d9-00a0c903b016">
+</object></form>
+<h3><a name="_wcesdk_creating_a_rebar_control"></a>Creating a Rebar Control</h3>
+<p>
+The following sample creates a rebar control with two bands<font face="Symbol"><span style="font-family:symbol">&#190;</span></font>one that contains a combo box and another that contains a toolbar. The sample includes the RBS_VARHEIGHT style to allow the control to use variable band height. After creating the rebar control, CreateRebar creates the child windows with calls to two application-defined functions, CreateComboBox and CreateToolbar. Before adding each band, CreateRebar initializes the <b>cbSize</b> member of the <A HREF='javascript:document.x.iv.ALink("_wcesdk_rebarbandinfo","")'><b>REBARBANDINFO</b></a> structure, as required by the<A HREF='javascript:document.x.iv.ALink("_wcesdk_rb_insertband","")'> RB_INSERTBAND</a> message. Then it sets the value of the structure's <b>fMask</b> member to reflect which members contain valid data. <b>CreateRebar</b> sets the <b>cyMinChild</b> member for each band to allow for the height of the control within it. The <b>cxMinChild</b> member is zero to allow the user to completely hide the control within a given band. </p>
+<pre>HWND WINAPI CreateRebar(HWND hwndOwner)
+{
+   REBARINFO     rbi;
+   REBARBANDINFO rbBand;
+   RECT          rc;
+   HWND   hwndCB, hwndTB, hwndRB;
+   DWORD  dwBtnSize;
+   INITCOMMONCONTROLSEX icex;
+
+   icex.dwSize = sizeof(INITCOMMONCONTROLSEX);
+   icex.dwICC   = ICC_COOL_CLASSES|ICC_BAR_CLASSES;
+   InitCommonControlsEx(&amp;icex);
+
+   hwndRB = CreateWindowEx(0,
+                           REBARCLASSNAME,
+                           NULL,
+                           WS_CHILD|WS_VISIBLE|WS_CLIPSIBLINGS|
+                           WS_CLIPCHILDREN|RBS_VARHEIGHT|CCS_NODIVIDER,
+                           0,0,0,0,
+                           hwndOwner,
+                           NULL,
+                           g_hinst,
+                           NULL);
+   if(!hwndRB)
+      return NULL;
+
+   // Initialize and send the REBARINFO structure.
+   rbi.cbSize = sizeof(REBARINFO);  // Required when using this struct.
+   rbi.fMask  = 0;
+   rbi.himl   = (HIMAGELIST)NULL;
+   if(!SendMessage(hwndRB, RB_SETBARINFO, 0, (LPARAM)&amp;rbi))
+      return NULL;
+
+   // Initialize structure members that both bands will share.
+   rbBand.cbSize = sizeof(REBARBANDINFO);  // Required
+   rbBand.fMask  = RBBIM_COLORS | RBBIM_TEXT | RBBIM_BACKGROUND | 
+                   RBBIM_STYLE | RBBIM_CHILD  | RBBIM_CHILDSIZE | 
+                   RBBIM_SIZE;
+   rbBand.fStyle = RBBS_CHILDEDGE | RBBS_FIXEDBMP;
+   rbBand.hbmBack= LoadBitmap(g_hinst, MAKEINTRESOURCE(IDB_BACKGRND));   
+   
+   // Create the combo box control to be added.
+   hwndCB = CreateComboBox(hwndRB);
+   
+   // Set values unique to the band with the combo box.
+   GetWindowRect(hwndCB, &amp;rc);
+   rbBand.lpText     = &quot;Combo Box&quot;;
+   rbBand.hwndChild  = hwndCB;
+   rbBand.cxMinChild = 0;
+   rbBand.cyMinChild = rc.bottom - rc.top;
+   rbBand.cx         = 200;
+
+   // Add the band that has the combo box.
+   SendMessage(hwndRB, RB_INSERTBAND, (WPARAM)-1, (LPARAM)&amp;rbBand);
+
+   // Create the toolbar control to be added
+   hwndTB = CreateToolbar(hwndOwner, dwStyle);
+
+   // Get the height of the toolbar.
+   dwBtnSize = SendMessage(hwndTB, TB_GETBUTTONSIZE, 0,0);
+
+   // Set values unique to the band with the toolbar;
+   rbBand.lpText     = &quot;Tool Bar&quot;;
+   rbBand.hwndChild  = hwndTB;
+   rbBand.cxMinChild = 0;
+   rbBand.cyMinChild = HIWORD(dwBtnSize);
+   rbBand.cx         = 250;
+
+   // Add the band that has the toolbar.
+   SendMessage(hwndRB, RB_INSERTBAND, (WPARAM)-1, (LPARAM)&amp;rbBand);
+
+   return (hwndRB);
+}
+</pre>
+</BODY>
+</HTML>

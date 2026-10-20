@@ -1,0 +1,77 @@
+<HTML>
+<HEAD>
+<TITLE>6.27   JSR (Jump to Subroutine): Branch Instruction</TITLE>
+</HEAD><body bgcolor="#FFFFFF">
+<!-- SH3PROG InfoViewer title (sh3prog.ivt); HTML topics extracted with tools/extract-ivt.py, images and the title's own indexes dropped. -->
+
+<A NAME="off_2261912"></A><A NAME="41a72c32"></A><FONT FACE="Arial" SIZE="5"><B>6.27   JSR (Jump to Subroutine): Branch Instruction
+<P>
+</B></FONT><FONT FACE="Arial" SIZE="3"><B>Class: </B>Delayed branch instruction
+<P>
+</FONT><TABLE><TR VALIGN=TOP><TD><FONT FACE="Arial" SIZE="3"><B>Format
+<BR></B></FONT></TD><TD><FONT FACE="Arial" SIZE="3"><B>Abstract
+<BR></B></FONT></TD><TD><FONT FACE="Arial" SIZE="3"><B>Code
+<BR></B></FONT></TD><TD><FONT FACE="Arial" SIZE="3"><B>Cycle
+<BR></B></FONT></TD><TD><FONT FACE="Arial" SIZE="3"><B>T Bit
+<BR></B></FONT></TD></TR><TR VALIGN=TOP><TD><FONT FACE="Lucida Sans Typewriter" SIZE="3">JSR @Rn
+<BR></FONT></TD><TD><FONT FACE="Arial" SIZE="3">PC <IMG SRC="sh390002.gif" ALT="sh390002.gif" BORDER=0 WIDTH=13 HEIGHT=16> Rn, Rn <IMG SRC="sh390002.gif" ALT="sh390002.gif" BORDER=0 WIDTH=13 HEIGHT=16> PC
+<BR></FONT></TD><TD><FONT FACE="Lucida Sans Typewriter" SIZE="3">0100nnnn00001011
+<BR></FONT></TD><TD><FONT FACE="Arial" SIZE="3">2
+<BR></FONT></TD><TD><FONT FACE="Arial" SIZE="3">-
+<BR>
+<BR></FONT></TD></TR></TABLE><FONT FACE="Arial" SIZE="3"><B>Description: 
+<P>
+</B>Branches to the subroutine procedure at a specified address after executing
+the instruction following this JSR instruction. The PC value is stored in the PR.
+The jump destination is an address specified by the 32-bit data in general
+register Rn. The PC points to the starting address of the second instruction after
+JSR. The JSR instruction and RTS instruction are used for subroutine procedure
+calls.
+<P>
+</FONT><FONT FACE="Arial Narrow" SIZE="4"><B>Note: 
+<P>
+</B></FONT><FONT FACE="Arial" SIZE="3">Since this is a delayed branch instruction, the instruction after JSR is
+executed before branching. No interrupts are accepted between this instruction and
+the next instruction. If the next instruction is a branch instruction, it is
+acknowledged as an illegal slot instruction. 
+<P>
+<B>Operation:
+<P>
+</B></FONT><FONT FACE="Lucida Sans Typewriter" SIZE="3">JSR(long n) /* JSR @Rn */
+<P>
+{
+<P>
+ PR=PC;
+<P>
+ PC=R[n]+4;
+<P>
+ Delay_Slot(PR+2);
+<P>
+}
+<P>
+</FONT><FONT FACE="Arial" SIZE="3"><B>Example:
+<P>
+ </B></FONT><FONT FACE="Lucida Sans Typewriter" SIZE="3">MOV.L JSR_TABLE,R0 Address of R0 = TRGET
+<P>
+ JSR @R0 Branches to TRGET
+<P>
+ XOR R1,R1 Executes XOR before branching
+<P>
+ ADD R0,R1 ¨ Return address for when the subroutine procedure is completed (PR data)
+<P>
+ ...........
+<P>
+ <I>.align</I>  4
+<P>
+JSR_TABLE: <I>.data.l </I>TRGET Jump table
+<P>
+TRGET: NOP  ¨ Procedure entrance
+<P>
+ MOV R2,R3
+<P>
+ RTS  Returns to the above ADD instruction
+<P>
+ MOV #70,R1 Executes MOV before RTS
+<P>
+</FONT></BODY>
+</HTML>

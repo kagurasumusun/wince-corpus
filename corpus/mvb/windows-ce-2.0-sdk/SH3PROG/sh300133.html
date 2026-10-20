@@ -1,0 +1,52 @@
+<HTML>
+<HEAD>
+<TITLE>8.6   Multiplier Access Contention</TITLE>
+</HEAD><body bgcolor="#FFFFFF">
+<!-- SH3PROG InfoViewer title (sh3prog.ivt); HTML topics extracted with tools/extract-ivt.py, images and the title's own indexes dropped. -->
+
+<A NAME="off_3735624"></A><A NAME="94b71498"></A><FONT FACE="Arial" SIZE="5"><B>8.6   Multiplier Access Contention 
+<P>
+</B></FONT><FONT FACE="Arial" SIZE="3">A multiplier-type instruction (multiply/accumulate calculations, multiplier
+instructions), an instruction in which the multiply and accumulate registers
+(MACH, MACL) are accessed, can cause a contention in the multiplier access.
+<P>
+In the multiplier instruction, the multiplier takes action regardless of the
+slots after the ending of the last MA. In the double precision (64 bytes) type
+multiplier instruction and the multiply/accumulate calculations instruction, the
+multiplier takes action in three states. In the single precision (32 bytes)
+type multiplier instruction, the action is taken in two states.
+<P>
+When MA (when there are two, the first MA takes precedence) of the multiplier
+instruction (multiply/accumulate calculations, multiplier instruction) contends
+with the multiplier access (mm) of the preceding multiplier instruction, the
+MA bus cycle is extended until the mm ends. The extended MA then becomes one
+slot.
+<P>
+The MA instruction which accesses the multiply/accumulate register (MACH,
+MACL) also accesses the multiplier. Similar to the multiplier instruction, the MA
+bus cycle is extended until the mm of the preceding multiplier-type instruction
+ends, and the extended MA becomes one slot. In particular, in the instruction
+(STS, STS.L), which reads out the multiply/accumulate register (MACH, MACL,MA)
+is extended until one slot has elapsed after the ending of the mm, the extended
+MA becomes one slot.
+<P>
+On the other hand, when the instruction has two MAs, the succeeding ID
+instruction is stalled for a one-slot period.
+<P>
+Because the multiplier-type instruction and the multiply/accumulate register
+access instruction both have MA cycles, a contention with IF may develop.
+<P>
+Examples of multiplier access contention are shown in figures 8.10 and 8.11.
+In these cases, the contention between MA and IF is not taken into consideration.
+<P>
+
+<BR><IMG SRC="sh300055.gif" ALT="sh300055.gif" BORDER=0 WIDTH=510 HEIGHT=166>
+<BR><B>Figure 8.10   Contention between Two MAC.L Instructions
+<P>
+
+<BR></B></FONT><FONT FACE="Times New Roman" SIZE="5"><B><IMG SRC="sh300056.gif" ALT="sh300056.gif" BORDER=0 WIDTH=522 HEIGHT=148>
+<P>
+</B></FONT><FONT FACE="Arial" SIZE="3"><B>Figure 8.11   Contention between the MAC.L and STS.L Instructions
+<P>
+</B></FONT></BODY>
+</HTML>

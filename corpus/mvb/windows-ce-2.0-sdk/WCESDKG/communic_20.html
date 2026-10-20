@@ -1,0 +1,39 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML>
+<HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text-html; charset=Windows-1252">
+<title>Using a Deferred Handshake</title>
+<meta name=MS-HAID content="_wcesdk_using_a_deferred_handshake">
+<meta name=MS-HKWD content="Using a Deferred Handshake">
+</HEAD>
+<BODY BGCOLOR=#FFFFFF TEXT=#000000>
+<!-- WCESDKG InfoViewer title (Wcesdkg.ivt); HTML topics extracted with tools/extract-ivt.py, images and the title's own indexes dropped. -->
+
+<form name=x><object name=iv classid="clsid:9c2ac687-ceef-11cf-96d9-00a0c903b016">
+</object></form>
+<h3><a name="_wcesdk_using_a_deferred_handshake"></a>Using a Deferred Handshake</h3>
+<p>
+A deferred handshake allows an application to create an unsecured connection, and then later convert it to a secure connection.</p>
+<h4><img src="../guide/art/wedge.gif" border=0>&#09;To implement secure sockets with a deferred handshake</h4>
+<ol>
+<li>
+Create a socket with <A HREF='javascript:document.x.iv.ALink("_wcesdk_win32_socket_2","")'><b>socket</b></a>.<br><br></li>
+<li>
+Set the socket in secure mode with <A HREF='javascript:document.x.iv.ALink("_wcesdk_win32_setsockopt_2","")'><b>setsockopt</b></a>. The <i>level</i> parameter should be set to SO_SOCKET, <i>optname</i> to SO_SECURE, and <i>optval</i> should be a DWORD set to SO_SEC_SSL.<br><br></li>
+<li>
+Specify the certificate validation callback function by invoking <b>WSAIoctl</b> with the SO_SSL_SET_VALIDATE_CERT_HOOK control code.<br><br></li>
+<li>
+Set the socket in deferred handshake mode with <b>WSAIoctl</b>. Set the control code to SO_SSL_SET_FLAGS with the flag set to SSL_FLAG_DEFER_HANDSHAKE.<br><br></li>
+<li>
+Establish a non-secure connection with the remote party with <b>connect</b>.<br><br></li>
+<li>
+Transmit and receive unencrypted data normally.<br><br></li>
+<li>
+To switch to secure mode, invoke <b>WSAIoctl</b> with the SO_SSL_PERFORM_HANDSHAKE control code. The certificate callback function will be automatically invoked. The handshake will be successful only if the callback function verifies the acceptability of the certificate by returning SSL_ERR_OKAY.<br><br></li>
+<li>
+Transmit and receive normally. The <b>send</b> and <b>recv</b> functions will encrypt and decrypt the data automatically.<br><br></li>
+<li>
+Close the socket.</li>
+</ol>
+</BODY>
+</HTML>

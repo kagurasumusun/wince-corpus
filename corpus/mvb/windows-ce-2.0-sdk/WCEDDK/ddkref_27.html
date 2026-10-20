@@ -1,0 +1,119 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
+<HTML>
+<HEAD><META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=Windows-1252">
+<TITLE>ACMDRVOPENDESC</TITLE>
+<META NAME="MS-HKWD" CONTENT="ACMDRVOPENDESC">
+<META NAME="MS-HAID" CONTENT="_wceddk_ACMDRVOPENDESC">
+</HEAD>
+<BODY BGPROPERTIES="FIXED" TEXT="#000000" BGCOLOR="#FFFFFF">
+<!-- WCEDDK InfoViewer title (WCEDDK.IVT); HTML topics extracted with tools/extract-ivt.py, images and the title's own indexes dropped. -->
+
+<FORM name=x>
+<OBJECT name=iv classid="clsid:9c2ac687-ceef-11cf-96d9-00a0c903b016">
+</OBJECT>
+</FORM>
+<FONT FACE="ARIAL,HELVETICA" SIZE="2">
+<H2><A NAME="_wceddk_ACMDRVOPENDESC"></A>ACMDRVOPENDESC</H2>
+<PRE><FONT FACE="Courier" SIZE="2">typedef struct {
+&#09;DWORD cbStruct;
+&#09;FOURCC fccType;
+&#09;FOURCC fccComp;
+&#09;DWORD dwVersion;
+&#09;DWORD dwFlags;
+&#09;DWORD dwError;
+&#09;LPCSTR pszSectionName;
+&#09;LPCSTR pszAliasName;
+&#09;DWORD dnDevNode;
+} ACMDRVOPENDESC;
+</FONT></PRE>
+<P>
+The ACMDRVOPENDESC structure is used by the ACM for passing information to an
+ACM driver, when the ACM sends the driver a <B>ACM_Open</B>&nbsp;function.
+ACMDRVOPENDESC is defined in msacmdrv.h.
+<H5>Members</H5>
+<DL>
+<DT>
+<B>cbStruct</B>
+<DD>
+Size, in bytes, of the ACMDRVOPENDESC structure.
+<BR>
+<DT>
+<B>fccType</B>
+<DD>
+Contains a four-character code identifying the driver type. The driver must
+compare this value with ACMDRIVERDETAILS_FCCTYPE_AUDIOCODEC, which is defined
+in msacm.h to equal the string &quot;audc&quot;. If the member contents does
+not match this string, the driver must fail the open request by specifying a <B>ACM_IOControl</B>
+return value of zero.
+<BR>
+<DT>
+<B>fccComp</B>
+<DD>
+Not used. Defined to contain a four-character code identifying the driver
+sub-type.
+<BR>
+<DT>
+<B>dwVersion</B>
+<DD>
+Contains the ACM's version number. The version number's format is 0xAABBCCCC,
+where AA is the major version number, BB is the minor version number, and CCCC
+is the build number. This value is also returned by the ACM's acmGetVersion
+function, described in the Win32 SDK.
+<BR>
+<DT>
+<B>dwFlags</B>
+<DD>
+Contains flags. This member is identical to the fdwOpen argument passed to
+acmDriverOpen. No flags are currently defined.
+<BR>
+<DT>
+<B>dwError</B>
+<DD>
+Used by drivers to supply an error code. Drivers are restricted to specifying
+a <B>ACM_IOControl</B>&nbsp;return value of zero for all error types. To provide
+better error resolution, ACM drivers can specify an error code in this member,
+if they set the <B>ACM_IOControl</B>&nbsp;function's return code to zero. The error
+code can be one of the MMSYSERR error codes defined in mmsystem.h, or one of
+the ACMERR error codes defined in msacm.h.
+<BR>
+<DT>
+<B>pszSectionName</B>
+<DD>
+Contains the registry key under which the driver's alias is stored. For more
+information, see Installing ACM Drivers in the Windows NT DDK.
+<BR>
+<DT>
+<B>pszAliasName</B>
+<DD>
+Contains the driver's alias. This is the driver's &quot;msacm. alias&quot;
+entry in the registry. For more information, see Installing ACM Drivers in the
+Windows NT DDK.
+<BR>
+<DT>
+<B>dnDevNode</B>
+<DD>
+Device node ID.
+</DL>
+<H5>Comments</H5>
+<P>
+When the ACM calls an ACM driver's <B>ACM_IOControl</B>&nbsp;entry point and
+specifies a DRV_OPEN message, it includes an ACMDRVOPENDESC structure as the
+lParam2 parameter to <B>ACM_IOControl</B>. The ACM sends a DRV_OPEN message
+when an application calls the acmDriverOpen function, which is described in
+the Win32 SDK. For additional information, see <B>ACM_IOControl</B>&nbsp;in ACM
+Drivers.
+<P>
+ACM drivers do not always receive this structure when they receive a <B>ACM_Open</B>
+function. They only receive the structure if they are called by the ACM.
+Circumstances in which a driver is not called by the ACM are as follows:
+<P>
+·The driver might be called by a Control Panel applet for configuration
+purposes.
+<P>
+·The driver might be designed to be both an ACM driver and an audio device
+driver. When such a driver is called by winmm.dll for device operations, it
+does not receive the structure. (For more information, see Providing ACM
+Support in Device Drivers in the Windows NT DDK.)
+<P></FONT>
+</BODY>
+</HTML>

@@ -1,0 +1,66 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML>
+<HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text-html; charset=Windows-1252">
+<title>Using Bitmaps</title>
+<meta name=MS-HAID content="_wcesdk_using_bitmaps">
+<meta name=MS-HKWD content="Using Bitmaps">
+</HEAD>
+<BODY BGCOLOR=#FFFFFF TEXT=#000000>
+<!-- WCESDKG InfoViewer title (Wcesdkg.ivt); HTML topics extracted with tools/extract-ivt.py, images and the title's own indexes dropped. -->
+
+<form name=x><object name=iv classid="clsid:9c2ac687-ceef-11cf-96d9-00a0c903b016">
+</object></form>
+<h3><a name="_wcesdk_using_bitmaps"></a>Using Bitmaps</h3>
+<p>
+You can use the<b> CreateBitMap</b> function to create a device dependent bitmap. Use the <b>CreateDIBSection</b> function to create a DIB that you can write to directly. <BR>Use the <b>DeleteObject </b>function to delete the objects created by these functions.</p>
+<p>
+ </p>
+<p>
+In order to store a device-dependent bitmap in memory, you must first create a memory device context (DC)with the <b>CreateCompatibleDC</b> function. This function creates a DC that is compatible with the specified device. The DC contains a single-bit array that serves as a placeholder for a bitmap. You can use the <b>CreateBitmap</b>, or <b>CreateCompatibleBitmap</b> function to create a bitmap of the desired size, and then select it into the DC with the <b>SelectObject</b> function. Windows CE then replaces the single-bit array with an array large enough to store color information for the specified rectangle of pixels. </p>
+<p>
+When you draw using the handle returned by <b>CreateCompatibleDC</b>, the output does not appear on a device's drawing surface; instead, it is stored in memory. To copy the image stored in memory to a display device, call the <b>BitBlt</b> function. <b>BitBlt</b> copies the bitmap data from the bitmap in the source DC into the bitmap in the target DC. In this case, the source DC is the memory DC, and the target DC is the display DC so when <b>BitBlt</b> completes the transfer, the image will appear on the screen. By reversing the source and target DCs, you can use <b>BitBlt</b> to transfer images from the screen into memory. </p>
+<p>
+Bit block transfer (blt) functions, such as <b>BitBlt,</b> can be used to modify as well as transfer bitmaps. These functions modify a destination bitmap by combining it with a pen, a brush, and, in some cases, a source bitmap, in a format specified by a raster operation (ROP) code. Each ROP codes specifies a unique logical pattern for combining graphic objects.  For example, the <b>SRCCOPY</b> ROP simply copies a source bitmap to a destination bitmap while the <b>MERGECOPY</b> ROP merges the colors of a source rectangle with a specified pattern.</p>
+<p>
+The ROP code types are described in the following table.  </p>
+<table>
+<tr valign=top>
+<td>
+<b>ROP Type </b></td>
+<td>
+<b>Description </b></td>
+</tr>
+<tr valign=top>
+<td>
+ROP2 </td>
+<td>
+Combines a pen or brush with a destination bitmap in one of 16 possible combinations.</td>
+</tr>
+<tr valign=top>
+<td>
+ROP3 </td>
+<td>
+Combines a brush, a source bitmap, and a destination bitmap in one of 256 possible combinations. </td>
+</tr>
+<tr valign=top>
+<td>
+ROP4 </td>
+<td>
+Uses a monochrome &quot;mask&quot; bitmap to combine a foreground ROP3 and a background ROP3. The mask uses zeros and ones to indicate the areas where each ROP3 will be used.</td>
+</tr>
+</table><br>
+<p>
+When the source and destination bitmaps are different sizes, you can use the <b>StrechBlt</b> function to perform a blt between the two bitmaps. <b>StrechBlt</b> copies a bitmap from a source rectangle into a destination rectangle, stretching or compressing the bitmap to fit the destination rectangle. </p>
+<p>
+You can use the <b>PatBlt</b> function to paint a selected rectangle using a selected brush and an ROP2 code.  </p>
+<p>
+You can use the <b>TransparentImage</b> to transfer all portions of a bitmap except for those drawn in a specified &quot;transparent&quot; color. This function is especially useful for transferring non-rectangular bitmaps, such as icons.</p>
+<p>
+<b>Note</b>  Windows CE supports arbitrary bit pixel formats, which allow you to use blt functions between bitmaps with different pixel depths.</p>
+<p>
+You store DIBS in a file consisting of a <b>BITMAPFILEHEADER</b> structure followed by a <b>BITMAPINFOHEADER</b> structure, followed by an array of <b>RGBQUAD</b> structures (which constitute the color table), followed by a color index array(the actual bitmap data).The resulting file should be saved with a name ending with a .bmp extension.</p>
+<p>
+The <b>BITMAPFILEHEADER</b> structure contains information about the type, size, and layout of the file. The <b>BITMAPINFOHEADER</b> structure contains information about the bitmap's dimensions and color format. The <b>RGBQUAD</b> structures specify the red-green-blue (RGB) values for each color in the device's palette. The color-index array maps the values from the <b>RGBQUAD</b> array to the corresponding rectangle on the display device </p>
+</BODY>
+</HTML>

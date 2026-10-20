@@ -1,0 +1,79 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
+<HTML>
+<HEAD><META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=Windows-1252">
+<TITLE>Windows CE Display Hardware Recommendations</TITLE>
+<META NAME="MS-HKWD" CONTENT="Windows CE Display Hardware Recommendations">
+<META NAME="MS-HAID" CONTENT="_wceddk_Windows_CE_Display_Hardware_Recommendations">
+</HEAD>
+<BODY BGPROPERTIES="FIXED" TEXT="#000000" BGCOLOR="#FFFFFF">
+<!-- WCEDDK InfoViewer title (WCEDDK.IVT); HTML topics extracted with tools/extract-ivt.py, images and the title's own indexes dropped. -->
+
+<FORM name=x>
+<OBJECT name=iv classid="clsid:9c2ac687-ceef-11cf-96d9-00a0c903b016">
+</OBJECT>
+</FORM>
+<FONT FACE="ARIAL,HELVETICA" SIZE="2">
+<H2><A NAME="_wceddk_Windows_CE_Display_Hardware_Recommendations"></A>Windows CE Display Hardware Recommendations</H2>
+<P>
+Microsoft has several recommends for display hardware used with Windows CE.
+These recommendations are both to improve performance and to facilitate your
+display driver development effort. You can still write a fully functional
+display driver even if your hardware does not conform to these
+recommendations, or if it is too late in the design cycle for your product to
+alter the hardware design, at the expense of additional effort in implementing
+the driver.
+<H4>Memory Layout</H4>
+<P>
+Microsoft strongly recommends that your display hardware use a linear frame
+buffer. All of your display's memory should be contiguous, and preferably
+there should be one linear access window that covers the entire frame buffer.
+Hardware that does not meet this recommendation will require that you make
+substantial modifications to the GPE classes if you choose to use them. See <A HREF="display_2.htm">Using
+GPE Classes</A>&nbsp;for more information.
+<P>
+Your display hardware should also use a supported combination of pixel format,
+packing, and pixel ordering. See <A HREF="display_4.htm">Display
+Buffer Formats</A>&nbsp;for more information. The display hardware's frame buffer
+should have the following properties:
+<UL>
+<LI>
+Top-down format, with pixel (0,0) at the top left, and pixel (<I>width</I>-1, <I>height</I>-1)
+at the lower right.
+<P>
+<LI>
+The frame buffer's stride, the number of bytes in memory that it takes to
+represent one scan line on the display, should be a multiple of four bytes,
+even if that means padding the end of each scan line with unused bytes.
+<P>
+<LI>
+The entire frame buffer must be accessible by the CPU without the CPU having
+to perform bank selection.
+<P>
+<LI>
+Frame buffers should not use bit-planes, in which separate frame buffers are
+used for each color channel or intensity component.
+</UL>
+<H4>Acceleration</H4>
+<P>
+Microsoft recommends that you use display hardware which can accelerate the
+following operations, in order of decreasing importance:
+<UL>
+<LI>
+Solid color fills. Specifically, Blt operations whose pbo-&gt;iSolidColor
+member is not 0xFFFFFFFF.
+<P>
+<LI>
+SRCCOPY Blt operations.
+<P>
+<LI>
+Cursor display, if your platform uses a cursor.
+<P>
+<LI>
+Solid line drawing with sub-pixel precision.
+<P>
+<LI>
+Masked SRCCOPY Blt operations.
+</UL>
+<P></FONT>
+</BODY>
+</HTML>

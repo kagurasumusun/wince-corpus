@@ -1,0 +1,101 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML>
+<HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text-html; charset=Windows-1252">
+<title>Certificate Validation Callback Function</title>
+<meta name=MS-HAID content="_wcesdk_certificate_validation_callback_function">
+<meta name=MS-HKWD content="Certificate Validation Callback Function">
+</HEAD>
+<BODY BGCOLOR=#FFFFFF TEXT=#000000>
+<!-- WCESDKG InfoViewer title (Wcesdkg.ivt); HTML topics extracted with tools/extract-ivt.py, images and the title's own indexes dropped. -->
+
+<form name=x><object name=iv classid="clsid:9c2ac687-ceef-11cf-96d9-00a0c903b016">
+</object></form>
+<h3><a name="_wcesdk_certificate_validation_callback_function"></a>Certificate Validation Callback Function</h3>
+<p>
+The certificate validation callback function must be implemented by all client applications that utilize secure sockets. It is invoked by a secure socket when server credentials (a certificate chain) are received from the remote party.</p>
+<p>
+Applications bear ultimate responsibility for ensuring that the certificate is acceptable. At a minimum, a certificate should meet the following two requirements:
+<ul>
+<li>
+It has not expired<br><br></li>
+<li>
+The identity contained within the certificate matches the identity of the remote party</li>
+</ul>
+<dl>
+<dt>
+The callback will be passed the following information:</dt>
+<dd>
+<pre>typedef int (CALLBACK *SSLVALIDATECERTFUNC)
+{
+&#09;DWORD&#09;dwType
+&#09;LPVOID&#09;pvArg
+&#09;DWORD&#09;dwChainLen
+&#09;LPBLOB&#09;pCertChain
+&#09;DWORD&#09;dwFlags
+};
+</pre>
+</dd>
+</dl>
+<p>
+The parameters contain the following information:
+<ul>
+<li>
+The <i>dwType</i> parameter specifies the type of data pointed to by <i>pCertChain</i>. This must be SSL_CERT_X509, specifying that <i>pCertChain</i> is a pointer to an X509 style certificate.<br><br></li>
+<li>
+The <i>pvArg</i> parameter is the application-defined context, passed via the SSLVALIDATECERTHOOK structure.<br><br></li>
+<li>
+The <i>dwChainLen</i> parameter is the number of certificates pointed to by <i>pCertChain</i>. It will always be equal to one.<br><br></li>
+<li>
+The <i>pCertChain</i> parameter is a pointer to the remote party's certificate.<br><br></li>
+<li>
+If the root issuer of the certificate could not be verified, the <i>dwFlags</i> parameter will contain SSL_CERT_FLAG_ISSUER_UNKNOWN. The application can either attempt to verify the issuer, or return SSL_ERR_CERT_UNKNOWN.</li>
+</ul>
+<p>
+The callback function will generally return one of the following values:</p>
+<table>
+<tr valign=top>
+<td>
+<b>Return Value</b></td>
+<td>
+<b>Description</b></td>
+</tr>
+<tr valign=top>
+<td>
+SSL_ERR_BAD_DATA</td>
+<td>
+The certificate is not properly formatted.</td>
+</tr>
+<tr valign=top>
+<td>
+SSL_ERR_BAD_SIG</td>
+<td>
+The signature check failed.</td>
+</tr>
+<tr valign=top>
+<td>
+SSL_ERR_CERT_EXPIRED</td>
+<td>
+The certificate has expired.</td>
+</tr>
+<tr valign=top>
+<td>
+SSL_ERR_CERT_REVOKED</td>
+<td>
+The certificate has been revoked by its issuer.</td>
+</tr>
+<tr valign=top>
+<td>
+SSL_ERR_CERT_UNKNOWN</td>
+<td>
+The issuer is unknown, or some unspecified problem arose in the processing of the certificate, rendering it unacceptable</td>
+</tr>
+<tr valign=top>
+<td>
+SSL_ERR_OKAY</td>
+<td>
+The certificate is acceptable.</td>
+</tr>
+</table><br>
+</BODY>
+</HTML>

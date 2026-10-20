@@ -1,0 +1,66 @@
+<HTML>
+<HEAD>
+<TITLE>6.72   TRAPA (Trap Always): System Control Instruction</TITLE>
+</HEAD><body bgcolor="#FFFFFF">
+<!-- SH3PROG InfoViewer title (sh3prog.ivt); HTML topics extracted with tools/extract-ivt.py, images and the title's own indexes dropped. -->
+
+<A NAME="off_3442076"></A><A NAME="99dd75cc"></A><FONT FACE="Arial" SIZE="5"><B>6.72   TRAPA (Trap Always): System Control Instruction 
+<P>
+
+<P>
+</B></FONT><TABLE><TR VALIGN=TOP><TD><FONT FACE="Arial" SIZE="3"><B>Format
+<BR></B></FONT></TD><TD><FONT FACE="Arial" SIZE="3"><B>Abstract
+<BR></B></FONT></TD><TD><FONT FACE="Arial" SIZE="3"><B>Code
+<BR></B></FONT></TD><TD><FONT FACE="Arial" SIZE="3"><B>Cycle
+<BR></B></FONT></TD><TD><FONT FACE="Arial" SIZE="3"><B>T Bit
+<BR></B></FONT></TD></TR><TR VALIGN=TOP><TD><FONT FACE="Lucida Sans Typewriter" SIZE="3">TRAPA #imm
+<BR></FONT></TD><TD><FONT FACE="Arial" SIZE="3">imm <IMG SRC="sh390002.gif" ALT="sh390002.gif" BORDER=0 WIDTH=13 HEIGHT=16> TRA,
+<BR>PC <IMG SRC="sh390002.gif" ALT="sh390002.gif" BORDER=0 WIDTH=13 HEIGHT=16> SPC, 
+<BR>SR <IMG SRC="sh390002.gif" ALT="sh390002.gif" BORDER=0 WIDTH=13 HEIGHT=16> SSR,
+<BR>1 <IMG SRC="sh390002.gif" ALT="sh390002.gif" BORDER=0 WIDTH=13 HEIGHT=16> SR.MD/BL/RB
+<BR>0x160 <IMG SRC="sh390002.gif" ALT="sh390002.gif" BORDER=0 WIDTH=13 HEIGHT=16> EXPEVT
+<BR>VBR + H'00000100 <IMG SRC="sh390002.gif" ALT="sh390002.gif" BORDER=0 WIDTH=13 HEIGHT=16> PC
+<BR></FONT></TD><TD><FONT FACE="Lucida Sans Typewriter" SIZE="3">11000011iiiiiiii
+<BR></FONT></TD><TD><FONT FACE="Arial" SIZE="3">6
+<BR></FONT></TD><TD><FONT FACE="Arial" SIZE="3">-
+<BR>
+<BR></FONT></TD></TR></TABLE><FONT FACE="Arial" SIZE="3"><B>Description: 
+<P>
+</B>Starts the trap exception processing. The PC and SR values are saved in SPC
+and SSR. Eight-bit immediate data is stored in the TRA registers (TRA9 to TRA2).
+The processor goes into privileged mode (SR.MD = 1) with SR.BL = 1 and SR.RB =
+1, that is, blocking exceptions and masking interrupts, and selecting BANK1
+registers (R0_BANK1 to R7_BANK1). Exception code 0x160 is stored in the EXPEVT
+register (EXPEVT11 to EXPEVT0). The program branches to an address
+(VBR+H'00000100).
+<P>
+<B>Operation:
+<P>
+</B></FONT><FONT FACE="Lucida Sans Typewriter" SIZE="3">TRAPA(long i) /* TRAPA #imm */
+<P>
+{
+<P>
+ long imm;
+<P>
+ imm=(0x000000FF &amp; i);
+<P>
+ TRA=imm&lt;&lt;2;
+<P>
+ SSR=SR;
+<P>
+ SPC=PC;
+<P>
+ SR.MD=1
+<P>
+ SR.BL=1
+<P>
+ SR.RB=1
+<P>
+ EXPEVT=0x00000160;
+<P>
+ PC=VBR+H'00000100;
+<P>
+}
+<P>
+</FONT></BODY>
+</HTML>

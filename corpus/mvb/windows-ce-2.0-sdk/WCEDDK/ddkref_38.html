@@ -1,0 +1,105 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
+<HTML>
+<HEAD><META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=Windows-1252">
+<TITLE>ACMDM_FORMAT_SUGGEST</TITLE>
+<META NAME="MS-HKWD" CONTENT="ACMDM_FORMAT_SUGGEST">
+<META NAME="MS-HAID" CONTENT="_wceddk_ACMDM_FORMAT_SUGGEST">
+</HEAD>
+<BODY BGPROPERTIES="FIXED" TEXT="#000000" BGCOLOR="#FFFFFF">
+<!-- WCEDDK InfoViewer title (WCEDDK.IVT); HTML topics extracted with tools/extract-ivt.py, images and the title's own indexes dropped. -->
+
+<FORM name=x>
+<OBJECT name=iv classid="clsid:9c2ac687-ceef-11cf-96d9-00a0c903b016">
+</OBJECT>
+</FORM>
+<FONT FACE="ARIAL,HELVETICA" SIZE="2">
+<H2><A NAME="_wceddk_ACMDM_FORMAT_SUGGEST"></A>ACMDM_FORMAT_SUGGEST</H2>
+<P>
+The ACMDM_FORMAT_SUGGEST message requests an ACM driver to suggest a
+destination format for a conversion, given a specified source format.
+<H5>Return Value</H5>
+<DL>
+<DT>
+The driver should return MMSYSERR_NOERROR if the operation succeeds. Otherwise
+it should return one of the MMSYSERR error codes defined in mmsystem.h, or one
+of the ACMERR error codes defined in msacm.h. Possible error codes include:
+<DD>
+MMSYSERR_NOTSUPPORTED
+<P>
+The driver does not support format suggestion operations.
+<DL>
+<DT>
+ACMERR_NOTPOSSIBLE
+<DD>
+The driver cannot suggest a destination format, based on the specified source
+format and restriction flags.
+</DL>
+</DL>
+<H5>Parameters</H5>
+<DL>
+<DT>
+<I>dwDriverID</I>
+<DD>
+Driver instance identifier. This is the value returned by the driver in
+response to the <B>ACM_Open</B>&nbsp;function.
+<BR>
+<DT>
+<I>hDriver</I>
+<DD>
+Driver handle.
+<BR>
+<DT>
+<I>uMsg</I>
+<DD>
+ACMDM_FORMAT_SUGGEST
+<BR>
+<DT>
+<I>lParam1</I>
+<DD>
+Pointer to an <B>ACMDRVFORMATSUGGEST</B>&nbsp;structure. ( <B>ACMDRVFORMATSUGGEST</B>
+is defined in msacmdrv.h.)
+<BR>
+<DT>
+<I>lParam2</I>
+<DD>
+Not used.
+</DL>
+<H5>Comments</H5>
+<P>
+The ACM (WAVEAPI.DLL) sends the ACMDM_FORMAT_SUGGEST message by calling the
+ACM driver's <B>ACM_IOControl</B>() entry point via DeviceIoControl(). The ACM
+sends this message when an application calls the <B>acmFormatSuggest</B>
+function, which is described in the Win32 SDK.
+<P>
+All ACM drivers that provide stream conversions must support this message.
+<P>
+The <B>ACMDRVFORMATSUGGEST</B>&nbsp;structure contains pointers to two WAVEFORMATEX
+structures. One of these structures describes the client-specified source
+format. The other structure is used by the driver to return a suggested
+destination format. The client might specify values for some of the
+destination structure members, in order to restrict the possible suggestions.
+For more information, see the description of <B>ACMDRVFORMATSUGGEST</B>.
+<P>
+Given the specified source format and destination restrictions (if any), the
+driver determines if it can provide a conversion from the specified source
+format to some destination format. If it can, it returns a description of that
+format in the destination WAVEFORMATEX structure.
+<P>
+Before calling the driver's <B>ACM_IOControl</B>&nbsp;function, the ACM verifies
+that:
+<P>
+·The flag values contained in the <B>ACMDRVFORMATSUGGEST</B>&nbsp;structure are
+valid.
+<P>
+·The WAVEFORMATEX structure containing the source format description is
+readable.
+<P>
+·The WAVEFORMATEX structure specified for receiving the suggested destination
+format description is writeable.
+<P>
+·The destination WAVEFORMATEX structure's size, contained in the <B>ACMDRVFORMATSUGGEST</B>
+structure's cbwfxDst member, is large enough to receive a format structure for
+an appropriate destination format.
+<P></FONT>
+</BODY>
+</HTML>

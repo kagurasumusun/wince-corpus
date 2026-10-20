@@ -1,0 +1,101 @@
+<HTML>
+<HEAD>
+<TITLE>7.1.4  Conditional Iterated Expansion</TITLE>
+</HEAD><body bgcolor="#FFFFFF">
+<!-- SHASM InfoViewer title (Shasm.ivt); HTML topics extracted with tools/extract-ivt.py, images and the title's own indexes dropped. -->
+
+<A NAME="off_2916352"></A><A NAME="b72f9ab5"></A><FONT FACE="Arial" SIZE="4"><B>7.1.4  Conditional Iterated Expansion 
+<P>
+</B></FONT><FONT FACE="Arial" SIZE="3">A part of a source program can be iteratively assembled while the specified
+condition is satisfied. 
+<P>
+A coding example is shown below.
+<P>
+</FONT><FONT FACE="Lucida Sans Typewriter" SIZE="3">.AWHILE &lt;condition&gt;
+<P>
+ </FONT><FONT FACE="Times" SIZE="3">&lt;</FONT><FONT FACE="Lucida Sans Typewriter" SIZE="3">Statements to be iterated</FONT><FONT FACE="Times" SIZE="3">&gt;
+<P>
+</FONT><FONT FACE="Lucida Sans Typewriter" SIZE="3">.AENDW
+<P>
+</FONT><FONT FACE="Arial" SIZE="3"><B>Example:
+<P>
+          </B></FONT><FONT FACE="Lucida Sans Typewriter" SIZE="3">; This example is a multiply and
+<P>
+          ; accumulate operation.
+<P>
+TblSiz: .ASSIGNA 50    ; TblSiz: Data Table size
+<P>
+   MOV  A_Tb11,R1   ; R1: Start address of data Table 1
+<P>
+   MOV  A_Tb12,R2   ; R2: Start address of data Table 2
+<P>
+   CLRMAC      ; Mac register initialization
+<P>
+   .AWHILE \&amp;TblSize &gt; 0 ; While TblSiz is larger than 0,
+<P>
+   MAC.W @R0+,@R1+   ; this statement is iteratively             ; assembled
+<P>
+TblSiz: .ASSIGNA \&amp;TblSiz-1 ; 1 is subtracted from TblSiz.
+<P>
+   .AENDW
+<P>
+   STS  MACL,R0   ; The result is obtained in R0.
+<P>
+</FONT><FONT FACE="Arial" SIZE="3"><B>Example:
+<P>
+</B></FONT><FONT FACE="Lucida Sans Typewriter" SIZE="3">two:  .assigna 2
+<P>
+label1: .data.l 1
+<P>
+label2: .data.l \&amp;two     ; same as .data.l 2
+<P>
+mult:  .equ  5
+<P>
+str:  .assignc </FONT><FONT FACE="Times New Roman" SIZE="3">“</FONT><FONT FACE="Lucida Sans Typewriter" SIZE="3">mumble</FONT><FONT FACE="Times New Roman" SIZE="3">”
+<P>
+</FONT><FONT FACE="Lucida Sans Typewriter" SIZE="3">num:  .assigna 38 + (label2 - label1) ; num = 42
+<P>
+   .sdata  \&amp;str     ; same as </FONT><FONT FACE="Times New Roman" SIZE="3">“</FONT><FONT FACE="Lucida Sans Typewriter" SIZE="3">mumble</FONT><FONT FACE="Times New Roman" SIZE="3">”
+<P>
+   </FONT><FONT FACE="Lucida Sans Typewriter" SIZE="3">.sdata  </FONT><FONT FACE="Times New Roman" SIZE="3">“</FONT><FONT FACE="Lucida Sans Typewriter" SIZE="3">\&amp;str = \&amp;num</FONT><FONT FACE="Times New Roman" SIZE="3">”  </FONT><FONT FACE="Lucida Sans Typewriter" SIZE="3">; same as </FONT><FONT FACE="Times New Roman" SIZE="3">“</FONT><FONT FACE="Lucida Sans Typewriter" SIZE="3">mumble = 42</FONT><FONT FACE="Times New Roman" SIZE="3">”
+<P>
+   </FONT><FONT FACE="Lucida Sans Typewriter" SIZE="3">.arepeat (mult &lt; \&amp;two) ? (\&amp;num * mult) : \&amp;num
+<P>
+   nop
+<P>
+   .aendr
+<P>
+permnum: .equ  \&amp;num
+<P>
+   .awhile \&amp;num &gt; mult ne 0  ; same as \&amp;num &gt; mult
+<P>
+   .data.l \&amp;num
+<P>
+num:  .assigna \&amp;num - 1
+<P>
+   .aendw
+<P>
+   .aif  </FONT><FONT FACE="Times New Roman" SIZE="3">“</FONT><FONT FACE="Lucida Sans Typewriter" SIZE="3">fumble</FONT><FONT FACE="Times New Roman" SIZE="3">”</FONT><FONT FACE="Lucida Sans Typewriter" SIZE="3"> &lt; \&amp;str
+<P>
+   .sdata  </FONT><FONT FACE="Times New Roman" SIZE="3">“</FONT><FONT FACE="Lucida Sans Typewriter" SIZE="3">fumble &lt; \&amp;str</FONT><FONT FACE="Times New Roman" SIZE="3">”
+<P>
+   </FONT><FONT FACE="Lucida Sans Typewriter" SIZE="3">.aelif  mult * \&amp;num eq 42
+<P>
+   .sdata  </FONT><FONT FACE="Times New Roman" SIZE="3">“</FONT><FONT FACE="Lucida Sans Typewriter" SIZE="3">5 * \&amp;num == 42</FONT><FONT FACE="Times New Roman" SIZE="3">”
+<P>
+   </FONT><FONT FACE="Lucida Sans Typewriter" SIZE="3">.aelsif label1 &gt; label2
+<P>
+   .sdata  </FONT><FONT FACE="Times New Roman" SIZE="3">“</FONT><FONT FACE="Lucida Sans Typewriter" SIZE="3">label1 &gt; label2</FONT><FONT FACE="Times New Roman" SIZE="3">”
+<P>
+   </FONT><FONT FACE="Lucida Sans Typewriter" SIZE="3">.aelseif \&amp;num == permnum || \&amp;num == 0
+<P>
+   .sdata  </FONT><FONT FACE="Times New Roman" SIZE="3">“</FONT><FONT FACE="Lucida Sans Typewriter" SIZE="3">last chance</FONT><FONT FACE="Times New Roman" SIZE="3">”
+<P>
+   </FONT><FONT FACE="Lucida Sans Typewriter" SIZE="3">.aelse
+<P>
+   .sdata  </FONT><FONT FACE="Times New Roman" SIZE="3">“</FONT><FONT FACE="Lucida Sans Typewriter" SIZE="3">giving up</FONT><FONT FACE="Times New Roman" SIZE="3">”
+<P>
+   </FONT><FONT FACE="Lucida Sans Typewriter" SIZE="3">.aendi
+<P>
+</FONT></BODY>
+</HTML>

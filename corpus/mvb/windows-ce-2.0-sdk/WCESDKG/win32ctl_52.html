@@ -1,0 +1,134 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML>
+<HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text-html; charset=Windows-1252">
+<title>Creating a Transparent Toolbar Control</title>
+<meta name=MS-HAID content="_wcesdk_creating_a_transparent_toolbar_control">
+<meta name=MS-HKWD content="Creating a Transparent Toolbar Control">
+</HEAD>
+<BODY BGCOLOR=#FFFFFF TEXT=#000000>
+<!-- WCESDKG InfoViewer title (Wcesdkg.ivt); HTML topics extracted with tools/extract-ivt.py, images and the title's own indexes dropped. -->
+
+<form name=x><object name=iv classid="clsid:9c2ac687-ceef-11cf-96d9-00a0c903b016">
+</object></form>
+<h3><a name="_wcesdk_creating_a_transparent_toolbar_control"></a>Creating a Transparent Toolbar Control</h3>
+<p>
+An application must prepare a toolbar control by sending messages it uses to manage memory and format its display. The following CreateTransparentToolbar sample function creates a child normal or list style transparent toolbar control. It accepts style bits in the <i>dwStyle</i> parameter that are used to determine which type of toolbar it will create. </p>
+<p>
+To support button text and list style buttons, CreateTransparentToolbar calls the following application-defined functions. 
+<ul>
+<li>
+<b>BuildStrList</b> <br><br></li>
+<li>
+<b>WidestBtn</b> </li>
+</ul>
+<pre>/////
+//
+// CreateTransparentToolbar Function
+//     Creates a transparent toolbar control based upon the owner's
+//     window handle an incoming style bit field that is assumed
+//     to be a combination of TBSTYLE_FLAT and TBSTYLE_LIST flags.
+//
+// Accepts:
+//    HWND: The handle to the parent window.
+//    DWORD:  Style values that are included in CreateWindowEx.
+//
+// Returns:
+//    HWND to the newly created toolbar. The owner must resize it.
+//
+/////
+
+HWND WINAPI CreateTransparentToolbar(HWND hwndOwner, DWORD dwStyle.)
+{
+   HWND         hwndTB;
+   HIMAGELIST   himl, himlHot;   
+   TBBUTTON     tbArray[MAX_BUTTONS];
+   int          i, iListSpace;
+   INITCOMMONCONTROLSEX icex;
+
+   LPTSTR lpszStrList, 
+          pszStrArray[4] = { &quot;Button 1&quot;,
+                             &quot;Button 2&quot;,
+                             &quot;Button 3&quot;,
+                             &quot;Button 4&quot;};
+
+   icex.dwSize = sizeof(INITCOMMONCONTROLSEX);
+   icex.dwICC  = ICC_BAR_CLASSES;
+   InitCommonControlsEx(&amp;icex);
+
+   // Create the toolbar control.
+   hwndTB=CreateWindowEx(WS_EX_TOOLWINDOW,
+                         TOOLBARCLASSNAME,
+                         NULL,
+                         WS_CHILD | WS_VISIBLE | WS_CLIPCHILDREN | 
+                         WS_CLIPSIBLINGS | CCS_NODIVIDER
+                         |CCS_NOPARENTALIGN | CCS_NORESIZE | dwStyle, 
+                         0,0,0,0,  // Make it zero, Let owner resize it.
+                         hwndOwner,
+                         NULL, g_hinst, NULL); 
+   
+   // Tells the toolbar what version we are.
+   SendMessage(hwndTB, TB_BUTTONSTRUCTSIZE, sizeof(TBBUTTON), 0);
+
+   // Set the maximum number of text rows and bitmap size.
+   SendMessage(hwndTB, TB_SETMAXTEXTROWS, 1, 0L);
+   SendMessage(hwndTB, TB_SETBITMAPSIZE,
+               0, (LPARAM)MAKELONG(MYICON_CX, MYICON_CY));
+
+   // Create, fill and assign the image list for default buttons.
+   himl = ImageList_Create(MYICON_CX,MYICON_CY,ILC_COLOR8,0,4);
+   ImageList_Add(himl,
+                 LoadBitmap(g_hinst,MAKEINTRESOURCE(IDB_DEF1)),NULL);
+   ImageList_Add(himl,
+                 LoadBitmap(g_hinst, MAKEINTRESOURCE(IDB_DEF2)),NULL);
+   ImageList_Add(himl,
+                 LoadBitmap(g_hinst, MAKEINTRESOURCE(IDB_DEF3)),NULL);
+   ImageList_Add(himl,
+                 LoadBitmap(g_hinst, MAKEINTRESOURCE(IDB_DEF4)),NULL);
+
+   SendMessage(hwndTB, TB_SETIMAGELIST, 0, (LPARAM)himl);
+
+   // Create, fill and assign the image list for hot buttons.
+   himlHot = ImageList_Create(MYICON_CX,MYICON_CY,ILC_COLOR8,0,4);
+   ImageList_Add(himlHot,
+                 LoadBitmap(g_hinst, MAKEINTRESOURCE(IDB_HOT1)),NULL);
+   ImageList_Add(himlHot,
+                 LoadBitmap(g_hinst, MAKEINTRESOURCE(IDB_HOT2)),NULL);
+   ImageList_Add(himlHot,
+                 LoadBitmap(g_hinst, MAKEINTRESOURCE(IDB_HOT3)),NULL);
+   ImageList_Add(himlHot,
+                 LoadBitmap(g_hinst, MAKEINTRESOURCE(IDB_HOT4)),NULL);
+   
+   // Loop to fill the array of TBBUTTON structures.
+   for(i=0;i&lt;MAX_BUTTONS;i++){
+      tbArray[i].iBitmap   = i;
+      tbArray[i].idCommand = IDM_BUTTONSTART + i;
+      tbArray[i].fsState   = TBSTATE_ENABLED;
+      tbArray[i].fsStyle   = TBSTYLE_DROPDOWN;//BUTTON;
+      tbArray[i].dwData    = 0;
+      tbArray[i].iString   = i;
+   }
+   
+   // Put button text in the correct format for TB_ADDSTRING.
+   lpszStrList = BuildStrList(pszStrArray);
+
+   SendMessage(hwndTB, TB_ADDSTRING, 0,(LPARAM)lpszStrList);
+
+   // If this is a list style toolbar, add buffer pixels 
+   // to make room for button text.
+   iBufferPix=(dwStyle &amp; TBSTYLE_LIST)?WidestBtn(pszStrArray, hwndTB):0;
+
+   // Add the buttons, then set the minimum and maximum button widths.
+   SendMessage(hwndTB,
+               TB_ADDBUTTONS, (UINT)MAX_BUTTONS, (LPARAM)tbArray);
+
+   SendMessage(hwndTB,
+               TB_SETBUTTONWIDTH, 0, 
+               (LPARAM)MAKELONG(MYICON_CX+iBufferPix,
+               MYICON_CX+iBufferPix));
+
+   return (hwndTB);
+}
+</pre>
+</BODY>
+</HTML>

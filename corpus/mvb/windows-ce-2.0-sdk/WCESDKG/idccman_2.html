@@ -1,0 +1,93 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML>
+<HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text-html; charset=Windows-1252">
+<title>COM Interface-Based Notification</title>
+<meta name=MS-HAID content="_wcesdk_com_interface_based_notification">
+</HEAD>
+<BODY BGCOLOR=#FFFFFF TEXT=#000000>
+<!-- WCESDKG InfoViewer title (Wcesdkg.ivt); HTML topics extracted with tools/extract-ivt.py, images and the title's own indexes dropped. -->
+
+<form name=x><object name=iv classid="clsid:9c2ac687-ceef-11cf-96d9-00a0c903b016">
+</object></form>
+<h2><a name="_wcesdk_com_interface_based_notification"></a>COM Interface-Based Notification</h2>
+<p>
+In this method, two Component Object Module (COM) interfaces<font face="Symbol"><span style="font-family:symbol">&#190;</span></font><A HREF='javascript:document.x.iv.ALink("_wcesdk_idccman_iunknown","")'><b>IDccMan</b></a> and <A HREF='javascript:document.x.iv.ALink("_wcesdk_idccmansink_iunknown","")'><b>IDccManSink</b></a><font face="Symbol"><span style="font-family:symbol">&#190;</span></font>are used to register an application with Windows CE Services connection manager. The <b>IDccMan</b> interface is implemented by the Windows CE Services connection manager, while <b>IDccManSink</b> is implemented by the application. The advantage to this method is the control you get through the interface methods. However, it is more complex to use.</p>
+<p>
+Note that when a connection is waiting to be established or has been established, an icon appears in the task bar (the icon shows two terminals with a connecting cable, next to the clock.). This icon indicates the connection status and also allows a shortcut (by right-clicking on the icon) to start the Explorer Window for Windows CE Services application.</p>
+<p>
+The <b>IDccMan</b> and <b>IDccManSink</b> interfaces are defined in the header file Dccole.h, provided with the SDK. These interfaces are described in the topic &quot;Connection Notification Interfaces&quot;.</p>
+<p>
+<b>Note</b>  The notification methods called by the connection manager vary slightly between Windows 95 and Windows NT. Under Windows 95, GW_LOG messages are sent under the control of the Direct Cable Connection (DCC) service. However, under Windows NT the connection manager simulates the GW_LOG messages. </p>
+<h4>Notification at Connection</h4>
+<p>
+The following procedure is for an application to be notified at the connection of the desktop PC and the mobile device. It assumes that the <b>IDccMan</b> and <b>IDccManSink</b> interfaces have been implemented.
+<ol>
+<li>
+Initialize the component object model (COM) library and register with the Windows CE Services connection manager. <ol>
+<li>
+The application calls the COM function <b>CoInitialize</b> to initialize the Component Object library.<br><br></li>
+<li>
+The application calls the COM function <b>CoCreateInstance</b> with the CLSID_DccMan class identifier and IID_IDccMan interface identifier, and receives a pointer to the <b>IDccMan</b> interface. <br><br></li>
+<li>
+The application calls the <A HREF='javascript:document.x.iv.ALink("_wcesdk_idccman_advise","")'><b>IDccMan::Advise</b></a> method. This provides the Windows CE Services connection manager with a pointer to the <b>IDccManSink</b> interface implemented by the application. This also registers the client application with the connection manager.<br><br></li>
+<li>
+The Windows CE Services connection manager calls the <A HREF='javascript:document.x.iv.ALink("_wcesdk_idccmansink_onloginactive","")'><b>IDccManSink::OnLogInactive</b></a> method, telling the application that there is no connection between the desktop and the mobile device.</li>
+</ol>
+</li>
+<li>
+Establish the connection between the desktop and the mobile device.<ol>
+<li>
+The Windows CE Services connection manager calls the <A HREF='javascript:document.x.iv.ALink("_wcesdk_idccmansink_onloglisten","")'><b>IDccManSink::OnLogListen</b></a> method, waiting for the desktop PC and the mobile device remote connection services to run and respond. Until they are both running the connection manager will not proceed.<br><br></li>
+<li>
+<u>For Windows 95 only</u>, the connection manager calls the <A HREF='javascript:document.x.iv.ALink("_wcesdk_idccmansink_onloganswered","")'><b>IDccManSink::OnLogAnswered</b></a> method when the connection manager has detected the communications interface.<br><br></li>
+<li>
+The Windows CE Services connection manager calls the <A HREF='javascript:document.x.iv.ALink("_wcesdk_idccmansink_onlogactive","")'><b>IDccManSink::OnLogActive</b></a> method when the connection is established between the application and Windows CE Services connection manager. </li>
+</ol>
+<ol>
+<li>
+The Windows CE Services connection manager calls the <A HREF='javascript:document.x.iv.ALink("_wcesdk_idccmansink_onlogipaddr","")'><b>IDccManSink::OnLogIpAddr</b></a> method, providing the IP address for the communications socket which it obtained.</li>
+</ol>
+</li>
+</ol>
+<p>
+<b>Note</b>  An application should not consider a connection to be completely established until the <b>IDccManSink::OnLogIpAddr</b> notification occurs.
+<ol>
+<li>
+Perform the desired processing in the application. </li>
+</ol>
+<p>
+Once the connection has been established, the application can begin normal processing. This can include processing on the desktop, remote processing on the mobile device (using RAPI), and calling the <b>IDccMan</b> methods.</p>
+<p>
+It is advantageous to initialize RAPI (by calling <A HREF='javascript:document.x.iv.ALink("_wcesdk_cerapiinit","")'><b>CeRapiInit</b></a>) when the <b>IDccManSink::OnLogActive</b> notification is received, since <b>CeRapiInit</b> requires that a connection be established between the desktop PC and the mobile device in order to return from the call.</p>
+<p>
+An example of a useful <b>IDccMan</b> method is <A HREF='javascript:document.x.iv.ALink("_wcesdk_idccman_showcommsettings","")'><b>ShowCommSettings</b></a>. This displays the Windows CE Services connection manager property sheet which allows the user to select the communication port for connecting the desktop PC to the mobile device.</p>
+<h4>Notification at Disconnection </h4>
+<p>
+The process for disconnection is similar to that of connection.
+<ol>
+<li>
+Initialize the COM library and register the application (as shown above).<br><br></li>
+<li>
+When the actual disconnection occurs, Windows CE Services calls <A HREF='javascript:document.x.iv.ALink("_wcesdk_idccmansink_onlogdisconnection","")'><b>IDccManSink::OnLogDisconnection</b></a> which tells the application that the connection has been terminated. </li>
+</ol>
+<ol>
+<li>
+Now application processing starts. It can only take place on the desktop PC.</li>
+</ol>
+<h4>Connection Notification Scenarios</h4>
+<p>
+You can see the results of several potential notification scenarios by using the Connection Notification Client sample program. After building and running the program, view the <b>Notification Messages:</b> listbox output in the <b>Connection Notification Test</b> dialog box. Some possible scenarios include: a new remote connection, a disconnection of the desktop PC or mobile device connection service, and a reestablishment of the remote connection.</p>
+<h4>The Unregistration Process</h4>
+<ol>
+<li>
+The application calls <b>IDccMan::Unadvise</b>, which releases the memory associated with the <b>IDccManSink</b> interface<br><br></li>
+<li>
+The application calls <b>IDccMan::Release</b>, which releases the <b>IDccMan</b> object</li>
+</ol>
+<ol>
+<li>
+The application calls <b>CoUninitialize</b> to perform any OLE cleanup. Note:  a call to <b>CoUninitialize</b> is required for each successful call to <b>CoInitialize</b>.</li>
+</ol>
+</BODY>
+</HTML>

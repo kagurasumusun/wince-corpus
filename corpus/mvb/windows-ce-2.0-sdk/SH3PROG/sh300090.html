@@ -1,0 +1,68 @@
+<HTML>
+<HEAD>
+<TITLE>6.56   SHAD (Shift Arithmetic Dynamically): Shift Instruction</TITLE>
+</HEAD><body bgcolor="#FFFFFF">
+<!-- SH3PROG InfoViewer title (sh3prog.ivt); HTML topics extracted with tools/extract-ivt.py, images and the title's own indexes dropped. -->
+
+<A NAME="off_3048028"></A><A NAME="6076b2ef"></A><FONT FACE="Arial" SIZE="5"><B>6.56   SHAD (Shift Arithmetic Dynamically): Shift Instruction 
+<P>
+
+<P>
+</B></FONT><TABLE><TR VALIGN=TOP><TD><FONT FACE="Arial" SIZE="3"><B>Format
+<BR></B></FONT></TD><TD><FONT FACE="Arial" SIZE="3"><B>Abstract
+<BR></B></FONT></TD><TD><FONT FACE="Arial" SIZE="3"><B>Code
+<BR></B></FONT></TD><TD><FONT FACE="Arial" SIZE="3"><B>Cycle
+<BR></B></FONT></TD><TD><FONT FACE="Arial" SIZE="3"><B>T Bit
+<BR></B></FONT></TD></TR><TR VALIGN=TOP><TD><FONT FACE="Lucida Sans Typewriter" SIZE="3">SHAD Rm,Rn
+<BR></FONT></TD><TD><FONT FACE="Arial" SIZE="3">Rn &lt;&lt; Rm <IMG SRC="sh390002.gif" ALT="sh390002.gif" BORDER=0 WIDTH=13 HEIGHT=16> Rn (Rm ³ 0)
+<BR>Rn &gt;&gt; Rm <IMG SRC="sh390002.gif" ALT="sh390002.gif" BORDER=0 WIDTH=13 HEIGHT=16> Rn (Rm &lt; 0)
+<BR></FONT></TD><TD><FONT FACE="Lucida Sans Typewriter" SIZE="3">0100nnnnmmmm1100
+<BR></FONT></TD><TD><FONT FACE="Arial" SIZE="3">2
+<BR></FONT></TD><TD><FONT FACE="Arial" SIZE="3">-
+<BR>
+<BR></FONT></TD></TR></TABLE><FONT FACE="Arial" SIZE="3"><B>Description: 
+<P>
+</B>Arithmetically shifts the contents of general register Rn. General register Rm
+indicates the shift direction and shift count (figure 6.7). 
+<P>
+<IMG SRC="sh390000.gif" ALT="sh390000.gif" BORDER=0 WIDTH=6 HEIGHT=16> Shift directionRm ³ 0, left
+<BR>Rm &lt; 0, rightShift count: Rm (4-0) are used; if negative, two's complement is
+set to Rm. 
+<BR>The maximum magnitude of the left shift count is 31 (0-31).
+<BR>The maximum magnitude of the right shift count is 32 (1-32).
+<P>
+
+<BR></FONT><FONT FACE="Times New Roman" SIZE="5"><B><IMG SRC="sh300036.gif" ALT="sh300036.gif" BORDER=0 WIDTH=335 HEIGHT=272>
+<P>
+</B></FONT><FONT FACE="Arial" SIZE="3"><B>Figure 6.7   Shift Arithmetic Dynamically
+<P>
+Operation:
+<P>
+</B></FONT><FONT FACE="Lucida Sans Typewriter" SIZE="3">SHAD(long m,n) /* SHAD Rm,Rn */
+<P>
+{
+<P>
+ long cont, sgn;
+<P>
+ sgn = R[m] &amp;0x80000000;
+<P>
+ cnt = R[m] &amp;0x0000001F;
+<P>
+ if (sgn==0) R[n]&lt;&lt;=cnt;
+<P>
+ else   R[n]=(signed long)R[n]&gt;&gt;((~cnt+1) &amp; 0x1F); /*shift 
+<P>
+     arithmetic right*/
+<P>
+ PC+=2;
+<P>
+}
+<P>
+</FONT><FONT FACE="Arial" SIZE="3"><B>Example:
+<P>
+</B></FONT><FONT FACE="Lucida Sans Typewriter" SIZE="3">SHAD R1,R2 Before execution R1 = H'FFFFFFEC, R2 = H'80180000
+<P>
+  After execution R1 = H'FFFFFFEC, R2 = H'FFFFF801
+<P>
+</FONT></BODY>
+</HTML>

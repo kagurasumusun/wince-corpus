@@ -1,0 +1,48 @@
+<HTML>
+<HEAD>
+<TITLE>6.8.3 Bus Error Exception</TITLE>
+</HEAD><BODY BGCOLOR=#ffffff>
+<!-- PR3910 InfoViewer title (Pr3910.ivt); HTML topics extracted with tools/extract-ivt.py, images and the title's own indexes dropped. -->
+<BASEFONT FACE="Arial,Helvetica" SIZE="2">
+<A HREF= "PR39home.htm"><IMG SRC="contents.gif" ALT="contents.gif" BORDER = 0></A>
+<P>
+<A NAME="off_689864"></A><A NAME="de0573bd"></A><FONT FACE="Arial" SIZE="3"><H1>6.8.3 Bus Error Exception
+<P>
+</H1><B>Cause
+<P>
+</B>This exception is signaled by hardware external to the core in case of bus
+errors during a memory bus cycle. This occurs during execution of the instruction
+causing the bus error. The memory bus cycle ends upon notification of a bus
+error. When a bus error is raised during a burst refill, the following refill is
+not performed. A bus error sihnal will be ignored if the PR3910 is executing a
+cycle other than a bus cycle. It is not possible to raised a bus error exception
+in a write access using a write buffer. A general interrupt must be used.
+<P>
+<B>Handling
+<P>
+</B>The PR3910 branches to the General Exception vector for this exception. When
+the exception occurs, the PR3910 sets the <I>IBE</I> or <I>DBE</I> code in the Cause register</FONT><FONT FACE="Times New Roman" SIZE="3">’</FONT><FONT FACE="Arial" SIZE="3">s <I>ExcCode</I> field to indicate whether the error occurred during an instruction fetch
+(IBE) or during a data load or store reference (DBE).
+<P>
+The EPC register points at the instruction that caused the exception, unless
+the instruction is in a branch delay slot: in that case, the EPC points at the
+preceding <B>branch</B> instruction and the <I>BD</I> bit of the Cause register is set.
+<P>
+<B>Servicing
+<P>
+</B>The physical address at which the fault occurred can be computed from
+information in the system control coprocessor (CP0) registers.
+<P>
+If the Cause register</FONT><FONT FACE="Times New Roman" SIZE="3">’</FONT><FONT FACE="Arial" SIZE="3">s <I>IBE</I> code is set (indicating an instruction fetch reference), the virtual address
+is contained in the EPC register.
+<P>
+If the Cause register</FONT><FONT FACE="Times New Roman" SIZE="3">’</FONT><FONT FACE="Arial" SIZE="3">s DBE code is set (indicating a data load or store reference), the instruction
+which caused the exception is at the virtual address contained in the EPC
+register (or four plus the contents of the EPC register if the BD bit is set in the
+Cause register). The virtual address of the load or store reference can then
+be obtained by interpreting the instruction.
+<P>
+The operating system should hand the executing process a bus error when this
+exception occurs. Such an error is usually fatal.
+<P>
+</FONT></BODY>

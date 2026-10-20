@@ -1,0 +1,138 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML>
+<HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text-html; charset=Windows-1252">
+<title>Using Wait Functions</title>
+<meta name=MS-HAID content="_wcesdk_using_wait_functions">
+<meta name=MS-HKWD content="Using Wait Functions">
+</HEAD>
+<BODY BGCOLOR=#FFFFFF TEXT=#000000>
+<!-- WCESDKG InfoViewer title (Wcesdkg.ivt); HTML topics extracted with tools/extract-ivt.py, images and the title's own indexes dropped. -->
+
+<form name=x><object name=iv classid="clsid:9c2ac687-ceef-11cf-96d9-00a0c903b016">
+</object></form>
+<h3><a name="_wcesdk_using_wait_functions"></a>Using Wait Functions</h3>
+<p>
+Windows CE supports two types of wait functions, single-object and multiple-objects. The single object function is <b>WaitForSingleObject</b>. The multiple object functions are <b>WaitForMultipleObjects</b> and <b>MsgWaitForMultipleObjects</b>.</p>
+<p>
+The <A HREF='javascript:document.x.iv.ALink("_wcesdk_win32_waitforsingleobject","")'><b>WaitForSingleObject</b></a> function requires a handle of one synchronization object. This function returns when one of the following occurs:
+<ul>
+<li>
+The specified object is in the signaled state.<br><br></li>
+<li>
+The time-out interval elapses. The time-out interval can be set to INFINITE to specify that the wait will not time out.</li>
+</ul>
+<p>
+The <A HREF='javascript:document.x.iv.ALink("_wcesdk_win32_waitformultipleobjects","")'><b>WaitForMultipleObjects</b></a> and <A HREF='javascript:document.x.iv.ALink("_wcesdk_win32_msgwaitformultipleobjectsex","")'><b>MsgWaitForMultipleObjects</b></a> functions enable the calling thread to specify an array containing one or more synchronization object handles. These functions return when one of the following occurs:
+<ul>
+<li>
+The state of any one of the specified objects is set to signaled or the states of all objects have been set to signaled. You control whether one or all of the states will be used in the function call.<br><br></li>
+<li>
+The time-out interval elapses. The time-out interval can be set to INFINITE to specify that the wait will not time out.</li>
+</ul>
+<p>
+The following example is not a complete program but it is a piece of code that shows you how to use the <A HREF='javascript:document.x.iv.ALink("_wcesdk_win32_createevent","")'><b>CreateEvent</b></a> function to create two event objects. It then uses the two created objects as parameters in the function call to <A HREF='javascript:document.x.iv.ALink("_wcesdk_win32_waitformultipleobjects","")'><b>WaitForMultipleObjects</b></a> The WaitForMultipleObjects function does not return until one of the objects is set to signaled. </p>
+<pre>HANDLE hEvents[2]; 
+DWORD i, dwEvent; 
+
+// Create two event objects.
+
+for (i = 0; i &lt; 2; i++) 
+{ 
+    hEvents[i] = CreateEvent( 
+        NULL,   // no security attributes
+        FALSE,  // auto-reset event object
+        FALSE,  // initial state is nonsignaled
+        NULL);  // unnamed object
+    if (hEvents[i] == NULL) { 
+        printf(&quot;CreateEvent error: %d\n&quot;, GetLastError() ); 
+        ExitProcess(0); 
+    } 
+} 
+
+// The creating thread waits for other threads or processes
+// to signal the event objects.
+
+dwEvent = WaitForMultipleObjects( 
+    2,           // number of objects in array
+    hEvents,     // array of objects
+    FALSE,       // wait for any
+    INFINITE);   // indefinite wait
+
+// Return value indicates which event is signaled.
+
+switch (dwEvent) { 
+
+    // hEvent[0] was signaled.
+    case WAIT_OBJECT_0 + 0: 
+        // Perform tasks required by this event.
+        break; 
+
+    // hEvent[1] was signaled.
+    case WAIT_OBJECT_0 + 1: 
+        // Perform tasks required by this event.
+        break; 
+
+    // Return value is invalid.
+    default: 
+        printf(&quot;Wait error: %d\n&quot;, GetLastError()); 
+        ExitProcess(0); 
+}
+</pre>
+<p>
+The <A HREF='javascript:document.x.iv.ALink("_wcesdk_win32_msgwaitformultipleobjectsex","")'><b>MsgWaitForMultipleObjects</b></a> is like the WaitForMultipleObjects except that it allows you to specify input event objects in the object handle array. You select the type of input event to wait for in the <i>dwWakeMask</i> parameter. The MsgWaitForMultipleObjects function does not return if there is unread input of the specified type in the queue. It returns only when new input arrives.</p>
+<p>
+For example, a thread can use <b>MsgWaitForMultipleObjects</b> with its dwWakeMask parameter set to QS_KEY to block its execution until the state of a specified object has been set to signaled and there is keyboard input available in the thread's input queue. The thread can use the <A HREF='javascript:document.x.iv.ALink("_wcesdk_win32_getmessage","")'><b>GetMessage</b></a> or <A HREF='javascript:document.x.iv.ALink("_wcesdk_win32_peekmessage","")'><b>PeekMessage</b></a> function to retrieve the input. </p>
+<p>
+When waiting for the states of all objects to be set to signaled, the multiple-object functions do not modify the states of the specified objects until the states of all objects have been set to signaled. For example, the state of a mutex object can be signaled, but the calling thread does not get ownership until the states of the other objects specified in the array have also been set to signaled. In the meantime, some other thread may get ownership of the mutex object, thereby setting its state to nonsignaled.</p>
+<p>
+The following code fragment illustrates the use of the <A HREF='javascript:document.x.iv.ALink("_wcesdk_win32_msgwaitformultipleobjects","")'><b>MsgWaitForMultipleObjects</b></a> function in a message loop. The loop continues until a WM_QUIT message appears in the queue. The <i>dwWakeMask</i> parameter is set to QS_ALLINPUT so all messages are checked. </p>
+<pre>int MessageLoop ( 
+    HANDLE* lphObjects,  // handles that need to be waited on 
+    int     cObjects     // number of handles to wait on 
+  )
+{ 
+    // The message loop lasts until we get a WM_QUIT message.
+    // When we get a WM_QUIT message we return from the function.
+    while (TRUE)
+    {
+        // block-local variable 
+        DWORD result ; 
+        MSG msg ; 
+
+        // Read all of the messages in this next loop, 
+        // removing each message as we read it.
+        while (PeekMessage(&amp;msg, NULL, 0, 0, PM_REMOVE)) 
+        { 
+            // If it's a quit message, we return.
+            if (msg.message == WM_QUIT)  
+                return 1; 
+            // Otherwise, dispatch the message.
+            DispatchMessage(&amp;msg); 
+        } // End of PeekMessage while loop.
+
+        // Wait for any message sent or posted to this queue 
+        // or for one of the passed handles to be set to signaled.
+        result = MsgWaitForMultipleObjects(cObjects, lphObjects, 
+                 FALSE, INFINITE, QS_ALLINPUT); 
+
+        // The result tells us the type of event we have.
+        if (result == (WAIT_OBJECT_0 + cObjects))
+        {
+            // New messages have arrived. 
+            // Continue to the top of the always while loop to 
+            // dispatch them and resume waiting.
+            continue;
+        } 
+        else 
+        { 
+            // One of the handles became signaled. 
+            Other Code (result - WAIT_OBJECT_0) ; 
+        } // End of else clause.
+    } // End of the always while loop. 
+} // End of function.
+</pre>
+<p>
+Be careful when using the wait functions and code that directly or indirectly creates windows. If a thread creates any windows, it must process messages. Message broadcasts are sent to all windows in the system. If you have a thread that uses a wait function with no time-out interval, the system will deadlock. Two examples of code that indirectly creates windows are DDE and COM <b>CoInitialize</b>. If you have a thread that creates windows, use <A HREF='javascript:document.x.iv.ALink("_wcesdk_win32_msgwaitformultipleobjects","")'><b>MsgWaitForMultipleObjects</b></a> rather than the other wait functions.</p>
+</BODY>
+</HTML>

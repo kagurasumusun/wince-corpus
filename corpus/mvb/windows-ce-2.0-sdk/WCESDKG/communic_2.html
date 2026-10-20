@@ -1,0 +1,35 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML>
+<HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text-html; charset=Windows-1252">
+<title>Implementing Serial Communications</title>
+<meta name=MS-HAID content="_wcesdk_implementing_serial_communications">
+<meta name=MS-HKWD content="Implementing Serial Communications">
+</HEAD>
+<BODY BGCOLOR=#FFFFFF TEXT=#000000>
+<!-- WCESDKG InfoViewer title (Wcesdkg.ivt); HTML topics extracted with tools/extract-ivt.py, images and the title's own indexes dropped. -->
+
+<form name=x><object name=iv classid="clsid:9c2ac687-ceef-11cf-96d9-00a0c903b016">
+</object></form>
+<h3><a name="_wcesdk_implementing_serial_communications"></a>Implementing Serial Communications</h3>
+<h4><img src="../guide/art/wedge.gif" border=0>&#09;To use serial communication</h4>
+<ol>
+<li>
+Determine which COM port you need to open. Port numbers are stored in the registry (\HKEY_LOCAL_MACHINE\Drivers). Active drivers are listed under \HKEY_LOCAL_MACHINE\Active.<br><br></li>
+<li>
+Call <b>CreateFile</b> with <i>lpFileName</i> set to the COM port name (&quot;COM1:&quot;, for example.). Note that &quot;COM1&quot; (i.e., no colon) will not work. The <i>lpSecurityAttributes</i> parameter should be set to NULL and the <i>dwFlagsAndAttributes</i> parameter set to zero.<br><br></li>
+<li>
+For raw-IR transmission, the port must be placed in IR mode. Invoke <A HREF='javascript:document.x.iv.ALink("_wcesdk_win32_escapecommfunction","")'><b>EscapeCommFunction</b></a> with <i>hFile</i> set to the handle returned by <b>CreateFile</b>, and <i>dwFunc</i> set to SETIR. Check the return value to be sure that raw IR is supported.<br><br></li>
+<li>
+Call <b>SetCommTimeouts</b> to set the communication timeouts.<p>
+The timeout parameters can be queried by calling the <b>GetCommTimeouts</b> function. For more information about communication timeouts, see <b>COMMTIMEOUTS</b>.</p>
+</li>
+<li>
+Call the <b>ReadFile</b> and <b>WriteFile</b> functions to transmit and receive serial data. Set the <i>lpOverlapped</i> parameter for each function to NULL.<p>
+When one thread is waiting for a <b>ReadFile</b> function to return, <b>ReadFile</b> calls issued by other threads will be blocked until the initial <b>ReadFile</b> call returns. The same is true for the <b>WriteFile</b> function.</p>
+</li>
+<li>
+Call <b>CloseHandle</b> to close the serial port.</li>
+</ol>
+</BODY>
+</HTML>

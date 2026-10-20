@@ -1,0 +1,131 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML>
+<HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text-html; charset=Windows-1252">
+<title>CeSeekDatabase</title>
+<meta name=MS-HAID content="_wcesdk_ceseekdatabase">
+<meta name=MS-HKWD content="CeSeekDatabase">
+<meta name=MS-HKWD content="PegSeekDatabase">
+</HEAD>
+<BODY BGCOLOR=#FFFFFF TEXT=#000000>
+<!-- WCESDK InfoViewer title (WCESDK.IVT); HTML topics extracted with tools/extract-ivt.py, images and the title's own indexes dropped. -->
+
+<BODY BGCOLOR=#FFFFFF BACKGROUND= "images\cewmark.gif" TEXT=#000000><form name=x><object name=iv classid="clsid:9c2ac687-ceef-11cf-96d9-00a0c903b016">
+</object></form>
+<h1><a name="_wcesdk_ceseekdatabase"></a>CeSeekDatabase </h1>
+<p>
+The <b>CeSeekDatabase</b> function seeks the specified record in an open database. A RAPI version of this function exists and is also called <b>CeSeekDatabase</b>. </p>
+<h2>Syntax</h2>
+<p>
+<b>CEOID</b> <b>CeSeekDatabase(HANDLE</b> <i>hDatabase</i><b>, DWORD</b> <i>dwSeekType</i><b>, DWORD</b> <i>dwValue</i><b>, LPDWORD</b> <i>lpdwIndex<b>)</i>;</b> </p>
+<h2>At a Glance</h2>
+<table>
+<tr valign=top>
+<td>
+Header file:</td>
+<td>
+Winbase.h</td>
+</tr>
+<tr valign=top>
+<td>
+Component:</td>
+<td>
+<a href="modcomp_14.htm">fsdbase</a></td>
+</tr>
+<tr valign=top>
+<td>
+Platforms:</td>
+<td>
+H/PC</td>
+</tr>
+<tr valign=top>
+<td>
+Windows CE versions:</td>
+<td>
+1.01 and later</td>
+</tr>
+</table><br>
+<h2>Parameters</h2>
+<dl>
+<dt>
+<i>hDatabase</i> </dt>
+<dd>
+Handle to the open database in which to seek. <br>
+</dd>
+<dt>
+<i>dwSeekType</i> </dt>
+<dd>
+Type of seek operation to perform. This parameter can be one of the following values:<dl>
+<dt>
+CEDB_SEEK_PEGOID</dt>
+<dd>
+Seek until finding an object that has the given object identifier. The <i>dwValue</i> parameter specifies the object identifier. This type of seek operation is very efficient.<br>
+</dd>
+<dt>
+CEDB_SEEK_VALUESMALLER</dt>
+<dd>
+Seek until finding the largest value that is smaller than the given value. If none of the records has a smaller value, the seek pointer is left at the end of the database and the function returns zero. The <i>dwValue</i> parameter is a pointer to a <a href="fsdbas_s_2.htm"><b>CEPROPVAL</b></a> structure.<br>
+</dd>
+<dt>
+CEDB_SEEK_VALUEFIRSTEQUAL</dt>
+<dd>
+Seek until finding the first value that is equal to the given value. If the seek operation fails, the seek pointer is left pointing at the end of the database, and the function returns zero. The <i>dwValue</i> parameter is a pointer to a <b>CEPROPVAL</b> structure.<br>
+</dd>
+<dt>
+CEDB_SEEK_VALUENEXTEQUAL</dt>
+<dd>
+Starting from the current seek position, seek exactly one position forward in the sorted order and check if the next record is equal in value to the given value. If so, return the object identifier of this next record; otherwise, return zero and leave the seek pointer at the end of the database. This operation can be used in conjunction with the CEDB_SEEK_VALUEFIRSTEQUAL operation to enumerate all records with an equal value. The <i>dwValue</i> parameter specifies the value for which to seek. <br>
+</dd>
+<dt>
+CEDB_SEEK_VALUEGREATER</dt>
+<dd>
+Seek until finding a value greater than or equal to the given value. If all records are smaller, the seek pointer is left at the end of the database and the function returns zero. The <i>dwValue</i> parameter is a pointer to a <b>CEPROPVAL</b> structure. <br>
+</dd>
+<dt>
+CEDB_SEEK_BEGINNING</dt>
+<dd>
+Seek until finding the record at the given position from the beginning of the database. The <i>dwValue</i> parameter specifies the number of records to seek. <br>
+</dd>
+<dt>
+CEDB_SEEK_CURRENT</dt>
+<dd>
+Seek backward or forward from the current position of the seek pointer for the given number of records. The <i>dwValue</i> parameter specifies the number of records from the current position. The function seeks forward if <i>dwValue</i> is a positive value, or backward if it is negative. A forward seek operation is efficient.<br>
+</dd>
+<dt>
+CEDB_SEEK_END</dt>
+<dd>
+Seek backward for the given number of records from the end of the database. The <i>dwValue</i> parameter specifies the number of records. </dd>
+</dl>
+<br>
+</dd>
+<dt>
+<i>dwValue</i> </dt>
+<dd>
+Value to use for the seek operation. The meaning of this parameter depends on the value of <i>dwSeekType</i>. <br>
+</dd>
+<dt>
+<i>lpdwIndex</i> </dt>
+<dd>
+Pointer to a variable that receives the index from the start of the database to the beginning of the record that was found. </dd>
+</dl>
+<h2>Return Values</h2>
+<p>
+If the function succeeds, the return value is the object identifier of the record on which the seek ends. If the function fails, the return value is zero. To get extended error information when within a CE program call <a href="nk_f_15.htm"><b>GetLastError</b></a>. If within a RAPI program, call <a href="func_c_84.htm"><b>CeGetLastError</b></a>. <b>GetLastError </b>and <b>CeGetLastError</b> may return ERROR_INVALID_PARAMETER if a parameter is invalid. </p>
+<h2>Remarks</h2>
+<p>
+The <b>CeSeekDatabase</b> function always uses the current sort order as specified in the call to the <a href="fsdbas_f_5.htm"><b>CeOpenDatabase</b></a> function. If the CEDB_AUTOINCREMENT flag was specified, an automatic seek of one from the current position is done with each read operation that occurs on the database. </p>
+<p>
+Note that a seek can only be performed on a sorted property value. After creating a database (using <b>CeCreateDatabase</b>) and opening the database (using <b>CeOpenDatabase</b>), subsequent calls to <b>CeSeekDatabase</b> assume the sort order that was specified in the <i>propid</i> parameter of the call to <b>CeOpenDatabase</b>. Although property identifiers can be modified using <a href="fsdbas_f_9.htm"><b>CeWriteRecordProps</b></a>, it is best to use the same property identifier for <b>CeOpenDatabase</b> that was used for the <b>propid</b> member of the <a href="fsdbas_s_3.htm"><b>SORTORDERSPEC</b></a> structure that was passed in the call to <a href="fsdbas_f.htm"><b>CeCreateDatabase</b></a>.</p>
+<p>
+To enter negative values for the CEDB_SEEK_CURRENT case, cast a signed long. This changes the effective range on the record indexes to 31 bits from 32.</p>
+<p>
+Multiple sort orders cannot be specified for a single property.</p>
+<p>
+For more information, see <A HREF='javascript:document.x.iv.ALink("_wcesdk_accessing_persistent_storage","")'>Accessing Persistent Storage</a>.</p>
+<p>
+When writing applications for Windows CE version 1.0, use the <b>PegSeekDatabase</b> function.</p>
+<h2>See Also</h2>
+<p>
+<a href="fsdbas_f.htm"><b>CeCreateDatabase</b></a>, <a href="fsdbas_f_5.htm"><b>CeOpenDatabase</b></a>, <a href="fsdbas_s_2.htm"><b>CEPROPVAL</b></a></p>
+</BODY>
+</HTML>

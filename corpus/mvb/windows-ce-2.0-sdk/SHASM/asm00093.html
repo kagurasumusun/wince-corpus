@@ -1,0 +1,97 @@
+<HTML>
+<HEAD>
+<TITLE>5.6.3 .PROLOG: End of Function's Prolog Code</TITLE>
+</HEAD><body bgcolor="#FFFFFF">
+<!-- SHASM InfoViewer title (Shasm.ivt); HTML topics extracted with tools/extract-ivt.py, images and the title's own indexes dropped. -->
+
+<A NAME="off_2393838"></A><A NAME="504a1268"></A><FONT FACE="Arial" SIZE="4"><B>5.6.3 .PROLOG: End of Function's Prolog Code 
+<P>
+</B></FONT><FONT FACE="Arial" SIZE="3"><B>Syntax:
+<P>
+</B></FONT><FONT FACE="Lucida Sans Typewriter" SIZE="3">.PROLOG
+<P>
+
+<P>
+</FONT><FONT FACE="Arial" SIZE="3"><B>Statement Elements:
+<P>
+<IMG SRC="asm90000.gif" ALT="asm90000.gif" BORDER=0 WIDTH=6 HEIGHT=16> </B>Label: The label field is not used
+<P>
+<IMG SRC="asm90000.gif" ALT="asm90000.gif" BORDER=0 WIDTH=6 HEIGHT=16> Operation: Enter the .PROLOG mnemonic in the operation field
+<P>
+<IMG SRC="asm90000.gif" ALT="asm90000.gif" BORDER=0 WIDTH=6 HEIGHT=16> Operands: The operand field is not used
+<P>
+
+<P>
+<B>Description: 
+<P>
+</B>The .PROLOG directive marks the end of the prolog code of a function. The
+prolog code is the code at the beginning of a function that sets up the stack frame
+for the function, in accordance with the Calling Standard Specification. This
+includes saving the PR register, pushing other registers onto the stack,
+setting up the frame pointer, etc. See the Calling Standard Specification for
+reference. The .PROLOG directive should appear between the last line of prolog code
+and the first line of non-prolog code for the function. If the function has no
+prolog code, then the .PROLOG directive should appear between the .ENTRY
+directive for the function and the first line of code in the function. 
+<P>
+It is important that the .PROLOG directive be used appropriately, and that the
+prolog code (and the epilog code) of each function conform to the Calling
+Standard Specification. Otherwise, structured exception handling may not work
+correctly, and the debugger may be unable to provide stack traces. If the .PROLOG
+directive is not specified for a function (ie, an .ENDF directive is encountered
+without a .PROLOG directive having been encountered since the most recent
+.ENTRY directive), the assembler will issue a warning, and act as though the .PROLOG
+directive had been specified immediately following the .ENTRY directive. This
+effectively indicates that the function has no prolog code. If the function
+does in fact have prolog code, then structured exception handling and stack
+tracing may not operate properly. It is best to always use a .PROLOG directive, even
+if the function has no prolog code.
+<P>
+<B>Example:
+<P>
+</B></FONT><FONT FACE="Lucida Sans Typewriter" SIZE="3">fun6: .entry
+<P>
+ ; this is the prolog code:
+<P>
+ mov.l  r14,@-sp
+<P>
+ mov.l  r8,@-sp
+<P>
+ sts.l  pr,@-sp
+<P>
+ mov  sp,fp
+<P>
+ add  #12,fp
+<P>
+ ; end of prolog code.
+<P>
+ .prolog    ; mark end of prolog code
+<P>
+ add  #-16,sp
+<P>
+ ; function code goes here
+<P>
+ mov  fp,r2
+<P>
+ add  #-12,r2
+<P>
+ lds.l  @r2+,pr
+<P>
+ mov.l  @r2+,r8
+<P>
+ mov  r2,sp
+<P>
+ rts
+<P>
+  mov.l @sp+,fp
+<P>
+ .endf
+<P>
+</FONT><FONT FACE="Arial Narrow" SIZE="4"><B>Note:
+<P>
+</B></FONT><FONT FACE="Arial" SIZE="3">See also examples for the </FONT><FONT FACE="Arial" COLOR="#008000" SIZE="3"><A HREF="asm00095.htm">PDATA directive section</A></FONT><FONT FACE="Arial" SIZE="3">.
+<P>
+
+<P>
+</FONT><FONT FACE="Lucida Sans Typewriter" SIZE="3"></FONT></BODY>
+</HTML>

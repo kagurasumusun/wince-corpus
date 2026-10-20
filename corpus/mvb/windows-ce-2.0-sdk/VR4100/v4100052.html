@@ -1,0 +1,253 @@
+<HTML>
+<HEAD>
+<TITLE>CP0 Registers</TITLE>
+</HEAD><BODY BGCOLOR=#ffffff>
+<!-- VR4100 InfoViewer title (Vr4100.ivt); HTML topics extracted with tools/extract-ivt.py, images and the title's own indexes dropped. -->
+<BASEFONT FACE="Arial,Helvetica" SIZE="2">
+<A HREF= "VR41home.htm"><IMG SRC="contents.gif" ALT="contents.gif" BORDER = 0></A>
+<P>
+<A NAME="off_657215"></A><A NAME="abba42c4"></A><FONT FACE="Arial,Helvetica"><H1>CP0 Registers
+<P>
+</H1></FONT><FONT FACE="Arial" SIZE="3">The following sections describe the CP0 registers, shown in Figure 4-7, that
+are assigned specifically as a software interface with memory management (each
+register is followed by its register number in parentheses). 
+<P>
+<I>Index</I> register (CP0 register number 0)
+<P>
+<I>Random</I> register (1)
+<P>
+<I>EntryLo0</I> (2) and <I>EntryLo1</I> (3) registers
+<P>
+<I>PageMask</I> register (5)
+<P>
+<I>Wired</I> register (6)
+<P>
+<I>EntryHi</I> register (10)
+<P>
+<I>PRId</I> register (15)
+<P>
+<I>Config</I> register (16)
+<P>
+<I>LLAddr register (17)
+<P>
+TagLo</I> (28) and <I>TagHi</I> (29) registers
+<P>
+</FONT><FONT FACE="Arial" SIZE="5"><B>Index Register (0)
+<P>
+</B></FONT><FONT FACE="Arial" SIZE="3">The <I>Index </I>register is a 32-bit, read/write register containing six bits to index an
+entry in the TLB. The high-order bit of the register shows the success or failure
+of a TLB Probe (TLBP)<B> </B>instruction.
+<P>
+The <I>Index </I>register also specifies the TLB entry affected by TLB Read (TLBR)<B> </B>or TLB Write Index (TLBWI)<B> </B>instructions.
+<P>
+Figure 4-11 shows the format of the <I>Index </I>register; Table 4-7 describes the <I>Index </I>register fields.
+<P>
+ </FONT><FONT FACE="Times New Roman" SIZE="6"><IMG SRC="v4100066.gif" ALT="v4100066.gif" BORDER=0 WIDTH=437 HEIGHT=100>
+<P>
+</FONT><FONT FACE="Times New Roman" SIZE="3">Figure 4-11    Index Register
+<P>
+ </FONT><FONT FACE="Times New Roman" SIZE="6"><IMG SRC="v4100067.gif" ALT="v4100067.gif" BORDER=0 WIDTH=420 HEIGHT=154>
+<P>
+</FONT><FONT FACE="Times New Roman" SIZE="3">Table 4-7    Index Register Field Descriptions
+<P>
+</FONT><FONT FACE="Arial" SIZE="5"><B>Random Register (1)
+<P>
+</B></FONT><FONT FACE="Arial" SIZE="3">This register decrements as each instruction executes, and its values range
+between an upper and a lower bound, as follows:
+<P>
+A lower bound is set by the number of TLB entries reserved for exclusive use
+by the operating system (the contents of the <I>Wired</I> register).
+<P>
+An upper bound is set by the total number of TLB entries-1 (31).
+<P>
+The <I>Random</I> register specifies the entry in the TLB that is affected by the TLB Write
+Random instruction. The register does not need to be read for this purpose;
+however, the register is readable to verify proper operation of the processor.
+<P>
+To simplify testing, the <I>Random</I> register is set to the value of the upper bound upon Cold Reset. This
+register is also set to the upper bound when the <I>Wired</I> register is written. 
+<P>
+Figure 4-12 shows the format of the <I>Random</I> register; Table 4-8 describes the <I>Random</I> register fields.
+<P>
+ </FONT><FONT FACE="Times New Roman" SIZE="6"><IMG SRC="v4100068.gif" ALT="v4100068.gif" BORDER=0 WIDTH=437 HEIGHT=117>
+<P>
+</FONT><FONT FACE="Times New Roman" SIZE="3">Figure 4-12    Random Register
+<P>
+ </FONT><FONT FACE="Times New Roman" SIZE="6"><IMG SRC="v4100069.gif" ALT="v4100069.gif" BORDER=0 WIDTH=421 HEIGHT=120>
+<P>
+</FONT><FONT FACE="Times New Roman" SIZE="3">Table 4-8    Random Register Field Descriptions
+<P>
+</FONT><FONT FACE="Arial" SIZE="5"><B>EntryLo0 (2), and EntryLo1 (3) Registers
+<P>
+</B></FONT><FONT FACE="Arial" SIZE="3">The<I> EntryLo</I> register consists of two registers that have identical formats: 
+<P>
+<I>EntryLo0</I> is used for even virtual pages.
+<P>
+<I>EntryLo1</I> is used for odd virtual pages.
+<P>
+The <I>EntryLo0 </I>and<I> EntryLo1</I> registers are read/write registers. They hold the physical page frame number
+(PFN) of the TLB entry for even and odd pages, respectively, when performing
+TLB read and write operations. Figure 4-10 shows the format of these registers. 
+<P>
+</FONT><FONT FACE="Arial" SIZE="5"><B>PageMask Register (5)
+<P>
+</B></FONT><FONT FACE="Arial" SIZE="3">The <I>PageMask</I> register is a read/write register used for reading from or writing to the
+TLB; it holds a comparison mask that sets the page size for each TLB entry, as
+shown in Table 1-9. Page sizes must be from 1 Kbytes to 256 Kbytes. The format of
+the <I>PageMask</I> register is shown in Figure 4-9.
+<P>
+TLB read and write operations use this register as either a source or a
+destination; when virtual addresses are presented for translation into physical
+address, the corresponding bits in the TLB identify which virtual address bits among
+bits 18:11 are used in the comparison. When the <I>Mask</I> field is not one of the values shown in Table 1-9, the operation of the TLB
+is undefined.
+<P>
+ </FONT><FONT FACE="Times New Roman" SIZE="6"><IMG SRC="v4100070.gif" ALT="v4100070.gif" BORDER=0 WIDTH=295 HEIGHT=197>
+<P>
+</FONT><FONT FACE="Times New Roman" SIZE="3">Table 4-9    Mask Field Values for Page Sizes
+<P>
+</FONT><FONT FACE="Arial" SIZE="5"><B>Wired Register (6)
+<P>
+</B></FONT><FONT FACE="Arial" SIZE="3">The <I>Wired</I> register is a read/write register that specifies the boundary between the <I>wired</I> and <I>random</I> entries of the TLB as shown in Figure 4-13. Wired entries are fixed,
+nonreplaceable entries, which cannot be overwritten by a TLBWR (TLB Write Random)
+operation. They can, however, be overwritten by a TLBWI (TLB Write Indexed)
+instruction. Random entries can be overwritten.
+<P>
+ </FONT><FONT FACE="Times New Roman" SIZE="6"><IMG SRC="v4100071.gif" ALT="v4100071.gif" BORDER=0 WIDTH=487 HEIGHT=174>
+<P>
+</FONT><FONT FACE="Times New Roman" SIZE="3">Figure 4-13    Wired Register Boundary
+<P>
+</FONT><FONT FACE="Arial" SIZE="3">Although the <I>Wired</I> field is six bits wide, only the five least-significant bits (4:0) are used
+in TLB operations, since the VR4100 TLB has 32 entries. 
+<P>
+The <I>Wired</I> register is set to 0 upon Cold Reset. Writing this register also sets the <I>Random</I> register to the value of its upper bound of 31 (see <I>Random</I> register, above). Figure 4-14 shows the format of the <I>Wired</I> register; Table 4-10 describes the register fields.
+<P>
+ </FONT><FONT FACE="Times New Roman" SIZE="6"><IMG SRC="v4100072.gif" ALT="v4100072.gif" BORDER=0 WIDTH=438 HEIGHT=100>
+<P>
+</FONT><FONT FACE="Times New Roman" SIZE="3">Figure 4-14    Wired Register
+<P>
+ </FONT><FONT FACE="Times New Roman" SIZE="6"><IMG SRC="v4100073.gif" ALT="v4100073.gif" BORDER=0 WIDTH=421 HEIGHT=114>
+<P>
+</FONT><FONT FACE="Times New Roman" SIZE="3">Table 4-10    Wired Register Field Descriptions
+<P>
+</FONT><FONT FACE="Arial" SIZE="5"><B>EntryHi Register (CP0 Register 10)
+<P>
+</B></FONT><FONT FACE="Arial" SIZE="3">The <I>EntryHi</I> register holds the high-order bits of a TLB entry for TLB read and write
+operations. 
+<P>
+The<I> EntryHi</I> register is accessed by the TLB Probe, TLB Write Random, TLB Write Indexed,
+and TLB Read Indexed instructions.
+<P>
+Figure 4-9 shows the format of this<I> </I>register.
+<P>
+When either a TLB refill, TLB invalid, or TLB modified exception occurs, the <I>EntryHi</I> register is loaded with the virtual page number (VPN2) and the ASID of the
+virtual address that did not have a matching TLB entry. (See Chapter 5 for more
+information about these exceptions.)
+<P>
+</FONT><FONT FACE="Arial" SIZE="5"><B>Processor Revision Identifier (PRId) Register (15)
+<P>
+</B></FONT><FONT FACE="Arial" SIZE="3">The 32-bit, read-only <I>Processor Revision Identifier</I> (<I>PRId</I>) register contains information identifying the implementation and revision
+level of the CPU and CP0. Table 4-15 shows the format of the <I>PRId</I> register; Table 4-11 describes the <I>PRId</I> register fields.
+<P>
+ </FONT><FONT FACE="Times New Roman" SIZE="6"><IMG SRC="v4100074.gif" ALT="v4100074.gif" BORDER=0 WIDTH=440 HEIGHT=99>
+<P>
+</FONT><FONT FACE="Times New Roman" SIZE="3">Figure 4-15    Processor Revision Identifier Register Format
+<P>
+ </FONT><FONT FACE="Times New Roman" SIZE="6"><IMG SRC="v4100075.gif" ALT="v4100075.gif" BORDER=0 WIDTH=420 HEIGHT=151>
+<P>
+</FONT><FONT FACE="Times New Roman" SIZE="3">Table 4-11    PRId Register Fields
+<P>
+</FONT><FONT FACE="Arial" SIZE="3">The low-order byte (bits 7:0) of the <I>PRId</I> register is interpreted as a revision number, and the high-order byte (bits
+15:8) is interpreted as an implementation number. The content of the high-order
+halfword (bits 31:16) of the register are reserved.
+<P>
+The revision number is stored as a value in the form <I>y.x</I>, where <I>y</I> is a major revision number in bits 7:4 and <I>x</I> is a minor revision number in bits 3:0.
+<P>
+The revision number can distinguish some chip revisions, however there is no
+guarantee that changes to the chip will necessarily be reflected in the <I>PRId</I> register, or that changes to the revision number necessarily reflect real
+chip changes. For this reason, these values are not listed and software should not
+rely on the revision number in the <I>PRId</I> register to characterize the chip.
+<P>
+</FONT><FONT FACE="Arial" SIZE="5"><B>Config Register (16)
+<P>
+</B></FONT><FONT FACE="Arial" SIZE="3">The <I>Config</I> register specifies various configuration options selected on VR4100
+processors; 4-12 lists these options.
+<P>
+Some configuration options, as defined by the<I> EC </I>and<I> BE </I>fields, are set by the hardware during Cold Reset (as derived from the state
+of dedicated pins on the VR4100) and are included in the <I>Config</I> register as read-only status bits for the software to access. Other
+configuration options are read/write ( <I>AD,EP and K0</I> fields) and controlled by software; on Cold Reset these fields are undefined.
+Since only a subset of the R4000 options are available in the VR4100
+processor, some bits are set to constants (e.g., bits 14:13) that were variable in the
+R4000. The <I>Config</I> register should be initialized by software before caches are used. 
+<P>
+Figure 4-16 shows the format of the <I>Config</I> register; Table 4-12 describes the <I>Config</I> register fields.
+<P>
+ </FONT><FONT FACE="Times New Roman" SIZE="6"><IMG SRC="v4100076.gif" ALT="v4100076.gif" BORDER=0 WIDTH=528 HEIGHT=107>
+<P>
+</FONT><FONT FACE="Times New Roman" SIZE="3">Figure 4-16    Config Register Format
+<P>
+</FONT><FONT FACE="Arial" SIZE="3">When the AD bit is set to one, processor read/write address cycle issue rate
+is max 4 TClock cycles ( ADxxADxx or ADDxADDx etc. ) .
+<P>
+When the AD bit is clear to zero, that is max 2 TClock cycles ( ADAD or ADDADD
+etc.).
+<P>
+ </FONT><FONT FACE="Times New Roman" SIZE="6"><IMG SRC="v4100077.gif" ALT="v4100077.gif" BORDER=0 WIDTH=457 HEIGHT=658>
+<P>
+</FONT><FONT FACE="Times New Roman" SIZE="3">Table 4-12    Config Register Field
+<P>
+</FONT><FONT FACE="Arial" SIZE="5"><B>Cache Tag Registers [TagLo (28) and TagHi (29)
+<P>
+</B></FONT><FONT FACE="Arial" SIZE="3">The <I>TagLo</I> and <I>TagHi</I> registers are 32-bit read/write registers that hold the primary cache tag and
+parity during cache initialization, cache diagnostics, or cache error
+processing. The <I>Tag</I> registers are written by the CACHE and MTC0 instructions.
+<P>
+The <I>P</I> fields of these registers are ignored on Index Store Tag operations. Parity
+is computed by the store operation. 
+<P>
+Figure 4-17 shows the format of these registers for primary cache operations.
+Table 4-13 lists the field definitions of the <I>TagLo</I> and <I>TagHi</I> registers.
+<P>
+ </FONT><FONT FACE="Times New Roman" SIZE="6"><IMG SRC="v4100078.gif" ALT="v4100078.gif" BORDER=0 WIDTH=492 HEIGHT=215>
+<P>
+</FONT><FONT FACE="Times New Roman" SIZE="3">Figure 4-17    TagLo and TagHi Register Formats
+<P>
+ </FONT><FONT FACE="Times New Roman" SIZE="6"><IMG SRC="v4100079.gif" ALT="v4100079.gif" BORDER=0 WIDTH=426 HEIGHT=227>
+<P>
+</FONT><FONT FACE="Times New Roman" SIZE="3">Table 4-13    Cache Tag Register Fields
+<P>
+</FONT><FONT FACE="Arial" SIZE="5"><B>Load Linked Address (LLAddr) Register (17)
+<P>
+</B></FONT><FONT FACE="Arial" SIZE="3">The read/write <I>Load Linked Address</I> (<I>LLAddr</I>)<I> </I>register is not used with the VR4100 processor except for diagnostic purpose,
+and serves no function during normal operation.
+<P>
+<I>LLAddr</I> register is implemented just for a compatibility between the VR4100 to V</FONT><FONT FACE="Arial" SIZE="2">R</FONT><FONT FACE="Arial" SIZE="3">4000/4400.
+<P>
+ </FONT><FONT FACE="Times New Roman" SIZE="6"><IMG SRC="v4100080.gif" ALT="v4100080.gif" BORDER=0 WIDTH=443 HEIGHT=101>
+<P>
+</FONT><FONT FACE="Times New Roman" SIZE="3">Figure 4-18    LLAddr register
+<P>
+</FONT><FONT FACE="Arial" SIZE="5"><B>Virtual-to-Physical Address Translation Process
+<P>
+</B></FONT><FONT FACE="Arial" SIZE="3">During virtual-to-physical address translation, the CPU compares the 
+8-bit ASID (if the Global bit, <I>G</I>, is not set) of the virtual address to the ASID of the TLB entry to see if
+there is a match. One of the following comparisons are also made:
+<P>
+In 32-bit mode, the highest 13 or 21 bits (depending upon the page size) of
+the virtual address are compared to the contents of the TLB VPN2 (virtual page
+number divided by two).
+<P>
+In 64-bit mode, the highest 24 or 29 bits (depending upon the page size) of
+the virtual address are compared to the contents of the TLB VPN2 (virtual page
+number divided by two).
+<P>
+If a TLB entry matches, the physical address and access control bits (<I>C</I>, <I>D</I>, and <I>V</I>) are retrieved from the matching TLB entry. While the <I>V</I> bit of the entry must be set for a valid translation to take place, it is not
+involved in the determination of a matching TLB entry.
+<P>
+Figure 4-19 illustrates the TLB address translation process.
+<P>
+ </FONT><FONT FACE="Times New Roman" SIZE="6"><IMG SRC="v4100081.gif" ALT="v4100081.gif" BORDER=0 WIDTH=541 HEIGHT=706>
+<P>
+</FONT><FONT FACE="Times New Roman" SIZE="3">Figure 4-19    TLB Address Translation
+<P>
+</FONT></BODY>

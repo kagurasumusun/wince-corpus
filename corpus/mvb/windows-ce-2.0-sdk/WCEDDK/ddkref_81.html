@@ -1,0 +1,66 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
+<HTML>
+<HEAD><META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=Windows-1252">
+<TITLE>CARD_ISR</TITLE>
+<META NAME="MS-HKWD" CONTENT="CARD_ISR">
+<META NAME="MS-HAID" CONTENT="_wceddk_CARD_ISR">
+</HEAD>
+<BODY BGPROPERTIES="FIXED" TEXT="#000000" BGCOLOR="#FFFFFF">
+<!-- WCEDDK InfoViewer title (WCEDDK.IVT); HTML topics extracted with tools/extract-ivt.py, images and the title's own indexes dropped. -->
+
+<FORM name=x>
+<OBJECT name=iv classid="clsid:9c2ac687-ceef-11cf-96d9-00a0c903b016">
+</OBJECT>
+</FORM>
+<FONT FACE="ARIAL,HELVETICA" SIZE="2">
+<H2><A NAME="_wceddk_CARD_ISR"></A>CARD_ISR</H2>
+<P>
+When a PC Card generates an interrupt on the PC Card interrupt line, Card
+Services calls the interrupt service function handler that is associated with
+a specified socket and function pair. Interrupt service function handlers must
+conform to the <B>CARD_ISR</B>&nbsp;prototype.
+<H5>Syntax</H5>
+<P>
+<B>typedef void (*CARD_ISR)(</B>&nbsp;<BR>
+<B>&nbsp; &nbsp; UINT32 </B><I>uISRContextData<BR>
+</I><B>&nbsp; &nbsp; );</B>
+<P>
+<B>Note</B>&nbsp; The interrupt service function handler is not a true kernel-mode
+interrupt service routine; it is a user-mode callback function that Card
+Services will call directly.
+<H5>Parameters</H5>
+<DL>
+<DT>
+<I>uISRContextData</I>
+<DD>
+Contains context data specified by <B>CardRequestIRQ</B>&nbsp;that the driver can
+interpret as needed.  This parameter is usually a pointer to a structure
+representing the state of the socket and function pair.
+</DL>
+<H5>Return Values</H5>
+<P>
+None.
+<H5>Remarks</H5>
+<P>
+When a PC Card generates an interrupt, Card Services determines which function
+caused the interrupt and then calls the associated interrupt service function
+with the specified socket and function pair.  For single function cards, the
+function number is zero.
+<P>
+An installable device driver calls <B>CardRequestIRQ</B>&nbsp;to register an
+interrupt service routine for a specified socket and function pair.
+<P>
+Card Services clears the interrupt condition in the card configuration
+registers when the interrupt callback function returns.
+<P>
+The interrupt callback function must clear the function interrupt request
+source on the card and return as quickly as possible. If more time is required
+for processing the interrupt, the callback function should determine what
+needs to be done and spawn a thread to do further processing.
+<H5>See Also</H5>
+<P>
+<B><A HREF="#_wceddk_CARD_ISR">CARD_ISR</A></B>, <B><A HREF="ddkref_69.htm">CardRequestIRQ</A></B>,
+<B><A HREF="ddkref_64.htm">CardReleaseIRQ</A></B>
+<P></FONT>
+</BODY>
+</HTML>

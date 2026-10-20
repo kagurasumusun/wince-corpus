@@ -1,0 +1,33 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML>
+<HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text-html; charset=Windows-1252">
+<title>Application Hibernation</title>
+<meta name=MS-HAID content="_wcesdk_application_hibernation">
+</HEAD>
+<BODY BGCOLOR=#FFFFFF TEXT=#000000>
+<!-- WCESDKG InfoViewer title (Wcesdkg.ivt); HTML topics extracted with tools/extract-ivt.py, images and the title's own indexes dropped. -->
+
+<form name=x><object name=iv classid="clsid:9c2ac687-ceef-11cf-96d9-00a0c903b016">
+</object></form>
+<h2><a name="_wcesdk_application_hibernation"></a>Application Hibernation</h2>
+<p>
+The system uses the <A HREF='javascript:document.x.iv.ALink("_wcesdk_wm_hibernate","")'>WM_HIBERNATE</a> message as its primary mechanism for asking applications to free memory. It posts the message to one or more applications when required. The system tries to be intelligent. It begins hibernating applications that have been inactive the longest, and hibernates the active application last. It does <i>not</i> send messages to invisible windows.</p>
+<p>
+<b>Note</b>  Hibernating is vital. All well-behaved Windows CE applications <i>must</i> have a handler for WM_HIBERNATE. </p>
+<p>
+When an application is brought to the foreground, the system sends an WM_ACTIVATE message. If the hibernating application had released memory, the system does <i>not</i> restore its memory resources to the pre-hibernation state. Applications should have a WM_ACTIVATE handler that can deal with the restoration of memory resources following hibernation.</p>
+<p>
+An application must take the following actions when it receives a WM_HIBERNATE message: 
+<ul>
+<li>
+Free any large blocks of memory (caches, for instance) that were allocated by <A HREF='javascript:document.x.iv.ALink("_wcesdk_win32_virtualalloc","")'><b>VirtualAlloc</b></a>. <br><br></li>
+<li>
+Free as many GWES objects as possible, including windows, bitmaps, and device contexts. <br><br></li>
+<li>
+Save the state of the heap in order to restore it later, then free the entire heap. </li>
+</ul>
+<p>
+As the amount of available memory drops, the system posts WM_HIBERNATE messages at an increasing rate. If the system reaches a situation where a call to <b>VirtualAlloc</b> is about to fail, it tries to free pages by shrinking stacks. The system shrinks stacks in reverse order to minimize the risk of a stack fault, which is fatal to an application. If the system cannot free any stack pages, <b>VirtualAlloc</b> fails, and is returned to the application as a failed function call. </p>
+</BODY>
+</HTML>

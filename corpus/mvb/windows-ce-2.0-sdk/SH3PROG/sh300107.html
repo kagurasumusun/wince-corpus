@@ -1,0 +1,105 @@
+<HTML>
+<HEAD>
+<TITLE>6.73   TST (Test Logical): Logic Operation Instruction</TITLE>
+</HEAD><body bgcolor="#FFFFFF">
+<!-- SH3PROG InfoViewer title (sh3prog.ivt); HTML topics extracted with tools/extract-ivt.py, images and the title's own indexes dropped. -->
+
+<A NAME="off_3474087"></A><A NAME="19821092"></A><FONT FACE="Arial" SIZE="5"><B>6.73   TST (Test Logical): Logic Operation Instruction 
+<P>
+
+<P>
+</B></FONT><TABLE><TR VALIGN=TOP><TD><FONT FACE="Arial" SIZE="3"><B>Format
+<BR></B></FONT></TD><TD><FONT FACE="Arial" SIZE="3"><B>Abstract
+<BR></B></FONT></TD><TD><FONT FACE="Arial" SIZE="3"><B>Code
+<BR></B></FONT></TD><TD><FONT FACE="Arial" SIZE="3"><B>Cycle
+<BR></B></FONT></TD><TD><FONT FACE="Arial" SIZE="3"><B>T Bit
+<BR></B></FONT></TD></TR><TR VALIGN=TOP><TD><FONT FACE="Lucida Sans Typewriter" SIZE="3">TST Rm,Rn
+<BR></FONT></TD><TD><FONT FACE="Arial" SIZE="3">Rn &amp; Rm, when result is 0, 1 <IMG SRC="sh390002.gif" ALT="sh390002.gif" BORDER=0 WIDTH=13 HEIGHT=16> T
+<BR></FONT></TD><TD><FONT FACE="Lucida Sans Typewriter" SIZE="3">0010nnnnmmmm1000
+<BR></FONT></TD><TD><FONT FACE="Arial" SIZE="3">1
+<BR></FONT></TD><TD><FONT FACE="Arial" SIZE="3">Test results
+<BR></FONT></TD></TR><TR VALIGN=TOP><TD><FONT FACE="Lucida Sans Typewriter" SIZE="3">TST #imm,R0
+<BR></FONT></TD><TD><FONT FACE="Arial" SIZE="3">R0 &amp; imm, when result is 0, 1 <IMG SRC="sh390002.gif" ALT="sh390002.gif" BORDER=0 WIDTH=13 HEIGHT=16> T
+<BR></FONT></TD><TD><FONT FACE="Lucida Sans Typewriter" SIZE="3">11001000iiiiiiii
+<BR></FONT></TD><TD><FONT FACE="Arial" SIZE="3">1
+<BR></FONT></TD><TD><FONT FACE="Arial" SIZE="3">Test results
+<BR></FONT></TD></TR><TR VALIGN=TOP><TD><FONT FACE="Lucida Sans Typewriter" SIZE="3">TST.B #imm,@(R0,GBR)
+<BR></FONT></TD><TD><FONT FACE="Arial" SIZE="3">(R0 + GBR) &amp; imm, 
+<BR>when result is 0, 1 <IMG SRC="sh390002.gif" ALT="sh390002.gif" BORDER=0 WIDTH=13 HEIGHT=16> T
+<BR></FONT></TD><TD><FONT FACE="Lucida Sans Typewriter" SIZE="3">11001100iiiiiiii
+<BR></FONT></TD><TD><FONT FACE="Arial" SIZE="3">3
+<BR></FONT></TD><TD><FONT FACE="Arial" SIZE="3">Test results
+<BR>
+<BR></FONT></TD></TR></TABLE><FONT FACE="Arial" SIZE="3"><B>Description: 
+<P>
+</B>Logically ANDs the contents of general registers Rn and Rm, and sets the T bit
+to 1 if the result is 0 or clears the T bit to 0 if the result is not 0. The
+Rn data does not change. The contents of general register R0 can also be ANDed
+with zero-extended 8-bit immediate data, or the contents of 8-bit memory
+accessed by indirect indexed GBR addressing can be ANDed with 8-bit immediate data.
+The R0 and memory data do not change.
+<P>
+<B>Operation:
+<P>
+</B></FONT><FONT FACE="Lucida Sans Typewriter" SIZE="3">TST(long m,long n) /* TST Rm,Rn */
+<P>
+{
+<P>
+ if ((R[n]&amp;R[m])==0) T=1;
+<P>
+ else T=0;
+<P>
+ PC+=2;
+<P>
+}
+<P>
+TSTI(long i) /* TEST #imm,R0 */
+<P>
+{
+<P>
+ long temp;
+<P>
+ temp=R[0]&amp;(0x000000FF &amp; (long)i);
+<P>
+ if (temp==0) T=1;
+<P>
+ else T=0;
+<P>
+ PC+=2;
+<P>
+}
+<P>
+TSTM(long i) /* TST.B #imm,@(R0,GBR) */
+<P>
+{
+<P>
+ long temp;
+<P>
+ temp=(long)Read_Byte(GBR+R[0]);
+<P>
+ temp&amp;=(0x000000FF &amp; (long)i);
+<P>
+ if (temp==0) T=1;
+<P>
+ else T=0;
+<P>
+ PC+=2;
+<P>
+}
+<P>
+</FONT><FONT FACE="Arial" SIZE="3"><B>Example:
+<P>
+</B></FONT><FONT FACE="Lucida Sans Typewriter" SIZE="3">TST R0,R0 Before execution R0 = H'00000000
+<P>
+  After execution T = 1
+<P>
+TST #H'80,R0 Before execution R0 = H'FFFFFF7F
+<P>
+  After execution T = 1
+<P>
+TST.B #H'A5,@(R0,GBR) Before execution @(R0,GBR) = H'A5
+<P>
+  After execution T = 0
+<P>
+</FONT></BODY>
+</HTML>

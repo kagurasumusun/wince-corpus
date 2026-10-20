@@ -1,0 +1,176 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML>
+<HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text-html; charset=Windows-1252">
+<title>Window Functions</title>
+<meta name=MS-HAID content="_wcesdk_window_functions">
+<meta name=MS-HKWD content="Window Functions">
+</HEAD>
+<BODY BGCOLOR=#FFFFFF TEXT=#000000>
+<!-- WCESDKG InfoViewer title (Wcesdkg.ivt); HTML topics extracted with tools/extract-ivt.py, images and the title's own indexes dropped. -->
+
+<form name=x><object name=iv classid="clsid:9c2ac687-ceef-11cf-96d9-00a0c903b016">
+</object></form>
+<h3><a name="_wcesdk_window_functions"></a>Window Functions</h3>
+<p>
+In Windows CE you use the windowing functions the same way you do in Windows desktop platforms, with the following exceptions.</p>
+<p>
+Windows CE doesn't support menu bars outside of the command bar, so you have to set the <i>bMenu</i> parameter to the <b>AdjustWindowRectEx</b> function to FALSE</p>
+<p>
+In <b>CreateWindow</b> and <b>CreateWindowEx</b>, always set the <i>hMenu</i> parameter to NULL, unless you're using it as a child-window identifier. Windows CE 1.0 doesn't support owned windows, except for dialog boxes. Windows CE doesn't support Multiple Document Interface (MDI), so you can't specify the MDICLIENT class in the <i>lpClassName</i> parameter. Windows CE doesn't support all of the window styles Windows desktop platforms support, so there are some restrictions on the window styles you can pass in the <i>dwStyle</i> parameter to the <b>CreateWindow</b> function and in the <i>dwStyle</i> and <i>dwExStyle</i> parameters to the <b>CreateWindowEx</b> function. See these topics for details.</p>
+<p>
+In Windows CE, <b>CreateWindow</b> is implemented as a macro. It works the same way it does in Windows 95 and Windows NT.</p>
+<p>
+The <b>DestroyWindow</b> function sends only the WM_DESTROY message. Windows CE does not support the WM_NCDESTROY message.</p>
+<p>
+Windows CE doesn't support the <b>EnumThreadWindows</b> function, but you can create an equivalent function by using <A HREF='javascript:document.x.iv.ALink("_wcesdk_win32_enumwindows","")'><b>EnumWindows</b></a> and <A HREF='javascript:document.x.iv.ALink("_wcesdk_win32_getwindowthreadprocessid","")'><b>GetWindowThreadProcessId</b></a>.</p>
+<p>
+If you pass an atom in the <i>lpClassName</i> parameter to the <b>FindWindow</b> or <b>GetClassInfo</b> functions, the atom must be one returned by the <b>RegisterClass</b> function.</p>
+<p>
+Windows CE doesn't support unaligned access in window classes, so the <i>nIndex</i> parameter to the <b>GetClassLong</b> and <b>SetClassLong</b> functions must be a multiple of 4 bytes. The <b>GetClassLong</b>_wcesdk_<b>GetClassLong</b> function doesn't support the GCW_ATOM, GCL_CBCLSEXTRA, GCL_CBWNDEXTRA, GCL_HBRBACKGROUND, GCL_HCURSOR, GCL_HICONSM, GCL_HMODULE, GCL_MENUNAME, or GCL_WNDPROC values in the nIndex parameter. The <b>SetClassLong</b>_wcesdk_<b>SetClassLong</b> function doesn't support any of the GCL_* values. If you're using the Windows CE Iconcurs component, which supports mouse cursors on appropriate target platforms, you can use the GCL_HCURSOR value in the <i>nIndex</i> parameter of both of these functions.</p>
+<p>
+Because the command bar is part of the client area in Windows CE, it is included in the dimensions returned by the <b>GetClientRect </b>function.</p>
+<p>
+In Windows CE, you use the <b>GetDoubleClickTime</b> function for stylus input the same way you use this function for mouse input in Windows desktop platforms.</p>
+<p>
+Since Windows CE does not support the <b>GetScrollPos</b> or <b>GetScrollRange </b>functions, you use the <b>GetScrollInfo</b> function to retrieve the current position and range of a scroll bar.</p>
+<p>
+Windows CE versions 2.0 and later support two new values you can pass in the <i>nIndex</i> parameter of <b>GetSysColor</b> and the <i>lpaElements</i> parameter of <b>SetSysColors</b>. Use the COLOR_STATIC constant to get or set the background color for static controls and dialog boxes. Use the COLOR_STATICTEXT constant to get or set the text color for static controls. The default color for the background is gray and the default color for text is black.</p>
+<p>
+Windows CE does not support all of the <i>nIndex </i>values<i> </i>for the <b>GetSystemMetrics</b> function that Windows desktop platforms do.</p>
+<p>
+In Windows CE, the <b>GetWindowLong</b> and <b>SetWindowLong</b> functions do not support the values GWL_HINSTANCE, or GWL_HWNDPARENT in the <i>nIndex </i>parameter. Since the bytes have to be aligned, the value of the <i>nIndex</i> parameter must be a multiple of four.</p>
+<p>
+You have to pass a valid window handle to the <b>InvalidateRect</b> and <b>ValidateRect</b> functions. Windows 95 and Windows NT invalidate and redraw all windows if the <i>hWnd</i> parameter is set to NULL. This isn't supported in Windows CE.</p>
+<p>
+Windows CE ignores the bRepaint parameter to the MoveWindowfunction, treating it as TRUE.This function always sends the WM_PAINT message to the window.</p>
+<p>
+In the <b>RegisterClass</b> function, the <b>WNDCLASS</b> structure you pass by way of the <i>lpWndClass</i> parameter doesn't support the <b>lpszMenuName</b> fields. Set this field to NULL. IF your target device doesn't provide mouse cursor support, you must also set the <b>hCursor</b> field to NULL.</p>
+<p>
+<b>Tip</b>  When registering a new window class, the class name has to be a Unicode string. You can use the TEXT macro to cast a string as Unicode. For example, TEXT(&quot;classname&quot;).</p>
+<p>
+You cannot use the SW_SCROLLCHILDREN flag in the <i>flags</i> parameter to the <b>ScrollWindowEx</b> function and, because you can only scroll a window in one direction at a time, you have to set either the <i>dx </i>or <i>dy</i> parameter to zero.</p>
+<p>
+When you set the SWP_FRAMECHANGED flag in the <i>fuFlags</i> parameter to the <b>SetWindowPos</b> function, Windows CE redraws the entire non-client area of the window. Redrawing may change the size of the client area as well. If you set the SWP_NOACTIVATE flag, and the specified window is currently active, but hidden, the activation is passed to another visible top level window</p>
+<p>
+Use the following windowing functions in Windows CE the same way you use them in Windows desktop platforms.</p>
+<table>
+<tr valign=top>
+<td>
+<A HREF='javascript:document.x.iv.ALink("_wcesdk_win32_beginpaint","")'><b>BeginPaint</b></a></td>
+<td>
+<A HREF='javascript:document.x.iv.ALink("_wcesdk_win32_getwindowthreadprocessid","")'><b>GetWindowThreadProcessId</b></a></td>
+</tr>
+<tr valign=top>
+<td>
+<A HREF='javascript:document.x.iv.ALink("_wcesdk_win32_bringwindowtotop","")'><b>BringWindowToTop</b></a></td>
+<td>
+<A HREF='javascript:document.x.iv.ALink("_wcesdk_win32_ischild","")'><b>IsChild</b></a></td>
+</tr>
+<tr valign=top>
+<td>
+<A HREF='javascript:document.x.iv.ALink("_wcesdk_win32_callwindowproc","")'><b>CallWindowProc</b></a></td>
+<td>
+<A HREF='javascript:document.x.iv.ALink("_wcesdk_win32_iswindow","")'><b>IsWindow</b></a></td>
+</tr>
+<tr valign=top>
+<td>
+<A HREF='javascript:document.x.iv.ALink("_wcesdk_win32_childwindowfrompoint","")'><b>ChildWindowFromPoint</b></a></td>
+<td>
+<A HREF='javascript:document.x.iv.ALink("_wcesdk_win32_iswindowenabled","")'><b>IsWindowEnabled</b></a></td>
+</tr>
+<tr valign=top>
+<td>
+<A HREF='javascript:document.x.iv.ALink("_wcesdk_win32_clienttoscreen","")'><b>ClientToScreen</b></a></td>
+<td>
+<A HREF='javascript:document.x.iv.ALink("_wcesdk_win32_iswindowvisible","")'><b>IsWindowVisible</b></a></td>
+</tr>
+<tr valign=top>
+<td>
+<A HREF='javascript:document.x.iv.ALink("_wcesdk_win32_defwindowproc","")'><b>DefWindowProc</b></a></td>
+<td>
+<A HREF='javascript:document.x.iv.ALink("_wcesdk_win32_mapwindowpoints","")'><b>MapWindowPoints</b></a></td>
+</tr>
+<tr valign=top>
+<td>
+<A HREF='javascript:document.x.iv.ALink("_wcesdk_win32_enablewindow","")'><b>EnableWindow</b></a></td>
+<td>
+<A HREF='javascript:document.x.iv.ALink("_wcesdk_win32_mapwindowrect","")'><b>MapWindowRect</b></a></td>
+</tr>
+<tr valign=top>
+<td>
+<A HREF='javascript:document.x.iv.ALink("_wcesdk_win32_endpaint","")'><b>EndPaint</b></a></td>
+<td>
+<A HREF='javascript:document.x.iv.ALink("_wcesdk_win32_releasedc","")'><b>ReleaseDC</b></a></td>
+</tr>
+<tr valign=top>
+<td>
+<A HREF='javascript:document.x.iv.ALink("_wcesdk_win32_enumwindows","")'><b>EnumWindows</b></a></td>
+<td>
+<A HREF='javascript:document.x.iv.ALink("_wcesdk_win32_screentoclient","")'><b>ScreenToClient</b></a></td>
+</tr>
+<tr valign=top>
+<td>
+<A HREF='javascript:document.x.iv.ALink("_wcesdk_win32_getclassname","")'><b>GetClassName</b></a></td>
+<td>
+<A HREF='javascript:document.x.iv.ALink("_wcesdk_win32_scrolldc","")'><b>ScrollDC</b></a></td>
+</tr>
+<tr valign=top>
+<td>
+<A HREF='javascript:document.x.iv.ALink("_wcesdk_win32_getdc","")'><b>GetDC</b></a></td>
+<td>
+<A HREF='javascript:document.x.iv.ALink("_wcesdk_win32_setparent","")'><b>SetParent</b></a></td>
+</tr>
+<tr valign=top>
+<td>
+<A HREF='javascript:document.x.iv.ALink("_wcesdk_win32_getparent","")'><b>GetParent</b></a></td>
+<td>
+<A HREF='javascript:document.x.iv.ALink("_wcesdk_win32_setscrollinfo","")'><b>SetScrollInfo</b></a></td>
+</tr>
+<tr valign=top>
+<td>
+<A HREF='javascript:document.x.iv.ALink("_wcesdk_win32_getscrollinfo","")'><b>GetScrollInfo</b></a></td>
+<td>
+<A HREF='javascript:document.x.iv.ALink("_wcesdk_win32_setscrollpos","")'><b>SetScrollPos</b></a></td>
+</tr>
+<tr valign=top>
+<td>
+<A HREF='javascript:document.x.iv.ALink("_wcesdk_win32_getupdaterect","")'><b>GetUpdateRect</b></a></td>
+<td>
+<A HREF='javascript:document.x.iv.ALink("_wcesdk_win32_setscrollrange","")'><b>SetScrollRange</b></a></td>
+</tr>
+<tr valign=top>
+<td>
+<A HREF='javascript:document.x.iv.ALink("_wcesdk_win32_getwindow","")'><b>GetWindow</b></a></td>
+<td>
+<A HREF='javascript:document.x.iv.ALink("_wcesdk_win32_setwindowtext","")'><b>SetWindowText</b></a></td>
+</tr>
+<tr valign=top>
+<td>
+<A HREF='javascript:document.x.iv.ALink("_wcesdk_win32_getwindowdc","")'><b>GetWindowDC</b></a></td>
+<td>
+<A HREF='javascript:document.x.iv.ALink("_wcesdk_win32_unregisterclass","")'><b>UnregisterClass</b></a></td>
+</tr>
+<tr valign=top>
+<td>
+<A HREF='javascript:document.x.iv.ALink("_wcesdk_win32_getwindowrect","")'><b>GetWindowRect</b></a></td>
+<td>
+<A HREF='javascript:document.x.iv.ALink("_wcesdk_win32_updatewindow","")'><b>UpdateWindow</b></a></td>
+</tr>
+<tr valign=top>
+<td>
+<A HREF='javascript:document.x.iv.ALink("_wcesdk_win32_getwindowtext","")'><b>GetWindowText</b></a></td>
+<td>
+<A HREF='javascript:document.x.iv.ALink("_wcesdk_win32_windowfrompoint","")'><b>WindowFromPoint</b></a></td>
+</tr>
+<tr valign=top>
+<td>
+<A HREF='javascript:document.x.iv.ALink("_wcesdk_win32_getwindowtextlength","")'><b>GetWindowTextLength</b></a></td>
+<td>
+<A HREF='javascript:document.x.iv.ALink("_wcesdk_win32_registerwindowmessage","")'><b>RegisterWindowMessage</b></a></td>
+</tr>
+</table><br>
+<p>
+Windows CE doesn't support the <b>AdjustWindowRect</b>, <b>AnyPopup</b>, <b>ArrangeIconicWindows</b>,<b> BeginDeferWindowPos</b>, <b>CascadeWindows, ChildWindowFromPointEx, CloseWindow</b>, <b>DeferWindowPos</b>, <b>EndDeferWindowPos</b>, <b>EnumChildProc</b>, <b>EnumChildWindows</b>, <b>EnumThreadWindows</b>, <b>EnumThreadWndProc</b>, <b>ExcludeUpdateRgn</b>, <b>FindWindowEx</b>, <b>GetBoundsRect</b>, <b>GetClassInfoEx</b>, <b>GetClassWord</b>, <b>GetDesktopWindow</b>, <b>GetLastActivePopup</b>, <b>GetNextWindow</b>, <b>GetProp</b>, <b>GetTopWindow</b>, <b>GetWindowPlacement</b>, <b>GetWindowWord</b>, <b>InvalidateRgn</b>, <b>IsIconic</b>,<b> IsWindowUnicode</b>, <b>IsZoomed</b>, <b>LockWindowUpdate</b>, <b>OpenIcon</b>, <b>OutputProc</b>, <b>PaintDesktop</b>, <b>RedrawWindow</b>, <b>RegisterClassEx</b>, <b>SetBoundsRect</b>, <b>SetClassWord</b>, <b>SetProp,</b> <b>SetWindowRegion</b>, <b>ShowWindowAsync</b>, <b>SetWindowPlacement</b>, <b>SetWindowWord</b>, <b>ShowOwnedPopups</b>, <b>TileWindows,</b> <b>ValidateRgn</b>, or <b>WindowFromDC</b> functions.</p>
+</BODY>
+</HTML>

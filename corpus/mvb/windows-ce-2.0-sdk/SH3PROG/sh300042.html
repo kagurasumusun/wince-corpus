@@ -1,0 +1,74 @@
+<HTML>
+<HEAD>
+<TITLE>6.8   BRA (Branch): Branch Instruction</TITLE>
+</HEAD><body bgcolor="#FFFFFF">
+<!-- SH3PROG InfoViewer title (sh3prog.ivt); HTML topics extracted with tools/extract-ivt.py, images and the title's own indexes dropped. -->
+
+<A NAME="off_1835936"></A><A NAME="dae1d458"></A><FONT FACE="Arial" SIZE="5"><B>6.8   BRA (Branch): Branch Instruction
+<P>
+
+<P>
+</B></FONT><TABLE><TR VALIGN=TOP><TD><FONT FACE="Arial" SIZE="3"><B>Format
+<BR></B></FONT></TD><TD><FONT FACE="Arial" SIZE="3"><B>Abstract
+<BR></B></FONT></TD><TD><FONT FACE="Arial" SIZE="3"><B>Code
+<BR></B></FONT></TD><TD><FONT FACE="Arial" SIZE="3"><B>Cycle
+<BR></B></FONT></TD><TD><FONT FACE="Arial" SIZE="3"><B>T Bit
+<BR></B></FONT></TD></TR><TR VALIGN=TOP><TD><FONT FACE="Lucida Sans Typewriter" SIZE="3">BRA label
+<BR></FONT></TD><TD><FONT FACE="Arial" SIZE="3">disp + PC <IMG SRC="sh390002.gif" ALT="sh390002.gif" BORDER=0 WIDTH=13 HEIGHT=16> PC
+<BR></FONT></TD><TD><FONT FACE="Lucida Sans Typewriter" SIZE="3">1010dddddddddddd
+<BR></FONT></TD><TD><FONT FACE="Arial" SIZE="3">2
+<BR></FONT></TD><TD><FONT FACE="Arial" SIZE="3">-
+<BR>
+<BR></FONT></TD></TR></TABLE><FONT FACE="Arial" SIZE="3"><B>Description: 
+<P>
+</B>Branches unconditionally after executing the instruction following this BRA
+instruction. The branch destination is an address specified by PC + displacement.
+The PC points to the starting address of the second instruction after this BRA
+instruction. The 12-bit displacement is sign-extended and doubled.
+Consequently, the relative interval from the branch destination is -4096 to +4094 bytes.
+If the displacement is too short to reach the branch destination, this
+instruction must be changed to the JMP instruction. Here, a MOV instruction must be used
+to transfer the destination address to a register.
+<P>
+</FONT><FONT FACE="Arial Narrow" SIZE="4"><B>Note: 
+<P>
+</B></FONT><FONT FACE="Arial" SIZE="3">Since this is a delayed branch instruction, the instruction after BRA is
+executed before branching. No interrupts are accepted between this instruction and
+the next instruction. If the next instruction is a branch instruction, it is
+acknowledged as an illegal slot instruction. 
+<P>
+<B>Operation:
+<P>
+</B></FONT><FONT FACE="Lucida Sans Typewriter" SIZE="3">BRA(long d) /* BRA disp */
+<P>
+{
+<P>
+ unsigned long temp;
+<P>
+ long disp;
+<P>
+ if ((d&amp;0x800)==0) disp=(0x00000FFF &amp; d);
+<P>
+ else disp=(0xFFFFF000 | d);
+<P>
+ temp=PC;
+<P>
+ PC=PC+(disp&lt;&lt;1)+4;
+<P>
+ Delay_Slot(temp+2);
+<P>
+}
+<P>
+</FONT><FONT FACE="Arial" SIZE="3"><B>Example:
+<P>
+ </B></FONT><FONT FACE="Lucida Sans Typewriter" SIZE="3">BRA TRGET Branches to TRGET
+<P>
+ ADD R0,R1 Executes ADD before branching
+<P>
+ NOP  ¨ The PC location is used to calculate the branch destination address of the
+BRA instruction
+<P>
+TRGET:  ¨ Branch destination of the BRA instruction
+<P>
+</FONT></BODY>
+</HTML>

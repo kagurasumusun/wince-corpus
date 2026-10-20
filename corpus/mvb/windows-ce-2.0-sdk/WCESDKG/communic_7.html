@@ -1,0 +1,164 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML>
+<HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text-html; charset=Windows-1252">
+<title>Communicating over the Internet (WinINET API)</title>
+<meta name=MS-HAID content="_wcesdk_communicating_over_the_internet_wininet_api_">
+<meta name=MS-HKWD content="Communicating over the Internet (WinINET API)">
+</HEAD>
+<BODY BGCOLOR=#FFFFFF TEXT=#000000>
+<!-- WCESDKG InfoViewer title (Wcesdkg.ivt); HTML topics extracted with tools/extract-ivt.py, images and the title's own indexes dropped. -->
+
+<form name=x><object name=iv classid="clsid:9c2ac687-ceef-11cf-96d9-00a0c903b016">
+</object></form>
+<h2><a name="_wcesdk_communicating_over_the_internet_wininet_api_"></a>Communicating over the Internet (WinINET API)</h2>
+<p>
+Transmitting packets to the intended receiver is largely a matter of creating an appropriate header. However, much of the communication that now takes place over the internet involves the use of high-level protocols such as HTTP. These protocols specify how the data contained in the packets must be structured.</p>
+<p>
+The Microsoft&reg; Windows CE&reg; Internet API (WinINET) provides a set of tools for developing Internet client applications such as browsers using the FTP and HTTP Internet protocols. Windows CE does not support Gopher, Cookie or persistent URL Caching functions. WinINET also simplifies the details of making and using socket connections. You can use WinINET to:
+<ul>
+<li>
+Connect to remote sites<br><br></li>
+<li>
+Download HTML pages. <br><br></li>
+<li>
+Send FTP requests to upload or download files or get directory listings.</li>
+</ul>
+<p>
+If you are accustomed to the Win32 version of WinINET, the Windows CE version is similar, with two significant differences:
+<ul>
+<li>
+Most callback functions are handled synchronously in Windows CE. Only <A HREF='javascript:document.x.iv.ALink("_wcesdk_internetreadfile","")'><b>InternetReadFile</b></a> and <A HREF='javascript:document.x.iv.ALink("_wcesdk_internetquerydataavailable","")'><b>InternetQueryDataAvailable</b></a> operate in both synchronous and asynchronous modes.<br><br></li>
+<li>
+Windows CE supports Unicode by default.</li>
+</ul>
+<p>
+WinINET uses internet handles, that are passed to functions that offer specific Internet services (such as making an HTTP request). They are generally organized in a tree. The following figure illustrates the hierarchy that might be used for HTTP communication.</p>
+<p>
+&#09;<img src="../guide/art/gif/hndltre.gif" border=0></p>
+<p>
+The <i>hInternetOpen</i> handle is the root of the tree, and is used by all HTTP sessions. The <i>hInternetConnect</i> handle identifies a particular site. It is used to open a connection to the site that is then represented by an <i>hHttpOpen</i> handle. This handle can then be used to send an HTTP request, and so on.</p>
+<p>
+When a &quot;parent&quot; node handle is closed, all the &quot;child&quot; handles will be closed recursively. In the example illustrated above, closing <i>hInternetConnect2</i> also closes <i>hHttpOpenA</i>, and <i>hHttpOpenB</i>.</p>
+<p>
+For more complete information on how to use the WinINET API, refer to the Microsoft Platform SDK.</p>
+<p>
+Windows CE supports the following general WinINET functions.</p>
+<table>
+<tr valign=top>
+<td>
+<b>Functions </b></td>
+<td>
+<b>Description</b></td>
+</tr>
+<tr valign=top>
+<td>
+<A HREF='javascript:document.x.iv.ALink("_wcesdk_internetopen","")'><b>InternetOpen</b></a> </td>
+<td>
+Initializes the application's use of the Windows CE Internet functions and creates the root HINTERNET handle </td>
+</tr>
+<tr valign=top>
+<td>
+<A HREF='javascript:document.x.iv.ALink("_wcesdk_internetconnect","")'><b>InternetConnect</b></a> </td>
+<td>
+Opens an FTP, or HTTP session with a server. This function requires a handle created by <b>InternetOpen</b>. </td>
+</tr>
+<tr valign=top>
+<td>
+<A HREF='javascript:document.x.iv.ALink("_wcesdk_internetclosehandle","")'><b>InternetCloseHandle</b></a> </td>
+<td>
+Closes any designated handle created by a Windows CE Internet function and any handles derived from that handle. </td>
+</tr>
+<tr valign=top>
+<td>
+<A HREF='javascript:document.x.iv.ALink("_wcesdk_internetqueryoption","")'><b>InternetQueryOption</b></a> </td>
+<td>
+Queries the setting of an Internet option. </td>
+</tr>
+<tr valign=top>
+<td>
+<A HREF='javascript:document.x.iv.ALink("_wcesdk_internetsetoption","")'><b>InternetSetOption</b></a> </td>
+<td>
+Sets an Internet option. </td>
+</tr>
+<tr valign=top>
+<td>
+<A HREF='javascript:document.x.iv.ALink("_wcesdk_internetsetstatuscallback","")'><b>InternetSetStatusCallback</b></a> </td>
+<td>
+Sets a callback function that is called with status information. Assigns a callback function to the designated HINTERNET handle and all of the handles derived from it. </td>
+</tr>
+<tr valign=top>
+<td>
+<A HREF='javascript:document.x.iv.ALink("_wcesdk_internetstatuscallback","")'><b>InternetStatusCallback</b></a> </td>
+<td>
+This is a placeholder for the application-defined status callback.</td>
+</tr>
+<tr valign=top>
+<td>
+<A HREF='javascript:document.x.iv.ALink("_wcesdk_internettimefromsystemtime","")'><b>InternetTimeFromSystemTime</b></a> </td>
+<td>
+Formats a date and time according to the specified RFC format (as specified in the HTTP version 1.0 specification).</td>
+</tr>
+<tr valign=top>
+<td>
+<b> </b><A HREF='javascript:document.x.iv.ALink("_wcesdk_internettimetosystemtime","")'><b>InternetTimeToSystemTime</b></a> </td>
+<td>
+Takes an HTTP time/date string and converts it to a SYSTEMTIME structure.</td>
+</tr>
+<tr valign=top>
+<td>
+<A HREF='javascript:document.x.iv.ALink("_wcesdk_internetreadfile","")'><b>InternetReadFile</b></a> </td>
+<td>
+Downloads data from the Internet. This function requires a handle created by <b>InternetOpenUrl</b>, <b>FtpOpenFile</b>, or <b>HttpOpenRequest</b>.</td>
+</tr>
+<tr valign=top>
+<td>
+<A HREF='javascript:document.x.iv.ALink("_wcesdk_internetfindnextfile","")'><b>InternetFindNextFile</b></a></td>
+<td>
+Continues file enumeration or search. This function requires a handle created by <b>FtpFindFirstFile</b>.</td>
+</tr>
+<tr valign=top>
+<td>
+<A HREF='javascript:document.x.iv.ALink("_wcesdk_internetquerydataavailable","")'><b>InternetQueryDataAvailable</b></a></td>
+<td>
+Queries the amount of data available. This function requires a handle created by <b>FtpOpenFile</b>, or <b>HttpOpenRequest</b>. </td>
+</tr>
+<tr valign=top>
+<td>
+<A HREF='javascript:document.x.iv.ALink("_wcesdk_internetgetlastresponseinfo","")'><b>InternetGetLastResponseInfo</b></a> </td>
+<td>
+Retrieves the text of the server's response to the FTP command. This function requires a handle created by <b>InternetConnect</b>.</td>
+</tr>
+<tr valign=top>
+<td>
+<A HREF='javascript:document.x.iv.ALink("_wcesdk_internetcrackurl","")'><b>InternetCrackUrl</b></a> </td>
+<td>
+Parses a URL string into components.</td>
+</tr>
+<tr valign=top>
+<td>
+<A HREF='javascript:document.x.iv.ALink("_wcesdk_internetcreateurl","")'><b>InternetCreateUrl</b></a></td>
+<td>
+Creates a URL string from components. </td>
+</tr>
+<tr valign=top>
+<td>
+<A HREF='javascript:document.x.iv.ALink("_wcesdk_internetcanonicalizeurl","")'><b>InternetCanonicalizeUrl</b></a> </td>
+<td>
+Converts a URL to a canonical form. </td>
+</tr>
+<tr valign=top>
+<td>
+<A HREF='javascript:document.x.iv.ALink("_wcesdk_internetcombineurl","")'><b>InternetCombineUrl</b></a> </td>
+<td>
+Combines base and relative URLs. </td>
+</tr>
+<tr valign=top>
+<td>
+<A HREF='javascript:document.x.iv.ALink("_wcesdk_internetopenurl","")'><b>InternetOpenUrl</b></a> </td>
+<td>
+Begins retrieving a complete FTP, or HTTP URL. This function requires a handle created by <b>InternetOpen</b>.</td>
+</tr>
+</table><br>
+</BODY>
+</HTML>

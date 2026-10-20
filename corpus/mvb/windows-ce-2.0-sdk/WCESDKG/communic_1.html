@@ -1,0 +1,184 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML>
+<HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text-html; charset=Windows-1252">
+<title>Serial Communication</title>
+<meta name=MS-HAID content="_wcesdk_serial_communication">
+<meta name=MS-HKWD content="Serial Communication">
+</HEAD>
+<BODY BGCOLOR=#FFFFFF TEXT=#000000>
+<!-- WCESDKG InfoViewer title (Wcesdkg.ivt); HTML topics extracted with tools/extract-ivt.py, images and the title's own indexes dropped. -->
+
+<form name=x><object name=iv classid="clsid:9c2ac687-ceef-11cf-96d9-00a0c903b016">
+</object></form>
+<h2><a name="_wcesdk_serial_communication"></a>Serial Communication</h2>
+<p>
+Serial communication requires a direct one-to-one connection between source and receiver. The most common use is probably transferring information between two devices connected by a cable (usually called a &quot;serial cable&quot;). Infrared transceivers or modems can also used for serial communication.</p>
+<p>
+From the standpoint of software, each serial device is identified by its &quot;COM port&quot; name (COM1:, COM2:, etc). Note that, with Windows CE, the colon (:) is part of the port name and must be included. The COM port assignments are stored in the registry under \HKEY_LOCAL_MACHINE\Drivers. Because they may be installable drivers, check \HKEY_LOCAL_MACHINE\Active to see which drivers are loaded.</p>
+<p>
+Serial communication over a COM port is very similar to reading from or writing to a file, and uses some of the same functions. The basic procedure works in much the same way regardless of the hardware involved. There are three steps:
+<ol>
+<li>
+Open and configure the appropriate COM port<br><br></li>
+<li>
+Transmit and receive information.<br><br></li>
+<li>
+Close the COM port.</li>
+</ol>
+<p>
+With infrared transceivers, there are some additional considerations. Windows CE supports two ways to use an infrared transceiver for serial communication. An approach supported by some Windows CE devices (&quot;raw IR&quot;) is to treat the IR transceiver like a serial cable. The data is not processed in any way, and the application is responsible for dealing with collision detection and other potential problems.</p>
+<p>
+The COM port assigned to raw IR is determined by the OEM of the device and listed in the registry. In some cases, it may share a port assignment with a wired serial connector, but you should check the registry to be certain. Use <b>EscapeCommFunction</b> to set the port to IR mode (see the procedure outlined below for details). Check the return value to make sure that raw IR is supported. </p>
+<p>
+A more robust approach to serial IR communication is to utilize the Infrared Data Association (IrDA) protocols. These protocols are actually part of the network stack (discussed later). To simplify their use for serial communication, Windows CE provides an emulator (&quot;IrComm&quot;), that allows applications to communicate using the IrDA protocols in almost exactly the same way as with raw IR.</p>
+<p>
+From a programming standpoint, the main difference between raw IR and IrComm is that they use different COM ports. The port assignments are determined by the device's manufacturer and stored in the registry. With IrComm, there is also no need to explicitly configure the port for IR by calling <b>EscapeCommFunction</b>. </p>
+<p>
+Windows CE supports the following file system functions to access serial devices.</p>
+<table>
+<tr valign=top>
+<td>
+<b>Function</b></td>
+<td>
+<b>Device Application</b></td>
+</tr>
+<tr valign=top>
+<td>
+<A HREF='javascript:document.x.iv.ALink("_wcesdk_win32_createfile","")'><b>CreateFile</b></a></td>
+<td>
+Open (get a handle to) a device.</td>
+</tr>
+<tr valign=top>
+<td>
+<A HREF='javascript:document.x.iv.ALink("_wcesdk_win32_closehandle","")'><b>CloseHandle</b></a></td>
+<td>
+Close (the handle to) a device.</td>
+</tr>
+<tr valign=top>
+<td>
+<A HREF='javascript:document.x.iv.ALink("_wcesdk_win32_readfile","")'><b>ReadFile</b></a></td>
+<td>
+Read data from the device.</td>
+</tr>
+<tr valign=top>
+<td>
+<A HREF='javascript:document.x.iv.ALink("_wcesdk_win32_writefile","")'><b>WriteFile</b></a></td>
+<td>
+Write data to the device.</td>
+</tr>
+<tr valign=top>
+<td>
+<A HREF='javascript:document.x.iv.ALink("_wcesdk_win32_deviceiocontrol","")'><b>DeviceIoControl</b></a></td>
+<td>
+Perform an I/O control operation</td>
+</tr>
+</table><br>
+<p>
+Windows CE supports the following functions for setting up and using serial devices. </p>
+<table>
+<tr valign=top>
+<td>
+<b>Function</b></td>
+<td>
+<b>Description</b></td>
+</tr>
+<tr valign=top>
+<td>
+<A HREF='javascript:document.x.iv.ALink("_wcesdk_win32_clearcommbreak","")'><b>ClearCommBreak</b></a></td>
+<td>
+Restore character transmission</td>
+</tr>
+<tr valign=top>
+<td>
+<A HREF='javascript:document.x.iv.ALink("_wcesdk_win32_clearcommerror","")'><b>ClearCommError</b></a></td>
+<td>
+Get information about a communication error and report the current status</td>
+</tr>
+<tr valign=top>
+<td>
+<A HREF='javascript:document.x.iv.ALink("_wcesdk_win32_escapecommfunction","")'><b>EscapeCommFunction</b></a></td>
+<td>
+Direct a serial device to perform an extended function.</td>
+</tr>
+<tr valign=top>
+<td>
+<A HREF='javascript:document.x.iv.ALink("_wcesdk_win32_getcommmask","")'><b>GetCommMask</b></a></td>
+<td>
+Get the value of the event mask for a serial device. </td>
+</tr>
+<tr valign=top>
+<td>
+<A HREF='javascript:document.x.iv.ALink("_wcesdk_win32_getcommmodemstatus","")'><b>GetCommModemStatus</b></a></td>
+<td>
+Get the modem control register values.</td>
+</tr>
+<tr valign=top>
+<td>
+<A HREF='javascript:document.x.iv.ALink("_wcesdk_win32_getcommproperties","")'><b>GetCommProperties</b></a></td>
+<td>
+Get information about the serial driver.</td>
+</tr>
+<tr valign=top>
+<td>
+<A HREF='javascript:document.x.iv.ALink("_wcesdk_win32_getcommstate","")'><b>GetCommState</b></a></td>
+<td>
+Get the current control settings for a serial device</td>
+</tr>
+<tr valign=top>
+<td>
+<A HREF='javascript:document.x.iv.ALink("_wcesdk_win32_getcommtimeouts","")'><b>GetCommTimeouts</b></a></td>
+<td>
+Get time-out parameters</td>
+</tr>
+<tr valign=top>
+<td>
+<A HREF='javascript:document.x.iv.ALink("_wcesdk_win32_purgecomm","")'><b>PurgeComm</b></a></td>
+<td>
+Used to clear I/O buffer and terminating pending read or write operations</td>
+</tr>
+<tr valign=top>
+<td>
+<A HREF='javascript:document.x.iv.ALink("_wcesdk_win32_setcommbreak","")'><b>SetCommBreak</b></a></td>
+<td>
+Suspend character transmission.</td>
+</tr>
+<tr valign=top>
+<td>
+<A HREF='javascript:document.x.iv.ALink("_wcesdk_win32_setcommmask","")'><b>SetCommMask</b></a></td>
+<td>
+Specify a set of events to be monitored</td>
+</tr>
+<tr valign=top>
+<td>
+<A HREF='javascript:document.x.iv.ALink("_wcesdk_win32_setcommstate","")'><b>SetCommState</b></a></td>
+<td>
+Configure a serial device</td>
+</tr>
+<tr valign=top>
+<td>
+<A HREF='javascript:document.x.iv.ALink("_wcesdk_win32_setcommtimeouts","")'><b>SetCommTimeouts</b></a></td>
+<td>
+Set the time-out parameters</td>
+</tr>
+<tr valign=top>
+<td>
+<A HREF='javascript:document.x.iv.ALink("_wcesdk_win32_setupcomm","")'><b>SetupComm</b></a></td>
+<td>
+Initialize the communication parameters</td>
+</tr>
+<tr valign=top>
+<td>
+<A HREF='javascript:document.x.iv.ALink("_wcesdk_win32_transmitcommchar","")'><b>TransmitCommChar</b></a></td>
+<td>
+Transmit a character ahead of any pending data in the output buffer.</td>
+</tr>
+<tr valign=top>
+<td>
+<A HREF='javascript:document.x.iv.ALink("_wcesdk_win32_waitcommevent","")'><b>WaitCommEvent</b></a></td>
+<td>
+Waits for a serial communications event specified by <b>SetCommMask</b></td>
+</tr>
+</table><br>
+</BODY>
+</HTML>

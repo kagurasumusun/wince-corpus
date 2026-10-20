@@ -1,0 +1,53 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML>
+<HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text-html; charset=Windows-1252">
+<title>The DoFormatQuery application-defined function</title>
+<meta name=MS-HAID content="_wcesdk_the_doformatquery_application_defined_function">
+<meta name=MS-HKWD content="The DoFormatQuery application-defined function">
+</HEAD>
+<BODY BGCOLOR=#FFFFFF TEXT=#000000>
+<!-- WCESDKG InfoViewer title (Wcesdkg.ivt); HTML topics extracted with tools/extract-ivt.py, images and the title's own indexes dropped. -->
+
+<form name=x><object name=iv classid="clsid:9c2ac687-ceef-11cf-96d9-00a0c903b016">
+</object></form>
+<h3><a name="_wcesdk_the_doformatquery_application_defined_function"></a>The DoFormatQuery application-defined function</h3>
+<p>
+A date and time picker (DTP) control sends a <A HREF='javascript:document.x.iv.ALink("_wcesdk_dtn_formatquery","")'>DTN_FORMATQUERY</a> notification message to request information about the maximum possible size of a callback field within the control. Handling this message ensures that all fields are displayed properly. The following DoFormatQuery application-defined function processes the DTN_FORMATQUERY notification message by calculating the width of the widest possible string for a given callback field. </p>
+<pre>//
+//  DoFormatQuery processes DTN_FORMATQUERY messages to ensure that the
+//  DTP control displays callback fields properly.
+//
+void WINAPI DoFormatQuery(
+ HWND hwndDP, 
+ LPNMDATETIMEFORMATQUERY lpDTFQuery)
+{
+    HDC hdc;
+    HFONT hFont, hOrigFont;
+
+    //  Prepare the device context for GetTextExtentPoint32 call.
+    hdc = GetDC(hwndDP);
+
+    hFont = FORWARD_WM_GETFONT(hwndDP, SendMessage);
+
+    if(!hFont)
+        hFont = (HFONT)GetStockObject(DEFAULT_GUI_FONT);
+    
+    hOrigFont = SelectObject(hdc, hFont);
+    
+    // Check to see if this is the callback segment desired. If so,
+    // use the longest text segment to determine the maximum 
+    // width of the callback field, and then place the information into 
+    // the NMDATETIMEFORMATQUERY structure.
+    if(!lstrcmp(&quot;XX&quot;,lpDTFQuery-&gt;pszFormat))
+    GetTextExtentPoint32 (hdc,
+                          &quot;366&quot;,  // widest date string
+                          3,
+                          &amp;lpDTFQuery-&gt;szMax);
+    
+    // Reset the font in the device context then release the context.
+    SelectObject(hdc,hOrigFont);
+    ReleaseDC(hwndDP, hdc);
+}</pre>
+</BODY>
+</HTML>

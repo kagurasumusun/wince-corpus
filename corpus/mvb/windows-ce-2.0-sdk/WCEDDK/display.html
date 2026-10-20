@@ -1,0 +1,87 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
+<HTML>
+<HEAD><META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=Windows-1252">
+<TITLE>Windows CE Display Drivers</TITLE>
+<META NAME="MS-HKWD" CONTENT="Windows CE Display Drivers">
+<META NAME="MS-HAID" CONTENT="_wceddk_Windows_CE_Display_Drivers">
+</HEAD>
+<BODY BGPROPERTIES="FIXED" TEXT="#000000" BGCOLOR="#FFFFFF">
+<!-- WCEDDK InfoViewer title (WCEDDK.IVT); HTML topics extracted with tools/extract-ivt.py, images and the title's own indexes dropped. -->
+
+<FORM name=x>
+<OBJECT name=iv classid="clsid:9c2ac687-ceef-11cf-96d9-00a0c903b016">
+</OBJECT>
+</FORM>
+<FONT FACE="ARIAL,HELVETICA" SIZE="2">
+<H1><A NAME="_wceddk_Windows_CE_Display_Drivers"></A>Windows CE Display Drivers</H1>
+<P>
+Like much of Windows CE, the Display Driver Interface (DDI) is a subset of the
+Windows NT DDI. If you are not familiar with the Windows NT DDI, you may wish
+to read the display driver sections of the Windows NT Device Driver Kit before
+writing your Windows CE display driver.
+<P>
+Windows CE uses only the basic graphics engine functions and driver functions
+from the Windows NT DDI. These differences between Windows CE and Windows NT
+have the following ramifications on Windows CE display drivers:
+<UL>
+<LI>
+Windows CE display drivers always present the same set of functionality; GDI
+does not query the driver for information about its capabilities.
+<P>
+<LI>
+A Windows CE display driver can't reject an operation as too complex and then
+call back into GDI to have the operation broken into simpler primitives.
+Because all Windows CE display drivers support the same set of functionality,
+GDI can breaks up complex operations before calling the display driver in the
+first place.
+<P>
+<LI>
+Windows CE display drivers are compiled as dynamic link libraries (.DLL files)
+rather than as libraries (.LIB files).
+</UL>
+<P>
+All Windows CE display drivers must implement a set of <A HREF="display_1.htm">DDI
+functions</A>&nbsp;which will be called by GDI to initialize the display driver and
+draw to the display. In addition to the DDI functions there is a set of C++
+classes called the Graphics Primitive Engine (GPE) classes which display
+drivers can use to facilitate hardware acceleration. The sample display
+driver's implementation of the GPE Classes and their methods perform
+acceleration for S3Trio64 based display hardware. If your display hardware
+uses a different video chip set, you can change the implementation of the GPE
+methods to suit your hardware's capabilities.
+<P>
+Note that using the GPE classes is optional. You could write your display
+driver without them, at the expense of making your implementations of the DDI
+functions more complex. Note that the GPE classes as provided by Microsoft
+require that your display hardware have a flat frame buffer. If your display
+hardware does not, for example if it uses a fixed-size moveable window to
+access the whole of display memory, it may be infeasable to use the GPE
+classes. See <A HREF="display_13.htm">Windows
+CE Display Hardware Recommendations</A>&nbsp;for more information.
+<P>
+Windows CE display drivers differ from normal installable device drivers in a
+number of ways. The major difference is that they do not themselves expose the
+stream I/O interface. Therefore, they are not managed by the Device Manager,
+and so <B>RegisterDevice</B>&nbsp;is never called for them. As a result, there are
+no special device files or other filesystem entries corresponding to active
+display drivers. The mechanism by which display drivers are loaded is that an
+application that needs to use the display driver calls <B>CreateDC</B>&nbsp;with
+the name of the display driver's .DLL file. This causes Windows CE to load the
+display driver, and initialize it so that a device context can be returned to
+the calling application.
+<P>
+However, since display drivers require direct access to the display adapter's
+frame buffer, they are generally implemented on PC Cards. And in Windows CE,
+PC Cards require drivers that do expose the stream I/O interface. If you are
+implementing a display driver on a PC Card, you will also have to create a
+minimal PC Card driver as explained in Installable Device Drivers. This
+minimal driver will use the <B><I><A HREF="ddkref_4.htm">xxx</I>_Init</A></B>
+function as a bootstrap to loading and initializing your display driver DLL.
+The <B><I>xxx</I>_Init</B>&nbsp;function typically creates registry entries under
+[HKEY_LOCAL_MACHINE\Drivers\Display\Active]. Applications that need to use
+your driver can then find the name of its DLL there, and so call <B>CreateDC</B>
+to load and initialize the display driver. When the PC Card is removed, <B><I><A HREF="ddkref_3.htm">xxx</I>_Deinit</A></B>
+can remove the registry entries created by <B><I>xxx</I>_Init</B>.
+<P></FONT>
+</BODY>
+</HTML>

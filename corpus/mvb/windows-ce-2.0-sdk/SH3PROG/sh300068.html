@@ -1,0 +1,135 @@
+<HTML>
+<HEAD>
+<TITLE>6.34   MOV (Move Immediate Data): Data Transfer Instruction</TITLE>
+</HEAD><body bgcolor="#FFFFFF">
+<!-- SH3PROG InfoViewer title (sh3prog.ivt); HTML topics extracted with tools/extract-ivt.py, images and the title's own indexes dropped. -->
+
+<A NAME="off_2622129"></A><A NAME="55916160"></A><FONT FACE="Arial" SIZE="5"><B>6.34   MOV (Move Immediate Data): Data Transfer Instruction 
+<P>
+
+<P>
+</B></FONT><TABLE><TR VALIGN=TOP><TD><FONT FACE="Arial" SIZE="3"><B>Format
+<BR></B></FONT></TD><TD><FONT FACE="Arial" SIZE="3"><B>Abstract
+<BR></B></FONT></TD><TD><FONT FACE="Arial" SIZE="3"><B>Code
+<BR></B></FONT></TD><TD><FONT FACE="Arial" SIZE="3"><B>Cycle
+<BR></B></FONT></TD><TD><FONT FACE="Arial" SIZE="3"><B>T Bit
+<BR></B></FONT></TD></TR><TR VALIGN=TOP><TD><FONT FACE="Lucida Sans Typewriter" SIZE="3">MOV #imm,Rn
+<BR></FONT></TD><TD><FONT FACE="Arial" SIZE="3">#imm <IMG SRC="sh390002.gif" ALT="sh390002.gif" BORDER=0 WIDTH=13 HEIGHT=16> sign extension <IMG SRC="sh390002.gif" ALT="sh390002.gif" BORDER=0 WIDTH=13 HEIGHT=16> Rn
+<BR></FONT></TD><TD><FONT FACE="Lucida Sans Typewriter" SIZE="3">1110nnnniiiiiiii
+<BR></FONT></TD><TD><FONT FACE="Arial" SIZE="3">1
+<BR></FONT></TD><TD><FONT FACE="Arial" SIZE="3">-
+<BR></FONT></TD></TR><TR VALIGN=TOP><TD><FONT FACE="Lucida Sans Typewriter" SIZE="3">MOV.W @(disp,PC),Rn
+<BR></FONT></TD><TD><FONT FACE="Arial" SIZE="3">(disp + PC) <IMG SRC="sh390002.gif" ALT="sh390002.gif" BORDER=0 WIDTH=13 HEIGHT=16> sign extension <IMG SRC="sh390002.gif" ALT="sh390002.gif" BORDER=0 WIDTH=13 HEIGHT=16> Rn
+<BR></FONT></TD><TD><FONT FACE="Lucida Sans Typewriter" SIZE="3">1001nnnndddddddd
+<BR></FONT></TD><TD><FONT FACE="Arial" SIZE="3">1
+<BR></FONT></TD><TD><FONT FACE="Arial" SIZE="3">-
+<BR></FONT></TD></TR><TR VALIGN=TOP><TD><FONT FACE="Lucida Sans Typewriter" SIZE="3">MOV.L @(disp,PC),Rn
+<BR></FONT></TD><TD><FONT FACE="Arial" SIZE="3">(disp + PC) <IMG SRC="sh390002.gif" ALT="sh390002.gif" BORDER=0 WIDTH=13 HEIGHT=16> Rn
+<BR></FONT></TD><TD><FONT FACE="Lucida Sans Typewriter" SIZE="3">1101nnnndddddddd
+<BR></FONT></TD><TD><FONT FACE="Arial" SIZE="3">1
+<BR></FONT></TD><TD><FONT FACE="Arial" SIZE="3">-
+<BR>
+<BR></FONT></TD></TR></TABLE><FONT FACE="Arial" SIZE="3"><B>Description: 
+<P>
+</B>Stores immediate data, which has been sign-extended to a longword, into
+general register Rn. 
+<P>
+If the data is a word or longword, table data stored in the address specified
+by PC + displacement is accessed. If the data is a word, the 8-bit displacement
+is zero-extended and doubled. Consequently, the relative interval from the
+table is up to PC + 510 bytes. The PC points to the starting address of the second
+instruction after this MOV instruction. If the data is a longword, the 8-bit
+displacement is zero-extended and quadrupled. Consequently, the relative
+interval from the table is up to PC + 1020 bytes. The PC points to the starting
+address of the second instruction after this MOV instruction, but the lowest two bits
+of the PC are corrected to B'00.
+<P>
+</FONT><FONT FACE="Arial Narrow" SIZE="4"><B>Note: 
+<P>
+</B></FONT><FONT FACE="Arial" SIZE="3">The end address of the program area (module) or the second address after an
+unconditional branch instruction are suitable for the start address of the table.
+If suitable table assignment is impossible (for example, if there are no
+unconditional branch instructions within the area specified by PC + 510 bytes or PC
++ 1020 bytes), the BRA instruction must be used to jump past the table. When
+this MOV instruction is placed immediately after a delayed branch instruction,
+the PC points to an address specified by (the starting address of the branch
+destination) + 2.
+<P>
+<B>Operation:
+<P>
+</B></FONT><FONT FACE="Lucida Sans Typewriter" SIZE="3">MOVI(long i,long n)  /* MOV #imm,Rn */
+<P>
+{
+<P>
+ if ((i&amp;0x80)==0) R[n]=(0x000000FF &amp; (long)i);
+<P>
+ else R[n]=(0xFFFFFF00 | (long)i);
+<P>
+ PC+=2;
+<P>
+}
+<P>
+MOVWI(long d,long n)  /* MOV.W @(disp,PC),Rn */
+<P>
+{
+<P>
+ long disp;
+<P>
+ disp=(0x000000FF &amp; (long)d);
+<P>
+ R[n]=(long)Read_Word(PC+(disp&lt;&lt;1));
+<P>
+ if ((R[n]&amp;0x8000)==0) R[n]&amp;=0x0000FFFF;
+<P>
+ else R[n]|=0xFFFF0000;
+<P>
+ PC+=2;
+<P>
+}
+<P>
+MOVLI(long d,long n)  /* MOV.L @(disp,PC),Rn */
+<P>
+{
+<P>
+ long disp;
+<P>
+ disp=(0x000000FF &amp; (long)d);
+<P>
+ R[n]=Read_Long((PC&amp;0xFFFFFFFC)+(disp&lt;&lt;2));
+<P>
+ PC+=2;
+<P>
+}
+<P>
+</FONT><FONT FACE="Arial" SIZE="3"><B>Example:
+<P>
+</B></FONT><FONT FACE="Lucida Sans Typewriter" SIZE="3">Address
+<P>
+1000  MOV #H'80,R1 R1 = H'FFFFFF80
+<P>
+1002  MOV.W  IMM,R2 R2 = H'FFFF9ABC, IMM means @(H'08,PC)
+<P>
+1004  ADD #-1,R0
+<P>
+1006  TST R0,R0 <IMG SRC="sh390005.gif" ALT="sh390005.gif" BORDER=0 WIDTH=13 HEIGHT=16> PC location used for address calculation for the MOV.W instruction
+<P>
+1008  MOVT R13
+<P>
+100A  BRA NEXT Delayed branch instruction
+<P>
+100C  MOV.L @(4,PC),R3 R3 = H'12345678
+<P>
+100E IMM <I>.data.w </I>H'9ABC
+<P>
+1010  <I>.data.w </I>H'1234
+<P>
+1012 NEXT JMP @R3 Branch destination of the BRA instruction
+<P>
+1014  CMP/EQ #0,R0 <IMG SRC="sh390005.gif" ALT="sh390005.gif" BORDER=0 WIDTH=13 HEIGHT=16> PC location used for address calculation for the MOV.L instruction
+<P>
+  <I>.align </I>4
+<P>
+1018  <I>.data.l </I>H'12345678
+<P>
+</FONT></BODY>
+</HTML>

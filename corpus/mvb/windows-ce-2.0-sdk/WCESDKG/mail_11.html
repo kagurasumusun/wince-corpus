@@ -1,0 +1,38 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML>
+<HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text-html; charset=Windows-1252">
+<title>Inserting Messages</title>
+<meta name=MS-HAID content="_wcesdk_inserting_messages">
+<meta name=MS-HKWD content="Inserting Messages">
+</HEAD>
+<BODY BGCOLOR=#FFFFFF TEXT=#000000>
+<!-- WCESDKG InfoViewer title (Wcesdkg.ivt); HTML topics extracted with tools/extract-ivt.py, images and the title's own indexes dropped. -->
+
+<form name=x><object name=iv classid="clsid:9c2ac687-ceef-11cf-96d9-00a0c903b016">
+</object></form>
+<h3><a name="_wcesdk_inserting_messages"></a>Inserting Messages</h3>
+<p>
+The basic procedure for inserting a new message into a message store folder is:
+<ul>
+<li>
+Create the message body and header string.<br><br></li>
+<li>
+Create a <A HREF='javascript:document.x.iv.ALink("_wcesdk_mailmsg","")'><b>MailMsg</b></a> structure.<br><br></li>
+<li>
+Point the <i>szBody</i> member of the structure to the message body.<br><br></li>
+<li>
+Use <A HREF='javascript:document.x.iv.ALink("_wcesdk_mailsetfield","")'><b>MailSetField</b></a> to put the headers string into the <i>pwcHeaders</i> member.<br><br></li>
+<li>
+Set the message flags to point to the desired folder.<br><br></li>
+<li>
+Set any other relevant flags (MAIL_STATUS_COMPOSED, for instance)<br><br></li>
+<li>
+Fill in the <i>dwMsgLen</i>, <i>ftDate</i>, and <i>szSvcNam</i> members, if relevant.<br><br></li>
+<li>
+Use <A HREF='javascript:document.x.iv.ALink("_wcesdk_mailput","")'><b>MailPut</b></a> to put the message in the desired folder.</li>
+</ul>
+<p>
+This basic procedure works well for simple mail messages without attachments or other non-IPM messages. However, if you need to add non-IPM properties or attachments to the newly created message, you must be aware that a transport may be registered to receive database notifications and may attempt to manipulate the message as soon as it is written.  This is of special consequence for a message created in the Outbox folder, as the transport may move or delete the message in that folder. This could before the call to <b>MailPutAttachment</b>. Thus, it is recommended that you create such outgoing messages in the Inbox folder.  Only after it is completely written to the message store and ready to be sent should you use <b>MailUpdate</b>(<i>hMail, pmm</i>, FALSE) to move the message to the Outbox.</p>
+</BODY>
+</HTML>

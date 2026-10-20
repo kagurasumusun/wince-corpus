@@ -1,0 +1,103 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML>
+<HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text-html; charset=Windows-1252">
+<title>Sample Function: PrepCache</title>
+<meta name=MS-HAID content="_wcesdk_sample_function.3a_.prepcache">
+<meta name=MS-HKWD content="Sample Function: PrepCache">
+</HEAD>
+<BODY BGCOLOR=#FFFFFF TEXT=#000000>
+<!-- WCESDKG InfoViewer title (Wcesdkg.ivt); HTML topics extracted with tools/extract-ivt.py, images and the title's own indexes dropped. -->
+
+<form name=x><object name=iv classid="clsid:9c2ac687-ceef-11cf-96d9-00a0c903b016">
+</object></form>
+<h3><a name="_wcesdk_sample_function.3a_.prepcache"></a>Sample Function: PrepCache</h3>
+<p>
+This sample function accepts the range values for the cache suggested by a virtual list view control. It performs a verification to determine that the requested range is not already cached, and then allocates the required global memory and fills the cache if necessary. </p>
+<pre>void PrepCache( int iFrom, int iTo )
+{
+/*  Global Variables: 
+ *    g_priCache[] is the main cache.
+ *    g_iCache is the index of the first item in the main cache.
+ *    c_cCache is the count of items in the main cache.
+ *
+ *    g_priEndCache[] is the cache of items at the end of the list.
+ *    g_iEndCache is the index of the first item in the end cache.
+ *    g_cEndCache is the count of items in the end cache.
+ */
+
+    //  Local Variables
+    int i;
+    BOOL fOLFrom = FALSE;
+    BOOL fOLTo = FALSE;
+
+    //  Check to see if this is the end cache.
+    if ((iTo == g_cItems - 1) &amp;&amp; ((iTo - iFrom) &lt; 30))  // 30 entries wide{
+        // Check to see if this is a portion of the current end cache.
+        if ((g_cEndCache) &amp;&amp;
+            (iFrom &gt;= g_iEndCache) &amp;&amp;
+            (iFrom &lt; g_iEndCache+g_cEndCache))
+            return;  //  if a part of current end cache, no loading is necessary
+
+        //  This is a new end cache; free the old memory.
+        if ( g_priEndCache )
+            GlobalFree( g_priEndCache );
+
+        //  Set the index and count values for the new end cache, then get the memory.
+        g_iEndCache = iFrom;
+        g_cEndCache = (iTo - iFrom + 1);
+        g_priEndCache = (PRndItem)GlobalAlloc( GPTR, sizeof( RndItem ) * g_cEndCache );
+
+        if (! g_priEndCache);
+            //  Out of memory. Perform error handling operations.
+
+        //  Loop to fill the cache with the recommended items.
+        for (i=0; i&lt;g_cEndCache; i++);
+            //  Call function that accesses item information and
+            //  fills a cache element here.
+    }
+
+    else{    //  Not a member of the current end cache. Try primary cache instead.
+
+        //  Check to see if iFrom is within the primary cache.
+        if ((g_cCache) &amp;&amp;
+            (iFrom &gt;= g_iCache) &amp;&amp;
+            (iFrom &lt; g_iCache+g_cCache))
+            fOLFrom = TRUE;
+
+        //  Check to see if iTo is within the primary cache.
+        if ((g_cCache) &amp;&amp;
+            (iTo &gt;= g_iCache) &amp;&amp;
+            (iTo &lt;= g_iCache+g_cCache))
+            fOLTo = TRUE;
+
+        //  If both iFrom and iTo are within current cache, no work is needed.
+        if (fOLFrom &amp;&amp; fOLTo)
+            return;
+
+        //  Enlarge the cache size rather than make it specific to this hint.
+        if (fOLFrom)
+            iFrom = g_iCache;
+        else if (fOLTo)
+            iTo = g_iCache + g_cCache;
+
+        //  A new primary cache is needed; free the old one.
+        if ( g_priCache )
+            GlobalFree( g_priCache );
+
+        //  Set the index and count values for the new primary cache, and then get the memory.
+        g_iCache = iFrom;
+        g_cCache = (iTo - iFrom + 1);
+        g_priCache = (PRndItem)GlobalAlloc( GPTR, sizeof( RndItem ) * g_cCache );
+
+        if (!g_priEndCache);
+            //  Out of memory. Do error handling.
+
+        //  Loop to fill the cache with the recommended items.
+        for (i=0; i&lt;g_cEndCache; i++);
+            //  Call function that accesses item information and
+            //  fills a cache element here.
+    }
+}</pre>
+</BODY>
+</HTML>

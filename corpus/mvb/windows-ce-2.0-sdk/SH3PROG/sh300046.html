@@ -1,0 +1,71 @@
+<HTML>
+<HEAD>
+<TITLE>6.12   BT (Branch if True): Branch Instruction</TITLE>
+</HEAD><body bgcolor="#FFFFFF">
+<!-- SH3PROG InfoViewer title (sh3prog.ivt); HTML topics extracted with tools/extract-ivt.py, images and the title's own indexes dropped. -->
+
+<A NAME="off_1902748"></A><A NAME="0f0b3fb9"></A><FONT FACE="Arial" SIZE="5"><B>6.12   BT (Branch if True): Branch Instruction
+<P>
+
+<P>
+</B></FONT><TABLE><TR VALIGN=TOP><TD><FONT FACE="Arial" SIZE="3"><B>Format
+<BR></B></FONT></TD><TD><FONT FACE="Arial" SIZE="3"><B>Abstract
+<BR></B></FONT></TD><TD><FONT FACE="Arial" SIZE="3"><B>Code
+<BR></B></FONT></TD><TD><FONT FACE="Arial" SIZE="3"><B>Cycle
+<BR></B></FONT></TD><TD><FONT FACE="Arial" SIZE="3"><B>T Bit
+<BR></B></FONT></TD></TR><TR VALIGN=TOP><TD><FONT FACE="Lucida Sans Typewriter" SIZE="3">BT label
+<BR></FONT></TD><TD><FONT FACE="Arial" SIZE="3">When T = 1, disp + PC <IMG SRC="sh390002.gif" ALT="sh390002.gif" BORDER=0 WIDTH=13 HEIGHT=16> PC; 
+<BR>When T = 0, nop
+<BR></FONT></TD><TD><FONT FACE="Lucida Sans Typewriter" SIZE="3">10001001dddddddd
+<BR></FONT></TD><TD><FONT FACE="Arial" SIZE="3">3/1
+<BR></FONT></TD><TD><FONT FACE="Arial" SIZE="3">-
+<BR>
+<BR></FONT></TD></TR></TABLE><FONT FACE="Arial" SIZE="3"><B>Description: 
+<P>
+</B>Reads the T bit, and conditionally branches. If T = 1, BT branches. If T = 0,
+BT executes the next instruction. The branch destination is an address
+specified by PC + displacement. The PC points to the starting address of the second
+instruction after the branch instruction. The 8-bit displacement is sign-extended
+and doubled. Consequently, the relative interval from the branch destination is
+-256 to +254 bytes. If the displacement is too short to reach the branch
+destination, use BT with the BRA instruction or the like.
+<P>
+</FONT><FONT FACE="Arial Narrow" SIZE="4"><B>Note: 
+<P>
+</B></FONT><FONT FACE="Arial" SIZE="3">When branching, requires three cycles; when not branching, one cycle.
+<P>
+<B>Operation:
+<P>
+</B></FONT><FONT FACE="Lucida Sans Typewriter" SIZE="3">BT(long d) /* BT disp */
+<P>
+{
+<P>
+ long disp;
+<P>
+ if ((d&amp;0x80)==0) disp=(0x000000FF &amp; (long)d);
+<P>
+ else disp=(0xFFFFFF00 | (long)d);
+<P>
+ if (T==1) PC=PC+(disp&lt;&lt;1)+4;
+<P>
+ else PC+=2;
+<P>
+}
+<P>
+</FONT><FONT FACE="Arial" SIZE="3"><B>Example:
+<P>
+ </B></FONT><FONT FACE="Lucida Sans Typewriter" SIZE="3">SETT  T is always 1
+<P>
+ BF TRGET_F Does not branch, because T = 1
+<P>
+ BT TRGET_T Branches to TRGET_T, because T = 1
+<P>
+ NOP
+<P>
+ NOP  ¨ The PC location is used to calculate the branch destination address of the
+BT instruction
+<P>
+TRGET_T:  ¨ Branch destination of the BT instruction
+<P>
+</FONT></BODY>
+</HTML>

@@ -1,0 +1,85 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
+<HTML>
+<HEAD><META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=Windows-1252">
+<TITLE>xxx_Init</TITLE>
+<META NAME="MS-HKWD" CONTENT="xxx_Init">
+<META NAME="MS-HAID" CONTENT="_wceddk_xxx_Init">
+</HEAD>
+<BODY BGPROPERTIES="FIXED" TEXT="#000000" BGCOLOR="#FFFFFF">
+<!-- WCEDDK InfoViewer title (WCEDDK.IVT); HTML topics extracted with tools/extract-ivt.py, images and the title's own indexes dropped. -->
+
+<FORM name=x>
+<OBJECT name=iv classid="clsid:9c2ac687-ceef-11cf-96d9-00a0c903b016">
+</OBJECT>
+</FORM>
+<FONT FACE="ARIAL,HELVETICA" SIZE="2">
+<H2><A NAME="_wceddk_xxx_Init"></A><I>xxx</I>_Init</H2>
+<P>
+Device Manager calls <I>xxx</I><B>_Init</B>&nbsp;function to initialize your
+device.
+<H5>Syntax</H5>
+<P>
+<B>DWORD</B>&nbsp; <I>xxx</I><B>_Init(</B><BR>
+&nbsp; &nbsp; <B>DWORD&#09;</B>&nbsp; &nbsp; <I>dwContext</I><BR>
+<B>);</B>&nbsp;
+<H5>Parameters</H5>
+<DL>
+<DT>
+<I>dwContext</I>
+<DD>
+Specifies a pointer to a string containing the registry path to the active key
+for the installable device driver. 
+</DL>
+<H5>Return Value</H5>
+<P>
+Returns a handle to the device context created. This handle is passed to the <I>xxx</I><B>_Open</B>,<B>
+</B><I>xxx</I><B>_PowerDown</B>, <I>xxx</I><B>_PowerUp</B>, and <I>xxx</I><B>_Deinit</B>
+functions.
+<H5>Remarks</H5>
+<P>
+When the user starts using a device, such as when a PC Card is inserted, the
+Device Manager calls this function to initialize the device. This function is
+not called by applications.
+<P>
+The Device Manager specifies a pointer to a string containing the registry
+path to the active key of the specific PC Card device in the <I>dwContext </I>parameter.
+Usually the string contains the registry path to a numbered subkey of the
+HKEY_LOCAL_MACHINE\Drivers\Active key. Your initialization function can use
+this information to access data stored in the registry.
+<P>
+Some tasks this function might perform include: 
+<UL>
+<LI>
+Initialize the installed device to a default state.
+</UL>
+<P>
+<font face="Symbol"><span
+style="font-family:symbol">&#183;</span></font>&#09;Allocate resources used
+globally by the device driver.
+<UL>
+<LI>
+Register a status callback function with Card services. When the status of the
+device changes, the operating system calls this status callback function. For
+example, the status of a PC Card changes when you insert it or remove it.
+<P>
+<LI>
+Map system memory and I/O space to a PC Card device's memory and I/O space.
+<P>
+<LI>
+Request notification on specific callback events.
+<P>
+<LI>
+For an interrupt-driven device, register an interrupt callback function. When
+the device generates an interrupt, the operating system calls this interrupt
+callback function.
+</UL>
+<P>
+After this function returns, the Device Manager checks the registry for a key
+named <B>Ctrl</B>&nbsp;for the driver, and if such a key is present Device Manger
+calls <I>xxx</I><B>_IOControl</B>. Your driver can use this function to finish
+initializing itself after it has been installed. For example, a driver might
+load additional modules that require the underlying driver to be installed
+before they can load.
+<P></FONT>
+</BODY>
+</HTML>

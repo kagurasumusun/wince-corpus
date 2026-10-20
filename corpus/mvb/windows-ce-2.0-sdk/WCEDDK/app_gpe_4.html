@@ -1,0 +1,70 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
+<HTML>
+<HEAD><META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=Windows-1252">
+<TITLE>Node2D Class</TITLE>
+<META NAME="MS-HKWD" CONTENT="Node2D Class">
+<META NAME="MS-HAID" CONTENT="_wceddk_Node2D_Class">
+</HEAD>
+<BODY BGPROPERTIES="FIXED" TEXT="#000000" BGCOLOR="#FFFFFF">
+<!-- WCEDDK InfoViewer title (WCEDDK.IVT); HTML topics extracted with tools/extract-ivt.py, images and the title's own indexes dropped. -->
+
+<FORM name=x>
+<OBJECT name=iv classid="clsid:9c2ac687-ceef-11cf-96d9-00a0c903b016">
+</OBJECT>
+</FORM>
+<FONT FACE="ARIAL,HELVETICA" SIZE="2">
+<H3><A NAME="_wceddk_Node2D_Class"></A>Node2D Class</H3>
+<P>
+The Node2D class is a helper class which is useful for display devices which
+allocate their memory as a single rectangle of memory. In such devices, the
+stride of Blts is a constant regardless of the width of the actual surface.
+Many devices such as the S3Trio64 used in our sample use the current screen
+width as the width of the video memory and all Blts are assumed to have the
+same stride (or pitch) as the screen and  the same pixel format.
+<P>
+For devices such as this, and in any place where you wish to allocate memory
+from a rectangular block of memory, the Node2D class can be used as follows:
+<P>
+Initialize the allocator by creating an initial Node2D object using the
+height, and width of the block - you may enter the width either in pixels or
+bytes however you should be aware that queries to allocated sub-rectangles of
+memory will return the origin of the allocated memory using the same units
+with which the original Node2D is created, and that suballocations must be
+done in the same units also.
+<DL>
+<DT>
+Allocate sub-rectangles using the <I>Alloc</I>&nbsp;method of the root node.
+Examine the origin of the new node using the <I>Top</I>&nbsp;and <I>Left</I>&nbsp;method
+of the node. Finally the node may be freed using the Free() method:
+<DD>
+<PRE><FONT FACE="Courier" SIZE="2">// Assume we have a 640 pixel x 1000 line 
+// block of memory starting at memBase
+// to be allocated rectangularly
+#define MEM_WIDTH_IN_PIXELS 640
+#define PIXEL_BYTES 2
+#define MEM_HEIGHT 1000
+extern unsigned char *memBase;
+
+Node2D AllMem(MEM_WIDTH_IN_PIXELS, MEM_HEIGHT);
+// allocations will be done in pixels
+
+// create a 20 x 40 surface
+Node2D *pSurf1 = AllMem-&gt;Alloc( 20, 40 );
+// Check that pSurf1 is not null!
+// create a 100 x 100 surf
+Node2D *pSurf2 = AllMem-&gt;Alloc( 100, 100 );
+// Check that pSurf2 is not null!
+int strideInBytes = MEM_WIDTH_IN_PIXELS * PIXEL_BYTES;
+
+// Create a pointer the the top left of the block of
+//    memory in surf1
+unsigned char *ptr1 = memBase + strideInBytes * pSurf1-&gt;Top()
++ PIXEL_BYTES * pSurf1-&gt;Left();
+
+// Now delete the surface(s)
+pSurf1-&gt;Free();
+pSurf2-&gt;free();</FONT></PRE>
+</DL>
+<P></FONT>
+</BODY>
+</HTML>

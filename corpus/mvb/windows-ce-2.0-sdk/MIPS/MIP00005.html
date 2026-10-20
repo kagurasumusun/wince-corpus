@@ -1,0 +1,68 @@
+<HTML>
+<HEAD>
+<TITLE>Arguments to the MIPS __asm Statement</TITLE>
+</HEAD><BODY BGCOLOR=#ffffff>
+<!-- MIPS InfoViewer title (Mips.ivt); HTML topics extracted with tools/extract-ivt.py, images and the title's own indexes dropped. -->
+<BASEFONT FACE="Arial,Helvetica" SIZE="2">
+<A HREF= "MIPShome.htm"><IMG SRC="contents.gif" ALT="contents.gif" BORDER = 0></A>
+<P>
+<A NAME="off_66469"></A><A NAME="a2723d26"></A><A NAME="off_66469"></A><A NAME="a2723d26"></A><A NAME="off_66469"></A><A NAME="a2723d26"></A><FONT FACE="Arial" SIZE="3"><H1>Arguments to the MIPS _ _asm Statement
+<P>
+</H1>Inline assembly statements refer to C/C++ expressions and objects in one of
+two ways:
+<P>
+If an object, variable or code target is an external global, you can refer to
+it directly in the statement string. For example, if Errno is an external
+variable, and Myfunc is an external function, the following are both valid:
+<P>
+</FONT><FONT FACE="Lucida Sans Typewriter" SIZE="3">__asm(&quot;lw %t0, Errno&quot;);
+<P>
+__asm(&quot;jal Myfunc&quot;);
+<P>
+
+<P>
+</FONT><FONT FACE="Arial" SIZE="3">Any code label or object (except for static labels) can be passed as an
+argument to an _ _asm string, in which the arguments are represented by the
+placeholders %0, %1, %2, and so on. For example:
+<P>
+</FONT><FONT FACE="Lucida Sans Typewriter" SIZE="3">__asm(&quot;add %0, %1&quot;, sum, val * base);
+<P>
+__asm(&quot;swl %t0, (%0)&quot;, &amp;buffer [3]);
+<P>
+
+<P>
+</FONT><FONT FACE="Arial" SIZE="3">An _ _asm string taking arguments (%0, %1, and so on) is evaluated similarly
+to a function call. The compiler handles such an _ _asm statement by first
+generating instructions that load the indicated expressions as arguments (sum, val *
+base and buffer [3] in the preceding examples). Arguments in an _ _asm
+statement are handled in the same manner as function arguments, which are defined by a
+platform</FONT><FONT FACE="Times New Roman" SIZE="3">’</FONT><FONT FACE="Arial" SIZE="3">s calling standard.
+<P>
+After the compiler generates instructions to load the arguments, if any, it
+assembles the actual instruction itself. A single instruction in an _ _asm
+statement may therefore cause multiple instructions to be generated. Judicious use of
+the argument placeholders enables you to control the order of evaluation.
+Expressions are always evaluated in the order in which they are passed to the _
+_asm statement. For example, consider the following _ _asm statement:
+<P>
+</FONT><FONT FACE="Lucida Sans Typewriter" SIZE="3">__asm(&quot;add %1, %0&quot;, height * get_coord (&amp;i), arr[i]);
+<P>
+
+<P>
+</FONT><FONT FACE="Arial" SIZE="3">In this statement, the expression height * get_coord (&amp;i) is evaluated first,
+potentially causing side effects in evaluation that could affect the value of
+arr[i]. To reverse the order of evaluation but specify the same instruction and
+operands, you could write the following _ _asm statement:
+<P>
+</FONT><FONT FACE="Lucida Sans Typewriter" SIZE="3">__asm(&quot;add %0, %1&quot;, arr [I], height * get_coord (&amp;i));
+<P>
+
+<P>
+</FONT><FONT FACE="Arial" SIZE="3">The placeholders %0 and %1 can appear in any order in the instruction string.
+<P>
+Because the _ _asm statement follows the standard MIPS calling conventions,
+and because each individual _ _asm statement is treated as a function call, you
+do not need to worry about preserving arguments in the current function. The _
+_asm statements do not corrupt the arguments in the surrounding function.
+<P>
+</FONT></BODY>

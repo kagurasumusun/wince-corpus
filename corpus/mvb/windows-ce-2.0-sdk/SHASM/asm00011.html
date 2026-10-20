@@ -1,0 +1,118 @@
+<HTML>
+<HEAD>
+<TITLE>1.3.1  .PDATA</TITLE>
+</HEAD><body bgcolor="#FFFFFF">
+<!-- SHASM InfoViewer title (Shasm.ivt); HTML topics extracted with tools/extract-ivt.py, images and the title's own indexes dropped. -->
+
+<A NAME="off_231359"></A><A NAME="e1d78b68"></A><FONT FACE="Arial" SIZE="4"><B>1.3.1 .PDATA
+<P>
+</B></FONT><FONT FACE="Arial" SIZE="3">The .PDATA directive specifies a language specific exception handler for the
+following or current function. Beginning with Shasm version 3.00.6070, the
+.PDATA directive must appear <I>before</I> the .ENTRY or .BIGENTRY section to which it applies. (Previously, the .PDATA
+directive could appear before or after the .ENTRY directive, as long as it
+appeared before the .ENDF directive. This is no longer the case; it must now
+precede the .ENTRY or .BIGENTRY directive.) The exception handler should be the
+address of a function, although no warning or error will be issued for a
+non-relative operand. You may optionally also provide one longword (4 bytes) of data for
+use by the exception handler; depending on the handler, that data may also be a
+pointer (an address). The syntax of the .PDATA directive is as follows:
+<P>
+ </FONT><FONT FACE="Lucida Sans Typewriter" SIZE="3">.pdata &lt;handler_address&gt; [, &lt;handler_data&gt;]
+<P>
+</FONT><FONT FACE="Arial" SIZE="3">where handler_address and handler_data may be expressions of any sort. Forward
+references and relative values are permitted. Note that the .PDATA directive
+is not persistent; it applies to no more than one function. To specify an except
+handler (and optionally handler data) for more than one function, you must
+provide a .PDATA directive for each such function. Also, function information
+(including information supplied by .PDATA directives) is maintained separately for
+each section. The .PDATA directive is optional; Shasm issues no error or
+warning messages if it is not supplied. Examples:
+<P>
+ </FONT><FONT FACE="Lucida Sans Typewriter" SIZE="3">.section .text
+<P>
+ .import ex_handler
+<P>
+ .import handler_data
+<P>
+ ; set up exception handler for following function (fun1 in
+<P>
+ ; this case).
+<P>
+ .pdata ex_handler,handler_data
+<P>
+fun1: .entry
+<P>
+ .prolog
+<P>
+ rts
+<P>
+  nop
+<P>
+ .endf
+<P>
+; fun1 uses ex_handler &amp; handler_data.
+<P>
+fun2: .entry
+<P>
+ .prolog
+<P>
+ rts
+<P>
+  nop
+<P>
+ .endf
+<P>
+; fun2 has no exception handler or handler data (both 0).
+<P>
+ .pdata ex_handler
+<P>
+fun3: .entry
+<P>
+ .prolog
+<P>
+ rts
+<P>
+  nop
+<P>
+ .endf
+<P>
+; fun3 uses ex_handler; handler data is 0 (the default).
+<P>
+ .pdata fun4,5
+<P>
+fun4: .entry
+<P>
+ .prolog
+<P>
+ rts
+<P>
+  nop
+<P>
+ .endf
+<P>
+; fun4 is its own exception handler (probably a bad idea);
+<P>
+; handler data is a constant 5.
+<P>
+fun5: .entry
+<P>
+ .prolog
+<P>
+ rts
+<P>
+  nop
+<P>
+ .endf
+<P>
+ .pdata ex_handler
+<P>
+; fun5 has no exception handler or handler data; the .pdata
+<P>
+; directive above applies to the next function. (The assembler
+<P>
+; issues a warning if no function follows in the same section,
+<P>
+; since in that case the .pdata directive would have no effect.)
+<P>
+</FONT></BODY>
+</HTML>

@@ -1,0 +1,88 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
+<HTML>
+<HEAD><META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=Windows-1252">
+<TITLE>ACMDM_STREAM_SIZE</TITLE>
+<META NAME="MS-HKWD" CONTENT="ACMDM_STREAM_SIZE">
+<META NAME="MS-HAID" CONTENT="_wceddk_ACMDM_STREAM_SIZE">
+</HEAD>
+<BODY BGPROPERTIES="FIXED" TEXT="#000000" BGCOLOR="#FFFFFF">
+<!-- WCEDDK InfoViewer title (WCEDDK.IVT); HTML topics extracted with tools/extract-ivt.py, images and the title's own indexes dropped. -->
+
+<FORM name=x>
+<OBJECT name=iv classid="clsid:9c2ac687-ceef-11cf-96d9-00a0c903b016">
+</OBJECT>
+</FORM>
+<FONT FACE="ARIAL,HELVETICA" SIZE="2">
+<H2><A NAME="_wceddk_ACMDM_STREAM_SIZE"></A>ACMDM_STREAM_SIZE</H2>
+<P>
+The ACMDM_STREAM_SIZE message requests an ACM driver to return the size
+required for a source (or destination) buffer, given a specified destination
+(or source) buffer size along with source and destination format descriptions.
+<H5>Return Value</H5>
+<P>
+The driver should return MMSYSERR_NOERROR if the operation succeeds. Otherwise
+it should return one of the MMSYSERR error codes defined in mmsystem.h, or one
+of the ACMERR error codes defined in msacm.h.
+<H5>Parameters</H5>
+<DL>
+<DT>
+<I>dwDriverID</I>
+<DD>
+Driver instance identifier. This is the value returned by the driver in
+response to the <B>ACM_Open</B>&nbsp;function.
+<BR>
+<DT>
+<I>hDriver</I>
+<DD>
+Driver handle.
+<BR>
+<DT>
+<I>uMsg</I>
+<DD>
+ACMDM_STREAM_SIZE
+<BR>
+<DT>
+<I>lParam1</I>
+<DD>
+Pointer to an <B>ACMDRVSTREAMINSTANCE</B>&nbsp;structure.
+<BR>
+<DT>
+<I>lParam2</I>
+<DD>
+Pointer to an <B>ACMDRVSTREAMSIZE</B>&nbsp;structure.
+</DL>
+<H5>Comments</H5>
+<P>
+The ACM (WAVEAPI.DLL) sends the ACMDM_STREAM_SIZE message by calling the ACM
+driver's <B>ACM_IOControl</B>() entry point via DeviceIoControl(). The ACM
+sends this message when an application calls the <B>acmStreamSize</B>
+function, which is described in the Win32 SDK.
+<P>
+All ACM drivers that provide stream conversions must support this message. For
+more information about stream conversions, see Converting Data Streams in the
+Windows NT DDK.
+<P>
+Based on the input arguments, the driver must answer one of the following
+questions:
+<P>
+·Given a specified source buffer size, how large does a destination buffer
+need to be in order to hold all of the converted data?
+<P>
+·Given a specified destination buffer size, what is the largest amount of
+source data that can specified without overflowing the destination buffer?
+<P>
+The <B>ACMDRVSTREAMINSTANCE</B>&nbsp;structure received with this message is the
+same structure that was received with a previous ACMDM_STREAM_OPEN message.
+The driver does not need to validate the structure's contents again.
+<P>
+The driver examines the <B>ACMDRVSTREAMSIZE</B>&nbsp;structure to determine which
+buffer (source or destination) the client has supplied. The <B>ACMDRVSTREAMINSTANCE</B>
+structure contains structures that describe the source and destination
+formats, and, possibly, a filter specification. The driver uses this
+information to determine the size of the requested buffer.
+<P>
+If the driver returns a buffer length of zero, the ACM provides an error
+return code of ACMERR_NOTPOSSIBLE to acmStreamSize.
+<P></FONT>
+</BODY>
+</HTML>

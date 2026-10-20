@@ -1,0 +1,84 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
+<HTML>
+<HEAD><META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=Windows-1252">
+<TITLE>CardRegisterClient</TITLE>
+<META NAME="MS-HKWD" CONTENT="CardRegisterClient">
+<META NAME="MS-HAID" CONTENT="_wceddk_CardRegisterClient">
+</HEAD>
+<BODY BGPROPERTIES="FIXED" TEXT="#000000" BGCOLOR="#FFFFFF">
+<!-- WCEDDK InfoViewer title (WCEDDK.IVT); HTML topics extracted with tools/extract-ivt.py, images and the title's own indexes dropped. -->
+
+<FORM name=x>
+<OBJECT name=iv classid="clsid:9c2ac687-ceef-11cf-96d9-00a0c903b016">
+</OBJECT>
+</FORM>
+<FONT FACE="ARIAL,HELVETICA" SIZE="2">
+<H2><A NAME="_wceddk_CardRegisterClient"></A>CardRegisterClient</H2>
+<P>
+The <B>CardRegisterClient </B>function registers a callback function that is
+called by Card Services when a specified socket event occurs. The callback
+function notifies the driver of the event, such as card insertion, so the
+driver can take the appropriate action.
+<H5>Syntax</H5>
+<P>
+<B>CARD_CLIENT_HANDLE CardRegisterClient(<BR>
+&nbsp; &nbsp; CLIENT_CALLBACK</B>&nbsp;<I>CallBackFn<BR>
+</I><B>&nbsp; &nbsp; PCARD_REGISTER_PARMS</B>&nbsp;<I>pParms<BR>
+</I><B>&nbsp; &nbsp; );</B>
+<H5>Parameters</H5>
+<DL>
+<DT>
+<I>CallBackFn</I>
+<DD>
+Specifies a pointer to the driver's callback function.
+<BR>
+<DT>
+<I>pParms</I>
+<DD>
+Specifies a pointer to a <B>CARD_REGISTER_PARMS</B>&nbsp;structure defining the
+drivers characteristics.
+</DL>
+<H5>Return Values</H5>
+<P>
+If successful, <B>CardRegisterClient</B>&nbsp;returns a driver handle. If
+unsuccessful, it returns NULL and <B>GetLastError</B>&nbsp;returns one of the
+following values:
+<DL>
+<DT>
+CERR_BAD_ARGS
+<DD>
+Indicates the pointer specified in <I>pParms</I>&nbsp;or <I>CallBackFn </I>is
+invalid.
+<BR>
+<DT>
+CERR_OUT_OF_RESOURCE
+<DD>
+Indicates Card Services is unable to allocate memory to track the driver.
+</DL>
+<H5>Remarks</H5>
+<P>
+A driver can request artificial insertion notifications so it can check
+whether a card it controls has already been inserted.
+<P>
+Card Services sends a CE_CARD_INSERTION callback event code for every function
+on the PC Cards that are currently inserted. If the driver does not want to
+receive these artificial insertion notices, it can clear the
+CLIENT_ATTR_NOTIFY_SHARED and CLIENT_ATTR_NOTIFY_EXCLUSIVE bits in the <I>fAttributes</I>
+field of the <B>CARD_REGISTER_PARMS</B>&nbsp;structure.
+<P>
+Because the CE_CARD_INSERTION callbacks can occur before <B>CardRegisterClient</B>
+returns, the <I>Parm2</I>&nbsp;member of the <B>CARD_EVENT_PARMS</B>&nbsp;structure
+contains the registering client's CARD_CLIENT_HANDLE.  For the same reason, <I>Parm1</I>
+also contains the registering client's handle on the CE_REGISTRATION_COMPLETE
+callback.
+<P>
+When the driver is unloaded, it must call <B>CardDeregisterClient</B>&nbsp;to free
+any PC Card resources allocated to the driver.
+<H5>See Also</H5>
+<P>
+<B><A HREF="ddkref_75.htm">CARD_CLIENT_HANDLE</A></B>,<B>&nbsp;<A HREF="ddkref_78.htm">CARD_EVENT</A></B>,<B>
+<A HREF="ddkref_82.htm">CARD_REGISTER_PARMS</A></B>,<B>&nbsp;<A HREF="ddkref_80.htm">CARD_EVENT_PARMS</A></B>,<B>
+<A HREF="ddkref_52.htm">CardDeregisterClient</A></B>
+<P></FONT>
+</BODY>
+</HTML>

@@ -1,0 +1,45 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
+<HTML>
+<HEAD><META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=Windows-1252">
+<TITLE>Single and Multiple-Access Issues</TITLE>
+<META NAME="MS-HKWD" CONTENT="Single and Multiple-Access Issues">
+<META NAME="MS-HAID" CONTENT="_wceddk_Single_and_Multiple.2d.Access_Issues">
+</HEAD>
+<BODY BGPROPERTIES="FIXED" TEXT="#000000" BGCOLOR="#FFFFFF">
+<!-- WCEDDK InfoViewer title (WCEDDK.IVT); HTML topics extracted with tools/extract-ivt.py, images and the title's own indexes dropped. -->
+
+<FORM name=x>
+<OBJECT name=iv classid="clsid:9c2ac687-ceef-11cf-96d9-00a0c903b016">
+</OBJECT>
+</FORM>
+<FONT FACE="ARIAL,HELVETICA" SIZE="2">
+<H2><A NAME="_wceddk_Single_and_Multiple.2d.Access_Issues"></A>Single and Multiple-Access Issues</H2>
+<P>
+Recall that peripheral devices are exposed to applications as special files,
+and when you create an installable device driver you are providing the
+implementation of such a file. Therefore, one thing you have to consider when
+writing your device driver is whether it makes sense to allow applications to
+open this special file more than once simultaneously. Your installable device
+driver can implement either policy<font face="Symbol"><span
+style="font-family:symbol">&#190;</span></font>single access or multiple
+access<font face="Symbol"><span
+style="font-family:symbol">&#190;</span></font>by using the <I>hOpenContext</I>
+parameter that is used by the Win32 file I/O functions.
+<P>
+If you wish to allow multiple access, each call to your <B><I><A HREF="ddkref_6.htm">xxx</I>_Open</A></B>
+function should return a different value for <I>hOpenContext</I>. Your device
+driver will have to track which return values from <B><I>xxx</I>_Open</B>&nbsp;are
+in use. Subsequent calls by the application to your <B><I><A HREF="ddkref_2.htm">xxx</I>_Close</A></B>,
+<B><I><A HREF="ddkref_9.htm">xxx</I>_Read</A></B>, <B><I><A HREF="ddkref_11.htm">xxx</I>_Write</A></B>,
+<B><I><A HREF="ddkref_10.htm">xxx</I>_Seek</A></B>, and <B><I><A HREF="ddkref_5.htm">xxx</I>_IOControl</A></B>
+functions will pass this value back to your device driver so that the driver
+can identify which internal data structures to manipulate.
+<P>
+If you wish to enfore single-access, then only the first call to <B><I>xxx</I>_Open</B>
+should return a valid <I>hOpenContext</I>&nbsp;value. So long as that value is
+still valid (which is until the application calls <B><I>xxx</I>_Close</B>&nbsp;for
+that value), subsequent calls to <B><I>xxx</I>_Open</B>&nbsp;should return NULL to
+indicate failure to the calling application.
+<P></FONT>
+</BODY>
+</HTML>

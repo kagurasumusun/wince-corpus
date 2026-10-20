@@ -1,0 +1,39 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML>
+<HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text-html; charset=Windows-1252">
+<title>Implementing a Dummy File Filter</title>
+<meta name=MS-HAID content="_wcesdk_implementing_a_dummy_file_filter">
+<meta name=MS-HKWD content="Implementing a Dummy File Filter">
+</HEAD>
+<BODY BGCOLOR=#FFFFFF TEXT=#000000>
+<!-- WCESDKG InfoViewer title (Wcesdkg.ivt); HTML topics extracted with tools/extract-ivt.py, images and the title's own indexes dropped. -->
+
+<form name=x><object name=iv classid="clsid:9c2ac687-ceef-11cf-96d9-00a0c903b016">
+</object></form>
+<h2><a name="_wcesdk_implementing_a_dummy_file_filter"></a>Implementing a Dummy File Filter</h2>
+<p>
+A dummy file filter gives the appearance that files are being converted, without actually implementing a file filter or performing a filter conversion. </p>
+<p>
+Implementing such a dummy filter may be desirable for files that have a unique or &quot;non-standard&quot; file extension name (that is, a file type not already registered in the desktop registry) but do not need any conversion when transferred between the desktop Windows Explorer and the Explorer window for the mobile device. Normally, if a file with an unregistered file type is being copied to the mobile device, the Explorer window for the mobile device will display a <b>No Converter Selected</b> dialog warning. This states that the file will be transferred without conversion. Implementing a dummy filter for this case would avoid alarming the user with the file conversion warning.</p>
+<p>
+<b>Note</b>  The <b>No Converter Selected</b> dialog warning will be displayed only if the mobile device's <b>File Conversions Properties</b> is set to enable file conversion. If the &quot;Enable File Conversion&quot; checkbox is unchecked, then the <b>No Converter Selected</b> dialog warning will not be displayed.</p>
+<h5><img src="../guide/art/wedge.gif" border=0>&#09;To Register a Dummy File Filter</h5>
+<ol>
+<li>
+Modify the desktop PC registry key <b>HKLM\Software\Microsoft\Windows CE Services\Filters</b> by adding a subkey that is the name of the file extension for the type of files that should be converted using the &quot;null&quot; file conversion. For example, if you are converting files with extension &quot;.abc&quot;, then you must add a subkey <b>.abc</b>.<br><br></li>
+<li>
+Under the <b>.abc</b> subkey, create a string value named <b>DefaultImport</b> that is set to &quot;Binary Copy&quot;. This identifies the conversion for files with extension .abc that are imported from the desktop PC to the Windows CE device.<br><br></li>
+<li>
+Under the <b>.abc</b> subkey, create a string value named <b>DefaultExport</b> that is set to &quot;Binary Copy&quot;. This identifies the conversion for files with extension .abc that are exported from Windows CE device to the desktop PC.</li>
+</ol>
+<p>
+The following .reg file registers the example .abc dummy file filter.</p>
+<pre>REGEDIT4
+[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows CE Services\Filters\.abc]
+&quot;DefaultImport&quot;=&quot;Binary Copy&quot;
+&quot;DefaultExport&quot;=&quot;Binary Copy&quot;</pre>
+<p>
+So in this example, when a file with extension .abc is copied between the desktop PC and the Windows CE device, it will appear as though a conversion process is taking place (that is, there is no <b>No Converter Selected </b>message from Windows CE Services). However, no filter actually is being used, since an <b>InstalledFilters</b> subkey has not been added under the <b>.abc</b> key.</p>
+</BODY>
+</HTML>

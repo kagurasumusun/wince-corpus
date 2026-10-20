@@ -1,0 +1,142 @@
+<HTML>
+<HEAD>
+<TITLE>B.2  Coding Example</TITLE>
+</HEAD><body bgcolor="#FFFFFF">
+<!-- SHASM InfoViewer title (Shasm.ivt); HTML topics extracted with tools/extract-ivt.py, images and the title's own indexes dropped. -->
+
+<A NAME="off_3802667"></A><A NAME="76c12439"></A><FONT FACE="Arial" SIZE="5"><B>B.2  Coding Example 
+<P>
+  </B></FONT><FONT FACE="Lucida Sans Typewriter" SIZE="3">.MACRO FIX_ADD Rs=Parm2, Rd=Parm1
+<P>
+  ADD  \Rs, \Rd
+<P>
+  .ENDM
+<P>
+  .MACRO FIX_SUB Rs=Parm2, Rd=Parm1
+<P>
+  SUB  \Rs, \Rd
+<P>
+  .ENDM
+<P>
+FIX_MUL:
+<P>
+  DIV0S  Parm1,Parm2 ;
+<P>
+  MOVT  WORK1   ; Stores the sign of the result in WORK1
+<P>
+  CMP/PZ  Parm1   ; -+
+<P>
+  BT   MUL01   ; |If (Parm1 &lt; 0), Parm1= -Parm1
+<P>
+  NEG   Parm1,Parm1 ; -+
+<P>
+MUL01 CMP/PZ  Parm2   ; -+
+<P>
+  BT   MUL02   ; |If (PARM2 &lt; 0), PARM2 = -PARM2
+<P>
+  NEG   Parm2,Parm2 ; -+
+<P>
+MUL02 MULU  Parm1,Parm2 ; Parm1 (low)* Parm2 (low)
+<P>
+  SWAP.W  Parm1,Parm1 ;
+<P>
+  STS   MACL,WORK2 ;
+<P>
+  MULU  Parm1,Parm2 ; Parm1 (high)* Parm2 (low)
+<P>
+  SWAP.W  Parm1,Parm1 ;
+<P>
+  SWAP.W  Parm2,Parm2 ;
+<P>
+  STS   MACL,WORK3 ;
+<P>
+  MULU  Parm1,Parm2 ; Parm1 (low)* Parm2 (high)
+<P>
+  SWAP.W  Parm1,Parm1 ;
+<P>
+  STS   MACL,WORK4 ;
+<P>
+  MULU  Parm1,Parm2 ; Parm1 (high)* Parm2 (high)
+<P>
+  CLRT      ;
+<P>
+  STS   MACL,Parm1 ;
+<P>
+  MOV   WORK3,Parm2 ; -+
+<P>
+  SHLR16  WORK3   ; |
+<P>
+  SHLL16  Parm2   ; |
+<P>
+  ADDC  Parm2,WORK2 ; |
+<P>
+  ADDC  WORK3,Parm1 ; | Sums 16-bit multiplication results.
+<P>
+  MOV   WORK4,Parm2 ; |
+<P>
+  SHLR16  WORK4   ; |
+<P>
+  SHLL16  Parm2   ; |
+<P>
+  ADDC  WORK2,Parm2 ; |
+<P>
+  ADDC  WORK4,Parm1 ; -+
+<P>
+  .AREPEAT \&amp;POINT  ; -+
+<P>
+  SHLL  Parm2   ; | Corrects decimal point location.
+<P>
+  ROTCL  Parm1   ; |
+<P>
+  .AENDR      ; -+
+<P>
+  SHLR  WORK1   ; -+
+<P>
+  BF   MUL03   ; | Adds the sign.
+<P>
+  NEG   Parm1,Parm1 ; -+
+<P>
+MUL03 RTS
+<P>
+  NOP
+<P>
+FIX_DIV
+<P>
+  MOV   #0,WORK1  ; -+
+<P>
+  DIV0S  WORK1,Parm1 ; | If dividend is a negative value,
+<P>
+  SUBC  WORK1,Parm1 ; -+ converts to 1's complement.
+<P>
+  .AREPEAT \&amp;POINT  ; -+
+<P>
+  SHAR  Parm1   ; | Corrects decimal point location.
+<P>
+  ROTCR  WORK1   ; |
+<P>
+  .AENDR      ; -+
+<P>
+  DIV0S  Parm2,Parm1 ;
+<P>
+  .AREPEAT 32    ; -+
+<P>
+  ROTCL  WORK1   ; | Parm1:WORK1/Parm2 <IMG SRC="asm90013.gif" ALT="asm90013.gif" BORDER=0 WIDTH=10 HEIGHT=16><IMG SRC="asm90005.gif" ALT="asm90005.gif" BORDER=0 WIDTH=3 HEIGHT=16>WORK1
+<P>
+  DIV1  Parm2,Parm1 ; |
+<P>
+  .AENDR      ; -+
+<P>
+  ROTCL  WORK1   ;
+<P>
+  MOV   #0,Parm1  ; -+
+<P>
+  ADDC  Parm1,WORK1 ; | Corrects to 2's complement.
+<P>
+  MOV   WORK1,Parm1 ; -+
+<P>
+  RTS
+<P>
+  NOP
+<P>
+</FONT></BODY>
+</HTML>

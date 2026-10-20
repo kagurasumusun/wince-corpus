@@ -1,0 +1,77 @@
+<HTML>
+<HEAD>
+<TITLE>6.53   RTS (Return from Subroutine): Branch Instruction</TITLE>
+</HEAD><body bgcolor="#FFFFFF">
+<!-- SH3PROG InfoViewer title (sh3prog.ivt); HTML topics extracted with tools/extract-ivt.py, images and the title's own indexes dropped. -->
+
+<A NAME="off_3015569"></A><A NAME="747feb60"></A><FONT FACE="Arial" SIZE="5"><B>6.53   RTS (Return from Subroutine): Branch Instruction 
+<P>
+</B></FONT><FONT FACE="Arial" SIZE="3"><B>Class:</B> Delayed branch instruction
+<P>
+</FONT><TABLE><TR VALIGN=TOP><TD><FONT FACE="Arial" SIZE="3"><B>Format
+<BR></B></FONT></TD><TD><FONT FACE="Arial" SIZE="3"><B>Abstract
+<BR></B></FONT></TD><TD><FONT FACE="Arial" SIZE="3"><B>Code
+<BR></B></FONT></TD><TD><FONT FACE="Arial" SIZE="3"><B>Cycle
+<BR></B></FONT></TD><TD><FONT FACE="Arial" SIZE="3"><B>T Bit
+<BR></B></FONT></TD></TR><TR VALIGN=TOP><TD><FONT FACE="Lucida Sans Typewriter" SIZE="3">RTS
+<BR></FONT></TD><TD><FONT FACE="Arial" SIZE="3">PR <IMG SRC="sh390002.gif" ALT="sh390002.gif" BORDER=0 WIDTH=13 HEIGHT=16> PC
+<BR></FONT></TD><TD><FONT FACE="Lucida Sans Typewriter" SIZE="3">0000000000001011
+<BR></FONT></TD><TD><FONT FACE="Arial" SIZE="3">2
+<BR></FONT></TD><TD><FONT FACE="Arial" SIZE="3">-
+<BR>
+<BR></FONT></TD></TR></TABLE><FONT FACE="Arial" SIZE="3"><B>Description: 
+<P>
+</B>Returns from a subroutine procedure. The PC values are restored from the PR,
+and the program continues from the address specified by the restored PC value.
+This instruction is used to return to the program from a subroutine program
+called by a BSR or JSR instruction.
+<P>
+</FONT><FONT FACE="Arial Narrow" SIZE="4"><B>Note: 
+<P>
+</B></FONT><FONT FACE="Arial" SIZE="3">Since this is a delayed branch instruction, the instruction after this RTS is
+executed before branching. No interrupts are accepted between this instruction
+and the next instruction. If the next instruction is a branch instruction, it
+is acknowledged as an illegal slot instruction. An instruction restoring the PR
+should be prior to an RTS instruction. That restoring instruction should not be
+the delay slot of the RTS.
+<P>
+<B>Operation:
+<P>
+</B></FONT><FONT FACE="Lucida Sans Typewriter" SIZE="3">RTS() /* RTS */
+<P>
+{
+<P>
+ unsigned long temp;
+<P>
+ temp=PC;
+<P>
+ PC=PR+4;
+<P>
+ Delay_Slot(temp+2);
+<P>
+}
+<P>
+</FONT><FONT FACE="Arial" SIZE="3"><B>Example:
+<P>
+ </B></FONT><FONT FACE="Lucida Sans Typewriter" SIZE="3">MOV.L TABLE,R3 R3 = Address of TRGET
+<P>
+ JSR @R3 Branches to TRGET
+<P>
+ NOP  Executes NOP before branching
+<P>
+ ADD R0,R1 ¨ Return address for when the subroutine procedure is completed (PR data)
+<P>
+ .............
+<P>
+TABLE: <I>.data.l </I>TRGET Jump table
+<P>
+ .............
+<P>
+TRGET: MOV R1,R0 ¨ Procedure entrance
+<P>
+ RTS  PR data Æ PC
+<P>
+ MOV #12,R0 Executes MOV before branching
+<P>
+</FONT></BODY>
+</HTML>

@@ -1,0 +1,671 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML>
+<HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text-html; charset=Windows-1252">
+<title>CEUTIL—A Helper DLL for Windows CE Services</title>
+<meta name=MS-HAID content="_wcesdk_ceutil_a_helper_dll_for_windows_ce_services">
+<meta name=MS-HKWD content="CEUTIL—A Helper DLL for Windows CE Services">
+</HEAD>
+<BODY BGCOLOR=#FFFFFF TEXT=#000000>
+<!-- WCESDKG InfoViewer title (Wcesdkg.ivt); HTML topics extracted with tools/extract-ivt.py, images and the title's own indexes dropped. -->
+
+<form name=x><object name=iv classid="clsid:9c2ac687-ceef-11cf-96d9-00a0c903b016">
+</object></form>
+<h2><a name="_wcesdk_ceutil_a_helper_dll_for_windows_ce_services"></a>CEUTIL<font face="Symbol"><span style="font-family:symbol">&#190;</span></font>A Helper DLL for Windows CE Services</h2>
+<p>
+CEUTIL is a utility dll that provides the following services:</p>
+<p>
+registration of desktop file filters,</p>
+<p>
+registration of desktop synchronization services,</p>
+<p>
+addition of custom menu items,</p>
+<p>
+access to device partnership settings.</p>
+<p>
+CEUTIL is the recommended method when dealing with the desktop registry entries for Windows CE Services.  It encapsulates the registry top-level locations, helping to ensure forward-compatibility for applications and provides helper functions for browsing device partnerships, querying the currently connected or selected device settings, etc.  In general, this API is a replacement for (and compatible with) the Win32 registry API usage when referring to any subkeys under the Windows CE Services root.</p>
+<h4>Registry Structure</h4>
+<p>
+This section briefly describes the desktop directory structure used by Windows CE Services and the corresponding identifiers used in CEUTIL to refer to particular keys in the hierarchy.  General information is stored under HKEY_LOCAL_MACHINES\Software\Microsoft\Windows CE Services (henceforth referred to as MACHINE_ROOT) and partnership information is stored under HKEY_CURRENT_USER\Software\Microsoft\Windows CE Service (henceforth referred to as LOCAL_ROOT).  The first time a device is connected to the desktop and a partnership is created, the various synchronization and filter settings are copied from the MACHINE_ROOT to the partnership subkey under LOCAL_ROOT.</p>
+<p>
+The following table maps registry locations to pre-defined constants used by CEUTIL APIs.</p>
+<table>
+<tr valign=top>
+<td>
+<b>Registry Key</b></td>
+<td>
+<b>CEUTIL Constants</b></td>
+<td>
+<b>Description</b></td>
+</tr>
+<tr valign=top>
+<td>
+MACHINE_ROOT</td>
+<td>
+CESVC_ROOT_MACHINE</td>
+<td>
+Root of Windows CE Services hierarchy under HKEY_LOCAL_MACHINE</td>
+</tr>
+<tr valign=top>
+<td>
+MACHINE_ROOT\Filters</td>
+<td>
+CESVC_FILTERS</td>
+<td>
+Filters reg root.  New filters should register themselves here</td>
+</tr>
+<tr valign=top>
+<td>
+MACHINE_ROOT\CustomMenus</td>
+<td>
+CESVC_CUSTOM_MENUS</td>
+<td>
+Custom menus reg root</td>
+</tr>
+<tr valign=top>
+<td>
+MACHINE_ROOT\Services</td>
+<td>
+CESVC_SERVICES_COMMON</td>
+<td>
+Services reg root</td>
+</tr>
+<tr valign=top>
+<td>
+MACHINE_ROOT\Services \Synchronization</td>
+<td>
+CESVC_SYNC_COMMON</td>
+<td>
+Synchronization reg root.  New sync services should register here</td>
+</tr>
+<tr valign=top>
+<td>
+LOCAL_ROOT</td>
+<td>
+CESVC_ROOT_USER</td>
+<td>
+Root of Windows CE Services hierarchy under HKEY_CURRENT_USER</td>
+</tr>
+<tr valign=top>
+<td>
+LOCAL_ROOT\Partners</td>
+<td>
+CESVC_DEVICES</td>
+<td>
+Individual device subkeys are created under this key</td>
+</tr>
+<tr valign=top>
+<td>
+LOCAL_ROOT\Partners\&lt;device id&gt;</td>
+<td>
+CESVC_DEVICEX</td>
+<td>
+Particular device root subkey</td>
+</tr>
+<tr valign=top>
+<td>
+LOCAL_ROOT\Partners\&lt;selected device id&gt;</td>
+<td>
+CESVC_DEVICE_SELECTED</td>
+<td>
+Root subkey for the currently selected device</td>
+</tr>
+<tr valign=top>
+<td>
+LOCAL_ROOT\Partners\&lt;device id&gt;\Services</td>
+<td>
+CESVC_SERVICES_USER</td>
+<td>
+Root Services subkey for a particular device</td>
+</tr>
+<tr valign=top>
+<td>
+LOCAL_ROOT\Partners\&lt;device id&gt;\Services\Synchronization</td>
+<td>
+CESVC_SYNC</td>
+<td>
+Synchronization reg root for a particular device</td>
+</tr>
+</table><br>
+<h4>API Descriptions</h4>
+<p>
+This section gives detailed descriptions for the CEUTIL APIs.</p>
+<p>
+<b>Note</b>  In order to use these APIs you must include <i>ceutil.h </i>and link with <i>ceutil.lib</i>.</p>
+<table>
+<tr valign=top>
+<td>
+<b>function</b></td>
+<td>
+<b>description</b></td>
+</tr>
+<tr valign=top>
+<td>
+CeSvcOpen</td>
+<td>
+opens and returns handle to the registry root for a specified logical position</td>
+</tr>
+<tr valign=top>
+<td>
+CeSvcOpenEx</td>
+<td>
+opens a nested subkey underneath an already open registry handle</td>
+</tr>
+<tr valign=top>
+<td>
+CeSvcClose</td>
+<td>
+closes a handle previously returned by CeSvcOpen or CeSvcOpenEx</td>
+</tr>
+<tr valign=top>
+<td>
+CeSvcGetString</td>
+<td>
+reads a string value from a registry subkey and copies the data into a buffer</td>
+</tr>
+<tr valign=top>
+<td>
+CeSvcSetString</td>
+<td>
+writes a string value to a registry subkey</td>
+</tr>
+<tr valign=top>
+<td>
+CeSvcGetDword</td>
+<td>
+reads a DWORD value from a registry key and copies the data into a buffer</td>
+</tr>
+<tr valign=top>
+<td>
+CeSvcSetDword</td>
+<td>
+writes a DWORD value to a registry subkey</td>
+</tr>
+<tr valign=top>
+<td>
+CeSvcGetBinary</td>
+<td>
+reads a binary value from a registry subkey and copies the data into a buffer</td>
+</tr>
+<tr valign=top>
+<td>
+CeSvcSetBinary</td>
+<td>
+writes a binary value to a registry subkey</td>
+</tr>
+<tr valign=top>
+<td>
+CeSvcDeleteVal</td>
+<td>
+removes a named value from the specified registry key</td>
+</tr>
+<tr valign=top>
+<td>
+CeGetDeviceId</td>
+<td>
+returns a device id for the currently connected device</td>
+</tr>
+<tr valign=top>
+<td>
+CeGetSelectedId</td>
+<td>
+returns a device id for the currently selected device</td>
+</tr>
+<tr valign=top>
+<td>
+CeSvcEnumProfiles</td>
+<td>
+enumerates all subkeys underneath a given subkey</td>
+</tr>
+</table><br>
+<h2>CeSvcOpen</h2>
+<p>
+opens and returns a handle to the registry root for a specified logical position as specified by the CEUTIL constants shown in the table above.</p>
+<h5>Syntax</h5>
+<p>
+<b>HRESULT</b>  <b>CeSvcOpen(</b><BR>&#09;<b>UINT</b> <i>uSvc</i>,<BR>&#09;<b>LPTSTR</b> <i>pszPath</i>,<BR>&#09;<b>BOOL</b> <i>fCreate,</i><BR>&#09;<b>PHCESVC</b> <i>phSvc</i><BR><b>);</b></p>
+<h5>Parameters</h5>
+<dl>
+<dt>
+<i>uSvc</i></dt>
+<dd>
+logical subkey in registry as identified by CESVC_keys<br>
+</dd>
+<dt>
+<i>pszPath</i></dt>
+<dd>
+specifies either a subpath to append to the logical subkey, or a DWORD device id (if uSvc is CESVC_DEVICEX)<br>
+</dd>
+<dt>
+<i>fCreate</i></dt>
+<dd>
+TRUE<font face="Symbol"><span style="font-family:symbol">&#190;</span></font>subkey should be created if it doesn't exist<br>
+</dd>
+<dt>
+<i>phSvc</i></dt>
+<dd>
+returns the logical handle to the registry subkey.  This handle is equivalent to a HKEY and can be used by other CEUTIL APIs as well as Win32 registry manipulation routines.</dd>
+</dl>
+<h5>Return value</h5>
+<dl>
+<dt>
+HRESULT</dt>
+<dd>
+standard Win32 error code</dd>
+</dl>
+<h2>CeSvcOpenEx</h2>
+<p>
+Given a handle to an already open resgistry, opens a nested subkey underneath.</p>
+<h5>Syntax</h5>
+<b>HRESULT  CeSvcOpenEx(<BR>&#09;HCESVC </b><i>hSvcRoot,<BR>&#09;</i><b>LPTSTR </b><i>pszPath,<BR>&#09;</i><b>BOOL </b><i>fCreate,<BR>&#09;</i><b>PHCESVC </b><i>phSvc<BR></i><b>);</b>
+<h5>Parameters</h5>
+<dl>
+<dt>
+<i>hSvcRoot</i></dt>
+<dd>
+handle to a registry subkey, obtained via a call to CeSvcOpen<br>
+</dd>
+<dt>
+<i>pszPath</i></dt>
+<dd>
+specifies a subpath to append to the logical subkey<br>
+</dd>
+<dt>
+<i>fCreate</i></dt>
+<dd>
+TRUE<font face="Symbol"><span style="font-family:symbol">&#190;</span></font>subkey should be created if it doesn't exist<br>
+</dd>
+<dt>
+<i>phSvc</i></dt>
+<dd>
+returns the logical handle to the registry subkey.  This handle is equivalent to a HKEY and can be used by other CEUTIL APIs as well as Win32 registry manipulation routines.</dd>
+</dl>
+<h5>Return value</h5>
+<dl>
+<dt>
+HRESULT</dt>
+<dd>
+standard Win32 error code</dd>
+</dl>
+<h2>CeSvcClose</h2>
+<p>
+closes a handle previously returned by CeSvcOpen or CeSvcOpenEx</p>
+<h5>Syntax</h5>
+<b>HRESULT  CeSvcClose(<BR>&#09;HCESVC </b><i>hSvc<BR></i><b>);</b>
+<h5>Parameters</h5>
+<dl>
+<dt>
+<i>hSvc</i></dt>
+<dd>
+handle to a registry subkey, obtained via a call to CeSvcOpen or CeSvcOpenEx. Can be NULL.</dd>
+</dl>
+<h5>Return value</h5>
+<dl>
+<dt>
+HRESULT </dt>
+<dd>
+standard Win32 error code</dd>
+</dl>
+<h2>CeSvcGetString</h2>
+<p>
+reads a string value from a registry subkey and copies the data into a buffer.</p>
+<h5>Syntax</h5>
+<b>HRESULT  CeSvcGetString(<BR>&#09;HCESVC </b><i>hSvc,<BR>&#09;</i><b>LPTSTR </b><i>pszValName,<BR>&#09;</i><b>LPTSTR </b><i>pszVal,<BR>&#09;</i><b>DWORD </b><i>cbVal<BR></i><b>);</b>
+<h5>Parameters</h5>
+<dl>
+<dt>
+<i>hSvc</i></dt>
+<dd>
+handle to a registry subkey<br>
+</dd>
+<dt>
+<i>pszValName</i></dt>
+<dd>
+name of value<br>
+</dd>
+<dt>
+<i>pszVal</i></dt>
+<dd>
+address of buffer for read data<br>
+</dd>
+<dt>
+<i>cbVa</i>l</dt>
+<dd>
+size of buffer</dd>
+</dl>
+<h5>Return value</h5>
+<dl>
+<dt>
+HRESULT</dt>
+<dd>
+standard Win32 error code</dd>
+</dl>
+<h2>CeSvcSetString</h2>
+<p>
+writes a string value to a registry subkey</p>
+<h5>Syntax</h5>
+<b>HRESULT  CeSvcSetString(<BR>&#09;HCESVC </b><i>hSvc,<BR>&#09;</i><b>LPCTSTR </b><i>psValName,<BR>&#09;</i><b>LPTSTR </b><i>pszVal<BR></i><b>);</b>
+<h5>Parameters</h5>
+<dl>
+<dt>
+<i>hSvc</i></dt>
+<dd>
+handle to a registry subkey<br>
+</dd>
+<dt>
+<i>pszValName</i></dt>
+<dd>
+name of value<br>
+</dd>
+<dt>
+<i>pszVal</i></dt>
+<dd>
+data to be written</dd>
+</dl>
+<h5>Return value</h5>
+<dl>
+<dt>
+HRESULT</dt>
+<dd>
+standard Win32 error code</dd>
+</dl>
+<h2>CeSvcGetDword</h2>
+<p>
+reads a DWORD value from a registry key and copies the data into a buffer</p>
+<h5>Syntax</h5>
+<b>HRESULT  CeSvcGetDword(<BR>&#09;HCESVC </b><i>hSvc,<BR>&#09;</i><b>LPCTSTR </b><i>pszValName,<BR>&#09;</i><b>LPDWORD </b><i>pdwVal<BR></i><b>);</b>
+<h5>Parameters</h5>
+<dl>
+<dt>
+<i>hSvc</i></dt>
+<dd>
+handle to a registry subkey<br>
+</dd>
+<dt>
+<i>pszValName</i></dt>
+<dd>
+name of value<br>
+</dd>
+<dt>
+<i>pdwVal</i></dt>
+<dd>
+address of buffer for read data</dd>
+</dl>
+<h5>Return value</h5>
+<dl>
+<dt>
+HRESULT</dt>
+<dd>
+standard Win32 error code</dd>
+</dl>
+<h2>CeSvcSetDword</h2>
+<p>
+writes a DWORD value to a registry subkey</p>
+<h5>Syntax</h5>
+<b>HRESULT  CeSvcSetDword(<BR>&#09;HCESVC </b><i>hSvc,<BR>&#09;</i><b>LPCTSTR </b><i>pszValName,<BR>&#09;</i><b>DWORD </b><i>dwVal<BR></i><b>);</b>
+<h5>Parameters</h5>
+<dl>
+<dt>
+<i>hSvc</i></dt>
+<dd>
+handle to a registry subkey<br>
+</dd>
+<dt>
+<i>pszValName</i></dt>
+<dd>
+name of value<br>
+</dd>
+<dt>
+<i>dwVal</i></dt>
+<dd>
+data to be written.</dd>
+</dl>
+<h5>Return value</h5>
+<dl>
+<dt>
+HRESULT</dt>
+<dd>
+standard Win32 error code</dd>
+</dl>
+<h2>CeSvcGetBinary</h2>
+<p>
+reads a binary value from a registry subkey and copies the data into a buffer.</p>
+<h5>Syntax</h5>
+<b>HRESULT  CeSvcGetBinary(<BR>&#09;HCESVC </b><i>hSvc,<BR>&#09;</i><b>LPCTSTR </b><i>pszValName,<BR>&#09;</i><b>LPBYTE </b><i>lpData,<BR>&#09;</i><b>LPDWORD </b><i>pcbVal<BR></i><b>);</b>
+<h5>Parameters</h5>
+<dl>
+<dt>
+<i>hSvc</i></dt>
+<dd>
+handle to a registry subkey<br>
+</dd>
+<dt>
+<i>pszValName</i></dt>
+<dd>
+name of value<br>
+</dd>
+<dt>
+<i>lpData</i></dt>
+<dd>
+address of buffer for read data<br>
+</dd>
+<dt>
+<i>pcbVal</i></dt>
+<dd>
+pointer to a variable that specifies the size, in bytes, of the buffer pointed to by the lpData parameter.  When the function returns, this variable contains the size of the data copied to lpData.</dd>
+</dl>
+<h5>Return value</h5>
+<dl>
+<dt>
+HRESULT</dt>
+<dd>
+standard Win32 error code</dd>
+</dl>
+<h2>CeSvcSetBinary</h2>
+<p>
+writes a binary value to a registry subkey</p>
+<h5>Syntax</h5>
+<b>HRESULT  CeSvcSetBinary(<BR>&#09;HCESVC </b><i>hSvc,<BR>&#09;</i><b>LPCTSTR </b><i>pszValName,<BR>&#09;</i><b>LPBYTE </b><i>lpData,<BR>&#09;</i><b>DWORD </b><i>cbVal<BR></i><b>);</b>
+<h5>Parameters</h5>
+<dl>
+<dt>
+<i>hSvc</i></dt>
+<dd>
+handle to a registry subkey<br>
+</dd>
+<dt>
+<i>pszValName</i></dt>
+<dd>
+name of value<br>
+</dd>
+<dt>
+<i>lpData</i></dt>
+<dd>
+address of binary data to be written<br>
+</dd>
+<dt>
+<i>cbVal</i></dt>
+<dd>
+size of binary data</dd>
+</dl>
+<h5>Return value</h5>
+<dl>
+<dt>
+HRESULT</dt>
+<dd>
+standard Win32 error code</dd>
+</dl>
+<h2>CeSvcDeleteVal</h2>
+<p>
+removes a named value from the specified registry key</p>
+<h5>Syntax</h5>
+<b>HRESULT  CeSvcDeleteVal(<BR>&#09;HCESVC </b><i>hSvc,<BR>&#09;</i><b>LPCTSTR </b><i>pszValName<BR></i><b>);</b>
+<h5>Parameters</h5>
+<dl>
+<dt>
+<i>hSvc</i></dt>
+<dd>
+handle to a registry subkey<br>
+</dd>
+<dt>
+<i>pszValName</i></dt>
+<dd>
+name of value to delete</dd>
+</dl>
+<h5>Return value</h5>
+<dl>
+<dt>
+HRESULT</dt>
+<dd>
+standard Win32 error code</dd>
+</dl>
+<h2>CeGetDeviceId</h2>
+<p>
+returns a device id for the currently connected device</p>
+<h5>Syntax</h5>
+<p>
+<b>DWORD  CeGetDeviceId(</b>void<b>);</b></p>
+<h5>Parameters</h5>
+<p>
+none</p>
+<h5>Return value</h5>
+<dl>
+<dt>
+valid device id</dt>
+<dd>
+zero if no device or invalid device; -1 means a guest device</dd>
+</dl>
+<h2>CeGetSelectedDeviceId</h2>
+<p>
+returns a device id for the currently selected device</p>
+<h5>Syntax</h5>
+<p>
+<b>DWORD  CeGetSelectedDeviceId(</b>void<b>);</b></p>
+<h5>Parameters</h5>
+<p>
+none</p>
+<h5>Return value</h5>
+<dl>
+<dt>
+valid device id; </dt>
+<dd>
+zero if no device or invalid device; -1 means a guest device</dd>
+</dl>
+<h2>CeSvcEnumProfiles</h2>
+<p>
+enumerates all subkeys underneath a given subkey</p>
+<h5>Syntax</h5>
+<b>HRESULT  CeSvcEnumProfiles(<BR>&#09;PHCESVC </b><i>phSvc,<BR>&#09;</i><b>DWORD </b><i>plProfileIndex,<BR>&#09;</i><b>PDWORD </b><i>plProfile<BR></i><b>);</b>
+<h5>Parameters</h5>
+<dl>
+<dt>
+<i>phSvc</i></dt>
+<dd>
+pointer to a handle to a registry subkey<br>
+</dd>
+<dt>
+<i>lProfileIndex</i></dt>
+<dd>
+index for subkey returned.  Caller should initialize to 0 and increment for each additional subkey<br>
+</dd>
+<dt>
+<i>plProfile</i></dt>
+<dd>
+pointer to a device id.</dd>
+</dl>
+<h5>Return value</h5>
+<dl>
+<dt>
+HRESULT</dt>
+<dd>
+standard Win32 error code</dd>
+</dl>
+<pre>Example 1: enumerate device partnerships and get file sync folder path
+
+HCESVC&#09;hsvc = NULL;
+HCESVC&#09;hsvcSync = NULL;
+HCESVC&#09;hsvcProfile = NULL;
+DWORD&#09;cProfilesEnum = 0;
+DWORD&#09;nProfileID&#09;= 0;
+
+//Enumerate all profiles
+while (SUCCEEDED (CeSvcEnumProfiles(&amp;hsvc, cProfilesEnum, &amp;nProfileID)))
+{
+&#09;if (nProfileID != (DWORD)-1)
+&#09;{
+&#09;&#09;// Open the registry root for the device
+&#09;&#09;if (SUCCEEDED(CeSvcOpenEx(hsvcProfile, TEXT(&quot;Services\\Synchronization&quot;), FALSE, &amp;hsvcSync)))
+&#09;&#09;&#09;{
+&#09;&#09;&#09;&#09;TCHAR szPath[MAX_PATH];
+&#09;&#09;&#09;&#09;if (SUCCEEDED(CeSvcGetString(HsvcSync, TEXT(&quot;Briefcase Path&quot;), szPath, sizeof(szPath)/sizeof(TCHAR))))
+&#09;&#09;&#09;&#09;{
+&#09;&#09;&#09;&#09;&#09;// do whatever…
+&#09;&#09;&#09;&#09;}
+&#09;&#09;&#09;&#09;CeSvcClose(hsvcSync);
+&#09;&#09;&#09;}
+&#09;&#09;&#09;CeSvcClose(hsvcProfile);
+&#09;&#09;}
+&#09;}
+&#09;cProfilesEnum++;
+}
+
+Example 2:  add a custom menu
+HCESVC&#09;hsvcMyMenu = NULL;
+
+// Create and open the registry root for Custom Menu
+if (SUCCEEDED(CeSvcOpen(CESVC_CUSTOM_MENUS, TEXT(&quot;MyApp&quot;), TRUE, &amp;hsvcMyMenu)))
+{
+&#09;CeSVCSetString(hsvcMyMenu, TEXT(&quot;DisplayName&quot;), TEXT(&quot;&amp;My Calculator&quot;));
+&#09;CeSVCSetString(hsvcMyMenu, TEXT(&quot;Command&quot;), TEXT(&quot;calc.exe&quot;));
+&#09;CeSVCSetString(hsvcMyMenu, TEXT(&quot;StatusHelp&quot;), TEXT(&quot;Displays calculator&quot;));
+&#09;CeSVCSetString(hsvcMyMenu, TEXT(&quot;Version&quot;), 0x00020000);
+&#09;CeSvcClose(hsvcMyMenu);
+}
+</pre>
+<b>Table <font face="Symbol"><span style="font-family:Symbol">&#165;</span></font>    Revision History</b>
+<table>
+<tr valign=top>
+<td>
+<b>Writer</b></td>
+<td>
+<b>Date</b></td>
+<td>
+<b>Comments</b></td>
+</tr>
+<tr valign=top>
+<td>
+a-tclark</td>
+<td>
+10/14/97</td>
+<td>
+preliminary; replaces appload.csf</td>
+</tr>
+<tr valign=top>
+<td>
+a-tclark</td>
+<td>
+10/15/97</td>
+<td>
+MAE template, more work</td>
+</tr>
+<tr valign=top>
+<td>
+a-tclark</td>
+<td>
+10/17/97</td>
+<td>
+added CustMenu and CEUTIL</td>
+</tr>
+<tr valign=top>
+<td>
+a-tclark</td>
+<td>
+10/21/97</td>
+<td>
+more work</td>
+</tr>
+</table><br>
+<p>
+ </p>
+</BODY>
+</HTML>

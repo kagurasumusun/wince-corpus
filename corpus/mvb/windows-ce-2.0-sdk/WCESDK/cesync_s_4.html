@@ -1,0 +1,154 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML>
+<HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text-html; charset=Windows-1252">
+<title>OBJNOTIFY</title>
+<meta name=MS-HAID content="_wcesdk_objnotify">
+<meta name=MS-HKWD content="OBJNOTIFY">
+</HEAD>
+<BODY BGCOLOR=#FFFFFF TEXT=#000000>
+<!-- WCESDK InfoViewer title (WCESDK.IVT); HTML topics extracted with tools/extract-ivt.py, images and the title's own indexes dropped. -->
+
+<BODY BGCOLOR=#FFFFFF BACKGROUND= "images\cewmark.gif" TEXT=#000000><form name=x><object name=iv classid="clsid:9c2ac687-ceef-11cf-96d9-00a0c903b016">
+</object></form>
+<h1><a name="_wcesdk_objnotify"></a>OBJNOTIFY</h1>
+<p>
+The <b>OBJNOTIFY </b>structure is used to notify the ActiveSync service provider that an object in the Windows CE file system has changed or been deleted.</p>
+<p>
+<b>typedef struct tagObjNotify{</b><BR>&#09;<b>UINT</b> &#09;&#09;<i>cbStruct</i>;<BR>&#09;<b>OBJTYPENAME</b> &#09;<i>szObjType</i>[ MAX_OBJTYPE_NAME ];<BR>&#09;<b>UINT</b> &#09;<i>uFlags</i>;<BR>&#09;<b>UINT</b> &#09;<i>uPartnerBit</i>;<BR>&#09;<b>CEOID</b> &#09;&#09;<i>oidObject</i>;<BR>&#09;<b>CEOIDINFO</b> &#09;&#09;<i>oidInfo</i>;<BR>&#09;<b>UINT</b> &#09;&#09;<i>cOidChg</i>;<BR>&#09;<b>UINT</b>&#09;&#09;<i>cOidDel</i>;<BR>&#09;<b>UINT  </b><i>*poid<BR></i><b>} OBJNOTIFY</b>, <b>*POBJNOTIFY;</b></p>
+<h2>At a Glance</h2>
+<table>
+<tr valign=top>
+<td>
+Header file:</td>
+<td>
+cesync.h</td>
+</tr>
+<tr valign=top>
+<td>
+Component:</td>
+<td>
+</td>
+</tr>
+<tr valign=top>
+<td>
+Platforms:</td>
+<td>
+H/PC</td>
+</tr>
+<tr valign=top>
+<td>
+Windows CE versions:</td>
+<td>
+2.0 and later</td>
+</tr>
+</table><br>
+<h2>Members</h2>
+<dl>
+<dt>
+<i>cbStruct</i></dt>
+<dd>
+Input. Size of the structure in bytes.<br>
+</dd>
+<dt>
+<i>SzObjType</i></dt>
+<dd>
+Input, the object type name.<br>
+</dd>
+<dt>
+<i>uFlags</i></dt>
+<dd>
+Input. Flags<dl>
+<dt>
+ONF_FILE</dt>
+<dd>
+the object is a file.<br>
+</dd>
+<dt>
+ONF_DIRECTORY</dt>
+<dd>
+the object is a directory.<br>
+</dd>
+<dt>
+ONF_DATABASE</dt>
+<dd>
+the object is a database.<br>
+</dd>
+<dt>
+ONF_RECORD</dt>
+<dd>
+the object is a record.<br>
+</dd>
+<dt>
+ONF_CHANGED</dt>
+<dd>
+set if the file system object is changed.<br>
+</dd>
+<dt>
+ONF_DELETED</dt>
+<dd>
+set if the file system object is deleted.<br>
+</dd>
+<dt>
+ONF_CLEAR_CHANGE</dt>
+<dd>
+client should clear the change bit for the object whose object identifier is pointed at by <i>poid</i>.<br>
+</dd>
+<dt>
+ONF_CALL_BACK</dt>
+<dd>
+output. Client asks server to call ObjectNotify two seconds later.<br>
+</dd>
+<dt>
+ONF_CALLING_BACK</dt>
+<dd>
+set if this call is a result of ONF_CALL_BACK being set earlier.</dd>
+</dl>
+<br>
+</dd>
+<dt>
+<i>uPartnerBit</i></dt>
+<dd>
+Input. It is 1 if the desktop currently connected is partner #1, and it is 2 if the desktop is partner #2.<br>
+</dd>
+<dt>
+<i>oidObject</i></dt>
+<dd>
+Input. This is the OID of the file system object, representing a file, a database, or a database record.<br>
+</dd>
+<dt>
+<i>OidInfo</i></dt>
+<dd>
+Input. Stores information about the object (if the object has not been deleted).<br>
+</dd>
+<dt>
+<i>cOidChg</i></dt>
+<dd>
+Output, When ONF_CHANGED is set, this is the number of oid's that should be replicated. Set to 0 if no object should be replicated because of this change.<p>
+When both ONF_CHANGED and ONF_DELETED are not set, this is the number of oid's in the first part of the list for objects that are changed.</p>
+<br>
+</dd>
+<dt>
+<i>cOidDel</i></dt>
+<dd>
+Output, When ONF_DELETED is set, this is the number of deleted oid's that should be replicated. Set to 0 if no object should be replicated because of this delete.<p>
+When both ONF_CHANGED and ONF_DELETED are not set, this is the number of oid's in the later part of the list for objects that are not changed</p>
+<br>
+</dd>
+<dt>
+<i>poid</i></dt>
+<dd>
+Output, Points to an array of oid's that's should be marked as needs to be replicated first cOidChg elements are for the changed objects, the last cOidDel elements are for the deleted objects Note that, memory pointed to by this pointer is owned by the ActiveSync service provider. It will not be freed by replication.</dd>
+</dl>
+<h2>Remarks</h2>
+<p>
+This structure is passed to the <a href="cesync_f.htm"><b>ObjectNotify</b></a> function to inform the provider that an event that changes or deletes an object in the Windows CE file system has occurred. The provider should return, via this structure, how many replication objects have changed or been deleted because of this change or deletion to a file system object.</p>
+<p>
+When ONF_CHANGED is set, <i>cOidChg</i> is the number of object id's in the list that should be synchronized (<i>cOidDel </i>is not used).</p>
+<p>
+When ONF_DELETED is set, <i>cOidDel</i> is the number of deleted object id's in the list that should be synchronized (<i>cOidChg</i> is not used).</p>
+<h2>See Also</h2>
+<p>
+<a href="cesync_f.htm"><b>ObjectNotify</b></a></p>
+</BODY>
+</HTML>

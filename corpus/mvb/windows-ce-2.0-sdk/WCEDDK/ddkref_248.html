@@ -1,0 +1,134 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
+<HTML>
+<HEAD><META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=Windows-1252">
+<TITLE>The [Drivers\Builtin] Key</TITLE>
+<META NAME="MS-HKWD" CONTENT="The [Drivers\\Builtin] Key">
+<META NAME="MS-HAID" CONTENT="_wceddk_The_.5b.Drivers.5c.Builtin.5d_.Key">
+</HEAD>
+<BODY BGPROPERTIES="FIXED" TEXT="#000000" BGCOLOR="#FFFFFF">
+<!-- WCEDDK InfoViewer title (WCEDDK.IVT); HTML topics extracted with tools/extract-ivt.py, images and the title's own indexes dropped. -->
+
+<FORM name=x>
+<OBJECT name=iv classid="clsid:9c2ac687-ceef-11cf-96d9-00a0c903b016">
+</OBJECT>
+</FORM>
+<FONT FACE="ARIAL,HELVETICA" SIZE="2">
+<H3><A NAME="_wceddk_The_.5b.Drivers.5c.Builtin.5d_.Key"></A>The [Drivers\Builtin] Key</H3>
+<P>
+The<B>&nbsp;[</B>HKEY_LOCAL_MACHINE\Drivers\Builtin]<B>&nbsp;</B>key contains subkeys
+for device drivers that the Device Manager should load when the system is
+turned on. Each subkey is named after the device driver and contains values
+described in the following table. Additional values can be stored for purposes
+specific to the device driver.
+<P>
+Typically, installable device drivers will not use anything within the
+[Drivers\Builtin] key. However, if it is important for your driver to be
+loaded when the Windows CE platform undergoes a warm reboot, the driver's
+installation routine can install a key within the [Drivers\Builtin] key. Be
+cautious, however; you should not modify any existing keys within this portion
+of the registry. It is also good to recommend that users do a full backup of
+the data on their Windows CE platform in the event that changes to keys within
+this portion of the registry cause their Windows CE platform to become
+unusable.
+<TABLE>
+<TR VALIGN=top>
+<TD><FONT FACE="ARIAL,HELVETICA" SIZE="2">
+<P>
+<B>Value name</B>
+</FONT><TD><FONT FACE="ARIAL,HELVETICA" SIZE="2">
+<P>
+<B>Value Type</B>
+</FONT><TD><FONT FACE="ARIAL,HELVETICA" SIZE="2">
+<P>
+<B>Description </B>
+</FONT><TR VALIGN=top>
+<TD><FONT FACE="ARIAL,HELVETICA" SIZE="2">
+<P>
+<B>Dll</B>
+</FONT><TD><FONT FACE="ARIAL,HELVETICA" SIZE="2">
+<P>
+<B>REG_SZ</B>
+</FONT><TD><FONT FACE="ARIAL,HELVETICA" SIZE="2">
+<P>
+This required entry specifies the filename for an driver DLL the Device
+Manager is to load.
+</FONT><TR VALIGN=top>
+<TD><FONT FACE="ARIAL,HELVETICA" SIZE="2">
+<P>
+<B>Entry</B>
+</FONT><TD><FONT FACE="ARIAL,HELVETICA" SIZE="2">
+<P>
+<B>REG_SZ</B>
+</FONT><TD><FONT FACE="ARIAL,HELVETICA" SIZE="2">
+<P>
+The <B>Entry</B>&nbsp;value, if it exists, names an entry point to the DLL. The
+Device Manager loads the DLL and calls the specified entry point, with the
+driver's registry path as a parameter. When a driver is invoked in this
+manner, the driver is responsible for calling <B>RegisterDevice</B>&nbsp;on its
+own, and will not be tracked by the Device Manager. <B>RegisterDevice</B>
+calls <B><A HREF='javascript:document.x.iv.ALink("_sdk_LoadLibrary","#")'>LoadLibrary</A></B>&nbsp;to load the DLL,
+so when the DLLs entry point returns, the Device Manager will call <B><A HREF='javascript:document.x.iv.ALink("_sdk_FreeLibrary","#")'>FreeLibrary</A></B>
+to free the instance that it previously loaded.
+<P>
+The function named in the <B>Entry</B>&nbsp;value must follow the prototype
+specified for <B>PFN_DEV_ENTRY</B>: DWORD (*PFN_DEV_ENTRY)(LPTSTR); where the <B>LPSTR</B>
+parameter is the registry path of the device's key.
+</FONT><TR VALIGN=top>
+<TD><FONT FACE="ARIAL,HELVETICA" SIZE="2">
+<P>
+<B>Keep</B>
+</FONT><TD><FONT FACE="ARIAL,HELVETICA" SIZE="2">
+<P>
+<B>REG_SZ</B>
+</FONT><TD><FONT FACE="ARIAL,HELVETICA" SIZE="2">
+<P>
+The <B>Keep</B>&nbsp;value works in conjunction with the <B>Entry</B>&nbsp;value; if you
+have the <B>Keep</B>&nbsp;value, you must also have the <B>Entry</B>&nbsp;value. The
+existence of this value causes the Device Manager to not call <B>FreeLibrary</B>
+after the entry point specified in the <B>Entry</B>&nbsp;value returns. This
+behavior should only be used by DLLs which are loaded by the Device Manager at
+boot time but which are not actually device drivers.
+</FONT><TR VALIGN=top>
+<TD><FONT FACE="ARIAL,HELVETICA" SIZE="2">
+<P>
+<B>Order</B>
+</FONT><TD><FONT FACE="ARIAL,HELVETICA" SIZE="2">
+<P>
+<B>DWORD</B>
+</FONT><TD><FONT FACE="ARIAL,HELVETICA" SIZE="2">
+<P>
+Specifies the load order for the built-in driver. If two drivers have the same
+load order value, they load in the order they occur in the registry. This
+entry is useful when one driver must load subsequent to another. This value is
+required for non-PC Card devices, ignored when loading PC Card drivers.
+</FONT><TR VALIGN=top>
+<TD><FONT FACE="ARIAL,HELVETICA" SIZE="2">
+<P>
+<B>Prefix</B>
+</FONT><TD><FONT FACE="ARIAL,HELVETICA" SIZE="2">
+<P>
+<B>REG_SZ</B>
+</FONT><TD><FONT FACE="ARIAL,HELVETICA" SIZE="2">
+<P>
+This required value specifies the device driver's <A HREF="devnames_2.htm">device
+filename prefix</A>. It is a three character identifier, such as &quot;COM&quot;.
+</FONT></TABLE>
+<P>
+The following example shows the contents under the Builtin key for the
+standard serial port driver: 
+<PRE><FONT FACE="Courier" SIZE="2">HKEY_LOCAL_MACHINE
+    [Drivers]
+        [BuiltIn]
+            [Serial]
+                SZ: Dll = Serial.DLL
+                DWORD: Order = 0x00000000 (0)
+                SZ: Prefix = COM
+                hex: DevConfig = 10 00 00 00 02 00 00 00 10 01 00 00 00 4b 00
+                DWORD: DeviceArrayIndex = 0x00000000 (0)
+                DWORD: DeviceType = 0x00000000 (0)
+                SZ: FriendlyName = Serial Cable on COM1:
+                SZ: Tsp = Unimodem.dll
+</FONT></PRE>
+<P></FONT>
+</BODY>
+</HTML>

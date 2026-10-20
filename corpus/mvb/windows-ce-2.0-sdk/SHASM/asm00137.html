@@ -1,0 +1,78 @@
+<HTML>
+<HEAD>
+<TITLE>8.3.3  Macro Generation Number</TITLE>
+</HEAD><body bgcolor="#FFFFFF">
+<!-- SHASM InfoViewer title (Shasm.ivt); HTML topics extracted with tools/extract-ivt.py, images and the title's own indexes dropped. -->
+
+<A NAME="off_3246124"></A><A NAME="61b6b780"></A><FONT FACE="Arial" SIZE="4"><B>8.3.3  Macro Generation Number 
+<P>
+</B></FONT><FONT FACE="Arial" SIZE="3">The macro generation number facility is used to avoid the problem that symbols
+used within a macro body will be multiply defined if the macro is expanded
+multiple times. To avoid this problem, specify the macro generation number marker
+as part of any symbol used in a macro. This will result in symbols that are
+unique to each macro call.
+<P>
+The macro generation number marker is expanded as a 5-digit decimal number
+(between 00000 and 99999) unique to the macro expansion. The syntax for specifying
+the macro generation number marker is as follows:
+<P>
+</FONT><FONT FACE="Lucida Sans Typewriter" SIZE="3">\@
+<P>
+</FONT><FONT FACE="Arial" SIZE="3">Two or more macro generation number markers can be written in a macro body,
+and they will be expanded to the same number in one macro call.
+<P>
+</FONT><FONT FACE="Arial Narrow" SIZE="4"><B>Note:
+<P>
+</B></FONT><FONT FACE="Arial" SIZE="3">Because macro generation number markers are expanded to numbers, they must not
+be written at the beginning of symbol names. See section 2.5.2, </FONT><FONT FACE="Arial" COLOR="#008000" SIZE="3"><A HREF="asm00031.htm">Symbol Coding</A></FONT><FONT FACE="Arial" SIZE="3">.
+<P>
+<B>Example:
+<P>
+  </B></FONT><FONT FACE="Lucida Sans Typewriter" SIZE="3">.MACRO RES_STR, Rn
+<P>
+  MOV.L  #str\@,\Rn
+<P>
+  BRA  end_str\@
+<P>
+  NOP
+<P>
+str\@ .SDATA &quot;\STR&quot;
+<P>
+  .ALIGN 2
+<P>
+end_str\@
+<P>
+  .ENDM
+<P>
+  RES_STR &quot;ONE&quot;,R0 ; Different symbols are generated each time
+<P>
+  RES_STR &quot;TWO&quot;,R1 ; RES_STR is expanded.
+<P>
+</FONT><FONT FACE="Arial" SIZE="3">Expanded results are as follows:
+<P>
+  </FONT><FONT FACE="Lucida Sans Typewriter" SIZE="3">MOV.L  #str00000,R0
+<P>
+  BRA  end_str00000
+<P>
+  NOP
+<P>
+str00000   .SDATA &quot;ONE&quot;
+<P>
+  .ALIGN 2
+<P>
+end_str00000
+<P>
+  MOV.L  #str00001,R1
+<P>
+  BRA  end_str00001
+<P>
+  NOP
+<P>
+str00001   .SDATA &quot;TWO&quot;
+<P>
+  .ALIGN 2
+<P>
+end_str00001
+<P>
+</FONT></BODY>
+</HTML>

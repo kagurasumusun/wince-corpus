@@ -1,0 +1,276 @@
+<HTML>
+<HEAD>
+<TITLE>Example 1: MIPS Multiplication Function with Overflow</TITLE>
+</HEAD><BODY BGCOLOR=#ffffff>
+<!-- MIPS InfoViewer title (Mips.ivt); HTML topics extracted with tools/extract-ivt.py, images and the title's own indexes dropped. -->
+<BASEFONT FACE="Arial,Helvetica" SIZE="2">
+<A HREF= "MIPShome.htm"><IMG SRC="contents.gif" ALT="contents.gif" BORDER = 0></A>
+<P>
+<A NAME="off_131072"></A><A NAME="0da0a5ac"></A><A NAME="off_131072"></A><A NAME="0da0a5ac"></A><FONT FACE="Arial" SIZE="3"><H1>Example: MIPS Multiplication Function with Overflow
+<P>
+</H1>With the MIPS edition of the compiler, the _ _asm statement can be used to
+write macros that can be called from within C/C++ source code. The syntax of the _
+_asm statement makes such macros possible because of the flexible support for
+arguments. As illustrated in the following example, the arguments do not have
+to be fixed, and they can even be specified at the time of macro expansion.
+However, this macro must be called only from within C/C++ functions.
+<P>
+In this example, the sample function named my_mult takes two unsigned 32-bit
+integer arguments, a and b, and multiplies them together. The product is stored
+at the location specified by the third argument, c, which is a pointer to a
+32-bit argument. The function also determines what the overflow portion of the
+multiplication is, if any, and returns the overflow portion via its return value.
+<P>
+</FONT><FONT FACE="Lucida Sans Typewriter" SIZE="3">extern &quot;C&quot; { // Use extern &quot;c&quot; for C++ file only
+<P>
+    void __asm(char*, ...);
+<P>
+};
+<P>
+
+<P>
+#pragma intrinsic(__asm) // this is actually optional
+<P>
+
+<P>
+long my_mult(long a, long b, long* c) {
+<P>
+    long overflow;
+<P>
+    __asm(&quot;mult $4,$5&quot;);
+<P>
+    __asm(&quot;mflo $4&quot;);
+<P>
+    __asm(&quot;sw $4, 0($6)&quot;);  // store product
+<P>
+    __asm(&quot;mfhi $11&quot;);
+<P>
+    __asm(&quot;sra $12,$4, 31&quot;);
+<P>
+    __asm(&quot;sne $12,$12,$11&quot;);
+<P>
+    __asm(&quot;sw $12, 0(%0)&quot;, &amp;overflow);  // store overflow
+<P>
+    return(overflow);
+<P>
+}
+<P>
+
+<P>
+
+<P>
+</FONT><FONT FACE="Arial" SIZE="3">Note the ways in which the C/C++ code and the assembly code interact in the
+preceding example:
+<P>
+Because conditional compilation is not used in this case, the code is not
+portable to MIPS platforms. To make it portable, #ifdef blocks would have to be
+used.
+<P>
+Although most of the function body is written with inline assembly code, the
+basic structure of the function is created with C/C++ code. This is required
+because the compiler does not accept _ _asm statements outside of functions.
+<P>
+The function places its arguments <I>a</I>, <I>b</I>, and <I>c</I> in the registers $4, $5, and $6, respectively. These are the first three
+argument registers; they can also be referred to as %a0, %a1, and %a2.
+<P>
+The local variable <I>overflow</I> is defined in C/C++ code. Inline assembly code can easily recognize variables
+defined in C/C++ statements because of the _ _asm argument-handling feature.
+The expression &amp;overflow is referred to as the argument %0 in the string portion
+of the following statement:
+<P>
+
+<P>
+</FONT><FONT FACE="Lucida Sans Typewriter" SIZE="3">extern &quot;C&quot; { // Use extern &quot;c&quot; for C++ file only
+<P>
+    void __asm(char*, ...);
+<P>
+}; 
+<P>
+
+<P>
+long my_mult(long a, long b, long* c) {
+<P>
+    long overflow;
+<P>
+    __asm(&quot;mult $4,$5;&quot;
+<P>
+   &quot;mflo $4;&quot;
+<P>
+   &quot;sw $4, 0($6);&quot;  // store product
+<P>
+   &quot;mfhi $11;&quot;
+<P>
+   &quot;sra $12,$4, 31;&quot;
+<P>
+   &quot;sne $12,$12,$11;&quot;
+<P>
+   &quot;sw $12, 0(%0)&quot;, &amp;overflow);  // store overflow
+<P>
+    return(overflow);
+<P>
+}
+<P>
+
+<P>
+ asm(&quot;sw $12, 0(%0)&quot;,&amp;overflow);    // store
+<P>
+ overflow
+<P>
+
+<P>
+</FONT><FONT FACE="Arial" SIZE="3">The return statement also uses a C/C++ statement. This is required because
+there is no way for an _ _asm statement to take over the role of function
+termination.
+<P>
+In the preceding example, each instruction is encoded with a separate _ _asm
+statement. However, because the _ _asm statement accepts multiple instructions
+separated by semicolons (;) or explicitly coded new-lines (\n), the same example
+could be written as follows:
+<P>
+</FONT><FONT FACE="Lucida Sans Typewriter" SIZE="3">extern &quot;C&quot; { // Use extern &quot;c&quot; for C++ file only
+<P>
+    void __asm(char*, ...);
+<P>
+}; 
+<P>
+
+<P>
+long my_mult(long a, long b, long* c) {
+<P>
+    long overflow;
+<P>
+    __asm(&quot;mult $4,$5;&quot;
+<P>
+   &quot;mflo $4;&quot;
+<P>
+   &quot;sw $4, 0($6);&quot;  // store product
+<P>
+   &quot;mfhi $11;&quot;
+<P>
+   &quot;sra $12,$4, 31;&quot;
+<P>
+   &quot;sne $12,$12,$11;&quot;
+<P>
+   &quot;sw $12, 0(%0)&quot;, &amp;overflow);  // store overflow
+<P>
+    return(overflow);
+<P>
+}
+<P>
+
+<P>
+</FONT><FONT FACE="Arial" SIZE="3">In either case, the compiler generates the code shown in the following
+example. Notice that most of the _ _asm statements are assembled as instructions in a
+one-to-one relationship between the _ _asm statement and the instruction.
+However, there are several exceptions to this general one-to-one relationship:
+<P>
+The inline assembler occasionally generates nop (no-operation) instructions to
+improve performance. Without the nop instructions, in some cases the processor
+would have to interlock the pipeline until all dependencies were satisfied.
+Insertion of the nop instructions changes the timing of instructions so that the
+pipeline hazard is avoided. The assembler automatically determines these
+situations for you.
+<P>
+Some assembly-language instructions are actually macros that result in the
+generation of more than one instruction. The sne instruction, which is used here,
+is an example of such a macro.
+<P>
+The last _ _asm statement, which takes the expression &amp;overflow as an
+argument, generates an additional instruction that loads this expression into an
+argument register.
+<P>
+</FONT><FONT FACE="Lucida Sans Typewriter" SIZE="3">Proc: my_mult
+<P>
+ 0000000000   0x27bdfff8   addiu   sp,sp,-8
+<P>
+ 0x00000004   0xafa40008   sw      a0, 8(sp)
+<P>
+ 0x00000008   0xafa5000c   sw      a1, 12(sp)
+<P>
+ 0x0000000c   0xafa60010   sw      a2, 16(sp)
+<P>
+ __asm(&quot;mult $4,$5&quot;);
+<P>
+// $r4*$r5
+<P>
+ 0x00000014   0x00850018   mult    a0, a1
+<P>
+ __asm(&quot;mflo $4&quot;);
+<P>
+// Transfer low-part(32bits)of
+<P>
+
+<P>
+// result into $r4
+<P>
+
+<P>
+$r4*$r5
+<P>
+ 0x00000014   0x00002012   mflo    a0
+<P>
+ 0x00000018   0000000000   nop
+<P>
+ 0x0000001c   0000000000   nop
+<P>
+ __asm(&quot;sw $4, 0($6)&quot;);
+<P>
+// Store $r4 into *c (c is in $r6) .
+<P>
+ 0x00000020   0xacc40000   sw       a0,0(a2)
+<P>
+ __asm(&quot;mfhi $11&quot;);
+<P>
+// Get high-part (32bits) of result
+<P>
+// into $11.
+<P>
+ 0x00000024   0x00005810   mfhi      t3
+<P>
+// Note that t3=$11
+<P>
+ 0x00000028   0000000000   nop
+<P>
+ 0x0000002c   0000000000   nop
+<P>
+ __asm(&quot;sra $12,$4,31&quot;);
+<P>
+// Isolate sign bit of $r4 by shifting
+<P>
+// 31 bits.
+<P>
+ 0x00000030   0x000467c3   sra       t4,a0,31
+<P>
+ __asm(&quot;sne $12,$12,$11&quot;);
+<P>
+// Same signs?
+<P>
+ 0x00000034   0x018b6026   xor        t4,t4,t3
+<P>
+ 0x00000038   0x000c602b   sltu       t4,zero,t4
+<P>
+ __asm(&quot;sw $12,0(%0)&quot;,&amp;overflow);
+<P>
+// Store overflow into the local.
+<P>
+
+<P>
+// Get the address of overflow to store the result into
+<P>
+
+<P>
+ 0x0000003c   0x27a40004   addiu        a0,sp,4
+<P>
+ 0x00000040   0xac8c0000   sw           t4,0(a0)
+<P>
+ return(overflow);
+<P>
+ 0x00000044   0x8fa20004   lw           v0,4(sp)    //
+<P>
+Return overflow.
+<P>
+ 0x00000048   0x03e00008   jr           ra
+<P>
+ 0x0000004c   0x27bd0008   addiu        sp,sp,8
+<P>
+</FONT></BODY>

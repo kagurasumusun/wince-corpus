@@ -1,0 +1,41 @@
+<HTML>
+<HEAD>
+<TITLE>6.8 Exception Description Details</TITLE>
+</HEAD><BODY BGCOLOR=#ffffff>
+<!-- PR3910 InfoViewer title (Pr3910.ivt); HTML topics extracted with tools/extract-ivt.py, images and the title's own indexes dropped. -->
+<BASEFONT FACE="Arial,Helvetica" SIZE="2">
+<A HREF= "PR39home.htm"><IMG SRC="contents.gif" ALT="contents.gif" BORDER = 0></A>
+<P>
+<A NAME="off_655499"></A><A NAME="88c36511"></A><FONT FACE="Times New Roman" SIZE="3"><B><H1>6.8 Exception Description Details
+<P>
+</H1></B></FONT><FONT FACE="Arial" SIZE="3">This section describes each of the PR3910 exceptions - its cause, handling,
+and servicing. The exception handling system provides efficient management of
+relatively infrequent events such as I/O interrupts, arithmetic overflow, system
+calls, and debug traps.
+<P>
+PR3910 architecture defines a certain amount of additional state which is
+saved in coprocessor registers to analyze the cause of the exception, service the
+event that caused the exception, and resume the original flow of execution, if
+applicable.
+<P>
+To handle an exception, the processor forces execution of a handler, at a
+fixed address in Kernel mode, with interrupts disabled. To resume normal operation,
+the Program Counter (PC), operating mode, and interrupt enable must be
+restored; thus it is <I>this</I> context that must be saved when an exception is taken.
+<P>
+When an exception occurs, the EPC register is loaded with the restart location
+at which execution can resume after servicing the exception. The EPC register
+contains the address of the instruction that caused the exception; or, if the
+instruction was executing in a branch delay slot, the EPC register contains the
+address of the instruction immediately preceding.
+<P>
+To save and restore the operating mode and interrupt enable, the PR3910
+processor use a three-level stack for the <I>KU</I> and <I>IE</I> bits. (See <B>Error! Bookmark not defined.</B>.) The <I>KUc</I> and <I>IEc</I> bits always specify whether the machine is executing in Kernel or User mode,
+and whether interrupts are enabled or disabled.
+<P>
+When an exception (other than Reset) is taken, the values of <I>KUp</I>, <I>IEp</I>, <I>KUc</I>, and <I>IEc</I> are saved in <I>KUo</I>, <I>IEo</I>, <I>KUp</I>, and <I>IEp</I> respectively. <I>KUc</I> and <I>IEc</I> are cleared, and the machine begins operating in Kernel mode with interrupts
+disabled.
+<P>
+On return from exception (RFE instruction) the <I>KUc</I>, <I>IEc</I>, and <I>IEp</I> bits are restored from <I>KUp</I>, <I>KUo</I>, and <I>IEo</I> respectively. The <I>KUo</I> and <I>IEo</I> bits allow an exception to be taken in a first level exception handler.
+<P>
+</FONT></BODY>

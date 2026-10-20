@@ -1,0 +1,31 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML>
+<HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text-html; charset=Windows-1252">
+<title>Handling Virtual List View Control Notification Messages</title>
+<meta name=MS-HAID content="_wcesdk_handling_virtual_list_view_control_notification_messages">
+<meta name=MS-HKWD content="Handling Virtual List View Control Notification Messages">
+</HEAD>
+<BODY BGCOLOR=#FFFFFF TEXT=#000000>
+<!-- WCESDKG InfoViewer title (Wcesdkg.ivt); HTML topics extracted with tools/extract-ivt.py, images and the title's own indexes dropped. -->
+
+<form name=x><object name=iv classid="clsid:9c2ac687-ceef-11cf-96d9-00a0c903b016">
+</object></form>
+<h3><a name="_wcesdk_handling_virtual_list_view_control_notification_messages"></a>Handling Virtual List View Control Notification Messages </h3>
+<p>
+List view controls with the LVS_OWNERDATA style send the same notification messages as other list view controls plus two new ones: <A HREF='javascript:document.x.iv.ALink("_wcesdk_lvn_odcachehint","")'>LVN_ODCACHEHINT</a> and <A HREF='javascript:document.x.iv.ALink("_wcesdk_lvn_odfinditem","")'>LVN_ODFINDITEM</a>. </p>
+<b>Handling LVN_GETDISPINFO </b>
+<p>
+A virtual list view control maintains very little item information on its own. As a result, it often sends the <A HREF='javascript:document.x.iv.ALink("_wcesdk_win32_lvn_getdispinfo","")'>LVN_GETDISPINFO</a> notification message to request item information. This message is handled in much the same way as callback items in a standard list control. However, because the number of items supported by the control is probably very large, it is recommended that you cache item data to improve performance. </p>
+<p>
+When handling LVN_GETDISPINFO, the owner of the control should first attempt to supply requested item information from the cache (for more information, see Cache Management). If the requested item is not cached, the owner must be prepared to supply the information by other means. </p>
+<b>Handling LVN_ODCACHEHINT </b>
+<p>
+A virtual list view sends the LVN_ODCACHEHINT notification message to assist in optimizing the cache. The notification message provides inclusive index values for a range of items that it recommends be cached. Upon receiving the notification message, the owner must be prepared to load the cache with item information for the requested range, so that the information will be readily available when LVN_GETDISPINFO is sent later. </p>
+<b>Handling LVN_ODFINDITEM </b>
+<p>
+The LVN_ODFINDITEM notification message is sent by a virtual list view control when the control needs the owner to find a particular callback item. The notification message is sent when the list view control receives quick key access, or when it receives an LVM_FINDITEM message. Search information is sent in the form of an <A HREF='javascript:document.x.iv.ALink("_wcesdk_lvfindinfo","")'><b>LVFINDINFO</b></a> structure, which is a member of the <A HREF='javascript:document.x.iv.ALink("_wcesdk_nmlvfinditem","")'><b>NMLVFINDITEM</b></a> structure. </p>
+<p>
+The owner should be prepared to search for an item that matches the information given by the list view control. The owner should return the index of the item if successful, or -1 if no matching item is found. </p>
+</BODY>
+</HTML>

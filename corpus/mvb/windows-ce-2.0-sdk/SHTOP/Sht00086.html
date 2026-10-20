@@ -1,0 +1,37 @@
+<HTML>
+<HEAD>
+<TITLE>Restrictions</TITLE>
+</HEAD><body bgcolor="#FFFFFF">
+<!-- SHTOP InfoViewer title (Shtop.ivt); HTML topics extracted with tools/extract-ivt.py, images and the title's own indexes dropped. -->
+
+<A NAME="off_1311566"></A><A NAME="818ce553"></A><FONT FACE="Arial" SIZE="5"><B>Restrictions
+<P>
+<IMG SRC="sht90000.gif" ALT="sht90000.gif" BORDER=0 WIDTH=6 HEIGHT=16> </B></FONT><FONT FACE="Arial" SIZE="3">An <B>__asm</B> line record can be any valid assembly operation code (including operands)
+accepted by the stand-alone assembler In addition, an <B>__asm</B> line record may contain a label definition or a comment as described in the
+previous sections However, there are some coding restrictions:
+<P>
+<IMG SRC="sht90000.gif" ALT="sht90000.gif" BORDER=0 WIDTH=6 HEIGHT=16> No directives (except for <B>.prolog</B>) are allowed in the <B>__asm</B> instruction stream The <B>.prolog</B> directive is only allowed if the enclosing function has the <B>naked</B> attribute In this case, the compiler does not generate prolog/epilog code If
+the prolog end is not at the function start, it must be marked within an <B>__asm</B> statement using this directive.
+<P>
+<IMG SRC="sht90000.gif" ALT="sht90000.gif" BORDER=0 WIDTH=6 HEIGHT=16> No expansion of assembler instructions is performed Immediate values (after
+scaling) must fit in the associated object code field for the instruction.
+<P>
+<IMG SRC="sht90000.gif" ALT="sht90000.gif" BORDER=0 WIDTH=6 HEIGHT=16> No assembler macro definitions or references are allowed.
+<P>
+<IMG SRC="sht90000.gif" ALT="sht90000.gif" BORDER=0 WIDTH=6 HEIGHT=16> Literal pool entries are not allowed in the <B>__asm</B> instruction stream Therefore, using the PC-relative addressing mode for
+memory references is not recommended.
+<P>
+<IMG SRC="sht90000.gif" ALT="sht90000.gif" BORDER=0 WIDTH=6 HEIGHT=16> No reference to a symbol defined outside of the <B>__asm</B> strings for a routine is allowed in an <B>__asm</B> instruction stream.
+<P>
+<IMG SRC="sht90000.gif" ALT="sht90000.gif" BORDER=0 WIDTH=6 HEIGHT=16> Registers <B>R0</B> through <B>R3</B> are available as temporary registers Registers <B>R4</B> through <B>R7</B> hold <B>__asm</B> argument values according to the standard calling conventions on entry to an <B>__asm</B> statement Otherwise, they may be used as temporary registers Permanent
+registers <B>R8</B> through <B>R14</B> are not saved and restored by the compiler if they are modified in an <B>__asm</B> statement.
+<P>
+<IMG SRC="sht90000.gif" ALT="sht90000.gif" BORDER=0 WIDTH=6 HEIGHT=16> The default stack frame for a function with an inline <B>__asm</B> in it that has a function call is 16 bytes. This will allow for up to four
+arguments to be passed to the function. if you want to call one with more than
+four args, you must use <B>__declspec(naked)</B> and allocate your own arg build area.
+<P>
+<IMG SRC="sht90000.gif" ALT="sht90000.gif" BORDER=0 WIDTH=6 HEIGHT=16> Do not attempt to allow data to flow implicitly between inline <B>__asm</B> calls using SH-3 registers, because global register allocation is performed
+around the calls. Instead, return the values from the inline <B>__asm</B> and assign these to temps.
+<P>
+</FONT></BODY>
+</HTML>

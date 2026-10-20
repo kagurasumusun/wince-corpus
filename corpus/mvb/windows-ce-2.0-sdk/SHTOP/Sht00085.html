@@ -1,0 +1,118 @@
+<HTML>
+<HEAD>
+<TITLE>Branch Code in __asm Statements</TITLE>
+</HEAD><body bgcolor="#FFFFFF">
+<!-- SHTOP InfoViewer title (Shtop.ivt); HTML topics extracted with tools/extract-ivt.py, images and the title's own indexes dropped. -->
+
+<A NAME="off_1279851"></A><A NAME="f571b641"></A><FONT FACE="Arial" SIZE="5"><B>Branch Code in __asm Statements
+<P>
+</B></FONT><FONT FACE="Arial" SIZE="3">The following example demonstrates how to use branch code within an <B>__asm</B> statement. A branch instruction may be given a fixed displacement, which is
+divided by 2 and inserted into the object code. Alternatively, a label may be
+the target of a branch. However, the label must be defined within an <B>__asm</B> string (not necessarily the one containing the label reference) in the
+current function. <B>__asm</B> labels are not visible outside of <B>__asm</B> strings. The distance from a label reference to its definition must fit
+within the displacement field of the corresponding branch instruction.
+<P>
+</FONT><FONT FACE="Lucida Sans Typewriter" SIZE="3">#include &lt;stdio.h&gt;
+<P>
+
+<P>
+#ifdef __cplusplus
+<P>
+extern &quot;C&quot; { void __asm(const char *, ...); }
+<P>
+#else
+<P>
+extern void __asm(const char *,...);
+<P>
+#endif
+<P>
+
+<P>
+main() {
+<P>
+// Branch example using displacements
+<P>
+     __asm(
+<P>
+          &quot;sett               ; set T bit\n&quot;
+<P>
+          &quot;bf 6               ; branch to print FAIL if not set\n&quot;
+<P>
+          &quot;jsr @R6          ; print PASS\n&quot;
+<P>
+          &quot;nop               ; delay slot\n&quot;
+<P>
+          &quot;bra 4               ; branch using displacement\n&quot;
+<P>
+          &quot;nop               ; delay slot\n&quot;
+<P>
+          &quot;jsr @R6          ; print PASS\n&quot;
+<P>
+          &quot;nop               ; delay slot\n&quot;
+<P>
+          ,&quot;PASS\n&quot;          // argument #1 (R4)
+<P>
+          ,&quot;FAIL\n&quot;          // argument #2 (R5)
+<P>
+          ,printf               // argument #3 (R6)
+<P>
+     );
+<P>
+
+<P>
+// Branch example using labels
+<P>
+     __asm(
+<P>
+          &quot;sett               ; set T bit\n&quot;
+<P>
+          &quot;bf lab1               ; branch to print FAIL if not set\n&quot;
+<P>
+          &quot;jsr @R5          ; print PASS\n&quot;
+<P>
+          &quot;nop               ; delay slot\n&quot;
+<P>
+          &quot;bra lab2          ; branch using label\n&quot;
+<P>
+          &quot;nop               ; delay slot&quot;
+<P>
+          ,&quot;PASS\n&quot;
+<P>
+          ,printf
+<P>
+          );
+<P>
+     __asm(
+<P>
+          &quot;lab1:               ; isolate label&quot;
+<P>
+          );
+<P>
+     __asm(
+<P>
+          &quot;jsr @R5          ; print FAIL\n&quot;
+<P>
+          &quot;nop               ; delay slot&quot;
+<P>
+          ,&quot;FAIL\n&quot;
+<P>
+          ,printf
+<P>
+          );
+<P>
+     __asm(
+<P>
+          &quot;lab2:&quot;
+<P>
+          );
+<P>
+}
+<P>
+</FONT><FONT FACE="Arial" SIZE="3">In the above example, the <B>__asm</B> label </FONT><FONT FACE="Times New Roman" SIZE="3">“</FONT><FONT FACE="Arial" SIZE="3">lab1</FONT><FONT FACE="Times New Roman" SIZE="3">”</FONT><FONT FACE="Arial" SIZE="3"> must be isolated in its own <B>__asm</B> statement If the label definition is inserted at the start of the next <B>__asm</B> statement, the code inserted by the compiler to process arguments for that
+statement would not be executed.
+<P>
+Labels within <B>__asm</B> strings are treated as case-sensitive Reserved words such as register names
+and operation names are treated as case-insensitive.
+<P>
+</FONT></BODY>
+</HTML>

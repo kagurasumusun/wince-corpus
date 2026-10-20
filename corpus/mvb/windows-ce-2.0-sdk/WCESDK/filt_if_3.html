@@ -1,0 +1,107 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML>
+<HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text-html; charset=Windows-1252">
+<title>IPegasusFileFilter::NextConvertFile</title>
+<meta name=MS-HAID content="_wcesdk_ipegasusfilefilter_nextconvertfile">
+<meta name=MS-HKWD content="IPegasusFileFilter::NextConvertFile (Windows CE)">
+<meta name=MS-HKWD content="NextConvertFile (Windows CE)">
+</HEAD>
+<BODY BGCOLOR=#FFFFFF TEXT=#000000>
+<!-- WCESDK InfoViewer title (WCESDK.IVT); HTML topics extracted with tools/extract-ivt.py, images and the title's own indexes dropped. -->
+
+<BODY BGCOLOR=#FFFFFF BACKGROUND= "images\cewmark.gif" TEXT=#000000><form name=x><object name=iv classid="clsid:9c2ac687-ceef-11cf-96d9-00a0c903b016">
+</object></form>
+<h1><a name="_wcesdk_ipegasusfilefilter_nextconvertfile"></a>IPegasusFileFilter::NextConvertFile</h1>
+<p>
+When the user selects a conversion type from the H/PC Explorer <b>File Conversion Properties</b> dialog box, H/PC Explorer calls the <b>IPegasusFileFilter::NextConvertFile</b> method of the file filter that supports the selected conversion. </p>
+<h2>Syntax</h2>
+<p>
+<b>STDMETHODIMP IPegasusFileFilter::NextConvertFile(<BR>int</b> <i>nConversion</i><b>,</b><BR><b>PFF_CONVERTINFO</b> *<i>pci</i><b>,</b><BR><b>PFF_SOURCEFILE</b> *<i>psf</i><b>,</b><BR><b>PFF_DESTINATIONFILE</b> *<i>pdf</i><b>,</b><BR><b>volatile BOOL</b> *<i>pbCancel</i><b>,</b><i><BR></i><b>PR_ERROR</b> *<i>perr<BR></i><b>);</b></p>
+<h2>At a Glance</h2>
+<table>
+<tr valign=top>
+<td>
+Header file:</td>
+<td>
+Replfilt.h</td>
+</tr>
+<tr valign=top>
+<td>
+Platforms:</td>
+<td>
+H/PC</td>
+</tr>
+<tr valign=top>
+<td>
+Windows CE versions:</td>
+<td>
+1.0 and later</td>
+</tr>
+</table><br>
+<h2>Parameters</h2>
+<dl>
+<dt>
+<i>nConversion</i> </dt>
+<dd>
+A counter for converting a single source file into multiple destination files. This parameter will be zero the first time <b>NextConvertFile</b> is called and will be incremented for each successive call. A simple filter should return HRESULT_FROM_WIN32<b>(</b>ERROR_NO_MORE_ITEMS<b>)</b> if this parameter is not zero. <br>
+</dd>
+<dt>
+<i>pci</i> </dt>
+<dd>
+Pointer to a <a href="str_pw_3.htm"><b>PFF_CONVERTINFO</b></a> structure that contains a pointer to an <b>IPegasusFileFilterSite</b> object. A file filter uses this interface to create an <b>IStream</b> or <b>IStorage</b> object to read the contents of the source file or to write to the destination file. The type of interface object to create is determined by the the <i>nHowToOpen</i> parameter in the <a href="filt_if_8.htm"><b>IPegasusFileFilterSite::OpenSourceFile</b></a> and <a href="filt_if_7.htm"><b>IPegasusFileFilterSite::OpenDestinationFile</b></a> methods. Any files opened in this way should be closed using the corresponding <a href="filt_if_6.htm"><b>IPegasusFileFilterSite::CloseSourceFile</b></a> or <a href="filt_if_5.htm"><b>IPegasusFileFilterSite::CloseDestinationFile</b></a> methods. <br>
+</dd>
+<dt>
+<i>psf</i> </dt>
+<dd>
+Pointer to a <a href="str_pw_5.htm"><b>PFF_SOURCEFILE</b></a> structure that contains information about the source file. <br>
+</dd>
+<dt>
+<i>pdf</i> </dt>
+<dd>
+Pointer to a <a href="str_pw_4.htm"><b>PFF_DESTINATIONFILE</b></a> structure that contains information about the destination file. <br>
+</dd>
+<dt>
+<i>pbCancel</i> </dt>
+<dd>
+Pointer to a variable that receives TRUE if the user cancels the file conversion before it is completed. Otherwise, the variable is set to FALSE. Because this variable is updated asynchronously by another thread, its contents can change at any time. A file filter must check this variable regularly during the conversion process, and return ERROR_CANCELLED (after cleaning up) if it is ever set to TRUE. <br>
+</dd>
+<dt>
+<i>perr</i> </dt>
+<dd>
+Address of a filter-defined error value that can be passed (by the H/PC Explorer application) to the <b>IPegasusFileFilter::FormatMessage</b> method. This error value will be ignored unless the return value from <b>NextConvertFile</b> is E_FAIL. </dd>
+</dl>
+<h2>Return Values</h2>
+<dl>
+<dt>
+NOERROR</dt>
+<dd>
+The subconversion was successful; proceed to the next subconversion. <br>
+</dd>
+<dt>
+HRESULT_FROM_WIN32 (ERROR_CANCELLED)</dt>
+<dd>
+The user canceled the conversion. <br>
+</dd>
+<dt>
+HRESULT_FROM_WIN32 (ERROR_NO_MORE_ITEMS)</dt>
+<dd>
+The conversion (or last subconversion) was successful. End calls to <b>IPegasusFileFilter::NextConvertFile</b>. <br>
+</dd>
+<dt>
+E_FAIL</dt>
+<dd>
+The <i>perr</i> parameter contained an error value that should be passed to <a href="filt_if_2.htm"><b>IPegasusFileFilter::FormatMessage</b></a>.</dd>
+</dl>
+<h2>Remarks</h2>
+<p>
+H/PC Explorer calls the <b>IPegasusFileFilter::NextConvertFile</b> method repeatedly, incrementing the <i>nConversion</i> parameter, until the return value is ERROR_NO_MORE_ITEMS. A simple filter should return NOERROR the first time this method is called, and thereafter return <b>HRESULT_FROM_WIN32(</b>ERROR_NO_MORE_ITEMS<b>)</b>. Alternatively, a file filter can return E_FAIL and specify a filter-defined error code in the variable pointed to by <i>perr</i>. For more information about filter-defined error codes, see <A HREF='javascript:document.x.iv.ALink("_wcesdk_filter_defined_error_values","")'>Filter Defined Error Values</a>. </p>
+<p>
+As a file conversion progresses, a file filter should periodically call <a href="filt_if_10.htm"><b>IPegasusFileFilterSite::ReportProgress</b></a> to report its progress. H/PC Explorer uses the progress information to update a progress bar that shows the user how much of the conversion has been completed. </p>
+<p>
+If any important data is intentionally discarded by a file filter during the conversion process, the filter should call <a href="filt_if_9.htm"><b>IPegasusFileFilterSite::ReportLoss</b></a> to report the loss. When calling this <b>ReportLoss</b>, the filter specifies a message that explains the data loss, and H/PC Explorer formats and displays the message in a message box when the file conversion has completed. For more information, see <A HREF='javascript:document.x.iv.ALink("_wcesdk_file_filters","")'>File Filters</a>.</p>
+<h2>See Also</h2>
+<p>
+<a href="filt_if_9.htm"><b>IPegasusFileFilterSite::ReportLoss</b></a>, <a href="filt_if_10.htm"><b>IPegasusFileFilterSite::ReportProgress</b></a></p>
+</BODY>
+</HTML>

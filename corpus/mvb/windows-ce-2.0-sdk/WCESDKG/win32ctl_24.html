@@ -1,0 +1,74 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML>
+<HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text-html; charset=Windows-1252">
+<title>Creating a Month Calendar Control</title>
+<meta name=MS-HAID content="_wcesdk_creating_a_month_calendar_control">
+<meta name=MS-HKWD content="Creating a Month Calendar Control">
+</HEAD>
+<BODY BGCOLOR=#FFFFFF TEXT=#000000>
+<!-- WCESDKG InfoViewer title (Wcesdkg.ivt); HTML topics extracted with tools/extract-ivt.py, images and the title's own indexes dropped. -->
+
+<form name=x><object name=iv classid="clsid:9c2ac687-ceef-11cf-96d9-00a0c903b016">
+</object></form>
+<h3><a name="_wcesdk_creating_a_month_calendar_control"></a>Creating a Month Calendar Control</h3>
+<p>
+The following example creates a month calendar control in an existing modeless dialog box. Note that the size values passed to <b>CreateWindowEx</b> are all zeros. Since the minimum required size depends on the font that the control uses, <b>DoNotify</b> uses the <A HREF='javascript:document.x.iv.ALink("_wcesdk_monthcal_getminreqrect","")'><b>MonthCal_GetMinReqRect</b></a> macro to request size information, and then resizes the control by calling SetWindowPos. </p>
+<pre>//
+//   CreateMonthCal -- Creates a month calendar control in a dialog box.
+//                   Returns the handle to the month calendar control
+//                   if successful and NULL otherwise.
+//
+//    hwndOwner   -- Handle to the owner of the dialog box.
+//    g_hinst     -- Global handle to the program instance.
+//   
+/////
+HWND WINAPI CreateMonthCal(HWND hwndOwner)
+{
+   HWND hwnd;
+   RECT rc;
+   INITCOMMONCONTROLSEX icex;
+
+   // Load the window class.
+   icex.dwSize = sizeof(icex);
+   icex.dwICC  = ICC_DATE_CLASSES;
+   InitCommonControlsEx(&amp;icex);
+
+   // Create a modeless dialog to hold the control.
+   g_hwndDlg = CreateDialog(g_hinst,
+                     MAKEINTRESOURCE(IDD_DIALOG1),
+                     hwndOwner,
+                     DlgProc);
+
+   // Create the month calendar.
+   hwnd = CreateWindowEx(0,
+                     MONTHCAL_CLASS,
+                     &quot;&quot;,
+                     WS_BORDER | WS_CHILD | WS_VISIBLE | MCS_DAYSTATE,
+                     0,0,0,0, // resize it later
+                     g_hwndDlg,
+                     NULL,
+                     g_hinst,
+                     NULL);
+
+   // Get the size required to show an entire month.
+   MonthCal_GetMinReqRect(hwnd, &amp;rc);
+
+// Arbitrary values
+#define LEFT 35
+#define TOP  40
+
+   // Resize the control now that I have the size values.
+   SetWindowPos(hwnd, NULL, TOP, LEFT, 
+                LEFT + rc.right, TOP + rc.bottom,
+                SWP_NOZORDER);
+
+   // Set colors for aesthetics.
+   MonthCal_SetColor(hwnd, MCSC_BACKGROUND, RGB(175,175,175));
+   MonthCal_SetColor(hwnd, MCSC_MONTHBK, RGB(248,245,225));
+
+   return(hwnd);
+}
+</pre>
+</BODY>
+</HTML>

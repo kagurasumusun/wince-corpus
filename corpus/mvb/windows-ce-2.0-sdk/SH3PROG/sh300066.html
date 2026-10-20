@@ -1,0 +1,157 @@
+<HTML>
+<HEAD>
+<TITLE>6.32   MAC (Multiply and Accumulate): Arithmetic Instruction</TITLE>
+</HEAD><body bgcolor="#FFFFFF">
+<!-- SH3PROG InfoViewer title (sh3prog.ivt); HTML topics extracted with tools/extract-ivt.py, images and the title's own indexes dropped. -->
+
+<A NAME="off_2490985"></A><A NAME="4c7e3f4a"></A><FONT FACE="Arial" SIZE="5"><B>6.32   MAC (Multiply and Accumulate): Arithmetic Instruction 
+<P>
+
+<P>
+</B></FONT><TABLE><TR VALIGN=TOP><TD><FONT FACE="Arial" SIZE="3"><B>Format
+<BR></B></FONT></TD><TD><FONT FACE="Arial" SIZE="3"><B>Abstract
+<BR></B></FONT></TD><TD><FONT FACE="Arial" SIZE="3"><B>Code
+<BR></B></FONT></TD><TD><FONT FACE="Arial" SIZE="3"><B>Cycle
+<BR></B></FONT></TD><TD><FONT FACE="Arial" SIZE="3"><B>T Bit
+<BR></B></FONT></TD></TR><TR VALIGN=TOP><TD><FONT FACE="Lucida Sans Typewriter" SIZE="3">MAC.W @Rm+,@Rn+
+<BR></FONT></TD><TD><FONT FACE="Arial" SIZE="3">With sign, (Rn)<IMG SRC="sh390003.gif" ALT="sh390003.gif" BORDER=0 WIDTH=3 HEIGHT=16><IMG SRC="sh390001.gif" ALT="sh390001.gif" BORDER=0 WIDTH=7 HEIGHT=16><IMG SRC="sh390003.gif" ALT="sh390003.gif" BORDER=0 WIDTH=3 HEIGHT=16>(Rm) + MAC <IMG SRC="sh390002.gif" ALT="sh390002.gif" BORDER=0 WIDTH=13 HEIGHT=16> MAC
+<BR></FONT></TD><TD><FONT FACE="Lucida Sans Typewriter" SIZE="3">0100nnnnmmmm1111
+<BR></FONT></TD><TD><FONT FACE="Arial" SIZE="3">2 (to 5)
+<BR></FONT></TD><TD><FONT FACE="Arial" SIZE="3">-
+<BR>
+<BR></FONT></TD></TR></TABLE><FONT FACE="Arial" SIZE="3"><B>Description: 
+<P>
+</B>Multiplies 16-bit operands obtained using the contents of general registers Rm
+and Rn as addresses. The 32-bit result is added to contents of the MAC
+register, and the final result is stored in the MAC register. 
+<P>
+When the S bit is cleared to 0, the 42-bit result is stored in the coupled
+MACH and MACL registers. Bit 9 data is copied to the upper 22 bits (bits 31 to 10)
+of the MACH register. Rm and Rn data are incremented by 2 after the operation. 
+<P>
+When the bit S is set to 1, addition to the MAC register is a saturation
+operation. For the saturation operation, only the MACL register is enabled and the
+result is limited to between H'80000000 (minimum) and H'7FFFFFFF (maximum). 
+<P>
+If an overflow occurs, the LSB of the MACH register is set to 1. The result is
+stored in the MACL register, and the result is limited to a value between
+H'80000000 (minimum) for overflows in the negative direction and H'7FFFFFFF
+(maximum) for overflows in the positive direction.
+<P>
+</FONT><FONT FACE="Arial Narrow" SIZE="4"><B>Note: 
+<P>
+</B></FONT><FONT FACE="Arial" SIZE="3">The normal number of cycles for execution is 3; however, succeeding
+instructions can be executed in two cycles.
+<P>
+<B>Operation:
+<P>
+</B></FONT><FONT FACE="Lucida Sans Typewriter" SIZE="3">MACW(long m,long n) /* MAC.W @Rm+,@Rn+*/
+<P>
+{
+<P>
+ long tempm,tempn,dest,src,ans;
+<P>
+ unsigned long templ;
+<P>
+ tempn=(long)Read_Word(R[n]);
+<P>
+ R[n]+=2;
+<P>
+ tempm=(long)Read_Word(R[m]);
+<P>
+ R[m]+=2;
+<P>
+ templ=MACL;
+<P>
+ tempm=((long)(short)tempn*(long)(short)tempm);
+<P>
+ if ((long)MACL&gt;=0) dest=0;
+<P>
+ else dest=1;
+<P>
+ if ((long)tempm&gt;=0 {
+<P>
+  src=0;
+<P>
+  tempn=0;
+<P>
+ }
+<P>
+ else {
+<P>
+  src=1;
+<P>
+  tempn=0xFFFFFFFF;
+<P>
+ }
+<P>
+ src+=dest;
+<P>
+ MACL+=tempm;
+<P>
+ if ((long)MACL&gt;=0) ans=0;
+<P>
+ else ans=1;
+<P>
+ ans+=dest;
+<P>
+ if (S==1) {
+<P>
+  if (ans==1) {
+<P>
+   if (src==0 || src==2) MACH|=0x00000001;
+<P>
+   if (src==0) MACL=0x7FFFFFFF;
+<P>
+   if (src==2) MACL=0x80000000;
+<P>
+  }
+<P>
+ }
+<P>
+ else {
+<P>
+  MACH+=tempn;
+<P>
+  if (templ&gt;MACL) MACH+=1;
+<P>
+  if ((MACH&amp;0x00000200)==0) MACH&amp;=0x000003FF;
+<P>
+  else MACH|=0xFFFFFC00;
+<P>
+ }
+<P>
+ PC+=2;
+<P>
+}
+<P>
+</FONT><FONT FACE="Arial" SIZE="3"><B>Example:
+<P>
+ </B></FONT><FONT FACE="Lucida Sans Typewriter" SIZE="3">MOVA TBLM,R0 Table address
+<P>
+ MOV R0,R1 
+<P>
+ MOVA TBLN,R0 Table address
+<P>
+ CLRMAC  MAC register initialization
+<P>
+ MAC.W @R0+,@R1+
+<P>
+ MAC.W @R0+,@R1+
+<P>
+ STS MACL,R0 Store result into R0
+<P>
+ ...............
+<P>
+ <I>.align </I>2
+<P>
+TBLM <I>.data.w </I>H'1234
+<P>
+ <I>.data.w </I>H'5678
+<P>
+TBLN <I>.data.w </I>H'0123
+<P>
+ <I>.data.w </I>H'4567
+<P>
+</FONT></BODY>
+</HTML>

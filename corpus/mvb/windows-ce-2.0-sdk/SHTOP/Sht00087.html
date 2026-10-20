@@ -1,0 +1,123 @@
+<HTML>
+<HEAD>
+<TITLE>Example</TITLE>
+</HEAD><body bgcolor="#FFFFFF">
+<!-- SHTOP InfoViewer title (Shtop.ivt); HTML topics extracted with tools/extract-ivt.py, images and the title's own indexes dropped. -->
+
+<A NAME="off_1343736"></A><A NAME="4a890626"></A><FONT FACE="Arial" SIZE="5"><B>Example
+<P>
+</B></FONT><FONT FACE="Arial" SIZE="3">This section provides a detailed example of how to use the inline assembly
+language to specify code for a <B>naked</B> routine The compiler does not generate any prolog or epilog code so this code
+must be specified within <B>__asm</B> statements Note the use of the <B>.prolog</B> directive to mark the end of the prolog code in case a stack traceback walks
+through this routine during debugging.
+<P>
+</FONT><FONT FACE="Lucida Sans Typewriter" SIZE="3">#include &lt;stdio.h&gt;
+<P>
+
+<P>
+void __asm(const char *, ...);
+<P>
+_muls();
+<P>
+_adds();
+<P>
+
+<P>
+// Compute (a * (X * X)) + (b * X) + c in single precision
+<P>
+// floating point and return the result
+<P>
+__declspec(naked) float quadratic(float X, float a, float b, float c) {
+<P>
+
+<P>
+__asm(
+<P>
+ &quot;sts.l  PR,@-SP    ; save return address on stack\n&quot;
+<P>
+ &quot;mov.l   R4,@(4,SP)   ; save X on stack\n&quot;
+<P>
+ &quot;mov.l   R5,@(8,SP)   ; save a on stack\n&quot;
+<P>
+ &quot;mov.l   R6,@(12,SP)   ; save b on stack\n&quot;
+<P>
+ &quot;mov.l   R7,@(16,SP)   ; save c on stack\n&quot;
+<P>
+ &quot;add  #-12,SP    ; allocate local stack frame\n&quot;
+<P>
+ &quot;.prolog     ; add a prolog marker\n&quot;
+<P>
+ );
+<P>
+__asm(
+<P>
+ &quot;mov.l   R4,@(4,SP)  ; save address of multiply routine\n&quot;
+<P>
+ &quot;mov.l   R5,@(8,SP)  ; save address of add routine\n&quot;
+<P>
+ &quot;mov  R4,R5   ; set up call to multiply routine\n&quot;
+<P>
+ &quot;mov.l   @(16,SP),R4  ; get X\n&quot;
+<P>
+ &quot;jsr   @R5   ; compute a * X\n&quot;
+<P>
+ &quot;mov.l   @(20,SP),R5  ; delay slot - get a\n&quot;
+<P>
+ &quot;mov  R0,R4   ; get a * X\n&quot;
+<P>
+ &quot;mov.l   @(8,SP),R0   ; get address of add routine\n&quot;
+<P>
+ &quot;jsr  @R0   ; compute a * X + b\n&quot;
+<P>
+ &quot;mov.l   @(24,SP),R5  ; delay slot - get b\n&quot;
+<P>
+ &quot;mov  R0,R4   ; get a * X + b\n&quot;
+<P>
+ &quot;mov.l   @(4,SP),R0   ; get address of mult routine\n&quot;
+<P>
+ &quot;jsr  @R0   ; compute (a * X + b) * X\n&quot;
+<P>
+ &quot;mov.l   @(16,SP),R5  ; delay slot - get X\n&quot;
+<P>
+ &quot;mov  R0,R4   ; get (a * X + b) * X\n&quot;
+<P>
+ &quot;mov.l   @(8,SP),R0   ; get address of add routine\n&quot;
+<P>
+ &quot;jsr  @R0   ; compute ((a * X + b) * X) + c\n&quot;
+<P>
+ &quot;mov.l   @(28,SP),R5  ; delay slot - get c\n&quot;
+<P>
+ &quot;mov.l   R0,@(0,SP)   ; save result on stack\n&quot;
+<P>
+ ,_muls
+<P>
+ ,_adds
+<P>
+ );
+<P>
+__asm(
+<P>
+ &quot;mov.l   @(0,SP),R0   ; recover result\n&quot;
+<P>
+ &quot;mov  SP, R2   ; save SP\n&quot;
+<P>
+ &quot;add  #12, R2   ; R2 points to RSA base\n&quot;
+<P>
+ &quot;lds.l   @R2+,PR    ; pop return address from stack\n&quot;
+<P>
+ &quot;rts     ; return\n&quot;
+<P>
+ &quot;mov  R2, SP   ; delay slot - restore stack pointer&quot;
+<P>
+ );
+<P>
+}
+<P>
+</FONT><FONT FACE="Arial" SIZE="3">In the example above, intrinsics <B>_muls</B> and <B>_adds</B> are used to perform single-precision floating-point multiply and add,
+respectively The compiler may use hidden intrinsics to generate code, especially in
+the case of floating point and 64-bit integer data types If references to such
+intrinsics are made within <B>__asm</B> statements, it is necessary to include prototype definitions for those
+intrinsics.
+<P>
+</FONT></BODY>
+</HTML>

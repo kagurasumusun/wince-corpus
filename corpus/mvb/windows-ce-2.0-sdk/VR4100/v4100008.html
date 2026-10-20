@@ -1,0 +1,159 @@
+<HTML>
+<HEAD>
+<TITLE>Coprocessors (CP0-CP3)</TITLE>
+</HEAD><BODY BGCOLOR=#ffffff>
+<!-- VR4100 InfoViewer title (Vr4100.ivt); HTML topics extracted with tools/extract-ivt.py, images and the title's own indexes dropped. -->
+<BASEFONT FACE="Arial,Helvetica" SIZE="2">
+<A HREF= "VR41home.htm"><IMG SRC="contents.gif" ALT="contents.gif" BORDER = 0></A>
+<P>
+<A NAME="off_98867"></A><A NAME="e6ae684e"></A><FONT FACE="Arial,Helvetica"><H1>Coprocessors (CP0-CP3)
+<P>
+</H1></FONT><FONT FACE="Arial" SIZE="3">The MIPS ISA defines four coprocessors (designated CP0 through CP3):
+<P>
+Coprocessor 0 (<B>CP0</B>) is incorporated on the CPU chip and supports the Figure 1-9 virtual memory
+system and exception handling. CP0 is also referred to as the <I>System Control Coprocessor</I>.
+<P>
+Coprocessor 1 (<B>CP1</B>) is reserved for floating-point coprocessor operations.
+<P>
+Coprocessor 2 (<B>CP2</B>) is reserved for future definition by MIPS.
+<P>
+Coprocessor 3 (<B>CP3</B>) is no longer defined. CP3 opcodes are reserved for future extensions.
+<P>
+CP0 is described in the sections that follow.
+<P>
+</FONT><FONT FACE="Arial" SIZE="5"><B>System Control Coprocessor, CP0
+<P>
+</B></FONT><FONT FACE="Arial" SIZE="3">CP0 translates virtual addresses into physical addresses and manages
+exceptions and transitions between kernel, supervisor, and user states. CP0 also
+controls the cache subsystem, as well as providing diagnostic control and error
+recovery facilities.
+<P>
+The CP0 registers shown in Figure 1-10 and described in Table 1-1 manipulate
+the memory-management and exception-handling capabilities of the CPU.
+<P>
+<IMG SRC="v4100009.gif" ALT="v4100009.gif" BORDER=0 WIDTH=497 HEIGHT=536>
+<P>
+</FONT><FONT FACE="Times New Roman" SIZE="3">Figure 1-10    CP0 Registers
+<P>
+</FONT><FONT FACE="Arial" SIZE="3"><IMG SRC="v4100010.gif" ALT="v4100010.gif" BORDER=0 WIDTH=503 HEIGHT=597>
+<P>
+ 
+<P>
+</FONT><FONT FACE="Times New Roman" SIZE="3">Table 1-1    System Control Coprocessor (CP0) Register Definitions
+<P>
+</FONT><FONT FACE="Arial" SIZE="5"><B>Floating-Point Operation
+<P>
+</B></FONT><FONT FACE="Arial" SIZE="3">The VR4100 inimplementes the Floating-point Unit (FPU) instruction set.
+Reserved instruction exception will occur whenever any FPU instructions are executed.
+If needs, Floating-point instructions should be emulated by software in
+exception handler.
+<P>
+</FONT><FONT FACE="Arial" SIZE="5"><B>Memory Management System (MMU)
+<P>
+</B></FONT><FONT FACE="Arial" SIZE="3">The VR4100 processor has a 32-bit physical addressing range of 4 Gbytes.
+However, since it is rare for systems to implement a physical memory space this
+large, the CPU provides a logical expansion of memory space by translating
+addresses composed in the large virtual address space into available physical memory
+addresses. The VR4100 processor supports the following two addressing modes:
+<P>
+32-bit mode, in which the virtual address space is divided into 2 Gbytes per
+user process and 2 Gbytes for the kernel. 
+<P>
+64-bit mode, in which the virtual address is expanded to 1 Tbyte (240 bytes)
+of user virtual address space.
+<P>
+A detailed description of these address spaces is given in Chapter 4.
+<P>
+</FONT><FONT FACE="Arial" SIZE="5"><B>Joint TLB
+<P>
+</B></FONT><FONT FACE="Arial" SIZE="3">For fast virtual-to-physical address decoding, the VR4100 uses a large, fully
+associative TLB which 64 Virtual pages to their corresponding physical
+addresses. The TLB is organized as 32 pairs of even-odd entries, and maps a virtual
+address and address space identifier into the 4GB physical address space.
+<P>
+The page size can be configured, on a per-entry basis, to map a page size of
+1KB to 256KB (in multiples of 4). A CP0 register is loaded with the page size of
+a mapping, and that size is entered into the TLB when a new entry is written.
+Thus, operating systems can provide special purpose maps; for example, a
+typical frame buffer can be memory mapped using only one TLB entry.
+<P>
+Converting a virtual address to a physical address begins by comparing the
+virtual address from the processor with the virtual addresses in the TLB; there is
+a match when the virtual page number (VPN) of the address is the same as the
+VPN field of the entry, and either the Global (<I>G</I>) bit of the TLB entry is set, or the ASID field of the virtual address is the
+same as the ASID field of the TLB entry.
+<P>
+This match is referred to as a <I>TLB hit</I>. If there is no match, a TLB Miss exception is taken by the processor and
+software is allowed to refill the TLB from a page table of virtual/physical
+addresses in memory.
+<P>
+</FONT><FONT FACE="Arial" SIZE="5"><B>Operating Modes
+<P>
+</B></FONT><FONT FACE="Arial" SIZE="3">The VR4100 processor has three operating modes: 
+<P>
+User<I> </I>mode
+<P>
+Supervisor mode
+<P>
+Kernel<I> </I>mode
+<P>
+The manner in which memory addresses are translated or <I>mapped </I>depends on the operating mode of the CPU; this is described in Chapter 4. 
+<P>
+</FONT><FONT FACE="Arial" SIZE="5"><B>Instruction Cache
+<P>
+</B></FONT><FONT FACE="Arial" SIZE="3">The VR4100 incorporates a direct-mapped on-chip instruction cache. This
+virtually indexed, physically tagged cache is 2KB in size and is protected with word
+parity.
+<P>
+Because the cache is virtually indexed, the virtual-to-physical address
+translation occurs in parallel with the cache access, thus further simultaneously.
+The tag holds a 22-bit physical address and valid bit, and is parity protected.
+<P>
+The instruction cache is 64-bits wide, and can be refilled or accessed in a
+single processor cycle. Instruction fetches require only 32 bits per cycle, for a
+peak instruction bandwidth of 132MB/sec. The line size is four instructions
+(16 bytes) .
+<P>
+</FONT><FONT FACE="Arial" SIZE="5"><B>Data Cache
+<P>
+</B></FONT><FONT FACE="Arial" SIZE="3">For fast, single cycle data access, the VR4100 includes a 1KB on-chip data
+cache that is direct-mapped with a fixed 16-byte (four words) line size.
+<P>
+The data cache is protected with byte parity and its tag is protected with a
+single parity bit. It is virtually indexed and physically tagged to allow
+simultaneous address translation and data cache access.
+<P>
+The write policy is writeback, which means that a store to a cache line does
+not immediately cause memory to be updated. This increases system performance by
+reducing bus traffic and eliminating the bottleneck of waiting for each store
+operation to finish before issuing a subsequent memory operation. 
+<P>
+Associated with the Data Cache is the store buffer. When the VR4100 executes a
+Store instruction, this single-entry buffer gets written with the store data
+while the tag comparison is performed. If the tag matches, then the data is
+written into the Data Cache in the next cycle that the Data Caches not accessed
+(the next non-load cycle). The store buffer allows the VR4100 to execute a store
+ever processor cycle and to perform back-to-back stores without penalty.
+<P>
+</FONT><FONT FACE="Arial" SIZE="5"><B>Bus Interface
+<P>
+</B></FONT><FONT FACE="Arial" SIZE="3">Bus Interface allows the processor access to external resources required to
+satisfy internal requirements. It contains a 32-bit wide, multiplexed address and
+data bus, clock signals, interrupts, and a number of control signals.
+<P>
+</FONT><FONT FACE="Arial" SIZE="5"><B>Clock Generator
+<P>
+</B></FONT><FONT FACE="Arial" SIZE="3">The VR4100 has 5clocks that the user must be aware of. First, there is the
+pipeline clock, PClock. This clock is used for the pipeline and pipeline related
+functions internal to the VR4100. It is four times the MasterClock frequency.
+The next clock is MasterOut. This clock output is aligned with MasterClock. And
+the next clock is the system interface clock, SClock. This is also an internal
+clock and is used to sample data at the system interface and to clock data into
+the processor system interface output registers. The SClock is a divided
+version of the PClock. The divisor is selected at boot time.
+<P>
+There is the TClock, Transmit clock. The TClock is used to clock the output
+registers (signals transmitted to the VR4100) of the external agent and is at the
+same frequency as SClock. 
+<P>
+</FONT></BODY>

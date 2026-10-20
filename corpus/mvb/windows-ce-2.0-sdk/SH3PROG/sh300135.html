@@ -1,0 +1,478 @@
+<HTML>
+<HEAD>
+<TITLE>8.8   Operation of Instruction Pipelines</TITLE>
+</HEAD><body bgcolor="#FFFFFF">
+<!-- SH3PROG InfoViewer title (sh3prog.ivt); HTML topics extracted with tools/extract-ivt.py, images and the title's own indexes dropped. -->
+
+<A NAME="off_3768320"></A><A NAME="d09fc030"></A><FONT FACE="Arial" SIZE="5"><B>8.8   Operation of Instruction Pipelines 
+<P>
+</B></FONT><FONT FACE="Arial" COLOR="#008000" SIZE="3"><A HREF="sh300136.htm">8.8.1   Data Transfer Instructions</A></FONT><FONT FACE="Arial" COLOR="#000080" SIZE="3"> 
+<P>
+</FONT><FONT FACE="Arial" COLOR="#008000" SIZE="3"><A HREF="sh300137.htm">8.8.2   Arithmetic Instructions</A></FONT><FONT FACE="Arial" COLOR="#000080" SIZE="3"> 
+<P>
+</FONT><FONT FACE="Arial" COLOR="#008000" SIZE="3"><A HREF="sh300138.htm">8.8.3   Logic Operation Instructions</A></FONT><FONT FACE="Arial" COLOR="#000080" SIZE="3"> 
+<P>
+</FONT><FONT FACE="Arial" COLOR="#008000" SIZE="3"><A HREF="sh300139.htm">8.8.4   Shift Instructions</A></FONT><FONT FACE="Arial" COLOR="#000080" SIZE="3"> 
+<P>
+</FONT><FONT FACE="Arial" COLOR="#008000" SIZE="3"><A HREF="sh300140.htm">8.8.5   Branch Instructions</A></FONT><FONT FACE="Arial" COLOR="#000080" SIZE="3"> 
+<P>
+</FONT><FONT FACE="Arial" COLOR="#008000" SIZE="3"><A HREF="sh300141.htm">8.8.6   System Control Instructions</A></FONT><FONT FACE="Arial" COLOR="#000080" SIZE="3"> 
+<P>
+</FONT><FONT FACE="Arial" COLOR="#008000" SIZE="3"><A HREF="sh300142.htm">8.8.7   Exception Processing</A></FONT><FONT FACE="Arial" COLOR="#000080" SIZE="3"> 
+<P>
+</FONT><FONT FACE="Arial" SIZE="3">This section describes the operation of the instruction pipelines. By
+combining these with the rules described so far, the way pipelines flow in a program
+and the number of instruction execution cycles can be calculated.
+<P>
+In the following figures, &quot;Instruction A&quot; refers to the instruction being
+discussed. When &quot;IF&quot; is written in the instruction fetch stage, it may refer to
+either &quot;IF&quot; or &quot;if&quot;. When there is contention between IF and MA, the slot will 
+split, but the manner of the split is not discussed in the tables, with a few
+exceptions. When a slot has split, see</FONT><FONT FACE="Arial" COLOR="#008000" SIZE="3"><A HREF="sh300128.htm"> section 8.4, Contention between Instruction Fetch (IF) and Memory Access (MA)</A></FONT><FONT FACE="Arial" SIZE="3">. Base your response on the rules for pipeline operation given there.
+<P>
+<IMG SRC="sh390000.gif" ALT="sh390000.gif" BORDER=0 WIDTH=6 HEIGHT=16> Type: Given by function
+<P>
+<IMG SRC="sh390000.gif" ALT="sh390000.gif" BORDER=0 WIDTH=6 HEIGHT=16> Category: Categorized by differences in instruction operation
+<P>
+<IMG SRC="sh390000.gif" ALT="sh390000.gif" BORDER=0 WIDTH=6 HEIGHT=16> Stages: The number of stages in the instruction
+<P>
+<IMG SRC="sh390000.gif" ALT="sh390000.gif" BORDER=0 WIDTH=6 HEIGHT=16> Cycles: The number of execution cycles when there is no contention
+<P>
+<IMG SRC="sh390000.gif" ALT="sh390000.gif" BORDER=0 WIDTH=6 HEIGHT=16> Contention: Indicates the contention that occurs
+<P>
+<IMG SRC="sh390000.gif" ALT="sh390000.gif" BORDER=0 WIDTH=6 HEIGHT=16> Instructions: Gives a mnemonic for the instruction concerned
+<P>
+<A NAME="5a6480b2"></A><B>Table 8.1:  Number of Instruction Stages and Execution Cycles 
+<P>
+</B></FONT><TABLE><TR VALIGN=TOP><TD><FONT FACE="Arial" SIZE="3"><B>Type
+<BR></B></FONT></TD><TD><FONT FACE="Arial" SIZE="3"><B>Category
+<BR></B></FONT></TD><TD><FONT FACE="Arial" SIZE="3"><B>Stages
+<BR></B></FONT></TD><TD><FONT FACE="Arial" SIZE="3"><B>Cycles
+<BR></B></FONT></TD><TD><FONT FACE="Arial" SIZE="3"><B>Contention
+<BR></B></FONT></TD><TD><FONT FACE="Arial" SIZE="3"><B>Instruction
+<BR></B></FONT></TD></TR><TR VALIGN=TOP><TD><FONT FACE="Arial" COLOR="#008000" SIZE="3"><A HREF="sh300136.htm">Data transfer instructions
+<BR></A></FONT></TD><TD><FONT FACE="Arial" SIZE="3">Register-register transfer instructions
+<BR></FONT></TD><TD><FONT FACE="Arial" SIZE="3">3
+<BR></FONT></TD><TD><FONT FACE="Arial" SIZE="3">1
+<BR></FONT></TD><TD><FONT FACE="Arial" SIZE="3">-
+<BR></FONT></TD><TD><FONT FACE="Lucida Sans Typewriter" SIZE="3">MOV #imm,Rn
+<BR>MOV Rm,Rn
+<BR>MOVA @(disp,PC),R0
+<BR>MOVT Rn
+<BR>SWAP.B Rm,Rn
+<BR>SWAP.W Rm,Rn
+<BR>XTRCT Rm,Rn
+<BR>
+<BR></FONT></TD></TR><TR VALIGN=TOP><TD>
+<BR></TD><TD><FONT FACE="Arial" SIZE="3">Memory load instructions
+<BR></FONT></TD><TD><FONT FACE="Arial" SIZE="3">5
+<BR></FONT></TD><TD><FONT FACE="Arial" SIZE="3">1
+<BR></FONT></TD><TD><FONT FACE="Arial" SIZE="3">Contention occurs if the instruction placed immediately after this one uses
+the same destination register
+<BR>MA contends with IF
+<BR></FONT></TD><TD><FONT FACE="Lucida Sans Typewriter" SIZE="3">MOV.W @(disp,PC),Rn
+<BR>MOV.L @(disp,PC),Rn
+<BR>MOV.B Rm,@Rn
+<BR>MOV.W Rm,@Rn
+<BR>MOV.L Rm,@Rn
+<BR>MOV.B @Rm+,Rn
+<BR>MOV.W @Rm+,Rn
+<BR>MOV.L @Rm+,Rn
+<BR>MOV.B @(disp,Rm),R0
+<BR>MOV.W @(disp,Rm),R0
+<BR>MOV.L @(disp,Rm),Rn
+<BR>MOV.B @(R0,Rm),Rn
+<BR>MOV.W @(R0,Rm),Rn
+<BR>MOV.L @(R0,Rm),Rn
+<BR>MOV.B @(disp,GBR),R0
+<BR>MOV.W @(disp,GBR),R0
+<BR>MOV.L @(disp,GBR),R0
+<BR>
+<BR></FONT></TD></TR><TR VALIGN=TOP><TD>
+<BR></TD><TD><FONT FACE="Arial" SIZE="3">Memory store instructions
+<BR></FONT></TD><TD><FONT FACE="Arial" SIZE="3">4
+<BR></FONT></TD><TD><FONT FACE="Arial" SIZE="3">1
+<BR></FONT></TD><TD><FONT FACE="Arial" SIZE="3">MA contends with IF
+<BR></FONT></TD><TD><FONT FACE="Lucida Sans Typewriter" SIZE="3">MOV.B @Rm,Rn
+<BR>MOV.W @Rm,Rn
+<BR>MOV.L @Rm,Rn
+<BR>MOV.B Rm,@-Rn
+<BR>MOV.W Rm,@-Rn
+<BR>MOV.L Rm,@-Rn
+<BR>MOV.B R0,@(disp,Rn)
+<BR>MOV.W R0,@(disp,Rn)
+<BR>MOV.L Rm,@(disp,Rn)
+<BR>
+<BR></FONT></TD></TR><TR VALIGN=TOP><TD>
+<BR></TD><TD><FONT FACE="Arial" SIZE="3">Memory store instructions (cont)
+<BR></FONT></TD><TD><FONT FACE="Arial" SIZE="3">4
+<BR></FONT></TD><TD><FONT FACE="Arial" SIZE="3">1
+<BR></FONT></TD><TD><FONT FACE="Arial" SIZE="3">MA contends with IF
+<BR></FONT></TD><TD><FONT FACE="Lucida Sans Typewriter" SIZE="3">MOV.B Rm,@(R0,Rn)
+<BR>MOV.W Rm,@(R0,Rn)
+<BR>MOV.L Rm,@(R0,Rn)
+<BR>MOV.B R0,@(disp,GBR)
+<BR>MOV.W R0,@(disp,GBR)
+<BR>MOV.L R0,@(disp,GBR)
+<BR>
+<BR></FONT></TD></TR><TR VALIGN=TOP><TD>
+<BR></TD><TD><FONT FACE="Arial" SIZE="3">Cache instruction
+<BR></FONT></TD><TD><FONT FACE="Arial" SIZE="3">4
+<BR></FONT></TD><TD><FONT FACE="Arial" SIZE="3">1
+<BR></FONT></TD><TD><FONT FACE="Arial" SIZE="3">-
+<BR></FONT></TD><TD><FONT FACE="Lucida Sans Typewriter" SIZE="3">PREF @Rn
+<BR>
+<BR></FONT></TD></TR><TR VALIGN=TOP><TD><FONT FACE="Arial" COLOR="#008000" SIZE="3"><A HREF="sh300137.htm">Arithmetic instructions
+<BR></A></FONT></TD><TD><FONT FACE="Arial" SIZE="3">Arithmetic instructions between registers (except multiplica-
+<BR>tion instructions)
+<BR></FONT></TD><TD><FONT FACE="Arial" SIZE="3">3
+<BR></FONT></TD><TD><FONT FACE="Arial" SIZE="3">1
+<BR></FONT></TD><TD><FONT FACE="Arial" SIZE="3">-
+<BR></FONT></TD><TD><FONT FACE="Lucida Sans Typewriter" SIZE="3">ADD Rm,Rn 
+<BR>ADD #imm,Rn
+<BR>ADDC Rm,Rn
+<BR>ADDV Rm,Rn
+<BR>CMP/EQ #imm,R0
+<BR>CMP/EQ Rm,Rn
+<BR>CMP/HS Rm,Rn
+<BR>CMP/GE Rm,Rn
+<BR>CMP/HI Rm,Rn
+<BR>CMP/GT Rm,Rn
+<BR>CMP/PZ Rn
+<BR>CMP/PL Rn
+<BR>CMP/STR Rm,Rn
+<BR>DIV1 Rm,Rn
+<BR>DIV0S Rm,Rn
+<BR>DIV0U 
+<BR>EXTS.B Rm,Rn
+<BR>EXTS.W Rm,Rn
+<BR>EXTU.B Rm,Rn
+<BR>EXTU.W Rm,Rn
+<BR>NEG Rm,Rn
+<BR>NEGC Rm,Rn
+<BR>SUB Rm,Rn
+<BR>SUBC Rm,Rn
+<BR>SUBV Rm,Rn
+<BR>
+<BR></FONT></TD></TR><TR VALIGN=TOP><TD>
+<BR></TD><TD><FONT FACE="Arial" SIZE="3">Multiply/ accumulate instruction
+<BR></FONT></TD><TD><FONT FACE="Arial" SIZE="3">7
+<BR></FONT></TD><TD><FONT FACE="Arial" SIZE="3">2 (to 5)*</FONT><FONT FACE="Arial" SIZE="2">1
+<BR></FONT></TD><TD><FONT FACE="Arial" SIZE="3">Contention with the multiplier occurs when an instruction that uses the
+multiplier comes after a MAC instruction
+<BR>MA contends with IF
+<BR>
+<BR></FONT></TD><TD><FONT FACE="Lucida Sans Typewriter" SIZE="3">MAC.W @Rm+,@Rn+
+<BR></FONT></TD></TR><TR VALIGN=TOP><TD>
+<BR></TD><TD><FONT FACE="Arial" SIZE="3">Double length/
+<BR>multiply accumulate instruction
+<BR></FONT></TD><TD><FONT FACE="Arial" SIZE="3">9
+<BR></FONT></TD><TD><FONT FACE="Arial" SIZE="3">2 (to 5)*</FONT><FONT FACE="Arial" SIZE="2">1
+<BR></FONT></TD><TD><FONT FACE="Arial" SIZE="3">Contention with the multiplier occurs when an instruction that uses the
+multiplier comes after a MAC instruction
+<BR>MA contends with IF
+<BR>
+<BR></FONT></TD><TD><FONT FACE="Lucida Sans Typewriter" SIZE="3">MAC.L @Rm+,@Rn+
+<BR></FONT></TD></TR><TR VALIGN=TOP><TD>
+<BR></TD><TD><FONT FACE="Arial" SIZE="3">Multiplic-ation instruction
+<BR></FONT></TD><TD><FONT FACE="Arial" SIZE="3">6
+<BR></FONT></TD><TD><FONT FACE="Arial" SIZE="3">1 (to 3)*</FONT><FONT FACE="Arial" SIZE="2">1
+<BR></FONT></TD><TD><FONT FACE="Arial" SIZE="3">Contention with the multiplier occurs when an instruction that uses the
+multiplier comes after a MUL instruction
+<BR>MA contends with IF
+<BR>
+<BR></FONT></TD><TD><FONT FACE="Lucida Sans Typewriter" SIZE="3">MULS.W Rm,Rn
+<BR>MULU.W Rm,Rn
+<BR></FONT></TD></TR><TR VALIGN=TOP><TD>
+<BR></TD><TD><FONT FACE="Arial" SIZE="3">Double length multipli-cation instructions
+<BR></FONT></TD><TD><FONT FACE="Arial" SIZE="3">9
+<BR></FONT></TD><TD><FONT FACE="Arial" SIZE="3">2 (to 5)*</FONT><FONT FACE="Arial" SIZE="2">1
+<BR></FONT></TD><TD><FONT FACE="Times New Roman" SIZE="3">• </FONT><FONT FACE="Arial" SIZE="3">Contention with the multiplier occurs when an instruction that uses the
+multiplier comes after a MUL instruction
+<BR>MA contends with IF
+<BR>
+<BR></FONT></TD><TD><FONT FACE="Lucida Sans Typewriter" SIZE="3">DMULS.L Rm,Rn
+<BR>DMULU.L Rm,Rn
+<BR>MUL.L  Rm,Rn
+<BR></FONT></TD></TR><TR VALIGN=TOP><TD><FONT FACE="Arial" COLOR="#008000" SIZE="3"><A HREF="sh300138.htm">Logic operation instructions</A></FONT><FONT FACE="Arial" SIZE="3"> 
+<BR></FONT></TD><TD><FONT FACE="Arial" SIZE="3">Register to register logic operation instructions
+<BR></FONT></TD><TD><FONT FACE="Arial" SIZE="3">3
+<BR></FONT></TD><TD><FONT FACE="Arial" SIZE="3">1
+<BR></FONT></TD><TD><FONT FACE="Arial" SIZE="3">-
+<BR></FONT></TD><TD><FONT FACE="Lucida Sans Typewriter" SIZE="3">AND Rm,Rn
+<BR>AND #imm,R0
+<BR>NOT Rm,Rn
+<BR>OR Rm,Rn
+<BR>OR #imm,R0
+<BR>TST Rm,Rn
+<BR>TST #imm,R0
+<BR>XOR Rm,Rn
+<BR>XOR #imm,R0
+<BR>
+<BR></FONT></TD></TR><TR VALIGN=TOP><TD>
+<BR></TD><TD><FONT FACE="Arial" SIZE="3">Memory logic operations instructions
+<BR></FONT></TD><TD><FONT FACE="Arial" SIZE="3">6
+<BR></FONT></TD><TD><FONT FACE="Arial" SIZE="3">3
+<BR></FONT></TD><TD><FONT FACE="Arial" SIZE="3">MA contends with IF
+<BR></FONT></TD><TD><FONT FACE="Lucida Sans Typewriter" SIZE="3">AND.B #imm,@(R0,GBR)
+<BR>OR.B #imm,@(R0,GBR)
+<BR>TST.B #imm,@(R0,GBR)
+<BR>XOR.B #imm,@(R0,GBR)
+<BR>
+<BR></FONT></TD></TR><TR VALIGN=TOP><TD>
+<BR></TD><TD><FONT FACE="Arial" SIZE="3">TAS instruction
+<BR>
+<BR></FONT></TD><TD><FONT FACE="Arial" SIZE="3">6
+<BR></FONT></TD><TD><FONT FACE="Arial" SIZE="3">3
+<BR></FONT></TD><TD><FONT FACE="Arial" SIZE="3">MA contends with IF
+<BR></FONT></TD><TD><FONT FACE="Lucida Sans Typewriter" SIZE="3">TAS.B @Rn
+<BR></FONT></TD></TR><TR VALIGN=TOP><TD><FONT FACE="Arial" COLOR="#008000" SIZE="3"><A HREF="sh300139.htm">Shift instructions
+<BR></A></FONT></TD><TD><FONT FACE="Arial" SIZE="3">Shift instructions
+<BR></FONT></TD><TD><FONT FACE="Arial" SIZE="3">3
+<BR></FONT></TD><TD><FONT FACE="Arial" SIZE="3">1
+<BR></FONT></TD><TD><FONT FACE="Arial" SIZE="3">-
+<BR></FONT></TD><TD><FONT FACE="Lucida Sans Typewriter" SIZE="3">ROTL Rn
+<BR>ROTR Rn
+<BR>ROTCL Rn
+<BR>ROTCR Rn
+<BR>SHAL Rn
+<BR>SHAR Rn
+<BR>SHLL Rn
+<BR>SHLR Rn
+<BR>SHLL2 Rn
+<BR>SHLR2 Rn
+<BR>SHLL8 Rn
+<BR>SHLR8 Rn
+<BR>SHLL16 Rn
+<BR>SHLR16 Rn
+<BR>
+<BR></FONT></TD></TR><TR VALIGN=TOP><TD>
+<BR></TD><TD><FONT FACE="Arial" SIZE="3">Dynamic shift instructions
+<BR></FONT></TD><TD><FONT FACE="Arial" SIZE="3">3
+<BR></FONT></TD><TD><FONT FACE="Arial" SIZE="3">1
+<BR></FONT></TD><TD><FONT FACE="Arial" SIZE="3">-
+<BR></FONT></TD><TD><FONT FACE="Lucida Sans Typewriter" SIZE="3">SHAD Rm,Rn
+<BR>SHLD Rm,Rn
+<BR>
+<BR></FONT></TD></TR><TR VALIGN=TOP><TD><FONT FACE="Arial" COLOR="#008000" SIZE="3"><A HREF="sh300140.htm">Branch instructions
+<BR></A></FONT></TD><TD><FONT FACE="Arial" SIZE="3">Conditional branch instructions
+<BR>
+<BR></FONT></TD><TD><FONT FACE="Arial" SIZE="3">3
+<BR></FONT></TD><TD><FONT FACE="Arial" SIZE="3">3/1*</FONT><FONT FACE="Arial" SIZE="2">2
+<BR></FONT></TD><TD><FONT FACE="Arial" SIZE="3">-
+<BR></FONT></TD><TD><FONT FACE="Lucida Sans Typewriter" SIZE="3">BF disp
+<BR>BT disp
+<BR></FONT></TD></TR><TR VALIGN=TOP><TD>
+<BR></TD><TD><FONT FACE="Arial" SIZE="3">Delayed conditional branch instructions
+<BR>
+<BR></FONT></TD><TD><FONT FACE="Arial" SIZE="3">3
+<BR></FONT></TD><TD><FONT FACE="Arial" SIZE="3">2/1*</FONT><FONT FACE="Arial" SIZE="2">2
+<BR></FONT></TD><TD><FONT FACE="Arial" SIZE="3">-
+<BR></FONT></TD><TD><FONT FACE="Lucida Sans Typewriter" SIZE="3">BF/S label
+<BR>BT/S label
+<BR></FONT></TD></TR><TR VALIGN=TOP><TD>
+<BR></TD><TD><FONT FACE="Arial" SIZE="3">Unconditional branch instructions
+<BR></FONT></TD><TD><FONT FACE="Arial" SIZE="3">3
+<BR></FONT></TD><TD><FONT FACE="Arial" SIZE="3">2
+<BR></FONT></TD><TD><FONT FACE="Arial" SIZE="3">-
+<BR></FONT></TD><TD><FONT FACE="Lucida Sans Typewriter" SIZE="3">BRA disp
+<BR>BRAF Rn
+<BR>BSR disp
+<BR>BSRF Rn
+<BR>JMP @Rn
+<BR>JSR @Rn
+<BR>RTS
+<BR>
+<BR></FONT></TD></TR><TR VALIGN=TOP><TD><FONT FACE="Arial" COLOR="#008000" SIZE="3"><A HREF="sh300141.htm">System control instructions
+<BR></A></FONT></TD><TD><FONT FACE="Arial" SIZE="3">System control ALU instructions
+<BR></FONT></TD><TD><FONT FACE="Arial" SIZE="3">3
+<BR></FONT></TD><TD><FONT FACE="Arial" SIZE="3">1
+<BR></FONT></TD><TD><FONT FACE="Arial" SIZE="3">-
+<BR></FONT></TD><TD><FONT FACE="Lucida Sans Typewriter" SIZE="3">CLRS
+<BR>CLRT
+<BR>LDC Rm,SR
+<BR>LDC Rm,GBR
+<BR>LDC Rm,VBR
+<BR>LDC Rm,SSR
+<BR>LDC Rm,SPC
+<BR>LDC Rm,R0_BANK
+<BR>LDC Rm,R1_BANK
+<BR>LDC Rm,R2_BANK
+<BR>LDC Rm,R3_BANK
+<BR>LDC Rm,R4_BANK
+<BR>LDC Rm,R5_BANK
+<BR>LDC Rm,R6_BANK
+<BR>LDC Rm,R7_BANK
+<BR>LDS Rm,PR
+<BR>LDTLB
+<BR>NOP
+<BR>SETS
+<BR>SETT
+<BR>
+<BR></FONT></TD></TR><TR VALIGN=TOP><TD>
+<BR></TD><TD><FONT FACE="Arial" SIZE="3">System control ALU instructions (cont)
+<BR></FONT></TD><TD><FONT FACE="Arial" SIZE="3">3
+<BR></FONT></TD><TD><FONT FACE="Arial" SIZE="3">1
+<BR></FONT></TD><TD><FONT FACE="Arial" SIZE="3">-
+<BR></FONT></TD><TD><FONT FACE="Lucida Sans Typewriter" SIZE="3">STC SR,Rn
+<BR>STC GBR,Rn
+<BR>STC VBR,Rn
+<BR>STC SSR,Rn
+<BR>STC SPC,Rn
+<BR>STC R0_BANK,Rn
+<BR>STC R1_BANK,Rn
+<BR>STC R2_BANK,Rn
+<BR>STC R3_BANK,Rn
+<BR>STC R4_BANK,Rn
+<BR>STC R5_BANK,Rn
+<BR>STC R6_BANK,Rn
+<BR>STC R7_BANK,Rn
+<BR>STS PR,Rn
+<BR>
+<BR></FONT></TD></TR><TR VALIGN=TOP><TD>
+<BR></TD><TD><FONT FACE="Arial" SIZE="3">LDC instructions (SR)
+<BR>
+<BR></FONT></TD><TD><FONT FACE="Arial" SIZE="3">5
+<BR></FONT></TD><TD><FONT FACE="Arial" SIZE="3">5
+<BR></FONT></TD><TD><FONT FACE="Arial" SIZE="3">-
+<BR></FONT></TD><TD><FONT FACE="Lucida Sans Typewriter" SIZE="3">LDC Rm,SR
+<BR></FONT></TD></TR><TR VALIGN=TOP><TD>
+<BR></TD><TD><FONT FACE="Arial" SIZE="3">LDC.L instructions (SR)
+<BR>
+<BR></FONT></TD><TD><FONT FACE="Arial" SIZE="3">7
+<BR></FONT></TD><TD><FONT FACE="Arial" SIZE="3">7
+<BR></FONT></TD><TD><FONT FACE="Arial" SIZE="3">MA contends with IF
+<BR></FONT></TD><TD><FONT FACE="Lucida Sans Typewriter" SIZE="3">LDC.L @Rm+,SR
+<BR></FONT></TD></TR><TR VALIGN=TOP><TD>
+<BR></TD><TD><FONT FACE="Arial" SIZE="3">LDC.L instructions
+<BR></FONT></TD><TD><FONT FACE="Arial" SIZE="3">5
+<BR></FONT></TD><TD><FONT FACE="Arial" SIZE="3">1
+<BR></FONT></TD><TD><FONT FACE="Arial" SIZE="3">Contention occurs when an instruction that uses the same destination register
+is placed immediately after this instruction
+<BR>MA contends with IF
+<BR></FONT></TD><TD><FONT FACE="Lucida Sans Typewriter" SIZE="3">LDC.L @Rm+,GBR
+<BR>LDC.L @Rm+,VBR
+<BR>LDC.L @Rm+,SSR
+<BR>LDC.L @Rm+,SPC
+<BR>LDC.L @Rm+,R0_BANK
+<BR>LDC.L @Rm+,R1_BANK
+<BR>LDC.L @Rm+,R2_BANK
+<BR>LDC.L @Rm+,R3_BANK
+<BR>LDC.L @Rm+,R4_BANK
+<BR>LDC.L @Rm+,R5_BANK
+<BR>LDC.L @Rm+,R6_BANK
+<BR>LDC.L @Rm+,R7_BANK
+<BR>
+<BR></FONT></TD></TR><TR VALIGN=TOP><TD>
+<BR></TD><TD><FONT FACE="Arial" SIZE="3">STC.L instructions
+<BR></FONT></TD><TD><FONT FACE="Arial" SIZE="3">4
+<BR></FONT></TD><TD><FONT FACE="Arial" SIZE="3">1
+<BR></FONT></TD><TD><FONT FACE="Arial" SIZE="3">MA contends with IF
+<BR></FONT></TD><TD><FONT FACE="Lucida Sans Typewriter" SIZE="3">STC.L SR,@-Rn
+<BR>STC.L GBR,@-Rn
+<BR>STC.L VBR,@-Rn
+<BR>STC.L SSR,@-Rn
+<BR>STC.L SPC,@-Rn
+<BR>
+<BR></FONT></TD></TR><TR VALIGN=TOP><TD>
+<BR></TD><TD>
+<BR></TD><TD><FONT FACE="Arial" SIZE="3">5
+<BR></FONT></TD><TD><FONT FACE="Arial" SIZE="3">2
+<BR></FONT></TD><TD><FONT FACE="Arial" SIZE="3">MA contends with IF
+<BR></FONT></TD><TD><FONT FACE="Lucida Sans Typewriter" SIZE="3">STC.L R0_BANK,@-Rn
+<BR>STC.L R1_BANK,@-Rn
+<BR>STC.L R2_BANK,@-Rn
+<BR>STC.L R3_BANK,@-Rn
+<BR>STC.L R4_BANK,@-Rn
+<BR>STC.L R5_BANK,@-Rn
+<BR>STC.L R6_BANK,@-Rn
+<BR>STC.L R7_BANK,@-Rn
+<BR>
+<BR></FONT></TD></TR><TR VALIGN=TOP><TD>
+<BR></TD><TD><FONT FACE="Arial" SIZE="3">LDS.L instructions (PR)
+<BR></FONT></TD><TD><FONT FACE="Arial" SIZE="3">5
+<BR></FONT></TD><TD><FONT FACE="Arial" SIZE="3">1
+<BR></FONT></TD><TD><FONT FACE="Arial" SIZE="3">Contention occurs when an instruction that uses the same destination register
+is placed immediately after this instruction
+<BR>MA contends with IF
+<BR>
+<BR></FONT></TD><TD><FONT FACE="Lucida Sans Typewriter" SIZE="3">LDS.L @Rm+,PR
+<BR></FONT></TD></TR><TR VALIGN=TOP><TD>
+<BR></TD><TD><FONT FACE="Arial" SIZE="3">STS.L instruction (PR)
+<BR>
+<BR></FONT></TD><TD><FONT FACE="Arial" SIZE="3">4
+<BR></FONT></TD><TD><FONT FACE="Arial" SIZE="3">1
+<BR></FONT></TD><TD><FONT FACE="Arial" SIZE="3">MA contends with IF
+<BR></FONT></TD><TD><FONT FACE="Lucida Sans Typewriter" SIZE="3">STS.L PR,@-Rn
+<BR></FONT></TD></TR><TR VALIGN=TOP><TD>
+<BR></TD><TD><FONT FACE="Arial" SIZE="3">Register <IMG SRC="sh390002.gif" ALT="sh390002.gif" BORDER=0 WIDTH=13 HEIGHT=16> MAC transfer instruction
+<BR></FONT></TD><TD><FONT FACE="Arial" SIZE="3">4
+<BR></FONT></TD><TD><FONT FACE="Arial" SIZE="3">1
+<BR></FONT></TD><TD><FONT FACE="Arial" SIZE="3">Contention occurs with multiplier
+<BR>MA contends with IF
+<BR></FONT></TD><TD><FONT FACE="Lucida Sans Typewriter" SIZE="3">CLRMAC
+<BR>LDS Rm,MACH
+<BR>LDS Rm,MACL
+<BR>
+<BR></FONT></TD></TR><TR VALIGN=TOP><TD>
+<BR></TD><TD><FONT FACE="Arial" SIZE="3">Memory <IMG SRC="sh390002.gif" ALT="sh390002.gif" BORDER=0 WIDTH=13 HEIGHT=16> MAC transfer instructions
+<BR></FONT></TD><TD><FONT FACE="Arial" SIZE="3">4
+<BR></FONT></TD><TD><FONT FACE="Arial" SIZE="3">1
+<BR></FONT></TD><TD><FONT FACE="Arial" SIZE="3">Contention occurs with multiplier
+<BR>MA contends with IF
+<BR>
+<BR></FONT></TD><TD><FONT FACE="Lucida Sans Typewriter" SIZE="3">LDS.L @Rm+,MACH
+<BR>LDS.L @Rm+,MACL
+<BR></FONT></TD></TR><TR VALIGN=TOP><TD>
+<BR></TD><TD><FONT FACE="Arial" SIZE="3">MAC <IMG SRC="sh390002.gif" ALT="sh390002.gif" BORDER=0 WIDTH=13 HEIGHT=16> register transfer instruction
+<BR></FONT></TD><TD><FONT FACE="Arial" SIZE="3">5
+<BR></FONT></TD><TD><FONT FACE="Arial" SIZE="3">1
+<BR></FONT></TD><TD><FONT FACE="Arial" SIZE="3">Contention occurs with multiplier
+<BR>Contention occurs when an instruction that uses the same destination register
+is placed immediately after this instruction
+<BR>MA contends with IF
+<BR>
+<BR></FONT></TD><TD><FONT FACE="Lucida Sans Typewriter" SIZE="3">STS MACH,Rn
+<BR>STS MACL,Rn
+<BR></FONT></TD></TR><TR VALIGN=TOP><TD>
+<BR></TD><TD><FONT FACE="Arial" SIZE="3">MAC <IMG SRC="sh390002.gif" ALT="sh390002.gif" BORDER=0 WIDTH=13 HEIGHT=16> memory transfer instruction
+<BR>
+<BR></FONT></TD><TD><FONT FACE="Arial" SIZE="3">4
+<BR></FONT></TD><TD><FONT FACE="Arial" SIZE="3">1
+<BR></FONT></TD><TD><FONT FACE="Arial" SIZE="3">Contention occurs with multiplier
+<BR>MA contends with IF
+<BR></FONT></TD><TD><FONT FACE="Lucida Sans Typewriter" SIZE="3">STS.L MACH,@-Rn
+<BR>STS.L MACL,@-Rn
+<BR></FONT></TD></TR><TR VALIGN=TOP><TD>
+<BR></TD><TD><FONT FACE="Arial" SIZE="3">RTE instruction
+<BR>
+<BR></FONT></TD><TD><FONT FACE="Arial" SIZE="3">5
+<BR></FONT></TD><TD><FONT FACE="Arial" SIZE="3">4
+<BR></FONT></TD><TD><FONT FACE="Arial" SIZE="3">-
+<BR></FONT></TD><TD><FONT FACE="Lucida Sans Typewriter" SIZE="3">RTE
+<BR></FONT></TD></TR><TR VALIGN=TOP><TD>
+<BR></TD><TD><FONT FACE="Arial" SIZE="3">TRAP instruction
+<BR>
+<BR></FONT></TD><TD><FONT FACE="Arial" SIZE="3">9
+<BR></FONT></TD><TD><FONT FACE="Arial" SIZE="3">6
+<BR></FONT></TD><TD><FONT FACE="Arial" SIZE="3">-
+<BR></FONT></TD><TD><FONT FACE="Lucida Sans Typewriter" SIZE="3">TRAPA #imm
+<BR></FONT></TD></TR><TR VALIGN=TOP><TD>
+<BR></TD><TD><FONT FACE="Arial" SIZE="3">SLEEP instruction
+<BR>
+<BR></FONT></TD><TD><FONT FACE="Arial" SIZE="3">3
+<BR></FONT></TD><TD><FONT FACE="Arial" SIZE="3">4
+<BR></FONT></TD><TD><FONT FACE="Arial" SIZE="3">-
+<BR></FONT></TD><TD><FONT FACE="Lucida Sans Typewriter" SIZE="3">SLEEP
+<BR></FONT></TD></TR></TABLE><FONT FACE="Arial Narrow" SIZE="4"><B>Note:
+<P>
+</B></FONT><FONT FACE="Arial" SIZE="3"><B>1. </B>Indicates the normal minimum number of execution states (the number in
+parentheses is the number of cycles when there is contention with following
+instructions).
+<P>
+</FONT><FONT FACE="Arial Narrow" SIZE="4"><B>Note:
+<P>
+</B></FONT><FONT FACE="Arial" SIZE="3"><B>2. </B>One state when there is no branch.
+<P>
+</FONT></BODY>
+</HTML>

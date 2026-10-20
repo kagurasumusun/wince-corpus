@@ -1,0 +1,56 @@
+<HTML>
+<HEAD>
+<TITLE>8.3.4 Cache Testing Function</TITLE>
+</HEAD><BODY BGCOLOR=#ffffff>
+<!-- PR3910 InfoViewer title (Pr3910.ivt); HTML topics extracted with tools/extract-ivt.py, images and the title's own indexes dropped. -->
+<BASEFONT FACE="Arial,Helvetica" SIZE="2">
+<A HREF= "PR39home.htm"><IMG SRC="contents.gif" ALT="contents.gif" BORDER = 0></A>
+<P>
+<A NAME="off_1738410"></A><A NAME="e26dd748"></A><FONT FACE="Arial" SIZE="3"><H1>8.3.4 Cache Testing Function
+<P>
+</H1><B>1. Cache disable
+<P>
+</B>ICE and DCE bit in Config register is used to disable/enable Instruction and
+Data cache.
+<P>
+When a cache is disabled all the cache references are cached missed. (same
+non-cacheable memory).
+<P>
+<B>2. Cache flushing
+<P>
+</B>Both the instruction and data cache are flushed when the reset exception is
+raised.
+<P>
+The instruction cache is flushed by the CACHE instruction IndexInvalidate and
+disabling the instruction cache (ICE=0 in Config register). The data cache is
+flushed by CACHE instruction HitInvalidate.
+<P>
+Note: Disabling the instruction cache, streaming should be stopped by
+inserting a branch instruction after MTC0;
+<P>
+Example:
+<P>
+MTC0 Rn, Config (Clear ICE to 0)
+<P>
+J L1 (Branch to L1; stop streaming)
+<P>
+Nop
+<P>
+</FONT><FONT FACE="Arial" SIZE="5"><B>8.3.4.1 Cache Refill
+<P>
+</B></FONT><FONT FACE="Arial" SIZE="3">Both cache are refilled from the head of the refill boundary regardless of the
+refill size.
+<P>
+</FONT><FONT FACE="Arial" SIZE="5"><B>8.3.4.2 Cache Snoop
+<P>
+</B></FONT><FONT FACE="Arial" SIZE="3">To maintain the cache coherency with the memory during DMA cycle. The PR3910
+snooped the bus master. if the an address access by the external bus master
+matches as address stored in the data cache tag (cache hit), the valid bit (V) for
+that cache data is cleared to 0.
+<P>
+Locked data cannot be invalidated, even when a hit occurs in a snoop operation.
+<P>
+After a cache block has been invalidated in a snoop, the LRU bit points to the
+invalidated cache set.
+<P>
+</FONT></BODY>

@@ -1,0 +1,146 @@
+<HTML>
+<HEAD>
+<TITLE>8.8.2   Arithmetic Instructions</TITLE>
+</HEAD><body bgcolor="#FFFFFF">
+<!-- SH3PROG InfoViewer title (sh3prog.ivt); HTML topics extracted with tools/extract-ivt.py, images and the title's own indexes dropped. -->
+
+<A NAME="off_3933105"></A><A NAME="90946f87"></A><FONT FACE="Arial" SIZE="4"><B>8.8.2   Arithmetic Instructions 
+<P>
+</B></FONT><FONT FACE="Arial" SIZE="3"><B>Arithmetic Instructions between Registers (Except Multiplication Instructions):</B> Instruction types:
+<P>
+</FONT><TABLE><TR VALIGN=TOP><TD><FONT FACE="Arial" SIZE="3"><B><IMG SRC="sh390000.gif" ALT="sh390000.gif" BORDER=0 WIDTH=6 HEIGHT=16> </B>ADRm, Rn 
+<BR><IMG SRC="sh390000.gif" ALT="sh390000.gif" BORDER=0 WIDTH=6 HEIGHT=16> AD#imm, Rn
+<BR><IMG SRC="sh390000.gif" ALT="sh390000.gif" BORDER=0 WIDTH=6 HEIGHT=16> ADDRm, Rn
+<BR><IMG SRC="sh390000.gif" ALT="sh390000.gif" BORDER=0 WIDTH=6 HEIGHT=16> ADDRm, Rn
+<BR><IMG SRC="sh390000.gif" ALT="sh390000.gif" BORDER=0 WIDTH=6 HEIGHT=16> CMP/E#imm, R0
+<BR><IMG SRC="sh390000.gif" ALT="sh390000.gif" BORDER=0 WIDTH=6 HEIGHT=16> CMP/ERm, Rn
+<BR><IMG SRC="sh390000.gif" ALT="sh390000.gif" BORDER=0 WIDTH=6 HEIGHT=16> CMP/HRm, Rn
+<BR><IMG SRC="sh390000.gif" ALT="sh390000.gif" BORDER=0 WIDTH=6 HEIGHT=16> CMP/GRm, Rn
+<BR><IMG SRC="sh390000.gif" ALT="sh390000.gif" BORDER=0 WIDTH=6 HEIGHT=16> CMP/HRm, Rn
+<BR><IMG SRC="sh390000.gif" ALT="sh390000.gif" BORDER=0 WIDTH=6 HEIGHT=16> CMP/GRm, Rn
+<BR><IMG SRC="sh390000.gif" ALT="sh390000.gif" BORDER=0 WIDTH=6 HEIGHT=16> CMP/PRn
+<BR><IMG SRC="sh390000.gif" ALT="sh390000.gif" BORDER=0 WIDTH=6 HEIGHT=16> CMP/PRn
+<BR><IMG SRC="sh390000.gif" ALT="sh390000.gif" BORDER=0 WIDTH=6 HEIGHT=16> CMP/STR   Rm, Rn
+<BR><IMG SRC="sh390000.gif" ALT="sh390000.gif" BORDER=0 WIDTH=6 HEIGHT=16> 
+<BR></FONT></TD><TD><FONT FACE="Arial" SIZE="3"><IMG SRC="sh390000.gif" ALT="sh390000.gif" BORDER=0 WIDTH=6 HEIGHT=16> DIV1         Rm, Rn
+<BR><IMG SRC="sh390000.gif" ALT="sh390000.gif" BORDER=0 WIDTH=6 HEIGHT=16> DIV0Rm, Rn
+<BR><IMG SRC="sh390000.gif" ALT="sh390000.gif" BORDER=0 WIDTH=6 HEIGHT=16> DIV0
+<BR><IMG SRC="sh390000.gif" ALT="sh390000.gif" BORDER=0 WIDTH=6 HEIGHT=16> EXTS.Rm, Rn
+<BR><IMG SRC="sh390000.gif" ALT="sh390000.gif" BORDER=0 WIDTH=6 HEIGHT=16> EXTS.Rm, Rn
+<BR><IMG SRC="sh390000.gif" ALT="sh390000.gif" BORDER=0 WIDTH=6 HEIGHT=16> EXTU.Rm, Rn
+<BR><IMG SRC="sh390000.gif" ALT="sh390000.gif" BORDER=0 WIDTH=6 HEIGHT=16> EXTU.Rm, Rn
+<BR><IMG SRC="sh390000.gif" ALT="sh390000.gif" BORDER=0 WIDTH=6 HEIGHT=16> NERm, Rn
+<BR><IMG SRC="sh390000.gif" ALT="sh390000.gif" BORDER=0 WIDTH=6 HEIGHT=16> NEGRm, Rn
+<BR><IMG SRC="sh390000.gif" ALT="sh390000.gif" BORDER=0 WIDTH=6 HEIGHT=16> SURm, Rn
+<BR><IMG SRC="sh390000.gif" ALT="sh390000.gif" BORDER=0 WIDTH=6 HEIGHT=16> SUBRm, Rn
+<BR><IMG SRC="sh390000.gif" ALT="sh390000.gif" BORDER=0 WIDTH=6 HEIGHT=16> SUBRm, Rn
+<BR>
+<BR>
+<BR></FONT><FONT FACE="Times New Roman" SIZE="5"><B><IMG SRC="sh300060.gif" ALT="sh300060.gif" BORDER=0 WIDTH=456 HEIGHT=172>
+<BR></B></FONT></TD></TR></TABLE><FONT FACE="Arial" SIZE="3"><B>Figure 8.15   Pipeline for Arithmetic Instructions between Registers Except
+Multiplication Instructions
+<P>
+</B>The pipeline has three stages: IF, ID, and EX (figure 8.15). The data
+operation is completed in the EX stage via the ALU.
+<P>
+<B>Multiply/Accumulate Instruction:</B> Instruction type:
+<P>
+<B><IMG SRC="sh390000.gif" ALT="sh390000.gif" BORDER=0 WIDTH=6 HEIGHT=16> </B>MAC.@Rm+, @Rn+
+<P>
+
+<BR></FONT><FONT FACE="Times New Roman" SIZE="5"><B><IMG SRC="sh300061.gif" ALT="sh300061.gif" BORDER=0 WIDTH=502 HEIGHT=177>
+<P>
+</B></FONT><FONT FACE="Arial" SIZE="3"><B>Figure 8.16   Multiply/Accumulate Instruction Pipeline
+<P>
+</B>The pipeline has eight stages: IF, ID, EX, MA, MA, mm, mm, and mm (figure
+8.16). The second MA reads the memory and accesses the multiplier. The mm indicates
+that the multiplier is operating. The mm operates for three cycles after the
+final MA ends, regardless of slot. The ID of the instruction after the MAC
+instruction is stalled for one slot. The two MAs of the MAC instruction, when they
+contend with IF, split the slots as described in </FONT><FONT FACE="Arial" COLOR="#008000" SIZE="3"><A HREF="sh300128.htm">section 8.4, Contention between Instruction Fetch (IF) and Memory Access (MA).
+<P>
+</A></FONT><FONT FACE="Arial" SIZE="3">When an instruction that does not use the multiplier follows the MAC
+instruction, the MAC instruction may be considered to be a five-stage pipeline
+instruction of IF, ID, EX, MA, MA. In such cases, the ID of the next instruction simply
+stalls one slot and thereafter the pipeline operates normally. When an
+instruction that uses the multiplier comes after the MAC instruction, contention occurs
+with the multiplier, so operation is not as normal. 
+<P>
+<B>Double-Length Multiply/Accumulate Instruction:</B> Instruction type:
+<P>
+<B><IMG SRC="sh390000.gif" ALT="sh390000.gif" BORDER=0 WIDTH=6 HEIGHT=16> </B>MAC.@Rm+, @Rn+
+<P>
+
+<BR></FONT><FONT FACE="Times New Roman" SIZE="5"><B><IMG SRC="sh300062.gif" ALT="sh300062.gif" BORDER=0 WIDTH=531 HEIGHT=146>
+<P>
+</B></FONT><FONT FACE="Arial" SIZE="3"><B>Figure 8.17   Multiply/Accumulate Instruction Pipeline
+<P>
+</B>The pipeline has eight stages: IF, ID, EX, MA, MA, mm, mm, and mm (figure
+8.17). The second MA reads the memory and accesses the multiplier. The mm indicates
+that the multiplier is operating. The mm operates for three cycles after the
+final MA ends, regardless of slot. The ID of the instruction after the MAC.L
+instruction is stalled for one slot. The two MAs of the MAC.L instruction, when
+they contend with IF, split the slots as described in section 8.4, Contention
+between Instruction Fetch (IF) and Memory Access (MA).
+<P>
+When an instruction that does not use the multiplier follows the MAC.L
+instruction, the MAC.L instruction may be considered to be a five-stage pipeline
+instruction of IF, ID, EX, MA, MA. In such cases, the ID of the next instruction
+simply stalls one slot and thereafter the pipeline operates normally. When an
+instruction that uses the multiplier comes after the MAC.L instruction, contention
+occurs with the multiplier, so operation is not as normal.
+<P>
+<B>Multiplication Instructions:</B> Instruction types:
+<P>
+<B><IMG SRC="sh390000.gif" ALT="sh390000.gif" BORDER=0 WIDTH=6 HEIGHT=16> </B>MUL.Rm, Rn
+<P>
+<IMG SRC="sh390000.gif" ALT="sh390000.gif" BORDER=0 WIDTH=6 HEIGHT=16> MULU.Rm, Rn
+<P>
+
+<BR></FONT><FONT FACE="Times New Roman" SIZE="5"><B><IMG SRC="sh300063.gif" ALT="sh300063.gif" BORDER=0 WIDTH=464 HEIGHT=145>
+<P>
+</B></FONT><FONT FACE="Arial" SIZE="3"><B>Figure 8.18   Multiplication Instruction Pipeline
+<P>
+</B>The pipeline has six stages: IF, ID, EX, MA, mm, and mm (figure 8.18). The MA
+accesses the multiplier. The mm indicates that the multiplier is operating. The
+mm operates for two cycles after the MA ends, regardless of the slot. The MA
+of the MULS.W instruction, when it contends with IF, splits the slot as
+described in </FONT><FONT FACE="Arial" COLOR="#008000" SIZE="3"><A HREF="sh300128.htm">section 8.4, Contention between Instruction Fetch (IF) and Memory Access (MA</A></FONT><FONT FACE="Arial" SIZE="3">).
+<P>
+When an instruction that does not use the multiplier comes after the MULS.W
+instruction, the MULS.W instruction may be considered to be a four-stage pipeline
+instruction of IF, ID, EX, and MA. In such cases, it operates like a normal
+pipeline. When an instruction that uses the multiplier come after the MULS.W
+instruction, however, contention occurs with the multiplier, so operation is not as
+normal.
+<P>
+<B>Double-Length Multiplication Instructions:</B> Instruction types:
+<P>
+<B><IMG SRC="sh390000.gif" ALT="sh390000.gif" BORDER=0 WIDTH=6 HEIGHT=16> </B>DMULS.Rm, Rn
+<P>
+<IMG SRC="sh390000.gif" ALT="sh390000.gif" BORDER=0 WIDTH=6 HEIGHT=16> DMULU.Rm, Rn
+<P>
+<IMG SRC="sh390000.gif" ALT="sh390000.gif" BORDER=0 WIDTH=6 HEIGHT=16> MUL.Rm, Rn
+<P>
+
+<BR></FONT><FONT FACE="Times New Roman" SIZE="5"><B><IMG SRC="sh300064.gif" ALT="sh300064.gif" BORDER=0 WIDTH=493 HEIGHT=160>
+<P>
+</B></FONT><FONT FACE="Arial" SIZE="3"><B>Figure 8.19   Multiplication Instruction Pipeline
+<P>
+</B>The pipeline has eight stages: IF, ID, EX, MA, MA, mm, mm, and mm (figure
+8.19). The MA accesses the multiplier. The mm indicates that the multiplier is
+operating. The mm operates for three cycles after the MA ends, regardless of slot.
+The ID of the instruction following the DMULS.L instruction is stalled for 1
+slot (see the description of the multiply/accumulate instruction). The two MA
+stages of the DMULS.L instruction, when they contend with IF, split the slot as
+described in </FONT><FONT FACE="Arial" COLOR="#008000" SIZE="3"><A HREF="sh300128.htm">section 8.4, Contention between Instruction Fetch (IF) and Memory Access (MA).
+<P>
+</A></FONT><FONT FACE="Arial" SIZE="3">When an instruction that does not use the multiplier comes after the DMULS.L
+instruction, the DMULS.L instruction may be considered to be a five-stage
+pipeline instruction of IF, ID, EX, MA, and MA. In such cases, it operates like a
+normal pipeline. When an instruction that uses the multiplier come after the
+DMULS.L instruction, however, contention occurs with the multiplier, so operation is
+not as normal.
+<P>
+</FONT></BODY>
+</HTML>

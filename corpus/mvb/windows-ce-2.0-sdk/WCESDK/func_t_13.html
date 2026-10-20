@@ -1,0 +1,102 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML>
+<HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text-html; charset=Windows-1252">
+<title>TransportRecv</title>
+<meta name=MS-HAID content="_wcesdk_transportrecv">
+<meta name=MS-HKWD content="TransportRecv (Windows CE)">
+</HEAD>
+<BODY BGCOLOR=#FFFFFF TEXT=#000000>
+<!-- WCESDK InfoViewer title (WCESDK.IVT); HTML topics extracted with tools/extract-ivt.py, images and the title's own indexes dropped. -->
+
+<BODY BGCOLOR=#FFFFFF BACKGROUND= "images\cewmark.gif" TEXT=#000000><form name=x><object name=iv classid="clsid:9c2ac687-ceef-11cf-96d9-00a0c903b016">
+</object></form>
+<h1><a name="_wcesdk_transportrecv"></a>TransportRecv</h1>
+<p>
+The <b>TransportRecv</b> function gets a specific message from the mail server. The number of <b>MailMsg</b> messages that can be retrieved is between 1 and the number returned by <b>TransportCount</b>.</p>
+<h2>Syntax</h2>
+<p>
+<b>BOOL TransportRecv(HANDLE </b><i>hService, </i><b>WORD </b><i>wMessageId, </i><b>short </b><i>sNumLines, </i><b>MailMsg </b>*<i>MsgPtr, </i><b>lpMailAttArray </b><i>*lplpMaa<b>)</i>;</b></p>
+<h2>At a Glance</h2>
+<table>
+<tr valign=top>
+<td>
+Header file:</td>
+<td>
+Smtp.h</td>
+</tr>
+<tr valign=top>
+<td>
+Platforms:</td>
+<td>
+H/PC</td>
+</tr>
+<tr valign=top>
+<td>
+Windows CE versions:</td>
+<td>
+1.0 and later</td>
+</tr>
+</table><br>
+<h2>Parameters</h2>
+<dl>
+<dt>
+<i>hService</i></dt>
+<dd>
+Handle to a <b>SERVICE</b> structure.<br>
+</dd>
+<dt>
+<i>wMessageId</i></dt>
+<dd>
+Identifier of the message for this session. If this value is zero, the unique message identifier stored in the <b>szSvcId</b> member of the <b>MailMsg</b> structure is used. For more information, see <A HREF='javascript:document.x.iv.ALink("_wcesdk_implementing_a_sample_transport_service","")'>Implementing a Sample Transport Service</a>.<br>
+</dd>
+<dt>
+<i>sNumLines</i></dt>
+<dd>
+Number of lines to receive. For the sample service, <i>sNumLines</i> is assigned value indicating the number of lines to be read. <p>
+If only message information is to be returned, <i>sNumLines </i>is set to one of the following flags:</p>
+<dl>
+<dt>
+TRANSPORT_MSG_EXIST</dt>
+<dd>
+Used to check for the existence of a message, without allocating any memory. Neither the message header nor the message body is read.<br>
+</dd>
+<dt>
+TRANSPORT_ALL_LINES</dt>
+<dd>
+Returns the unique identifier stored in the <b>szSvcId</b> member of the <b>MailMsg</b> structure as determined from <i>wSessionId</i>.<br>
+</dd>
+<dt>
+TRANSPORT_HEADERS</dt>
+<dd>
+Parses the message header and places the information in <i>MsgPtr</i>, also without allocating any memory. The message body is not read.</dd>
+</dl>
+<br>
+</dd>
+<dt>
+<i>MsgPtr</i></dt>
+<dd>
+A <a href="str_fo_20.htm"><b>MailMsg</b></a> structure that contains the message to be read.<br>
+</dd>
+<dt>
+<i>lplpMaa</i></dt>
+<dd>
+For Windows CE version 1.0, this parameter is reserved must be set to NULL. For version 2.0, it is a pointer to <b>lpMailAttArray</b> which itself is a pointer to a <b>MailAttArray</b> structure.</dd>
+</dl>
+<h2>Return Values</h2>
+<p>
+Returns TRUE if successful or FALSE otherwise. To get extended error information, call <a href="func_t_7.htm"><b>TransportError</b></a> or <a href="func_t_8.htm"><b>TransportErrorMsg</b></a>.</p>
+<h2>Remarks</h2>
+<p>
+The <b>TransportRecv</b> function must be implemented by the transport service provider in a DLL registered as a mail service. The Inbox application can load this DLL and call this function.</p>
+<p>
+For the sample transport service, <b>TransportRecv</b> receives a message via <i>hService</i> and copies the message (or message information) into the <i>MsgPtr</i> structure. If the calling application wishes only to check for the existence of the message, or just obtain header information, the calling application sets <i>sNumLines</i> to TRANSPORT_MSG_EXIST.</p>
+<p>
+A typical <b>TransportRecv</b> routine opens the file containing the message (specified in <i>hService</i>), allocates heap space, parses the header, and fills the various <i>MsgPtr</i> fields with the appropriate information. After assigning pointers to the heap, header, and body fields of <i>MsgPtr</i>, the sample <b>TransportRecv</b> frees the memory allocated to <i>MsgPtr</i>, but leaves the heap it created intact. The heap must be destroyed by using <b>TransportFreeMsg</b>.</p>
+<p>
+If the <i>lplpMaa</i> parameter returns a valid pointer and the transport determines that attachments are to be added to the message, then a <b>MailAttArray</b> structure should be allocated from the message heap and initialized with appropriate attachment information.</p>
+<h2>See Also</h2>
+<p>
+<a href="func_t_9.htm"><b>TransportFreeMsg</b></a></p>
+</BODY>
+</HTML>

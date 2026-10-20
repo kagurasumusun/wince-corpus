@@ -1,0 +1,131 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
+<HTML>
+<HEAD><META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=Windows-1252">
+<TITLE>The [Drivers\PCMCIA\Plug-and-Play ID] Key</TITLE>
+<META NAME="MS-HKWD" CONTENT="The [Drivers\\PCMCIA\\Plug-and-Play ID] Key">
+<META NAME="MS-HAID" CONTENT="_wceddk_The_.5b.Drivers.5c.PCMCIA.5c.Plug.2d.and.2d.Play_ID.5d_.Key">
+</HEAD>
+<BODY BGPROPERTIES="FIXED" TEXT="#000000" BGCOLOR="#FFFFFF">
+<!-- WCEDDK InfoViewer title (WCEDDK.IVT); HTML topics extracted with tools/extract-ivt.py, images and the title's own indexes dropped. -->
+
+<FORM name=x>
+<OBJECT name=iv classid="clsid:9c2ac687-ceef-11cf-96d9-00a0c903b016">
+</OBJECT>
+</FORM>
+<FONT FACE="ARIAL,HELVETICA" SIZE="2">
+<H3><A NAME="_wceddk_The_.5b.Drivers.5c.PCMCIA.5c.Plug.2d.and.2d.Play_ID.5d_.Key"></A>The [Drivers\PCMCIA\<I>Plug-and-Play ID</I>] Key</H3>
+<P>
+The [Drivers\PCMCIA] key contains subkeys for known PC Cards. Each subkey is
+the card's Plug-and-Play ID. The values within a <I>Plug and Play ID</I>
+subkey define the values for a PC Card device with a matching Plug and Play
+identifier.
+<P>
+Required values for this subkey are described in the following table.
+Additional values can be stored for purposes specific to the device.
+<TABLE>
+<TR VALIGN=top>
+<TD><FONT FACE="ARIAL,HELVETICA" SIZE="2">
+<P>
+<B>Value name</B>
+</FONT><TD><FONT FACE="ARIAL,HELVETICA" SIZE="2">
+<P>
+<B>Value type</B>
+</FONT><TD><FONT FACE="ARIAL,HELVETICA" SIZE="2">
+<P>
+<B>Description</B>
+</FONT><TR VALIGN=top>
+<TD><FONT FACE="ARIAL,HELVETICA" SIZE="2">
+<P>
+<B>Dll</B>
+</FONT><TD><FONT FACE="ARIAL,HELVETICA" SIZE="2">
+<P>
+<B>REG_SZ</B>
+</FONT><TD><FONT FACE="ARIAL,HELVETICA" SIZE="2">
+<P>
+This value specifies the filename for the DLL that contains the installable
+device driver. The Device Manager will load the DLL.
+</FONT><TR VALIGN=top>
+<TD><FONT FACE="ARIAL,HELVETICA" SIZE="2">
+<P>
+<B>Prefix</B>
+</FONT><TD><FONT FACE="ARIAL,HELVETICA" SIZE="2">
+<P>
+<B>REG_SZ</B>
+</FONT><TD><FONT FACE="ARIAL,HELVETICA" SIZE="2">
+<P>
+This value specifies the device driver's <A HREF="devnames_2.htm">device
+filename prefix</A>. It is a three character identifier, such as &quot;COM&quot;.
+</FONT><TR VALIGN=top>
+<TD><FONT FACE="ARIAL,HELVETICA" SIZE="2">
+<P>
+<B>Index</B>
+</FONT><TD><FONT FACE="ARIAL,HELVETICA" SIZE="2">
+<P>
+<B>REG_DWORD</B>
+</FONT><TD><FONT FACE="ARIAL,HELVETICA" SIZE="2">
+<P>
+This optional value specifies the device index (0 through 9) which the Device
+Manager should assign to the driver. If the <B>Index</B>&nbsp;value is not present,
+the Device Manager assigns the lowest index value available. This index will
+be associated with the device (for example, &quot;PGR1:&quot;). Only index
+values 0 through 9 are allowed.
+</FONT><TR VALIGN=top>
+<TD><FONT FACE="ARIAL,HELVETICA" SIZE="2">
+<P>
+<B>Context</B>
+</FONT><TD><FONT FACE="ARIAL,HELVETICA" SIZE="2">
+<P>
+<B>REG_DWORD</B>
+</FONT><TD><FONT FACE="ARIAL,HELVETICA" SIZE="2">
+<P>
+This optional value specifies the device context. If the <B>Context</B>&nbsp;value
+is present (that is, if it was initialized by the device's setup application),
+the Device Manager passes it as the <I>dwInfo</I>&nbsp;parameter to <B>RegisterDevice</B>.
+If it is not present, a pointer to a string containing the registry path to
+the device's [Drivers\Active] key is passed as the parameter. The driver's
+initialization function can then open this key to read its information. To let
+the driver read the [Drivers\Active] key data, you should not initialize the <B>Context</B>
+value.
+</FONT><TR VALIGN=top>
+<TD><FONT FACE="ARIAL,HELVETICA" SIZE="2">
+<P>
+<B>Ioctl</B>
+</FONT><TD><FONT FACE="ARIAL,HELVETICA" SIZE="2">
+<P>
+<B>REG_DWORD</B>
+</FONT><TD><FONT FACE="ARIAL,HELVETICA" SIZE="2">
+<P>
+This optional value specifies an I/O control code the Device Manager sends to
+an installable driver after loading it. If the <B>Ioctl</B>&nbsp;value is present,
+the Device Manager opens the loaded driver and calls its <B><I>xxx</I>_IOControl</B>
+function, passing the I/O control code specified by the <B>Ioctl</B>&nbsp;value.
+The driver can do any necessary post-initialization in this context. For
+example, the driver could load modules that will use the device. 
+<P>
+In addition, the Device Manager broadcasts a WM_DEVICECHANGE message for the
+new device and it signals the application notification system via the <B><A HREF='javascript:document.x.iv.ALink("_SDK_CeEventHasOccurred","#")'>CeEventHasOccurred</A></B>
+function, passing it the NOTIFICATION_EVENT_DEVICE_CHANGE event.
+</FONT></TABLE>
+<P>
+The following example shows the registry key for the Motorola NewsCard pager.
+When the Device Manager matches the pager's Plug-and-Play ID with the registry
+key, it loads Newscard.dll and registers a device for the NewsCard driver.
+Because the <B>Index</B>&nbsp;value is specified, the Device Manager registers the
+pager device as &quot;PGR1:&quot; device. If the <B>Index</B>&nbsp;value were not
+present, the Device Manager would select an appropriate device index (which
+would most likely be 1 anyway, unless some other device driver had already
+registered &quot;PGR1:&quot;). However, since an index is specified, only one
+PC Card of this type can be supported by this device driver because Device
+Manager cannot register this type of card under any other device name than
+&quot;PGR1:&quot;.
+<PRE><FONT FACE="Courier" SIZE="2">HKEY_LOCAL_MACHINE
+    [Drivers]
+        [PCMCIA]
+            [Motorola,_Inc.-NewsCard_Data_Receiver-E6DD]
+                DWORD: Index = 0x1
+                SZ: Prefix = PGR
+                SZ: Dll = NEWSCARD.DLL
+</FONT></PRE>
+<P></FONT>
+</BODY>
+</HTML>

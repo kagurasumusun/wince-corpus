@@ -1,0 +1,23 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML>
+<HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text-html; charset=Windows-1252">
+<title>Managing Memory for Mail Allocations</title>
+<meta name=MS-HAID content="_wcesdk_managing_memory_for_mail_allocations">
+</HEAD>
+<BODY BGCOLOR=#FFFFFF TEXT=#000000>
+<!-- WCESDKG InfoViewer title (Wcesdkg.ivt); HTML topics extracted with tools/extract-ivt.py, images and the title's own indexes dropped. -->
+
+<form name=x><object name=iv classid="clsid:9c2ac687-ceef-11cf-96d9-00a0c903b016">
+</object></form>
+<h3><a name="_wcesdk_managing_memory_for_mail_allocations"></a>Managing Memory for Mail Allocations</h3>
+<p>
+Inbox allocates a private heap (using <b>HeapCreate</b> and <b>HeapAlloc</b>) for each mail message; however, Inbox opens only one mail message at a time, in order to conserve memory. When Inbox is finished working with a message, the application frees the allocated memory by calling <b>HeapDestroy</b>. If a service or application needs to create a memory heap, following this method can help to minimize the effects of memory fragmentation. </p>
+<p>
+When working with a mail message, if Inbox has already allocated a heap for a message, then the service can reallocate memory on the existing heap.  For example, if the handle <b>hHeap</b> in the <b>MailMsg</b> structure is not NULL (that is, if the handle exists), then the service can allocate additional memory to this existing heap.  So, Inbox will take care of freeing this memory when it calls the <b>MailFree</b> function.</p>
+<p>
+In following this method, the <b>TransportRecv</b> routine should create a private heap (using <b>HeapCreate</b>) for each mail message (2Kb is a good initial size). <b>TransportRecv</b> should then store this heap handle in the <b>hHeap </b>field of the <b>MailMsg</b> structure. This private heap will be used for all dynamic storage in the <b>MailMsg</b> structure. Heap allocated storage should include the <b>szSvcId</b>, <b>szSvcNam</b>, <b>pwcHeaders</b>, and <b>szBody</b> fields of the <b>MailMsg</b> structure.</p>
+<p>
+The <b>TransportFreeMsg</b> routine should check for a NULL heap handle, delete the heap, and set the <b>hHeap</b> field m of the <b>MailMsg</b> structure to NULL.</p>
+</BODY>
+</HTML>

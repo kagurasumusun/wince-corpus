@@ -1,0 +1,47 @@
+<HTML>
+<HEAD>
+<TITLE>6.8.4 Coprocessor Unusable Exception</TITLE>
+</HEAD><BODY BGCOLOR=#ffffff>
+<!-- PR3910 InfoViewer title (Pr3910.ivt); HTML topics extracted with tools/extract-ivt.py, images and the title's own indexes dropped. -->
+<BASEFONT FACE="Arial,Helvetica" SIZE="2">
+<A HREF= "PR39home.htm"><IMG SRC="contents.gif" ALT="contents.gif" BORDER = 0></A>
+<P>
+<A NAME="off_721025"></A><A NAME="de5207a5"></A><FONT FACE="Arial" SIZE="3"><H1>6.8.4 Coprocessor Unusable Exception
+<P>
+</H1><B>Cause
+<P>
+</B>This exception occurs due to an attempt to execute a coprocessor instruction
+when the corresponding coprocessor unit has not been marked usable (i.e., the
+appropriate <I>CU</I> bit in the Status register has not been set.) 
+<P>
+For CP0 instructions (including RFE and DERET), this exception occurs when the
+unit has not been marked usable and the process is executing in User mode: CP0
+is always usable from Kernel mode regardless of the setting of the <I>CU0</I> bit in the Status register.
+<P>
+This exception is not maskable.
+<P>
+<B>Handling
+<P>
+</B>The General Exception vector is used for this exception, and the <I>CpU </I>code is set in the Cause register</FONT><FONT FACE="Times New Roman" SIZE="3">’</FONT><FONT FACE="Arial" SIZE="3">s <I>ExcCode</I> field. The contents of the Cause register</FONT><FONT FACE="Times New Roman" SIZE="3">’</FONT><FONT FACE="Arial" SIZE="3">s CE (Coprocessor Error) field show which of the four Coprocessor was
+referenced.
+<P>
+The EPC register points at the coprocessor instruction which caused the
+exception, unless the instruction is in a branch delay slot: in that case, the EPC
+points at the preceding <B>branch</B> instruction and the <I>BD</I> bit of the Cause register is set.
+<P>
+<B>Servicing
+<P>
+</B>To identify the coprocessor unit that was referenced, examine the contents of
+the Cause register</FONT><FONT FACE="Times New Roman" SIZE="3">’</FONT><FONT FACE="Arial" SIZE="3">s <I>CE</I> field. If the process is entitled to access, mark the coprocessor usable and
+restore the corresponding user state to the coprocessor.
+<P>
+If the process is entitled to access to the coprocessor, but the coprocessor
+does not exist, or has failed, interpretation of the instruction is possible. If
+the <I>BD</I> bit is set in the Cause register, the <B>branch</B> instruction must be interpreted; then, the coprocessor instruction could be
+emulated with the EPC register advanced past the coprocessor instruction
+<P>
+If the process is not entitled to access to the coprocessor, the process
+executing at the time should be notified that it attempted to execute an illegal
+instruction. Such an error is usually fatal.
+<P>
+</FONT></BODY>

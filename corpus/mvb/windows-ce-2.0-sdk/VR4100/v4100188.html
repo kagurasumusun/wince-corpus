@@ -1,0 +1,67 @@
+<HTML>
+<HEAD>
+<TITLE>External Arbitration Protocol</TITLE>
+</HEAD><BODY BGCOLOR=#ffffff>
+<!-- VR4100 InfoViewer title (Vr4100.ivt); HTML topics extracted with tools/extract-ivt.py, images and the title's own indexes dropped. -->
+<BASEFONT FACE="Arial,Helvetica" SIZE="2">
+<A HREF= "VR41home.htm"><IMG SRC="contents.gif" ALT="contents.gif" BORDER = 0></A>
+<P>
+<A NAME="off_2033586"></A><A NAME="2ca7ca5c"></A><FONT FACE="Arial" SIZE="5"><B>External Arbitration Protocol
+<P>
+</B></FONT><FONT FACE="Arial" SIZE="3">System interface arbitration uses the signals <B>EReq a</B>nd<B> PMaster</B> and<B> PReq</B> to arbitrate for bus mastership.
+<P>
+The transition from processor master to slave state is arbitrated by the
+processor using the system interface handshake signals <B>EReq</B> and <B>PMaster. W</B>hen the processor is master, an external agent acquires control of the system
+interface by asserting <B>EReq</B>, and waiting for the processor to de-assert <B>PMaster</B> when it is ready to relinquish the system interface.
+<P>
+When a processor read request is pending, the processor transitions to slave
+by de-asserting <B>PMaster</B>, to allow an external agent to return read response data. The processor
+remains slave until an external agent issues a read response and also de-asserts <B>EReq</B>, when it then transitions to master with the assertion of <B>PMaster</B>.
+<P>
+When the processor is master, an external agent acquires control of the system
+interface by asserting <B>EReq</B>, and waiting for the processor to de-assert <B>PMaster</B> when it is ready to relinquish the system interface. When the processor is
+ready to go slave state, it will de-assert <B>PMaster</B>. If the processor is not asserting <B>PReq</B>, it is guaranteed to release the bus two cycles after the external agent
+asserts <B>EReq</B>. The system interface will return to master state when the issue of the
+external request is complete and <B>EReq</B> is de-asserted. Having asserted <B>EReq</B>, an external agent must not de-assert <B>EReq</B> until the processor de-asserts <B>PMaster</B>. Once the external agent has become master with an <B>EReq</B>, it may continue to assert <B>EReq</B> until it is ready to relinquish the bus. Normally this would be on the same
+cycle as it signals end of data. Upon completing its transaction, it may
+continue to drive the bus and issue more transactions by continuing to hold the EReq
+line. That is, once the external agent has become bus master, it can remain
+master as long as it wants by simply continuing to assert <B>EReq</B>.
+<P>
+If the processor is in slave state and needs the bus, it may assert the <B>PReq</B> line to let the external agent know that it wants the bus. When the processor
+sees <B>EReq</B> de-asserted, it resumes ownership, asserts the PMaster line, and can issue
+its command. The processor will become master two cycles after <B>EReq</B> is de-asserted.
+<P>
+Upon assertion of <B>Reset</B> or <B>ColdReset</B>, the processor becomes bus master and the external agent must become slave.
+<P>
+This protocol guarantees that either the processor or the external agent is
+always bus master. The master should never tristate the bus, except when giving
+up ownership of the bus under the rules of the protocol.
+<P>
+Figure 1-16 is a timing diagram of the arbitration protocol, in which slave
+and master states are shown. The arbitration cycle consists of the following
+steps:
+<P>
+The external agent asserts <B>EReq</B> when it wishes to submit an external request. 
+<P>
+The processor waits until it is ready to handle an external request, whereupon
+it de-asserts<B> PMaster</B> .
+<P>
+The processor sets the <B>SysAD</B> and <B>SysCmd</B> buses to tri-state. 
+<P>
+The external agent must begin driving the <B>SysAD</B> bus and the <B>SysCmd</B> bus one cycles after the de-assertion of<B> PMaster</B>. 
+<P>
+The external agent continues to assert <B>EReq</B> until it is ready to relinquish the bus.
+<P>
+The external agent sets the <B>SysAD</B> and the <B>SysCmd</B> buses to tri-state at the completion of an external request.
+<P>
+The processor can start issuing a processor request one cycle after the
+external agent sets the bus to tri-state.
+<P>
+<B>Note: </B>Timings for the <B>SysADC </B>and <B>SysCmdP </B>buses are the same as those of the SysAD and SysCmd, respectively.
+<P>
+ </FONT><FONT FACE="Times New Roman" SIZE="6"><IMG SRC="v4100173.gif" ALT="v4100173.gif" BORDER=0 WIDTH=541 HEIGHT=242>
+<P>
+</FONT><FONT FACE="Times New Roman" SIZE="3">Figure 11-16    External Request Arbitration Protocol
+<P>
+</FONT></BODY>

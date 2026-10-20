@@ -1,0 +1,70 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML>
+<HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text-html; charset=Windows-1252">
+<title>The WidestBtn Sample Function</title>
+<meta name=MS-HAID content="_wcesdk_the_widestbtn_sample_function">
+<meta name=MS-HKWD content="The WidestBtn Sample Function">
+</HEAD>
+<BODY BGCOLOR=#FFFFFF TEXT=#000000>
+<!-- WCESDKG InfoViewer title (Wcesdkg.ivt); HTML topics extracted with tools/extract-ivt.py, images and the title's own indexes dropped. -->
+
+<form name=x><object name=iv classid="clsid:9c2ac687-ceef-11cf-96d9-00a0c903b016">
+</object></form>
+<h3><a name="_wcesdk_the_widestbtn_sample_function"></a>The WidestBtn Sample Function</h3>
+<p>
+The WidestBtn application-defined function calculates the button width necessary to completely display the widest button text string. </p>
+<pre>/////
+//
+// WidestBtn Function
+//     Calculates the width, in pixels of the widest button in the
+//     toolbar. Since toolbar controls use the same with for all
+//     buttons, the return value is used when sending the 
+//     TB_SETBUTTONWIDTH message;
+//
+// Accepts:
+//    LPTSTR *: Address of the array of button text strings.
+//    HWND: The handle to the parent window.
+//
+// Returns:
+//    An INT value representing the minimum width, in pixels,
+//    a button must be to allow room for the button text.
+/////
+
+INT WINAPI WidestBtn(LPTSTR *pszStrArray, HWND hwndOwner)
+{
+// The toolbar reserves pixels for space between buttons,
+// text, etc. This value is added to the return value
+// to compensate.
+#define EXTRA_PIXELS 8
+
+   INT      i, iStrMax_cx = 0;
+   SIZE     sz;
+   LOGFONT  lf;
+   HFONT    hFont;
+   HDC      hdc;
+
+   // Get the font used to display button text, the select it into
+   // a device context to be passed to GetTextExtentPoint32.
+   SystemParametersInfo(SPI_GETICONTITLELOGFONT,sizeof(LOGFONT),&amp;lf,0);
+
+   hdc = GetDC(hwnd);
+   hFont = CreateFontIndirect(&amp;lf);
+   SelectObject(hdc,hFont);
+
+   // Loop to find the widest string.
+   for(i=0;i&lt;MAX_BUTTONS;i++){
+      GetTextExtentPoint32(hdc, pszStrArray[i],
+                           strlen(pszStrArray[i]), &amp;sz);
+      if(sz.cx &gt; iStrMax_cx) iStrMax_cx = sz.cx;
+   }
+
+   // Release the DC and font now that we're done.
+   ReleaseDC(hwnd, hdc);
+   DeleteObject(hFont);
+   
+   // Return the sum of the string width, the border and extra pixels.
+   return (iStrMax_cx + GetSystemMetrics(SM_CXBORDER) + EXTRA_PIXELS);}
+</pre>
+</BODY>
+</HTML>

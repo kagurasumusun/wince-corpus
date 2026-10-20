@@ -1,0 +1,59 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML>
+<HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text-html; charset=Windows-1252">
+<title>Interprocess Synchronization</title>
+<meta name=MS-HAID content="_wcesdk_interprocess_synchronization">
+<meta name=MS-HKWD content="Interprocess Synchronization">
+</HEAD>
+<BODY BGCOLOR=#FFFFFF TEXT=#000000>
+<!-- WCESDKG InfoViewer title (Wcesdkg.ivt); HTML topics extracted with tools/extract-ivt.py, images and the title's own indexes dropped. -->
+
+<form name=x><object name=iv classid="clsid:9c2ac687-ceef-11cf-96d9-00a0c903b016">
+</object></form>
+<h2><a name="_wcesdk_interprocess_synchronization"></a>Interprocess Synchronization</h2>
+<p>
+Multiple processes can have handles to the same event or mutex object, so these objects can be used to accomplish interprocess synchronization. The process that creates an object can use the handle returned by the creation function (<A HREF='javascript:document.x.iv.ALink("_wcesdk_win32_createevent","")'><b>CreateEvent</b></a> or <A HREF='javascript:document.x.iv.ALink("_wcesdk_win32_createmutex","")'><b>CreateMutex</b></a>). Other processes can open a handle to the object by using its name in another call to the appropriate creation function. </p>
+<p>
+Named objects provide an easy way for processes to share object handles. The name specified by the creating process is limited to MAX_PATH characters, and can include any character except the backslash path-separator character (\). Once a process has created a named event or mutex object, other processes can use the name to call the appropriate function (<A HREF='javascript:document.x.iv.ALink("_wcesdk_win32_createevent","")'><b>CreateEvent</b></a> or <A HREF='javascript:document.x.iv.ALink("_wcesdk_win32_createmutex","")'><b>CreateMutex</b></a>) to open a handle to the object. Name comparison is case sensitive. </p>
+<p>
+The names of event and mutex objects share the same name space. If you specify a name that is in use by an object of another type when creating an object, the function succeeds, but <A HREF='javascript:document.x.iv.ALink("_wcesdk_win32_getlasterror","")'><b>GetLastError</b></a> returns ERROR_ALREADY_EXISTS. Therefore, when creating named objects, use unique names and be sure to check function return values for duplicate-name errors. </p>
+<p>
+If the name specified in a call to <A HREF='javascript:document.x.iv.ALink("_wcesdk_win32_createevent","")'><b>CreateEvent</b></a> matches the name of an existing event object, the function returns the handle of the existing object. When using this technique for event objects, however, none of the calling processes should request immediate ownership of the event. If multiple processes do request immediate ownership, it can be difficult to predict which process actually gets the initial ownership. </p>
+<p>
+The following examples illustrate the use of object names by creating and opening named objects.</p>
+<p>
+The first process uses the <A HREF='javascript:document.x.iv.ALink("_wcesdk_win32_createmutex","")'><b>CreateMutex</b></a> function to create the mutex object. Note that the function succeeds even if there is an existing object with the same name. </p>
+<pre>// One process creates the mutex object.
+
+HANDLE hMutex; 
+DWORD dwErr; 
+
+hMutex = CreateMutex( 
+    NULL,                  // no security descriptor
+    FALSE,                 // mutex not owned
+    &quot;NameOfMutexObject&quot;);  // object name
+
+if (hMutex == NULL) 
+    printf(&quot;CreateMutex error: %d\n&quot;, GetLastError() ); 
+else 
+    if ( GetLastError() == ERROR_ALREADY_EXISTS ) 
+        printf(&quot;CreateMutex opened existing mutex\n&quot;); 
+    else 
+        printf(&quot;CreateMutex created new mutex\n&quot;); 
+</pre>
+<p>
+The second process uses the <A HREF='javascript:document.x.iv.ALink("_wcesdk_win32_createmutex","")'><b>CreateMutex</b></a> function to open a handle of the existing mutex. </p>
+<pre>// Another process opens a handle of the existing mutex.
+
+HANDLE hMutex; 
+
+hMutex = OpenMutex( 
+    MUTEX_ALL_ACCESS,      // request full access
+    FALSE,                 // handle not inheritable
+    &quot;NameOfMutexObject&quot;);  // object name
+
+if (hMutex == NULL) 
+    printf(&quot;OpenMutex error: %d\n&quot;, GetLastError() ); </pre>
+</BODY>
+</HTML>

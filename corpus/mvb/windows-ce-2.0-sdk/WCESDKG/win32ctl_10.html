@@ -1,0 +1,63 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML>
+<HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text-html; charset=Windows-1252">
+<title>Processing Date and Time Picker Notifications</title>
+<meta name=MS-HAID content="_wcesdk_processing_date_and_time_picker_notifications">
+<meta name=MS-HKWD content="Processing Date and Time Picker Notifications">
+</HEAD>
+<BODY BGCOLOR=#FFFFFF TEXT=#000000>
+<!-- WCESDKG InfoViewer title (Wcesdkg.ivt); HTML topics extracted with tools/extract-ivt.py, images and the title's own indexes dropped. -->
+
+<form name=x><object name=iv classid="clsid:9c2ac687-ceef-11cf-96d9-00a0c903b016">
+</object></form>
+<h3><a name="_wcesdk_processing_date_and_time_picker_notifications"></a>Processing Date and Time Picker Notifications </h3>
+<p>
+The following example processes the <A HREF='javascript:document.x.iv.ALink("_wcesdk_dtn_datetimechange","")'>DTN_DATETIMECHANGE</a>, <A HREF='javascript:document.x.iv.ALink("_wcesdk_dtn_format","")'>DTN_FORMAT</a>, <A HREF='javascript:document.x.iv.ALink("_wcesdk_dtn_formatquery","")'>DTN_FORMATQUERY</a>, and <A HREF='javascript:document.x.iv.ALink("_wcesdk_dtn_wmkeydown","")'>DTN_WMKEYDOWN</a> notifications by calling the DoDateTimeChange, DoFormatQuery, DoFormat, and DoWMKeydown application-defined functions. </p>
+<p>
+Other topics in this chapter provide additional information on these notifications. See Supporting Callback Fields and Processing the DTN_DATETIMECHANGE Notification Message for additional information. </p>
+<pre>BOOL WINAPI DoNotify(HWND hwnd, WPARAM wParam, LPARAM lParam)
+{
+    LPNMHDR hdr = (LPNMHDR)lParam;
+
+    switch(hdr-&gt;code){
+        case DTN_DATETIMECHANGE:{
+            LPNMDATETIMECHANGE lpChange = (LPNMDATETIMECHANGE)lParam;
+            DoDateTimeChange(lpChange);
+        }
+        break;
+
+        case DTN_FORMATQUERY:{
+            LPNMDATETIMEFORMATQUERY lpDTFQuery = (LPNMDATETIMEFORMATQUERY)lParam;
+
+            // Process DTN_FORMATQUERY to ensure that the control
+            // displays callback information properly.
+            DoFormatQuery(hdr-&gt;hwndFrom, lpDTFQuery);
+        }
+        break;
+
+        case DTN_FORMAT:{
+            LPNMDATETIMEFORMAT lpNMFormat = (LPNMDATETIMEFORMAT) lParam;
+
+            // Process DTN_FORMAT to supply information about callback
+            // fields (fields) in the DTP control.
+            DoFormat(hdr-&gt;hwndFrom, lpNMFormat);
+        }
+        break;
+
+        case DTN_WMKEYDOWN:{
+            LPNMDATETIMEWMKEYDOWN lpDTKeystroke = 
+                            (LPNMDATETIMEWMKEYDOWN)lParam;
+
+            // Process DTN_WMKEYDOWN to respond to a user's keystroke in
+            // a callback field.
+            DoWMKeydown(hdr-&gt;hwndFrom, lpDTKeystroke);
+        }
+        break;
+    }
+    // All of the above notifications require that the owner return zero.
+    return FALSE;
+}
+</pre>
+</BODY>
+</HTML>

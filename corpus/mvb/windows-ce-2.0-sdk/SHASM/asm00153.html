@@ -1,0 +1,91 @@
+<HTML>
+<HEAD>
+<TITLE>9.4  Literal Sharing</TITLE>
+</HEAD><body bgcolor="#FFFFFF">
+<!-- SHASM InfoViewer title (Shasm.ivt); HTML topics extracted with tools/extract-ivt.py, images and the title's own indexes dropped. -->
+
+<A NAME="off_3474621"></A><A NAME="db8212d8"></A><FONT FACE="Arial" SIZE="5"><B>9.4  Literal Sharing 
+<P>
+</B></FONT><FONT FACE="Arial" SIZE="3">When the literals for several extended instructions are gathered into a
+literal pool, the assembler makes the extended instructions share identical immediate
+data. The assembler shares all operand forms (expressions) that are reducible
+(by computing subparts of the expression whose operands are known at assembly
+time) to one of the following forms:
+<P>
+</FONT><FONT FACE="Lucida Sans Typewriter" SIZE="3">expr:  constant
+<P>
+  | symbol
+<P>
+  | expr + expr
+<P>
+  | expr - constant
+<P>
+</FONT><FONT FACE="Arial" SIZE="3">The assembler can also share expressions between extended operations having
+different operation sizes (ie, a MOV.W and a MOV.L, or a plain MOV as described
+for </FONT><FONT FACE="Arial" COLOR="#008000" SIZE="3"><A HREF="asm00149.htm">Section 9.2</A></FONT><FONT FACE="Arial" SIZE="3">). Expressions that are determined to have the same value at assembly
+processing may also be shared.
+<P>
+An example of literal data sharing among extended instructions is shown below.
+<P>
+<B>Example:
+<P>
+</B>Source program:
+<P>
+ </FONT><FONT FACE="Lucida Sans Typewriter" SIZE="3">.SECTION CD1,CODE
+<P>
+CD1_START:
+<P>
+ MOV.L #H'FFFF0000,R0
+<P>
+ MOV.W #H'FF00,R1
+<P>
+ MOV.L #H'FFFF0000,R2
+<P>
+ MOV.B #H'FF,R3
+<P>
+ RTS
+<P>
+ MOV R0,R10
+<P>
+ .END
+<P>
+</FONT><FONT FACE="Arial" SIZE="3">Automatic literal pool generation result (source list)
+<P>
+</FONT><FONT FACE="Lucida Sans Typewriter" SIZE="3">*** SH Series Assembler Version 3.00.6110 *** -1- Fri Apr 26 10:53:44 1996
+<P>
+PROGRAM NAME = 94lst.obj
+<P>
+00000000   1  .SECTION CD1,CODE
+<P>
+00000000   2 CD1_START:
+<P>
+00000000 d003  3  MOV.L #H'FFFF0000,R0
+<P>
+00000002 9103  4  MOV.W #H'FF00,R1
+<P>
+00000004 d202  5  MOV.L #H'FFFF0000,R2
+<P>
+00000006 e3ff  6  MOV.B #H'FF,R3
+<P>
+00000008 000b  7  RTS
+<P>
+0000000a 6a03  8  MOV R0,R10
+<P>
+      ***** BEGIN-POOL SECTION CD1 *****
+<P>
+0000000c ff00   Data for source line 4
+<P>
+0000000e 0000   Align supplied by assembler
+<P>
+00000010 ffff0000  Data for source lines 3, 5
+<P>
+      ***** END-POOL SECTION CD1 *****
+<P>
+     9  .END
+<P>
+ ***** Total Errors:  0
+<P>
+ ***** Total Warnings: 0
+<P>
+</FONT></BODY>
+</HTML>

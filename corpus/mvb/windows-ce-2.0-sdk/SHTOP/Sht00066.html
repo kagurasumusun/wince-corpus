@@ -1,0 +1,72 @@
+<HTML>
+<HEAD>
+<TITLE>/YX</TITLE>
+</HEAD><body bgcolor="#FFFFFF">
+<!-- SHTOP InfoViewer title (Shtop.ivt); HTML topics extracted with tools/extract-ivt.py, images and the title's own indexes dropped. -->
+
+<A NAME="off_917504"></A><A NAME="000064f0"></A><FONT FACE="Arial" SIZE="4"><B>/YX (Automate Precompiled Header)
+<P>
+</B></FONT><FONT FACE="Arial" SIZE="3">The /YX option instructs the compiler to use a precompiled header file with a
+default name of MSVC.PCH if one exists or to create one if none exists. The
+file is created in the current directory. You can use the /Fp option to change the
+default name (and placement) of the precompiled header. The following command
+line uses /YX to create or use a precompiled header named MSVC.PCH:
+<P>
+SHCL /YX MYPROG.CPP
+<P>
+The following command line creates a precompiled header named MYPROG.PCH and
+places it in the \PROJPCH directory:
+<P>
+SHCL /YX /Fp\PROJPCH\MYPROG.PCH MYPROG.CPP
+<P>
+Using the /YX option limits precompilation to header files only. The
+precompiled header is created when the compiler encounters the first declaration,
+definition, <B>hrdstop</B> pragma, or <B>#line</B> directive that occurs in the source file. In a subsequent compilation, the
+precompiled header is used at the point in a source file where the compiler makes
+its final consistency check.
+<P>
+The actual set of header files precompiled with /YX is determined by the
+compiler, which may elect to use a subset of header files available to try and
+improve the number of cases where the resulting precompiled header can be used.
+<P>
+Although it is usually best to let the compiler determine which header files
+to use, you can selectively precompile header files by placing a <B>hdrstop</B> pragma in the source file between two <B>#include</B> directives. All header files before the <B>hdrstop</B> pragma are precompiled; those after are not. When used with /YX, any filename
+specified with the <B>hdrstop</B> pragma is ignored. If any subsequent compilation using the precompiled header
+does not contain an identical <B>hdrstop</B> pragma at the same point in the source file, the compiler builds a new
+precompiled header. 
+<P>
+Use of the /YX option implies use of the /Yd option (duplicate debugging
+information in all object files).
+<P>
+</FONT><FONT FACE="Arial Narrow" SIZE="4"><B>Note: 
+<P>
+</B></FONT><FONT FACE="Arial" SIZE="3">If either /Yc or /Yu is specified with /YX, a warning is issued. In such cases
+/YX is ignored, and /Yc or /Yu takes precedence. 
+<P>
+<B>Consistency Rules for the /YX Option
+<P>
+</B>If a precompiled header file exists (either MSVC.PCH or one specified by /Fp),
+it is compared to the current compilation for consistency. The following
+requirements must be met; otherwise, a new precompiled header file is created, and
+the new file overwrites the old:
+<P>
+<IMG SRC="sht90000.gif" ALT="sht90000.gif" BORDER=0 WIDTH=6 HEIGHT=16> The current compiler options must match those specified when the precompiled
+header was created.
+<P>
+<IMG SRC="sht90000.gif" ALT="sht90000.gif" BORDER=0 WIDTH=6 HEIGHT=16> The current working directory must match that specified when the precompiled
+header was created.
+<P>
+<IMG SRC="sht90000.gif" ALT="sht90000.gif" BORDER=0 WIDTH=6 HEIGHT=16> The order and values of all <B>#include</B> and <B>#pragma</B> preprocessor directives must match those specified when the precompiled
+header was created. These, along with <B>#define</B> directives, are checked one by one as they appear during subsequent
+compilations that use the precompiled header. The values of <B>#define</B> directives must match. However, a group of <B>#define</B> directives in sequence need not occur in exactly the same order since there
+are no semantic order dependencies for <B>#define</B> directives. The <B>#pragma</B> directives must be nearly identical<IMG SRC="sht90002.gif" ALT="sht90002.gif" BORDER=0 WIDTH=13 HEIGHT=16>multiple spaces outside of strings are treated as a single space to allow for
+different programming styles.
+<P>
+<IMG SRC="sht90000.gif" ALT="sht90000.gif" BORDER=0 WIDTH=6 HEIGHT=16> The value and order of include paths specified on the command line with /I
+options must match those specified when the precompiled header was created.
+<P>
+<IMG SRC="sht90000.gif" ALT="sht90000.gif" BORDER=0 WIDTH=6 HEIGHT=16> The timestamps of all the header files (all files specified with <B>#include</B> directives) used to build the precompiled header must match those that
+existed when the precompiled header was created.
+<P>
+</FONT></BODY>
+</HTML>

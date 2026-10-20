@@ -1,0 +1,70 @@
+<HTML>
+<HEAD>
+<TITLE>LWL    Load Word Left</TITLE>
+</HEAD><BODY BGCOLOR=#ffffff>
+<!-- PR3910 InfoViewer title (Pr3910.ivt); HTML topics extracted with tools/extract-ivt.py, images and the title's own indexes dropped. -->
+<BASEFONT FACE="Arial,Helvetica" SIZE="2">
+<A HREF= "PR39home.htm"><IMG SRC="contents.gif" ALT="contents.gif" BORDER = 0></A>
+<P>
+<A NAME="off_1346211"></A><A NAME="808813f3"></A><FONT FACE="Arial" SIZE="3"><H1>LWL    Load Word Left
+<P>
+ </H1></FONT><FONT FACE="Times New Roman" SIZE="6"><IMG SRC="P3900074.gif" ALT="P3900074.gif" BORDER=0 WIDTH=686 HEIGHT=94>
+<P>
+</FONT><FONT FACE="Arial" SIZE="3"><B>Format :</B>  LWL rt,offset(base)
+<P>
+<B>Description :</B>  This instruction can be used in combination with the LWR instruction to load
+a register with four consecutive bytes from memory, when the bytes cross a
+boundary between two words. LWL loads the left portion of the register from the
+appropriate part of the high-order word; LWR loads the right portion of the
+register from the appropriate part of the low-order word. The LWL instruction adds
+its sign-extended 16-bit<I> offset</I> to the contents of general register <I>base</I> to form a 32-bit unsigned effective address which can specify an arbitrary
+byte. It reads bytes only from the word in memory which contains the specified
+starting byte. From one to four bytes will be loaded, depending on the starting
+byte specified. Conceptually, it starts at the specified byte in memory and
+loads that byte into the high-order (left-most) byte of the register; then it
+proceeds toward the low-order byte of the word in memory and low-order byte of the
+register, loading bytes from memory into the register until it reaches the
+low-order byte of the word in memory. The low-order (right-most) byte(s) of the
+register will not be changed. 
+<P>
+The contents of general register <I>rt</I> are internally bypassed within the processor so that no NOP is needed between
+a load instruction which specifies register<I> rt </I>and an immediately following LWL instruction which also specifies register <I>rt</I>. Address error exceptions due to byte alignment are suppressed by this
+instruction.
+<P>
+<B>Operation :
+<P>
+</B>  T:   vAddress<IMG SRC="P3990000.gif" ALT="P3990000.gif" BORDER=0 WIDTH=3 HEIGHT=16> (offset15)16 || offset15..0 + GPR[base]
+<P>
+    (pAddress, nonCacheable) AddrTranslation (vAddress)
+<P>
+    byte  vAddress1..0 
+<P>
+    if BigEndian then 
+<P>
+    mem  LoadMemory (nonCacheable, WORD-byte,
+<P>
+    pAddress) 
+<P>
+    else 
+<P>
+    mem  LoadMmeory (nonCacheable, byte, pAddress31..2
+<P>
+    || 02) 
+<P>
+    endif 
+<P>
+T + 1:     if BigEndian then 
+<P>
+    GPR[rt]  mem31-8* byte..0 || GPR[rt] 8*byte-1..0 
+<P>
+    else 
+<P>
+    GPR[rt]  mem7+8* byte..0 || GPR[rt]23-8* byte..0 
+<P>
+    endif
+<P>
+<B>Exceptions :</B>  Bus error exception
+<P>
+Address error exception
+<P>
+</FONT></BODY>

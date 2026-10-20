@@ -1,0 +1,49 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML>
+<HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text-html; charset=Windows-1252">
+<title>Enumerating Databases</title>
+<meta name=MS-HAID content="_wcesdk_enumerating_databases">
+</HEAD>
+<BODY BGCOLOR=#FFFFFF TEXT=#000000>
+<!-- WCESDKG InfoViewer title (Wcesdkg.ivt); HTML topics extracted with tools/extract-ivt.py, images and the title's own indexes dropped. -->
+
+<form name=x><object name=iv classid="clsid:9c2ac687-ceef-11cf-96d9-00a0c903b016">
+</object></form>
+<h3><a name="_wcesdk_enumerating_databases"></a>Enumerating Databases</h3>
+<p>
+The Windows CE object store can contain an arbitrary number of databases.  </p>
+<p>
+To enumerate the databases that are present in the object store, call the <A HREF='javascript:document.x.iv.ALink("_wcesdk_cefindfirstdatabase","")'><b>CeFindFirstDatabase</b></a> and <A HREF='javascript:document.x.iv.ALink("_wcesdk_cefindnextdatabase","")'><b>CeFindNextDatabase</b></a> functions.</p>
+<p>
+<A HREF='javascript:document.x.iv.ALink("_wcesdk_cefindfirstdatabase","")'><b>CeFindFirstDatabase</b></a> establishes and returns a handle to the enumeration context for the type identifier specified. If the type identifier was zero, the context will include all the databases. Note that <A HREF='javascript:document.x.iv.ALink("_wcesdk_cefindfirstdatabase","")'><b>CeFindFirstDatabase</b></a> does not give the object identifier for the first database. You use the handle to the enumeration context to call <A HREF='javascript:document.x.iv.ALink("_wcesdk_cefindnextdatabase","")'><b>CeFindNextDatabase</b></a> repeatedly to obtain the object identifiers for each database in turn. When there are no more databases of that type, <A HREF='javascript:document.x.iv.ALink("_wcesdk_cefindnextdatabase","")'><b>CeFindNextDatabase</b></a> returns the value zero. To ensure that there was no problem with the enumeration, call <A HREF='javascript:document.x.iv.ALink("_wcesdk_win32_getlasterror","")'><b>GetLastError</b></a> and check for the ERROR_NO_MORE_ITEMS value.</p>
+<p>
+When the application is finished enumerating databases, it must close the handle to the enumeration context by using the <A HREF='javascript:document.x.iv.ALink("_wcesdk_win32_closehandle","")'><b>CloseHandle</b></a> function. </p>
+<p>
+The following sample enumerates all databases in the object store and adds their names to a combo box:</p>
+<pre>// sample fragment that enumerates databases, adds names to a combo box
+HANDLE hEnumDB;  // handle to a database enumerator
+TCHAR szBuf[MAX_BUF];  // tmp string for combobox or message box
+HWND hCB1;  // combo box; value set by calling GetDlgItem 
+...
+hEnumDB = CeFindFirstDatabase(0); // start the enumeration
+if (INVALID_HANDLE_VALUE == hEnumDB) {
+    // error handling omitted...uses GetLastError()
+    return;  // continue only if FindFirst succeeds
+}
+while( (WceObjID = CeFindNextDatabase(hEnumDB)) != 0) {
+    // get db information
+    if (!CeOidGetInfo(WceObjID, &amp;WceObjInfo) ) {
+        CloseHandle(hEnumDB); //  release handle to enumeration context
+        // error handling omitted...uses GetLastError()
+        return;   // continue only if FindNext succeeds
+    }
+    else { // add database name to combobox hCB1 
+        wsprintf(szBuf, WceObjInfo.infDatabase.szDbaseName);
+        SendMessage(hCB1, CB_ADDSTRING, 0, LPARAM(szBuf));
+    } // end else
+} // end while
+CloseHandle(hEnumDB); // must close handle to enumeration context
+</pre>
+</BODY>
+</HTML>

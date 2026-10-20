@@ -1,0 +1,46 @@
+<HTML>
+<HEAD>
+<TITLE>Soft Reset Exception</TITLE>
+</HEAD><BODY BGCOLOR=#ffffff>
+<!-- VR4100 InfoViewer title (Vr4100.ivt); HTML topics extracted with tools/extract-ivt.py, images and the title's own indexes dropped. -->
+<BASEFONT FACE="Arial,Helvetica" SIZE="2">
+<A HREF= "VR41home.htm"><IMG SRC="contents.gif" ALT="contents.gif" BORDER = 0></A>
+<P>
+<A NAME="off_1017837"></A><A NAME="4e794c7a"></A><FONT FACE="Arial" SIZE="3"><H1>Soft Reset Exception
+<P>
+</H1></FONT><FONT FACE="Arial" SIZE="5"><B>Cause
+<P>
+</B></FONT><FONT FACE="Arial" SIZE="3">A Soft Reset (sometimes called Warm Reset) occurs when the <B>ColdReset</B> signal remains deasserted while the <B>Reset</B> pin goes from assertion to deassertion. For a Soft Reset to be valid there
+must be at least one cycle during which neither <B>Reset</B> nor <B>ColdReset</B> were asserted.
+<P>
+A Soft Reset immediately resets all state machines, and sets the <I>SR</I> bit of the <I>Status</I> Register.
+<P>
+Execution begins at the reset vector when the reset is deasserted. This
+exception is not maskable.
+<P>
+</FONT><FONT FACE="Arial" SIZE="5"><B>Processing
+<P>
+</B></FONT><FONT FACE="Arial" SIZE="3">The CPU provides a special interrupt vector for this exception (same location
+as Cold Reset):
+<P>
+location 0xBFC0 0000 in 32-bit mode
+<P>
+location 0xFFFF FFFF BFC0 0000 in 64-bit mode
+<P>
+This vector is located within unmapped and uncached address space, so that the
+cache and TLB need not be initialized to process this exception. When a Soft
+Reset occurs, the <I>SR</I> bit of the <I>Status</I> register is set to distinguish this exception from a Cold Reset exception.
+<P>
+When this exception occurs, the contents of all registers are preserved except
+for:
+<P>
+<I>ErrorEPC</I> register, which contains the restart PC
+<P>
+<I>TS</I> of the <I>Status</I> register are cleared to 0
+<P>
+<I>ERL</I>, <I>SR</I>, and <I>BEV</I> of the <I>Status</I> register are set to 1.
+<P>
+Because the Soft Reset can abort cache and bus operations, cache and memory
+state is undefined when this exception occurs.
+<P>
+</FONT></BODY>

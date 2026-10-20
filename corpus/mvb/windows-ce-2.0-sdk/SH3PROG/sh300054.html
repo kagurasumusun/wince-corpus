@@ -1,0 +1,273 @@
+<HTML>
+<HEAD>
+<TITLE>6.20   DIV1 (Divide Step 1): Arithmetic Instruction</TITLE>
+</HEAD><body bgcolor="#FFFFFF">
+<!-- SH3PROG InfoViewer title (sh3prog.ivt); HTML topics extracted with tools/extract-ivt.py, images and the title's own indexes dropped. -->
+
+<A NAME="off_2097866"></A><A NAME="52d18691"></A><FONT FACE="Arial" SIZE="5"><B>6.20   DIV1 (Divide Step 1): Arithmetic Instruction
+<P>
+
+<P>
+</B></FONT><TABLE><TR VALIGN=TOP><TD><FONT FACE="Arial" SIZE="3"><B>Format
+<BR></B></FONT></TD><TD><FONT FACE="Arial" SIZE="3"><B>Abstract
+<BR></B></FONT></TD><TD><FONT FACE="Arial" SIZE="3"><B>Code
+<BR></B></FONT></TD><TD><FONT FACE="Arial" SIZE="3"><B>Cycle
+<BR></B></FONT></TD><TD><FONT FACE="Arial" SIZE="3"><B>T Bit
+<BR></B></FONT></TD></TR><TR VALIGN=TOP><TD><FONT FACE="Lucida Sans Typewriter" SIZE="3">DIV1 Rm,Rn
+<BR></FONT></TD><TD><FONT FACE="Arial" SIZE="3">1 step division (Rn ÷ Rm)
+<BR></FONT></TD><TD><FONT FACE="Lucida Sans Typewriter" SIZE="3">0011nnnnmmmm0100
+<BR></FONT></TD><TD><FONT FACE="Arial" SIZE="3">1
+<BR></FONT></TD><TD><FONT FACE="Arial" SIZE="3">Calculation result
+<BR>
+<BR></FONT></TD></TR></TABLE><FONT FACE="Arial" SIZE="3"><B>Description: 
+<P>
+</B>Uses single-step division to divide one bit of the 32-bit data in general
+register Rn (dividend) by Rm data (divisor). It finds a quotient through repetition
+either independently or used in combination with other instructions. During
+this repetition, do not rewrite the specified register or the M, Q, and T bits. 
+<P>
+In one-step division, the dividend is shifted one bit left, the divisor is
+subtracted and the quotient bit reflected in the Q bit according to the status
+(positive or negative). Zero division, overflow detection, and remainder operation
+are not supported. Check for zero division and overflow division before
+dividing. 
+<P>
+Find the remainder by first finding the sum of the divisor and the quotient
+obtained and then subtracting it from the dividend. That is, first initialize
+with DIV0S or DIV0U. Repeat DIV1 for each bit of the divisor to obtain the
+quotient. When the quotient requires 17 or more bits, place ROTCL before DIV1. For the
+division sequence, see the following examples.
+<P>
+<B>Operation:
+<P>
+</B></FONT><FONT FACE="Lucida Sans Typewriter" SIZE="3">DIV1(long m,long n) /* DIV1 Rm,Rn */
+<P>
+{
+<P>
+ unsigned long tmp0;
+<P>
+ unsigned char old_q,tmp1;
+<P>
+ old_q=Q;
+<P>
+ Q=(unsigned char)((0x80000000 &amp; R[n])!=0);
+<P>
+ R[n]&lt;&lt;=1;
+<P>
+ R[n]|=(unsigned long)T;
+<P>
+  switch(old_q){
+<P>
+  case 0:switch(M){
+<P>
+   case 0:tmp0=R[n];
+<P>
+    R[n]-=R[m];
+<P>
+    tmp1=(R[n]&gt;tmp0);
+<P>
+    switch(Q){
+<P>
+    case 0:Q=tmp1;
+<P>
+     break;
+<P>
+    case 1:Q=(unsigned char)(tmp1==0);
+<P>
+     break;
+<P>
+    }
+<P>
+    break;
+<P>
+   case 1:tmp0=R[n];
+<P>
+    R[n]+=R[m];
+<P>
+    tmp1=(R[n]&lt;tmp0);
+<P>
+    switch(Q){
+<P>
+    case 0:Q=(unsigned char)(tmp1==0);
+<P>
+     break;
+<P>
+    case 1:Q=tmp1;
+<P>
+     break;
+<P>
+   }
+<P>
+   break;
+<P>
+  }
+<P>
+  break;
+<P>
+ case 1:switch(M){
+<P>
+  case 0:tmp0=R[n];
+<P>
+   R[n]+=R[m];
+<P>
+   tmp1=(R[n]&lt;tmp0);
+<P>
+   switch(Q){
+<P>
+   case 0:Q=tmp1;
+<P>
+    break;
+<P>
+   case 1:Q=(unsigned char)(tmp1==0);
+<P>
+    break;
+<P>
+   }
+<P>
+   break;
+<P>
+  case 1:tmp0=R[n];
+<P>
+   R[n]-=R[m];
+<P>
+   tmp1=(R[n]&gt;tmp0);
+<P>
+   switch(Q){
+<P>
+   case 0:Q=(unsigned char)(tmp1==0);
+<P>
+    break;
+<P>
+  case 1:Q=tmp1;
+<P>
+    break;
+<P>
+   }
+<P>
+   break;
+<P>
+  }
+<P>
+  break;
+<P>
+ }
+<P>
+ T=(Q==M);
+<P>
+ PC+=2;
+<P>
+}
+<P>
+</FONT><FONT FACE="Arial" SIZE="3"><B>Example: 1:
+<P>
+  </B></FONT><FONT FACE="Lucida Sans Typewriter" SIZE="3">R1 (32 bits) / R0 (16 bits) = R1 (16 bits):Unsigned
+<P>
+SHLL16 R0 Upper 16 bits = divisor, lower 16 bits = 0
+<P>
+TST R0,R0 Zero division check
+<P>
+BT ZERO_DIV 
+<P>
+CMP/HS R0,R1 Overflow check
+<P>
+BT OVER_DIV
+<P>
+DIV0U  Flag initialization
+<P>
+<I>.arepeat</I>  16
+<P>
+DIV1 R0,R1 Repeat 16 times
+<P>
+<I>.aendr
+<P>
+</I>ROTCL R1
+<P>
+EXTU.W R1,R2 R1 = Quotient
+<P>
+</FONT><FONT FACE="Arial" SIZE="3"><B>Example: 2:
+<P>
+  </B></FONT><FONT FACE="Lucida Sans Typewriter" SIZE="3">R1:R2 (64 bits)/R0 (32 bits) = R2 (32 bits): Unsigned
+<P>
+TST R0,R0 Zero division check
+<P>
+BT ZERO_DIV
+<P>
+CMP/HS R0,R1 Overflow check
+<P>
+BT OVER_DIV 
+<P>
+DIV0U  Flag initialization
+<P>
+<I>.arepeat</I>  32
+<P>
+ROTCL R2 Repeat 32 times
+<P>
+DIV1 R0,R1
+<P>
+<I>.aendr
+<P>
+</I>ROTCL R2 R2 = Quotient
+<P>
+</FONT><FONT FACE="Arial" SIZE="3"><B>Example: 3:
+<P>
+  </B></FONT><FONT FACE="Lucida Sans Typewriter" SIZE="3">R1 (16 bits)/R0 (16 bits) = R1 (16 bits): Signed
+<P>
+SHLL16 R0 Upper 16 bits = divisor, lower 16 bits = 0
+<P>
+EXTS.W R1,R1 Sign-extends the dividend to 32 bits
+<P>
+XOR R2,R2 R2 = 0
+<P>
+MOV R1,R3
+<P>
+ROTCL R3 
+<P>
+SUBC R2,R1 Decrements if the dividend is negative
+<P>
+DIV0S R0,R1 Flag initialization
+<P>
+<I>.arepeat</I>  16
+<P>
+DIV1 R0,R1 Repeat 16 times
+<P>
+<I>.aendr
+<P>
+</I>EXTS.W R1,R1
+<P>
+ROTCL R1 R1 = quotient (ones complement)
+<P>
+ADDC R2,R1 Increments and takes the twos complement if the MSB of the quotient is 1
+<P>
+EXTS.W R1,R1 R1 = quotient (two's complement)
+<P>
+</FONT><FONT FACE="Arial" SIZE="3"><B>Example: 4:
+<P>
+  </B></FONT><FONT FACE="Lucida Sans Typewriter" SIZE="3">R2 (32 bits) / R0 (32 bits) = R2 (32 bits): Signed
+<P>
+MOV R2,R3 
+<P>
+ROTCL R3
+<P>
+SUBC R1,R1 Sign-extends the dividend to 64 bits (R1:R2)
+<P>
+XOR R3,R3 R3 = 0
+<P>
+SUBC R3,R2 Decrements and takes the ones complement if the dividend is negative
+<P>
+DIV0S R0,R1 Flag initialization
+<P>
+<I>.arepeat</I>  32
+<P>
+ROTCL R2 Repeat 32 times
+<P>
+DIV1 R0,R1
+<P>
+<I>.aendr
+<P>
+</I>ROTCL R2 R2 = Quotient (one's complement)
+<P>
+ADDC R3,R2 Increments and takes the two's complement if the MSB of the quotient is 1. R2
+= Quotient (two's complement)
+<P>
+</FONT></BODY>
+</HTML>

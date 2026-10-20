@@ -1,0 +1,65 @@
+<HTML>
+<HEAD>
+<TITLE>6.68   SUBC (Subtract with Carry): Arithmetic Instruction</TITLE>
+</HEAD><body bgcolor="#FFFFFF">
+<!-- SH3PROG InfoViewer title (sh3prog.ivt); HTML topics extracted with tools/extract-ivt.py, images and the title's own indexes dropped. -->
+
+<A NAME="off_3375921"></A><A NAME="bd359087"></A><FONT FACE="Arial" SIZE="5"><B>6.68   SUBC (Subtract with Carry): Arithmetic Instruction 
+<P>
+
+<P>
+</B></FONT><TABLE><TR VALIGN=TOP><TD><FONT FACE="Arial" SIZE="3"><B>Format
+<BR></B></FONT></TD><TD><FONT FACE="Arial" SIZE="3"><B>Abstract
+<BR></B></FONT></TD><TD><FONT FACE="Arial" SIZE="3"><B>Code
+<BR></B></FONT></TD><TD><FONT FACE="Arial" SIZE="3"><B>Cycle
+<BR></B></FONT></TD><TD><FONT FACE="Arial" SIZE="3"><B>T Bit
+<BR></B></FONT></TD></TR><TR VALIGN=TOP><TD><FONT FACE="Lucida Sans Typewriter" SIZE="3">SUBC Rm,Rn
+<BR></FONT></TD><TD><FONT FACE="Arial" SIZE="3">Rn - Rm- T <IMG SRC="sh390002.gif" ALT="sh390002.gif" BORDER=0 WIDTH=13 HEIGHT=16> Rn, Borrow <IMG SRC="sh390002.gif" ALT="sh390002.gif" BORDER=0 WIDTH=13 HEIGHT=16> T
+<BR></FONT></TD><TD><FONT FACE="Lucida Sans Typewriter" SIZE="3">0011nnnnmmmm1010
+<BR></FONT></TD><TD><FONT FACE="Arial" SIZE="3">1
+<BR></FONT></TD><TD><FONT FACE="Arial" SIZE="3">Borrow
+<BR>
+<BR></FONT></TD></TR></TABLE><FONT FACE="Arial" SIZE="3"><B>Description: 
+<P>
+</B>Subtracts Rm data and the T bit value from general register Rn data, and
+stores the result in Rn. The T bit changes according to the result. This instruction
+is used for subtraction of data that has more than 32 bits.
+<P>
+<B>Operation:
+<P>
+</B></FONT><FONT FACE="Lucida Sans Typewriter" SIZE="3">SUBC(long m,long n) /* SUBC Rm,Rn */
+<P>
+{
+<P>
+ unsigned long tmp0,tmp1;
+<P>
+ tmp1=R[n]-R[m];
+<P>
+ tmp0=R[n];
+<P>
+ R[n]=tmp1-T;
+<P>
+ if (tmp0&lt;tmp1) T=1;
+<P>
+ else T=0;
+<P>
+ if (tmp1&lt;R[n]) T=1;
+<P>
+ PC+=2;
+<P>
+}
+<P>
+</FONT><FONT FACE="Arial" SIZE="3"><B>Example:
+<P>
+</B></FONT><FONT FACE="Lucida Sans Typewriter" SIZE="3">CLRT  R0:R1(64 bits) - R2:R3(64 bits) = R0:R1(64 bits)
+<P>
+SUBC R3,R1 Before execution T = 0, R1 = H'00000000, R3 = H'00000001
+<P>
+  After execution T = 1, R1 = H'FFFFFFFF
+<P>
+SUBC R2,R0 Before execution T = 1, R0 = H'00000000, R2 = H'00000000
+<P>
+  After execution T = 1, R0 = H'FFFFFFFF
+<P>
+</FONT></BODY>
+</HTML>

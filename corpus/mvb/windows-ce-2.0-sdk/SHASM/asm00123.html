@@ -1,0 +1,103 @@
+<HTML>
+<HEAD>
+<TITLE>7.2.3  .AIF, .AELSIF, .AELSE, and .AENDI: Conditional Assembly</TITLE>
+</HEAD><body bgcolor="#FFFFFF">
+<!-- SHASM InfoViewer title (Shasm.ivt); HTML topics extracted with tools/extract-ivt.py, images and the title's own indexes dropped. -->
+
+<A NAME="off_3014989"></A><A NAME="3f013510"></A><FONT FACE="Arial" SIZE="4"><B>7.2.3  .AIF, .AELSIF, .AELSE, and .AENDI: Conditional Assembly 
+<P>
+</B></FONT><FONT FACE="Arial" SIZE="3"><B>Syntax:
+<P>
+</B></FONT><FONT FACE="Lucida Sans Typewriter" SIZE="3">.AIF<IMG SRC="asm90001.gif" ALT="asm90001.gif" BORDER=0 WIDTH=9 HEIGHT=16>&lt;condition1&gt;
+<P>
+</FONT><FONT FACE="Times" SIZE="3">&lt;</FONT><FONT FACE="Lucida Sans Typewriter" SIZE="3">Source statements assembled if condition1 is satisfied</FONT><FONT FACE="Times" SIZE="3">&gt;
+<P>
+</FONT><FONT FACE="Lucida Sans Typewriter" SIZE="3">.AELSIF<IMG SRC="asm90001.gif" ALT="asm90001.gif" BORDER=0 WIDTH=9 HEIGHT=16>&lt;condition2&gt;
+<P>
+&lt;Source statements assembled if condition1 is not satisfied, but condition2 is
+satisfied&gt;
+<P>
+.AELSE
+<P>
+</FONT><FONT FACE="Times" SIZE="3">&lt;</FONT><FONT FACE="Lucida Sans Typewriter" SIZE="3">Source statements assembled if neither condition1 nor condition2 is satisfied</FONT><FONT FACE="Times" SIZE="3">&gt;
+<P>
+</FONT><FONT FACE="Lucida Sans Typewriter" SIZE="3">.AENDI
+<P>
+</FONT><FONT FACE="Arial" SIZE="3"><B>Statement Elements:
+<P>
+<IMG SRC="asm90000.gif" ALT="asm90000.gif" BORDER=0 WIDTH=6 HEIGHT=16> </B>Label: The label field is not used
+<P>
+<IMG SRC="asm90000.gif" ALT="asm90000.gif" BORDER=0 WIDTH=6 HEIGHT=16> Operation: Enter the .AIF, .AELSIF (can be omitted), .AELSE (can be omitted),
+or .AENDI mnemonic in the operation field
+<P>
+<IMG SRC="asm90000.gif" ALT="asm90000.gif" BORDER=0 WIDTH=6 HEIGHT=16> Operands: .AIF or .AELSIF: Enter the condition. For .AELSE and .AENDI the
+operand field is not used
+<P>
+<B>Description: 
+<P>
+</B>.AIF, .AELSIF, .AELSE, and .AENDI are the assembler directives that select
+whether or not to assemble source statements according to the condition specified.
+The .AELSIF and/or .AELSE directives can be omitted. Multiple .AELSIF
+directives are permitted with a single .AIF, to test a list of conditions in sequence.
+There may be at most one .AELSE per .AIF. The alternate spellings .AELIF or
+.AELSEIF may be used in place of .AELSIF. The condition may be any expression with
+an absolute numeric result value. Expressions whose result is a relative
+value, or which involve forward references or external references, are not
+permitted. If the value is non-zero, the source statements up to the following .AELSIF,
+.AELSE, or .AENDI are assembled, and then any remaining statements up to the
+.AENDI are skippd. If the value is zero, the next .AELSIF (if any) is considered.
+If no .AELSIF's remain, and if all of the conditions have been zero, the
+source statements following the .AELSE are assembled.
+<P>
+For compatibility with other Hitachi assemblers, the following syntax is also
+supported. Term 1 and term 2 may be any expression (including constants).
+<P>
+The condition may be specified as follows:
+<P>
+</FONT><FONT FACE="Lucida Sans Typewriter" SIZE="3">.AIF<IMG SRC="asm90001.gif" ALT="asm90001.gif" BORDER=0 WIDTH=9 HEIGHT=16>&lt;term1&gt;<IMG SRC="asm90001.gif" ALT="asm90001.gif" BORDER=0 WIDTH=9 HEIGHT=16>&lt;relational operator&gt;<IMG SRC="asm90001.gif" ALT="asm90001.gif" BORDER=0 WIDTH=9 HEIGHT=16>&lt;term2&gt;
+<P>
+</FONT><FONT FACE="Arial" SIZE="3">Terms are specified with numeric values or character values. Table 7.2 lists
+the relational operators that can be used.
+<P>
+<A NAME="7b149d45"></A><B>Table 7.2  Relational Operators
+<P>
+</B></FONT><TABLE><TR VALIGN=TOP><TD><FONT FACE="Arial" SIZE="3"><B>Operator
+<BR></B></FONT></TD><TD><FONT FACE="Arial" SIZE="3"><B>Explanation
+<BR></B></FONT></TD></TR><TR VALIGN=TOP><TD><FONT FACE="Arial" SIZE="3">EQ
+<BR></FONT></TD><TD><FONT FACE="Arial" SIZE="3">term1 = term2
+<BR></FONT></TD></TR><TR VALIGN=TOP><TD><FONT FACE="Arial" SIZE="3">NE
+<BR></FONT></TD><TD><FONT FACE="Arial" SIZE="3">term1 != term2
+<BR></FONT></TD></TR><TR VALIGN=TOP><TD><FONT FACE="Arial" SIZE="3">GT
+<BR></FONT></TD><TD><FONT FACE="Arial" SIZE="3">term1 &gt; term2
+<BR></FONT></TD></TR><TR VALIGN=TOP><TD><FONT FACE="Arial" SIZE="3">LT
+<BR></FONT></TD><TD><FONT FACE="Arial" SIZE="3">term1 &lt; term2
+<BR></FONT></TD></TR><TR VALIGN=TOP><TD><FONT FACE="Arial" SIZE="3">GE
+<BR></FONT></TD><TD><FONT FACE="Arial" SIZE="3">term1 &gt;= term2
+<BR></FONT></TD></TR><TR VALIGN=TOP><TD><FONT FACE="Arial" SIZE="3">LE
+<BR></FONT></TD><TD><FONT FACE="Arial" SIZE="3">term1 &lt;= term2
+<BR></FONT></TD></TR></TABLE><FONT FACE="Arial Narrow" SIZE="4"><B>Note:
+<P>
+</B></FONT><FONT FACE="Arial" SIZE="3">Numeric values are handled as 32-bit signed integers.
+<P>
+<B>Example:
+<P>
+ </B></FONT><FONT FACE="Lucida Sans Typewriter" SIZE="3">.AIF &quot;\&amp;FLAG&quot; EQ &quot;ON&quot;
+<P>
+ MOV R0,R10     ; These statements
+<P>
+ MOV R1,R11     ; are assembled
+<P>
+ MOV R2,R12     ; when FLAG is &quot;ON&quot;.
+<P>
+ .AELSE
+<P>
+ MOV R10,R0     ; These statements
+<P>
+ MOV R11,R1     ; are assembled
+<P>
+ MOV R12,R2     ; when FLAG is not &quot;ON&quot;.
+<P>
+ .AENDI
+<P>
+</FONT></BODY>
+</HTML>

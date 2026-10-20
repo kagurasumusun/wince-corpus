@@ -1,0 +1,148 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML>
+<HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text-html; charset=Windows-1252">
+<title>SETUP.DLL</title>
+<meta name=MS-HAID content="_wcesdk_setup.dll">
+<meta name=MS-HKWD content="SETUP.DLL">
+</HEAD>
+<BODY BGCOLOR=#FFFFFF TEXT=#000000>
+<!-- WCESDKG InfoViewer title (Wcesdkg.ivt); HTML topics extracted with tools/extract-ivt.py, images and the title's own indexes dropped. -->
+
+<form name=x><object name=iv classid="clsid:9c2ac687-ceef-11cf-96d9-00a0c903b016">
+</object></form>
+<h3><a name="_wcesdk_setup.dll"></a>SETUP.DLL</h3>
+<p>
+The device-specific Setup.dll file is an optional ISV-created file that allows the ISV to perform custom operations such as handling errors, ensuring that a &quot;main&quot; component is present , deleting database and user data, etc. The file must export the following functions:</p>
+<p>
+Install_Init()&#09;&#09;called before the application is installed;</p>
+<p>
+Install_Exit()&#09;called after the application is installed;</p>
+<p>
+Uninstall_Init()&#09;&#09;called before the application is uninstalled;</p>
+<p>
+Uninstall_Exit()&#09;called after the application is uninstalled,</p>
+<p>
+<b>Note</b>  Once the &quot;Setup.DLL&quot; file is incorporated into the CAB file, it is renamed.  You cannot make any assumptions on filename or location of this DLL on the device.</p>
+<p>
+<b>Note</b>  You need to include the SDK public header file &quot;ce_setup.h&quot;</p>
+<h2>Install_Init</h2>
+<p>
+this is called before the application is installed.  This can be used for custom operations such as application version checking in a reinstall scenario, checking if a &quot;dependent application&quot; is present, etc.</p>
+<h5>Syntax</h5>
+<p>
+<b>codeINSTALL_INIT</b> <BR><b>Install_Init(<BR>&#09;HWND</b> <i>hwndParent,<BR>&#09;</i><b>BOOL</b> <i>fFirstCall</i>,<BR>&#09;<b>BOOL</b> <i>fPreviouslyInstalled</i>,<BR>&#09;<b>LPCTSTR</b> <i>pszInstallDir<BR></i><b>);</b></p>
+<h5>Parameters</h5>
+<dl>
+<dt>
+<i>hwndParent</i></dt>
+<dd>
+handle to the parent window<br>
+</dd>
+<dt>
+<i>fFirstCall</i></dt>
+<dd>
+TRUE<font face="Symbol"><span style="font-family:symbol">&#190;</span></font>this is the first time this function is being called<p>
+(Note: Install_Init may be called multiple times, each time with a different string for <i>pszInstallDir</i> (for example, when the current directory does not have enough room). ISVs should do &quot;first time&quot; processing when <i>fFirstCall</i> is TRUE and to be aware that subsequent calls to Install_Init may result in different string values for <i>pszInstallDir.</i></p>
+<br>
+</dd>
+<dt>
+<i>fPreviouslyInstalled</i></dt>
+<dd>
+TRUE--the current application is already installed<br>
+</dd>
+<dt>
+<i>pszInstallDir</i></dt>
+<dd>
+the user-selected install directory of the application</dd>
+</dl>
+<h5>Return value</h5>
+<p>
+codeINSTALL_INIT_CONTINUE&#09;&#09;&#09;//continue installation</p>
+<p>
+codeINSTALL_INIT_CANCEL&#09;&#09;&#09;//cancel installation</p>
+<h2>Install_Exit</h2>
+<p>
+this is called after the installation is over. This can be used for error handling that occurred during the installation.</p>
+<p>
+<b>codeINSTALL_EXIT<BR>Install_Exit (</b><BR>&#09;<b>HWND</b> <i>hwndParent</i>,<BR>&#09;<b>LPCTSTR</b> <i>pszInstallDir</i>,<BR>&#09;<b>WORD</b> <i>cFailedDirs</i>,<BR>&#09;<b>WORD</b> <i>cFailedFiles</i>,<BR>&#09;<b>WORD</b> <i>cFailedRegKeys</i>,<BR>&#09;<b>WORD</b> <i>cFailedRegVals</i>,<BR>&#09;<b>WORD</b> <i>cFailedShortcuts<BR></i><b>);</b></p>
+<h5>Parameters</h5>
+<dl>
+<dt>
+<i>hwndParent</i></dt>
+<dd>
+handle to the parent window<br>
+</dd>
+<dt>
+<i>pszInstallDir</i></dt>
+<dd>
+final install directory<br>
+</dd>
+<dt>
+<i>cFailedDirs</i></dt>
+<dd>
+count of the directories that failed to be created<br>
+</dd>
+<dt>
+<i>cFailedFiles</i></dt>
+<dd>
+count of files that failed to be created<br>
+</dd>
+<dt>
+<i>cFainedRegKeys</i></dt>
+<dd>
+count of the registry keys that failed to be created<br>
+</dd>
+<dt>
+<i>cFailedRegVals</i></dt>
+<dd>
+count of the registry values that failed to be created<br>
+</dd>
+<dt>
+<i>cFailedShortcuts</i></dt>
+<dd>
+count of the shortcuts that failed to be created</dd>
+</dl>
+<h5>return value</h5>
+<p>
+codeINSTALL_EXIT_DONE&#09;&#09;&#09;//exit, installation successful</p>
+<p>
+codeINSTALL_EXIT_UNINSTALL&#09;//uninstall application before exiting</p>
+<h2>Uninstall_Init</h2>
+<p>
+this is called before the uninstallation begins.</p>
+<b>codeUNINSTALL_INIT<BR>Uninstall_Init(<BR>&#09;HWND </b><i>hwndParent,<BR>&#09;</i><b>LPCTSTR </b><i>pszInstallDir<BR></i><b>);</b>
+<h5>Parameters</h5>
+<dl>
+<dt>
+<i>hwndParent</i></dt>
+<dd>
+handle to the parent window<br>
+</dd>
+<dt>
+<i>pszInstallDir</i></dt>
+<dd>
+install directory of the application</dd>
+</dl>
+<h5>return value</h5>
+<p>
+codeUNINSTALL_INIT_CONTINUE&#09;&#09;//continue with uninstallation</p>
+<p>
+codeUNINSTALL_INIT_CANCEL&#09;&#09;&#09;//cancel uninstallation</p>
+<h2>Uninstall_Exit</h2>
+<p>
+this is called after the uninstallation. This can be used for any special error handling routines.</p>
+<p>
+<b>codeUNINSTALL_EXIT<BR>Uninstall_Exit(<BR>&#09;HWND</b> <i>hwndParent<BR></i><b>);</b></p>
+<h5>Parameters</h5>
+<dl>
+<dt>
+<i>hwndParent</i></dt>
+<dd>
+handle to the parent window</dd>
+</dl>
+<h5>return value</h5>
+<p>
+codeUNINSTALL_EXIT_DONE&#09;&#09;// a successful uninstallation</p>
+</BODY>
+</HTML>

@@ -1,0 +1,76 @@
+<HTML>
+<HEAD>
+<TITLE>6.11   BSRF (Branch to Subroutine Far): Branch Instruction</TITLE>
+</HEAD><body bgcolor="#FFFFFF">
+<!-- SH3PROG InfoViewer title (sh3prog.ivt); HTML topics extracted with tools/extract-ivt.py, images and the title's own indexes dropped. -->
+
+<A NAME="off_1901430"></A><A NAME="825318df"></A><FONT FACE="Arial" SIZE="5"><B>6.11   BSRF (Branch to Subroutine Far): Branch Instruction
+<P>
+
+<P>
+</B></FONT><TABLE><TR VALIGN=TOP><TD><FONT FACE="Arial" SIZE="3"><B>Format
+<BR></B></FONT></TD><TD><FONT FACE="Arial" SIZE="3"><B>Abstract
+<BR></B></FONT></TD><TD><FONT FACE="Arial" SIZE="3"><B>Code
+<BR></B></FONT></TD><TD><FONT FACE="Arial" SIZE="3"><B>Cycle
+<BR></B></FONT></TD><TD><FONT FACE="Arial" SIZE="3"><B>T Bit
+<BR></B></FONT></TD></TR><TR VALIGN=TOP><TD><FONT FACE="Lucida Sans Typewriter" SIZE="3">BSRF Rn
+<BR></FONT></TD><TD><FONT FACE="Arial" SIZE="3">PC <IMG SRC="sh390002.gif" ALT="sh390002.gif" BORDER=0 WIDTH=13 HEIGHT=16> PR, Rn + PC <IMG SRC="sh390002.gif" ALT="sh390002.gif" BORDER=0 WIDTH=13 HEIGHT=16> PC
+<BR></FONT></TD><TD><FONT FACE="Lucida Sans Typewriter" SIZE="3">0000nnnn00000011
+<BR></FONT></TD><TD><FONT FACE="Arial" SIZE="3">2
+<BR></FONT></TD><TD><FONT FACE="Arial" SIZE="3">-
+<BR>
+<BR></FONT></TD></TR></TABLE><FONT FACE="Arial" SIZE="3"><B>Description: 
+<P>
+</B>Branches to the subroutine procedure at a specified address after executing
+the instruction following this BSRF instruction. The PC value is stored in the
+PR. The branch destination is PC + the 32-bit contents of the general register
+Rn. PC is the start address of the second instruction after this instruction.
+Used as a subroutine call in combination with RTS.
+<P>
+</FONT><FONT FACE="Arial Narrow" SIZE="4"><B>Note: 
+<P>
+</B></FONT><FONT FACE="Arial" SIZE="3">Since this is a delayed branch instruction, the instruction after BSR is
+executed before branching. No interrupts are accepted between this instruction and
+the next instruction. If the next instruction is a branch instruction, it is
+acknowledged as an illegal slot instruction. 
+<P>
+<B>Operation:
+<P>
+</B></FONT><FONT FACE="Lucida Sans Typewriter" SIZE="3">BSRF(long n) /* BSRF Rn */
+<P>
+{
+<P>
+ PR=PC;
+<P>
+ PC+=R[n];
+<P>
+ Delay_Slot(PR+2);
+<P>
+}
+<P>
+</FONT><FONT FACE="Arial" SIZE="3"><B>Example:
+<P>
+ </B></FONT><FONT FACE="Lucida Sans Typewriter" SIZE="3">MOV.L #(TARGET-BSRF_PC),R0 Sets displacement.
+<P>
+ BRSF @R0    Branches to TARGET
+<P>
+ MOV R3,R4 Executes the MOV instruction before branching
+<P>
+BSRF_PC:  ¨ The PC location is used to calculate the branch destination with BSRF</FONT><FONT FACE="Times" SIZE="3">.
+<P>
+ </FONT><FONT FACE="Lucida Sans Typewriter" SIZE="3">ADD R0,R1 
+<P>
+ .....
+<P>
+ .....
+<P>
+TARGET:  ¨Procedure entrance
+<P>
+ MOV R2,R3 
+<P>
+ RTS  Returns to the above ADD instruction
+<P>
+ MOV #1,R0    Executes MOV before branching
+<P>
+</FONT></BODY>
+</HTML>

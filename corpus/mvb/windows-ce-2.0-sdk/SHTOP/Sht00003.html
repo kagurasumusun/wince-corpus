@@ -1,0 +1,69 @@
+<HTML>
+<HEAD>
+<TITLE>Linking</TITLE>
+</HEAD><body bgcolor="#FFFFFF">
+<!-- SHTOP InfoViewer title (Shtop.ivt); HTML topics extracted with tools/extract-ivt.py, images and the title's own indexes dropped. -->
+
+<A NAME="off_1590"></A><A NAME="17376cb0"></A><FONT FACE="Arial" SIZE="5"><B>Linking
+<P>
+</B></FONT><FONT FACE="Arial" SIZE="3">SHCL automatically invokes the linker after compiling unless the /c option
+(Compile Without Linking) is used. It gives the names of the object files created
+during compiling, and the names of any object files or libraries given on the
+command line to the linker. The linker uses the options listed in the LINK
+environment variable. If you use /link to specify linker options on the SHCL command
+line, these options apply as well. If conflicts occur, options that follow
+/link override those in the LINK environment variable.
+<P>
+Before it creates the executable file or DLL, the linker resolves external
+references in the object files. An external reference is a function call in one
+object file that refers to a function defined in another object file or in a
+library. To resolve an external reference, the linker searches for the called
+function in the following order:
+<P>
+<IMG SRC="sht90000.gif" ALT="sht90000.gif" BORDER=0 WIDTH=6 HEIGHT=16> The object files passed by SHCL
+<P>
+<IMG SRC="sht90000.gif" ALT="sht90000.gif" BORDER=0 WIDTH=6 HEIGHT=16> The libraries given on the SHCL command line, if any
+<P>
+<IMG SRC="sht90000.gif" ALT="sht90000.gif" BORDER=0 WIDTH=6 HEIGHT=16> The libraries named in the object files
+<P>
+After all external references are resolved, the linker links the object files
+and libraries named by SHCL to create a single executable file or DLL. 
+<P>
+<B>Example:
+<P>
+</B>Assume that you are compiling three C source files: MAIN.C, MOD1.C, and
+MOD2.C. Each file includes a call to a function defined in a different file:
+<P>
+<IMG SRC="sht90000.gif" ALT="sht90000.gif" BORDER=0 WIDTH=6 HEIGHT=16> MAIN.C calls the function named func1 in MOD1.C and the function named func2 in MOD2.C.
+<P>
+<IMG SRC="sht90000.gif" ALT="sht90000.gif" BORDER=0 WIDTH=6 HEIGHT=16> MOD1.C calls the standard library functions printf and scanf.
+<P>
+<IMG SRC="sht90000.gif" ALT="sht90000.gif" BORDER=0 WIDTH=6 HEIGHT=16> MOD2.C calls graphics functions named myline and mycircle, which are defined
+in a library named MYGRAPH.LIB.
+<P>
+Compile with the following command line:
+<P>
+</FONT><FONT FACE="Lucida Sans Typewriter" SIZE="3">SHCL MAIN.C MOD1.C MOD2.C MYGRAPH.LIB
+<P>
+
+<P>
+</FONT><FONT FACE="Arial" SIZE="3">SHCL first compiles the C source files and creates the object files MAIN.OBJ,
+MOD1.OBJ, and MOD2.OBJ. The compiler places the name of the standard library
+(libc.lib or coredll.lib) in each object file. (Use the -Zl flag to override the
+placement of the name.)
+<P>
+Next, SHCL passes the names of the generated object files to the linker.
+Finally, the linker resolves the external references as follows:
+<P>
+In MAIN.OBJ, the reference to the function func1 is resolved using the
+definition in MOD1.OBJ; the reference to the function func2 is resolved using the
+definition in MOD2.OBJ.
+<P>
+In MOD1.OBJ, the references to printf and scanf are resolved using the
+definitions in the library that the linker finds named within MOD1.OBJ.
+<P>
+In MOD2.OBJ, the references to myline and mycircle are resolved using the
+definitions in MYGRAPH.LIB.
+<P>
+</FONT></BODY>
+</HTML>

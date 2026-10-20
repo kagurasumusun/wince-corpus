@@ -1,0 +1,85 @@
+<HTML>
+<HEAD>
+<TITLE>9.5  Literal Pool Output Suppression</TITLE>
+</HEAD><body bgcolor="#FFFFFF">
+<!-- SHASM InfoViewer title (Shasm.ivt); HTML topics extracted with tools/extract-ivt.py, images and the title's own indexes dropped. -->
+
+<A NAME="off_3506369"></A><A NAME="601b6fad"></A><FONT FACE="Arial" SIZE="5"><B>9.5  Literal Pool Output Suppression 
+<P>
+</B></FONT><FONT FACE="Arial" SIZE="3">When a program has too many unconditional branches, the following problems may
+occur:
+<P>
+<IMG SRC="asm90000.gif" ALT="asm90000.gif" BORDER=0 WIDTH=6 HEIGHT=16> Many small literal pools are output
+<P>
+<IMG SRC="asm90000.gif" ALT="asm90000.gif" BORDER=0 WIDTH=6 HEIGHT=16> Literals are not shared
+<P>
+In these cases, suppress literal pool output as shown below.
+<P>
+ </FONT><FONT FACE="Lucida Sans Typewriter" SIZE="3">&lt;delayed branch instruction&gt;
+<P>
+ &lt;delay slot instruction&gt;
+<P>
+ .NOPOOL
+<P>
+</FONT><FONT FACE="Arial" SIZE="3"><B>Example:
+<P>
+</B></FONT><FONT FACE="Lucida Sans Typewriter" SIZE="3">CASE1:
+<P>
+ MOV.L #H'FFFF0000,R0
+<P>
+ RTS
+<P>
+ NOP
+<P>
+ .NOPOOL
+<P>
+CASE2:
+<P>
+ MOV.L #H'FFFF0000,R0
+<P>
+ RTS
+<P>
+ NOP
+<P>
+ .END
+<P>
+</FONT><FONT FACE="Arial" SIZE="3">Automatic literal pool generation result (source list)
+<P>
+</FONT><FONT FACE="Lucida Sans Typewriter" SIZE="3">*** SH Series Assembler Version 3.00.6110 *** -1- Fri Apr 26 10:53:47 1996
+<P>
+PROGRAM NAME = 95lst.obj
+<P>
+00000000   1 CASE1:
+<P>
+00000000 d002  2  MOV.L #H'FFFF0000,R0
+<P>
+00000002 000b  3  RTS
+<P>
+00000004 0009  4  NOP
+<P>
+     5  .NOPOOL
+<P>
+00000006   6 CASE2:
+<P>
+00000006 d001  7  MOV.L #H'FFFF0000,R0
+<P>
+00000008 000b  8  RTS
+<P>
+0000000a 0009  9  NOP
+<P>
+     10 
+<P>
+      ***** BEGIN-POOL SECTION .text *****
+<P>
+0000000c ffff0000  Data for source lines 2, 7
+<P>
+      ***** END-POOL SECTION .text *****
+<P>
+     11  .END
+<P>
+ ***** Total Errors:  0
+<P>
+ ***** Total Warnings: 0
+<P>
+</FONT></BODY>
+</HTML>

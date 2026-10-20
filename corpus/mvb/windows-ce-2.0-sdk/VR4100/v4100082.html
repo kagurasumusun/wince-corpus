@@ -1,0 +1,55 @@
+<HTML>
+<HEAD>
+<TITLE>Cache Error Exception</TITLE>
+</HEAD><BODY BGCOLOR=#ffffff>
+<!-- VR4100 InfoViewer title (Vr4100.ivt); HTML topics extracted with tools/extract-ivt.py, images and the title's own indexes dropped. -->
+<BASEFONT FACE="Arial,Helvetica" SIZE="2">
+<A HREF= "VR41home.htm"><IMG SRC="contents.gif" ALT="contents.gif" BORDER = 0></A>
+<P>
+<A NAME="off_1147557"></A><A NAME="718e6c87"></A><FONT FACE="Arial" SIZE="3"><H1>Cache Error Exception
+<P>
+</H1></FONT><FONT FACE="Arial" SIZE="5"><B>Cause
+<P>
+</B></FONT><FONT FACE="Arial" SIZE="3">The Cache Error exception occurs when either a primary cache parity error or a
+System bus parity error is detected. This exception is not maskable, but error
+detection may be disabled by the <I>DE</I> bit of the <I>Status</I> register.
+<P>
+If a parity error is detected when the <I>DE</I> bit of <I>Status</I> register is not set, a cache error exception is taken during one of the
+following operations:
+<P>
+an instruction fetch from instruction cache
+<P>
+a load from the data cache
+<P>
+tag parity check on a store
+<P>
+main memory read by the processor
+<P>
+most of the CACHE ops (no exception is taken for the CACHE ops Index Load Tag
+or Index Store Tag)
+<P>
+In case of a parity or bus error on the second double word returned from
+memory for data cache, the cache error exception is not taken and the cache line is
+marked invalid. This keeps the exceptions precise, since the processor pipeline
+may have advanced after receipt of the critical word.
+<P>
+</FONT><FONT FACE="Arial" SIZE="5"><B>Processing
+<P>
+</B></FONT><FONT FACE="Arial" SIZE="3">The processor sets the <I>ERL</I> bit in the <I>Status</I> register, saves the exception restart address in <I>ErrorEPC</I> register, and then transfers to a special vector in uncached space.
+<P>
+If the BEV bit = 0, the vector is one of the following: 0xA000 0100 in 32-bit
+mode, or 0xFFFF FFFF A000 0100 in 64-bit mode 
+<P>
+If the BEV bit = 1, the vector is one of the following: 0xBFC0 0300 in 32-bit
+mode, or 0xFFFF FFFF BFC0 0300 in 64-bit mode
+<P>
+No other registers are changed.
+<P>
+</FONT><FONT FACE="Arial" SIZE="5"><B>Servicing
+<P>
+</B></FONT><FONT FACE="Arial" SIZE="3">All errors should be logged. To correct cache parity errors, the system uses
+the CACHE instruction to invalidate the cache block, overwrites the old data
+through a cache miss, and resumes execution with an ERET. Other errors are not
+correctable and are likely to be fatal to the current process.
+<P>
+</FONT></BODY>

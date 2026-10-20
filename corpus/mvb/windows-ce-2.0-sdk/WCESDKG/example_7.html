@@ -1,0 +1,46 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML>
+<HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text-html; charset=Windows-1252">
+<title>The Window Procedure</title>
+<meta name=MS-HAID content="_wcesdk_the_window_procedure">
+</HEAD>
+<BODY BGCOLOR=#FFFFFF TEXT=#000000>
+<!-- WCESDKG InfoViewer title (Wcesdkg.ivt); HTML topics extracted with tools/extract-ivt.py, images and the title's own indexes dropped. -->
+
+<form name=x><object name=iv classid="clsid:9c2ac687-ceef-11cf-96d9-00a0c903b016">
+</object></form>
+<h3><a name="_wcesdk_the_window_procedure"></a>The Window Procedure </h3>
+<p>
+The window procedure, <b>WndProc</b>, contains some functions specific to Windows CE and some common Windows programming functions that have special implications for Windows CE.</p>
+<h4>WM_CREATE</h4>
+<p>
+As in Windows 95<font face="Symbol"><span style="font-family:symbol">&#45;</span></font>based programs, messages are processed in the window procedure. When the WM_CREATE message is received by the &quot;Hello Windows CE&quot; program, two functions unique to Windows CE are called, they are:
+<ul>
+<li>
+<b>CommandBar_Create</b>. This function creates an empty command bar. A handle to the instance of this window obtained in <b>WinMain </b>is passed to the function and it returns a handle to the command bar.<br><br></li>
+<li>
+<b>CommandBar_AddAdornments</b>. This function adds the help button and close button to the command bar. When the help button is selected, a WM_HELP message is sent to the application. When the close button is selected the system generates a WM_CLOSE message. The <b>CommandBar_AddAdornments </b>function can also be used to add an OK button that generates a WM_COMMAND message with IDOK as the message identifier.</li>
+</ul>
+<p>
+The &quot;Hello Windows CE&quot; program also calls the <b>sndPlaySound</b> function when the window is created. It plays a .wav file that is one of the sound files bundled with the applications and stored in ROM. Using the .wav files stored in ROM saves space in the object store. Because the sound is registered with Windows CE, the program can refer to that sound by the name of the .wav file. </p>
+<p>
+Windows CE can support 16-bit .wav files, but some hardware devices may not. Using 16-bit sounds in your application is not recommended. eight-bit mono sounds at 11,025 Hz or less are recommended to save storage space and processing time. </p>
+<h4>WM_PAINT </h4>
+<p>
+The WM_PAINT message informs the program when the client area of the window needs to be repainted. The sample program calls five functions in the WM_PAINT branch of the <b>switch </b>statement: <b>BeginPaint</b>, <b>GetClientRect</b>, <b>CommandBar_Height</b>, <b>DrawText</b>, and <b>EndPaint</b>.</p>
+<p>
+The functions<b> BeginPaint </b>and<b> EndPaint </b>operate the same for Windows 95<font face="Symbol"><span style="font-family:symbol">&#45;</span></font>based and Windows CE-based applications.<b> BeginPaint </b>prepares the window for painting and returns a handle to a device context, in this case the video display device driver. The <b>EndPaint</b> function releases the handle to the device context. </p>
+<p>
+The<b> GetClientRect</b> function is called to obtain the dimensions of the client area of the window. It performs identically to its Windows 95 counterpart; however, because the command bar is in the client area, it must be accounted for before the dimensions are passed to <b>DrawText</b>.</p>
+<p>
+The <b>CommandBar_Height</b> function returns the height in pixels of the command bar. The &quot;Hello Windows CE&quot; program implements the <b>CommandBar_Height</b> function by adding the value returned to the top of the rectangle obtained from <b>GetClientRect.</b></p>
+<p>
+<b>DrawText</b> is called to display &quot;Hello Windows CE!&quot; in the remainder of the client area. The flags passed in as the last parameter to this function specify how the text will be formatted on the screen. In this case they specify a single line of text centered in the rectangle passed in as the fourth parameter.</p>
+<h4>WM_HIBERNATE</h4>
+<p>
+Because Windows CE devices have limited memory, the system monitors memory usage, and takes action when available memory drops below a threshold value. A key part of this process is the WM_HIBERNATE message, which is sent to applications to warn them of a low-memory situation. Well behaved applications should cooperate with the system, and reduce their memory usage as much as possible when they receive this message.</p>
+<p>
+<b>Note</b>  Hibernating is vital. All well-behaved Windows CE applications <i>must</i> have a handler for WM_HIBERNATE and do as good a job as possible on receiving it.</p>
+</BODY>
+</HTML>

@@ -1,0 +1,154 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
+<HTML>
+<HEAD><META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=Windows-1252">
+<TITLE>ACMDM_FORMATTAG_DETAILS</TITLE>
+<META NAME="MS-HKWD" CONTENT="ACMDM_FORMATTAG_DETAILS">
+<META NAME="MS-HAID" CONTENT="_wceddk_ACMDM_FORMATTAG_DETAILS">
+</HEAD>
+<BODY BGPROPERTIES="FIXED" TEXT="#000000" BGCOLOR="#FFFFFF">
+<!-- WCEDDK InfoViewer title (WCEDDK.IVT); HTML topics extracted with tools/extract-ivt.py, images and the title's own indexes dropped. -->
+
+<FORM name=x>
+<OBJECT name=iv classid="clsid:9c2ac687-ceef-11cf-96d9-00a0c903b016">
+</OBJECT>
+</FORM>
+<FONT FACE="ARIAL,HELVETICA" SIZE="2">
+<H2><A NAME="_wceddk_ACMDM_FORMATTAG_DETAILS"></A>ACMDM_FORMATTAG_DETAILS</H2>
+<P>
+The ACMDM_FORMATTAG_DETAILS message requests an ACM driver to return
+information about a format tag.
+<H5>Return Value</H5>
+<DL>
+<DT>
+The driver should return MMSYSERR_NOERROR if the operation succeeds. Otherwise
+it should return one of the MMSYSERR error codes defined in mmsystem.h, or one
+of the ACMERR error codes defined in msacm.h. Possible error codes include:
+<DD>
+MMSYSERR_NOTSUPPORTED
+<P>
+The driver does not support the specified query operation.
+<DL>
+<DT>
+ACMERR_NOTPOSSIBLE
+<DD>
+The input parameter values do not represent a valid format or format tag.
+</DL>
+</DL>
+<H5>Parameters</H5>
+<DL>
+<DT>
+<I>dwDriverID</I>
+<DD>
+Driver instance identifier. This is the value returned by the driver in
+response to the <B>ACM_Open</B>&nbsp;function.
+<BR>
+<DT>
+<I>hDriver</I>
+<DD>
+Driver handle.
+<BR>
+<DT>
+<I>uMsg</I>
+<DD>
+ACMDM_FORMATTAG_DETAILS
+<BR>
+<DT>
+<I>lParam1</I>
+<DD>
+Pointer to an ACMFORMATTAGDETAILS structure. ( ACMFORMATTAGDETAILS is defined
+in msacm.h and described in the Win32 SDK.)
+<BR>
+<DT>
+<I>lParam2</I>
+<DD>
+Contains one of the following flags, specified by the fdwDetails parameter of
+the acmFormatTagDetails function, which is described in the Win32 SDK:
+<DL>
+<DT>
+ACM_FORMATTAGDETAILSF_INDEX
+<DD>
+Indicates the dwFormatTagIndex member of the ACMFORMATTAGDETAILS structure
+contains a format tag index. The valid index range is from zero to one less
+than the cFormatTags member returned in the driver's ACMDRIVERDETAILS
+structure. (See ACMDM_DRIVER_DETAILS.)
+<P>
+The driver should return details for the format tag associated with the index.
+<BR>
+<DT>
+ACM_FORMATTAGDETAILSF_FORMATTAG
+<DD>
+Indicates the dwFormatTag member of the ACMFORMATTAGDETAILS structure contains
+a format tag.
+<P>
+The driver should return details for the specified format tag.
+<BR>
+<DT>
+ACM_FORMATTAGDETAILSF_LARGESTSIZE
+<DD>
+Indicates the driver should return details for the format tag having the
+largest format. The dwFormatTag member of ACMFORMATTAGDETAILS can contain a
+format tag or WAVE_FORMAT_UNKNOWN.
+</DL>
+</DL>
+<H5>Comments</H5>
+<P>
+The ACM (WAVEAPI.DLL) sends the ACMDM_FORMATTAG_DETAILS message by calling the
+ACM driver's <B>ACM_IOControl</B>() entry point via DeviceIoControl(). The ACM
+sends this message when an application calls the <B>acmFormatTagDetails</B>
+function, which is described the Win32 SDK.
+<P>
+All ACM drivers must support this message.
+<P>
+The client specifies the format tag in the ACMFORMATTAGDETAILS structure's
+dwFormatTag member. The driver returns information for a particular tag, as
+follows:
+<P>
+·If the ACM_FORMATDETAILSF_INDEX flag is set, the client has specified an
+index value in the ACMFORMATTAGDETAILS structure's dwFormatTagIndex member.
+The driver fills in the ACMFORMATTAGDETAILS structure for the format tag
+associated with the specified index value.
+<P>
+·If the ACM_FORMATTAGDETAILSF_FORMATTAG flag is set, the client has specified
+a format tag in the ACMFORMATTAGDETAILS structure's dwFormatTag member. The
+driver fills in the ACMFORMATTAGDETAILS structure for the specified format
+tag.
+<P>
+·If the ACM_FORMATTAGDETAILSF_LARGESTSIZE flag is set, the driver does one of
+two things:
+<P>
+&nbsp;1.If dwFormatTag contains WAVE_FORMAT_UNKNOWN, the driver fills in the
+ACMFORMATTAGDETAILS structure for the format tag that has a format with the
+largest format structure size.
+<P>
+2.If dwFormatTag contains a format tag, the driver fills in the
+ACMFORMATTAGDETAILS structure for that format tag, describing the format with
+the largest structure size belonging to the specified tag.
+<P>
+Before calling the driver's <B>ACM_IOControl</B>&nbsp;function, the ACM verifies
+that:
+<P>
+·The ACMFORMATTAGDETAILS structure is readable and writeable.
+<P>
+·The size of the ACMFORMATTAGDETAILS structure (contained in its cbStruct
+member) is at least the structure's defined size. (The structure's size can be
+larger than its defined size, to allow for a longer szFormatTag member or to
+allow newer, larger structure definitions to be used within drivers under
+development.)
+<P>
+·The ACMFORMATTAGDETAILS structure's fdwSupport member contains zero.
+<P>
+·The lParam2 parameter contains a valid flag value.
+<P>
+If the format tag is WAVE_FORMAT_PCM, then the driver should return a
+zero-length string in szFormatTag. The ACM provides a description string for
+this format.
+<P>
+Before returning, the driver must set the ACMFORMATTAGDETAILS structure's
+cbStruct member to the actual number of bytes returned. The value returned in
+cbStruct must not be greater than the value received.
+<P>
+For more information about format tags, see Format Tags and Filter Tags in the
+Windows NT DDK.
+<P></FONT>
+</BODY>
+</HTML>

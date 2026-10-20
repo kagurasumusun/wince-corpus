@@ -1,0 +1,50 @@
+<HTML>
+<HEAD>
+<TITLE>Nonmaskable Interrupt (NMI) Exception</TITLE>
+</HEAD><BODY BGCOLOR=#ffffff>
+<!-- VR4100 InfoViewer title (Vr4100.ivt); HTML topics extracted with tools/extract-ivt.py, images and the title's own indexes dropped. -->
+<BASEFONT FACE="Arial,Helvetica" SIZE="2">
+<A HREF= "VR41home.htm"><IMG SRC="contents.gif" ALT="contents.gif" BORDER = 0></A>
+<P>
+<A NAME="off_1049578"></A><A NAME="698a6754"></A><FONT FACE="Arial" SIZE="3"><H1>Nonmaskable Interrupt (NMI) Exception
+<P>
+</H1></FONT><FONT FACE="Arial" SIZE="5"><B>Cause
+<P>
+</B></FONT><FONT FACE="Arial" SIZE="3">The Nonmaskable Interrupt (NMI) exception occurs in response to the falling
+edge of the NMI pin. An NMI can also be set by an external write through the <B>SysAD</B> bus.
+<P>
+Unlike all other interrupts, this interrupt is not maskable; it occurs
+regardless of the settings of the <I>EXL</I>, <I>ERL</I>, and the <I>IE</I> bits in the <I>Status</I> register.
+<P>
+</FONT><FONT FACE="Arial" SIZE="5"><B>Processing
+<P>
+</B></FONT><FONT FACE="Arial" SIZE="3">The CPU provides a special interrupt vector for this exception (same location
+as Cold Reset):
+<P>
+location 0xBFC0 0000 in 32-bit mode
+<P>
+location 0xFFFF FFFF BFC0 0000 in 64-bit mode
+<P>
+This vector is located within unmapped and uncached address space so that the
+cache and TLB need not be initialized to process an NMI interrupt. When an NMI
+exception occurs, the <I>SR</I> bit of the <I>Status</I> register is set to differentiate this exception from a Cold Reset exception.
+<P>
+Unlike Cold Reset and Soft Reset, but like other exceptions, NMI is taken only
+at instruction boundaries. The state of the caches and memory system are
+preserved by this exception.
+<P>
+When this exception occurs, the contents of all registers are preserved except
+for:
+<P>
+<I>ErrorEPC</I> register, which contains the restart PC
+<P>
+<I>TS</I> of the <I>Status</I> register are cleared to 0
+<P>
+<I>ERL</I>, <I>SR</I>, and <I>BEV</I> of the <I>Status</I> register are set to 1.
+<P>
+</FONT><FONT FACE="Arial" SIZE="5"><B>Servicing
+<P>
+</B></FONT><FONT FACE="Arial" SIZE="3">The NMI exception is serviced by saving the current processor state for
+diagnostic purposes, and reinitializing the system for the Cold Reset exception.
+<P>
+</FONT></BODY>

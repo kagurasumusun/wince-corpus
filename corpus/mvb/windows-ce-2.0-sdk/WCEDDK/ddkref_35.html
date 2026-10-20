@@ -1,0 +1,154 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
+<HTML>
+<HEAD><META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=Windows-1252">
+<TITLE>ACMDM_FILTER_DETAILS</TITLE>
+<META NAME="MS-HKWD" CONTENT="ACMDM_FILTER_DETAILS">
+<META NAME="MS-HAID" CONTENT="_wceddk_ACMDM_FILTER_DETAILS">
+</HEAD>
+<BODY BGPROPERTIES="FIXED" TEXT="#000000" BGCOLOR="#FFFFFF">
+<!-- WCEDDK InfoViewer title (WCEDDK.IVT); HTML topics extracted with tools/extract-ivt.py, images and the title's own indexes dropped. -->
+
+<FORM name=x>
+<OBJECT name=iv classid="clsid:9c2ac687-ceef-11cf-96d9-00a0c903b016">
+</OBJECT>
+</FORM>
+<FONT FACE="ARIAL,HELVETICA" SIZE="2">
+<H2><A NAME="_wceddk_ACMDM_FILTER_DETAILS"></A>ACMDM_FILTER_DETAILS</H2>
+<P>
+The ACMDM_FILTER_DETAILS message requests an ACM driver to return information
+about a filter associated with a specified filter tag.
+<H5>Return Value</H5>
+<DL>
+<DT>
+The driver should return MMSYSERR_NOERROR if the operation succeeds. Otherwise
+it should return one of the MMSYSERR error codes defined in mmsystem.h, or one
+of the ACMERR error codes defined in msacm.h. Possible error codes include:
+<DD>
+MMSYSERR_NOTSUPPORTED
+<P>
+The driver does not support filter operations or the specified query
+operation.
+<DL>
+<DT>
+ACMERR_NOTPOSSIBLE
+<DD>
+The input parameter values do not represent a valid filter or filter tag.
+</DL>
+</DL>
+<H5>Parameters</H5>
+<DL>
+<DT>
+<I>dwDriverID</I>
+<DD>
+Driver instance identifier. This is the value returned by the driver in
+response to the <B>ACM_Open</B>&nbsp;function.
+<BR>
+<DT>
+<I>hDriver</I>
+<DD>
+Driver handle.
+<BR>
+<DT>
+<I>uMsg</I>
+<DD>
+ACMDM_FILTER_DETAILS
+<BR>
+<DT>
+<I>lParam1</I>
+<DD>
+Pointer to an ACMFILTERDETAILS structure. ( ACMFILTERDETAILS is defined in
+msacm.h and described in the Win32 SDK.)
+<BR>
+<DT>
+<I>lParam2</I>
+<DD>
+Contains one of the following flags, specified by the fdwDetails parameter of
+the acmFilterDetails function ( described in the Win32 SDK):
+<DL>
+<DT>
+ACM_FILTERDETAILSF_INDEX
+<DD>
+Indicates the dwFilterIndex member of the ACMFILTERDETAILS structure contains
+a filter index. The valid index range is from zero to one less than the
+cStandardFilters member returned in the ACMFILTERTAGDETAILS structure for the
+filter tag. (See ACMDM_FILTERTAG_DETAILS.)
+<BR>
+<DT>
+ACM_FILTERDETAILSF_FILTER
+<DD>
+Indicates the client has filled in the WAVEFILTER structure associated with
+the ACMFILTERDETAILS structure.
+</DL>
+</DL>
+<H5>Comments</H5>
+<P>
+The ACM (WAVEAPI.DLL) sends the ACMDM_FILTER_DETAILS message by calling the
+ACM driver's <B>ACM_IOControl</B>() entry point via DeviceIoControl(). The ACM
+sends this message when an application calls <B>acmFilterDetails</B>, which is
+described in the Win32 SDK.
+<P>
+An ACM driver that provides filters must support this message.
+<P>
+The client can do either of the following:
+<P>
+·Specify a filter index, in order to obtain a description of the filter
+associated with the index.
+<P>
+·Specify a filter description, in order to validate the filter and obtain the
+filter's string description.
+<P>
+The client specifies the filter tag in the ACMFILTERDETAILS structure's
+dwFilterTag member. The driver returns information for a particular filter
+belonging to the filter tag, as follows:
+<P>
+·If the ACM_FILTERDETAILSF_INDEX flag is set, the client has specified an
+index value in the ACMFILTERDETAILS structure's dwFilterIndex member. The
+driver fills in the WAVEFILTER structure for the filter associated with the
+specified index value. It also fills in the ACMFILTERDETAILS structure's
+szFilter, fdwSupport, and cbStruct members.
+<P>
+·If the ACM_FILTERDETAILSF_FILTER flag is set, the client has filled in the
+WAVEFILTER structure. The driver validates the structure contents and, if the
+contents are valid, fills in the ACMFILTERDETAILS structure's szFilter,
+fdwSupport, and cbStruct members.
+<P>
+Before calling the driver's <B>ACM_IOControl</B>&nbsp;function, the ACM verifies
+that:
+<P>
+·The ACMFILTERDETAILS structure and its associated WAVEFILTER structure are
+readable and writeable.
+<P>
+·The size of the ACMFILTERDETAILS structure, contained in its cbStruct member,
+is at least the structure's defined size. (The structure's size can be larger
+than its defined size, to allow for a longer szFilter member or to allow
+newer, larger structure definitions to be used within drivers under
+development.)
+<P>
+·The size of the WAVEFILTER structure pointed to by the ACMFILTERDETAILS
+structure's pwfltr member is at least as large as the generic WAVEFILTER
+structure's defined size. (See The WAVEFILTER Structure below.)
+<P>
+·The ACMFILTERDETAILS structure's fdwSupport member contains zero.
+<P>
+·The lParam2 parameter contains a valid flag value.
+<P>
+&nbsp;Before returning, the driver must set the ACMFILTERDETAILS structure's
+cbStruct member to the actual number of bytes returned. The value returned in
+cbStruct must not be greater than the value received from the client.
+<P>
+For more information about filter tags and filter structures, see Format Tags
+and Filter Tags and Defining Format Structures and Filter Structures in the
+Windows NT DDK.
+<P>
+The WAVEFILTER Structure
+<P>
+The WAVEFILTER structure is a generic structure for describing a filter.
+Generally, you will extend this structure for your specific filter type, as
+has been done in the Microsoft Audio Filter. (For examples, see
+VOLUMEWAVEFILTER and ECHOWAVEFILTER in mmreg.h.) When a client sends an
+ACMDM_FILTER_DETAILS message, it specifies the address of a structure that you
+have defined for the specified filter type. This structure is typically larger
+than the generic WAVEFILTER structure.
+<P></FONT>
+</BODY>
+</HTML>

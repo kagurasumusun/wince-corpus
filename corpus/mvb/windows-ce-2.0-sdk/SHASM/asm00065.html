@@ -1,0 +1,204 @@
+<HTML>
+<HEAD>
+<TITLE>5.2.1  .SECTION: Section Declaration</TITLE>
+</HEAD><body bgcolor="#FFFFFF">
+<!-- SHASM InfoViewer title (Shasm.ivt); HTML topics extracted with tools/extract-ivt.py, images and the title's own indexes dropped. -->
+
+<A NAME="off_1705321"></A><A NAME="6646681a"></A><FONT FACE="Arial" SIZE="4"><B>5.2.1  .SECTION: Section Declaration 
+<P>
+</B></FONT><FONT FACE="Arial" SIZE="3"><B>Syntax:
+<P>
+</B></FONT><FONT FACE="Lucida Sans Typewriter" SIZE="3">.SECTION<IMG SRC="asm90001.gif" ALT="asm90001.gif" BORDER=0 WIDTH=9 HEIGHT=16>&lt;section name&gt; [,&lt;section type&gt; [,&lt;section attributes&gt;...]]
+<P>
+
+<P>
+</FONT><FONT FACE="Arial" SIZE="3"><B>Statement Elements:
+<P>
+<IMG SRC="asm90000.gif" ALT="asm90000.gif" BORDER=0 WIDTH=6 HEIGHT=16> </B>Label: The label field is not used
+<P>
+<IMG SRC="asm90000.gif" ALT="asm90000.gif" BORDER=0 WIDTH=6 HEIGHT=16> Operation: Enter the .SECTION mnemonic in the operation field
+<P>
+<IMG SRC="asm90000.gif" ALT="asm90000.gif" BORDER=0 WIDTH=6 HEIGHT=16> Operands: First operand: the section name; the rules for section names are
+similar the rules for symbols, except that the first character of the section name
+may be a period (.), and except as noted below for comdat support. (See
+section 2.5.2, </FONT><FONT FACE="Arial" COLOR="#008000" SIZE="3"><A HREF="asm00031.htm">Symbol Coding</A></FONT><FONT FACE="Arial" SIZE="3">)
+<P>
+<IMG SRC="asm90000.gif" ALT="asm90000.gif" BORDER=0 WIDTH=6 HEIGHT=16> Second operand: the section type; when the specification is omitted, the
+section will be a code section (Table 5.2)
+<P>
+<A NAME="e5aa17b2"></A><B>Table 5.2  Second Operand Section Types
+<P>
+</B></FONT><TABLE><TR VALIGN=TOP><TD><FONT FACE="Arial" SIZE="3"><B>Attribute
+<BR></B></FONT></TD><TD><FONT FACE="Arial" SIZE="3"><B>Section Type
+<BR></B></FONT></TD></TR><TR VALIGN=TOP><TD><FONT FACE="Arial" SIZE="3">CODE (default)
+<BR></FONT></TD><TD><FONT FACE="Arial" SIZE="3">Code section
+<BR></FONT></TD></TR><TR VALIGN=TOP><TD><FONT FACE="Arial" SIZE="3">DATA
+<BR></FONT></TD><TD><FONT FACE="Arial" SIZE="3">Data section
+<BR></FONT></TD></TR><TR VALIGN=TOP><TD><FONT FACE="Arial" SIZE="3">BSS
+<BR></FONT></TD><TD><FONT FACE="Arial" SIZE="3">BSS section
+<BR></FONT></TD></TR><TR VALIGN=TOP><TD><FONT FACE="Arial" SIZE="3">DUMMY
+<BR></FONT></TD><TD><FONT FACE="Arial" SIZE="3">Dummy section
+<BR>
+<BR><IMG SRC="asm90000.gif" ALT="asm90000.gif" BORDER=0 WIDTH=6 HEIGHT=16> </FONT></TD></TR></TABLE><FONT FACE="Arial" SIZE="3">When the specification is omitted, the section will be a code section
+<BR>Third operand: section attributes (Table 5.3)
+<P>
+<A NAME="396fae91"></A><B>Table 5.3  Third and Greater Operand Section Attributes
+<P>
+</B></FONT><TABLE><TR VALIGN=TOP><TD><FONT FACE="Arial" SIZE="3"><B>Specification
+<BR></B></FONT></TD><TD><FONT FACE="Arial" SIZE="3"><B>Meaning
+<BR></B></FONT></TD></TR><TR VALIGN=TOP><TD><FONT FACE="Arial" SIZE="3">SELECTION=&lt;selection number&gt;
+<BR></FONT></TD><TD><FONT FACE="Arial" SIZE="3">Specifiy comdat selection type
+<BR></FONT></TD></TR><TR VALIGN=TOP><TD><FONT FACE="Arial" SIZE="3">ASSOC=&lt;section symbol&gt;
+<BR></FONT></TD><TD><FONT FACE="Arial" SIZE="3">Specify other section to associate with
+<BR></FONT></TD></TR><TR VALIGN=TOP><TD><FONT FACE="Arial" SIZE="3">ALIGN=&lt;boundary alignment value&gt;
+<BR></FONT></TD><TD><FONT FACE="Arial" SIZE="3">Specify section's alignment
+<BR></FONT></TD></TR></TABLE><FONT FACE="Arial Narrow" SIZE="4"><B>Note:
+<P>
+</B></FONT><FONT FACE="Arial" SIZE="3">When the specification is omitted, the section will be a relative address
+section with a boundary alignment value of four.
+<P>
+<B>Description:
+<P>
+</B>.SECTION is the section declaration assembler directive. A section is a part
+of a program, and the linkage editor regards it as a unit of processing. Figure
+5.1 describes section declaration using simple examples.
+<P>
+</FONT><FONT FACE="Times New Roman" SIZE="5"><B><IMG SRC="asm00017.gif" ALT="asm00017.gif" BORDER=0 WIDTH=517 HEIGHT=358>
+<P>
+</B></FONT><FONT FACE="Arial" SIZE="3"><B>Figure 5.1  Section Declaration Assembler Directive
+<P>
+</B>A section name (both in a .SECTION directive and in expression contexts) may
+be either of the same form as an ordinary symbol (with the extension of allowing
+a period (.) as the leading character of the name), or of the following form:
+<P>
+</FONT><FONT FACE="Lucida Sans Typewriter" SIZE="3">&lt;symbol1&gt; { &lt;symbol2&gt; }
+<P>
+</FONT><FONT FACE="Arial" SIZE="3">In the example above, symbol1 is the section name as it should appear in the
+object file, and symbol2 is the </FONT><FONT FACE="Times New Roman" SIZE="3">“</FONT><FONT FACE="Arial" SIZE="3">COMDAT symbol</FONT><FONT FACE="Times New Roman" SIZE="3">”</FONT><FONT FACE="Arial" SIZE="3"> as described in the MS-COFF documentation. The curly braces are part of the
+actual syntax. A section declared using this syntax will be a COMDAT section in
+the object file. A section is uniquely identified by the combination of symbol1
+and symbol2. For instance, .text{foo} and .text{bar} will identify two
+different sections; both will have the name .text in the object file, and both will be
+combined into a single .text section (along with all other .text sections) at
+link time. However, the former will have foo as its COMDAT symbol and the
+latter will have bar as its COMDAT symbol.
+<P>
+The SELECTION=&lt;expression&gt; option determines the COMDAT selection type for the
+section. The default is 5 (IMAGE_COMDAT_SELECT_ASSOCIATIVE) if the ASSOC=
+option is used, and 0 otherwise. This option is valid only for a COMDAT section.
+<P>
+The ASSOC=&lt;section symbol&gt; option causes the section being declared to be
+linked if the section identified by section_symbol is linked. Use of this option
+causes the COMDAT selection type to default to 5
+(IMAGE_COMDAT_SELECT_ASSOCIATIVE). This option is valid only for a COMDAT section, and the target of the
+association (section symbol) must be a COMDAT section as well.
+<P>
+<B>Example:
+<P>
+</B></FONT><FONT FACE="Lucida Sans Typewriter" SIZE="3">SEL_NODUP .equ 1
+<P>
+ .section .text{foo},code,selection=SEL_NODUP
+<P>
+ nop
+<P>
+ .section .data{bar},data,assoc=.text{foo}
+<P>
+ .data  0
+<P>
+ .section .text{`??main@A`},code,selection=SEL_NODUP
+<P>
+ nop
+<P>
+ .section .data{`??main@Q`},data,assoc=.text{`??main@A`}
+<P>
+ .data  0
+<P>
+</FONT><FONT FACE="Arial" SIZE="3">It is possible to redeclare (re-enter) a section that was previously declared
+in the same file. Figure 5.2 shows a simple example of section restart.
+<P>
+</FONT><FONT FACE="Arial Narrow" SIZE="4"><B>Note:
+<P>
+</B></FONT><FONT FACE="Arial" SIZE="3">When using the .SECTION assembler directive to restart a section, the second
+and third operands can be omitted. The original specifications when first
+declaring the section remain valid.
+<P>
+</FONT><FONT FACE="Times New Roman" SIZE="5"><B><IMG SRC="asm00018.gif" ALT="asm00018.gif" BORDER=0 WIDTH=462 HEIGHT=363>
+<P>
+</B></FONT><FONT FACE="Arial" SIZE="3"><B>Figure 5.2  Section Restart
+<P>
+</B>Use ALIGN = &lt;boundary alignment value&gt; to start a relative address section.
+The linkage editor will adjust the start address of the section to be a multiple
+of the boundary alignment value. The boundary alignment value specified must be
+an absolute value, and forward reference symbols must not appear in the
+specification. The values allowed for the boundary alignment value are powers of 2 &lt;=
+2^6 (64), e.g. 2^0, 2^1, 2^2, <IMG SRC="asm90003.gif" ALT="asm90003.gif" BORDER=0 WIDTH=7 HEIGHT=16>, 2^6. For code sections, the values must be 4 or larger powers of 2, e.g. 2^2, 2^3, 2^4, 2^5, 2^6.
+<P>
+The assembler provides a default section for the following cases:
+<P>
+<IMG SRC="asm90000.gif" ALT="asm90000.gif" BORDER=0 WIDTH=6 HEIGHT=16> The use of executable instructions when no section has been declared
+<P>
+<IMG SRC="asm90000.gif" ALT="asm90000.gif" BORDER=0 WIDTH=6 HEIGHT=16> The use of data reservation assembler directives when no section has been
+declared
+<P>
+<IMG SRC="asm90000.gif" ALT="asm90000.gif" BORDER=0 WIDTH=6 HEIGHT=16> The use of the .ALIGN assembler directive when no section has been declared
+<P>
+<IMG SRC="asm90000.gif" ALT="asm90000.gif" BORDER=0 WIDTH=6 HEIGHT=16> The use of the .ORG assembler directive when no section has been declared
+<P>
+<IMG SRC="asm90000.gif" ALT="asm90000.gif" BORDER=0 WIDTH=6 HEIGHT=16> Reference to the location counter when no section has been declared
+<P>
+<IMG SRC="asm90000.gif" ALT="asm90000.gif" BORDER=0 WIDTH=6 HEIGHT=16> The use of statements consisting of only the label field when no section has
+been declared
+<P>
+The default section is the following section:
+<P>
+<IMG SRC="asm90000.gif" ALT="asm90000.gif" BORDER=0 WIDTH=6 HEIGHT=16> Section name: .text
+<P>
+<IMG SRC="asm90000.gif" ALT="asm90000.gif" BORDER=0 WIDTH=6 HEIGHT=16> Section type: Code section
+<P>
+<IMG SRC="asm90000.gif" ALT="asm90000.gif" BORDER=0 WIDTH=6 HEIGHT=16> Relative address section with a boundary alignment value of 4
+<P>
+<B>Example:
+<P>
+  </B></FONT><FONT FACE="Lucida Sans Typewriter" SIZE="3">.ALIGN 4     ; This section of the program belongs to the
+<P>
+  .DATA.L H'11111111 ; default section P.
+<P>
+         ; The default section P is a code section, and
+<P>
+         ; is a relative address section with a boundary
+<P>
+         ; alignment value of 4.
+<P>
+  .SECTION CD,CODE,ALIGN=4
+<P>
+  .MOV R0,R1    ; This section of the program belongs to the
+<P>
+  .MOV R0,R2    ; section CD.
+<P>
+         ; The section CD is a code section, and is a
+<P>
+         ; relative address section with a boundary
+<P>
+         ; alignment value of 4.
+<P>
+  .SECTION DT,DATA
+<P>
+X1:  .DATA.L H'22222222 ; This section of the program belongs to
+<P>
+  .DATA.L H'33333333 ; the section DT.
+<P>
+         ; The section DT is a data section, and
+<P>
+         ; is an relative address section with a
+<P>
+         ; boundary alignment value of 4.
+<P>
+  .END
+<P>
+</FONT><FONT FACE="Arial Narrow" SIZE="4"><B>Note:
+<P>
+</B></FONT><FONT FACE="Arial" SIZE="3">This example assumes the .SECTION assembler directive does not appear in the
+parts indicated by ~.
+<P>
+</FONT></BODY>
+</HTML>

@@ -1,0 +1,78 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML>
+<HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text-html; charset=Windows-1252">
+<title>Processing the NM_CUSTOMDRAW Notification Message</title>
+<meta name=MS-HAID content="_wcesdk_processing_the_nm_customdraw_notification_message">
+<meta name=MS-HKWD content="Processing the NM_CUSTOMDRAW Notification Message">
+</HEAD>
+<BODY BGCOLOR=#FFFFFF TEXT=#000000>
+<!-- WCESDKG InfoViewer title (Wcesdkg.ivt); HTML topics extracted with tools/extract-ivt.py, images and the title's own indexes dropped. -->
+
+<form name=x><object name=iv classid="clsid:9c2ac687-ceef-11cf-96d9-00a0c903b016">
+</object></form>
+<h3><a name="_wcesdk_processing_the_nm_customdraw_notification_message"></a>Processing the NM_CUSTOMDRAW Notification Message</h3>
+<p>
+The following application-defined function processes Custom Draw notification messages sent by a child list view control. Upon receiving the prepaint notification (CDDS_PREPAINT), the function requests item-specific notifications by returning CDRF_NOTIFYITEMDRAW. When it receives the subsequent item-specific notifications, it selects a previously created font into the provided device context and specifies new colors before returning CDRF_NEWFONT. </p>
+<pre>LRESULT DoNotify(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
+{
+   LPNMLISTVIEW  pnm    = (LPNMLISTVIEW)lParam;
+
+   switch (pnm-&gt;hdr.code){
+      case NM_CUSTOMDRAW:{
+         LPNMLVCUSTOMDRAW  lplvcd = (LPNMLVCUSTOMDRAW)lParam;
+
+         /*
+         CDDS_PREPAINT is at the beginning of the paint cycle. You 
+         implement custom draw by returning the proper value. In this 
+         case, we're requesting item-specific notifications.
+         */
+         if(lplvcd-&gt;nmcd.dwDrawStage == CDDS_PREPAINT)
+            // Request pre-paint notifications for each item.
+            return CDRF_NOTIFYITEMDRAW;
+
+         /*
+         CDDS_ITEMPREPAINT is sent when the control is about to paint an
+         item. We're getting this because we returned CDRF_NOTIFYITEMDRAW
+         in response to CDDS_PREPAINT before.
+         */
+         if(lplvcd-&gt;nmcd.dwDrawStage == CDDS_ITEMPREPAINT){
+            /*
+            To change the font, select the desired font into the 
+            provided HDC. We're changing the font for every third item
+            in the control, starting with item zero.
+            */
+            if(!(lplvcd-&gt;nmcd.dwItemSpec % 3))
+               SelectObject(lplvcd-&gt;nmcd.hdc, g_hNewFont);
+            else
+               return(CDRF_DODEFAULT);
+
+            /*
+            To change the text and background colors in a list view 
+            control, set the clrText and clrTextBk members of the 
+            NMLVCUSTOMDRAW structure to the desired color.
+
+            This differs from most other controls that support 
+            CustomDraw. To change the text and background colors for 
+            the others, call SetTextColor and SetBkColor on the provided HDC.
+            */
+            lplvcd-&gt;clrText = RGB(150, 75, 150);
+            lplvcd-&gt;clrTextBk = RGB(255,255,255);
+
+            /*
+            We changed the font, so we're returning CDRF_NEWFONT. This
+            tells the control to recalculate the extent of the text.
+            */
+            return CDRF_NEWFONT;
+            }
+         }
+      
+      default:
+         break;
+   }
+
+   return 0;
+}
+</pre>
+</BODY>
+</HTML>

@@ -1,0 +1,47 @@
+<HTML>
+<HEAD>
+<TITLE>6.8.1 Address Error Exception</TITLE>
+</HEAD><BODY BGCOLOR=#ffffff>
+<!-- PR3910 InfoViewer title (Pr3910.ivt); HTML topics extracted with tools/extract-ivt.py, images and the title's own indexes dropped. -->
+<BASEFONT FACE="Arial,Helvetica" SIZE="2">
+<A HREF= "PR39home.htm"><IMG SRC="contents.gif" ALT="contents.gif" BORDER = 0></A>
+<P>
+<A NAME="off_657520"></A><A NAME="8bc0c53f"></A><FONT FACE="Arial" SIZE="3"><H1>6.8.1 Address Error Exception
+<P>
+</H1><B>Causecheck these bullets
+<P>
+</B>This exception occurs when an attempt is made to load, fetch, or store a word
+that is not aligned on a word boundary. Attempts to load or store a half-word
+that is not aligned on a half-word boundary also cause this exception.
+<P>
+The exception also occurs in User mode if a reference is made to a virtual
+address whose most significant bit is set - a kernel address.
+<P>
+This exception is not maskable.
+<P>
+<B>Handling
+<P>
+</B>The PR3910 processor branches to the General Exception vector for this
+exception.
+<P>
+When the exception occurs, the PR3910 sets the ADEL or ADES code in the Cause
+register</FONT><FONT FACE="Times New Roman" SIZE="3">’</FONT><FONT FACE="Arial" SIZE="3">s <I>ExcCode</I> field to indicate whether the address error occurred during an instruction
+fetch or a load operation (ADEL) or a store operation (ADES).
+<P>
+The EPC register points at the instruction that caused the exception, unless
+the instruction is in a branch delay slot: in that case, the EPC register points
+at the <B>branch</B> instruction that preceded the exception-causing instruction and sets the <I>BD</I> bit of the Cause register.
+<P>
+When this exception occurs, the BadVAddr register contains the virtual address
+that was not properly aligned or that improperly addressed kernel data while
+in User mode.
+<P>
+<B>Servicing
+<P>
+</B>The process executing at the time should be given a indication that an
+addressing error has occurred (equivalent to the UNIX SIGSEGV signal).
+<P>
+Such an error is usually fatal, although an alignment error might be handled
+by simulating the instruction that caused the error.
+<P>
+</FONT></BODY>

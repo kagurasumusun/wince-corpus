@@ -1,0 +1,120 @@
+<HTML>
+<HEAD>
+<TITLE>TLB Exceptions</TITLE>
+</HEAD><BODY BGCOLOR=#ffffff>
+<!-- VR4100 InfoViewer title (Vr4100.ivt); HTML topics extracted with tools/extract-ivt.py, images and the title's own indexes dropped. -->
+<BASEFONT FACE="Arial,Helvetica" SIZE="2">
+<A HREF= "VR41home.htm"><IMG SRC="contents.gif" ALT="contents.gif" BORDER = 0></A>
+<P>
+<A NAME="off_1082464"></A><A NAME="7a87b5bb"></A><FONT FACE="Arial" SIZE="3"><H1>TLB Exceptions
+<P>
+</H1>Three types of TLB exceptions can occur:
+<P>
+TLB Refill/Extended Addressing TLB Refill exception occurs when there is no
+TLB entry that matches an attempted reference to a mapped address space.
+<P>
+TLB Invalid exception occurs when a virtual address reference matches a TLB
+entry that is marked invalid.
+<P>
+TLB Modified exception occurs when a store operation virtual address reference
+to memory matches a TLB entry which is marked valid but is not dirty (the
+entry is not writeable). As a result, this exception only occurs for the data
+cache, resulting in a lower priority for this exception.
+<P>
+The following three sections describe these TLB exceptions.
+<P>
+</FONT><FONT FACE="Arial" SIZE="5"><B>TLB Refill/Extended Addressing TLB Refill Exception
+<P>
+</B></FONT><FONT FACE="Arial" SIZE="4"><B>Cause
+<P>
+</B></FONT><FONT FACE="Arial" SIZE="3">The TLB Refill exception occurs when there is no TLB entry to match a
+reference to a mapped address space. This exception is not maskable.
+<P>
+</FONT><FONT FACE="Arial" SIZE="4"><B>Processing
+<P>
+</B></FONT><FONT FACE="Arial" SIZE="3">There are two special exception vectors for this exception; one for references
+to 32-bit address spaces, and one for references to 64-bit address spaces. The <I>UX, SX, </I>and <I>KX</I> bits of the <I>Status</I> register determine whether the user, supervisor or kernel address spaces
+referenced are 32-bit or 64-bit spaces. All TLB Refill exceptions use these vectors
+when the <I>EXL</I> bit is set to 0 in the <I>Status</I> register. This exception sets the <I>TLBL</I> or <I>TLBS</I> code in the <I>ExcCode</I> field of the <I>Cause</I> register, indicating whether the instruction, as shown by the <I>EPC</I> register and the <I>BD</I> bit in the <I>Cause</I> register, caused the miss by an instruction reference, load operation, or
+store operation.
+<P>
+When this exception occurs, the <I>BadVAddr</I>, <I>Context</I>, <I>XContext </I>and <I>EntryHi</I> registers hold the virtual address that failed address translation. The <I>EntryHi</I> register also contains the ASID from which the translation fault occurred.
+The <I>Random</I> register normally contains a valid location in which to place the replacement
+TLB entry. The contents of the <I>EntryLo</I> register are undefined. The <I>EPC</I> register contains the address of the instruction that caused the exception,
+unless this instruction is in a branch delay slot, in which case the <I>EPC</I> register contains the address of the preceding branch instruction and the <I>BD</I> bit of the <I>Cause</I> register is set.
+<P>
+</FONT><FONT FACE="Arial" SIZE="4"><B>Servicing
+<P>
+</B></FONT><FONT FACE="Arial" SIZE="3">To service this exception, the contents of the <I>Context</I> or <I>XContext </I>register are used as a virtual address to fetch memory locations containing
+the physical page frame and access control bits for a pair of TLB entries. The
+two entries are placed into the E<I>ntryLo0/EntryLo1</I> register; the <I>EntryHi</I> and <I>EntryLo</I> registers are written into the TLB.
+<P>
+It is possible that the virtual address used to obtain the physical address
+and access control information is on a page that is not resident in the TLB. This
+condition is processed by allowing a TLB Refill exception in the TLB refill
+handler. This second exception goes to the common exception vector because the <I>EXL</I> bit of the <I>Status</I> register is set.
+<P>
+</FONT><FONT FACE="Arial" SIZE="5"><B>TLB Invalid Exception
+<P>
+</B></FONT><FONT FACE="Arial" SIZE="4"><B>Cause
+<P>
+</B></FONT><FONT FACE="Arial" SIZE="3">The TLB Invalid exception occurs when a virtual address reference matches a
+TLB entry that is marked invalid (TLB valid bit cleared). This exception is not
+maskable.
+<P>
+</FONT><FONT FACE="Arial" SIZE="4"><B>Processing
+<P>
+</B></FONT><FONT FACE="Arial" SIZE="3">The common exception vector is used for this exception. The <I>TLBL</I> or <I>TLBS</I> code in the <I>ExcCode</I> field of the <I>Cause</I> register is set. This indicates whether the instruction, as shown by the <I>EPC</I> register and <I>BD</I> bit in the <I>Cause</I> register, caused the miss by an instruction reference, load operation, or
+store operation.
+<P>
+When this exception occurs, the <I>BadVAddr</I>, <I>Context</I>, <I>XContext </I>and <I>EntryHi</I> registers contain the virtual address that failed address translation. The <I>EntryHi</I> register also contains the ASID from which the translation fault occurred.
+The contents of the <I>EntryLo</I> register are undefined.
+<P>
+The <I>EPC</I> register contains the address of the instruction that caused the exception
+unless this instruction is in a branch delay slot, in which case the <I>EPC</I> register contains the address of the preceding branch instruction and the <I>BD</I> bit of the <I>Cause</I> register is set.
+<P>
+</FONT><FONT FACE="Arial" SIZE="4"><B>Servicing
+<P>
+</B></FONT><FONT FACE="Arial" SIZE="3">A TLB entry is typically marked invalid when one of the following is true:
+<P>
+a virtual address does not exist
+<P>
+the virtual address exists, but is not in main memory (a page fault)
+<P>
+a trap is desired on any reference to the page (for example, to maintain a
+reference bit)
+<P>
+After servicing the cause of a TLB Invalid exception, the TLB entry is located
+with TLBP (TLB Probe), and replaced by an entry with that entry</FONT><FONT FACE="Times New Roman" SIZE="3">’</FONT><FONT FACE="Arial" SIZE="3">s <I>Valid</I> bit set.
+<P>
+</FONT><FONT FACE="Arial" SIZE="5"><B>TLB Modified 
+<P>
+</B></FONT><FONT FACE="Arial" SIZE="4"><B>Cause
+<P>
+</B></FONT><FONT FACE="Arial" SIZE="3">The TLB Modified exception occurs when a store operation virtual address
+reference to memory matches a TLB entry that is marked valid but is not dirty and
+therefore is not writeable. This exception is not maskable.
+<P>
+</FONT><FONT FACE="Arial" SIZE="4"><B>Processing
+<P>
+</B></FONT><FONT FACE="Arial" SIZE="3">The common exception vector is used for this exception, and the <I>Mod</I> code in the <I>Cause</I> register is set.
+<P>
+When this exception occurs, the <I>BadVAddr</I>, <I>Context</I>, <I>XContext </I>and <I>EntryHi</I> registers contain the virtual address that failed address translation. The <I>EntryHi</I> register also contains the ASID from which the translation fault occurred.
+The contents of the <I>EntryLo</I> register are undefined.
+<P>
+The <I>EPC</I> register contains the address of the instruction that caused the exception
+unless that instruction is in a branch delay slot, in which case the <I>EPC</I> register contains the address of the preceding branch instruction and the <I>BD</I> bit of the <I>Cause</I> register is set.
+<P>
+</FONT><FONT FACE="Arial" SIZE="4"><B>Servicing
+<P>
+</B></FONT><FONT FACE="Arial" SIZE="3">The kernel uses the failed virtual address or virtual page number to identify
+the corresponding access control information. The page identified may or may
+not permit write accesses; if writes are not permitted, a write protection
+violation occurs.
+<P>
+If write accesses are permitted, the page frame is marked dirty/writeable by
+the kernel in its own data structures. The TLBP instruction places the index of
+the TLB entry that must be altered into the <I>Index</I> register. The <I>EntryLo</I> register is loaded with a word containing the physical page frame and access
+control bits (with the <I>D</I> bit set), and the <I>EntryHi</I> and <I>EntryLo</I> registers are written into the TLB.
+<P>
+</FONT></BODY>

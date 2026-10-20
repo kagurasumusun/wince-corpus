@@ -1,0 +1,79 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
+<HTML>
+<HEAD><META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=Windows-1252">
+<TITLE>Loading Installable Device Drivers</TITLE>
+<META NAME="MS-HKWD" CONTENT="Loading Installable Device Drivers">
+<META NAME="MS-HAID" CONTENT="_wceddk_Loading_Installable_Device_Drivers">
+</HEAD>
+<BODY BGPROPERTIES="FIXED" TEXT="#000000" BGCOLOR="#FFFFFF">
+<!-- WCEDDK InfoViewer title (WCEDDK.IVT); HTML topics extracted with tools/extract-ivt.py, images and the title's own indexes dropped. -->
+
+<FORM name=x>
+<OBJECT name=iv classid="clsid:9c2ac687-ceef-11cf-96d9-00a0c903b016">
+</OBJECT>
+</FORM>
+<FONT FACE="ARIAL,HELVETICA" SIZE="2">
+<H2><A NAME="_wceddk_Loading_Installable_Device_Drivers"></A>Loading Installable Device Drivers</H2>
+<P>
+This section explains the process by which the Device Manager loads an
+installable device driver. There are three ways in which an installable device
+driver can be loaded.
+<P>
+The first method is by the Device Manager at boot time. When the Windows CE
+platform boots, it starts the Device Manager. In turn, the Device Manager
+looks in the [HKEY_LOCAL_MACHINE\Drivers\Builtin] registry key and loads any
+installable device drivers listed there. For example, on many Windows CE
+platforms the driver for the built-in serial ports (Serial.DLL) is loaded in
+this way.
+<P>
+The second method is for any peripheral devices that Device Manager can
+automatically detect when the peripheral is connected to the Windows CE
+platform. Such devices are typically PC Cards, but in the future this category
+may be expanded to include other types of peripheral devices. When a PC Card
+is inserted into a PC Card socket, the PC Card socket driver (a builtin
+driver) is called to handle the event. It reads the Plug-and-Play ID from the
+PC Card, and checks the [HKEY_LOCAL_MACHINE\Drivers\PCMCIA] key for a subkey
+that matches the Plug-and-Play ID. If one exists, it loads the driver listed
+within that key. If there is no match, the Device Manager then calls all the
+detection functions listed within the
+[HKEY_LOCAL_MACHINE\Drivers\PCMCIA\Detect] key. If one of the detection
+functions returns a value indicating that it can handle the PC Card, then that
+installable device driver is loaded.
+<P>
+In both the first and second methods, the Device Manager calls <B>RegisterDevice</B>
+on behalf of the installable device driver, and creates a numbered subkey
+within the [HKEY_LOCAL_MACHINE\Drivers\Active] key to track the driver. <B>RegisterDevice</B>
+takes a further step, which is to lock the installable device driver into
+working RAM. This prevents the driver from getting swapped out, and thus
+prevents any paging activity which would slow down the driver's operation when
+servicing interrupt events.
+<P>
+The third method is for any peripheral devices that the Device Manager cannot
+automatically detect when the peripheral is connected to the Windows CE
+platform. Such devices are typically serial devices, because there is no
+automatic way for Windows CE to detect that a serial device has been connected
+to a serial port. However, it is not unusual for Windows CE platforms to have
+other types of connectors which are equally unable to signal Windows CE when a
+peripheral is connected to them. For these peripherals, the device driver is
+typically loaded by the application that needs to use the peripheral. The
+typical sequence of actions is:
+<OL>
+<LI>
+The user starts the application in question.
+<P>
+<LI>
+The application determines that the device driver is not loaded, either by
+inspecting the filesystem or by receiving a failure return code from <B>OpenFile</B>
+when trying to open the expected <A HREF="devnames.htm">device
+filename</A>.
+<P>
+<LI>
+The application calls <B>RegisterDevice</B>&nbsp;to load the installable device
+driver and lock it into memory.
+<P>
+<LI>
+The application continues with its normal operation.
+</OL>
+<P></FONT>
+</BODY>
+</HTML>

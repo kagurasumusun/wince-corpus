@@ -1,0 +1,81 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML>
+<HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text-html; charset=Windows-1252">
+<title>RegisterDevice</title>
+<meta name=MS-HAID content="_wcesdk_registerdevice">
+<meta name=MS-HKWD content="RegisterDevice">
+</HEAD>
+<BODY BGCOLOR=#FFFFFF TEXT=#000000>
+<!-- WCESDK InfoViewer title (WCESDK.IVT); HTML topics extracted with tools/extract-ivt.py, images and the title's own indexes dropped. -->
+
+<BODY BGCOLOR=#FFFFFF BACKGROUND= "images\cewmark.gif" TEXT=#000000><form name=x><object name=iv classid="clsid:9c2ac687-ceef-11cf-96d9-00a0c903b016">
+</object></form>
+<h1><a name="_wcesdk_registerdevice"></a>RegisterDevice</h1>
+<p>
+The <b>RegisterDevice</b> function registers a new device.</p>
+<h2>Syntax</h2>
+<b>HANDLE RegisterDevice(LPCWSTR </b><i>lpszType </i><b>DWORD </b><i>dwIndex </i><b>LPCWSTR </b><i>lpszLib </i><b>DWORD </b><i>dwInfo</i><b>);</b>
+<h2>At a Glance</h2>
+<table>
+<tr valign=top>
+<td>
+Header file:</td>
+<td>
+Winbase.h</td>
+</tr>
+<tr valign=top>
+<td>
+Platforms:</td>
+<td>
+H/PC</td>
+</tr>
+<tr valign=top>
+<td>
+Versions:</td>
+<td>
+1.0 and later</td>
+</tr>
+</table><br>
+<h2>Parameters</h2>
+<dl>
+<dt>
+<i>lpszType</i></dt>
+<dd>
+Device identifier prefix (for example COM, DEV, PGR); must be 3 characters long.<br>
+</dd>
+<dt>
+<i>dwIndex</i></dt>
+<dd>
+Device identifier index; must be a number from 0 through 9. For example, the index value for COM2 would be 2.<br>
+</dd>
+<dt>
+<i>lpszLib</i></dt>
+<dd>
+Device driver DLL module name.<br>
+</dd>
+<dt>
+<i>dwInfo</i></dt>
+<dd>
+Instance information. </dd>
+</dl>
+<h2>Return Value</h2>
+<p>
+Returns a handle to a device or zero for failure. This is passed to the following functions that are exported by the client driver: <b>PRE_Open</b>, <b>PRE_Deinit</b>, <b>PRE_PowerUp</b>, and <b>PRE_PowerDown</b>.</p>
+<p>
+For stream-based devices, the drivers will be DLL files. Each driver is initialized by a call to the <b>RegisterDevice</b> function (performed by the server process). The <i>IpszLib</i> parameter is what will be used to open the device. The <i>IpszType</i> parameter is a three character string which is used to identify the function entry points in the DLL, so that multiple devices can exist in one DLL. The <i>lpszLib</i> parameter is the name of the DLL that contains the entry points. Finally <i>dwInfo </i>is passed in to the initialization routine. So, for example, if there were two serial ports on a device, and Comm.dll was the DLL implementing the serial driver, it would likely present the following initialization calls:</p>
+<pre>h1 = RegisterDevice(L&quot;COM&quot;, 1, L&quot;comm.dll&quot;,0x3f8);
+hs
+</pre>
+<h2>Remarks</h2>
+<p>
+The <b>DeregisterDevice</b> function can be used if a device is removed from the system or is being shut down. An example would be:</p>
+<pre>DeregisterDevice(h1);
+</pre>
+<p>
+where <code>h1</code> was returned from a call to <b>RegisterDevice</b>.</p>
+<h2>See Also</h2>
+<p>
+<a href="func_d_1.htm"><b>DeregisterDevice</b></a></p>
+</BODY>
+</HTML>

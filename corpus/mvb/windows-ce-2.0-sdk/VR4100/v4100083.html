@@ -1,0 +1,45 @@
+<HTML>
+<HEAD>
+<TITLE>Bus Error Exception</TITLE>
+</HEAD><BODY BGCOLOR=#ffffff>
+<!-- VR4100 InfoViewer title (Vr4100.ivt); HTML topics extracted with tools/extract-ivt.py, images and the title's own indexes dropped. -->
+<BASEFONT FACE="Arial,Helvetica" SIZE="2">
+<A HREF= "VR41home.htm"><IMG SRC="contents.gif" ALT="contents.gif" BORDER = 0></A>
+<P>
+<A NAME="off_1149280"></A><A NAME="eebf3325"></A><FONT FACE="Arial" SIZE="3"><H1>Bus Error Exception
+<P>
+</H1></FONT><FONT FACE="Arial" SIZE="5"><B>Cause
+<P>
+</B></FONT><FONT FACE="Arial" SIZE="3">A Bus Error exception is raised by board-level circuitry for events such as
+bus time-out, backplane bus parity errors, and invalid physical memory addresses
+or access types. This exception is not maskable. A Bus Error exception occurs
+only when a cache miss refill, uncached reference, or unbuffered write occurs
+synchronously; a Bus Error exception resulting from a buffered write transaction
+must be reported using the general interrupt mechanism.
+<P>
+</FONT><FONT FACE="Arial" SIZE="5"><B>Processing
+<P>
+</B></FONT><FONT FACE="Arial" SIZE="3">The common interrupt vector is used for a Bus Error exception. The <I>IBE</I> or <I>DBE</I> code in the <I>ExcCode</I> field of the <I>Cause</I> register is set, signifying whether the instruction (as indicated by the <I>EPC</I> register and <I>BD</I> bit in the <I>Cause</I> register) caused the exception by an instruction reference, load operation,
+or store operation.
+<P>
+The <I>EPC</I> register contains the address of the instruction that caused the exception,
+unless it is in a branch delay slot, in which case the <I>EPC</I> register contains the address of the preceding branch instruction and the <I>BD</I> bit of the <I>Cause</I> register is set.
+<P>
+</FONT><FONT FACE="Arial" SIZE="5"><B>Servicing
+<P>
+</B></FONT><FONT FACE="Arial" SIZE="3">The physical address at which the fault occurred can be computed from
+information available in the CP0 registers.
+<P>
+If the <I>IBE</I> code in the <I>Cause</I> register is set (indicating an instruction fetch reference), the virtual
+address is contained in the <I>EPC</I> register (or 4 + the contents of the <I>EPC</I> register if the <I>BD</I> bit of the <I>Cause</I> register is set). 
+<P>
+If the <I>DBE</I> code is set (indicating a load or store reference), the instruction that
+caused the exception is located at the virtual address contained in the <I>EPC</I> register (or 4 + the contents of the <I>EPC</I> register if the <I>BD</I> bit of the <I>Cause</I> register is set). 
+<P>
+The virtual address of the load and store reference can then be obtained by
+interpreting the instruction. The physical address can be obtained by using the
+TLBP instruction and reading the <I>EntryLo</I> register to compute the physical page number. The process executing at the
+time of this exception is handed a UNIX SIGBUS (bus error) signal, which is
+usually fatal.
+<P>
+</FONT></BODY>

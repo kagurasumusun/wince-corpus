@@ -1,0 +1,104 @@
+<HTML>
+<HEAD>
+<TITLE>7.2.6  .AWHILE and .AENDW: Conditional Iterated Expansion</TITLE>
+</HEAD><body bgcolor="#FFFFFF">
+<!-- SHASM InfoViewer title (Shasm.ivt); HTML topics extracted with tools/extract-ivt.py, images and the title's own indexes dropped. -->
+
+<A NAME="off_3080570"></A><A NAME="2360aae7"></A><FONT FACE="Arial" SIZE="4"><B>7.2.6  .AWHILE and .AENDW: Conditional Iterated Expansion 
+<P>
+</B></FONT><FONT FACE="Arial" SIZE="3"><B>Syntax:
+<P>
+</B></FONT><FONT FACE="Lucida Sans Typewriter" SIZE="3">.AWHILE<IMG SRC="asm90001.gif" ALT="asm90001.gif" BORDER=0 WIDTH=9 HEIGHT=16>&lt;condition&gt;
+<P>
+</FONT><FONT FACE="Times" SIZE="3">&lt;</FONT><FONT FACE="Lucida Sans Typewriter" SIZE="3">Source statements iteratively assembled</FONT><FONT FACE="Times" SIZE="3">&gt;
+<P>
+</FONT><FONT FACE="Lucida Sans Typewriter" SIZE="3">.AENDW
+<P>
+</FONT><FONT FACE="Arial" SIZE="3"><B>Statement Elements:
+<P>
+<IMG SRC="asm90000.gif" ALT="asm90000.gif" BORDER=0 WIDTH=6 HEIGHT=16> </B>Label: The label field is not used
+<P>
+<IMG SRC="asm90000.gif" ALT="asm90000.gif" BORDER=0 WIDTH=6 HEIGHT=16> Operation: Enter the .AWHILE or .AENDW mnemonic in the operation field
+<P>
+<IMG SRC="asm90000.gif" ALT="asm90000.gif" BORDER=0 WIDTH=6 HEIGHT=16> Operands:
+<P>
+<IMG SRC="asm90000.gif" ALT="asm90000.gif" BORDER=0 WIDTH=6 HEIGHT=16> .AWHILE: Enter the condition to iteratively expand source statements
+<P>
+<IMG SRC="asm90000.gif" ALT="asm90000.gif" BORDER=0 WIDTH=6 HEIGHT=16> .AENDW: The operand field is not used
+<P>
+<B>Description: 
+<P>
+</B>.AWHILE, .AELSIF, and .AENDW are the assembler directives that assemble source
+statements by iteratively expanding them while the specified condition is
+satisfied.
+<P>
+The source statements between the .AWHILE and .AENDW directives are iterated
+while the condition specified with the .AWHILE directive is satisfied. Note that
+the source statements are simply copied iteratively, and therefore, the
+operation does not loop at program execution. 
+<P>
+The condition may be any expression with an absolute numeric value.
+Expressions whose result is a relative value, or which involve forward references, are
+not permitted. If the value is non-zero, the condition is considered to be
+satisfied.
+<P>
+For compatibility with other Hitachi assemblers, the following syntax is also
+supported. Term 1 and term 2 may be any expression (including constants).
+<P>
+The condition may be specified as follows:
+<P>
+</FONT><FONT FACE="Lucida Sans Typewriter" SIZE="3">.AWHILE<IMG SRC="asm90001.gif" ALT="asm90001.gif" BORDER=0 WIDTH=9 HEIGHT=16>&lt;term1&gt;<IMG SRC="asm90001.gif" ALT="asm90001.gif" BORDER=0 WIDTH=9 HEIGHT=16>&lt;relational operator&gt;<IMG SRC="asm90001.gif" ALT="asm90001.gif" BORDER=0 WIDTH=9 HEIGHT=16>&lt;term2&gt;
+<P>
+</FONT><FONT FACE="Arial" SIZE="3">Terms are specified with numeric values or character values. Table 7.3 lists
+the relational operators that can be used.
+<P>
+<A NAME="4b9dd540"></A><B>Table 7.3  Relational Operators
+<P>
+</B></FONT><TABLE><TR VALIGN=TOP><TD><FONT FACE="Arial" SIZE="3"><B>Operator
+<BR></B></FONT></TD><TD><FONT FACE="Arial" SIZE="3"><B>Explanation
+<BR></B></FONT></TD></TR><TR VALIGN=TOP><TD><FONT FACE="Arial" SIZE="3">EQ
+<BR></FONT></TD><TD><FONT FACE="Arial" SIZE="3">term1 = term2
+<BR></FONT></TD></TR><TR VALIGN=TOP><TD><FONT FACE="Arial" SIZE="3">NE
+<BR></FONT></TD><TD><FONT FACE="Arial" SIZE="3">term1 != term2
+<BR></FONT></TD></TR><TR VALIGN=TOP><TD><FONT FACE="Arial" SIZE="3">GT
+<BR></FONT></TD><TD><FONT FACE="Arial" SIZE="3">term1 &gt; term2
+<BR></FONT></TD></TR><TR VALIGN=TOP><TD><FONT FACE="Arial" SIZE="3">LT
+<BR></FONT></TD><TD><FONT FACE="Arial" SIZE="3">term1 &lt; term2
+<BR></FONT></TD></TR><TR VALIGN=TOP><TD><FONT FACE="Arial" SIZE="3">GE
+<BR></FONT></TD><TD><FONT FACE="Arial" SIZE="3">term1 &gt;= term2
+<BR></FONT></TD></TR><TR VALIGN=TOP><TD><FONT FACE="Arial" SIZE="3">LE
+<BR></FONT></TD><TD><FONT FACE="Arial" SIZE="3">term1 &lt;= term2
+<BR></FONT></TD></TR></TABLE><FONT FACE="Arial Narrow" SIZE="4"><B>Note:
+<P>
+</B></FONT><FONT FACE="Arial" SIZE="3">Numeric values are handled as 32-bit signed integers.
+<P>
+
+<P>
+<B>Example:
+<P>
+          </B></FONT><FONT FACE="Lucida Sans Typewriter" SIZE="3">; This example is a multiply and
+<P>
+          ; accumulate operation.
+<P>
+TblSiz: .ASSIGNA 50    ; TblSiz: Data Table size
+<P>
+   MOV A_Tbl1,R1   ; R1: Start address of data Table 1
+<P>
+   MOV A_Tbl2,R2   ; R2: Start address of data Table 2
+<P>
+   CLRMAC      ; Mac register initialization
+<P>
+   .AWHILE \&amp;TblSize GT 0 ; While TblSiz is larger than 0,
+<P>
+   MAC.W @R0+,@R1+   ; this statement is iteratively
+<P>
+          ; assembled.
+<P>
+TblSiz: .ASSIGNA \&amp;TblSiz-1  ; 1 is subtracted from TblSiz.
+<P>
+   .AENDW
+<P>
+   STS  MAC,R0    ; The result is obtained in R0.
+<P>
+</FONT></BODY>
+</HTML>

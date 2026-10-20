@@ -1,0 +1,149 @@
+<HTML>
+<HEAD>
+<TITLE>6.1   Sample Description (Name): Classification</TITLE>
+</HEAD><body bgcolor="#FFFFFF">
+<!-- SH3PROG InfoViewer title (sh3prog.ivt); HTML topics extracted with tools/extract-ivt.py, images and the title's own indexes dropped. -->
+
+<A NAME="off_1672136"></A><A NAME="e32dfd35"></A><FONT FACE="Arial" SIZE="5"><B>6.1   Sample Description (Name): Classification
+<P>
+</B></FONT><FONT FACE="Arial" SIZE="3"><B>Class: </B>Indicates if the instruction is a delayed branch instruction or interrupt
+disabled instruction
+<P>
+
+<P>
+</FONT><TABLE><TR VALIGN=TOP><TD><FONT FACE="Arial" SIZE="3"><B>Format
+<BR></B></FONT></TD><TD><FONT FACE="Arial" SIZE="3"><B>Abstract
+<BR></B></FONT></TD><TD><FONT FACE="Arial" SIZE="3"><B>Code
+<BR></B></FONT></TD><TD><FONT FACE="Arial" SIZE="3"><B>Cycle
+<BR></B></FONT></TD><TD><FONT FACE="Arial" SIZE="3"><B>T Bit
+<BR></B></FONT></TD></TR><TR VALIGN=TOP><TD><FONT FACE="Arial" SIZE="3">Assembler input format; imm and disp are numbers, expressions, or symbols
+<BR></FONT></TD><TD><FONT FACE="Arial" SIZE="3">A brief description of operation
+<BR></FONT></TD><TD><FONT FACE="Arial" SIZE="3">Displayed in order MSB <IMG SRC="sh390004.gif" ALT="sh390004.gif" BORDER=0 WIDTH=14 HEIGHT=16> LSB
+<BR></FONT></TD><TD><FONT FACE="Arial" SIZE="3">Number of cycles when there is no wait state
+<BR></FONT></TD><TD><FONT FACE="Arial" SIZE="3">The value of T bit after the instruction is executed
+<BR>
+<BR></FONT></TD></TR></TABLE><FONT FACE="Arial" SIZE="3"><B>Description: 
+<P>
+</B>Description of operation
+<P>
+<B>Operation: </B>Operation written in C language. This part is just a reference to help
+understanding of an operation. The following resources should be used.
+<P>
+<IMG SRC="sh390000.gif" ALT="sh390000.gif" BORDER=0 WIDTH=6 HEIGHT=16> Reads data of each length from address Addr. An address error will occur if
+word data is read from an address other than 2n or if longword data is read from
+an address other than 4n:
+<P>
+
+<P>
+</FONT><FONT FACE="Lucida Sans Typewriter" SIZE="3">unsigned char Read_Byte(unsigned long Addr);
+<P>
+unsigned short Read_Word(unsigned long Addr);
+<P>
+unsigned long Read_Long(unsigned long Addr);
+<P>
+
+<P>
+<IMG SRC="sh390000.gif" ALT="sh390000.gif" BORDER=0 WIDTH=6 HEIGHT=16> </FONT><FONT FACE="Arial" SIZE="3">Writes data of each length to address Addr. An address error will occur if
+word data is written to an address other than 2n or if longword data is written to
+an address other than 4n:
+<P>
+
+<P>
+</FONT><FONT FACE="Lucida Sans Typewriter" SIZE="3">unsigned char Write_Byte(unsigned long Addr, unsigned long Data);
+<P>
+unsigned short Write_Word(unsigned long Addr, unsigned long Data);
+<P>
+unsigned long Write_Long(unsigned long Addr, unsigned long Data);
+<P>
+
+<P>
+<IMG SRC="sh390000.gif" ALT="sh390000.gif" BORDER=0 WIDTH=6 HEIGHT=16> </FONT><FONT FACE="Arial" SIZE="3">Starts execution from the slot instruction located at an address (Addr - 4).
+For Delay_Slot (4), execution starts from an instruction at address 0 rather
+than address 4. The following instructions are detected before execution as having
+illegal slots (they become illegal slot instructions when used as delay slot
+instructions):BF, BT, BRA, BSR, JMP, JSR, RTS, RTE, TRAPA, BF/S, BT/S, BRAF, BSRF
+<P>
+
+<P>
+</FONT><FONT FACE="Lucida Sans Typewriter" SIZE="3">Delay_Slot(unsigned long Addr);
+<P>
+<IMG SRC="sh390000.gif" ALT="sh390000.gif" BORDER=0 WIDTH=6 HEIGHT=16>  </FONT><FONT FACE="Arial" SIZE="3">List registers:
+<P>
+
+<P>
+</FONT><FONT FACE="Lucida Sans Typewriter" SIZE="3">unsigned long R[16];
+<P>
+unsigned long SR,GBR,VBR;
+<P>
+unsigned long MACH,MACL,PR;
+<P>
+unsigned long PC;
+<P>
+<IMG SRC="sh390000.gif" ALT="sh390000.gif" BORDER=0 WIDTH=6 HEIGHT=16> </FONT><FONT FACE="Arial" SIZE="3">Definition of SR structures:
+<P>
+
+<P>
+</FONT><FONT FACE="Lucida Sans Typewriter" SIZE="3">struct SR0 {
+<P>
+ unsigned long dummy0:22;
+<P>
+ unsigned long M0:1;
+<P>
+ unsigned long Q0:1;
+<P>
+ unsigned long I0:4;
+<P>
+ unsigned long dummy1:2;
+<P>
+ unsigned long S0:1;
+<P>
+ unsigned long T0:1;
+<P>
+};
+<P>
+<IMG SRC="sh390000.gif" ALT="sh390000.gif" BORDER=0 WIDTH=6 HEIGHT=16>  </FONT><FONT FACE="Arial" SIZE="3">Definition of bits in SR:
+<P>
+</FONT><FONT FACE="Lucida Sans Typewriter" SIZE="3">#define M ((*(struct SR0 *)(&amp;SR)).M0)
+<P>
+#define Q ((*(struct SR0 *)(&amp;SR)).Q0)
+<P>
+#define S ((*(struct SR0 *)(&amp;SR)).S0)
+<P>
+#define T ((*(struct SR0 *)(&amp;SR)).T0)
+<P>
+<IMG SRC="sh390000.gif" ALT="sh390000.gif" BORDER=0 WIDTH=6 HEIGHT=16>  </FONT><FONT FACE="Arial" SIZE="3">Error display function:
+<P>
+</FONT><FONT FACE="Lucida Sans Typewriter" SIZE="3">Error( char *er );
+<P>
+</FONT><FONT FACE="Arial" SIZE="3">The PC should point to the location four bytes (the second instruction) after
+the current instruction. Therefore, </FONT><FONT FACE="Courier New" SIZE="3">PC = 4;</FONT><FONT FACE="Arial" SIZE="3"> means the instruction starts execution from address 0, not address 4.
+<P>
+<B>Examples: </B>Examples are written in assembler mnemonics and describe status before and
+after executing the instruction. Characters in italics such as <I>.align</I> are assembler control instructions (listed below). For more information, see
+the <B><I>Cross Assembler User Manual</I></B><I>.
+<P>
+</I></FONT><FONT FACE="Lucida Sans Typewriter" SIZE="3">.org Location counter set
+<P>
+.data.w Securing integer word data
+<P>
+.data.l Securing integer longword data
+<P>
+.sdata Securing string data
+<P>
+.align 2 2-byte boundary alignment
+<P>
+.align 4 2-byte boundary alignment
+<P>
+.arepeat 16 16-repeat expansion
+<P>
+.arepeat 32 32-repeat expansion
+<P>
+.aendr End of repeat expansion of specified number
+<P>
+</FONT><FONT FACE="Arial Narrow" SIZE="4"><B>Note:
+<P>
+</B></FONT><FONT FACE="Arial" SIZE="3">The SH series cross assembler version 1.0 does not support the conditional
+assembler functions.
+<P>
+</FONT></BODY>
+</HTML>

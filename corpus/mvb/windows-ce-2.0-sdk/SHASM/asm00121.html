@@ -1,0 +1,124 @@
+<HTML>
+<HEAD>
+<TITLE>7.2.1  .ASSIGNA: Integer Preprocessor Variable Definition</TITLE>
+</HEAD><body bgcolor="#FFFFFF">
+<!-- SHASM InfoViewer title (Shasm.ivt); HTML topics extracted with tools/extract-ivt.py, images and the title's own indexes dropped. -->
+
+<A NAME="off_2949632"></A><A NAME="c59a7c44"></A><FONT FACE="Arial" SIZE="4"><B>7.2.1  .ASSIGNA: Integer Preprocessor Variable Definition 
+<P>
+</B></FONT><FONT FACE="Arial" SIZE="3"><B>Syntax:
+<P>
+</B></FONT><FONT FACE="Lucida Sans Typewriter" SIZE="3">&lt;preprocessor variable&gt;[:].ASSIGNA<IMG SRC="asm90001.gif" ALT="asm90001.gif" BORDER=0 WIDTH=9 HEIGHT=16>&lt;value&gt;
+<P>
+</FONT><FONT FACE="Arial" SIZE="3"><B>Statement Elements:
+<P>
+<IMG SRC="asm90000.gif" ALT="asm90000.gif" BORDER=0 WIDTH=6 HEIGHT=16> </B>Label: Enter the name of the preprocessor variable
+<P>
+<IMG SRC="asm90000.gif" ALT="asm90000.gif" BORDER=0 WIDTH=6 HEIGHT=16> Operation: Enter the .ASSIGNA mnemonic in the operation field
+<P>
+<IMG SRC="asm90000.gif" ALT="asm90000.gif" BORDER=0 WIDTH=6 HEIGHT=16> Operands: enter the value to be assigned to the preprocessor variable
+<P>
+<B>Description: 
+<P>
+</B>.ASSIGNA is the assembler directive that defines a value for an integer
+preprocessor variable. The syntax of integer preprocessor variables is the same as
+that for symbols. The assembler distinguishes uppercase and lowercase letters.
+The preprocessor variables defined with the .ASSIGNA directive can be redefined
+with the .ASSIGNA or .ASSIGNC directive. The values for the preprocessor
+variables must be absolute values. Relative values, forward references, and external
+references are not permitted. Arithmetic involving relative values is permitted,
+subject to the usual restrictions as long as the result is absolute. Defined
+preprocessor variables are valid from the point of specification forward in the
+source program.
+<P>
+When referencing integer preprocessor variables, insert a backslash (\) and an
+ampersand (&amp;) in front of them.
+<P>
+</FONT><FONT FACE="Lucida Sans Typewriter" SIZE="3">\&amp;&lt;preprocessor variable&gt;[']
+<P>
+</FONT><FONT FACE="Arial" SIZE="3">To clearly distinguish the preprocessor variable name from the rest of the
+source statement, an apostrophe (') can be added. This is only necessary in
+certain cases when preprocessor variables are embedded in strings or macro bodies.
+<P>
+<B>Example:
+<P>
+        </B></FONT><FONT FACE="Lucida Sans Typewriter" SIZE="3">; This example generates a general-
+<P>
+        ; purpose multiple-bit shift instruction
+<P>
+        ; which shifts bits to the right by the
+<P>
+        ; number of SHIFT.
+<P>
+RN:  .REG R0    ; Rn is set to R0
+<P>
+SHIFT: .ASSIGNA 27   ; SHIFT is set to 27
+<P>
+  .AIF \&amp;SHIFT &gt;= 16 ; Condition: SHIFT &gt;= 16
+<P>
+  SHLR16 Rn    ; When the condition is satisfied, Rn is
+<P>
+        ; shifted to the right by 16 bits.
+<P>
+SHIFT: .ASSIGNA \&amp;SHIFT-16 ; 16 is subtracted from SHIFT.
+<P>
+  .AENDI
+<P>
+  .AIF \&amp;SHIFT &gt;= 8 ; Condition: SHIFT &gt;= 8
+<P>
+  SHLR8  Rn   ; When the condition is satisfied, Rn is
+<P>
+        ; shifted to the right by 8 bits.
+<P>
+SHIFT: .ASSIGNA \&amp;SHIFT-8 ; 8 is subtracted from SHIFT.
+<P>
+  .AENDI
+<P>
+  .AIF \&amp;SHIFT &gt;= 4 ; Condition: SHIFT &gt;= 4
+<P>
+  SHLR2  Rn   ; When the condition is satisfied, Rn is
+<P>
+  SHLR2  Rn   ; shifted to the right by 4 bits.
+<P>
+SHIFT: .ASSIGNA \&amp;SHIFT-4 ; 4 is subtracted from SHIFT.
+<P>
+  .AENDI
+<P>
+  .AIF \&amp;SHIFT &gt;= 2 ; Condition: SHIFT &gt;= 2
+<P>
+  SHLR2  Rn   ; When the condition is satisfied, Rn is
+<P>
+        ; shifted to the right by 2 bits.
+<P>
+SHIFT: .ASSIGNA \&amp;SHIFT-2 ; 2 is subtracted from SHIFT.
+<P>
+  .AENDI
+<P>
+  .AIF \&amp;SHIFT == 1 ; Condition: SHIFT = 1
+<P>
+  SHLR  Rn   ; When the condition is satisfied, Rn is
+<P>
+        ; shifted to the right by 1 bit.
+<P>
+  .AENDI
+<P>
+</FONT><FONT FACE="Arial" SIZE="3">The expanded results are as follows:
+<P>
+</FONT><FONT FACE="Lucida Sans Typewriter" SIZE="3">SHLR16 R1   ; When the condition is satisfied, Rn is shifted to the
+<P>
+     ; right by 16 bits.
+<P>
+SHLR8 R1   ; When the condition is satisfied, Rn is shifted to the
+<P>
+     ; right by 8 bits.
+<P>
+SHLR2 R1   ; When the condition is satisfied, Rn is shifted to the
+<P>
+     ; right by 2 bits.
+<P>
+SHLR R1   ; When the condition is satisfied, Rn is shifted to the
+<P>
+     ; right by 1 bit.
+<P>
+</FONT></BODY>
+</HTML>

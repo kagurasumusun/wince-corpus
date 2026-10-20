@@ -1,0 +1,130 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML>
+<HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text-html; charset=Windows-1252">
+<title>CeReadRecordProps</title>
+<meta name=MS-HAID content="_wcesdk_cereadrecordprops">
+<meta name=MS-HKWD content="CeReadRecordProps">
+<meta name=MS-HKWD content="PegReadRecordProps">
+</HEAD>
+<BODY BGCOLOR=#FFFFFF TEXT=#000000>
+<!-- WCESDK InfoViewer title (WCESDK.IVT); HTML topics extracted with tools/extract-ivt.py, images and the title's own indexes dropped. -->
+
+<BODY BGCOLOR=#FFFFFF BACKGROUND= "images\cewmark.gif" TEXT=#000000><form name=x><object name=iv classid="clsid:9c2ac687-ceef-11cf-96d9-00a0c903b016">
+</object></form>
+<h1><a name="_wcesdk_cereadrecordprops"></a>CeReadRecordProps </h1>
+<p>
+The <b>CeReadRecordProps</b> function reads properties from the current record. A RAPI version of this function exists and is also called <b>CeReadRecordProps</b>. </p>
+<h2>Syntax</h2>
+<p>
+<b>CEOID</b> <b>CeReadRecordProps(HANDLE</b> <i>hDbase</i><b>, DWORD</b> <i>dwFlags</i><b>, LPWORD</b> <i>lpcPropID</i><b>, CEPROPID</b> <b>*</b> <i>rgPropID</i><b>, LPBYTE</b> <b>*</b> <i>lplpBuffer</i><b>, LPDWORD</b> <i>lpcbBuffer<b>)</i>;</b> </p>
+<h2>At a Glance</h2>
+<table>
+<tr valign=top>
+<td>
+Header file:</td>
+<td>
+Winbase.h</td>
+</tr>
+<tr valign=top>
+<td>
+Component:</td>
+<td>
+<a href="modcomp_14.htm">fsdbase</a></td>
+</tr>
+<tr valign=top>
+<td>
+Platforms:</td>
+<td>
+H/PC</td>
+</tr>
+<tr valign=top>
+<td>
+Windows CE versions:</td>
+<td>
+1.01 and later</td>
+</tr>
+</table><br>
+<h2>Parameters</h2>
+<dl>
+<dt>
+<i>hDbase</i> </dt>
+<dd>
+Handle to an open database. The database must have been opened by a previous call to the <a href="fsdbas_f_5.htm"><b>CeOpenDatabase</b></a> function. <br>
+</dd>
+<dt>
+<i>dwFlags</i> </dt>
+<dd>
+Read flags. The following value is supported:<dl>
+<dt>
+CEDB_ALLOWREALLOC</dt>
+<dd>
+The <a href="lmem_f_7.htm"><b>LocalAlloc</b></a> function was used to allocate the buffer specified by the <i>lplpBuffer</i> parameter, and the server can reallocate the buffer if it is not large enough to hold the requested properties.</dd>
+</dl>
+<br>
+</dd>
+<dt>
+<i>lpcPropID</i> </dt>
+<dd>
+Number of property identifiers in the array specified by the <i>rgPropID</i> parameter. If <i>rgPropID</i> is NULL, this parameter receives the number of properties retrieved. <br>
+</dd>
+<dt>
+<i>rgPropID</i> </dt>
+<dd>
+Pointer to an array of property identifiers for the properties to be retrieved. If this parameter is NULL, <b>CeReadRecordProps</b> retrieves all properties in the record. <br>
+</dd>
+<dt>
+<i>lplpBuffer</i> </dt>
+<dd>
+Address of a pointer to a buffer that receives the requested properties. If the <i>dwFlags</i> parameter includes the CEDB_ALLOWREALLOC flag, the buffer may be reallocated if necessary. If the CEDB_ALLOWREALLOC flag is specified and this parameter is NULL, the server uses the <b>LocalAlloc</b> function to allocate a buffer of the appropriate size in the caller's address space and returns a pointer to the buffer. Note that if the CEDB_ALLOWREALLOC flag is specified, it is possible for the value of this pointer to change even on failure. For example, the old memory might be freed and the allocation might then fail, leaving the pointer set to NULL.<br>
+</dd>
+<dt>
+<i>lpcbBuffer</i> </dt>
+<dd>
+Pointer to a variable that contains the size, in bytes, of the buffer specified by the <i>lplpBuffer</i> parameter. When <b>CeReadRecordProps</b> returns, <i>lpcbBuffer</i> receives a value that indicates the actual size of the data copied to the buffer. If the buffer was too small to contain the data, this parameter can be used to calculate the amount of memory to allocate for the buffer if CEDB_ALLOWREALLOC was not specified. </dd>
+</dl>
+<h2>Return Values</h2>
+<p>
+If the function succeeds, the return value is the object identifier of the record from which the function read. If the function fails, the return value is zero. To get extended error information when within a CE program call <a href="nk_f_15.htm"><b>GetLastError</b></a>. If within a RAPI program, call <a href="func_c_84.htm"><b>CeGetLastError</b></a>. <b>GetLastError </b>and <b>CeGetLastError</b> may return one of the following values:</p>
+<dl>
+<dt>
+ERROR_INVALID_PARAMETER</dt>
+<dd>
+A parameter was invalid.<br>
+</dd>
+<dt>
+ERROR_NO_DATA</dt>
+<dd>
+None of the requested properties was found. The output buffer and the size are valid.<br>
+</dd>
+<dt>
+ERROR_INSUFFICIENT_BUFFER</dt>
+<dd>
+The given buffer was not large enough, and the reallocation failed <font face="Symbol"><span style="font-family:symbol">&#190;</span></font> if the CEDB_ALLOWREALLOC flag was specified. The <i>lpcbBuffer</i> parameter contains the required buffer size.<br>
+</dd>
+<dt>
+ERROR_KEY_DELETED</dt>
+<dd>
+The record that was about to be read was deleted by another thread. If the current record was reached as a result of an autoseek, this error is not returned, and the next record is returned.<br>
+</dd>
+<dt>
+ERROR_NO_MORE_ITEMS</dt>
+<dd>
+The current seek pointer is at the end of the database.</dd>
+</dl>
+<h2>Remarks</h2>
+<p>
+The <b>CeReadRecordProps</b> function reads the specified set of properties from the current record. If the database was opened with the autoseek flag <font face="Symbol"><span style="font-family:symbol">&#190;</span></font> that is, if the <i>dwFlags</i> parameter of <b>CeOpenDatabase</b> was set to CEDB_AUTOINCREMENT <font face="Symbol"><span style="font-family:symbol">&#190;</span></font> <b>CeReadRecordProps</b> increments the seek pointer by one so that the next call reads the next record in the current sort order. That is, if the database was opened with a sort order active, then <b>CeReadRecordProps</b> will return the records in sorted order. If the database was not opened with a sort order active, then the order in which records are returned is not predictable. </p>
+<p>
+Read all needed properties from the record in a single call. The entire record is stored in a compressed format, and each time a property is read it must be decompressed. All the properties are returned in a single marshalled structure, which consists of an array of <a href="fsdbas_s_2.htm"><b>CEPROPVAL</b></a> structures, one for each property requested <font face="Symbol"><span style="font-family:symbol">&#190;</span></font> or one for each property found if the application set the <i>rgPropID</i> parameter to NULL when calling the function. </p>
+<p>
+If a property was requested, such as strings or blobs that are packed in at the end of the array, the pointers in the <b>CEPROPVAL</b> structures point into this marshalled structure. This means that the only memory that must be freed is the original pointer to the buffer passed in to the call. Even if the function fails, it may have allocated memory on the caller's behalf. Free the pointer returned by this function if the pointer is not NULL. </p>
+<p>
+For more information, see <A HREF='javascript:document.x.iv.ALink("_wcesdk_accessing_persistent_storage","")'>Accessing Persistent Storage</a>.</p>
+<p>
+When writing applications for Windows CE version 1.0, use the <b>PegReadRecordProps</b> function.</p>
+<h2>See Also</h2>
+<p>
+<a href="lmem_f_7.htm"><b>LocalAlloc</b></a>, <a href="lmem_f_8.htm"><b>LocalFree</b></a>, <a href="fsdbas_f_5.htm"><b>CeOpenDatabase</b></a>, <a href="fsdbas_f_7.htm"><b>CeSeekDatabase</b></a>, <a href="fsdbas_s_2.htm"><b>CEPROPVAL</b></a></p>
+</BODY>
+</HTML>

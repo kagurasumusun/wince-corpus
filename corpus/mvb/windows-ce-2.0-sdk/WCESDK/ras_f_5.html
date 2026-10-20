@@ -1,0 +1,131 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML>
+<HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text-html; charset=Windows-1252">
+<title>RasGetEntryDevConfig</title>
+<meta name=MS-HAID content="_wcesdk_rasgetentrydevconfig">
+<meta name=MS-HKWD content="RasGetEntryDevConfig (Windows CE)">
+</HEAD>
+<BODY BGCOLOR=#FFFFFF TEXT=#000000>
+<!-- WCESDK InfoViewer title (WCESDK.IVT); HTML topics extracted with tools/extract-ivt.py, images and the title's own indexes dropped. -->
+
+<BODY BGCOLOR=#FFFFFF BACKGROUND= "images\cewmark.gif" TEXT=#000000><form name=x><object name=iv classid="clsid:9c2ac687-ceef-11cf-96d9-00a0c903b016">
+</object></form>
+<h1><a name="_wcesdk_rasgetentrydevconfig"></a>RasGetEntryDevConfig </h1>
+<p>
+The <b>RasGetEntryDevConfig</b> function retrieves the device information saved by the last successful call to the <a href="ras_f_10.htm"><b>RasSetEntryDevConfig</b></a> function. </p>
+<h2>Syntax</h2>
+<p>
+<b>DWORD</b> <b>RasGetEntryDevConfig(LPCTSTR</b> <i>lpszPhoneBook</i><b>, LPCTSTR</b> <i>szEntry</i><b>, LPDWORD</b> <i>pdwDeviceID</i><b>, LPDWORD</b> <i>pdwSize</i><b>, LPVARSTRING</b> <i>pDeviceConfig</i><b>);</b></p>
+<h2>At a Glance</h2>
+<table>
+<tr valign=top>
+<td>
+Header file:</td>
+<td>
+Afdfunc.h</td>
+</tr>
+<tr valign=top>
+<td>
+Module:</td>
+<td>
+Ras</td>
+</tr>
+<tr valign=top>
+<td>
+Platforms:</td>
+<td>
+H/PC</td>
+</tr>
+<tr valign=top>
+<td>
+Windows CE versions:</td>
+<td>
+1.0 and later</td>
+</tr>
+</table><br>
+<h2>Parameters</h2>
+<dl>
+<dt>
+<i>lpszPhoneBook</i> </dt>
+<dd>
+This parameter is ignored and should be set to NULL. Dial-up networking stores phone-book entries in the registry rather than in a phone-book file.<br>
+</dd>
+<dt>
+<i>szEntry</i> </dt>
+<dd>
+Pointer to a null-terminated string containing an existing entry name. <br>
+</dd>
+<dt>
+<i>pdwDeviceID</i> </dt>
+<dd>
+Returns the saved device identifier. <br>
+</dd>
+<dt>
+<i>pdwSize</i> </dt>
+<dd>
+Pointer to the size of the structure pointed to by <i>pDeviceConfig</i>. This should be filled with the size required. <br>
+</dd>
+<dt>
+<i>pDeviceConfig</i> </dt>
+<dd>
+Pointer to the memory location of the type <b>VARSTRING</b> where the device configuration structure is returned. If NULL then only the correct size is returned. </dd>
+</dl>
+<h2>Return Values</h2>
+<p>
+If the function succeeds, the return value is zero. If the function fails, the return value will be set to an error value:</p>
+<dl>
+<dt>
+ERROR_CANNOT_OPEN_PHONEBOOK</dt>
+<dd>
+Invalid phone book.<br>
+</dd>
+<dt>
+ERROR_CANNOT_FIND_PHONEBOOK_ENTRY</dt>
+<dd>
+Invalid <i>szEntry</i>.<br>
+</dd>
+<dt>
+ERROR_INVALID_PARAMETER</dt>
+<dd>
+Invalid <i>szEntry</i>, <i>pdwDeviceID</i> or <i>pdwSize</i> parameter.<br>
+</dd>
+<dt>
+ERROR_BUFFER_TOO_SMALL</dt>
+<dd>
+Specified buffer was too small.</dd>
+</dl>
+<h2>Remarks</h2>
+<p>
+In Windows CE version 2.0 the <b>RasGetEntryProperty</b> function supports the same functionality as the <b>RasGetEntryDevConfig</b> function. An application should use the <b>RasGetEntryProperties</b> function to retrieve device information.</p>
+<p>
+An example of how to use the <b>RasGetEntryDevConfig</b> function follows: </p>
+<pre>DWORD   dwDeviceID;
+LPVARSTRING pDeviceConfig;
+DWORD   dwSize;
+TCHAR szBuf[50];
+
+dwSize = 0;
+if (RasGetEntryDevConfig (NULL, EntryName, &amp;dwDeviceID,
+            &#09;&amp;dwSize, NULL)) {
+    OutputDebugString(TEXT(&quot;\r\nError getting device info size\r\n&quot;));
+    return;
+}
+pDeviceConfig = LocalAlloc (LPTR, dwSize);
+if (RasGetEntryDevConfig (NULL, EntryName, &amp;dwDeviceID,
+    &amp;dwSize, pDeviceConfig)) {
+    OutputDebugString(TEXT(&quot;\r\nError getting device info size\r\n&quot;));
+    return;
+} else {
+    wsprintf(szBuf, TEXT(&quot;dwDeviceID=%d\r\n&quot;), dwDeviceID);    
+    OutputDebugString(szBuf);
+    if (pDeviceConfig) {
+        wsprintf(szBuf, TEXT(&quot;Have a device config at: 0x%X\r\n&quot;),
+            pDeviceConfig));
+        OutputDebugString(szBuf);
+        LocalFree(pDeviceConfig);
+    }
+}
+</pre>
+</BODY>
+</HTML>

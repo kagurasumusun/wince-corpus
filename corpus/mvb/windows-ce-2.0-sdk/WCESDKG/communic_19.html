@@ -1,0 +1,39 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML>
+<HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text-html; charset=Windows-1252">
+<title>Implementing a Secure Socket</title>
+<meta name=MS-HAID content="_wcesdk_implementing_a_secure_socket">
+<meta name=MS-HKWD content="Implementing a Secure Socket">
+</HEAD>
+<BODY BGCOLOR=#FFFFFF TEXT=#000000>
+<!-- WCESDKG InfoViewer title (Wcesdkg.ivt); HTML topics extracted with tools/extract-ivt.py, images and the title's own indexes dropped. -->
+
+<form name=x><object name=iv classid="clsid:9c2ac687-ceef-11cf-96d9-00a0c903b016">
+</object></form>
+<h3><a name="_wcesdk_implementing_a_secure_socket"></a>Implementing a Secure Socket</h3>
+<h4><img src="../guide/art/wedge.gif" border=0>&#09;To Implement a Secure Socket</h4>
+<ol>
+<li>
+Create a socket with <A HREF='javascript:document.x.iv.ALink("_wcesdk_win32_socket_2","")'><b>socket</b></a>.<br><br></li>
+<li>
+Set the socket in secure mode with <A HREF='javascript:document.x.iv.ALink("_wcesdk_win32_setsockopt_2","")'><b>setsockopt</b></a>. The <i>level</i> parameter should be set to SO_SOCKET, <i>optname</i> to SO_SECURE, and <i>optval</i> should be a DWORD set to SO_SEC_SSL.<br><br></li>
+<li>
+Specify the certificate validation callback function by invoking <b>WSAIoctl</b> with the SO_SSL_SET_VALIDATE_CERT_HOOK control code.<br><br></li>
+<li>
+Optionally, an application may specify which secure sockets protocols may be used. This must be done prior to connecting. To do so:<ol>
+<li>
+Invoke <b>WSAIoctl</b> with the SO_SSL_GET_PROTOCOLS control code to determine the default protocols. Normally, all three security protocols (PCT1.0, SSL 2.0, and SSL 3.0) are enabled.<br><br></li>
+<li>
+Use the <b>WSAIoctl</b> function with the SO_SSL_SET_PROTOCOLS control code to select the protocols to be enabled.</li>
+</ol>
+</li>
+<li>
+Make a connection with <b>connect</b>. The certificate callback function will be automatically invoked. The connection can be completed only if the callback function verifies the acceptability of the certificate by returning SSL_ERR_OKAY.<br><br></li>
+<li>
+Transmit and send normally. The <b>send</b> and <b>recv</b> functions will automatically encrypt and decrypt the data.<br><br></li>
+<li>
+When finished, close the socket.</li>
+</ol>
+</BODY>
+</HTML>

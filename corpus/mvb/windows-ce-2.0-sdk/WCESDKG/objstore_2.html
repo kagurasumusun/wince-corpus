@@ -1,0 +1,76 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML>
+<HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text-html; charset=Windows-1252">
+<title>Creating And Deleting Databases</title>
+<meta name=MS-HAID content="_wcesdk_creating_and_deleting_databases">
+</HEAD>
+<BODY BGCOLOR=#FFFFFF TEXT=#000000>
+<!-- WCESDKG InfoViewer title (Wcesdkg.ivt); HTML topics extracted with tools/extract-ivt.py, images and the title's own indexes dropped. -->
+
+<form name=x><object name=iv classid="clsid:9c2ac687-ceef-11cf-96d9-00a0c903b016">
+</object></form>
+<h3><a name="_wcesdk_creating_and_deleting_databases"></a>Creating And Deleting Databases</h3>
+<p>
+The <A HREF='javascript:document.x.iv.ALink("_wcesdk_cecreatedatabase","")'><b>CeCreateDatabase</b></a> function creates a database. When calling the function, the application specifies the name, an optional type identifier for the database, and optional sort order specifications. <b>CeCreateDatabase</b> returns the object identifier of the newly created database.</p>
+<p>
+The type identifier is an optional, application-defined value which allows differentiation of different types of databases. For example, an application may have a different type for an address book than for a to-do list database. This allows grouping of related databases for searching, record management, and enumeration of databases.</p>
+<p>
+For a discussion of sorting and sort orders, see the section &quot;Sorting Records.&quot;  </p>
+<p>
+To destroy a database, the application passes the database's object identifier to <b>CeDeleteDatabase</b>. </p>
+<p>
+The following example attempts to open a database of addresses by calling the <b>CeOpenDatabase</b> function. If the database does not exist, the example calls the <b>CeCreateDatabase</b> function to create a new address database with three different sort orders. After creating the database, the example tries again to open the database. </p>
+<pre>// OpenAddressDatabase - opens database, creating a new one if one does 
+//   not already exist. 
+// Returns TRUE if successful or FALSE otherwise.
+// notifyWindow - handle of window that is notified when a message is 
+//   added or deleted
+// sortProperty - identifier of property on which to sort the database 
+// 
+// Global variables:
+//   g_oidAddressDatabase - object identifier of address database
+//   g_hAddressDatabase - open handle to the address database
+
+BOOL OpenAddressDatabase (HWND hwndNotify, CEPROPID cepidSortProperty)
+{
+    CEOID oidAddressDatabase; // Object identifier of address database
+    SORTORDERSPEC sort[MAX_MSG_PROPERTIES]; // Sort order descriptions
+
+    // Attempt to open the database of addresses. If successful, the 
+    // function returns an open  handle to the database and fills 
+    // oidAddressDatabase with the object identifier of the address 
+    // database.
+    g_hAddressDatabase = CeOpenDatabase(&amp;oidAddressDatabase, 
+        TEXT(&quot;Addresses&quot;),  cepidSortProperty, 0, hwndNotify);
+
+    // Check to see if the database handle is valid. If not, the
+    // database must not exist. Define the sort orders and create the
+    // address database.
+    if (g_hAddressDatabase == INVALID_HANDLE_VALUE) { // could not open 
+
+        // Define the sort orders.
+        sort[0].propid = HHPR_LAST_NAME;    
+        sort[0].dwFlags = 0;  // sort in ascending order
+        sort[1].propid = HHPR_CITY;
+        sort[1].dwFlags = 0;  // sort in ascending order
+        sort[2].propid = HHPR_STATE;
+        sort[2].dwFlags = 0;  // sort in ascending order
+
+        // Create the database.   
+        g_oidDatabase = CeCreateDatabase(TEXT(&quot;Addresses&quot;), 0, 
+            MAX_MSG_PROPERTIES, sort);
+
+        // Open the database.   
+        g_hAddressDatabase = CeOpenDatabase(&amp;oidAddressDatabase, NULL, cepidSortProperty, 0, 
+            NULL);
+    }
+
+    if (!g_hAddressDatabase)
+        return FALSE;
+
+    return TRUE;
+}
+</pre>
+</BODY>
+</HTML>

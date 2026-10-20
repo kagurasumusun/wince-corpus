@@ -1,0 +1,165 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
+<HTML>
+<HEAD><META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=Windows-1252">
+<TITLE>ACMDM_FORMAT_DETAILS</TITLE>
+<META NAME="MS-HKWD" CONTENT="ACMDM_FORMAT_DETAILS">
+<META NAME="MS-HAID" CONTENT="_wceddk_ACMDM_FORMAT_DETAILS">
+</HEAD>
+<BODY BGPROPERTIES="FIXED" TEXT="#000000" BGCOLOR="#FFFFFF">
+<!-- WCEDDK InfoViewer title (WCEDDK.IVT); HTML topics extracted with tools/extract-ivt.py, images and the title's own indexes dropped. -->
+
+<FORM name=x>
+<OBJECT name=iv classid="clsid:9c2ac687-ceef-11cf-96d9-00a0c903b016">
+</OBJECT>
+</FORM>
+<FONT FACE="ARIAL,HELVETICA" SIZE="2">
+<H2><A NAME="_wceddk_ACMDM_FORMAT_DETAILS"></A>ACMDM_FORMAT_DETAILS</H2>
+<P>
+The ACMDM_FORMAT_DETAILS message requests an ACM driver to return information
+about a format associated with a specified format tag.
+<H5>Return Value</H5>
+<DL>
+<DT>
+The driver should return MMSYSERR_NOERROR if the operation succeeds. Otherwise
+it should return one of the MMSYSERR error codes defined in mmsystem.h, or one
+of the ACMERR error codes defined in msacm.h. Possible error codes include:
+<DD>
+MMSYSERR_NOTSUPPORTED
+<P>
+The driver does not support the specified query operation.
+<DL>
+<DT>
+ACMERR_NOTPOSSIBLE
+<DD>
+The input parameter values do not represent a valid format or format tag.
+</DL>
+</DL>
+<H5>Parameters</H5>
+<DL>
+<DT>
+<I>dwDriverID</I>
+<DD>
+Driver instance identifier. This is the value returned by the driver in
+response to the <B>ACM_Open</B>&nbsp;function.
+<BR>
+<DT>
+<I>hDriver</I>
+<DD>
+Driver handle.
+<BR>
+<DT>
+<I>uMsg</I>
+<DD>
+ACMDM_FORMAT_DETAILS
+<BR>
+<DT>
+<I>lParam1</I>
+<DD>
+Pointer to an ACMFORMATDETAILS structure. ( ACMFORMATDETAILS is defined in
+msacm.h and described in the Win32 SDK.)
+<BR>
+<DT>
+<I>lParam2</I>
+<DD>
+Contains one of the following flags, specified by the fdwDetails parameter of
+the acmFormatDetails function, which is described in the Win32 SDK:
+<DL>
+<DT>
+ACM_FORMATDETAILSF_INDEX
+<DD>
+Indicates the dwFormatIndex member of the ACMFORMATDETAILS structure contains
+a format index. The valid index range is from zero to one less than the
+cStandardFormats member returned in the ACMFORMATTAGDETAILS structure for the
+format tag. (See ACMDM_FORMATTAG_DETAILS.)
+<BR>
+<DT>
+ACM_FORMATDETAILSF_FORMAT
+<DD>
+Indicates the client has filled in the WAVEFORMATEX structure associated with
+the ACMFORMATDETAILS structure.
+</DL>
+</DL>
+<H5>Comments</H5>
+<P>
+The ACM (WAVEAPI.DLL) sends the ACMDM_FORMAT_DETAILS message by calling the
+ACM driver's <B>ACM_IOControl</B>() entry point via DeviceIoControl(). The ACM
+sends this message when an application calls the <B>acmFormatDetails</B>
+function, which is described in the Win32 SDK.
+<P>
+All ACM drivers must support this message.
+<P>
+The client can do either of the following:
+<P>
+·Specify a format index, in order to obtain a description of the format
+associated with the index.
+<P>
+·Specify a format description, in order to validate the format and obtain the
+format's string description.
+<P>
+The client specifies the format tag in the ACMFORMATDETAILS structure's
+dwFormatTag member. The driver returns information for a particular format
+belonging to the format tag, as follows:
+<P>
+·If the ACM_FORMATDETAILSF_INDEX flag is set, the client has specified an
+index value in the ACMFORMATDETAILS structure's dwFormatIndex member. The
+driver fills in the WAVEFORMATEX structure for the format associated with the
+specified index value. It also fills in the ACMFORMATDETAILS structure's
+szFormat, fdwSupport, and cbStruct members.
+<P>
+·If the ACM_FORMATDETAILSF_FORMAT flag is set, the client has filled in the
+WAVEFORMATEX structure. The driver validates the structure contents and, if
+the contents are valid, fills in the ACMFORMATDETAILS structure's szFormat,
+fdwSupport, and cbStruct members.
+<P>
+Before calling the driver's <B>ACM_IOControl</B>&nbsp;function, the ACM verifies
+that:
+<P>
+·The ACMFORMATDETAILS structure and its associated WAVEFORMATEX structure are
+readable and writeable.
+<P>
+·The size of the ACMFORMATDETAILS structure (contained in its cbStruct member)
+is at least the structure's defined size. (The structure's size can be larger
+than its defined size, to allow for a longer szFormat member or to allow
+newer, larger structure definitions to be used within drivers under
+development.)
+<P>
+·The size of the WAVEFORMATEX structure associated with the ACMFORMATDETAILS
+structure's pwfx member is at least as large as the generic WAVEFORMATEX
+structure's defined size. (See The WAVEFORMATEX Structure below.)
+<P>
+·The ACMFORMATDETAILS structure's fdwSupport member contains zero.
+<P>
+·The lParam2 parameter contains a valid flag value.
+<P>
+Before returning, the driver must set the ACMFORMATDETAILS structure's
+cbStruct member to the actual number of bytes returned. The value returned in
+cbStruct must not be greater than the value received.
+<P>
+The WAVEFORMATEX Structure
+<P>
+The WAVEFORMATEX structure is a generic structure for describing a waveform
+format. Generally, you will use this structure as a basis for defining
+structures for your specific format types, as has been done in the IMA ADPCM
+Audio Codec. (For an example, see IMAADPCMWAVEFORMAT in mmreg.h.) When a
+client sends an ACMDM_FORMAT_DETAILS message, it specifies the address of a
+structure that you have defined for the specified format type. This structure
+is typically larger than the generic WAVEFORMATEX structure.
+<P>
+For more information about format tags and format structures, see Format Tags
+and Filter Tags and Defining Format Structures and Filter Structures in the
+Windows NT DDK.
+<P>
+Returning a Description String
+<P>
+The WAVEFORMATEX structure's szFormat member is used for returning a format
+description string. If an ACM driver returns a zero-length string in szFormat,
+the ACM creates an internationalized description string for the format. This
+string includes the format's speed (in Hz), bit depth, and channel setting
+(mono or stereo), based on the contents of the nSamplesPerSec, wBitsPerSample,
+and nChannels members of the WAVEFORMATEX structure. If wBitsPerSample
+contains zero, the ACM does not include the bit depth in the description
+string. You can provide your own description string and return it in szFormat,
+but allowing ACM to generate an internationalized string is preferred.
+<P></FONT>
+</BODY>
+</HTML>

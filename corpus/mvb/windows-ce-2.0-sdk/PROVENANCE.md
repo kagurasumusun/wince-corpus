@@ -3,7 +3,7 @@
 * Internet Archive item: <https://archive.org/details/MPLATSDK.20>
 * Title: Microsoft Windows CE Platform SDK (H/PC) 2.0 02/98
 * Creator / date: Microsoft / 1998-02
-* Collected: 2026-10-03 by tools/import-media.py (via .github/workflows/import-media.yml)
+* Collected: 2026-10-20 by tools/import-media.py (via .github/workflows/import-media.yml)
 
 | File | Bytes | md5 (Internet Archive) | URL |
 |------|------:|------------------------|-----|

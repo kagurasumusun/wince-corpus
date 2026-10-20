@@ -1,0 +1,80 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML>
+<HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text-html; charset=Windows-1252">
+<title>Using the Command Bands Control</title>
+<meta name=MS-HAID content="_wcesdk_using_the_command_bands_control">
+</HEAD>
+<BODY BGCOLOR=#FFFFFF TEXT=#000000>
+<!-- WCESDKG InfoViewer title (Wcesdkg.ivt); HTML topics extracted with tools/extract-ivt.py, images and the title's own indexes dropped. -->
+
+<form name=x><object name=iv classid="clsid:9c2ac687-ceef-11cf-96d9-00a0c903b016">
+</object></form>
+<h3><a name="_wcesdk_using_the_command_bands_control"></a>Using the Command Bands Control</h3>
+<h5><img src="../guide/art/wedge.gif" border=0>&#09;To create the command bands control</h5>
+<ol>
+<li>
+Initialize a <A HREF='javascript:document.x.iv.ALink("_wcesdk_initcommoncontrolsex","")'><b>INITCOMMONCONTROLSEX</b></a> structure with (ICC_BAR_CLASSES | ICC_COOL_CLASSES) in the <b>dwICC</b> field.<br><br></li>
+<li>
+Register the command bands control class and the command bar class by calling the <A HREF='javascript:document.x.iv.ALink("_wcesdk_initcommoncontrolsex","")'><b>InitCommonControlsEx</b></a> function, passing in the <b>INITCOMMONCONTROLSEX </b>structure.<br><br></li>
+<li>
+Create the image list to use for the band images.<br><br></li>
+<li>
+Create the commands bands control by calling the <A HREF='javascript:document.x.iv.ALink("_wcesdk_commandbands_create","")'><b>CommandBands_Create</b></a> function, passing the image list handle in the <i>himl</i> parameter.<br><br></li>
+<li>
+Initialize an array of <A HREF='javascript:document.x.iv.ALink("_wcesdk_rebarbandinfo","")'><b>REBARBANDINFO</b></a> structures, one for each band in the command bands control.<br><br></li>
+<li>
+Add the bands by calling the <A HREF='javascript:document.x.iv.ALink("_wcesdk_commandbands_addbands","")'><b>CommandBands_AddBands</b></a> function, passing the array of <A HREF='javascript:document.x.iv.ALink("_wcesdk_rebarbandinfo","")'><b>REBARBANDINFO</b></a> structures in the <i>prbbi</i> parameter.<br><br></li>
+<li>
+Add controls to the command bars in the bands by calling the appropriate command bar functions for the controls you want to add.<br><br></li>
+<li>
+Add the Close and Help buttons by calling the <A HREF='javascript:document.x.iv.ALink("_wcesdk_commandbands_addadornments","")'><b>CommandBands_AddAdornments</b></a> function. (The Close button is added by default.)</li>
+</ol>
+<pre>// Register the command bands control class and the command bar class.
+INITCOMMONCONTROLSEX icex;
+icex.dwSize = sizeof(icex);
+icex.dwICC = ICC_BAR_CLASSES | ICC_COOL_CLASSES;
+InitCommonControlsEx(&amp;icex);
+
+HWND hwndCmdBands, hwnd;
+REBARBANDINFO arbbi[2];
+
+// Create the image list to use for the band images.
+HIMAGELIST himl = ImageList_Create(16, 16, ILC_COLOR, 2, 0);
+// (Add some images to the image list here.)
+
+// Create the commands bands control.
+hwndCmdBands = CommandBands_Create(g_hinst, hwndParent, BANDS_ID, 
+&#09;RBS_VARHEIGHT | RBS_BANDBORDERS, himl);
+
+// Initialize the REBARBANDINFO structure for each band.
+arbbi[0].cbSize = sizeof(REBARBANDINFO); 
+arbbi[0].fMask = RBBIM_ID | RBBIM_STYLE| RBBIM_SIZE |  RBBIM_IMAGE;
+arbbi[0].fStyle = RBBS_NOGRIPPER ;
+arbbi[0].wID = ID_MENUBAND;
+arbbi[0].cx = 100;
+arbbi[0].iImage = 0;
+
+arbbi[1].cbSize = sizeof(REBARBANDINFO); 
+arbbi[1].fMask = RBBIM_ID |  RBBIM_IMAGE | RBBIM_SIZE;
+arbbi[1].wID = ID_BUTTONBAND;
+arbbi[1].cx = 125;
+arbbi[1].iImage = 1;
+
+// Add the bands.
+CommandBands_AddBands(hwndCmdBands, g_hinst, 2, arbbi);
+
+// Add a menu to the first band.
+hwnd = CommandBands_GetCommandBar(hwndCmdBands, 0);
+CommandBar_InsertMenubar(hwnd, g_hinst, IDM_MAINMENU, 0);
+
+// Add buttons to the second band. (tbButtons is an array of 
+// standard TBBUTTON structures, created previously.)
+hwnd = CommandBands_GetCommandBar(hwndCmdBands, 1);
+CommandBar_AddBitmap(hwnd, HINST_COMMCTRL, IDB_STD_SMALL_COLOR, 0, 0, 0);
+CommandBar_AddButtons(hwnd, sizeof(tbButtons)/sizeof(TBBUTTON), tbButtons);
+
+// Add the Close and Help buttons.
+CommandBands_AddAdornments(hwndCmdBands, g_hinst, CMDBAR_HELP, NULL);</pre>
+</BODY>
+</HTML>

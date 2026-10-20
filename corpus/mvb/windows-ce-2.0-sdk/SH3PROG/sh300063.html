@@ -1,0 +1,138 @@
+<HTML>
+<HEAD>
+<TITLE>6.29   LDS (Load to System Register): System Control Instruction</TITLE>
+</HEAD><body bgcolor="#FFFFFF">
+<!-- SH3PROG InfoViewer title (sh3prog.ivt); HTML topics extracted with tools/extract-ivt.py, images and the title's own indexes dropped. -->
+
+<A NAME="off_2393212"></A><A NAME="abe0eae6"></A><FONT FACE="Arial" SIZE="5"><B>6.29   LDS (Load to System Register): System Control Instruction
+<P>
+
+<P>
+</B></FONT><TABLE><TR VALIGN=TOP><TD><FONT FACE="Arial" SIZE="3"><B>Format
+<BR></B></FONT></TD><TD><FONT FACE="Arial" SIZE="3"><B>Abstract
+<BR></B></FONT></TD><TD><FONT FACE="Arial" SIZE="3"><B>Code
+<BR></B></FONT></TD><TD><FONT FACE="Arial" SIZE="3"><B>Cycle
+<BR></B></FONT></TD><TD><FONT FACE="Arial" SIZE="3"><B>T Bit
+<BR></B></FONT></TD></TR><TR VALIGN=TOP><TD><FONT FACE="Lucida Sans Typewriter" SIZE="3">LDS Rm,MACH
+<BR></FONT></TD><TD><FONT FACE="Arial" SIZE="3">Rm <IMG SRC="sh390002.gif" ALT="sh390002.gif" BORDER=0 WIDTH=13 HEIGHT=16> MACH
+<BR></FONT></TD><TD><FONT FACE="Lucida Sans Typewriter" SIZE="3">0100mmmm00001010
+<BR></FONT></TD><TD><FONT FACE="Arial" SIZE="3">1
+<BR></FONT></TD><TD><FONT FACE="Arial" SIZE="3">-
+<BR></FONT></TD></TR><TR VALIGN=TOP><TD><FONT FACE="Lucida Sans Typewriter" SIZE="3">LDS Rm,MACL
+<BR></FONT></TD><TD><FONT FACE="Arial" SIZE="3">Rm <IMG SRC="sh390002.gif" ALT="sh390002.gif" BORDER=0 WIDTH=13 HEIGHT=16> MACL
+<BR></FONT></TD><TD><FONT FACE="Lucida Sans Typewriter" SIZE="3">0100mmmm00011010
+<BR></FONT></TD><TD><FONT FACE="Arial" SIZE="3">1
+<BR></FONT></TD><TD><FONT FACE="Arial" SIZE="3">-
+<BR></FONT></TD></TR><TR VALIGN=TOP><TD><FONT FACE="Lucida Sans Typewriter" SIZE="3">LDS Rm,PR
+<BR></FONT></TD><TD><FONT FACE="Arial" SIZE="3">Rm <IMG SRC="sh390002.gif" ALT="sh390002.gif" BORDER=0 WIDTH=13 HEIGHT=16> PR
+<BR></FONT></TD><TD><FONT FACE="Lucida Sans Typewriter" SIZE="3">0100mmmm00101010
+<BR></FONT></TD><TD><FONT FACE="Arial" SIZE="3">1
+<BR></FONT></TD><TD><FONT FACE="Arial" SIZE="3">-
+<BR></FONT></TD></TR><TR VALIGN=TOP><TD><FONT FACE="Lucida Sans Typewriter" SIZE="3">LDS.L @Rm+,MACH
+<BR></FONT></TD><TD><FONT FACE="Arial" SIZE="3">(Rm) <IMG SRC="sh390002.gif" ALT="sh390002.gif" BORDER=0 WIDTH=13 HEIGHT=16> MACH, Rm + 4 <IMG SRC="sh390002.gif" ALT="sh390002.gif" BORDER=0 WIDTH=13 HEIGHT=16> Rm
+<BR></FONT></TD><TD><FONT FACE="Lucida Sans Typewriter" SIZE="3">0100mmmm00000110
+<BR></FONT></TD><TD><FONT FACE="Arial" SIZE="3">1
+<BR></FONT></TD><TD><FONT FACE="Arial" SIZE="3">-
+<BR></FONT></TD></TR><TR VALIGN=TOP><TD><FONT FACE="Lucida Sans Typewriter" SIZE="3">LDS.L @Rm+,MACL
+<BR></FONT></TD><TD><FONT FACE="Arial" SIZE="3">(Rm) <IMG SRC="sh390002.gif" ALT="sh390002.gif" BORDER=0 WIDTH=13 HEIGHT=16> MACL, Rm + 4 <IMG SRC="sh390002.gif" ALT="sh390002.gif" BORDER=0 WIDTH=13 HEIGHT=16> Rm
+<BR></FONT></TD><TD><FONT FACE="Lucida Sans Typewriter" SIZE="3">0100mmmm00010110
+<BR></FONT></TD><TD><FONT FACE="Arial" SIZE="3">1
+<BR></FONT></TD><TD><FONT FACE="Arial" SIZE="3">-
+<BR></FONT></TD></TR><TR VALIGN=TOP><TD><FONT FACE="Lucida Sans Typewriter" SIZE="3">LDS.L @Rm+,PR
+<BR></FONT></TD><TD><FONT FACE="Arial" SIZE="3">(Rm) <IMG SRC="sh390002.gif" ALT="sh390002.gif" BORDER=0 WIDTH=13 HEIGHT=16> PR, Rm + 4 <IMG SRC="sh390002.gif" ALT="sh390002.gif" BORDER=0 WIDTH=13 HEIGHT=16> Rm
+<BR></FONT></TD><TD><FONT FACE="Lucida Sans Typewriter" SIZE="3">0100mmmm00100110
+<BR></FONT></TD><TD><FONT FACE="Arial" SIZE="3">1
+<BR></FONT></TD><TD><FONT FACE="Arial" SIZE="3">-
+<BR>
+<BR></FONT></TD></TR></TABLE><FONT FACE="Arial" SIZE="3"><B>Description: 
+<P>
+</B>Stores the source operand into the system registers MACH, MACL, or PR.
+<P>
+<B>Operation:
+<P>
+</B></FONT><FONT FACE="Lucida Sans Typewriter" SIZE="3">LDSMACH(long m)   /* LDS Rm,MACH */
+<P>
+{
+<P>
+ MACH=R[m];
+<P>
+ if ((MACH&amp;0x00000200)==0) MACH&amp;=0x000003FF;
+<P>
+ else MACH|=0xFFFFFC00;
+<P>
+ PC+=2;
+<P>
+}
+<P>
+LDSMACL(long m)   /* LDS Rm,MACL */
+<P>
+{
+<P>
+ MACL=R[m];
+<P>
+ PC+=2;
+<P>
+}
+<P>
+LDSPR(long m)    /* LDS Rm,PR */
+<P>
+{
+<P>
+ PR=R[m];
+<P>
+ PC+=2;
+<P>
+}
+<P>
+LDSMMACH(long m)   /* LDS.L @Rm+,MACH */
+<P>
+{
+<P>
+ MACH=Read_Long(R[m]);
+<P>
+ if ((MACH&amp;0x00000200)==0) MACH&amp;=0x000003FF;
+<P>
+ else MACH|=0xFFFFFC00;
+<P>
+ R[m]+=4;
+<P>
+ PC+=2;
+<P>
+}
+<P>
+LDSMMACL(long m)   /* LDS.L @Rm+,MACL */
+<P>
+{
+<P>
+ MACL=Read_Long(R[m]);
+<P>
+ R[m]+=4;
+<P>
+ PC+=2;
+<P>
+}
+<P>
+LDSMPR(long m) /* LDS.L @Rm+,PR */
+<P>
+{
+<P>
+ PR=Read_Long(R[m]);
+<P>
+ R[m]+=4;
+<P>
+ PC+=2;
+<P>
+}
+<P>
+</FONT><FONT FACE="Arial" SIZE="3"><B>Example:
+<P>
+</B></FONT><FONT FACE="Lucida Sans Typewriter" SIZE="3">LDS R0,PR Before execution R0 = H'12345678, PR = H'00000000
+<P>
+  After execution PR = H'12345678
+<P>
+LDS.L @R15+,MACL Before execution R15 = H'10000000
+<P>
+  After execution R15 = H'10000004, MACL = @H'10000000
+<P>
+</FONT></BODY>
+</HTML>
