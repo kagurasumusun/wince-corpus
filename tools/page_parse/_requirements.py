@@ -731,6 +731,45 @@ def listed_function_requirements(fragment):
         out.append({"name": name, "field": "dll", "label": "part of",
                     "value": dll_value,
                     "evidence": re.sub(r"\s+", " ", match.group(0)).strip()})
+    # ``Function | Required Header`` tables (the CE CRT reference):
+    # one row per routine, the header in its own column, sometimes
+    # with an Architecture column beside it.  Each row is the page
+    # filing that name under a header -- the same listed-function
+    # statement as a component listing, read off the table's own
+    # column names.
+    for table in TABLE.finditer(fragment):
+        rows = list(ROW.finditer(table.group(1)))
+        if len(rows) < 2:
+            continue
+        heads = [text_of(c, keep_newlines=False).strip()
+                 for c in CELL.findall(rows[0].group(1))]
+        name_col = header_col = None
+        for i, head in enumerate(heads):
+            if head.lower().rstrip(":") in ("function", "functions",
+                                            "routine", "name"):
+                name_col = i
+            elif _field(head) == "header":
+                header_col = i
+        if name_col is None or header_col is None:
+            continue
+        for row in rows[1:]:
+            cells = [text_of(c, keep_newlines=False).strip()
+                     for c in CELL.findall(row.group(1))]
+            if len(cells) != len(heads):
+                continue
+            name, value = cells[name_col], cells[header_col]
+            if not _LISTED_NAME.match(name):
+                continue
+            key = (name, "header", value)
+            if key in seen or not _plausible("header", value):
+                continue
+            seen.add(key)
+            out.append({"name": name, "field": "header",
+                        "label": heads[header_col], "value": value,
+                        "evidence": re.sub(
+                            r"\s+", " ",
+                            text_of(row.group(1),
+                                    keep_newlines=False)).strip()})
     return out
 
 _NAMESPACE_RE = re.compile(

@@ -214,3 +214,26 @@ class ManagedSubjectTests(unittest.TestCase):
                if r["field"] == "assembly"]
         self.assertTrue(asm)
         self.assertIn("System.Http.dll", asm[0]["value"])
+
+
+class RequiredHeaderTableTests(unittest.TestCase):
+    """The CE CRT reference files each routine under its header with a
+    ``Routine | Required Header`` (3rd ed.: ``+ Architecture``) table;
+    no reader claimed that shape before 2026-10-21, so those pages'
+    own statements produced no header evidence at all."""
+
+    def _listed_headers(self, suffix):
+        fact = _fact(suffix)
+        return {x["name"]: x["value"] for x in fact["listed_requirements"]
+                if x["field"] == "header"}
+
+    def test_function_required_header(self):
+        self.assertEqual(
+            self._listed_headers("jan-2002/wcecrt/htm/crt3_47.html"),
+            {"_wfreopen": "<stdio.h>"})
+
+    def test_routine_required_header_with_architecture(self):
+        self.assertEqual(
+            self._listed_headers(
+                "02f39be5-6640-48ca-859a-86288b66f941.html"),
+            {"_prefetch": "<cmnintrin.h>"})
