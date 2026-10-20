@@ -1,6 +1,7 @@
 """The extractor interface (versioned): one corpus page -> observations.
 
-    EXTRACTOR_VERSION = 2   (the tools/page_parse package behind this module)
+    EXTRACTOR_VERSION (tools/kbgen/common.py; the tools/page_parse
+    package behind this module)
 
 kbgen never calls tools/page_parse directly; everything goes through
 parse_page() here, so the page-format readers can be replaced or improved

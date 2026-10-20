@@ -25,7 +25,7 @@ SHARED_MAP_PATH = os.path.join(ROOT, "data", "reports", "win32-shared.tsv")
 LICENSE_REGISTRY = os.path.join(ROOT, "data", "license-scopes.tsv")
 
 SCHEMA_VERSION = 3
-EXTRACTOR_VERSION = 3
+EXTRACTOR_VERSION = 4
 BUILDER_VERSION = 2
 
 
