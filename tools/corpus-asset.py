@@ -226,6 +226,7 @@ def pack_to(out_path):
     if committed != text:
         raise SystemExit("ledger is stale; run: python3 tools/corpus-asset.py hash")
     zstandard = _zstd()
+    os.makedirs(os.path.dirname(out_path), exist_ok=True)
     with open(out_path, "wb") as raw:
         cctx = zstandard.ZstdCompressor(level=10, threads=0)
         with cctx.stream_writer(raw) as comp:
