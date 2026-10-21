@@ -46,7 +46,7 @@ on:
         default: false
 
 concurrency:
-  group: crawl-mirror
+  group: corpus-asset
   cancel-in-progress: false
 
 permissions:
@@ -67,6 +67,14 @@ jobs:
         with:
           python-version: '3.x'
 
+      - name: Install zstandard
+        run: pip install zstandard
+
+      - name: Materialize the corpus asset
+        id: materialize
+        env:
+          GH_TOKEN: ${{ secrets.GIT_PAT || secrets.GITHUB_TOKEN }}
+        run: python3 tools/corpus-asset.py materialize
       - name: Crawl
         run: |
           set -o pipefail
@@ -104,7 +112,9 @@ jobs:
         # `always()` on purpose: a crawl that dies half way through (a
         # broken page, a network error) must still hand over the pages and
         # the frontier it did collect.  The run itself stays red.
-        if: ${{ always() && github.event.inputs.dry_run != 'true' }}
+        if: ${{ always() && steps.materialize.outcome == 'success' && github.event.inputs.dry_run != 'true' }}
+        env:
+          GH_TOKEN: ${{ secrets.GIT_PAT || secrets.GITHUB_TOKEN }}
         run: |
           git config user.name "wince-docs-corpus crawler"
           git config user.email "wince-corpus-harvester@users.noreply.github.com"
@@ -122,6 +132,12 @@ jobs:
           python3 tools/check-policy.py
           echo "--- crawl state (errors and skips are recorded here) ---"
           head -c 1200 data/crawl/*.json || true
+          if [ "${{ steps.materialize.outcome }}" = "success" ]; then
+            python3 tools/corpus-asset.py hash
+            if ! git diff --quiet -- data/index/corpus-hashes.tsv; then
+              python3 tools/corpus-asset.py publish
+            fi
+          fi
           git add corpus/ data/index data/crawl data/reports queues  || true
 
           if git diff --staged --quiet; then

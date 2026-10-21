@@ -37,7 +37,7 @@ on:
         default: false
 
 concurrency:
-  group: extract-chm
+  group: corpus-asset
   cancel-in-progress: false
 
 permissions:
@@ -58,6 +58,13 @@ jobs:
         with:
           python-version: '3.x'
 
+      - name: Install zstandard
+        run: pip install zstandard
+
+      - name: Materialize the corpus asset
+        env:
+          GH_TOKEN: ${{ secrets.GIT_PAT || secrets.GITHUB_TOKEN }}
+        run: python3 tools/corpus-asset.py materialize
       - name: Install 7-Zip
         run: |
           which 7z || sudo apt-get install -y p7zip-full
@@ -78,6 +85,8 @@ jobs:
 
       - name: Refresh indexes and commit
         if: ${{ github.event.inputs.report_only != 'true' }}
+        env:
+          GH_TOKEN: ${{ secrets.GIT_PAT || secrets.GITHUB_TOKEN }}
         run: |
           python3 tools/build-index.py
           python3 tools/build-index-sql.py
@@ -92,6 +101,10 @@ jobs:
           python3 tools/build-chm-inventory.py
           python3 tools/check-corpus.py --report || true
           python3 tools/check-policy.py
+          python3 tools/corpus-asset.py hash
+          if ! git diff --quiet -- data/index/corpus-hashes.tsv; then
+            python3 tools/corpus-asset.py publish
+          fi
           git config user.name "wince-docs-corpus extractor"
           git config user.email "wince-corpus-harvester@users.noreply.github.com"
           git add corpus/ data/index data/reports queues  || true

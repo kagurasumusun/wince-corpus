@@ -2,8 +2,9 @@
 #
 # The pipeline is Harvest -> Corpus -> KB Gen -> Header/.def Gen, and each
 # layer keeps its own artifact boundary: the collection workflows update
-# corpus/ and data/index/ only; THIS workflow turns corpus into kb/
-# (tools/kbgen) and never touches corpus/.
+# the corpus release asset and its ledger under data/index/ only; THIS
+# workflow materializes that asset, turns corpus into kb/ (tools/kbgen)
+# and never changes the corpus.
 #
 # kb/kb.sqlite3 is ~600 MB -- larger than GitHub's 100 MiB file limit --
 # so the database itself is published as a gzipped asset of the rolling
@@ -22,6 +23,7 @@ on:
     paths:
       - 'corpus/**'
       - 'data/index/INDEX.tsv'
+      - 'data/index/corpus-hashes.tsv'
       - 'data/catalogs/**'
       - 'data/license-scopes.tsv'
       - 'data/reports/win32-shared.tsv'
@@ -41,7 +43,7 @@ on:
         default: false
 
 concurrency:
-  group: kb
+  group: corpus-asset
   cancel-in-progress: false
 
 permissions:
@@ -62,6 +64,13 @@ jobs:
         with:
           python-version: '3.x'
 
+      - name: Install zstandard
+        run: pip install zstandard
+
+      - name: Materialize the corpus asset
+        env:
+          GH_TOKEN: ${{ secrets.GIT_PAT || secrets.GITHUB_TOKEN }}
+        run: python3 tools/corpus-asset.py materialize
       - name: Unit tests (kbgen)
         run: python3 -m unittest discover -s tools/tests -p 'test_kbgen_*.py' -v
 

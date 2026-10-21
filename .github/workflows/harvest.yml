@@ -61,7 +61,7 @@ on:
         default: false
 
 concurrency:
-  group: harvest
+  group: corpus-asset
   cancel-in-progress: false
 
 permissions:
@@ -123,7 +123,16 @@ jobs:
           echo "enabled=true" >> "$GITHUB_OUTPUT"
           echo "harvesting queues/$QUEUE (limit=$LIMIT, batch=$BATCH, time budget=${BUDGET:-none}s, dry_run=$DRY)"
 
-      - name: Run harvester (rate-limited, batch push)
+      - name: Install zstandard
+        if: steps.plan.outputs.enabled == 'true' && steps.plan.outputs.dry_run != 'true'
+        run: pip install zstandard
+
+      - name: Materialize the corpus asset
+        if: steps.plan.outputs.enabled == 'true' && steps.plan.outputs.dry_run != 'true'
+        env:
+          GH_TOKEN: ${{ secrets.GIT_PAT || secrets.GITHUB_TOKEN }}
+        run: python3 tools/corpus-asset.py materialize
+      - name: Run harvester (rate-limited)
         if: steps.plan.outputs.enabled == 'true'
         run: |
           git config user.name "wince-docs-corpus harvester"
@@ -145,10 +154,12 @@ jobs:
           python3 tools/harvest.py \
             --queue "queues/${{ steps.plan.outputs.queue }}" \
             --batch "${{ steps.plan.outputs.batch }}" $LIMIT_ARG $BUDGET_ARG \
-            --push --summary data/reports/harvest-last.json
+            --summary data/reports/harvest-last.json
 
       - name: Refresh index, integrity report and final push
         if: steps.plan.outputs.enabled == 'true' && steps.plan.outputs.dry_run != 'true'
+        env:
+          GH_TOKEN: ${{ secrets.GIT_PAT || secrets.GITHUB_TOKEN }}
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
@@ -165,6 +176,10 @@ jobs:
           python3 tools/check-corpus.py --report || true
           python3 tools/check-policy.py
           python3 tools/summarize-harvest.py || true
+          python3 tools/corpus-asset.py hash
+          if ! git diff --quiet -- data/index/corpus-hashes.tsv; then
+            python3 tools/corpus-asset.py publish
+          fi
           git add data/index/ data/reports/ corpus/ data/logs/  || true
 
           if ! git diff --quiet || ! git diff --staged --quiet; then

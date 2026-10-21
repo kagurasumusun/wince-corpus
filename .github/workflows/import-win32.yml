@@ -28,6 +28,10 @@ on:
         type: boolean
         default: false
 
+concurrency:
+  group: corpus-asset
+  cancel-in-progress: false
+
 permissions:
   contents: write
 
@@ -43,6 +47,13 @@ jobs:
         with:
           python-version: '3.x'
 
+      - name: Install zstandard
+        run: pip install zstandard
+
+      - name: Materialize the corpus asset
+        env:
+          GH_TOKEN: ${{ secrets.GIT_PAT || secrets.GITHUB_TOKEN }}
+        run: python3 tools/corpus-asset.py materialize
       - name: Build the SQL index
         # fetch-upstream decides the CE-shared set from the mined CE
         # API names (tools/ce_api_names.py over corpus.sqlite3); the
@@ -73,7 +84,13 @@ jobs:
 
       - name: Commit
         if: ${{ github.event.inputs.push == 'true' }}
+        env:
+          GH_TOKEN: ${{ secrets.GIT_PAT || secrets.GITHUB_TOKEN }}
         run: |
+          python3 tools/corpus-asset.py hash
+          if ! git diff --quiet -- data/index/corpus-hashes.tsv; then
+            python3 tools/corpus-asset.py publish
+          fi
           git config user.name "wince-docs-corpus importer"
           git config user.email "wince-corpus-harvester@users.noreply.github.com"
           git add corpus/win32 data/reports data/index sources/microsoftdocs 
