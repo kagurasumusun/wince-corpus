@@ -1,0 +1,67 @@
+# Publish (or re-publish) the corpus release asset.
+#
+# Since the 2026-10-21 policy review the corpus bytes are not tracked in
+# git: they ship as the `corpus-asset.tar.zst` asset of the rolling
+# `corpus-latest` release and are materialized by the workflows that read
+# them (tools/corpus-asset.py; docs/LICENSING.md).  The collection lanes
+# upload a new asset themselves when they change the corpus; this
+# workflow is the explicit entry point -- it bootstrapped the first
+# asset while the corpus was still tracked, and it is how a corpus
+# deletion (a ledger-only change) gets compacted into the asset.
+#
+# The job always ends with a round-trip proof: it deletes a subtree and
+# re-materializes from the asset it just published, then verifies every
+# file against data/index/corpus-hashes.tsv.
+
+name: Corpus asset
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - '.github/workflows/corpus-asset.yml'
+      - 'tools/corpus-asset.py'
+
+concurrency:
+  group: corpus-asset
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+
+jobs:
+  corpus-asset:
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GIT_PAT || secrets.GITHUB_TOKEN }}
+          ref: ${{ github.ref_name }}
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+
+      - name: Install zstandard
+        run: pip install zstandard
+
+      - name: Materialize the corpus if this checkout does not carry it
+        env:
+          GH_TOKEN: ${{ secrets.GIT_PAT || secrets.GITHUB_TOKEN }}
+        run: |
+          python3 tools/corpus-asset.py verify \
+            || python3 tools/corpus-asset.py materialize
+          python3 tools/corpus-asset.py hash --check
+
+      - name: Pack and publish the asset
+        env:
+          GH_TOKEN: ${{ secrets.GIT_PAT || secrets.GITHUB_TOKEN }}
+        run: python3 tools/corpus-asset.py publish
+
+      - name: Round-trip proof (delete a subtree, restore from the asset)
+        env:
+          GH_TOKEN: ${{ secrets.GIT_PAT || secrets.GITHUB_TOKEN }}
+        run: |
+          rm -rf corpus/msdn-library/jan-2002 corpus/win32/api
+          python3 tools/corpus-asset.py materialize
