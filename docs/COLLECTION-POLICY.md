@@ -13,6 +13,14 @@ document using the name.  The knowledge base carries that decision per name
 The policy is executable: `tools/check-policy.py` fails (exit 1) when a page
 that does not belong appears in `corpus/`. Every collection workflow runs it.
 
+Two other registries answer questions this policy does not, and both are
+executable too: **where did the bytes come from** (`data/provenance-scopes.tsv`,
+`tools/check-provenance.py`, `docs/PROVENANCE-SPLIT.ja.md`) and **what does the
+statement attached to each item permit** (`data/license-scopes.tsv`,
+`tools/check-licenses.py`, `docs/LICENSING.md` and the 2026-10-24 review
+`docs/review-rights-2026-10.ja.md`). A tree can be in policy and still be
+unpublishable — 20 of the 23 provenance scopes are.
+
 ```
 python3 tools/check-policy.py
 corpus/            210,773 pages in 10 trees

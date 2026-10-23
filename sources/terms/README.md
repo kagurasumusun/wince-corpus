@@ -9,7 +9,9 @@ instead of remembered.
 
 | File | What it is |
 |------|------------|
-| `learn-com-termsofuse-excerpt.txt` | The sections of the Microsoft Learn Terms of Use that govern copying and publishing content taken from learn.microsoft.com, quoted verbatim with the URL and the fetch date. |
+| `learn-com-termsofuse-excerpt.txt` | The sections of the Microsoft Learn Terms of Use that govern copying and publishing content taken from learn.microsoft.com, quoted verbatim with the URL and the fetch date. Re-fetched from the live page 2026-10-24 and confirmed identical. |
+| `mspress-wince-books-copyright-page.txt` | The copyright page of the five Microsoft Press books in `sources/bitsavers-microsoft/`, transcribed verbatim with each PDF's sha256 and the extraction method. Kept as text because `tools/check-licenses.py` reads HTML and text, not PDF, so a scope that quotes a book's copyright page needs the wording in a file the checker can open. |
+| `prentice-hall-wince30-appprog-copyright-page.txt` | The copyright page and imprint of `Windows_CE_3.0_Application_Programming_2001.pdf` — a **Prentice Hall PTR** retail book (ISBN 0-13-025592-0), not a Microsoft publication, whose bundled CD-ROM additionally carries Microsoft software reproduced under a special arrangement. Same reason, same method. |
 
 Rules for this directory:
 

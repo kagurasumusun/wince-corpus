@@ -44,3 +44,41 @@ One row per PDF, metadata from `data/probe/bitsavers-keep-*/INDEX.md`
 
 The files are the untouched medium; the corpus does not re-host their
 printed text as pages until an OCR/text pass decides that is worth it.
+
+## Status 2026-10-24 — the statements on these pages were read, and they forbid this
+
+The decision above ("the same reading applies to these printed guides") was made
+without reading the books' copyright pages.  They have now been read
+(text extracted from the PDFs and transcribed, with each file's sha256, to
+`sources/terms/mspress-wince-books-copyright-page.txt` and
+`sources/terms/prentice-hall-wince30-appprog-copyright-page.txt`):
+
+* Five of the seven files are **Microsoft Press commercial books**, each with
+  "PUBLISHED BY Microsoft Press", a copyright year, an ISBN and a Library of
+  Congress Cataloging-in-Publication record, and each with:
+  "All rights reserved. **No part of the contents of this book may be reproduced
+  or transmitted in any form or by any means without the written permission of
+  the publisher.**"
+* `Windows_CE_3.0_Application_Programming_2001.pdf` is **not a Microsoft
+  publication at all**.  It is a Prentice Hall PTR retail book
+  (ISBN 0-13-025592-0, $49.99 U.S. / $75.00 Canada) whose copyright page reads
+  "All rights reserved. No part of this book may be reproduced, in any form or
+  by any means, without permission in writing from the publisher."  Its bundled
+  CD-ROM additionally carries Microsoft eMbedded Visual C++/Visual Basic 3.0
+  "reproduced by Prentice Hall PTR under a special arrangement with Microsoft
+  Corporation", so two rightsholders restrict this one item.
+
+So the corpus rule this directory's own collection policy quotes — "verbatim
+books are only collected when a licence or public-domain marking is found" —
+is **not** satisfied by any of these files, and
+`queues/third-party-sources.md` reaches exactly that conclusion for this same
+bitsavers directory ("these stay uncollected").  The two documents contradict
+each other; this one is the outlier.
+
+Registry scopes: `mspress-book-copyright` (6 files) and
+`prentice-hall-book-copyright` (1 file), both redistribution **no**.
+Recommended action: delete the directory (`docs/review-rights-2026-10.ja.md`
+§7 P2).  Nothing in the knowledge base needs it — the material is printed
+prose, not an API reference, and the CE 1.0–3.0 API surface it describes is
+already covered by `corpus/chm/windows-ce-3.0/` under an explicit
+"internal, reference purposes" permission.

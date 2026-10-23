@@ -1,0 +1,60 @@
+# Provenance registry for wince-corpus.
+#
+# The licensing registry (data/license-scopes.tsv) answers "what does the
+# statement attached to this item say?".  This registry answers a different
+# question, and the one the rights review needs first: **where did the bytes
+# come from, and does Microsoft still publish them itself?**
+#
+# Two axes, because they do not coincide:
+#
+#   group    how the bytes reached this repository
+#     web       taken from a site Microsoft publishes (learn.microsoft.com) or
+#               from the Internet Archive's Wayback Machine captures of a site
+#               Microsoft published (msdn.microsoft.com)
+#     mirror    taken from a *third party's* web mirror.  The content is still
+#               Microsoft's, but the copy came from someone who is not the
+#               publisher -- the weakest acquisition route in the collection
+#     media     extracted from an official Microsoft medium: a product/SDK CD
+#               or DVD image, an installer payload, a documentation archive
+#     upstream  taken from a repository the publisher itself hosts and
+#               licences (MicrosoftDocs on GitHub) or from an allowlisted
+#               open-source project's own document
+#
+#   origin   what the bytes *are*, i.e. the publication they came off
+#
+# `official_compilation` is the result of the 2026-10-24 web survey
+# (docs/review-rights-2026-10.ja.md §3): does Microsoft itself still publish a
+# documentation compilation that covers this tree?  `none` means the survey
+# found no Microsoft-published ISO/PDF/ZIP/archive for it, so the copy here is
+# the only one the project has.  Where a compilation exists, the row names it,
+# and the tree can be re-derived from Microsoft's own URL instead of from a
+# mirror or an Archive.org item.
+#
+# The longest matching rule governs a path, exactly as in license-scopes.tsv.
+# tools/check-provenance.py verifies that every corpus page resolves to exactly
+# one row and writes data/reports/provenance-classification.tsv.
+#
+# rule	scope	group	origin	official_compilation	evidence	notes
+corpus/learn/	mslearn-previous-versions	web	Microsoft Learn, previous-versions/windows/embedded (the archived read-only copies of the MSDN Library CE sets)	none	corpus/README.md	Learn serves no Download PDF for the previous-versions namespace and there is no MicrosoftDocs repository for it (checked 2026-10-24 via api.github.com: no MicrosoftDocs repo for embedded/windows-ce/wince/winembedded). The web pages are the only Microsoft-published form.
+corpus/dotnet/	mslearn-previous-versions-dotnet	web	Microsoft Learn, previous-versions/windows/embedded -- the .NET families (POS for .NET, .NET Micro Framework, .NET Compact Framework)	none	corpus/dotnet/README.md	Same site and same namespace as corpus/learn/; kept in a separate tree because it documents a managed layer on top of CE, not the OS surface.
+corpus/msdn-library/2010-05/	wayback-msdn-2010-05	web	Wayback Machine captures of msdn.microsoft.com/en-us/library/<id>.aspx taken 2010-05-01	none	queues/wayback-msdn-2010.txt	msdn.microsoft.com no longer serves these topic ids; the captures are of Microsoft's own publication, so the route is a web archive of the publisher's site, not a third-party mirror.
+corpus/msdn-library/msdn-magazine/	wayback-msdn-magazine	web	Wayback Machine captures of the pre-2008 msdn.microsoft.com/msdnmag issue trees	none	queues/to-fetch-msdn-magazine.txt	Magazine articles, not product reference. 47 issue TOCs audited; 12 CE-flagged articles kept.
+corpus/msdn-library/techshelps/	mirror-techshelps	mirror	The MSDN Library sets for Windows CE 1.0/2.0 (CEGUIDE, WCEMFC, WCEATL, VBCE, WCEDDK, VCCE, DNEMBED) as re-published by techshelps.github.io	none	queues/third-party-sources.md	Acquisition route is a third party. The underlying publication is the MSDN Library of the CE 1.0/2.0 era, which Microsoft distributed on subscription media only; the survey found no Microsoft-published compilation of it.
+corpus/msdn-library/datadungeon-2000-04/	mirror-datadungeon	mirror	The Windows CE documentation of the MSDN Library April 2000 (CE 2.12/3.0 era), crawled from library.thedatadungeon.com	none	queues/mirrors.tsv	Acquisition route is a third party's crawl of an MSDN Library disc. The April 2000 MSDN Library was subscription media: no Microsoft-published ISO exists for it (the last MSDN Library ISO Microsoft ever published is the VS2008 SP1 one, id=20955).
+corpus/msdn-library/windows-mobile-6.5/	media-unrecorded	media	MSHelp-format Windows Mobile 6.5 topics from an MSDN Library / Visual Studio help collection	none	corpus/msdn-library/windows-mobile-6.5/PROVENANCE.md	PROVENANCE.md records that the extraction method, tool and date are unknown and that no source URL survives in the files. Grouped as media on the evidence of the format (MSHelp XML, per-topic MSHelp:Attr product metadata), not on a recorded acquisition; the uncertainty is itself a finding.
+corpus/msdn-library/wcedevcon-99/	media-devcon99-iso	media	Windows CE Developers Conference DevCon 99 Conference CD (Microsoft, 1999-05-24)	none	corpus/msdn-library/wcedevcon-99/PROVENANCE.md	Conference disc, never a Microsoft download. Fetched from the Internet Archive item windowscedevcon99conferencecd.
+corpus/msdn-library/jan-2002/	media-msdn-jan-2002-iso	media	MSDN Subscriptions Library January 2002 disc (QTR25ENUD1.ISO)	none	corpus/msdn-library/jan-2002/PROVENANCE.md	MSDN subscription quarterly media; never published on the Microsoft Download Center. Fetched from the Internet Archive item msdn-jan-2002.
+corpus/msdn-library/vsnet-2003/	media-msdn-vsnet2003-iso	media	MSDN Library for Visual Studio .NET 2003, Discs 1-3 (MSDVVSD1/2/3; part numbers X09-46370 / X09-46249 / X09-46251)	none	corpus/msdn-library/vsnet-2003/PROVENANCE.md	Shipped with Visual Studio .NET 2003 and on MSDN subscription media; no Microsoft Download Center entry. Fetched from Internet Archive Alcohol-MDF dumps (tools/mdf.py).
+corpus/msdn-library/vs2008-sp1/	media-msdn-vs2008sp1-iso	media	MSDN Library for Visual Studio 2008 SP1, November 2008 (VS2008SP1MSDNENUX1506188.iso; the archive.org item X15-18280 is the same disc)	https://www.microsoft.com/en-us/download/details.aspx?id=20955	corpus/msdn-library/vs2008-sp1/PROVENANCE.md	**Microsoft still publishes this disc itself.** Download Center id=20955, live as of 2026-10-24, VS2008SP1MSDNENUX1506188.iso, 2.2 GB, published 2024-07-15 (a Japanese JPNMSDNX1530336.ISO is offered from the same entry). It is the last MSDN Library ISO Microsoft ever released. This tree can therefore be re-derived from Microsoft's own URL rather than from the Archive.org copy.
+corpus/chm/windows-ce-3.0/	official-download-ce30-zip	media	WindowsCE3.0_DocumentationArchive.zip -- the retired MSDN "Windows CE 3.0" library as one CHM	https://www.microsoft.com/en-us/download/details.aspx?id=41197	sources/windows-ce-3.0/PROVENANCE.md	**A Microsoft-published, documentation-only compilation.** Download Center id=41197, live as of 2026-10-24, 12.4 MB, SHA1 7a62a0ab927b97f4acefe28d2f7fc6d986a5f19a. The repo already uses it; the ZIP is kept verbatim in sources/windows-ce-3.0/. The only CE tree whose every page carries an explicit use permission ("internal, reference purposes").
+corpus/chm/windows-ce-4.2/	media-ce42-installer	media	Windows CE .NET 4.2 Platform Builder Emulation Edition (winceemul42.exe, self-extracting installer, 2003) -- EMULATOR.CHM + REMTOOLS.CHM	none	sources/windows-ce-4.2/PROVENANCE.md	Emulator/remote-tools help only; the disc carries no CE .NET 4.x API reference. Microsoft retired the CE .NET 4.x downloads; nothing documentation-only was ever published for it.
+corpus/chm/windows-ce-5.0/	media-ce50-cd1-iso	media	Windows Embedded CE 5.0 CD1 English (en_win_ce_net_cd1.iso, 2004-07-02) -- the 98 component CHMs of PB_1.cab	none	sources/windows-ce-5.0/PROVENANCE.md	All Windows CE 5.0 content was retired from the Download Center and the Device Partner Center on 2022-09-30 (MC350659; Windows Embedded blog "Older Windows Embedded Compact content is being retired"). No documentation-only compilation was published before retirement.
+corpus/mvb/windows-ce-1.0/	media-ce10-sdk-beta-iso	media	Microsoft Windows CE 1.0 Desktop Emulation SDK **Beta 2.1** (WCESDK.iso), VCWCE/HELP/ -- PEGSDK.MVB, PEGDDK.MVB, RELNOTES.HLP	none	sources/windows-ce-1.0/PROVENANCE.md	A **beta** SDK. The book's own front matter (corpus/mvb/windows-ce-1.0/PEGSDK/AJ0A.html) is a Non-disclosure Agreement Note and AJ0B.html says the documentation is "only for limited distribution outside of Microsoft and not for redistribution". See data/license-scopes.tsv scope ce10-nda-prerelease.
+corpus/mvb/windows-ce-2.0-sdk/	media-ce20-sdk-iso	media	Microsoft Windows CE Platform SDK (H/PC) 2.0 02/98 (MPLATSDK.20.ISO) -- 11 InfoViewer .ivt titles + windbg.hlp + disc ReadMe	none	corpus/mvb/windows-ce-2.0-sdk/PROVENANCE.md	Contains substantial **third-party CPU vendor** documentation redistributed inside the Microsoft SDK: VR4100 (NEC), PR3910 (Philips Semiconductors), SH3PROG/SHASM/SHTOP/SHCALL (Hitachi). See the vendor scopes in data/license-scopes.tsv.
+corpus/site/	media-site-mirror	media	The CE-era web sites and release notes that shipped on the media (CE 2.0 Technical Information CD developer site; CE 4.2/5.0/6.0 disc release notes)	none	sources/windows-ce-2.0/PROVENANCE.md	A product site as published on a disc, not a live Microsoft site. Every CE 2.0 page carries "© 1997 Microsoft Corporation. All rights reserved."; the CE 6.0 release notes carry the express-written-permission no-reproduction clause.
+corpus/kb/	kbarchive-github	mirror	The Windows CE articles of the Microsoft KnowledgeBase Archive as re-published by github.com/jeffpar/kbarchive (Microsoft's ~2002 FTP archive plus Programmer's Library CD-ROM articles)	none	corpus/kb/README.md	Acquisition route is a third party's GitHub repository; the articles are Microsoft's. Microsoft retired the Knowledge Base archive it once published on FTP; support.microsoft.com no longer serves these article ids.
+corpus/win32/api/	microsoftdocs-sdk-api	upstream	MicrosoftDocs/sdk-api on GitHub, pinned commit c12073e417d5780fe796278ada21b90cef1b0568	https://github.com/MicrosoftDocs/sdk-api	sources/microsoftdocs/PROVENANCE.md	**Microsoft-published and licence-granting**: CC-BY-4.0 for the documentation (LICENSE), MIT for the code (LICENSE-CODE). The same pages are served by learn.microsoft.com/en-us/windows/win32/api/ under the Learn Terms of Use; the GitHub route is the one that carries an explicit redistribution licence.
+corpus/win32/common/	microsoftdocs-win32	upstream	MicrosoftDocs/win32 on GitHub, pinned commit e103fa4e8810bd8d42c4777e17081e24dbe62dbd, admitted page by page in data/win32-common-pages.tsv	https://github.com/MicrosoftDocs/win32	sources/microsoftdocs/PROVENANCE.md	CC-BY-4.0. The shared-surface reference pages (Windows Data Types and the type tables) that the CE books name but never spell out.
+corpus/oss/	oss-allowlist	upstream	Allowlisted official documents of open-source projects that are themselves about Windows CE (Qt, SDL, OpenSSL, wxWidgets)	n/a	queues/oss-docs.tsv	Not Microsoft material. Per-project licences read and quoted in sources/oss-licenses/; the allowlist is the only door into the tree.
+corpus/README.md	project-index-corpus	upstream	Project-authored index of the corpus trees (not a collected page)	n/a	corpus/README.md	Paperwork about the collection, not part of it; governed by the project's own (undecided) licence.
+corpus/win32/README.md	project-index-win32	upstream	Project-authored index of the Win32-common half (not a collected page)	n/a	corpus/win32/README.md	Paperwork; the pages it describes come from MicrosoftDocs/sdk-api and MicrosoftDocs/win32 under CC-BY-4.0.
